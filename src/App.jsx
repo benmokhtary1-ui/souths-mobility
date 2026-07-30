@@ -16,6 +16,24 @@ const formatNumber = (val) => {
   return num.toLocaleString('fr-FR'); 
 };
 
+// Fonction utilitaire pour associer chaque pays à son code ISO (pour afficher le vrai drapeau en image)
+const getCountryCode = (nameFr) => {
+  const map = {
+    "Algérie": "dz", "Égypte": "eg", "Libye": "ly", "Maroc": "ma", "Tunisie": "tn",
+    "Bénin": "bj", "Burkina Faso": "bf", "Cabo Verde": "cv", "Côte d'Ivoire": "ci", "Gambie": "gm",
+    "Ghana": "gh", "Guinée": "gn", "Guinée-Bissau": "gw", "Libéria": "lr", "Mali": "ml",
+    "Mauritanie": "mr", "Niger": "ne", "Nigéria": "ng", "Sénégal": "sn", "Sierra Leone": "sl", "Togo": "tg",
+    "Angola": "ao", "Cameroun": "cm", "Centrafrique": "cf", "Tchad": "td", "Congo": "cg",
+    "R.D. Congo": "cd", "Guinée Équatoriale": "gq", "Gabon": "ga", "Sao Tomé-et-Principe": "st",
+    "Burundi": "bi", "Comores": "km", "Djibouti": "dj", "Érythrée": "er", "Éthiopie": "et",
+    "Kenya": "ke", "Madagascar": "mg", "Malawi": "mw", "Maurice": "mu", "Mozambique": "mz",
+    "Rwanda": "rw", "Seychelles": "sc", "Somalie": "so", "Soudan du Sud": "ss", "Soudan": "sd",
+    "Tanzanie": "tz", "Ouganda": "ug", "Zambie": "zm", "Zimbabwe": "zw",
+    "Botswana": "bw", "Eswatini": "sz", "Lesotho": "ls", "Namibie": "na", "Afrique du Sud": "za"
+  };
+  return map[nameFr] || "un";
+};
+
 const HistoricalChart = ({ data, colorClass }) => {
   if (!data || data.length === 0) return null;
   const maxVal = Math.max(...data.map(d => parseFloat(d.value))) * 1.5; 
@@ -86,7 +104,6 @@ export default function App() {
 
   useEffect(() => { setIsLoaded(true); }, []);
 
-  // --- GESTION DE LA TOUCHE ÉCHAP POUR FERMER LA MODALE ---
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -97,7 +114,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // --- DICTIONNAIRE DE TRADUCTION ---
   const t = {
     fr: {
       title: "South(s) Mobility",
@@ -230,7 +246,7 @@ export default function App() {
         s2: "Haut Commissariat des Nations Unies pour les Réfugiés (UNHCR / HCR, 2025)",
         s3: "Observatoire des déplacements internes (IDMC, 2025)",
         s4: "Organisation Internationale pour les Migrations (OIM / IOM, 2025)",
-        s5: "Organisation Internationale du Travail (OIT NORMLEX) & Traités UA"
+        s5: "Organisation Internationale du Travail (OIT NORMLEX, 2025) & Traités UA"
       },
       myth: "Mythe", reality: "Réalité",
       footer: { tag: "L'ingénierie des données au service d'un nouveau récit.", sources: "Data: UNDESA 2024 • UNHCR 2025 • IDMC 2025 • OIT • OIM • Traités UA • BM" },
@@ -264,7 +280,7 @@ export default function App() {
         idp_conflict: "Internally Displaced (Conflict)", idp_disaster: "Internally Displaced (Climate)",
         hcr_hosted: "International Refugees Hosted",
         avoi_title: "Regional Integration (AVOI)", avoi_desc: "Visa openness index for citizens of other African countries.",
-        au_instruments: "Key African Union Treaties (Migration & Mobility)"
+        au_instruments: "Key African Union Treaties (Migration & Mobilty)"
       },
       sections: { 
         debunk: "1. Deconstructing Narratives", 
@@ -384,7 +400,6 @@ export default function App() {
     impact: { fr: "Résilience économique via les transferts de fonds (Remittances).", en: "Economic resilience through remittances." }
   };
 
-  // --- BASE DE DONNÉES INTÉGRÉE AVEC RATIFICATIONS OIT ET UA ---
   const countryData = {
     "af_med": [
       { 
