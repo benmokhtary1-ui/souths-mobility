@@ -1143,9 +1143,9 @@ export default function App() {
     {lang === 'fr' ? "Territoires et Mobilités" : "Territories and Mobilities"}
   </h3>
   <img 
-    src="/map_africa.png" 
+    src="/map_africa.png.png" 
     alt="Carte de l'Afrique" 
-    className="max-w-full h-auto rounded-xl shadow-lg border border-slate-100" 
+    className="max-w-git add .full h-auto rounded-xl shadow-lg border border-slate-100" 
   />
   <p className="text-[10px] text-slate-400 mt-4 italic">
     {lang === 'fr' ? "Représentation cartographique à titre illustratif." : "Cartographic representation for illustrative purposes."}
