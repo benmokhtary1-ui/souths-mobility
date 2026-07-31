@@ -122,7 +122,7 @@ export default function App() {
       },
       metrics: { stock: "Stock Total (2024)", female: "Parité (Femmes %)", evolution: "Part Pop. Nationale" },
       comparative_view_title: "Analyse Comparative : Transition Démographique & Résilience Sud-Sud",
-      comparative_view_desc: "Contrairement au mythe d'un continent subissant une pression migratoire incontrôlable vers le Nord, les données croisées de l'UNDESA et de l'IDMC démontrent que la dynamique démographique africaine nourrit d'abord l'économie interne et la mobilité circulaire Sud-Sud. La part des migrants internationaux reste structurellement stable (~1,9%), absorbée à 70% par le continent lui-même.",
+      comparative_view_desc: "Contrairement au mythe d'un continent subissant une pression migratoire incontrôlable vers le Nord, les données croisées de l'UNDESA, de l'IDMC et le rapport de l'UA/OIT (2019) démontrent que la dynamique démographique africaine nourrit d'abord l'économie interne. 77% des migrants africains sont en âge de travailler, formant une force de 14,5 millions de travailleurs migrants (taux d'activité de 72%). La part globale des migrants reste structurellement stable (~2%), absorbée majoritairement par le continent lui-même.",
       modal: {
         close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie", econ: "Économie & Droits" },
         south_view: "Perspective Analytique des Suds",
@@ -207,15 +207,15 @@ export default function App() {
       indicator_desc: "Ce référentiel n'est pas une base de données exhaustive, mais une matrice méthodologique suggérée. Il sert de guide pour les institutions, décideurs et chercheurs souhaitant objectiver la gouvernance des mobilités et orienter leurs futures collectes de données brutes sur le terrain.",
       download_indicators: "Télécharger la Matrice (CSV)",
       debunk_cards: [
-        { myth: "L'explosion migratoire africaine.", real: "Stabilité historique de la proportion (~1,9%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-blue-700", desc: "La part des migrants internationaux africains évolue très lentement. L'augmentation des volumes absolus n'est qu'un reflet de la croissance démographique continentale." },
-        { myth: "L'Afrique envahit l'Europe.", real: "Les migrations intra-africaines dominent (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-700", desc: "Les pôles d'attraction sont internes. Des pays comme la Côte d'Ivoire ou l'Afrique du Sud attirent massivement les travailleurs régionaux." },
-        { myth: "Le Nord accueille la majorité des réfugiés.", real: "Les réfugiés restent dans les pays frontaliers.", stat_text: "76%", stat_val: 76, color: "bg-orange-700", desc: "Le rapport HCR 2025 confirme que l'écrasante majorité des personnes fuyant les conflits trouvent refuge dans des pays limitrophes du Sud." },
-        { myth: "La migration est une affaire d'hommes.", real: "Féminisation structurelle des flux (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-700", desc: "Les femmes représentent aujourd'hui près de la moitié des migrants, redéfinissant l'économie du soin." },
-        { myth: "L'Afrique dépend de l'Aide Internationale.", real: "Les transferts de la diaspora dépassent l'aide publique.", stat_text: "3x plus", stat_val: 75, color: "bg-amber-600", desc: "Les envois de fonds constituent un filet de sécurité vital qui surpasse largement les budgets de l'aide internationale." },
-        { myth: "Le climat va vider le continent vers le Nord.", real: "Les déplacements climatiques sont majoritairement internes.", stat_text: ">90%", stat_val: 90, color: "bg-cyan-700", desc: "Plus de 90% des déplacés climatiques restent à l'intérieur de leurs frontières nationales ou sous-régionales (données IDMC)." },
-        { myth: "Les pays d'Afrique côtière ne sont que des zones de passage.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-700", desc: "Contrairement au narratif de l'Europe 'forteresse', les États perçus comme de simples espaces de passage voient une majorité de personnes s'y installer durablement, transformant leur gouvernance locale et leur tissu socio-économique." },
-        { myth: "Le développement économique arrêtera les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur", stat_val: 80, color: "bg-rose-700", desc: "Historiquement et statistiquement, l'augmentation initiale des revenus dans un pays en développement fournit en réalité le capital nécessaire pour migrer. La mobilité augmente avec le développement avant de se stabiliser." },
-        { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont des moteurs de l'économie informelle et de l'emploi.", stat_text: "+ Valeur", stat_val: 85, color: "bg-emerald-700", desc: "Les données montrent que les migrants intra-africains comblent des pénuries structurelles, stimulent la consommation locale et créent des micro-entreprises, contribuant positivement à la résilience des pays hôtes." }
+        { myth: "L'explosion migratoire africaine.", real: "Stabilité historique de la proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-emerald-500", desc: "La part des migrants internationaux africains évolue très lentement. L'augmentation des volumes absolus n'est qu'un reflet de la croissance démographique continentale (Rapport UA 2019)." },
+        { myth: "L'Afrique envahit l'Europe.", real: "Les migrations intra-africaines dominent (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-500", desc: "Les pôles d'attraction sont internes. Des pays comme la Côte d'Ivoire ou l'Afrique du Sud attirent massivement les travailleurs régionaux. L'Afrique de l'Est et de l'Ouest accueillent 58% des migrants du continent." },
+        { myth: "Le Nord accueille la majorité des réfugiés.", real: "Les réfugiés restent dans les pays frontaliers.", stat_text: "87%", stat_val: 87, color: "bg-orange-500", desc: "L'écrasante majorité des personnes fuyant les conflits trouvent refuge dans des pays limitrophes du Sud. 87% des Africains déplacés de force restent en Afrique (OCDE 2020)." },
+        { myth: "La migration est une affaire d'hommes.", real: "Féminisation structurelle des flux (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-500", desc: "Les femmes représentent 47% des migrants, mais seulement 39% de la main-d'œuvre formelle (Rapport UA/OIT). Cela souligne leur forte présence dans l'économie informelle et le travail de soin (care) non rémunéré." },
+        { myth: "L'Afrique dépend de l'Aide Internationale.", real: "Les transferts de la diaspora (Remittances) explosent.", stat_text: "86 Mds $", stat_val: 86, color: "bg-amber-500", desc: "Les envois de fonds ont atteint un record de 86,4 milliards de dollars en 2019, dont 82% captés par l'Afrique du Nord et de l'Ouest (Rapport UA/OIT). Ce filet de sécurité surpasse largement l'Aide Publique (APD)." },
+        { myth: "Le climat va vider le continent vers le Nord.", real: "Les déplacements climatiques sont majoritairement internes.", stat_text: ">90%", stat_val: 90, color: "bg-blue-500", desc: "Plus de 90% des déplacés climatiques restent à l'intérieur de leurs frontières nationales ou sous-régionales (données IDMC)." },
+        { myth: "Les pays d'Afrique côtière ne sont que des zones de passage.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-500", desc: "Contrairement au narratif de l'Europe 'forteresse', les États perçus comme de simples espaces de passage voient une majorité de personnes s'y installer durablement pour travailler." },
+        { myth: "Le développement économique arrêtera les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur", stat_val: 80, color: "bg-cyan-500", desc: "L'augmentation initiale des revenus dans un pays en développement fournit en réalité le capital nécessaire pour migrer. Le rapport de la CNUCED confirme que la migration stimule d'abord la transformation structurelle." },
+        { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont le moteur de l'agriculture et du commerce.", stat_text: "+ Valeur", stat_val: 85, color: "bg-rose-500", desc: "L'agriculture est le 1er employeur des migrants en Afrique (27,5%), suivie du commerce de gros/détail (21,9%). Les migrants comblent des pénuries structurelles et stimulent la consommation (Rapport UA/OIT 2019)." }
       ],
       about: { 
         p1: "South(s) Mobility DataHub est un portail de recherche et de visualisation de données indépendant, conçu à la croisée de la science des données et de l'analyse des politiques publiques.", 
@@ -227,22 +227,8 @@ export default function App() {
         citation_title: "Citation Académique & Journalistique (Norme APA) :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations africaines. Extrait de https://southsmobility.org"
       },
-      method: { 
-        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes (Open Data) :",
-        m1: "Extraction & Harmonisation : Croisement des bases de données internationales certifiées.", 
-        m2: "Analyse Proportionnelle : Normalisation des stocks migratoires par rapport aux bases démographiques régionales.", 
-        m3: "Modélisation Comparative : Évaluation croisée de la transition démographique et de la rétention régionale.",
-        m4: "Open Source & Intégrité : Infrastructure ouverte et indépendante de toute affiliation institutionnelle.",
-        sources_title: "Accès aux Datasets Originaux & Cadres :",
-        s1: "Département des affaires économiques et sociales (UNDESA, 2024)",
-        s2: "Haut Commissariat des Nations Unies pour les Réfugiés (UNHCR, 2025)",
-        s3: "Observatoire des déplacements internes (IDMC, 2025)",
-        s4: "Organisation Internationale pour les Migrations (OIM, 2025)",
-        s5: "Organisation Internationale du Travail (OIT NORMLEX)",
-        s6: "Union Africaine (Traités)"
-      },
-      myth: "Postulat", reality: "Donnée Factuelle",
-      footer: { tag: "L'ingénierie des données au service d'une analyse géopolitique apaisée.", sources: "Data: UNDESA 2024 • UNHCR 2025 • IDMC 2025 • OIT • OIM • Traités UA • BM" },
+      myth: "Mythe", reality: "Réalité",
+      footer: { tag: "L'ingénierie des données au service d'un nouveau récit.", sources: "Data: UNDESA • Rapport UA/OIT/OIM 2019 • UNHCR • IDMC • NORMLEX" },
       analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport",
       hero_title: "Objectiver les mobilités", hero_highlight: "par la science des données."
     },
@@ -262,7 +248,7 @@ export default function App() {
       },
       metrics: { stock: "Total Stock (2024)", female: "Parity (Women %)", evolution: "Nat. Pop. Share" },
       comparative_view_title: "Comparative Analysis: Demographic Transition & South-South Resilience",
-      comparative_view_desc: "Contrary to the myth of an uncontrollable migratory pressure heading North, cross-referenced UNDESA and IDMC data show that Africa's demographic dynamics primarily feed internal economies and South-South circular mobility. International migrant share remains structurally stable (~1.9%), with 70% absorbed within the continent.",
+      comparative_view_desc: "Contrary to the myth of an uncontrollable migratory pressure heading North, cross-referenced data from UNDESA, IDMC, and the AU/ILO Report (2019) show that Africa's demographic dynamics primarily feed internal economies. 77% of African migrants are of working age, forming a labor force of 14.5 million migrant workers (72% activity rate). International migrant share remains structurally stable (~2%), with 70% absorbed within the continent.",
       modal: { 
         close: "Close", tabs: { demo: "Demography", geo: "Geography", econ: "Economy & Treaties" }, 
         south_view: "Analytical Perspective", evo_title: "The Proportional Constant (1990-2024)", parity: "Feminization of flows", retention_title: "Regional Retention (South-South)", orig_dest_title: "Transition & Proximity Dynamics", econ_title: "Economic Independence", 
@@ -345,15 +331,15 @@ export default function App() {
       indicator_desc: "This registry is not an exhaustive database, but a suggested methodological matrix. It serves as a guide for institutions, policymakers, and researchers wishing to objectify mobility governance and guide their future raw data collection on the ground.",
       download_indicators: "Download Matrix (CSV)",
       debunk_cards: [
-        { myth: "The African migration explosion.", real: "Historical stability of proportion (~1.9%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-blue-700", desc: "The share of international migrants evolves very slowly. Absolute volume increase is a reflection of demographic growth." },
-        { myth: "Africa is invading Europe.", real: "Intra-African migrations dominate (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-700", desc: "Poles of attraction are internal. Countries like Côte d'Ivoire or South Africa massively attract regional workers." },
-        { myth: "The North hosts the majority of refugees.", real: "Refugees stay in bordering countries.", stat_text: "76%", stat_val: 76, color: "bg-orange-700", desc: "The UNHCR 2025 report confirms the overwhelming majority of people fleeing conflicts find refuge in neighboring Southern countries." },
-        { myth: "Migration is primarily a male affair.", real: "Structural feminization of flows (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-700", desc: "Women now represent nearly half of migrants, redefining the global care economy." },
-        { myth: "Africa depends on International Aid.", real: "Remittances far exceed official public aid.", stat_text: "3x more", stat_val: 75, color: "bg-amber-600", desc: "Diaspora remittances constitute a vital safety net that far surpasses international aid budgets." },
-        { myth: "Climate will empty the continent to the North.", real: "Climate displacement is overwhelmingly internal.", stat_text: ">90%", stat_val: 90, color: "bg-cyan-700", desc: "Over 90% of climate displaced persons remain within their national or sub-regional borders (IDMC data)." },
-        { myth: "Coastal African nations are merely areas of passage.", real: "Structural transformation into destination countries.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-700", desc: "Contrary to the 'Fortress Europe' narrative, states perceived as simple areas of passage see a majority of people settle permanently, transforming local governance and socioeconomic fabrics." },
-        { myth: "Economic development will mechanically stop emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst", stat_val: 80, color: "bg-rose-700", desc: "Historically and statistically, an initial increase in income in a developing country actually provides the capital needed to migrate. Mobility increases with development before stabilizing." },
-        { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of the informal economy and employment.", stat_text: "+ Value", stat_val: 85, color: "bg-emerald-700", desc: "Data shows that intra-African migrants fill structural shortages, stimulate local consumption, and create micro-enterprises, contributing positively to host countries' resilience." }
+        { myth: "The African migration explosion.", real: "Historical stability of proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-emerald-500", desc: "The share of international migrants evolves very slowly. Absolute volume increase is a reflection of continental demographic growth (AU Report 2019)." },
+        { myth: "Africa is invading Europe.", real: "Intra-African migrations dominate (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-500", desc: "Poles of attraction are internal. East and West Africa alone host 58% of the continent's migrants. Countries like Côte d'Ivoire or South Africa massively attract regional workers." },
+        { myth: "The North hosts the majority of refugees.", real: "Refugees stay in bordering countries.", stat_text: "87%", stat_val: 87, color: "bg-orange-500", desc: "The overwhelming majority of people fleeing conflicts find refuge in neighboring Southern countries. 87% of forcibly displaced Africans remain in Africa (OECD 2020)." },
+        { myth: "Migration is primarily a male affair.", real: "Structural feminization of flows (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-500", desc: "Women represent 47% of migrants, but only 39% of the formal migrant workforce (AU/ILO Report). This highlights their strong presence in the informal economy and unpaid care work." },
+        { myth: "Africa depends on International Aid.", real: "Remittances far exceed official public aid.", stat_text: "$86.4B", stat_val: 86, color: "bg-amber-500", desc: "Remittances reached a record $86.4 billion in 2019, with 82% captured by North and West Africa (AU/ILO Report). This vital safety net far surpasses international aid budgets." },
+        { myth: "Climate will empty the continent to the North.", real: "Climate displacement is overwhelmingly internal.", stat_text: ">90%", stat_val: 90, color: "bg-blue-500", desc: "Over 90% of climate displaced persons remain within their national or sub-regional borders (IDMC data)." },
+        { myth: "Coastal African nations are merely areas of passage.", real: "Structural transformation into destination countries.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-500", desc: "Contrary to the 'Fortress Europe' narrative, states perceived as simple areas of passage see a majority of people settle permanently to work." },
+        { myth: "Economic development will mechanically stop emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst", stat_val: 80, color: "bg-cyan-500", desc: "Historically and statistically, an initial increase in income provides the capital needed to migrate. UNCTAD confirms that migration primarily stimulates structural transformation." },
+        { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of agriculture and trade.", stat_text: "+ Value", stat_val: 85, color: "bg-rose-500", desc: "Agriculture is the largest employer of migrants in Africa (27.5%), followed by wholesale/retail trade (21.9%). Migrants fill structural shortages and stimulate consumption (AU/ILO Report 2019)." }
       ],
       about: { 
         p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science and public policy analysis.", 
@@ -378,7 +364,7 @@ export default function App() {
         s6: "African Union (Treaties)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Data engineering serving a new narrative.", sources: "Data: UN DESA 2024 • UNHCR 2025 • IDMC 2025 • ILO • IOM • AU Treaties • WB" },
+      footer: { tag: "Data engineering serving a new narrative.", sources: "Data: UNDESA • AU/ILO/IOM Report 2019 • UNHCR • IDMC • NORMLEX" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report",
       hero_title: "Objectifying mobilities", hero_highlight: "through data science."
     }
@@ -400,9 +386,18 @@ export default function App() {
         "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
         "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.8, "labour_participation": "65.0", "evolution": "0.6", 
         "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
+        "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
         ...genericDesc 
+      },
+      { 
+        "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
+        "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 4.9, "labour_participation": "65.0", "evolution": "1.1", 
+        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
+        "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65},
+        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+        ...genericDesc,
+        "impact": { "fr": "Capte 31% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), créant une résilience économique majeure via les Remittances.", "en": "Captures 31% of all remittances sent to Africa (ILO/AU Report 2019), creating major economic resilience." }
       },
       { 
         "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
@@ -530,7 +525,7 @@ export default function App() {
         "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
         "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.7, "labour_participation": "65.0", "evolution": "1.7", 
         "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
+        "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
         ...genericDesc 
       },
@@ -538,9 +533,10 @@ export default function App() {
         "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
         "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 4.0, "labour_participation": "65.0", "evolution": "0.6", 
         "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
+        "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
+        ...genericDesc,
+        "impact": { "fr": "Capte 28% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), pilier informel de l'économie locale.", "en": "Captures 28% of all remittances sent to Africa (ILO/AU Report 2019), acting as an informal pillar of the local economy." }
       },
       { 
         "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
