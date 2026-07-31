@@ -5,7 +5,7 @@ import {
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
-  Mail, Linkedin
+  Mail
 } from 'lucide-react';
 
 const formatNumber = (val) => {
@@ -17,22 +17,12 @@ const formatNumber = (val) => {
   return num.toLocaleString('fr-FR'); 
 };
 
-const getCountryCode = (nameFr) => {
-  const map = {
-    "Algérie": "dz", "Égypte": "eg", "Libye": "ly", "Maroc": "ma", "Tunisie": "tn",
-    "Bénin": "bj", "Burkina Faso": "bf", "Cabo Verde": "cv", "Côte d'Ivoire": "ci", "Gambie": "gm",
-    "Ghana": "gh", "Guinée": "gn", "Guinée-Bissau": "gw", "Libéria": "lr", "Mali": "ml",
-    "Mauritanie": "mr", "Niger": "ne", "Nigéria": "ng", "Sénégal": "sn", "Sierra Leone": "sl", "Togo": "tg",
-    "Angola": "ao", "Cameroun": "cm", "Centrafrique": "cf", "Tchad": "td", "Congo": "cg",
-    "R.D. Congo": "cd", "Guinée Équatoriale": "gq", "Gabon": "ga", "Sao Tomé-et-Principe": "st",
-    "Burundi": "bi", "Comores": "km", "Djibouti": "dj", "Érythrée": "er", "Éthiopie": "et",
-    "Kenya": "ke", "Madagascar": "mg", "Malawi": "mw", "Maurice": "mu", "Mozambique": "mz",
-    "Rwanda": "rw", "Seychelles": "sc", "Somalie": "so", "Soudan du Sud": "ss", "Soudan": "sd",
-    "Tanzanie": "tz", "Ouganda": "ug", "Zambie": "zm", "Zimbabwe": "zw",
-    "Botswana": "bw", "Eswatini": "sz", "Lesotho": "ls", "Namibie": "na", "Afrique du Sud": "za"
-  };
-  return map[nameFr] || "un";
-};
+// Icône LinkedIn vectorielle intégrée pour éviter l'erreur de build sur Lucide React
+const LinkedInIcon = ({ className = "w-3.5 h-3.5" }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+  </svg>
+);
 
 const HistoricalChart = ({ data, colorClass }) => {
   if (!data || data.length === 0) return null;
@@ -137,7 +127,7 @@ export default function App() {
         close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie", econ: "Économie & Droits" },
         south_view: "Perspective Analytique des Suds",
         evo_title: "La constante proportionnelle (1990-2024)", parity: "Féminisation des flux", retention_title: "Rétention Régionale (Sud-Sud)",
-        orig_dest_title: "Dynamiques de Transition & Proximité", econ_title: "Indépendance Économique",
+        orig_dest_title: "Dynamiques de Transition & Proximité", econ_title: "Indépendance Économique, Normes OIT & Traités UA",
         causal_chain: "Chaîne de causes systémiques", trigger: "Déclencheur", response: "Réponse Migratoire", impact: "Impact Socio-économique",
         data_source: "Sources : UNDESA / IDMC / UNHCR / OIT (NORMLEX) / OIM (IOM) / Union Africaine (UA)", export_csv: "Exporter (CSV)", export_pdf: "Rapport (PDF)",
         raw_data_title: "Fiche de Données Brutes", infographic_title: "Infographie : Répartition des Flux",
@@ -145,7 +135,7 @@ export default function App() {
         idp_conflict: "Déplacés Internes (Conflits)", idp_disaster: "Déplacés Internes (Climat)",
         hcr_hosted: "Réfugiés internationaux accueillis",
         avoi_title: "Intégration Régionale (Indice AVOI)", avoi_desc: "Score d'ouverture des frontières aux ressortissants des autres pays africains.",
-        au_instruments: "Traités Clés de l'Union Africaine"
+        au_instruments: "Instruments & Traités Clés de l'Union Africaine (Migration & Mobilité)"
       },
       sections: { 
         debunk: "1. Déconstruction des Narratifs", 
@@ -228,17 +218,17 @@ export default function App() {
         { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont des moteurs de l'économie informelle et de l'emploi.", stat_text: "+ Valeur", stat_val: 85, color: "bg-emerald-700", desc: "Les données montrent que les migrants intra-africains comblent des pénuries structurelles, stimulent la consommation locale et créent des micro-entreprises, contribuant positivement à la résilience des pays hôtes." }
       ],
       about: { 
-        p1: "South(s) Mobility DataHub est un portail d'analyse géopolitique, de recherche académique et de visualisation de données indépendant, conçu à l'intersection de la science des données et de l'analyse des politiques publiques.", 
-        p2: "Rigueur empirique & Neutralité institutionnelle : Face à la polarisation médiatique et aux narratifs surinterprétés, ce projet adopte une démarche strictement empirique. Il privilégie l'objectivation statistique des réalités continentales africaines et des Suds.",
-        expanded_p1: "En plaçant la proportionnalité mathématique et la pondération démographique au cœur de sa méthode, le portal neutralise les biais d'optique causés par la croissance absolue des volumes et révèle les constantes structurelles des mobilités.",
-        expanded_p2: "Ce portail met en lumière les angles morts des statistiques officielles et constitue un outil de référence apolitique et factuel pour les chercheurs, décideurs publics, journalistes et la société civile.",
+        p1: "South(s) Mobility DataHub est un portail de recherche et de visualisation de données indépendant, conçu à la croisée de la science des données et de l'analyse des politiques publiques.", 
+        p2: "Rigueur empirique & Éditoriale : Face à la polarisation des discours, ce projet s'inscrit dans une démarche strictly factuelle axée sur les réalités du continent africain.",
+        expanded_p1: "En privilégiant la proportionnalité mathématique et la pondération démographique, la méthode neutralise les biais de volume absolu et met en lumière les tendances structurelles des mobilités.",
+        expanded_p2: "Ce portail met en valeur les angles morts statistiques et s'impose comme un outil de référence factuel et institutionnel pour les chercheurs, décideurs et la société civile.",
         contact_title: "Transparence & Rétroaction Citoyenne",
         contact_desc: "Une coquille statistique ? Une suggestion méthodologique ou une opportunité de collaboration académique / institutionnelle ? L'Open Data s'enrichit grâce à l'amélioration continue et au dialogue.",
         citation_title: "Citation Académique & Journalistique (Norme APA) :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations africaines. Extrait de https://southsmobility.org"
       },
       method: { 
-        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes certifiées (Open Data) :",
+        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes (Open Data) :",
         m1: "Extraction & Harmonisation : Croisement des bases de données internationales certifiées.", 
         m2: "Analyse Proportionnelle : Normalisation des stocks migratoires par rapport aux bases démographiques régionales.", 
         m3: "Modélisation Comparative : Évaluation croisée de la transition démographique et de la rétention régionale.",
@@ -366,17 +356,15 @@ export default function App() {
         { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of the informal economy and employment.", stat_text: "+ Value", stat_val: 85, color: "bg-emerald-700", desc: "Data shows that intra-African migrants fill structural shortages, stimulate local consumption, and create micro-enterprises, contributing positively to host countries' resilience." }
       ],
       about: { 
-        p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science, geopolitics, and public policy analysis.", 
-        p2: "Empirical Rigor & Institutional Neutrality: Facing polarized narratives, this project adopts a strictly factual approach centered on African continental realities.",
+        p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science and public policy analysis.", 
+        p2: "Empirical Rigor & Neutrality: Facing polarized narratives, this project adopts a strictly factual approach centered on African continental realities.",
         expanded_p1: "By prioritizing mathematical proportionality and demographic weighting, the methodology neutralizes absolute volume biases to reveal structural mobility trends.",
-        expanded_p2: "This portal highlights statistical blind spots, standing as a factual and apolitical reference tool for researchers, policymakers, journalists, and civil society.",
-        contact_title: "Transparency & Community Feedback",
-        contact_desc: "Spotted a data discrepancy? Have a methodological suggestion or a collaboration proposal? Open Data thrives on continuous improvement and peer dialogue.",
+        expanded_p2: "This portal highlights statistical blind spots, standing as a factual and apolitical reference tool for researchers, policymakers, and civil society.",
         citation_title: "Academic & Journalistic Citation (APA format):",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: Empirical analysis of African migrations. Retrieved from https://southsmobility.org"
       },
       method: { 
-        summary: "The methodological architecture relies on the rigorous consolidation and transparent processing of certified Open Data:",
+        summary: "The methodological architecture relies on the rigorous consolidation and transparent processing of Open Data:",
         m1: "Extraction & Harmonization: Cross-referencing certified international databases.", 
         m2: "Proportional Analysis: Normalization of migratory stocks against regional demographic bases.", 
         m3: "Comparative Modeling: Cross-evaluating demographic transition and regional retention.",
@@ -385,12 +373,12 @@ export default function App() {
         s1: "Department of Economic and Social Affairs (UNDESA, 2024)",
         s2: "United Nations High Commissioner for Refugees (UNHCR, 2025)",
         s3: "Internal Displacement Monitoring Centre (IDMC, 2025)",
-        s4: "International Organization for Migration (IOM, 2025)",
+        s4: "International Organization for Migration (IOM / OIM, 2025)",
         s5: "International Labour Organization (ILO NORMLEX)",
         s6: "African Union (Treaties)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Data engineering serving an objective geopolitical narrative.", sources: "Data: UN DESA 2024 • UNHCR 2025 • IDMC 2025 • ILO • IOM • AU Treaties • WB" },
+      footer: { tag: "Data engineering serving a new narrative.", sources: "Data: UN DESA 2024 • UNHCR 2025 • IDMC 2025 • ILO • IOM • AU Treaties • WB" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report",
       hero_title: "Objectifying mobilities", hero_highlight: "through data science."
     }
@@ -1383,7 +1371,6 @@ export default function App() {
           )}
         </section>
 
-        {}
         {/* 6 & 7. À PROPOS ET MÉTHODOLOGIE */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
           <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
@@ -1426,7 +1413,7 @@ export default function App() {
                     rel="noopener noreferrer" 
                     className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-3.5 py-2 rounded-sm text-xs border border-slate-600 transition-colors shadow-sm"
                   >
-                    <Linkedin className="w-3.5 h-3.5 text-blue-300" />
+                    <LinkedInIcon className="w-3.5 h-3.5 text-blue-300" />
                     <span>LinkedIn</span>
                     <ExternalLink className="w-3 h-3 opacity-60" />
                   </a>
@@ -1440,7 +1427,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
             <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><BookOpen className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
             <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
@@ -1745,7 +1732,6 @@ export default function App() {
         </div>
       )}
 
-      {}
       {/* FOOTER */}
       <footer className="bg-[#0f172a] text-slate-400 py-12 border-t border-slate-800 mt-12 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
