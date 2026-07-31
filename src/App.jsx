@@ -6,7 +6,6 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText
 } from 'lucide-react';
-import mapAfrica from './assets/map_africa.png';
 
 const formatNumber = (val) => {
   if (val === undefined || val === null) return "0";
@@ -1144,14 +1143,14 @@ export default function App() {
     {lang === 'fr' ? "Territoires et Mobilités" : "Territories and Mobilities"}
   </h3>
   <img 
-    src="/map_africa.png.png" 
+    src="/map_africa.png" 
     alt="Carte de l'Afrique" 
-    className="max-w-git add .full h-auto rounded-xl shadow-lg border border-slate-100" 
+    className="max-w-md w-full h-auto rounded-xl shadow-lg border border-slate-100" 
   />
   <p className="text-[10px] text-slate-400 mt-4 italic">
     {lang === 'fr' ? "Représentation cartographique à titre illustratif." : "Cartographic representation for illustrative purposes."}
   </p>
-</div>          
+</div>     
           <div className="relative z-10 flex items-start space-x-3 bg-slate-800/80 p-4 rounded-lg border-l-4 border-emerald-500 print:bg-slate-50 print:border-slate-200 print:border-l-emerald-500">
             <Info className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5 print:text-emerald-600" />
             <p className="text-slate-300 text-sm font-medium leading-relaxed print:text-slate-700">{text.global_stats.note}</p>
