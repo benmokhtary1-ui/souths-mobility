@@ -6,6 +6,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText
 } from 'lucide-react';
+import mapAfrica from './assets/map_africa.png';
 
 const formatNumber = (val) => {
   if (val === undefined || val === null) return "0";
