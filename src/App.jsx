@@ -4,7 +4,8 @@ import {
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
-  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText
+  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
+  Mail, Linkedin
 } from 'lucide-react';
 
 const formatNumber = (val) => {
@@ -16,7 +17,6 @@ const formatNumber = (val) => {
   return num.toLocaleString('fr-FR'); 
 };
 
-// Fonction utilitaire pour associer chaque pays à son code ISO
 const getCountryCode = (nameFr) => {
   const map = {
     "Algérie": "dz", "Égypte": "eg", "Libye": "ly", "Maroc": "ma", "Tunisie": "tn",
@@ -228,15 +228,17 @@ export default function App() {
         { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont des moteurs de l'économie informelle et de l'emploi.", stat_text: "+ Valeur", stat_val: 85, color: "bg-emerald-700", desc: "Les données montrent que les migrants intra-africains comblent des pénuries structurelles, stimulent la consommation locale et créent des micro-entreprises, contribuant positivement à la résilience des pays hôtes." }
       ],
       about: { 
-        p1: "South(s) Mobility DataHub est un portail de recherche et de visualisation de données indépendant, conçu à la croisée de la science des données et de l'analyse des politiques publiques.", 
-        p2: "Rigueur empirique & Éditoriale : Face à la polarisation des discours, ce projet s'inscrit dans une démarche strictement factuelle axée sur les réalités du continent africain.",
-        expanded_p1: "En privilégiant la proportionnalité mathématique et la pondération démographique, la méthode neutralise les biais de volume absolu et met en lumière les tendances structurelles des mobilités.",
-        expanded_p2: "Ce portail met en valeur les angles morts statistiques et s'impose comme un outil de référence factuel et institutionnel pour les chercheurs, décideurs et la société civile.",
+        p1: "South(s) Mobility DataHub est un portail d'analyse géopolitique, de recherche académique et de visualisation de données indépendant, conçu à l'intersection de la science des données et de l'analyse des politiques publiques.", 
+        p2: "Rigueur empirique & Neutralité institutionnelle : Face à la polarisation médiatique et aux narratifs surinterprétés, ce projet adopte une démarche strictement empirique. Il privilégie l'objectivation statistique des réalités continentales africaines et des Suds.",
+        expanded_p1: "En plaçant la proportionnalité mathématique et la pondération démographique au cœur de sa méthode, le portal neutralise les biais d'optique causés par la croissance absolue des volumes et révèle les constantes structurelles des mobilités.",
+        expanded_p2: "Ce portail met en lumière les angles morts des statistiques officielles et constitue un outil de référence apolitique et factuel pour les chercheurs, décideurs publics, journalistes et la société civile.",
+        contact_title: "Transparence & Rétroaction Citoyenne",
+        contact_desc: "Une coquille statistique ? Une suggestion méthodologique ou une opportunité de collaboration académique / institutionnelle ? L'Open Data s'enrichit grâce à l'amélioration continue et au dialogue.",
         citation_title: "Citation Académique & Journalistique (Norme APA) :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations africaines. Extrait de https://southsmobility.org"
       },
       method: { 
-        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes (Open Data) :",
+        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes certifiées (Open Data) :",
         m1: "Extraction & Harmonisation : Croisement des bases de données internationales certifiées.", 
         m2: "Analyse Proportionnelle : Normalisation des stocks migratoires par rapport aux bases démographiques régionales.", 
         m3: "Modélisation Comparative : Évaluation croisée de la transition démographique et de la rétention régionale.",
@@ -364,15 +366,17 @@ export default function App() {
         { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of the informal economy and employment.", stat_text: "+ Value", stat_val: 85, color: "bg-emerald-700", desc: "Data shows that intra-African migrants fill structural shortages, stimulate local consumption, and create micro-enterprises, contributing positively to host countries' resilience." }
       ],
       about: { 
-        p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science and public policy analysis.", 
-        p2: "Empirical Rigor & Neutrality: Facing polarized narratives, this project adopts a strictly factual approach centered on African continental realities.",
+        p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science, geopolitics, and public policy analysis.", 
+        p2: "Empirical Rigor & Institutional Neutrality: Facing polarized narratives, this project adopts a strictly factual approach centered on African continental realities.",
         expanded_p1: "By prioritizing mathematical proportionality and demographic weighting, the methodology neutralizes absolute volume biases to reveal structural mobility trends.",
-        expanded_p2: "This portal highlights statistical blind spots, standing as a factual and apolitical reference tool for researchers, policymakers, and civil society.",
+        expanded_p2: "This portal highlights statistical blind spots, standing as a factual and apolitical reference tool for researchers, policymakers, journalists, and civil society.",
+        contact_title: "Transparency & Community Feedback",
+        contact_desc: "Spotted a data discrepancy? Have a methodological suggestion or a collaboration proposal? Open Data thrives on continuous improvement and peer dialogue.",
         citation_title: "Academic & Journalistic Citation (APA format):",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: Empirical analysis of African migrations. Retrieved from https://southsmobility.org"
       },
       method: { 
-        summary: "The methodological architecture relies on the rigorous consolidation and transparent processing of Open Data:",
+        summary: "The methodological architecture relies on the rigorous consolidation and transparent processing of certified Open Data:",
         m1: "Extraction & Harmonization: Cross-referencing certified international databases.", 
         m2: "Proportional Analysis: Normalization of migratory stocks against regional demographic bases.", 
         m3: "Comparative Modeling: Cross-evaluating demographic transition and regional retention.",
@@ -381,12 +385,12 @@ export default function App() {
         s1: "Department of Economic and Social Affairs (UNDESA, 2024)",
         s2: "United Nations High Commissioner for Refugees (UNHCR, 2025)",
         s3: "Internal Displacement Monitoring Centre (IDMC, 2025)",
-        s4: "International Organization for Migration (IOM / OIM, 2025)",
+        s4: "International Organization for Migration (IOM, 2025)",
         s5: "International Labour Organization (ILO NORMLEX)",
         s6: "African Union (Treaties)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Data engineering serving a new narrative.", sources: "Data: UN DESA 2024 • UNHCR 2025 • IDMC 2025 • ILO • IOM • AU Treaties • WB" },
+      footer: { tag: "Data engineering serving an objective geopolitical narrative.", sources: "Data: UN DESA 2024 • UNHCR 2025 • IDMC 2025 • ILO • IOM • AU Treaties • WB" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report",
       hero_title: "Objectifying mobilities", hero_highlight: "through data science."
     }
@@ -1001,7 +1005,6 @@ export default function App() {
     };
   }, [activeSubTab, activeSubRegion, lang, currentCountries]);
 
-  // --- MISE À JOUR SEO DYNAMIQUE DES TITRES ET LANGUE HTML ---
   useEffect(() => {
     document.title = `${display.name} | South(s) Mobility DataHub`;
     document.documentElement.lang = lang;
@@ -1380,22 +1383,61 @@ export default function App() {
           )}
         </section>
 
+        {}
         {/* 6 & 7. À PROPOS ET MÉTHODOLOGIE */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
           <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
             <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-40 h-40" /></div>
-            <div className="relative z-10 flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold flex items-center text-white"><Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}</h2></div>
-            <div className="relative z-10 mb-4">
-              <p className="text-slate-300 leading-relaxed mb-3 text-sm">{text.about.p1}</p>
-              <p className="text-slate-300 leading-relaxed mb-3 text-sm">{text.about.p2}</p>
-              <div className="mt-4 pt-5 border-t border-slate-700/50">
-                <p className="text-slate-200 leading-relaxed mb-4 text-sm">{text.about.expanded_p1}</p>
-                <p className="text-slate-200 leading-relaxed text-sm">{text.about.expanded_p2}</p>
+            <div>
+              <div className="relative z-10 flex justify-between items-center mb-6">
+                <h2 className="text-xl font-serif font-bold flex items-center text-white">
+                  <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
+                </h2>
+              </div>
+              <div className="relative z-10 mb-4">
+                <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
+                <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
+                <div className="mt-4 pt-5 border-t border-slate-700/50">
+                  <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
+                  <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
+                </div>
               </div>
             </div>
-            <div className="relative z-10 bg-slate-800/80 p-4 rounded-md border border-slate-700 mt-6">
-              <div className="flex items-center space-x-2 mb-1.5"><Quote className="w-3.5 h-3.5 text-blue-400" /><h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4></div>
-              <p className="text-xs text-slate-300 font-serif italic border-l-2 border-blue-500 pl-2.5">{text.about.citation_text}</p>
+
+            <div>
+              {/* BLOC CONTACT & RÉTROACTION CITOYENNE / INSTITUTIONNELLE */}
+              <div className="relative z-10 bg-slate-800/90 p-5 rounded-md border border-slate-700 mt-6 space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-4 h-4 text-blue-400" />
+                  <h4 className="text-xs font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
+                <div className="flex flex-wrap gap-2.5 pt-2">
+                  <a 
+                    href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
+                    className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-3.5 py-2 rounded-sm text-xs transition-colors shadow-sm"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
+                  </a>
+                  <a 
+                    href="https://www.linkedin.com/in/yassine-b-m" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-3.5 py-2 rounded-sm text-xs border border-slate-600 transition-colors shadow-sm"
+                  >
+                    <Linkedin className="w-3.5 h-3.5 text-blue-300" />
+                    <span>LinkedIn</span>
+                    <ExternalLink className="w-3 h-3 opacity-60" />
+                  </a>
+                </div>
+              </div>
+
+              {/* CITATION ACADÉMIQUE */}
+              <div className="relative z-10 bg-slate-800/80 p-4 rounded-md border border-slate-700 mt-4">
+                <div className="flex items-center space-x-2 mb-1.5"><Quote className="w-3.5 h-3.5 text-blue-400" /><h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4></div>
+                <p className="text-xs text-slate-300 font-serif italic border-l-2 border-blue-500 pl-2.5">{text.about.citation_text}</p>
+              </div>
             </div>
           </div>
           
@@ -1606,9 +1648,10 @@ export default function App() {
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
-                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
-                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                      {lang === 'fr' ? "→ Consulter la base des traités de l'UA" : "→ View AU Treaties Database"}
+                    <p className="text-sm text-slate-600 mb-2 print:mb-2">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
+                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                      <span>{lang === 'fr' ? "Accéder à la base des traités officiels de l'UA" : "Access Official AU Treaties Database"}</span>
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.constitutive ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
@@ -1643,10 +1686,11 @@ export default function App() {
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Évaluation Juridique des Droits (Base NORMLEX OIT)" : "Legal Evaluation of Rights (ILO NORMLEX)"}</h3>
-                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
+                    <p className="text-sm text-slate-600 mb-2 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
                     {display.normlex.link && (
-                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                        {lang === 'fr' ? "→ Consulter le profil national NORMLEX" : "→ View NORMLEX National Profile"}
+                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                        <span>{lang === 'fr' ? "Accéder au profil NORMLEX complet" : "Access full NORMLEX profile"}</span>
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 print:grid-cols-4">
@@ -1701,6 +1745,7 @@ export default function App() {
         </div>
       )}
 
+      {}
       {/* FOOTER */}
       <footer className="bg-[#0f172a] text-slate-400 py-12 border-t border-slate-800 mt-12 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
