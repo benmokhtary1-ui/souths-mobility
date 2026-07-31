@@ -4,8 +4,7 @@ import {
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
-  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
-  Mail
+  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Mail
 } from 'lucide-react';
 
 const formatNumber = (val) => {
@@ -28,22 +27,22 @@ const HistoricalChart = ({ data, colorClass }) => {
   if (!data || data.length === 0) return null;
   const maxVal = Math.max(...data.map(d => parseFloat(d.value))) * 1.5; 
   return (
-    <div className="flex items-end justify-between h-24 w-full gap-2 mt-4 pt-4 border-b border-slate-200 pb-2">
+    <div className="flex items-end justify-between h-24 w-full gap-2 mt-4 pt-4 border-b-2 border-slate-100 pb-2">
       {data.map((point, i) => {
         const heightPct = (parseFloat(point.value) / maxVal) * 100;
         return (
           <div key={i} className="flex flex-col items-center flex-1 group relative h-full justify-end">
             <div 
-              className={`w-full max-w-[32px] rounded-t-sm transition-all duration-1000 ease-out cursor-pointer hover:opacity-80 ${colorClass} print:!bg-blue-700`}
+              className={`w-full max-w-[32px] rounded-t-md transition-all duration-1000 ease-out cursor-pointer shadow-sm group-hover:shadow-md group-hover:opacity-80 ${colorClass} print:!bg-emerald-500`}
               style={{ height: `${Math.max(5, heightPct)}%` }}
             >
-              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
+              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
                 {parseFloat(point.value) > 100 
                   ? (parseFloat(point.value) >= 1000000 ? (parseFloat(point.value)/1000000).toFixed(1) + 'M' : (parseFloat(point.value)/1000).toFixed(0) + 'k') 
                   : point.value + '%'}
               </span>
             </div>
-            <span className="text-[9px] font-bold text-slate-500 mt-2">{point.year}</span>
+            <span className="text-[9px] font-black text-slate-400 mt-2">{point.year}</span>
           </div>
         );
       })}
@@ -59,21 +58,21 @@ const EconomicComparison = ({ remittances, aid, lang }) => {
   return (
     <div className="space-y-5 mt-4">
       <div>
-        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5">
-          <span className="text-amber-700 print:!text-amber-700">{lang === 'fr' ? "Transferts des diasporas" : "Remittances"}</span>
-          <span className="text-amber-900 print:!text-amber-900">{remittances}% PIB</span>
+        <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
+          <span className="text-amber-600 print:!text-amber-600">{lang === 'fr' ? "Transferts des diasporas" : "Remittances"}</span>
+          <span className="text-amber-700 print:!text-amber-700">{remittances}% PIB</span>
         </div>
-        <div className="h-2 w-full bg-slate-200 rounded-sm overflow-hidden print:!bg-slate-200">
-          <div className="h-full bg-amber-600 rounded-sm transition-all duration-1000 print:!bg-amber-600" style={{width: `${remPct}%`}}></div>
+        <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
+          <div className="h-full bg-amber-500 rounded-full transition-all duration-1000 print:!bg-amber-500" style={{width: `${remPct}%`}}></div>
         </div>
       </div>
       <div>
-        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5">
-          <span className="text-slate-600 print:!text-slate-500">{lang === 'fr' ? "Aide Internationale (APD)" : "International Aid (ODA)"}</span>
-          <span className="text-slate-800 print:!text-slate-600">{aid}% PIB</span>
+        <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
+          <span className="text-slate-500 print:!text-slate-500">{lang === 'fr' ? "Aide Internationale (APD)" : "International Aid (ODA)"}</span>
+          <span className="text-slate-600 print:!text-slate-600">{aid}% PIB</span>
         </div>
-        <div className="h-2 w-full bg-slate-200 rounded-sm overflow-hidden print:!bg-slate-200">
-          <div className="h-full bg-slate-400 rounded-sm transition-all duration-1000 print:!bg-slate-400" style={{width: `${aidPct}%`}}></div>
+        <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
+          <div className="h-full bg-slate-400 rounded-full transition-all duration-1000 print:!bg-slate-400" style={{width: `${aidPct}%`}}></div>
         </div>
       </div>
     </div>
@@ -207,19 +206,19 @@ export default function App() {
       indicator_desc: "Ce référentiel n'est pas une base de données exhaustive, mais une matrice méthodologique suggérée. Il sert de guide pour les institutions, décideurs et chercheurs souhaitant objectiver la gouvernance des mobilités et orienter leurs futures collectes de données brutes sur le terrain.",
       download_indicators: "Télécharger la Matrice (CSV)",
       debunk_cards: [
-        { myth: "L'explosion migratoire africaine.", real: "Stabilité historique de la proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-emerald-500", desc: "La part des migrants internationaux africains évolue très lentement. L'augmentation des volumes absolus n'est qu'un reflet de la croissance démographique continentale (Rapport UA 2019)." },
-        { myth: "L'Afrique envahit l'Europe.", real: "Les migrations intra-africaines dominent (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-500", desc: "Les pôles d'attraction sont internes. Des pays comme la Côte d'Ivoire ou l'Afrique du Sud attirent massivement les travailleurs régionaux. L'Afrique de l'Est et de l'Ouest accueillent 58% des migrants du continent." },
-        { myth: "Le Nord accueille la majorité des réfugiés.", real: "Les réfugiés restent dans les pays frontaliers.", stat_text: "87%", stat_val: 87, color: "bg-orange-500", desc: "L'écrasante majorité des personnes fuyant les conflits trouvent refuge dans des pays limitrophes du Sud. 87% des Africains déplacés de force restent en Afrique (OCDE 2020)." },
-        { myth: "La migration est une affaire d'hommes.", real: "Féminisation structurelle des flux (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-500", desc: "Les femmes représentent 47% des migrants, mais seulement 39% de la main-d'œuvre formelle (Rapport UA/OIT). Cela souligne leur forte présence dans l'économie informelle et le travail de soin (care) non rémunéré." },
-        { myth: "L'Afrique dépend de l'Aide Internationale.", real: "Les transferts de la diaspora (Remittances) explosent.", stat_text: "86 Mds $", stat_val: 86, color: "bg-amber-500", desc: "Les envois de fonds ont atteint un record de 86,4 milliards de dollars en 2019, dont 82% captés par l'Afrique du Nord et de l'Ouest (Rapport UA/OIT). Ce filet de sécurité surpasse largement l'Aide Publique (APD)." },
-        { myth: "Le climat va vider le continent vers le Nord.", real: "Les déplacements climatiques sont majoritairement internes.", stat_text: ">90%", stat_val: 90, color: "bg-blue-500", desc: "Plus de 90% des déplacés climatiques restent à l'intérieur de leurs frontières nationales ou sous-régionales (données IDMC)." },
-        { myth: "Les pays d'Afrique côtière ne sont que des zones de passage.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-500", desc: "Contrairement au narratif de l'Europe 'forteresse', les États perçus comme de simples espaces de passage voient une majorité de personnes s'y installer durablement pour travailler." },
-        { myth: "Le développement économique arrêtera les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur", stat_val: 80, color: "bg-cyan-500", desc: "L'augmentation initiale des revenus dans un pays en développement fournit en réalité le capital nécessaire pour migrer. Le rapport de la CNUCED confirme que la migration stimule d'abord la transformation structurelle." },
-        { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont le moteur de l'agriculture et du commerce.", stat_text: "+ Valeur", stat_val: 85, color: "bg-rose-500", desc: "L'agriculture est le 1er employeur des migrants en Afrique (27,5%), suivie du commerce de gros/détail (21,9%). Les migrants comblent des pénuries structurelles et stimulent la consommation (Rapport UA/OIT 2019)." }
+        { myth: "L'explosion migratoire africaine.", real: "Stabilité historique de la proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-blue-700", desc: "La part des migrants internationaux africains évolue très lentement. L'augmentation des volumes absolus n'est qu'un reflet de la croissance démographique continentale (Rapport UA 2019)." },
+        { myth: "L'Afrique envahit l'Europe.", real: "Les migrations intra-africaines dominent (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-700", desc: "Les pôles d'attraction sont internes. Des pays comme la Côte d'Ivoire ou l'Afrique du Sud attirent massivement les travailleurs régionaux. L'Afrique de l'Est et de l'Ouest accueillent 58% des migrants du continent." },
+        { myth: "Le Nord accueille la majorité des réfugiés.", real: "Les réfugiés restent dans les pays frontaliers.", stat_text: "87%", stat_val: 87, color: "bg-orange-700", desc: "L'écrasante majorité des personnes fuyant les conflits trouvent refuge dans des pays limitrophes du Sud. 87% des Africains déplacés de force restent en Afrique (OCDE 2020)." },
+        { myth: "La migration est une affaire d'hommes.", real: "Féminisation structurelle des flux (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-700", desc: "Les femmes représentent 47% des migrants, mais seulement 39% de la main-d'œuvre formelle (Rapport UA/OIT). Cela souligne leur forte présence dans l'économie informelle et le travail de soin (care) non rémunéré." },
+        { myth: "L'Afrique dépend de l'Aide Internationale.", real: "Les transferts de la diaspora (Remittances) explosent.", stat_text: "86,4 Mds $", stat_val: 86, color: "bg-amber-600", desc: "Les envois de fonds ont atteint un record de 86,4 milliards de dollars en 2019, dont 82% captés par l'Afrique du Nord et de l'Ouest (Rapport UA/OIT). Ce filet de sécurité surpasse largement l'Aide Publique (APD)." },
+        { myth: "Le climat va vider le continent vers le Nord.", real: "Les déplacements climatiques sont majoritairement internes.", stat_text: ">90%", stat_val: 90, color: "bg-cyan-700", desc: "Plus de 90% des déplacés climatiques restent à l'intérieur de leurs frontières nationales ou sous-régionales (données IDMC)." },
+        { myth: "Les pays d'Afrique côtière ne sont que des zones de passage.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-700", desc: "Contrairement au narratif de l'Europe 'forteresse', les États perçus comme de simples espaces de passage voient une majorité de personnes s'y installer durablement pour travailler." },
+        { myth: "Le développement économique arrêtera les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur", stat_val: 80, color: "bg-rose-700", desc: "L'augmentation initiale des revenus dans un pays en développement fournit en réalité le capital nécessaire pour migrer. Le rapport de la CNUCED confirme que la migration stimule d'abord la transformation structurelle." },
+        { myth: "Les migrants représentent un fardeau pour les pays d'accueil du Sud.", real: "Ils sont le moteur de l'agriculture et du commerce.", stat_text: "27,5% Agric.", stat_val: 85, color: "bg-emerald-700", desc: "L'agriculture est le 1er employeur des migrants en Afrique (27,5%), suivie du commerce de gros/détail (21,9%). Les migrants comblent des pénuries structurelles et stimulent la consommation (Rapport UA/OIT 2019)." }
       ],
       about: { 
         p1: "South(s) Mobility DataHub est un portail de recherche et de visualisation de données indépendant, conçu à la croisée de la science des données et de l'analyse des politiques publiques.", 
-        p2: "Rigueur empirique & Éditoriale : Face à la polarisation des discours, ce projet s'inscrit dans une démarche strictly factuelle axée sur les réalités du continent africain.",
+        p2: "Rigueur empirique & Éditoriale : Face à la polarisation des discours, ce projet s'inscrit dans une démarche strictement factuelle axée sur les réalités du continent africain.",
         expanded_p1: "En privilégiant la proportionnalité mathématique et la pondération démographique, la méthode neutralise les biais de volume absolu et met en lumière les tendances structurelles des mobilités.",
         expanded_p2: "Ce portail met en valeur les angles morts statistiques et s'impose comme un outil de référence factuel et institutionnel pour les chercheurs, décideurs et la société civile.",
         contact_title: "Transparence & Rétroaction Citoyenne",
@@ -227,8 +226,22 @@ export default function App() {
         citation_title: "Citation Académique & Journalistique (Norme APA) :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations africaines. Extrait de https://southsmobility.org"
       },
-      myth: "Mythe", reality: "Réalité",
-      footer: { tag: "L'ingénierie des données au service d'un nouveau récit.", sources: "Data: UNDESA • Rapport UA/OIT/OIM 2019 • UNHCR • IDMC • NORMLEX" },
+      method: { 
+        summary: "L'architecture méthodologique repose sur la consolidation rigoureuse et le traitement transparent de données ouvertes (Open Data) :",
+        m1: "Extraction & Harmonisation : Croisement des bases de données internationales certifiées.", 
+        m2: "Analyse Proportionnelle : Normalisation des stocks migratoires par rapport aux bases démographiques régionales.", 
+        m3: "Modélisation Comparative : Évaluation croisée de la transition démographique et de la rétention régionale.",
+        m4: "Open Source & Intégrité : Infrastructure ouverte et indépendante de toute affiliation institutionnelle.",
+        sources_title: "Accès aux Datasets Originaux & Cadres :",
+        s1: "Département des affaires économiques et sociales (UNDESA, 2024)",
+        s2: "Haut Commissariat des Nations Unies pour les Réfugiés (UNHCR, 2025)",
+        s3: "Observatoire des déplacements internes (IDMC, 2025)",
+        s4: "Organisation Internationale pour les Migrations (OIM, 2025)",
+        s5: "Organisation Internationale du Travail (OIT NORMLEX)",
+        s6: "Union Africaine (Traités)"
+      },
+      myth: "Postulat", reality: "Donnée Factuelle",
+      footer: { tag: "L'ingénierie des données au service d'une analyse géopolitique apaisée.", sources: "Data: UNDESA 2024 • UNHCR 2025 • IDMC 2025 • OIT • OIM • Traités UA • BM" },
       analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport",
       hero_title: "Objectiver les mobilités", hero_highlight: "par la science des données."
     },
@@ -331,21 +344,23 @@ export default function App() {
       indicator_desc: "This registry is not an exhaustive database, but a suggested methodological matrix. It serves as a guide for institutions, policymakers, and researchers wishing to objectify mobility governance and guide their future raw data collection on the ground.",
       download_indicators: "Download Matrix (CSV)",
       debunk_cards: [
-        { myth: "The African migration explosion.", real: "Historical stability of proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-emerald-500", desc: "The share of international migrants evolves very slowly. Absolute volume increase is a reflection of continental demographic growth (AU Report 2019)." },
-        { myth: "Africa is invading Europe.", real: "Intra-African migrations dominate (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-500", desc: "Poles of attraction are internal. East and West Africa alone host 58% of the continent's migrants. Countries like Côte d'Ivoire or South Africa massively attract regional workers." },
-        { myth: "The North hosts the majority of refugees.", real: "Refugees stay in bordering countries.", stat_text: "87%", stat_val: 87, color: "bg-orange-500", desc: "The overwhelming majority of people fleeing conflicts find refuge in neighboring Southern countries. 87% of forcibly displaced Africans remain in Africa (OECD 2020)." },
-        { myth: "Migration is primarily a male affair.", real: "Structural feminization of flows (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-500", desc: "Women represent 47% of migrants, but only 39% of the formal migrant workforce (AU/ILO Report). This highlights their strong presence in the informal economy and unpaid care work." },
-        { myth: "Africa depends on International Aid.", real: "Remittances far exceed official public aid.", stat_text: "$86.4B", stat_val: 86, color: "bg-amber-500", desc: "Remittances reached a record $86.4 billion in 2019, with 82% captured by North and West Africa (AU/ILO Report). This vital safety net far surpasses international aid budgets." },
-        { myth: "Climate will empty the continent to the North.", real: "Climate displacement is overwhelmingly internal.", stat_text: ">90%", stat_val: 90, color: "bg-blue-500", desc: "Over 90% of climate displaced persons remain within their national or sub-regional borders (IDMC data)." },
-        { myth: "Coastal African nations are merely areas of passage.", real: "Structural transformation into destination countries.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-500", desc: "Contrary to the 'Fortress Europe' narrative, states perceived as simple areas of passage see a majority of people settle permanently to work." },
-        { myth: "Economic development will mechanically stop emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst", stat_val: 80, color: "bg-cyan-500", desc: "Historically and statistically, an initial increase in income provides the capital needed to migrate. UNCTAD confirms that migration primarily stimulates structural transformation." },
-        { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of agriculture and trade.", stat_text: "+ Value", stat_val: 85, color: "bg-rose-500", desc: "Agriculture is the largest employer of migrants in Africa (27.5%), followed by wholesale/retail trade (21.9%). Migrants fill structural shortages and stimulate consumption (AU/ILO Report 2019)." }
+        { myth: "The African migration explosion.", real: "Historical stability of proportion (~2%).", stat_text: "1.9%", stat_val: 1.9, color: "bg-blue-700", desc: "The share of international migrants evolves very slowly. Absolute volume increase is a reflection of continental demographic growth (AU Report 2019)." },
+        { myth: "Africa is invading Europe.", real: "Intra-African migrations dominate (70%).", stat_text: "70%", stat_val: 70, color: "bg-teal-700", desc: "Poles of attraction are internal. East and West Africa alone host 58% of the continent's migrants. Countries like Côte d'Ivoire or South Africa massively attract regional workers." },
+        { myth: "The North hosts the majority of refugees.", real: "Refugees stay in bordering countries.", stat_text: "87%", stat_val: 87, color: "bg-orange-700", desc: "The overwhelming majority of people fleeing conflicts find refuge in neighboring Southern countries. 87% of forcibly displaced Africans remain in Africa (OECD 2020)." },
+        { myth: "Migration is primarily a male affair.", real: "Structural feminization of flows (47%).", stat_text: "47%", stat_val: 47, color: "bg-purple-700", desc: "Women represent 47% of migrants, but only 39% of the formal migrant workforce (AU/ILO Report). This highlights their strong presence in the informal economy and unpaid care work." },
+        { myth: "Africa depends on International Aid.", real: "Remittances far exceed official public aid.", stat_text: "$86.4B", stat_val: 86, color: "bg-amber-600", desc: "Remittances reached a record $86.4 billion in 2019, with 82% captured by North and West Africa (AU/ILO Report). This vital safety net far surpasses international aid budgets." },
+        { myth: "Climate will empty the continent to the North.", real: "Climate displacement is overwhelmingly internal.", stat_text: ">90%", stat_val: 90, color: "bg-cyan-700", desc: "Over 90% of climate displaced persons remain within their national or sub-regional borders (IDMC data)." },
+        { myth: "Coastal African nations are merely areas of passage.", real: "Structural transformation into destination countries.", stat_text: "Mutation", stat_val: 65, color: "bg-indigo-700", desc: "Contrary to the 'Fortress Europe' narrative, states perceived as simple areas of passage see a majority of people settle permanently to work." },
+        { myth: "Economic development will mechanically stop emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst", stat_val: 80, color: "bg-rose-700", desc: "Historically and statistically, an initial increase in income provides the capital needed to migrate. UNCTAD confirms that migration primarily stimulates structural transformation." },
+        { myth: "Migrants are a burden on Southern host countries.", real: "They are drivers of agriculture and trade.", stat_text: "27.5% Agric.", stat_val: 85, color: "bg-emerald-700", desc: "Agriculture is the largest employer of migrants in Africa (27.5%), followed by wholesale/retail trade (21.9%). Migrants fill structural shortages and stimulate consumption (AU/ILO Report 2019)." }
       ],
       about: { 
         p1: "South(s) Mobility DataHub is an independent data research and visualization portal at the intersection of data science and public policy analysis.", 
         p2: "Empirical Rigor & Neutrality: Facing polarized narratives, this project adopts a strictly factual approach centered on African continental realities.",
         expanded_p1: "By prioritizing mathematical proportionality and demographic weighting, the methodology neutralizes absolute volume biases to reveal structural mobility trends.",
         expanded_p2: "This portal highlights statistical blind spots, standing as a factual and apolitical reference tool for researchers, policymakers, and civil society.",
+        contact_title: "Transparency & Citizen Feedback",
+        contact_desc: "Spotted a statistical error? Have a methodological suggestion or a collaboration opportunity? Open Data thrives on continuous improvement and dialogue.",
         citation_title: "Academic & Journalistic Citation (APA format):",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: Empirical analysis of African migrations. Retrieved from https://southsmobility.org"
       },
@@ -386,18 +401,9 @@ export default function App() {
         "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
         "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.8, "labour_participation": "65.0", "evolution": "0.6", 
         "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60},
+        "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
         ...genericDesc 
-      },
-      { 
-        "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
-        "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 4.9, "labour_participation": "65.0", "evolution": "1.1", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc,
-        "impact": { "fr": "Capte 31% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), créant une résilience économique majeure via les Remittances.", "en": "Captures 31% of all remittances sent to Africa (ILO/AU Report 2019), creating major economic resilience." }
       },
       { 
         "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
@@ -405,7 +411,8 @@ export default function App() {
         "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
         "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
+        ...genericDesc,
+        "impact": { "fr": "L'Égypte capte près de 31% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), créant une résilience économique majeure via les Remittances.", "en": "Egypt captures nearly 31% of all remittances sent to Africa (ILO/AU Report 2019), creating major economic resilience." }
       },
       { 
         "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
@@ -525,7 +532,7 @@ export default function App() {
         "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
         "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.7, "labour_participation": "65.0", "evolution": "1.7", 
         "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43},
+        "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
         ...genericDesc 
       },
@@ -533,10 +540,10 @@ export default function App() {
         "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
         "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 4.0, "labour_participation": "65.0", "evolution": "0.6", 
         "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44},
+        "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
         "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
         ...genericDesc,
-        "impact": { "fr": "Capte 28% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), pilier informel de l'économie locale.", "en": "Captures 28% of all remittances sent to Africa (ILO/AU Report 2019), acting as an informal pillar of the local economy." }
+        "impact": { "fr": "Le Nigéria capte à lui seul 28% des transferts de fonds de toute l'Afrique (Rapport OIT/UA 2019), pilier informel de l'économie locale.", "en": "Nigeria captures 28% of all remittances sent to Africa (ILO/AU Report 2019), acting as an informal pillar of the local economy." }
       },
       { 
         "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
@@ -1631,10 +1638,9 @@ export default function App() {
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
-                    <p className="text-sm text-slate-600 mb-2 print:mb-2">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
-                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                      <span>{lang === 'fr' ? "Accéder à la base des traités officiels de l'UA" : "Access Official AU Treaties Database"}</span>
-                      <ExternalLink className="w-3 h-3" />
+                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
+                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                      {lang === 'fr' ? "→ Consulter la base des traités de l'UA" : "→ View AU Treaties Database"}
                     </a>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.constitutive ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
@@ -1669,11 +1675,10 @@ export default function App() {
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Évaluation Juridique des Droits (Base NORMLEX OIT)" : "Legal Evaluation of Rights (ILO NORMLEX)"}</h3>
-                    <p className="text-sm text-slate-600 mb-2 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
+                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
                     {display.normlex.link && (
-                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-1 text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                        <span>{lang === 'fr' ? "Accéder au profil NORMLEX complet" : "Access full NORMLEX profile"}</span>
-                        <ExternalLink className="w-3 h-3" />
+                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                        {lang === 'fr' ? "→ Consulter le profil national NORMLEX" : "→ View NORMLEX National Profile"}
                       </a>
                     )}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 print:grid-cols-4">
