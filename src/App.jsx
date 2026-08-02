@@ -7,6 +7,10 @@ import {
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Mail
 } from 'lucide-react';
 
+// ============================================================================
+// 1. FONCTIONS ET COMPOSANTS UTILITAIRES
+// ============================================================================
+
 const formatNumber = (val) => {
   if (val === undefined || val === null) return "0";
   const strVal = String(val);
@@ -16,7 +20,6 @@ const formatNumber = (val) => {
   return num.toLocaleString('fr-FR'); 
 };
 
-// Icône LinkedIn vectorielle intégrée pour éviter l'erreur de build sur Lucide React
 const LinkedInIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
@@ -59,7 +62,7 @@ const EconomicComparison = ({ remittances, aid, lang }) => {
     <div className="space-y-5 mt-4">
       <div>
         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
-          <span className="text-amber-600 print:!text-amber-600">{lang === 'fr' ? "Transferts des diasporas (Banque Mondiale, 2024)" : "Remittances (World Bank, 2024)"}</span>
+          <span className="text-amber-600 print:!text-amber-600">{lang === 'fr' ? "Transferts des diasporas (BM, 2024)" : "Remittances (World Bank, 2024)"}</span>
           <span className="text-amber-700 print:!text-amber-700">{remittances}% PIB</span>
         </div>
         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
@@ -79,31 +82,11 @@ const EconomicComparison = ({ remittances, aid, lang }) => {
   );
 };
 
-export default function App() {
-  const [lang, setLang] = useState('fr');
-  const [activeSubRegion, setActiveSubRegion] = useState('all');
-  const [activeSubTab, setActiveSubTab] = useState('perspective');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [modalView, setModalView] = useState('demography'); 
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [expandedMyth, setExpandedMyth] = useState(null);
-  const [expandedIndicator, setExpandedIndicator] = useState(null);
-  const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
+// ============================================================================
+// 2. DONNÉES STATIQUES (Déplacées hors du composant App pour performance)
+// ============================================================================
 
-  useEffect(() => { setIsLoaded(true); }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setShowModal(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const t = {
+const t = {
     fr: {
       title: "South(s) Mobility",
       subtitle: "DataHub",
@@ -137,22 +120,16 @@ export default function App() {
         au_instruments: "Traités & Conventions Clés de l'Union Africaine (État de ratification 2025)"
       },
       sections: { 
-        debunk: "1. Déconstruction Factuelle des Narratifs", 
-        global: "2. Perspective Globale des Stocks Migratoires (UNDESA, 2024)", 
-        explorer: "3. Explorateur Analytique & Données Consolidées", 
-        data: "4. Cadre d'Indicateurs Recommandés", 
-        sdg_gcm: "5. Alignement ODD (SDGs 2030) & Pactes Mondiaux (GCM / GCR 2018)",
-        about_title: "6. À Propos du Projet & Contact", 
-        method_title: "7. Ingénierie & Source des Données" 
+        debunk: "Déconstruction Factuelle des Narratifs", 
+        global: "Perspective Globale des Stocks Migratoires (UNDESA, 2024)", 
+        explorer: "Explorateur Analytique & Données Consolidées", 
+        data: "Cadre d'Indicateurs Recommandés", 
+        sdg_gcm: "Alignement ODD (SDGs 2030) & Pactes Mondiaux (GCM / GCR 2018)",
+        about_title: "À Propos du Projet", 
+        method_title: "Ingénierie & Source des Données" 
       },
       global_stats: {
-        world: "Total Mondial (2024)",
-        europe: "Europe (2024)",
-        asia: "Asie (2024)",
-        na: "Amérique du Nord (2024)",
-        africa: "Afrique (2024)",
-        latam: "Amérique Latine (2024)",
-        share: "Part mondiale :",
+        world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
         note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (29 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
       },
       sdg_section: {
@@ -223,8 +200,8 @@ export default function App() {
         expanded_p2: "À terme, l'objectif est de disposer de l'ensemble des données relatives aux migrations et à la mobilité humaine en Afrique sur une large gamme thématique, puis de répliquer ce modèle pour l'Amérique latine et l'Asie, dans une perspective ancrée dans les Suds (South(s)) et la majorité globale (global majority).",
         citation_title: "Citation Académique & Institutionnelle (Norme APA) :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations et gouvernance des mobilités africaines. Récupéré de https://southsmobility.org",
-        contact_title: "Contact, Remarques & Rétroaction Citoyenne :",
-        contact_desc: "Avez-vous identifié une coquille, une donnée à actualiser ou souhaitez-vous proposer une collaboration académique / institutionnelle ? N'hésitez pas à me contacter directement :"
+        contact_title: "Contact & Collaborations :",
+        contact_desc: "Ce DataHub a vocation à s'enrichir. Pour proposer un jeu de données, un working paper, ou discuter d'un partenariat académique / institutionnel :"
       },
       method: { 
         summary: "Architecture méthodologique fondée sur la consolidation et l'harmonisation de bases de données certifiées :",
@@ -233,14 +210,14 @@ export default function App() {
         m3: "Évaluation Juridique : Recensement des ratifications des traités phares de l'Union Africaine et des conventions NORMLEX de l'OIT.",
         m4: "Open Source & Indépendance : Code source ouvert et souveraineté complète du traitement des données.",
         sources_title: "Accès aux Datasets Originaux, Rapports & Cadres Légaux :",
-        s1: "Union Africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires de main-d'œuvre (Données 2010-2019 / Publié en 2021)",
-        s2: "UNDESA - Nations Unies, Département des Affaires Économiques et Sociales (Stock migratoire mondial, 2024)",
-        s3: "UNHCR - Haut Commissariat des Nations Unies pour les Réfugiés (Global Trends Report, 2025)",
-        s4: "IDMC - Internal Displacement Monitoring Centre (GRID Report, 2025)",
-        s5: "OIM - Organisation Internationale pour les Migrations (World Migration Report, 2024)",
-        s6: "OIT NORMLEX - Base de données sur les Normes Internationales du Travail (2025)",
-        s7: "Union Africaine - Traités, Conventions et Protocoles de Libre Circulation (2025)",
-        s8: "Banque Mondiale - Base de données des transferts de fonds et indicateurs de développement (2024)"
+        s1: "Union Africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires (2021)",
+        s2: "UNDESA - Stock migratoire mondial (2024)",
+        s3: "UNHCR - Global Trends Report (2025)",
+        s4: "IDMC - GRID Report (2025)",
+        s5: "OIM - World Migration Report (2024)",
+        s6: "OIT NORMLEX - Normes Internationales du Travail (2025)",
+        s7: "Union Africaine - Traités, Conventions et Protocoles (2025)",
+        s8: "Banque Mondiale - Base de données des transferts de fonds (2024)"
       },
       myth: "Postulat", reality: "Donnée Factuelle",
       footer: { tag: "L'ingénierie des données au service d'un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque Mondiale (2024)" },
@@ -277,22 +254,16 @@ export default function App() {
         au_instruments: "Key African Union Treaties & Conventions (Ratification Status 2025)"
       },
       sections: { 
-        debunk: "1. Factual Deconstruction of Narratives", 
-        global: "2. Global Perspective of Migrant Stocks (UNDESA, 2024)", 
-        explorer: "3. Analytical Explorer & Consolidated Data", 
-        data: "4. Recommended Indicators Framework", 
-        sdg_gcm: "5. SDG Alignment (SDGs 2030) & Global Compacts (GCM / GCR 2018)",
-        about_title: "6. About the Project & Contact", 
-        method_title: "7. Engineering & Data Sourcing" 
+        debunk: "Factual Deconstruction of Narratives", 
+        global: "Global Perspective of Migrant Stocks (UNDESA, 2024)", 
+        explorer: "Analytical Explorer & Consolidated Data", 
+        data: "Recommended Indicators Framework", 
+        sdg_gcm: "SDG Alignment (SDGs 2030) & Global Compacts (GCM / GCR 2018)",
+        about_title: "About the Project", 
+        method_title: "Engineering & Data Sourcing" 
       },
       global_stats: {
-        world: "Global Total (2024)",
-        europe: "Europe (2024)",
-        asia: "Asia (2024)",
-        na: "North America (2024)",
-        africa: "Africa (2024)",
-        latam: "Latin America (2024)",
-        share: "Global share:",
+        world: "Global Total (2024)", europe: "Europe (2024)", asia: "Asia (2024)", na: "North America (2024)", africa: "Africa (2024)", latam: "Latin America (2024)", share: "Global share:",
         note: "UNDESA (2024) Data: Africa accounts for only 9.5% of the global migrant stock (29M), well behind Europe (94M) and Asia (92M)."
       },
       sdg_section: {
@@ -363,8 +334,8 @@ export default function App() {
         expanded_p2: "Ultimately, the objective is to provide comprehensive data on migration and human mobility across Africa over a wide range of themes, and subsequently replicate this model for Latin America and Asia, within a perspective rooted in the Global South and the global majority.",
         citation_title: "Academic & Institutional Citation (APA format):",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: Empirical analysis of African migration and mobility governance. Retrieved from https://southsmobility.org",
-        contact_title: "Contact, Feedback & Citizen Engagement:",
-        contact_desc: "Did you spot a typo, a dataset to update, or would you like to propose an academic / institutional collaboration? Feel free to contact me directly:"
+        contact_title: "Contact & Collaborations:",
+        contact_desc: "This DataHub is intended to grow. To propose a dataset, a working paper, or discuss an academic / institutional partnership:"
       },
       method: { 
         summary: "Methodological architecture based on the consolidation and harmonization of certified open datasets:",
@@ -373,592 +344,1084 @@ export default function App() {
         m3: "Legal Assessment: Reviewing ratification statuses of key African Union treaties and ILO NORMLEX conventions.",
         m4: "Open Source & Integrity: Open source codebase and full data processing independence.",
         sources_title: "Access Original Datasets, Reports & Legal Frameworks:",
-        s1: "African Union & AUC / ILO / IOM / ECA - 3rd Labour Migration Statistics Report in Africa (2010-2019 Data / Published 2021)",
-        s2: "UNDESA - United Nations Department of Economic and Social Affairs (International Migrant Stock Data, 2024)",
-        s3: "UNHCR - United Nations High Commissioner for Refugees (Global Trends Report, 2025)",
-        s4: "IDMC - Internal Displacement Monitoring Centre (GRID Report, 2025)",
-        s5: "IOM - International Organization for Migration (World Migration Report, 2024)",
+        s1: "African Union & AUC / ILO / IOM / ECA - 3rd Labour Migration Statistics Report (2021)",
+        s2: "UNDESA - International Migrant Stock Data (2024)",
+        s3: "UNHCR - Global Trends Report (2025)",
+        s4: "IDMC - GRID Report (2025)",
+        s5: "IOM - World Migration Report (2024)",
         s6: "ILO NORMLEX - International Labour Standards Database (2025)",
-        s7: "African Union - Treaties, Conventions, and Free Movement Protocols (2025)",
-        s8: "World Bank - Migration and Remittances Data & Development Indicators (2024)"
+        s7: "African Union - Treaties, Conventions, and Protocols (2025)",
+        s8: "World Bank - Migration and Remittances Data (2024)"
       },
       myth: "Premise", reality: "Factual Data",
       footer: { tag: "Data engineering serving a new factual narrative on mobilities.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report",
       hero_title: "Objectifying mobilities", hero_highlight: "through data science."
     }
-  };
+};
 
-  const text = t[lang];
+const genericDesc = {
+  evo_desc: { fr: "Proportion migratoirement stable rythmée par la démographie locale.", en: "Migratory proportion structurally stable, driven by local demography." },
+  origDest: { fr: "Mobilités majoritairement de proximité et circulaires au sein de l'espace sous-régional (UA 2021).", en: "Predominantly proximity and circular mobilities within the sub-regional space (AU 2021)." },
+  trigger: { fr: "Asymétries de développement et chocs climatiques.", en: "Development asymmetries and climate shocks." },
+  response: { fr: "Déplacements transfrontaliers de travail et stratégies de survie.", en: "Cross-border labor displacements and survival strategies." },
+  impact: { fr: "Résilience économique via les transferts de fonds (Remittances 86,4 Mrd $ - UA 2021).", en: "Economic resilience through remittances ($86.4B - AU 2021)." }
+};
 
-  const genericDesc = {
-    evo_desc: { fr: "Proportion migratoirement stable rythmée par la démographie locale.", en: "Migratory proportion structurally stable, driven by local demography." },
-    origDest: { fr: "Mobilités majoritairement de proximité et circulaires au sein de l'espace sous-régional (UA 2021).", en: "Predominantly proximity and circular mobilities within the sub-regional space (AU 2021)." },
-    trigger: { fr: "Asymétries de développement et chocs climatiques.", en: "Development asymmetries and climate shocks." },
-    response: { fr: "Déplacements transfrontaliers de travail et stratégies de survie.", en: "Cross-border labor displacements and survival strategies." },
-    impact: { fr: "Résilience économique via les transferts de fonds (Remittances 86,4 Mrd $ - UA 2021).", en: "Economic resilience through remittances ($86.4B - AU 2021)." }
-  };
+const countryData = {
+  "af_med": [
+    { 
+      "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
+      "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.8, "labour_participation": "65.0", "evolution": "0.6", 
+      "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
+      "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 4.9, "labour_participation": "65.0", "evolution": "1.1", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc,
+      "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
+    },
+    { 
+      "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
+      "history": [ { "year": 1990, "value": "457075" }, { "year": 2024, "value": "897751" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "12.8", 
+      "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 19, "total": 29, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102919"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
+      "history": [ { "year": 1990, "value": "54895" }, { "year": 2024, "value": "111069" } ], "remittances": 8.0, "labour_participation": "65.0", "evolution": "0.3", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
+      "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.0, "labour_participation": "65.0", "evolution": "0.5", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102980"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    }
+  ],
+  "af_west": [
+    { 
+      "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
+      "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "3.0", 
+      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 100, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
+      "history": [ { "year": 1990, "value": "349652" }, { "year": 2024, "value": "739820" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "3.2", 
+      "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 4, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103058"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
+      "history": [ { "year": 1990, "value": "8931" }, { "year": 2024, "value": "16515" } ], "remittances": 12.6, "labour_participation": "65.0", "evolution": "3.0", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 2, "technical": 5, "total": 16, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102978"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
+      "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "9.5", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
+      "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "8.8", 
+      "idp_conflict": 0, "idp_disaster": 250, "refugees_hosted": 0, "avoi": 100, 
+      "normlex": {"fundamental": 8, "governance": 0, "technical": 11, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103004"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
+      "history": [ { "year": 1990, "value": "164851" }, { "year": 2024, "value": "532286" } ], "remittances": 3.0, "labour_participation": "65.0", "evolution": "1.6", 
+      "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103271"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
+      "history": [ { "year": 1990, "value": "403621" }, { "year": 2024, "value": "117416" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "0.8", 
+      "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 50, "total": 62, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103001"},
+      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
+      "history": [ { "year": 1990, "value": "15368" }, { "year": 2024, "value": "15064" } ], "remittances": 9.8, "labour_participation": "65.0", "evolution": "0.7", 
+      "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 1, "technical": 25, "total": 34, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103328"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
+      "history": [ { "year": 1990, "value": "94964" }, { "year": 2024, "value": "72423" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "1.3", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 17, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102941"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
+      "history": [ { "year": 1990, "value": "160736" }, { "year": 2024, "value": "545323" } ], "remittances": 4.2, "labour_participation": "65.0", "evolution": "2.3", 
+      "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 23, "total": 36, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102987"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
+      "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "4.0", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
+      "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.7, "labour_participation": "65.0", "evolution": "1.7", 
+      "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
+      "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 4.0, "labour_participation": "65.0", "evolution": "0.6", 
+      "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc,
+      "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
+    },
+    { 
+      "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
+      "history": [ { "year": 1990, "value": "270410" }, { "year": 2024, "value": "281867" } ], "remittances": 10.6, "labour_participation": "65.0", "evolution": "1.6", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103046"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
+      "history": [ { "year": 1990, "value": "222148" }, { "year": 2024, "value": "49997" } ], "remittances": 4.6, "labour_participation": "65.0", "evolution": "0.6", 
+      "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 2, "technical": 33, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103212"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
+      "history": [ { "year": 1990, "value": "84844" }, { "year": 2024, "value": "281994" } ], "remittances": 8.7, "labour_participation": "65.0", "evolution": "3.1", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 4, "technical": 15, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103134"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    }
+  ],
+  "af_central": [
+    { 
+      "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
+      "history": [ { "year": 1990, "value": "33517" }, { "year": 2024, "value": "676507" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
+      "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 30, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102951"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
+      "history": [ { "year": 1990, "value": "265967" }, { "year": 2024, "value": "642948" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "2.2", 
+      "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 39, "total": 51, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102973"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Rep." }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
+      "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
+      "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
+      "history": [ { "year": 1990, "value": "74342" }, { "year": 2024, "value": "1269673" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "6.3", 
+      "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 3, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103022"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
+      "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "6.3", 
+      "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 23, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103014"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
+      "history": [ { "year": 1990, "value": "754194" }, { "year": 2024, "value": "1085090" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "1.0", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
+      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
+      "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "14.5", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 0, "technical": 6, "total": 14, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103102"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
+      "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.1, "labour_participation": "65.0", "evolution": "18.2", 
+      "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 30, "total": 42, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103008"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
+      "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 14.2, "labour_participation": "65.0", "evolution": "0.8", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": true, "zlecaf": true },
+      ...genericDesc 
+    }
+  ],
+  "af_east": [
+    { 
+      "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
+      "history": [ { "year": 1990, "value": "333110" }, { "year": 2024, "value": "387101" } ], "remittances": 5.7, "labour_participation": "65.0", "evolution": "2.6", 
+      "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 21, "total": 31, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102988"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
+      "history": [ { "year": 1990, "value": "14079" }, { "year": 2024, "value": "12449" } ], "remittances": 20.8, "labour_participation": "65.0", "evolution": "1.4", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 26, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103322"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
+      "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.5, "labour_participation": "65.0", "evolution": "11.2", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 58, "total": 70, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102996"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
+      "history": [ { "year": 1990, "value": "11848" }, { "year": 2024, "value": "12512" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.3", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 0, "technical": 0, "total": 8, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103290"},
+      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
+      "history": [ { "year": 1990, "value": "875325" }, { "year": 2024, "value": "1168455" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "0.9", 
+      "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 1, "technical": 13, "total": 23, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102950"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
+      "history": [ { "year": 1990, "value": "298089" }, { "year": 2024, "value": "992536" } ], "remittances": 3.9, "labour_participation": "65.0", "evolution": "1.8", 
+      "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 7, "governance": 3, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103315"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
+      "history": [ { "year": 1990, "value": "23917" }, { "year": 2024, "value": "38625" } ], "remittances": 1.9, "labour_participation": "65.0", "evolution": "0.1", 
+      "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 4, "technical": 38, "total": 53, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102956"},
+      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
+      "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.4, "labour_participation": "65.0", "evolution": "0.8", 
+      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "480", "name": { "fr": "Maurice", "en": "Maurice" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
+      "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "2.3", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
+      "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.2, "labour_participation": "65.0", "evolution": "1.1", 
+      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "646", "name": { "fr": "Rwanda", "en": "Rwanda" }, "flag": "🇷🇼", "retention": 95, "aid": 12.5, "stock": "513316", "female": "49.4", 
+      "history": [ { "year": 1990, "value": "160024" }, { "year": 2024, "value": "513316" } ], "remittances": 3.5, "labour_participation": "65.0", "evolution": "3.6", 
+      "idp_conflict": 0, "idp_disaster": 81, "refugees_hosted": 0, "avoi": 100, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 22, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103153"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
+      "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.5, "labour_participation": "65.0", "evolution": "12.5", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 100, 
+      "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
+      "history": [ { "year": 1990, "value": "478294" }, { "year": 2024, "value": "77972" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.4", 
+      "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
+      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
+      "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.5, "labour_participation": "65.0", "evolution": "8.0", 
+      "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 50, 
+      "normlex": {"fundamental": 7, "governance": 0, "technical": 0, "total": 7, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103154"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
+      "history": [ { "year": 1990, "value": "1402896" }, { "year": 2024, "value": "2397113" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "4.8", 
+      "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102958"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": false },
+      ...genericDesc 
+    },
+    { 
+      "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
+      "history": [ { "year": 1990, "value": "574025" }, { "year": 2024, "value": "462371" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "0.7", 
+      "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 1, "technical": 28, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103136"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
+      "history": [ { "year": 1990, "value": "560570" }, { "year": 2024, "value": "2057759" } ], "remittances": 3.1, "labour_participation": "65.0", "evolution": "4.3", 
+      "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 3, "technical": 21, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103324"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
+      "history": [ { "year": 1990, "value": "279463" }, { "year": 2024, "value": "249205" } ], "remittances": 0.9, "labour_participation": "65.0", "evolution": "1.2", 
+      "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 4, "technical": 35, "total": 49, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103233"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
+      "history": [ { "year": 1990, "value": "634621" }, { "year": 2024, "value": "429108" } ], "remittances": 9.2, "labour_participation": "65.0", "evolution": "2.6", 
+      "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    }
+  ],
+  "af_south": [
+    { 
+      "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
+      "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "4.4", 
+      "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 3, "technical": 6, "total": 17, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103184"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
+      "history": [ { "year": 1990, "value": "74991" }, { "year": 2024, "value": "33268" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "2.7", 
+      "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 8, "governance": 2, "technical": 23, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103185"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
+      "history": [ { "year": 1990, "value": "8240" }, { "year": 2024, "value": "15039" } ], "remittances": 22.5, "labour_participation": "65.0", "evolution": "0.7", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 11, "governance": 2, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103186"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
+      "history": [ { "year": 1990, "value": "120641" }, { "year": 2024, "value": "116035" } ], "remittances": 0.7, "labour_participation": "65.0", "evolution": "4.3", 
+      "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103187"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
+      "history": [ { "year": 1990, "value": "1285707" }, { "year": 2024, "value": "2631100" } ], "remittances": 0.2, "labour_participation": "65.0", "evolution": "4.3", 
+      "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 50, 
+      "normlex": {"fundamental": 9, "governance": 2, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103188"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    }
+  ]
+};
 
-  const countryData = {
-    "af_med": [
+const aggregates = {
+  'africa_perspective': { 
+    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flag: "🌍", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
+    history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
+    distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
+    ...genericDesc
+  }
+};
+
+const indicatorThemes = [
+  {
+    theme_fr: "Intégration & Libre Circulation", theme_en: "Integration & Free Movement", icon: <GitMerge />, color: "text-blue-800",
+    items: [
       { 
-        "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
-        "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.8, "labour_participation": "65.0", "evolution": "0.6", 
-        "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
+        id: "1.1", fr: "Taux d'effectivité des protocoles régionaux", en: "Effectiveness of regional free movement protocols", 
+        desc_fr: "Mesure de l'application réelle des accords (ex: CEDEAO, ZLECAf) sur le terrain.", desc_en: "Measurement of the actual implementation of agreements (e.g. ECOWAS, AfCFTA).",
+        method_fr: "Ratio entre les postes frontières appliquant effectivement l'exemption de visa/passeport et le nombre total de postes.", method_en: "Ratio between border posts actually applying visa/passport exemptions and the total number of posts.",
+        contrast_fr: "Plutôt que de compter les 'appréhensions' ou 'refoulements' (qui criminalisent la mobilité), cet indicateur évalue la capacité de l'État à faciliter l'intégration régionale légitime.", contrast_en: "Rather than counting 'apprehensions' or 'pushbacks' (which criminalize mobility), this indicator assesses the state's capacity to facilitate legitimate regional integration."
       },
       { 
-        "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
-        "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 4.9, "labour_participation": "65.0", "evolution": "1.1", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc,
-        "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
-      },
-      { 
-        "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
-        "history": [ { "year": 1990, "value": "457075" }, { "year": 2024, "value": "897751" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "12.8", 
-        "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 19, "total": 29, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102919"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
-        "history": [ { "year": 1990, "value": "54895" }, { "year": 2024, "value": "111069" } ], "remittances": 8.0, "labour_participation": "65.0", "evolution": "0.3", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
-        "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.0, "labour_participation": "65.0", "evolution": "0.5", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102980"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      }
-    ],
-    "af_west": [
-      { 
-        "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
-        "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "3.0", 
-        "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 100, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
-        "history": [ { "year": 1990, "value": "349652" }, { "year": 2024, "value": "739820" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "3.2", 
-        "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 4, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103058"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
-        "history": [ { "year": 1990, "value": "8931" }, { "year": 2024, "value": "16515" } ], "remittances": 12.6, "labour_participation": "65.0", "evolution": "3.0", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 2, "technical": 5, "total": 16, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102978"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
-        "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "9.5", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
-        "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "8.8", 
-        "idp_conflict": 0, "idp_disaster": 250, "refugees_hosted": 0, "avoi": 100, 
-        "normlex": {"fundamental": 8, "governance": 0, "technical": 11, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103004"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
-        "history": [ { "year": 1990, "value": "164851" }, { "year": 2024, "value": "532286" } ], "remittances": 3.0, "labour_participation": "65.0", "evolution": "1.6", 
-        "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103271"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
-        "history": [ { "year": 1990, "value": "403621" }, { "year": 2024, "value": "117416" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "0.8", 
-        "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 50, "total": 62, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103001"},
-        "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
-        "history": [ { "year": 1990, "value": "15368" }, { "year": 2024, "value": "15064" } ], "remittances": 9.8, "labour_participation": "65.0", "evolution": "0.7", 
-        "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 1, "technical": 25, "total": 34, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103328"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
-        "history": [ { "year": 1990, "value": "94964" }, { "year": 2024, "value": "72423" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "1.3", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 17, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102941"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
-        "history": [ { "year": 1990, "value": "160736" }, { "year": 2024, "value": "545323" } ], "remittances": 4.2, "labour_participation": "65.0", "evolution": "2.3", 
-        "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 3, "technical": 23, "total": 36, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102987"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
-        "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "4.0", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
-        "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.7, "labour_participation": "65.0", "evolution": "1.7", 
-        "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
-        "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 4.0, "labour_participation": "65.0", "evolution": "0.6", 
-        "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc,
-        "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
-      },
-      { 
-        "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
-        "history": [ { "year": 1990, "value": "270410" }, { "year": 2024, "value": "281867" } ], "remittances": 10.6, "labour_participation": "65.0", "evolution": "1.6", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 3, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103046"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
-        "history": [ { "year": 1990, "value": "222148" }, { "year": 2024, "value": "49997" } ], "remittances": 4.6, "labour_participation": "65.0", "evolution": "0.6", 
-        "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 2, "technical": 33, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103212"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
-        "history": [ { "year": 1990, "value": "84844" }, { "year": 2024, "value": "281994" } ], "remittances": 8.7, "labour_participation": "65.0", "evolution": "3.1", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 4, "technical": 15, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103134"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      }
-    ],
-    "af_central": [
-      { 
-        "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
-        "history": [ { "year": 1990, "value": "33517" }, { "year": 2024, "value": "676507" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
-        "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 3, "technical": 30, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102951"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
-        "history": [ { "year": 1990, "value": "265967" }, { "year": 2024, "value": "642948" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "2.2", 
-        "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 39, "total": 51, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102973"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Rep." }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
-        "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
-        "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
-        "history": [ { "year": 1990, "value": "74342" }, { "year": 2024, "value": "1269673" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "6.3", 
-        "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 3, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103022"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
-        "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "6.3", 
-        "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 23, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103014"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
-        "history": [ { "year": 1990, "value": "754194" }, { "year": 2024, "value": "1085090" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "1.0", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
-        "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
-        "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "14.5", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 0, "technical": 6, "total": 14, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103102"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
-        "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.1, "labour_participation": "65.0", "evolution": "18.2", 
-        "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 30, "total": 42, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103008"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
-        "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 14.2, "labour_participation": "65.0", "evolution": "0.8", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": true, "zlecaf": true },
-        ...genericDesc 
-      }
-    ],
-    "af_east": [
-      { 
-        "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
-        "history": [ { "year": 1990, "value": "333110" }, { "year": 2024, "value": "387101" } ], "remittances": 5.7, "labour_participation": "65.0", "evolution": "2.6", 
-        "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 21, "total": 31, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102988"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
-        "history": [ { "year": 1990, "value": "14079" }, { "year": 2024, "value": "12449" } ], "remittances": 20.8, "labour_participation": "65.0", "evolution": "1.4", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 26, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103322"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
-        "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.5, "labour_participation": "65.0", "evolution": "11.2", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 58, "total": 70, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102996"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
-        "history": [ { "year": 1990, "value": "11848" }, { "year": 2024, "value": "12512" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.3", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 0, "technical": 0, "total": 8, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103290"},
-        "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
-        "history": [ { "year": 1990, "value": "875325" }, { "year": 2024, "value": "1168455" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "0.9", 
-        "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 1, "technical": 13, "total": 23, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102950"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
-        "history": [ { "year": 1990, "value": "298089" }, { "year": 2024, "value": "992536" } ], "remittances": 3.9, "labour_participation": "65.0", "evolution": "1.8", 
-        "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 7, "governance": 3, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103315"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
-        "history": [ { "year": 1990, "value": "23917" }, { "year": 2024, "value": "38625" } ], "remittances": 1.9, "labour_participation": "65.0", "evolution": "0.1", 
-        "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 4, "technical": 38, "total": 53, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102956"},
-        "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
-        "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.4, "labour_participation": "65.0", "evolution": "0.8", 
-        "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
-        "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "2.3", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
-        "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.2, "labour_participation": "65.0", "evolution": "1.1", 
-        "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "646", "name": { "fr": "Rwanda", "en": "Rwanda" }, "flag": "🇷🇼", "retention": 95, "aid": 12.5, "stock": "513316", "female": "49.4", 
-        "history": [ { "year": 1990, "value": "160024" }, { "year": 2024, "value": "513316" } ], "remittances": 3.5, "labour_participation": "65.0", "evolution": "3.6", 
-        "idp_conflict": 0, "idp_disaster": 81, "refugees_hosted": 0, "avoi": 100, 
-        "normlex": {"fundamental": 10, "governance": 3, "technical": 22, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103153"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
-        "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.5, "labour_participation": "65.0", "evolution": "12.5", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 100, 
-        "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
-        "history": [ { "year": 1990, "value": "478294" }, { "year": 2024, "value": "77972" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.4", 
-        "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
-        "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
-        "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.5, "labour_participation": "65.0", "evolution": "8.0", 
-        "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 50, 
-        "normlex": {"fundamental": 7, "governance": 0, "technical": 0, "total": 7, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103154"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
-        "history": [ { "year": 1990, "value": "1402896" }, { "year": 2024, "value": "2397113" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "4.8", 
-        "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102958"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": false },
-        ...genericDesc 
-      },
-      { 
-        "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
-        "history": [ { "year": 1990, "value": "574025" }, { "year": 2024, "value": "462371" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "0.7", 
-        "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 1, "technical": 28, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103136"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
-        "history": [ { "year": 1990, "value": "560570" }, { "year": 2024, "value": "2057759" } ], "remittances": 3.1, "labour_participation": "65.0", "evolution": "4.3", 
-        "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 3, "technical": 21, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103324"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
-        "history": [ { "year": 1990, "value": "279463" }, { "year": 2024, "value": "249205" } ], "remittances": 0.9, "labour_participation": "65.0", "evolution": "1.2", 
-        "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 4, "technical": 35, "total": 49, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103233"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
-        "history": [ { "year": 1990, "value": "634621" }, { "year": 2024, "value": "429108" } ], "remittances": 9.2, "labour_participation": "65.0", "evolution": "2.6", 
-        "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      }
-    ],
-    "af_south": [
-      { 
-        "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
-        "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "4.4", 
-        "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 3, "technical": 6, "total": 17, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103184"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
-        "history": [ { "year": 1990, "value": "74991" }, { "year": 2024, "value": "33268" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "2.7", 
-        "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 8, "governance": 2, "technical": 23, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103185"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
-        "history": [ { "year": 1990, "value": "8240" }, { "year": 2024, "value": "15039" } ], "remittances": 22.5, "labour_participation": "65.0", "evolution": "0.7", 
-        "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 11, "governance": 2, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103186"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
-        "history": [ { "year": 1990, "value": "120641" }, { "year": 2024, "value": "116035" } ], "remittances": 0.7, "labour_participation": "65.0", "evolution": "4.3", 
-        "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103187"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
-      },
-      { 
-        "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
-        "history": [ { "year": 1990, "value": "1285707" }, { "year": 2024, "value": "2631100" } ], "remittances": 0.2, "labour_participation": "65.0", "evolution": "4.3", 
-        "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 50, 
-        "normlex": {"fundamental": 9, "governance": 2, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103188"},
-        "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-        ...genericDesc 
+        id: "1.2", fr: "Volume du commerce informel transfrontalier", en: "Volume of cross-border informal trade", 
+        desc_fr: "Impact des mobilités de proximité sur l'intégration économique réelle par le bas.", desc_en: "Impact of proximity mobilities on real economic integration from below.",
+        method_fr: "Enquêtes micro-économiques aux frontières et modélisation des flux non-douaniers.", method_en: "Micro-economic surveys at borders and modeling of non-customs flows.",
+        contrast_fr: "Le PIB classique ignore l'économie informelle. Cet indicateur montre que les mobilités circulaires sont le véritable moteur de la survie et de l'intégration des communautés frontalières.", contrast_en: "Classic GDP ignores the informal economy. This indicator shows that circular mobilities are the true engine of survival and integration for border communities."
       }
     ]
-  };
+  },
+  {
+    theme_fr: "Économie Productive & Diasporas", theme_en: "Productive Economy & Diasporas", icon: <TrendingUp />, color: "text-amber-700",
+    items: [
+      { 
+        id: "2.1", fr: "Transferts alloués à l'investissement productif", en: "Remittances allocated to productive investment", 
+        desc_fr: "Part des envois de fonds investie dans la création d'activité vs la consommation.", desc_en: "Share of remittances invested in business creation vs. daily consumption.",
+        method_fr: "Suivi bancaire des fonds d'investissement diasporiques et sondages auprès des récipiendaires.", method_en: "Banking tracking of diaspora investment funds and surveys of recipients.",
+        contrast_fr: "Au lieu de pleurer sur le coût de la 'fuite des cerveaux', cela prouve que les diasporas sont les premiers investisseurs de l'économie réelle, remplaçant l'Aide Publique au Développement (paternaliste).", contrast_en: "Instead of mourning the cost of 'brain drain', this proves diasporas are the primary investors in the real economy, replacing paternalistic Official Development Assistance."
+      },
+      { 
+        id: "2.2", fr: "Taux d'entrepreneuriat des migrants", en: "Migrant entrepreneurship rate", 
+        desc_fr: "Création d'emplois et de micro-entreprises par les populations en mouvement.", desc_en: "Job and micro-enterprise creation by populations on the move.",
+        method_fr: "Recensement des entreprises (formelles et informelles) fondées par des non-nationaux.", method_en: "Census of businesses (formal and informal) founded by non-nationals.",
+        contrast_fr: "Détruit le mythe du 'migrant qui vole le travail local' en démontrant qu'il est structurellement créateur d'emplois et animateur de marchés.", contrast_en: "Destroys the myth of the 'migrant stealing local jobs' by demonstrating they are structurally job creators and market animators."
+      }
+    ]
+  },
+  {
+    theme_fr: "Mobilité Climatique & Adaptation", theme_en: "Climate Mobility & Adaptation", icon: <Leaf />, color: "text-teal-700",
+    items: [
+      { 
+        id: "3.1", fr: "Mobilité circulaire comme adaptation", en: "Circular mobility as adaptation", 
+        desc_fr: "Déplacements saisonniers anticipés pour pallier les chocs écologiques locaux.", desc_en: "Anticipated seasonal movements to mitigate local ecological shocks.",
+        method_fr: "Corrélation entre les flux de main-d'œuvre agricole et les calendriers de sécheresse/inondation.", method_en: "Correlation between agricultural labor flows and drought/flood calendars.",
+        contrast_fr: "Sort de la vision misérabiliste du 'réfugié climatique' passif pour objectiver la migration comme une stratégie de résilience proactive et autonome.", contrast_en: "Breaks away from the miserable vision of the passive 'climate refugee' to objectify migration as a proactive and autonomous resilience strategy."
+      },
+      { 
+        id: "3.2", fr: "Fonds diasporiques pour la résilience", en: "Diaspora funds for resilience", 
+        desc_fr: "Investissements transnationaux dans l'irrigation, l'énergie ou l'agriculture.", desc_en: "Transnational investments in local irrigation, energy, or agriculture.",
+        method_fr: "Analyse des transferts fléchés vers des projets d'infrastructure communautaire.", method_en: "Analysis of remittances directed towards community infrastructure projects.",
+        contrast_fr: "Ne plus attendre l'aide conditionnée des 'Fonds Verts' du Nord, mais mesurer la capacité d'auto-réparation climatique des communautés du Sud.", contrast_en: "Stop waiting for conditioned 'Green Funds' from the North, and measure the climate self-repair capacity of Southern communities."
+      }
+    ]
+  },
+  {
+    theme_fr: "Santé & Économie du Soin (Care)", theme_en: "Health & Care Economy", icon: <HeartPulse />, color: "text-rose-800",
+    items: [
+      { 
+        id: "4.1", fr: "Contribution migrante aux systèmes de santé", en: "Migrant contribution to health systems", 
+        desc_fr: "Part des travailleurs étrangers comblant les déficits de personnel médical local.", desc_en: "Share of foreign workers filling local medical staff shortages.",
+        method_fr: "Ratio du personnel de santé né à l'étranger au sein des cliniques et hôpitaux de la région.", method_en: "Ratio of foreign-born healthcare staff within regional clinics and hospitals.",
+        contrast_fr: "Remplace l'indicateur raciste du 'migrant vecteur de maladies' (sécurité épidémiologique) par la réalité du migrant comme pourvoyeur essentiel de soins.", contrast_en: "Replaces the racist indicator of the 'migrant as a disease vector' (epidemiological security) with the reality of the migrant as an essential care provider."
+      },
+      { 
+        id: "4.2", fr: "Inclusion dans la Couverture Sanitaire", en: "Inclusion in Universal Health Coverage", 
+        desc_fr: "Taux d'accès effectif des migrants aux soins de santé publics nationaux.", desc_en: "Effective access rate of migrants to national public healthcare.",
+        method_fr: "Étude légale et baromètres d'accès aux hôpitaux publics pour les non-nationaux.", method_en: "Legal review and barometers of access to public hospitals for non-nationals.",
+        contrast_fr: "Passe d'une logique humanitaire d'urgence (camps) à une logique structurelle d'intégration par les droits publics de santé.", contrast_en: "Shifts from emergency humanitarian logic (camps) to a structural logic of integration through public health rights."
+      }
+    ]
+  },
+  {
+    theme_fr: "Savoirs & Circulation des Compétences", theme_en: "Knowledge & Skills Circulation", icon: <BookOpen />, color: "text-sky-700",
+    items: [
+      { 
+        id: "5.1", fr: "Taux de rétention intra-africaine des diplômés", en: "Intra-African retention of graduates", 
+        desc_fr: "Proportion d'étudiants circulant au sein du continent (Brain Circulation).", desc_en: "Proportion of students circulating within the continent (Brain Circulation).",
+        method_fr: "Traçabilité des diplômés s'insérant professionnellement dans une autre sous-région africaine.", method_en: "Tracking graduates entering the workforce in another African sub-region.",
+        contrast_fr: "Renverse le concept euro-centré de 'Brain Drain' pour valoriser la construction d'un marché continental des cerveaux.", contrast_en: "Overturns the Euro-centric concept of 'Brain Drain' to value the construction of a continental brain market."
+      },
+      { 
+        id: "5.2", fr: "Reconnaissance mutuelle des acquis", en: "Mutual recognition of skills", 
+        desc_fr: "Avancement des cadres légaux régionaux pour la portabilité des compétences.", desc_en: "Advancement of regional legal frameworks for skills portability.",
+        method_fr: "Index mesurant l'opérationnalité des accords d'équivalence universitaire et professionnelle.", method_en: "Index measuring the operability of academic and professional equivalence agreements.",
+        contrast_fr: "Démontre l'autonomie académique des Suds sans avoir besoin de faire valider les savoirs par les institutions du Nord.", contrast_en: "Demonstrates the academic autonomy of the South without needing to have knowledge validated by Northern institutions."
+      }
+    ]
+  },
+  {
+    theme_fr: "Protection & Justice Sociale", theme_en: "Protection & Social Justice", icon: <Scale />, color: "text-slate-700",
+    items: [
+      { 
+        id: "6.1", fr: "Décriminalisation de l'irrégularité", en: "Decriminalization of irregularity", 
+        desc_fr: "Indicateur légal : absence de sanctions pénales pour les infractions migratoires.", desc_en: "Legal indicator: absence of criminal sanctions for migratory offenses.",
+        method_fr: "Analyse des codes pénaux nationaux concernant l'entrée et le séjour irrégulier.", method_en: "Analysis of national penal codes regarding irregular entry and stay.",
+        contrast_fr: "Déconstruit la fiction du 'migrant illégal' en séparant le simple défaut administratif de la criminalité de droit commun.", contrast_en: "Deconstructs the fiction of the 'illegal migrant' by separating simple administrative default from common criminality."
+      },
+      { 
+        id: "6.2", fr: "Portabilité des droits sociaux", en: "Portability of social rights", 
+        desc_fr: "Capacité des travailleurs à transférer leurs droits à la retraite ou au chômage.", desc_en: "Workers' ability to transfer their pension or unemployment rights.",
+        method_fr: "Nombre et effectivité des conventions bilatérales de sécurité sociale.", method_en: "Number and effectiveness of bilateral social security conventions.",
+        contrast_fr: "Arrête de considérer les migrants comme une simple force de travail jetable pour les reconnaître comme des sujets de droits sociaux.", contrast_en: "Stops considering migrants as merely disposable labor force to recognize them as subjects of social rights."
+      }
+    ]
+  }
+];
 
-  const aggregates = {
-    'africa_perspective': { 
-      name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flag: "🌍", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
-      history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
-      distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
-      ...genericDesc
-    }
-  };
 
-  const indicatorThemes = [
-    {
-      theme_fr: "Intégration & Libre Circulation", theme_en: "Integration & Free Movement", icon: <GitMerge />, color: "text-blue-800",
-      items: [
-        { 
-          id: "1.1", fr: "Taux d'effectivité des protocoles régionaux", en: "Effectiveness of regional free movement protocols", 
-          desc_fr: "Mesure de l'application réelle des accords (ex: CEDEAO, ZLECAf) sur le terrain.", desc_en: "Measurement of the actual implementation of agreements (e.g. ECOWAS, AfCFTA).",
-          method_fr: "Ratio entre les postes frontières appliquant effectivement l'exemption de visa/passeport et le nombre total de postes.", method_en: "Ratio between border posts actually applying visa/passport exemptions and the total number of posts.",
-          contrast_fr: "Plutôt que de compter les 'appréhensions' ou 'refoulements' (qui criminalisent la mobilité), cet indicateur évalue la capacité de l'État à faciliter l'intégration régionale légitime.", contrast_en: "Rather than counting 'apprehensions' or 'pushbacks' (which criminalize mobility), this indicator assesses the state's capacity to facilitate legitimate regional integration."
-        },
-        { 
-          id: "1.2", fr: "Volume du commerce informel transfrontalier", en: "Volume of cross-border informal trade", 
-          desc_fr: "Impact des mobilités de proximité sur l'intégration économique réelle par le bas.", desc_en: "Impact of proximity mobilities on real economic integration from below.",
-          method_fr: "Enquêtes micro-économiques aux frontières et modélisation des flux non-douaniers.", method_en: "Micro-economic surveys at borders and modeling of non-customs flows.",
-          contrast_fr: "Le PIB classique ignore l'économie informelle. Cet indicateur montre que les mobilités circulaires sont le véritable moteur de la survie et de l'intégration des communautés frontalières.", contrast_en: "Classic GDP ignores the informal economy. This indicator shows that circular mobilities are the true engine of survival and integration for border communities."
-        }
-      ]
-    },
-    {
-      theme_fr: "Économie Productive & Diasporas", theme_en: "Productive Economy & Diasporas", icon: <TrendingUp />, color: "text-amber-700",
-      items: [
-        { 
-          id: "2.1", fr: "Transferts alloués à l'investissement productif", en: "Remittances allocated to productive investment", 
-          desc_fr: "Part des envois de fonds investie dans la création d'activité vs la consommation.", desc_en: "Share of remittances invested in business creation vs. daily consumption.",
-          method_fr: "Suivi bancaire des fonds d'investissement diasporiques et sondages auprès des récipiendaires.", method_en: "Banking tracking of diaspora investment funds and surveys of recipients.",
-          contrast_fr: "Au lieu de pleurer sur le coût de la 'fuite des cerveaux', cela prouve que les diasporas sont les premiers investisseurs de l'économie réelle, remplaçant l'Aide Publique au Développement (paternaliste).", contrast_en: "Instead of mourning the cost of 'brain drain', this proves diasporas are the primary investors in the real economy, replacing paternalistic Official Development Assistance."
-        },
-        { 
-          id: "2.2", fr: "Taux d'entrepreneuriat des migrants", en: "Migrant entrepreneurship rate", 
-          desc_fr: "Création d'emplois et de micro-entreprises par les populations en mouvement.", desc_en: "Job and micro-enterprise creation by populations on the move.",
-          method_fr: "Recensement des entreprises (formelles et informelles) fondées par des non-nationaux.", method_en: "Census of businesses (formal and informal) founded by non-nationals.",
-          contrast_fr: "Détruit le mythe du 'migrant qui vole le travail local' en démontrant qu'il est structurellement créateur d'emplois et animateur de marchés.", contrast_en: "Destroys the myth of the 'migrant stealing local jobs' by demonstrating they are structurally job creators and market animators."
-        }
-      ]
-    },
-    {
-      theme_fr: "Mobilité Climatique & Adaptation", theme_en: "Climate Mobility & Adaptation", icon: <Leaf />, color: "text-teal-700",
-      items: [
-        { 
-          id: "3.1", fr: "Mobilité circulaire comme adaptation", en: "Circular mobility as adaptation", 
-          desc_fr: "Déplacements saisonniers anticipés pour pallier les chocs écologiques locaux.", desc_en: "Anticipated seasonal movements to mitigate local ecological shocks.",
-          method_fr: "Corrélation entre les flux de main-d'œuvre agricole et les calendriers de sécheresse/inondation.", method_en: "Correlation between agricultural labor flows and drought/flood calendars.",
-          contrast_fr: "Sort de la vision misérabiliste du 'réfugié climatique' passif pour objectiver la migration comme une stratégie de résilience proactive et autonome.", contrast_en: "Breaks away from the miserable vision of the passive 'climate refugee' to objectify migration as a proactive and autonomous resilience strategy."
-        },
-        { 
-          id: "3.2", fr: "Fonds diasporiques pour la résilience", en: "Diaspora funds for resilience", 
-          desc_fr: "Investissements transnationaux dans l'irrigation, l'énergie ou l'agriculture.", desc_en: "Transnational investments in local irrigation, energy, or agriculture.",
-          method_fr: "Analyse des transferts fléchés vers des projets d'infrastructure communautaire.", method_en: "Analysis of remittances directed towards community infrastructure projects.",
-          contrast_fr: "Ne plus attendre l'aide conditionnée des 'Fonds Verts' du Nord, mais mesurer la capacité d'auto-réparation climatique des communautés du Sud.", contrast_en: "Stop waiting for conditioned 'Green Funds' from the North, and measure the climate self-repair capacity of Southern communities."
-        }
-      ]
-    },
-    {
-      theme_fr: "Santé & Économie du Soin (Care)", theme_en: "Health & Care Economy", icon: <HeartPulse />, color: "text-rose-800",
-      items: [
-        { 
-          id: "4.1", fr: "Contribution migrante aux systèmes de santé", en: "Migrant contribution to health systems", 
-          desc_fr: "Part des travailleurs étrangers comblant les déficits de personnel médical local.", desc_en: "Share of foreign workers filling local medical staff shortages.",
-          method_fr: "Ratio du personnel de santé né à l'étranger au sein des cliniques et hôpitaux de la région.", method_en: "Ratio of foreign-born healthcare staff within regional clinics and hospitals.",
-          contrast_fr: "Remplace l'indicateur raciste du 'migrant vecteur de maladies' (sécurité épidémiologique) par la réalité du migrant comme pourvoyeur essentiel de soins.", contrast_en: "Replaces the racist indicator of the 'migrant as a disease vector' (epidemiological security) with the reality of the migrant as an essential care provider."
-        },
-        { 
-          id: "4.2", fr: "Inclusion dans la Couverture Sanitaire", en: "Inclusion in Universal Health Coverage", 
-          desc_fr: "Taux d'accès effectif des migrants aux soins de santé publics nationaux.", desc_en: "Effective access rate of migrants to national public healthcare.",
-          method_fr: "Étude légale et baromètres d'accès aux hôpitaux publics pour les non-nationaux.", method_en: "Legal review and barometers of access to public hospitals for non-nationals.",
-          contrast_fr: "Passe d'une logique humanitaire d'urgence (camps) à une logique structurelle d'intégration par les droits publics de santé.", contrast_en: "Shifts from emergency humanitarian logic (camps) to a structural logic of integration through public health rights."
-        }
-      ]
-    },
-    {
-      theme_fr: "Savoirs & Circulation des Compétences", theme_en: "Knowledge & Skills Circulation", icon: <BookOpen />, color: "text-sky-700",
-      items: [
-        { 
-          id: "5.1", fr: "Taux de rétention intra-africaine des diplômés", en: "Intra-African retention of graduates", 
-          desc_fr: "Proportion d'étudiants circulant au sein du continent (Brain Circulation).", desc_en: "Proportion of students circulating within the continent (Brain Circulation).",
-          method_fr: "Traçabilité des diplômés s'insérant professionnellement dans une autre sous-région africaine.", method_en: "Tracking graduates entering the workforce in another African sub-region.",
-          contrast_fr: "Renverse le concept euro-centré de 'Brain Drain' pour valoriser la construction d'un marché continental des cerveaux.", contrast_en: "Overturns the Euro-centric concept of 'Brain Drain' to value the construction of a continental brain market."
-        },
-        { 
-          id: "5.2", fr: "Reconnaissance mutuelle des acquis", en: "Mutual recognition of skills", 
-          desc_fr: "Avancement des cadres légaux régionaux pour la portabilité des compétences.", desc_en: "Advancement of regional legal frameworks for skills portability.",
-          method_fr: "Index mesurant l'opérationnalité des accords d'équivalence universitaire et professionnelle.", method_en: "Index measuring the operability of academic and professional equivalence agreements.",
-          contrast_fr: "Démontre l'autonomie académique des Suds sans avoir besoin de faire valider les savoirs par les institutions du Nord.", contrast_en: "Demonstrates the academic autonomy of the South without needing to have knowledge validated by Northern institutions."
-        }
-      ]
-    },
-    {
-      theme_fr: "Protection & Justice Sociale", theme_en: "Protection & Social Justice", icon: <Scale />, color: "text-slate-700",
-      items: [
-        { 
-          id: "6.1", fr: "Décriminalisation de l'irrégularité", en: "Decriminalization of irregularity", 
-          desc_fr: "Indicateur légal : absence de sanctions pénales pour les infractions migratoires.", desc_en: "Legal indicator: absence of criminal sanctions for migratory offenses.",
-          method_fr: "Analyse des codes pénaux nationaux concernant l'entrée et le séjour irrégulier.", method_en: "Analysis of national penal codes regarding irregular entry and stay.",
-          contrast_fr: "Déconstruit la fiction du 'migrant illégal' en séparant le simple défaut administratif de la criminalité de droit commun.", contrast_en: "Deconstructs the fiction of the 'illegal migrant' by separating simple administrative default from common criminality."
-        },
-        { 
-          id: "6.2", fr: "Portabilité des droits sociaux", en: "Portability of social rights", 
-          desc_fr: "Capacité des travailleurs à transférer leurs droits à la retraite ou au chômage.", desc_en: "Workers' ability to transfer their pension or unemployment rights.",
-          method_fr: "Nombre et effectivité des conventions bilatérales de sécurité sociale.", method_en: "Number and effectiveness of bilateral social security conventions.",
-          contrast_fr: "Arrête de considérer les migrants comme une simple force de travail jetable pour les reconnaître comme des sujets de droits sociaux.", contrast_en: "Stops considering migrants as merely disposable labor force to recognize them as subjects of social rights."
-        }
-      ]
-    }
-  ];
+// ============================================================================
+// 3. COMPOSANTS DES ONGLETS
+// ============================================================================
+
+const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
+  <div className="space-y-16 animate-in fade-in zoom-in-95 duration-500">
+    {/* HERO HEADER */}
+    <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg">
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+        <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">Open Data Initiative</div>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">{text.hero_title}<br/><span className="text-blue-300 italic font-normal">{text.hero_highlight}</span></h1>
+        <p className="text-slate-300 max-w-2xl text-base leading-relaxed font-medium">{text.desc}</p>
+      </div>
+    </header>
+
+    {/* 1. DÉCONSTRUCTION */}
+    <section>
+      <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-rose-50 rounded-sm text-rose-800"><ShieldAlert className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.debunk}</h2></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {text.debunk_cards.map((card, idx) => (
+          <div 
+            key={idx} 
+            onClick={() => setExpandedMyth(expandedMyth === idx ? null : idx)}
+            className={`bg-white rounded-lg p-5 border transition-all duration-300 flex flex-col cursor-pointer ${expandedMyth === idx ? 'border-blue-600 shadow-lg scale-[1.01]' : 'border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300'}`}
+          >
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-[9px] font-bold uppercase text-slate-500 tracking-widest border border-slate-100 px-2 py-0.5 rounded-sm">{text.myth}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${expandedMyth === idx ? 'rotate-180 text-blue-600' : ''}`} />
+              </div>
+              <p className="text-slate-800 font-serif italic text-sm md:text-base leading-snug mb-3">"{card.myth}"</p>
+            </div>
+            <div className="pt-4 border-t border-slate-100 mt-auto">
+              <span className="text-[9px] font-bold uppercase text-blue-800 tracking-widest bg-blue-50 px-2 py-0.5 rounded-sm">{text.reality}</span>
+              <p className="text-slate-900 font-bold text-base mt-2 mb-2 leading-tight">{card.real}</p>
+              <div className="flex items-center space-x-3">
+                 <div className="w-full bg-slate-100 h-1.5 rounded-sm overflow-hidden">
+                   <div className={`${card.color} h-full transition-all duration-1000 ease-out`} style={{width: `${card.stat_val}%`}}></div>
+                 </div>
+                 <span className={`text-xs font-bold ${card.color.replace('bg-', 'text-')}`}>{card.stat_text}</span>
+              </div>
+            </div>
+            <div className={`overflow-hidden transition-all duration-500 ${expandedMyth === idx ? 'max-h-48 opacity-100 mt-3 pt-3 border-t border-slate-100' : 'max-h-0 opacity-0'}`}>
+              <p className="text-xs text-slate-600 leading-relaxed">{card.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* 2. PERSPECTIVE GLOBALE */}
+    <section className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-xl border border-slate-800 relative overflow-hidden print:bg-white print:border print:text-slate-900 print:shadow-none">
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 print:hidden"><Globe className="w-96 h-96" /></div>
+      <div className="relative z-10 flex items-center space-x-3 mb-8">
+        <div className="p-2 bg-blue-900/50 rounded-sm border border-blue-800 text-blue-300 print:bg-slate-100 print:text-blue-800"><Globe className="h-5 w-5" /></div>
+        <h2 className="text-xl md:text-2xl font-serif font-bold tracking-tight">{text.sections.global}</h2>
+      </div>
+        
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">{text.global_stats.world}</span>
+          <span className="text-2xl font-bold text-white print:text-slate-900 block">304 M</span>
+          <div className="w-full bg-slate-700 h-1 mt-2 rounded-sm overflow-hidden print:bg-slate-200"><div className="bg-slate-500 h-full w-full"></div></div>
+        </div>
+        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
+          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.europe}</span>
+          <span className="text-2xl font-bold text-white print:text-slate-900 block">94 M</span>
+          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.9%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.9%</span></div>
+        </div>
+        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
+          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.asia}</span>
+          <span className="text-2xl font-bold text-white print:text-slate-900 block">92 M</span>
+          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.2%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.2%</span></div>
+        </div>
+        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
+          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.na}</span>
+          <span className="text-2xl font-bold text-white print:text-slate-900 block">61 M</span>
+          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '20%'}}></div></div><span className="text-[9px] font-bold text-slate-400">20.1%</span></div>
+        </div>
+        <div className="bg-blue-900/30 p-4 rounded-md border border-blue-700/50 transform hover:scale-105 transition-transform print:bg-blue-50 print:border-blue-200 shadow-md">
+          <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest block mb-1 print:text-blue-800">{text.global_stats.africa}</span>
+          <span className="text-2xl font-bold text-blue-200 print:text-blue-900 block">29 M</span>
+          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-blue-200"><div className="bg-blue-500 h-full" style={{width: '9.5%'}}></div></div><span className="text-[9px] font-bold text-blue-300 print:text-blue-800">9.5%</span></div>
+        </div>
+        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
+          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.latam}</span>
+          <span className="text-2xl font-bold text-white print:text-slate-900 block">17 M</span>
+          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '5.7%'}}></div></div><span className="text-[9px] font-bold text-slate-400">5.7%</span></div>
+        </div>
+      </div>
+        
+      {/* Section Carte Afrique */}
+      <div className="mt-8 bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col items-center print:border-slate-300 print:bg-white">
+        <h3 className="text-lg font-serif font-bold text-slate-900 mb-6 uppercase tracking-widest text-center">
+          {lang === 'fr' ? "Territoires et Mobilités" : "Territories and Mobilities"}
+        </h3>
+        <img 
+          src="/map_africa.png" 
+          alt="Carte de l'Afrique" 
+          className="max-w-md w-full h-auto rounded-sm shadow-md border border-slate-200" 
+        />
+        <p className="text-[10px] text-slate-500 mt-4 italic">
+          {lang === 'fr' ? "Représentation cartographique à titre illustratif." : "Cartographic representation for illustrative purposes."}
+        </p>
+      </div>
+        
+      <div className="relative z-10 mt-8 flex items-start space-x-3 bg-slate-800/50 p-4 rounded-sm border-l-4 border-blue-500 print:bg-slate-50 print:border-slate-200 print:border-l-blue-700">
+        <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5 print:text-blue-700" />
+        <p className="text-slate-300 text-sm leading-relaxed print:text-slate-700">{text.global_stats.note}</p>
+      </div>
+    </section>
+  </div>
+);
+
+const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
+  <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
+    <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2></div>
+    <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
+      <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
+        <div className="p-5 border-b border-slate-800 bg-slate-800/30">
+          <h4 className="text-blue-300 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center"><MapIcon className="w-3 h-3 mr-1.5" /> {text.sidebar.subregion}</h4>
+          <select value={activeSubRegion} onChange={(e) => { setActiveSubRegion(e.target.value); setActiveSubTab('perspective'); }} className="w-full bg-[#0f172a] border border-slate-700 rounded-sm py-2 px-3 text-xs font-bold text-slate-200 focus:ring-1 focus:ring-blue-500 outline-none cursor-pointer appearance-none">
+            <option value="all">{text.all_regions}</option>
+            {Object.keys(t[lang].regions).map(regId => (<option key={regId} value={regId}>{text.regions[regId]}</option>))}
+          </select>
+        </div>
+        <div className="p-5 pb-2">
+          <div className="relative"><input type="text" placeholder={text.sidebar.search} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/80 border border-slate-700 rounded-sm py-2 pl-8 pr-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-shadow" /><Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" /></div>
+        </div>
+        <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar max-h-[400px]">
+          <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" /><span className="truncate">{activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}</span></button>
+          {filteredCountries.map((item) => (
+            <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span><span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>{activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}</button>
+          ))}
+        </div>
+      </div>
+        
+      <div className="flex-1 p-6 md:p-10 bg-slate-50">
+        <div className="flex items-center space-x-5 mb-10"><span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span><div><h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">{display.name}</h3><div className="mt-3"><span className="px-3 py-1 bg-white text-blue-800 text-[9px] font-bold uppercase rounded-sm tracking-widest border border-blue-200 shadow-sm">{display.isRegion ? text.badge.regional : text.badge.country}</span></div></div></div>
+          
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><Users className="h-4 w-4" /> {text.metrics.stock}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{formatNumber(display.stock)}</span></div>
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><HeartPulse className="h-4 w-4" /> {text.metrics.female}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{display.female}%</span></div>
+          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><BarChart3 className="h-4 w-4" /> {text.metrics.evolution}</div><span className="block text-2xl md:text-3xl font-serif font-bold text-slate-800">{display.evolution}%</span></div>
+        </div>
+
+        {display.isRegion && (
+          <div className="mt-8 p-6 bg-blue-50/50 rounded-lg border border-blue-100 shadow-sm space-y-3">
+            <h4 className="text-blue-900 font-serif font-bold text-base flex items-center">
+              <Activity className="w-5 h-5 mr-2 text-blue-700" />
+              {text.comparative_view_title}
+            </h4>
+            <p className="text-sm text-blue-950 leading-relaxed">
+              {text.comparative_view_desc}
+            </p>
+          </div>
+        )}
+
+        <div className="mt-10 p-6 bg-[#0f172a] rounded-lg text-white relative overflow-hidden shadow-md group cursor-pointer border border-slate-800" onClick={() => setShowModal(true)}>
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
+            <div className="flex items-center space-x-4"><div className="p-3 bg-blue-900/50 rounded-sm border border-blue-800 group-hover:bg-blue-800 transition-colors">{display.isRegion ? <PieChart className="w-6 h-6 text-blue-300" /> : <TableProperties className="w-6 h-6 text-blue-300" />}</div><div><h4 className="font-serif font-bold text-lg mb-0.5">{display.isRegion ? text.modal.infographic_title : text.modal.raw_data_title}</h4><p className="text-slate-400 text-xs">{lang === 'fr' ? `Consulter l'analyse pour : ${display.name}.` : `View analysis for: ${display.name}.`}</p></div></div>
+            <button className="bg-blue-700 text-white font-bold px-6 py-3 rounded-sm text-xs transition-colors flex items-center shrink-0 shadow-sm group-hover:bg-blue-600">{text.analysis_btn}<ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" /></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
+  <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm animate-in fade-in zoom-in-95 duration-500">
+    <div className="flex items-center space-x-4 mb-6">
+      <div className="p-3 bg-slate-100 rounded-sm border border-slate-200 text-slate-700"><Target className="h-6 w-6" /></div>
+      <div>
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sdg_section.title}</h2>
+        <p className="text-slate-500 text-sm mt-1">{text.sdg_section.subtitle}</p>
+      </div>
+    </div>
+
+    <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-xl flex-wrap border border-slate-200">
+      <button onClick={() => setActiveSdgzTab('sdgs')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+        ODD / SDGs
+      </button>
+      <button onClick={() => setActiveSdgzTab('gcm')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+        Pacte GCM (23 Obj.)
+      </button>
+      <button onClick={() => setActiveSdgzTab('gcr')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+        Pacte Réfugiés GCR
+      </button>
+    </div>
+
+    {activeSdgzTab === 'sdgs' && (
+      <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+          <p className="text-slate-700 text-sm leading-relaxed">
+            {text.sdg_section.sdg_desc}
+          </p>
+          <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+            <span>{text.sdg_section.link_text}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {text.sdg_section.sdg_points.map((pt, idx) => (
+            <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {activeSdgzTab === 'gcm' && (
+      <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+          <p className="text-slate-700 text-sm leading-relaxed">
+            {text.sdg_section.gcm_desc}
+          </p>
+          <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+            <span>{text.sdg_section.link_text}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+          {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
+            <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
+              <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
+              <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {activeSdgzTab === 'gcr' && (
+      <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+          <p className="text-slate-700 text-sm leading-relaxed">
+            {text.sdg_section.gcr_desc}
+          </p>
+          <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+            <span>{text.sdg_section.link_text}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {text.sdg_section.gcr_objectifs.map((obj, idx) => (
+            <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+);
+
+const TabLibrary = ({ text, lang }) => (
+  <div className="animate-in fade-in zoom-in-95 duration-500">
+    <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl shadow-sm">
+      <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+      <h2 className="text-2xl font-serif font-bold text-slate-700 mb-2">
+        {lang === 'fr' ? 'Bibliothèque Documentaire' : 'Migration Library'}
+      </h2>
+      <p className="text-slate-500 max-w-lg mx-auto">
+        {lang === 'fr' 
+          ? 'Cette section accueillera prochainement une base de données filtrable de rapports, thèses et policy briefs sur les mobilités.'
+          : 'This section will soon host a filterable database of reports, theses, and policy briefs on mobility.'}
+      </p>
+      <div className="mt-6 inline-block bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-widest border border-blue-200">
+        En construction
+      </div>
+    </div>
+  </div>
+);
+
+const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
+  <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
+    {/* Matrice des Indicateurs */}
+    <section id="data">
+      <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
+            <div>
+              <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
+              <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl">{text.indicator_desc}</p>
+            </div>
+          </div>
+          <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
+            <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
+          </button>
+        </div>
+          
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+          {indicatorThemes.map((theme, i) => (
+            <div key={i}>
+              <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
+                {React.cloneElement(theme.icon, { className: "w-5 h-5 mr-2" })} 
+                {lang === 'fr' ? theme.theme_fr : theme.theme_en}
+              </h3>
+              <div className="space-y-3">
+                {theme.items.map((ind, j) => (
+                  <div 
+                    key={j} 
+                    onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
+                    className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-2 relative z-10">
+                      <span className="text-[9px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm tracking-widest shrink-0 uppercase">
+                        Ind. {ind.id}
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
+                    </div>
+                    <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10">
+                      {lang === 'fr' ? ind.fr : ind.en}
+                    </p>
+                    {(lang === 'fr' ? ind.desc_fr : ind.desc_en) && (
+                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed relative z-10">
+                        {lang === 'fr' ? ind.desc_fr : ind.desc_en}
+                      </p>
+                    )}
+                      
+                    {/* Zone extensible */}
+                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                      <div className="space-y-4">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block mb-1">{lang === 'fr' ? "🔍 Méthodologie & Collecte" : "🔍 Methodology & Data Collection"}</span>
+                          <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? ind.method_fr : ind.method_en}</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-sm border border-slate-200">
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "💡 Le Changement de Paradigme" : "💡 The Paradigm Shift"}</span>
+                          <p className="text-xs text-slate-800 italic leading-relaxed">{lang === 'fr' ? ind.contrast_fr : ind.contrast_en}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {/* Ingénierie & Source des Données */}
+    <section className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
+      <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
+      <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
+      <div className="mt-6 pt-6 border-t border-slate-100">
+        <ul className="space-y-5">
+          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '1. Sourcing : ' : '1. Sourcing: '}</strong>{text.method.m1}</p></li>
+          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '2. Analyse Proportionnelle : ' : '2. Proportional Analysis: '}</strong>{text.method.m2}</p></li>
+          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '3. Évaluation Juridique : ' : '3. Legal Assessment: '}</strong>{text.method.m3}</p></li>
+          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '4. Open Source & Intégrité : ' : '4. Open Source & Integrity: '}</strong>{text.method.m4}</p></li>
+        </ul>
+      </div>
+        
+      <div className="mt-8 pt-6 border-t border-slate-100">
+        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a href="https://www.un.org/development/desa/pd/data/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
+          </a>
+          <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <Users className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
+          </a>
+          <a href="https://www.internal-displacement.org/database/displacement-data/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <MapPin className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s3}</span>
+          </a>
+          <a href="https://www.iom.int/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <Globe className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s4}</span>
+          </a>
+          <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <Scale className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s5}</span>
+          </a>
+          <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <Landmark className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s6}</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
+const TabAbout = ({ text, lang }) => (
+  <section className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
+    <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
+      <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
+      <div>
+        <div className="relative z-10 flex justify-between items-center mb-6">
+          <h2 className="text-xl font-serif font-bold flex items-center text-white">
+            <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
+          </h2>
+        </div>
+        <div className="relative z-10 mb-4">
+          <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
+          <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
+          <div className="mt-4 pt-5 border-t border-slate-700/50">
+            <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
+            <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        {/* BLOC CONTACT & COLLABORATIONS */}
+        <div className="relative z-10 bg-slate-800/90 p-6 rounded-md border border-slate-700 mt-6 space-y-4">
+          <div className="flex items-center space-x-2">
+            <Mail className="w-5 h-5 text-blue-400" />
+            <h4 className="text-sm font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
+          </div>
+          <p className="text-sm text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
+          <div className="flex flex-wrap gap-3 pt-2">
+            <a 
+              href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
+              className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm transition-colors shadow-sm"
+            >
+              <Mail className="w-4 h-4" />
+              <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/yassine-b-m" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm border border-slate-600 transition-colors shadow-sm"
+            >
+              <LinkedInIcon className="w-4 h-4 text-blue-300" />
+              <span>LinkedIn</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+            </a>
+          </div>
+        </div>
+
+        {/* CITATION ACADÉMIQUE */}
+        <div className="relative z-10 bg-slate-800/80 p-5 rounded-md border border-slate-700 mt-5">
+          <div className="flex items-center space-x-2 mb-2"><Quote className="w-4 h-4 text-blue-400" /><h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4></div>
+          <p className="text-sm text-slate-300 font-serif italic border-l-2 border-blue-500 pl-3">{text.about.citation_text}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+
+// ============================================================================
+// 4. COMPOSANT PRINCIPAL (App)
+// ============================================================================
+
+export default function App() {
+  // États Globaux
+  const [lang, setLang] = useState('fr');
+  const [activeTab, setActiveTab] = useState('panorama');
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  // États Explorateur
+  const [activeSubRegion, setActiveSubRegion] = useState('all');
+  const [activeSubTab, setActiveSubTab] = useState('perspective');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // États Modal et autres
+  const [showModal, setShowModal] = useState(false);
+  const [modalView, setModalView] = useState('demography'); 
+  const [expandedMyth, setExpandedMyth] = useState(null);
+  const [expandedIndicator, setExpandedIndicator] = useState(null);
+  const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
+
+  useEffect(() => { setIsLoaded(true); }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const text = t[lang];
 
   const currentCountries = useMemo(() => {
     if (activeSubRegion === 'all') return Object.values(countryData).flat();
@@ -1007,8 +1470,8 @@ export default function App() {
 
   const exportIndicatorsCSV = () => {
     let csvContent = "data:text/csv;charset=utf-8,ID,Theme(FR),Theme(EN),Indicator(FR),Indicator(EN),Description(FR),Description(EN)\n";
-    indicatorThemes.forEach(t => t.items.forEach(i => {
-      csvContent += `${i.id},"${t.theme_fr}","${t.theme_en}","${(i.fr||'').replace(/"/g, '""')}","${(i.en||'').replace(/"/g, '""')}","${(i.desc_fr||"").replace(/"/g, '""')}","${(i.desc_en||"").replace(/"/g, '""')}"\n`;
+    indicatorThemes.forEach(thm => thm.items.forEach(i => {
+      csvContent += `${i.id},"${thm.theme_fr}","${thm.theme_en}","${(i.fr||'').replace(/"/g, '""')}","${(i.en||'').replace(/"/g, '""')}","${(i.desc_fr||"").replace(/"/g, '""')}","${(i.desc_en||"").replace(/"/g, '""')}"\n`;
     }));
     const link = document.createElement("a"); link.href = encodeURI(csvContent); link.download = "souths_indicators_registry.csv"; link.click();
   };
@@ -1017,6 +1480,16 @@ export default function App() {
     let csvContent = `data:text/csv;charset=utf-8,Metric,Value\nProfile,"${display.name}"\nStock,"${display.stock}"\nFemale Share %,"${display.female}"\nEvolution,"${display.evolution}"\nOrig/Dest,"${display.origDest}"\nTrigger,"${display.trigger}"\nResponse,"${display.response}"\nImpact,"${display.impact}"\nIDP Conflict,"${display.idp_conflict}"\nIDP Disaster,"${display.idp_disaster}"\n`;
     const link = document.createElement("a"); link.href = encodeURI(csvContent); link.download = `Profile_${display.name}.csv`; link.click();
   };
+
+  // Définition de la structure du menu
+  const navigation = [
+    { id: 'panorama', icon: Globe, label: { fr: 'Panorama & Narratifs', en: 'Overview & Narratives' } },
+    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
+    { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
+    { id: 'library', icon: BookOpen, label: { fr: 'Bibliothèque', en: 'Library' } },
+    { id: 'methodology', icon: Database, label: { fr: 'Méthodologie', en: 'Methodology' } },
+    { id: 'about', icon: Info, label: { fr: 'À Propos', en: 'About' } },
+  ];
 
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
@@ -1043,443 +1516,102 @@ export default function App() {
         }
       `}</style>
 
-      {/* NAVBAR */}
-      <nav className="bg-[#0f172a] text-white sticky top-0 z-50 border-b border-slate-800 shadow-md print:hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
-          <div className="flex items-center space-x-3">
-            <div className="bg-blue-800 p-1.5 rounded-sm shadow-sm"><Globe className="h-4 w-4 text-blue-100" /></div>
-            <span className="text-base font-serif font-bold tracking-tight uppercase">{text.title} <span className="text-blue-300 font-sans font-medium lowercase italic">{text.subtitle}</span></span>
+      {/* ----------------- NAVBAR & ONGLETS ----------------- */}
+      <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden">
+        {/* Barre supérieure : Branding & Langue */}
+        <div className="border-b border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
+            <div className="flex items-center space-x-3">
+              <div className="bg-blue-800 p-1.5 rounded-sm shadow-sm"><Globe className="h-4 w-4 text-blue-100" /></div>
+              <span className="text-base font-serif font-bold tracking-tight uppercase">
+                {text.title} <span className="text-blue-300 font-sans font-medium lowercase italic">{text.subtitle}</span>
+              </span>
+            </div>
+            <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
+              <Languages className="h-3 w-3" /> <span>{lang.toUpperCase()}</span>
+            </button>
           </div>
-          <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
-            <Languages className="h-3 w-3" /> <span>{lang.toUpperCase()}</span>
-          </button>
+        </div>
+
+        {/* Barre inférieure : Navigation par onglets */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto custom-scrollbar">
+          <div className="flex space-x-1 py-2">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center px-4 py-2.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap ${
+                    isActive 
+                      ? 'bg-blue-800 text-white shadow-inner border-t-2 border-t-blue-400' 
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border-t-2 border-t-transparent'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 mr-2 ${isActive ? 'text-blue-200' : 'text-slate-500'}`} />
+                  {item.label[lang]}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </nav>
 
-      {/* HERO HEADER */}
-      <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden print:hidden border-b border-blue-900/50">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">Open Data Initiative</div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">{text.hero_title}<br/><span className="text-blue-300 italic font-normal">{text.hero_highlight}</span></h1>
-          <p className="text-slate-300 max-w-2xl text-base leading-relaxed font-medium">{text.desc}</p>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 print:hidden space-y-16">
-
-        {/* 1. DÉCONSTRUCTION */}
-        <section>
-          <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-rose-50 rounded-sm text-rose-800"><ShieldAlert className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.debunk}</h2></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {text.debunk_cards.map((card, idx) => (
-              <div 
-                key={idx} 
-                onClick={() => setExpandedMyth(expandedMyth === idx ? null : idx)}
-                className={`bg-white rounded-lg p-5 border transition-all duration-300 flex flex-col cursor-pointer ${expandedMyth === idx ? 'border-blue-600 shadow-lg scale-[1.01]' : 'border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300'}`}
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-[9px] font-bold uppercase text-slate-500 tracking-widest border border-slate-100 px-2 py-0.5 rounded-sm">{text.myth}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${expandedMyth === idx ? 'rotate-180 text-blue-600' : ''}`} />
-                  </div>
-                  <p className="text-slate-800 font-serif italic text-sm md:text-base leading-snug mb-3">"{card.myth}"</p>
-                </div>
-                <div className="pt-4 border-t border-slate-100 mt-auto">
-                  <span className="text-[9px] font-bold uppercase text-blue-800 tracking-widest bg-blue-50 px-2 py-0.5 rounded-sm">{text.reality}</span>
-                  <p className="text-slate-900 font-bold text-base mt-2 mb-2 leading-tight">{card.real}</p>
-                  <div className="flex items-center space-x-3">
-                     <div className="w-full bg-slate-100 h-1.5 rounded-sm overflow-hidden">
-                       <div className={`${card.color} h-full transition-all duration-1000 ease-out`} style={{width: `${card.stat_val}%`}}></div>
-                     </div>
-                     <span className={`text-xs font-bold ${card.color.replace('bg-', 'text-')}`}>{card.stat_text}</span>
-                  </div>
-                </div>
-                <div className={`overflow-hidden transition-all duration-500 ${expandedMyth === idx ? 'max-h-48 opacity-100 mt-3 pt-3 border-t border-slate-100' : 'max-h-0 opacity-0'}`}>
-                  <p className="text-xs text-slate-600 leading-relaxed">{card.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 2. PERSPECTIVE GLOBALE */}
-        <section className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-xl border border-slate-800 relative overflow-hidden print:bg-white print:border print:text-slate-900 print:shadow-none">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 print:hidden"><Globe className="w-96 h-96" /></div>
-          <div className="relative z-10 flex items-center space-x-3 mb-8">
-            <div className="p-2 bg-blue-900/50 rounded-sm border border-blue-800 text-blue-300 print:bg-slate-100 print:text-blue-800"><Globe className="h-5 w-5" /></div>
-            <h2 className="text-xl md:text-2xl font-serif font-bold tracking-tight">{text.sections.global}</h2>
-          </div>
-           
-          <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">{text.global_stats.world}</span>
-              <span className="text-2xl font-bold text-white print:text-slate-900 block">304 M</span>
-              <div className="w-full bg-slate-700 h-1 mt-2 rounded-sm overflow-hidden print:bg-slate-200"><div className="bg-slate-500 h-full w-full"></div></div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.europe}</span>
-              <span className="text-2xl font-bold text-white print:text-slate-900 block">94 M</span>
-              <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.9%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.9%</span></div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.asia}</span>
-              <span className="text-2xl font-bold text-white print:text-slate-900 block">92 M</span>
-              <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.2%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.2%</span></div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.na}</span>
-              <span className="text-2xl font-bold text-white print:text-slate-900 block">61 M</span>
-              <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '20%'}}></div></div><span className="text-[9px] font-bold text-slate-400">20.1%</span></div>
-            </div>
-            <div className="bg-blue-900/30 p-4 rounded-md border border-blue-700/50 transform hover:scale-105 transition-transform print:bg-blue-50 print:border-blue-200 shadow-md">
-              <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest block mb-1 print:text-blue-800">{text.global_stats.africa}</span>
-              <span className="text-2xl font-bold text-blue-200 print:text-blue-900 block">29 M</span>
-              <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-blue-200"><div className="bg-blue-500 h-full" style={{width: '9.5%'}}></div></div><span className="text-[9px] font-bold text-blue-300 print:text-blue-800">9.5%</span></div>
-            </div>
-            <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-              <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.latam}</span>
-              <span className="text-2xl font-bold text-white print:text-slate-900 block">17 M</span>
-              <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '5.7%'}}></div></div><span className="text-[9px] font-bold text-slate-400">5.7%</span></div>
-            </div>
-          </div>
-           
-          {/* Section Carte Afrique */}
-          <div className="mt-8 bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col items-center print:border-slate-300 print:bg-white">
-            <h3 className="text-lg font-serif font-bold text-slate-900 mb-6 uppercase tracking-widest text-center">
-              {lang === 'fr' ? "Territoires et Mobilités" : "Territories and Mobilities"}
-            </h3>
-            <img 
-              src="/map_africa.png" 
-              alt="Carte de l'Afrique" 
-              className="max-w-md w-full h-auto rounded-sm shadow-md border border-slate-200" 
-            />
-            <p className="text-[10px] text-slate-500 mt-4 italic">
-              {lang === 'fr' ? "Représentation cartographique à titre illustratif." : "Cartographic representation for illustrative purposes."}
-            </p>
-          </div>
-           
-          <div className="relative z-10 mt-8 flex items-start space-x-3 bg-slate-800/50 p-4 rounded-sm border-l-4 border-blue-500 print:bg-slate-50 print:border-slate-200 print:border-l-blue-700">
-            <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5 print:text-blue-700" />
-            <p className="text-slate-300 text-sm leading-relaxed print:text-slate-700">{text.global_stats.note}</p>
-          </div>
-        </section>
-
-        {/* 3. EXPLORATEUR & VUE COMPARATIVE */}
-        <section id="explorer">
-          <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2></div>
-          <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
-            <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
-              <div className="p-5 border-b border-slate-800 bg-slate-800/30">
-                <h4 className="text-blue-300 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center"><MapIcon className="w-3 h-3 mr-1.5" /> {text.sidebar.subregion}</h4>
-                <select value={activeSubRegion} onChange={(e) => { setActiveSubRegion(e.target.value); setActiveSubTab('perspective'); }} className="w-full bg-[#0f172a] border border-slate-700 rounded-sm py-2 px-3 text-xs font-bold text-slate-200 focus:ring-1 focus:ring-blue-500 outline-none cursor-pointer appearance-none">
-                  <option value="all">{text.all_regions}</option>
-                  {Object.keys(countryData).map(regId => (<option key={regId} value={regId}>{text.regions[regId]}</option>))}
-                </select>
-              </div>
-              <div className="p-5 pb-2">
-                <div className="relative"><input type="text" placeholder={text.sidebar.search} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/80 border border-slate-700 rounded-sm py-2 pl-8 pr-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-shadow" /><Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" /></div>
-              </div>
-              <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar max-h-[400px]">
-                <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" /><span className="truncate">{activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}</span></button>
-                {filteredCountries.map((item) => (
-                  <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span><span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>{activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}</button>
-                ))}
-              </div>
-            </div>
-             
-            <div className="flex-1 p-6 md:p-10 animate-in fade-in zoom-in-95 duration-500 bg-slate-50">
-              <div className="flex items-center space-x-5 mb-10"><span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span><div><h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">{display.name}</h3><div className="mt-3"><span className="px-3 py-1 bg-white text-blue-800 text-[9px] font-bold uppercase rounded-sm tracking-widest border border-blue-200 shadow-sm">{display.isRegion ? text.badge.regional : text.badge.country}</span></div></div></div>
-               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><Users className="h-4 w-4" /> {text.metrics.stock}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{formatNumber(display.stock)}</span></div>
-                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><HeartPulse className="h-4 w-4" /> {text.metrics.female}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{display.female}%</span></div>
-                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><BarChart3 className="h-4 w-4" /> {text.metrics.evolution}</div><span className="block text-2xl md:text-3xl font-serif font-bold text-slate-800">{display.evolution}%</span></div>
-              </div>
-
-              {display.isRegion && (
-                <div className="mt-8 p-6 bg-blue-50/50 rounded-lg border border-blue-100 shadow-sm space-y-3">
-                  <h4 className="text-blue-900 font-serif font-bold text-base flex items-center">
-                    <Activity className="w-5 h-5 mr-2 text-blue-700" />
-                    {text.comparative_view_title}
-                  </h4>
-                  <p className="text-sm text-blue-950 leading-relaxed">
-                    {text.comparative_view_desc}
-                  </p>
-                </div>
-              )}
-
-              <div className="mt-10 p-6 bg-[#0f172a] rounded-lg text-white relative overflow-hidden shadow-md group cursor-pointer border border-slate-800" onClick={() => setShowModal(true)}>
-                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
-                  <div className="flex items-center space-x-4"><div className="p-3 bg-blue-900/50 rounded-sm border border-blue-800 group-hover:bg-blue-800 transition-colors">{display.isRegion ? <PieChart className="w-6 h-6 text-blue-300" /> : <TableProperties className="w-6 h-6 text-blue-300" />}</div><div><h4 className="font-serif font-bold text-lg mb-0.5">{display.isRegion ? text.modal.infographic_title : text.modal.raw_data_title}</h4><p className="text-slate-400 text-xs">{lang === 'fr' ? `Consulter l'analyse pour : ${display.name}.` : `View analysis for: ${display.name}.`}</p></div></div>
-                  <button className="bg-blue-700 text-white font-bold px-6 py-3 rounded-sm text-xs transition-colors flex items-center shrink-0 shadow-sm group-hover:bg-blue-600">{text.analysis_btn}<ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" /></button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. RÉFÉRENTIEL (GUIDE MÉTHODOLOGIQUE) */}
-        <section id="data">
-          <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
-              <div className="flex items-center space-x-4">
-                <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
-                <div>
-                  <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
-                  <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl">{text.indicator_desc}</p>
-                </div>
-              </div>
-              <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
-                <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
-              </button>
-            </div>
-             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
-              {indicatorThemes.map((theme, i) => (
-                <div key={i}>
-                  <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
-                    {React.cloneElement(theme.icon, { className: "w-5 h-5 mr-2" })} 
-                    {lang === 'fr' ? theme.theme_fr : theme.theme_en}
-                  </h3>
-                  <div className="space-y-3">
-                    {theme.items.map((ind, j) => (
-                      <div 
-                        key={j} 
-                        onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
-                        className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
-                      >
-                        <div className="flex items-center justify-between w-full mb-2 relative z-10">
-                          <span className="text-[9px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm tracking-widest shrink-0 uppercase">
-                            Ind. {ind.id}
-                          </span>
-                          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
-                        </div>
-                        <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10">
-                          {lang === 'fr' ? ind.fr : ind.en}
-                        </p>
-                        {(lang === 'fr' ? ind.desc_fr : ind.desc_en) && (
-                          <p className="text-xs text-slate-500 mt-1.5 leading-relaxed relative z-10">
-                            {lang === 'fr' ? ind.desc_fr : ind.desc_en}
-                          </p>
-                        )}
-                         
-                        {/* Zone extensible */}
-                        <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
-                          <div className="space-y-4">
-                            <div>
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block mb-1">{lang === 'fr' ? "🔍 Méthodologie & Collecte" : "🔍 Methodology & Data Collection"}</span>
-                              <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? ind.method_fr : ind.method_en}</p>
-                            </div>
-                            <div className="bg-white p-3 rounded-sm border border-slate-200">
-                              <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "💡 Le Changement de Paradigme" : "💡 The Paradigm Shift"}</span>
-                              <p className="text-xs text-slate-800 italic leading-relaxed">{lang === 'fr' ? ind.contrast_fr : ind.contrast_en}</p>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. SECTION : ODD (SDGs), GCM & GCR */}
-        <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-4 mb-6">
-            <div className="p-3 bg-slate-100 rounded-sm border border-slate-200 text-slate-700"><Target className="h-6 w-6" /></div>
-            <div>
-              <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sdg_section.title}</h2>
-              <p className="text-slate-500 text-sm mt-1">{text.sdg_section.subtitle}</p>
-            </div>
-          </div>
-
-          <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-xl flex-wrap border border-slate-200">
-            <button onClick={() => setActiveSdgzTab('sdgs')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-              ODD / SDGs
-            </button>
-            <button onClick={() => setActiveSdgzTab('gcm')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-              Pacte GCM (23 Obj.)
-            </button>
-            <button onClick={() => setActiveSdgzTab('gcr')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-              Pacte Réfugiés GCR
-            </button>
-          </div>
-
-          {activeSdgzTab === 'sdgs' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <p className="text-slate-700 text-sm leading-relaxed">
-                  {text.sdg_section.sdg_desc}
-                </p>
-                <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                  <span>{text.sdg_section.link_text}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {text.sdg_section.sdg_points.map((pt, idx) => (
-                  <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
-                    <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeSdgzTab === 'gcm' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <p className="text-slate-700 text-sm leading-relaxed">
-                  {text.sdg_section.gcm_desc}
-                </p>
-                <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                  <span>{text.sdg_section.link_text}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-                {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
-                  <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
-                    <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
-                    <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeSdgzTab === 'gcr' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                <p className="text-slate-700 text-sm leading-relaxed">
-                  {text.sdg_section.gcr_desc}
-                </p>
-                <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                  <span>{text.sdg_section.link_text}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {text.sdg_section.gcr_objectifs.map((obj, idx) => (
-                  <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                    <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* 6 & 7. À PROPOS ET MÉTHODOLOGIE */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
-          <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
-            <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-40 h-40" /></div>
-            <div>
-              <div className="relative z-10 flex justify-between items-center mb-6">
-                <h2 className="text-xl font-serif font-bold flex items-center text-white">
-                  <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
-                </h2>
-              </div>
-              <div className="relative z-10 mb-4">
-                <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
-                <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
-                <div className="mt-4 pt-5 border-t border-slate-700/50">
-                  <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
-                  <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              {/* BLOC CONTACT & RÉTROACTION CITOYENNE / INSTITUTIONNELLE */}
-              <div className="relative z-10 bg-slate-800/90 p-5 rounded-md border border-slate-700 mt-6 space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-blue-400" />
-                  <h4 className="text-xs font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
-                </div>
-                <p className="text-xs text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
-                <div className="flex flex-wrap gap-2.5 pt-2">
-                  <a 
-                    href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
-                    className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-3.5 py-2 rounded-sm text-xs transition-colors shadow-sm"
-                  >
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
-                  </a>
-                  <a 
-                    href="https://www.linkedin.com/in/yassine-b-m" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-3.5 py-2 rounded-sm text-xs border border-slate-600 transition-colors shadow-sm"
-                  >
-                    <LinkedInIcon className="w-3.5 h-3.5 text-blue-300" />
-                    <span>LinkedIn</span>
-                    <ExternalLink className="w-3 h-3 opacity-60" />
-                  </a>
-                </div>
-              </div>
-
-              {/* CITATION ACADÉMIQUE */}
-              <div className="relative z-10 bg-slate-800/80 p-4 rounded-md border border-slate-700 mt-4">
-                <div className="flex items-center space-x-2 mb-1.5"><Quote className="w-3.5 h-3.5 text-blue-400" /><h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4></div>
-                <p className="text-xs text-slate-300 font-serif italic border-l-2 border-blue-500 pl-2.5">{text.about.citation_text}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
-            <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><BookOpen className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
-            <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
-            <div className="mt-6 pt-6 border-t border-slate-100">
-              <ul className="space-y-5">
-                <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '1. Sourcing : ' : '1. Sourcing: '}</strong>{text.method.m1}</p></li>
-                <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '2. Analyse Proportionnelle : ' : '2. Proportional Analysis: '}</strong>{text.method.m2}</p></li>
-                <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '3. Modélisation Comparative : ' : '3. Comparative Modeling: '}</strong>{text.method.m3}</p></li>
-                <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '4. Open Source & Intégrité : ' : '4. Open Source & Integrity: '}</strong>{text.method.m4}</p></li>
-              </ul>
-            </div>
-             
-            <div className="mt-8 pt-6 border-t border-slate-100">
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <a href="https://www.un.org/development/desa/pd/data/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
-                </a>
-                <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <Users className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
-                </a>
-                <a href="https://www.internal-displacement.org/database/displacement-data/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <MapPin className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s3}</span>
-                </a>
-                <a href="https://www.iom.int/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <Globe className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s4}</span>
-                </a>
-                <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <Scale className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s5}</span>
-                </a>
-                <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-                  <Landmark className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-                  <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s6}</span>
-                </a>
-              </div>
-            </div>
-             
-          </div>
-        </section>
-
+      {/* ----------------- CONTENU PRINCIPAL (ROUTAGE MANUEL) ----------------- */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
+        {activeTab === 'panorama' && (
+          <TabPanorama 
+            text={text} 
+            lang={lang} 
+            expandedMyth={expandedMyth} 
+            setExpandedMyth={setExpandedMyth} 
+          />
+        )}
+        {activeTab === 'explorer' && (
+          <TabExplorer 
+            text={text} 
+            lang={lang} 
+            activeSubRegion={activeSubRegion}
+            setActiveSubRegion={setActiveSubRegion}
+            activeSubTab={activeSubTab}
+            setActiveSubTab={setActiveSubTab}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            filteredCountries={filteredCountries}
+            display={display}
+            setShowModal={setShowModal}
+          />
+        )}
+        {activeTab === 'governance' && (
+          <TabGovernance 
+            text={text} 
+            lang={lang} 
+            activeSdgzTab={activeSdgzTab} 
+            setActiveSdgzTab={setActiveSdgzTab} 
+          />
+        )}
+        {activeTab === 'library' && (
+          <TabLibrary 
+            text={text} 
+            lang={lang} 
+          />
+        )}
+        {activeTab === 'methodology' && (
+          <TabMethodology 
+            text={text} 
+            lang={lang} 
+            expandedIndicator={expandedIndicator}
+            setExpandedIndicator={setExpandedIndicator}
+            exportIndicatorsCSV={exportIndicatorsCSV}
+          />
+        )}
+        {activeTab === 'about' && (
+          <TabAbout 
+            text={text} 
+            lang={lang} 
+          />
+        )}
       </main>
 
       {/* --- MODAL DÉTAILLÉ (FICHE PAYS) AVEC RATIFICATIONS UA & OIT --- */}
@@ -1492,7 +1624,7 @@ export default function App() {
             onClick={(e) => e.stopPropagation()} 
             className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
-             
+              
             {/* EN-TÊTE DU MODAL */}
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
               <div className="flex items-center space-x-5">
@@ -1502,7 +1634,7 @@ export default function App() {
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm">{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</p>
                 </div>
               </div>
-               
+                
               {/* BOUTONS D'ONGLETS */}
               <div className="flex bg-slate-100 p-1 rounded-sm border border-slate-200 print:hidden">
                 <button onClick={() => setModalView('demography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'demography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.demo}</button>
@@ -1514,7 +1646,7 @@ export default function App() {
 
             {/* CORPS DU MODAL */}
             <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
-               
+                
               {/* ONGLET 1 : DÉMOGRAPHIE */}
               <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
@@ -1533,7 +1665,7 @@ export default function App() {
                     <HistoricalChart data={display.history} colorClass="bg-blue-700" />
                   </div>
                 </div>
-                 
+                  
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-center items-center print:border print:p-4">
                    <h3 className="font-serif font-bold text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
                    <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-sm border border-slate-100 print:w-24 print:h-24" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
@@ -1548,7 +1680,7 @@ export default function App() {
 
               {/* ONGLET 2 : GÉOGRAPHIE & INTÉGRATION */}
               <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
-                 
+                  
                 <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
                   <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 mr-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
@@ -1558,7 +1690,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                 
+                  
                 <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
                   <div>
                     <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
@@ -1567,10 +1699,10 @@ export default function App() {
                       <p className="text-xs text-slate-500 italic print:text-[10px]">{lang === 'fr' ? "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne." : "This dynamic proves that Southern countries are primarily host and internal passage countries."}</p>
                     </div>
                   </div>
-                   
+                    
                   {!display.isRegion && (
                     <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
-                       
+                        
                       {/* PROTECTION & VULNÉRABILITÉS */}
                       {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
@@ -1705,7 +1837,7 @@ export default function App() {
                     </div>
                   </div>
                 )}
-                 
+                  
                 <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
                   <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
