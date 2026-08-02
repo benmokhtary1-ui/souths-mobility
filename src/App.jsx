@@ -83,7 +83,7 @@ const EconomicComparison = ({ remittances, aid, lang }) => {
 };
 
 // ============================================================================
-// 2. DONNÉES STATIQUES (Déplacées hors du composant App pour performance)
+// 2. DONNÉES STATIQUES
 // ============================================================================
 
 const t = {
@@ -366,6 +366,38 @@ const genericDesc = {
   trigger: { fr: "Asymétries de développement et chocs climatiques.", en: "Development asymmetries and climate shocks." },
   response: { fr: "Déplacements transfrontaliers de travail et stratégies de survie.", en: "Cross-border labor displacements and survival strategies." },
   impact: { fr: "Résilience économique via les transferts de fonds (Remittances 86,4 Mrd $ - UA 2021).", en: "Economic resilience through remittances ($86.4B - AU 2021)." }
+};
+
+// ----------------------------------------------------------------------------
+// NOUVEAU : LES AGRÉGATS DES SOUS-RÉGIONS (Niveau intermédiaire)
+// ----------------------------------------------------------------------------
+const aggregates = {
+  'africa_perspective': { 
+    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flag: "🌍", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
+    history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
+    distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
+    ...genericDesc
+  },
+  'af_med_perspective': { 
+    name: { fr: "Afrique Méditerranéenne (Sous-région)", en: "Mediterranean Africa (Sub-region)" }, flag: "🌊", stock: '3,4 M', female: '43.7', evolution: '1.8', retention: 65, remittances: 3.9, aid: 1.3,
+    history: [{ year: 1990, value: '1.0' }, { year: 2024, value: '3.4' }], ...genericDesc 
+  },
+  'af_west_perspective': { 
+    name: { fr: "Afrique de l'Ouest (Sous-région)", en: "West Africa (Sub-region)" }, flag: "🌳", stock: '7,6 M', female: '47.6', evolution: '2.1', retention: 84, remittances: 5.1, aid: 4.8,
+    history: [{ year: 1990, value: '3.5' }, { year: 2024, value: '7.6' }], ...genericDesc 
+  },
+  'af_central_perspective': { 
+    name: { fr: "Afrique Centrale (Sous-région)", en: "Central Africa (Sub-region)" }, flag: "🦍", stock: '4,2 M', female: '48.9', evolution: '3.5', retention: 92, remittances: 1.5, aid: 5.9,
+    history: [{ year: 1990, value: '1.5' }, { year: 2024, value: '4.2' }], ...genericDesc 
+  },
+  'af_east_perspective': { 
+    name: { fr: "Afrique de l'Est (Sous-région)", en: "East Africa (Sub-region)" }, flag: "⛰️", stock: '6,8 M', female: '49.1', evolution: '1.6', retention: 88, remittances: 2.8, aid: 5.1,
+    history: [{ year: 1990, value: '4.5' }, { year: 2024, value: '6.8' }], ...genericDesc 
+  },
+  'af_south_perspective': { 
+    name: { fr: "Afrique Australe (Sous-région)", en: "Southern Africa (Sub-region)" }, flag: "🦓", stock: '4,5 M', female: '44.8', evolution: '3.2', retention: 95, remittances: 1.9, aid: 2.3,
+    history: [{ year: 1990, value: '2.5' }, { year: 2024, value: '4.5' }], ...genericDesc 
+  }
 };
 
 const countryData = {
@@ -815,15 +847,6 @@ const countryData = {
   ]
 };
 
-const aggregates = {
-  'africa_perspective': { 
-    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flag: "🌍", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
-    history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
-    distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
-    ...genericDesc
-  }
-};
-
 const indicatorThemes = [
   {
     theme_fr: "Intégration & Libre Circulation", theme_en: "Integration & Free Movement", icon: <GitMerge />, color: "text-blue-800",
@@ -1022,21 +1045,6 @@ const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
         </div>
       </div>
         
-      {/* Section Carte Afrique */}
-      <div className="mt-8 bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col items-center print:border-slate-300 print:bg-white">
-        <h3 className="text-lg font-serif font-bold text-slate-900 mb-6 uppercase tracking-widest text-center">
-          {lang === 'fr' ? "Territoires et Mobilités" : "Territories and Mobilities"}
-        </h3>
-        <img 
-          src="/map_africa.png" 
-          alt="Carte de l'Afrique" 
-          className="max-w-md w-full h-auto rounded-sm shadow-md border border-slate-200" 
-        />
-        <p className="text-[10px] text-slate-500 mt-4 italic">
-          {lang === 'fr' ? "Représentation cartographique à titre illustratif." : "Cartographic representation for illustrative purposes."}
-        </p>
-      </div>
-        
       <div className="relative z-10 mt-8 flex items-start space-x-3 bg-slate-800/50 p-4 rounded-sm border-l-4 border-blue-500 print:bg-slate-50 print:border-slate-200 print:border-l-blue-700">
         <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5 print:text-blue-700" />
         <p className="text-slate-300 text-sm leading-relaxed print:text-slate-700">{text.global_stats.note}</p>
@@ -1049,7 +1057,22 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
     <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2></div>
     <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
+      
+      {/* SIDEBAR EXPLORATEUR */}
       <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
+        
+        {/* NOUVEAU : LA CARTE AU SOMMET DE L'EXPLORATEUR */}
+        <div className="p-5 pb-0">
+          <div className="bg-slate-800/40 rounded-md border border-slate-700/50 p-3 flex justify-center items-center shadow-inner">
+            <img 
+              src="/map_africa.png" 
+              alt="Carte des régions" 
+              className="w-3/4 h-auto opacity-75 hover:opacity-100 transition-opacity" 
+            />
+          </div>
+        </div>
+
+        {/* MENU DÉROULANT DES SOUS-RÉGIONS */}
         <div className="p-5 border-b border-slate-800 bg-slate-800/30">
           <h4 className="text-blue-300 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center"><MapIcon className="w-3 h-3 mr-1.5" /> {text.sidebar.subregion}</h4>
           <select value={activeSubRegion} onChange={(e) => { setActiveSubRegion(e.target.value); setActiveSubTab('perspective'); }} className="w-full bg-[#0f172a] border border-slate-700 rounded-sm py-2 px-3 text-xs font-bold text-slate-200 focus:ring-1 focus:ring-blue-500 outline-none cursor-pointer appearance-none">
@@ -1057,17 +1080,26 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
             {Object.keys(t[lang].regions).map(regId => (<option key={regId} value={regId}>{text.regions[regId]}</option>))}
           </select>
         </div>
+
+        {/* RECHERCHE */}
         <div className="p-5 pb-2">
           <div className="relative"><input type="text" placeholder={text.sidebar.search} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/80 border border-slate-700 rounded-sm py-2 pl-8 pr-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-shadow" /><Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" /></div>
         </div>
+
+        {/* LISTE DES BOUTONS */}
         <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar max-h-[400px]">
-          <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" /><span className="truncate">{activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}</span></button>
+          <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" />
+            <span className="truncate">
+              {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
+            </span>
+          </button>
           {filteredCountries.map((item) => (
             <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span><span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>{activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}</button>
           ))}
         </div>
       </div>
         
+      {/* VUE PRINCIPALE */}
       <div className="flex-1 p-6 md:p-10 bg-slate-50">
         <div className="flex items-center space-x-5 mb-10"><span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span><div><h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">{display.name}</h3><div className="mt-3"><span className="px-3 py-1 bg-white text-blue-800 text-[9px] font-bold uppercase rounded-sm tracking-widest border border-blue-200 shadow-sm">{display.isRegion ? text.badge.regional : text.badge.country}</span></div></div></div>
           
@@ -1437,6 +1469,8 @@ export default function App() {
 
   const display = useMemo(() => {
     const country = currentCountries.find(c => c.id === activeSubTab);
+    
+    // Si on a cliqué sur un pays précis
     if (country && activeSubTab !== 'perspective') {
       return { 
         name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, stock: country.stock, female: country.female, evolution: country.evolution,
@@ -1448,7 +1482,11 @@ export default function App() {
         isRegion: false
       };
     }
-    const fallback = aggregates['africa_perspective'];
+    
+    // NOUVEAU : Si on est sur "Perspective", on charge les données du continent OU de la sous-région
+    const fallbackKey = activeSubRegion === 'all' ? 'africa_perspective' : `${activeSubRegion}_perspective`;
+    const fallback = aggregates[fallbackKey] || aggregates['africa_perspective'];
+    
     return {
       name: typeof fallback.name === 'object' ? (fallback.name?.[lang] || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
       flag: fallback.flag, stock: fallback.stock, female: fallback.female, evolution: fallback.evolution,
