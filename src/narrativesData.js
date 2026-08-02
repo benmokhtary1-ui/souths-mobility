@@ -49,7 +49,7 @@ export const evidenceCheckData = [
     reality: "Une grande partie des mobilités africaines est régulière, notamment grâce aux accords régionaux de libre circulation, aux visas, aux permis de séjour ou aux migrations de travail. Les données sur les migrations irrégulières restent incomplètes par définition.",
     indicators: ["Visas délivrés", "Titres de séjour", "Mobilité CEDEAO", "Ratification des protocoles"],
     sources: ["OIM - World Migration Report 2024", "UA/OIT/OIM - 3e Rapport sur les statistiques migratoires (2021)", "CEDEAO - Données de libre circulation"],
-    limits: "L'irrégularité dépend des législations nationales.",
+    limits: "L'irrégularité dépend des législations nationales et internationales.",
     why_persists: ["Invisibilité statistique et médiatique de la migration régulière et administrative."]
   },
   {

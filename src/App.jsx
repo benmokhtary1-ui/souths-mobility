@@ -4,7 +4,8 @@ import {
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
-  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Copy, Check, Mail
+  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, 
+  Copy, Check, Mail
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -168,7 +169,7 @@ const t = {
           { num: "Obj. 16", title: "Intégration et cohésion", desc: "Favoriser l'inclusion à long terme et la cohésion sociale dans les sociétés d'accueil." },
           { num: "Obj. 17", title: "Élimination des discriminations", desc: "Éliminer toutes les formes de discrimination et promouvoir un discours public factuel." },
           { num: "Obj. 18", title: "Compétences", desc: "Investir dans le développement des compétences et faciliter la reconnaissance mutuelle des qualifications." },
-          { num: "Obj. 19", title: "Diasporas", desc: "Créer des conditions propices pour que les diasporas contribuent pleinement au développement durable." },
+          { num: "Obj. 19", title: "Diasporas", desc: "Créer conditions propices pour que les diasporas contribuent pleinement au développement durable." },
           { num: "Obj. 20", title: "Transferts de fonds", desc: "Promouvoir des transferts de fonds rapides, sûrs et moins coûteux et stimuler l'inclusion financière." },
           { num: "Obj. 21", title: "Retour et réadmission", desc: "Coopérer pour assurer un retour et une réadmission sûrs et dignes, ainsi qu'une réintégration durable." },
           { num: "Obj. 22", title: "Sécurité sociale", desc: "Établir des mécanismes de portabilité des droits sociaux et des prestations de retraite." },
@@ -194,15 +195,76 @@ const t = {
         { myth: "Le développement économique stoppe mécaniquement les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur (2024)", stat_val: 80, color: "bg-rose-700", desc: "Démontré empiriquement : l'augmentation initiale des revenus fournit aux ménages le capital financier nécessaire pour financer un projet migratoire régulier." },
         { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l'emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : 27,5% des migrants occupés travaillent dans l'agriculture et comblent des pénuries de main-d'œuvre tout en dynamisant les marchés locaux." }
       ],
-      about: { 
-        p1: "South(s) Mobility DataHub est un portail indépendant de recherche et de visualisation Open Data, situé à la jonction de la science des données, de la démographie et de la géopolitique des mobilités.", 
-        p2: "Rigueur Empirique & Neutralité : En écartant les caricatures sensationnalistes, ce projet s'appuie sur la consolidation stricte des rapports officiels de l'Union Africaine (CUA), des agences de l'ONU (UNDESA, UNHCR, OIM, OIT) et des institutions financières (Banque Mondiale).",
-        expanded_p1: "Actuellement en phase de construction active, le portail fait l'objet de mises à jour régulières et d'enrichissements continus de ses bases de données et de ses indicateurs analytiques.",
-        expanded_p2: "À terme, l'objectif est de disposer de l'ensemble des données relatives aux migrations et à la mobilité humaine en Afrique sur une large gamme thématique, puis de répliquer ce modèle pour l'Amérique latine et l'Asie, dans une perspective ancrée dans les Suds (South(s)) et la majorité globale (global majority).",
-        citation_title: "Citation Académique & Institutionnelle (Norme APA) :",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Analyse empirique des migrations et gouvernance des mobilités africaines. Récupéré de https://southsmobility.org",
-        contact_title: "Contact & Collaborations :",
-        contact_desc: "Ce DataHub a vocation à s'enrichir. Pour proposer un jeu de données, un working paper, ou discuter d'un partenariat académique / institutionnel :"
+      about: {
+        intro_title: "À propos de South(s) Mobility",
+        intro_subtitle: "Une infrastructure ouverte pour comprendre les mobilités dans les Suds",
+        intro_p1: "South(s) Mobility DataHub est une plateforme indépendante de recherche, de données et de visualisation consacrée aux mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique.",
+        intro_p2: "À l'intersection des sciences sociales, de la science des données et des études sur les migrations, la plateforme rassemble, harmonise et valorise des données, indicateurs, cartes, publications, instruments juridiques et ressources documentaires provenant d'institutions internationales, régionales et nationales.",
+        intro_p3: "Son ambition est de rendre les données sur les mobilités humaines plus accessibles, plus comparables et plus intelligibles, afin de favoriser une compréhension empirique, nuancée et documentée des dynamiques migratoires contemporaines.",
+        
+        research_title: "Une plateforme née de la recherche",
+        research_p1: "South(s) Mobility est issu d'un projet de recherche doctorale consacré à la gouvernance des migrations africaines.",
+        research_p2: "Au cours de cette recherche, un constat s'est imposé : une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources demeurent largement dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
+        research_p3: "South(s) Mobility est né de cette observation. Le projet vise à rassembler ces ressources dans un environnement unique, ouvert et évolutif afin de faciliter leur consultation, leur comparaison et leur réutilisation par les chercheurs, les étudiants, les journalistes, les décideurs publics, les organisations internationales et l'ensemble des personnes intéressées par les mobilités humaines.",
+        research_p4: "Il s'inscrit dans une démarche de science ouverte (Open Science), de diffusion des connaissances et de valorisation de la recherche.",
+
+        data_title: "Une approche fondée sur les données",
+        data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
+        data_list: [
+          "Commission de l'Union africaine (AUC)",
+          "Nations Unies (UN DESA, UNHCR, OIM, OIT, UNESCO…)",
+          "Banque mondiale",
+          "Banque africaine de développement",
+          "OCDE",
+          "Internal Displacement Monitoring Centre (IDMC)",
+          "Communautés économiques régionales africaines",
+          "Instituts nationaux de statistique"
+        ],
+        data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
+        data_p3: "South(s) Mobility ne produit pas de statistiques officielles. La plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
+
+        south_title: "Une perspective ancrée dans les Suds",
+        south_p1: "South(s) Mobility adopte une perspective centrée sur les Suds, en accordant une attention particulière aux dynamiques souvent moins visibles dans les bases de données internationales. Cela inclut notamment :",
+        south_list: [
+          "les migrations intra-africaines",
+          "les mobilités Sud-Sud",
+          "les communautés économiques régionales africaines",
+          "les instruments juridiques continentaux",
+          "les politiques africaines de mobilité",
+          "les corridors régionaux",
+          "les diasporas",
+          "les déplacements internes",
+          "les connaissances produites depuis les institutions et les chercheurs des Suds"
+        ],
+        south_p2: "À plus long terme, cette approche a vocation à être progressivement étendue à d'autres régions du monde, notamment l'Amérique latine, les Caraïbes et l'Asie.",
+
+        evolution_title: "Une plateforme en évolution permanente",
+        evolution_p1: "South(s) Mobility est un projet évolutif. De nouvelles bases de données, cartes interactives, tableaux de bord, visualisations, fiches méthodologiques, analyses, référentiels documentaires et outils de recherche sont ajoutés régulièrement. Les développements en cours comprennent notamment :",
+        evolution_list: [
+          "un Observatoire des narratifs sur les migrations",
+          "des profils pays",
+          "des profils des communautés économiques régionales",
+          "un référentiel des instruments juridiques africains",
+          "une bibliothèque documentaire",
+          "des séries chronologiques harmonisées",
+          "des tableaux de bord interactifs",
+          "de nouveaux indicateurs comparatifs"
+        ],
+        evolution_p2: "L'objectif est de construire progressivement une infrastructure de référence pour l'étude des mobilités humaines dans les Suds.",
+
+        founder_title: "À propos du fondateur",
+        founder_p1: "South(s) Mobility a été fondé par Yassine Ben Mokhtar, doctorant en relations internationales dont les recherches portent sur la gouvernance des migrations africaines, les dynamiques institutionnelles continentales et les politiques de mobilité.",
+        founder_p2: "Le projet s'appuie sur plusieurs années de recherche académique, d'analyse documentaire et de terrain, ainsi que sur une expérience professionnelle auprès d'institutions travaillant sur les questions migratoires et de gouvernance en Afrique.",
+        founder_p3: "South(s) Mobility constitue à la fois un prolongement de cette recherche et une initiative de valorisation scientifique destinée à rendre les connaissances, les données et les ressources plus accessibles au plus grand nombre.",
+        founder_p4: "Les analyses, interprétations et éventuelles erreurs relèvent de la seule responsabilité de son auteur et n'engagent aucune institution avec laquelle il a collaboré.",
+
+        collab_title: "Collaborer & Contact",
+        collab_p1: "South(s) Mobility est ouvert aux collaborations académiques, institutionnelles et techniques. Les propositions de jeux de données, publications, visualisations, corrections, projets communs ou partenariats sont les bienvenues.",
+        contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
+        disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
+        
+        citation_title: "Citation Académique (Norme APA) :",
+        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://southsmobility.vercel.app/"
       },
       method: { 
         summary: "Architecture méthodologique fondée sur la consolidation et l'harmonisation de bases de données certifiées :",
@@ -265,7 +327,7 @@ const t = {
       },
       global_stats: {
         world: "Global Total (2024)", europe: "Europe (2024)", asia: "Asia (2024)", na: "North America (2024)", africa: "Africa (2024)", latam: "Latin America (2024)", share: "Global share:",
-        note: "UNDESA (2024) Data: Africa accounts for only 9.5% of the global migrant stock (29M), well behind Europe (94M) and Asia (92M)."
+        note: "UNDESA (2024) Data: Africa accounts for only 9.5% of the global migrant stock (28.5M), well behind Europe (94M) and Asia (92M)."
       },
       sdg_section: {
         title: "International Frameworks: SDGs (2030), GCM (2018) & GCR (2018)",
@@ -328,15 +390,76 @@ const t = {
         { myth: "Economic growth automatically stops emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst (2024)", stat_val: 80, color: "bg-rose-700", desc: "Empirically proven: initial income growth provides households with the financial capital needed to undertake regular migration projects." },
         { myth: "Migrant workers are a burden on host economies.", real: "Drivers of local employment and value creation.", stat_text: "+ Value (2021)", stat_val: 85, color: "bg-emerald-700", desc: "AU/ILO Report (2021): 27.5% of employed migrants work in agriculture, filling labor shortages and stimulating local trade." }
       ],
-      about: { 
-        p1: "South(s) Mobility DataHub is an independent data visualization and research portal at the intersection of data science, demography, and mobility geopolitics.", 
-        p2: "Empirical Rigor & Neutrality: Bypassing sensationalist narratives, this project strictly consolidates official reports from the African Union (AUC), UN agencies (UNDESA, UNHCR, IOM, ILO), and financial institutions (World Bank).",
-        expanded_p1: "Currently under active construction, the portal undergoes regular updates and continuous dataset and indicator expansions.",
-        expanded_p2: "Ultimately, the objective is to provide comprehensive data on migration and human mobility across Africa over a wide range of themes, and subsequently replicate this model for Latin America and Asia, within a perspective rooted in the Global South and the global majority.",
-        citation_title: "Academic & Institutional Citation (APA format):",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: Empirical analysis of African migration and mobility governance. Retrieved from https://southsmobility.org",
-        contact_title: "Contact & Collaborations:",
-        contact_desc: "This DataHub is intended to grow. To propose a dataset, a working paper, or discuss an academic / institutional partnership:"
+      about: {
+        intro_title: "About South(s) Mobility",
+        intro_subtitle: "An open infrastructure to understand mobility in the Global South",
+        intro_p1: "South(s) Mobility DataHub is an independent research, data, and visualization platform dedicated to human mobility in the Global South, with an initial focus on Africa.",
+        intro_p2: "At the intersection of social sciences, data science, and migration studies, the platform gathers, harmonizes, and leverages data, indicators, maps, publications, legal instruments, and documentary resources from international, regional, and national institutions.",
+        intro_p3: "Its ambition is to make data on human mobility more accessible, comparable, and intelligible, in order to foster an empirical, nuanced, and documented understanding of contemporary migratory dynamics.",
+        
+        research_title: "A platform born from research",
+        research_p1: "South(s) Mobility stems from a doctoral research project focused on the governance of African migrations.",
+        research_p2: "During this research, a clear observation emerged: a vast amount of quality data is already produced by public and international institutions, but these resources remain widely scattered, heterogeneous, and sometimes difficult to access. Cross-referencing, contextualizing, or simply finding them often requires considerable effort.",
+        research_p3: "South(s) Mobility was born from this observation. The project aims to gather these resources in a single, open, and scalable environment to facilitate their consultation, comparison, and reuse by researchers, students, journalists, public decision-makers, international organizations, and anyone interested in human mobility.",
+        research_p4: "It is part of an Open Science approach, aimed at disseminating knowledge and promoting research.",
+
+        data_title: "A data-driven approach",
+        data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
+        data_list: [
+          "African Union Commission (AUC)",
+          "United Nations (UN DESA, UNHCR, IOM, ILO, UNESCO…)",
+          "World Bank",
+          "African Development Bank",
+          "OECD",
+          "Internal Displacement Monitoring Centre (IDMC)",
+          "African Regional Economic Communities",
+          "National Statistical Institutes"
+        ],
+        data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
+        data_p3: "South(s) Mobility does not produce official statistics. The platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
+
+        south_title: "A perspective rooted in the Souths",
+        south_p1: "South(s) Mobility adopts a Global South-centric perspective, paying special attention to dynamics that are often less visible in international databases. This includes:",
+        south_list: [
+          "intra-African migrations",
+          "South-South mobilities",
+          "African regional economic communities",
+          "continental legal instruments",
+          "African mobility policies",
+          "regional corridors",
+          "diasporas",
+          "internal displacements",
+          "knowledge produced by institutions and researchers from the Global South"
+        ],
+        south_p2: "In the longer term, this approach is intended to be progressively extended to other regions of the world, notably Latin America, the Caribbean, and Asia.",
+
+        evolution_title: "A constantly evolving platform",
+        evolution_p1: "South(s) Mobility is an evolving project. New databases, interactive maps, dashboards, visualizations, methodological sheets, analyses, documentary repositories, and research tools are added regularly. Ongoing developments include:",
+        evolution_list: [
+          "a Migration Narratives Observatory",
+          "country profiles",
+          "regional economic community profiles",
+          "a repository of African legal instruments",
+          "a documentary library",
+          "harmonized time series",
+          "interactive dashboards",
+          "new comparative indicators"
+        ],
+        evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of human mobility in the Global South.",
+
+        founder_title: "About the founder",
+        founder_p1: "South(s) Mobility was founded by Yassine Ben Mokhtar, a PhD candidate in international relations whose research focuses on African migration governance, continental institutional dynamics, and mobility policies.",
+        founder_p2: "The project is built on several years of academic research, documentary and field analysis, as well as professional experience with institutions working on migration and governance issues in Africa.",
+        founder_p3: "South(s) Mobility constitutes both an extension of this research and a scientific dissemination initiative designed to make knowledge, data, and resources more accessible to a wider audience.",
+        founder_p4: "Analyses, interpretations, and any potential errors are the sole responsibility of the author and do not commit any institution with which he has collaborated.",
+
+        collab_title: "Collaborate & Contact",
+        collab_p1: "South(s) Mobility is open to academic, institutional, and technical collaborations. Proposals for datasets, publications, visualizations, corrections, joint projects, or partnerships are welcome.",
+        contact_p: "For any questions, collaboration proposals, or contributions to the project:",
+        disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
+        
+        citation_title: "Academic Citation (APA format):",
+        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://southsmobility.vercel.app/"
       },
       method: { 
         summary: "Methodological architecture based on the consolidation and harmonization of certified open datasets:",
@@ -953,7 +1076,6 @@ const indicatorThemes = [
   }
 ];
 
-
 // ============================================================================
 // 3. COMPOSANTS DES ONGLETS
 // ============================================================================
@@ -1035,7 +1157,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
               }`}
             >
-              {/* En-tête de la carte (J'ai enlevé le h-full qui causait l'étirement) */}
+              {/* En-tête de la carte */}
               <div 
                 className="p-6 cursor-pointer group flex flex-col"
                 onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
@@ -1069,7 +1191,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 </div>
               </div>
 
-              {/* Zone extensible (J'ai mis max-h-[2000px] pour éviter que le texte soit coupé) */}
+              {/* Zone extensible */}
               <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                 <div className="p-6 space-y-6">
                   
@@ -1150,13 +1272,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   return (
     <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
       
-      {/* --- LE TITRE EST MAINTENANT TOUT EN HAUT --- */}
+      {/* 1. TITRE EXPLORATEUR */}
       <div className="flex items-center space-x-3 mb-6">
         <div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div>
         <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2>
       </div>
 
-      {/* --- LA CARTE VIENT EN DEUXIÈME --- */}
+      {/* 2. LA CARTE */}
       <div className="mb-10 bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-inner flex flex-col items-center justify-center">
         <img 
           src="/map_africa.png" 
@@ -1168,7 +1290,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         </p>
       </div>
 
-      {/* 3. NOUVELLE SÉLECTION INTUITIVE DES SOUS-RÉGIONS */}
+      {/* 3. SÉLECTION INTUITIVE DES SOUS-RÉGIONS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         {regionCards.map(rc => {
           const isActive = activeSubRegion === rc.id;
@@ -1211,7 +1333,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
                 <span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span>
                 <span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>
-                {activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}
+                <ChevronRight className={`w-3.5 h-3.5 ml-auto ${activeSubTab === item.id ? 'text-blue-600' : 'text-transparent group-hover:text-slate-500'}`} />
               </button>
             ))}
           </div>
@@ -1505,7 +1627,6 @@ const TabAbout = ({ text, lang }) => {
     try {
       await navigator.clipboard.writeText(text.about.citation_text);
       setIsCopied(true);
-      // Remet le bouton à son état normal après 2 secondes
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error("Erreur lors de la copie de la citation : ", err);
@@ -1513,79 +1634,169 @@ const TabAbout = ({ text, lang }) => {
   };
 
   return (
-    <section className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
-      <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
+    <section className="max-w-5xl mx-auto animate-in fade-in zoom-in-95 duration-500 space-y-6">
+      
+      {/* HEADER / INTRO */}
+      <div className="bg-[#0f172a] rounded-xl p-8 md:p-12 text-white shadow-lg relative overflow-hidden border border-slate-800">
         <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
-        <div>
-          <div className="relative z-10 flex justify-between items-center mb-6">
-            <h2 className="text-xl font-serif font-bold flex items-center text-white">
-              <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
-            </h2>
-          </div>
-          <div className="relative z-10 mb-4">
-            <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
-            <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
-            <div className="mt-4 pt-5 border-t border-slate-700/50">
-              <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
-              <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          {/* BLOC CONTACT & COLLABORATIONS */}
-          <div className="relative z-10 bg-slate-800/90 p-6 rounded-md border border-slate-700 mt-6 space-y-4">
-            <div className="flex items-center space-x-2">
-              <Mail className="w-5 h-5 text-blue-400" />
-              <h4 className="text-sm font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
-            </div>
-            <p className="text-sm text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <a 
-                href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
-                className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm transition-colors shadow-sm"
-              >
-                <Mail className="w-4 h-4" />
-                <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
-              </a>
-              <a 
-                href="https://www.linkedin.com/in/yassine-b-m" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm border border-slate-600 transition-colors shadow-sm"
-              >
-                <LinkedInIcon className="w-4 h-4 text-blue-300" />
-                <span>LinkedIn</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-              </a>
-            </div>
-          </div>
-
-          {/* CITATION ACADÉMIQUE */}
-          <div className="relative z-10 bg-slate-800/80 p-5 rounded-md border border-slate-700 mt-5 group transition-colors hover:border-slate-600">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-              <div className="flex items-center space-x-2">
-                <Quote className="w-4 h-4 text-blue-400" />
-                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4>
-              </div>
-              
-              {/* Le nouveau bouton de copie */}
-              <button 
-                onClick={handleCopyCitation}
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-sm text-xs font-bold transition-all border shadow-sm self-start sm:self-auto focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:ring-offset-slate-800
-                ${isCopied ? 'bg-emerald-900/50 text-emerald-400 border-emerald-800/50' : 'bg-slate-700 hover:bg-slate-600 text-slate-300 border-slate-600 hover:text-white'}"
-              >
-                {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{isCopied ? (lang === 'fr' ? 'Copié !' : 'Copied!') : (lang === 'fr' ? 'Copier' : 'Copy')}</span>
-              </button>
-            </div>
-            
-            <p className="text-sm text-slate-300 font-serif italic border-l-2 border-blue-500 pl-3 leading-relaxed">
-              {text.about.citation_text}
-            </p>
+        <div className="relative z-10">
+          <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-3">
+            {text.about.intro_title}
+          </h1>
+          <p className="text-blue-300 font-bold text-sm md:text-base uppercase tracking-widest mb-8">
+            {text.about.intro_subtitle}
+          </p>
+          <div className="space-y-4 text-slate-300 leading-relaxed max-w-3xl">
+            <p>{text.about.intro_p1}</p>
+            <p>{text.about.intro_p2}</p>
+            <p>{text.about.intro_p3}</p>
           </div>
         </div>
       </div>
+
+      {/* CORPS DU TEXTE EN GRILLE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Née de la recherche */}
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-blue-50 rounded-sm"><BookOpen className="w-5 h-5 text-blue-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.research_title}</h2>
+          </div>
+          <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+            <p>{text.about.research_p1}</p>
+            <p>{text.about.research_p2}</p>
+            <p>{text.about.research_p3}</p>
+            <p className="font-medium text-slate-800">{text.about.research_p4}</p>
+          </div>
+        </div>
+
+        {/* Fondée sur les données */}
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-emerald-50 rounded-sm"><Database className="w-5 h-5 text-emerald-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.data_title}</h2>
+          </div>
+          <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+            <p>{text.about.data_p1}</p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-4">
+              {text.about.data_list.map((item, idx) => (
+                <li key={idx} className="flex items-start">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2 shrink-0 mt-0.5" />
+                  <span className="text-xs">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{text.about.data_p2}</p>
+            <p className="italic">{text.about.data_p3}</p>
+          </div>
+        </div>
+
+        {/* Ancrée dans les Suds */}
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-amber-50 rounded-sm"><Globe className="w-5 h-5 text-amber-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.south_title}</h2>
+          </div>
+          <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+            <p>{text.about.south_p1}</p>
+            <ul className="space-y-2 my-4 bg-slate-50 p-4 rounded-md border border-slate-100">
+              {text.about.south_list.map((item, idx) => (
+                <li key={idx} className="flex items-center">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3"></span>
+                  <span className="text-sm font-medium text-slate-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{text.about.south_p2}</p>
+          </div>
+        </div>
+
+        {/* Évolution permanente */}
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-purple-50 rounded-sm"><TrendingUp className="w-5 h-5 text-purple-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.evolution_title}</h2>
+          </div>
+          <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
+            <p>{text.about.evolution_p1}</p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-4">
+              {text.about.evolution_list.map((item, idx) => (
+                <li key={idx} className="flex items-start">
+                  <ArrowRight className="w-3.5 h-3.5 text-purple-400 mr-2 shrink-0 mt-1" />
+                  <span className="text-xs">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="font-bold text-slate-800">{text.about.evolution_p2}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* BLOC FONDATEUR & CONTACT (Pleine largeur) */}
+      <div className="bg-slate-50 p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-10">
+        
+        {/* Le Fondateur */}
+        <div className="flex-1 space-y-4">
+          <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.founder_title}</h2>
+          <div className="text-sm text-slate-600 leading-relaxed space-y-3">
+            <p>{text.about.founder_p1}</p>
+            <p>{text.about.founder_p2}</p>
+            <p>{text.about.founder_p3}</p>
+            <p className="text-xs italic text-slate-500 border-l-2 border-slate-300 pl-3 mt-4">{text.about.founder_p4}</p>
+          </div>
+        </div>
+
+        {/* Contact & Collaborer */}
+        <div className="flex-1 flex flex-col justify-between space-y-6">
+          <div>
+            <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.collab_title}</h2>
+            <p className="text-sm text-slate-600 leading-relaxed mb-4">{text.about.collab_p1}</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{text.about.contact_p}</p>
+            
+            <div className="flex flex-col gap-3">
+              <a href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
+                 className="inline-flex items-center space-x-3 bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 hover:text-blue-700 hover:border-blue-200 px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
+                <Mail className="w-4 h-4" />
+                <span className="text-sm font-bold">benmokhtary1@gmail.com</span>
+              </a>
+              <a href="https://www.linkedin.com/in/yassine-b-m" target="_blank" rel="noopener noreferrer" 
+                 className="inline-flex items-center space-x-3 bg-[#0a66c2] hover:bg-[#084e96] text-white px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
+                <LinkedInIcon className="w-4 h-4" />
+                <span className="text-sm font-bold">Yassine Ben Mokhtar</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-70 ml-1" />
+              </a>
+            </div>
+          </div>
+
+          <div className="bg-amber-50 text-amber-800 text-xs p-4 rounded-md border border-amber-200 leading-relaxed">
+            {text.about.disclaimer}
+          </div>
+        </div>
+      </div>
+
+      {/* CITATION ACADÉMIQUE */}
+      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm group hover:border-blue-300 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+          <div className="flex items-center space-x-2">
+            <Quote className="w-5 h-5 text-blue-500" />
+            <h4 className="text-sm font-bold uppercase tracking-widest text-slate-700">{text.about.citation_title}</h4>
+          </div>
+          
+          <button 
+            onClick={handleCopyCitation}
+            className={`inline-flex items-center justify-center space-x-1.5 px-4 py-2 rounded-sm text-xs font-bold transition-all border shadow-sm w-full sm:w-auto
+            ${isCopied ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'}`}
+          >
+            {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <span>{isCopied ? (lang === 'fr' ? 'Copié !' : 'Copied!') : (lang === 'fr' ? 'Copier' : 'Copy')}</span>
+          </button>
+        </div>
+        <p className="text-sm text-slate-600 font-serif italic border-l-2 border-blue-500 pl-4 leading-relaxed">
+          {text.about.citation_text}
+        </p>
+      </div>
+      
     </section>
   );
 };
@@ -1598,7 +1809,7 @@ const TabAbout = ({ text, lang }) => {
 export default function App() {
   // États Globaux
   const [lang, setLang] = useState('fr');
-  const [activeTab, setActiveTab] = useState('evidence'); // Corrigé ici
+  const [activeTab, setActiveTab] = useState('evidence'); 
   const [isLoaded, setIsLoaded] = useState(false);
   
   // États Explorateur
@@ -1692,7 +1903,7 @@ export default function App() {
 
   // Définition de la structure du menu
   const navigation = [
-    { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } }, // Corrigé ici
+    { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'library', icon: BookOpen, label: { fr: 'Bibliothèque', en: 'Library' } },
@@ -1769,7 +1980,7 @@ export default function App() {
 
       {/* ----------------- CONTENU PRINCIPAL (ROUTAGE MANUEL) ----------------- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
-        {activeTab === 'evidence' && ( // Corrigé ici
+        {activeTab === 'evidence' && (
           <TabEvidenceCheck 
             text={text} 
             lang={lang} 
