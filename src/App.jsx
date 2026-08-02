@@ -959,6 +959,7 @@ const indicatorThemes = [
 
 const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
   <div className="space-y-16 animate-in fade-in zoom-in-95 duration-500">
+    
     {/* HERO HEADER */}
     <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg">
       <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
@@ -969,7 +970,70 @@ const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
       </div>
     </header>
 
-    {/* 1. DÉCONSTRUCTION */}
+    {/* 1. PERSPECTIVE GLOBALE (Déplacée en premier et redesignée) */}
+    <section className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-xl border border-slate-800 relative overflow-hidden print:bg-white print:border print:text-slate-900 print:shadow-none">
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 print:hidden"><Globe className="w-96 h-96" /></div>
+      
+      {/* En-tête de la section */}
+      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-blue-900/50 rounded-sm border border-blue-800 text-blue-300 print:bg-slate-100 print:text-blue-800"><Globe className="h-5 w-5" /></div>
+          <h2 className="text-xl md:text-2xl font-serif font-bold tracking-tight">{text.sections.global}</h2>
+        </div>
+        <div className="bg-slate-800/80 border border-slate-700 px-5 py-2.5 rounded-md flex items-center gap-3 shadow-inner">
+           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{text.global_stats.world}</span>
+           <span className="text-xl font-bold text-white">304 M</span>
+        </div>
+      </div>
+        
+      {/* Grille des Régions */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 gap-5 mb-8">
+        
+        {/* Europe */}
+        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.europe}</span>
+          <span className="text-3xl font-serif font-bold text-white mb-4">94 M</span>
+          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '30.9%'}}></div></div>
+          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">30.9%</span>
+        </div>
+        
+        {/* Asie */}
+        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.asia}</span>
+          <span className="text-3xl font-serif font-bold text-white mb-4">92 M</span>
+          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '30.2%'}}></div></div>
+          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">30.2%</span>
+        </div>
+        
+        {/* Amérique du Nord */}
+        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.na}</span>
+          <span className="text-3xl font-serif font-bold text-white mb-4">61 M</span>
+          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '20.1%'}}></div></div>
+          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">20.1%</span>
+        </div>
+
+        {/* L'Afrique - Mise en évidence (Prend 2 colonnes) */}
+        <div className="bg-blue-900/40 p-6 rounded-lg border border-blue-500/50 transform hover:scale-[1.02] transition-transform shadow-lg relative overflow-hidden flex flex-col justify-between md:col-span-2">
+          <div className="absolute top-0 right-0 p-4 opacity-10"><Globe className="w-24 h-24 text-blue-300" /></div>
+          <span className="text-xs font-bold text-blue-300 uppercase tracking-widest mb-2 relative z-10">{text.global_stats.africa}</span>
+          <div className="flex items-end gap-3 mb-4 relative z-10">
+            <span className="text-5xl font-serif font-bold text-blue-100">29 M</span>
+            <span className="text-sm font-bold text-blue-400 mb-1.5">({text.global_stats.share} 9.5%)</span>
+          </div>
+          <div className="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden relative z-10"><div className="bg-blue-400 h-full shadow-[0_0_10px_rgba(96,165,250,0.5)]" style={{width: '9.5%'}}></div></div>
+        </div>
+
+      </div>
+        
+      {/* Note d'analyse */}
+      <div className="relative z-10 flex items-start space-x-4 bg-slate-800/80 p-5 rounded-lg border-l-4 border-blue-500 shadow-sm">
+        <Info className="w-6 h-6 text-blue-400 shrink-0 mt-0.5" />
+        <p className="text-slate-200 text-sm leading-relaxed font-medium">{text.global_stats.note}</p>
+      </div>
+    </section>
+
+    {/* 2. DÉCONSTRUCTION (Déplacée en second) */}
     <section>
       <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-rose-50 rounded-sm text-rose-800"><ShieldAlert className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.debunk}</h2></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -1004,52 +1068,6 @@ const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
       </div>
     </section>
 
-    {/* 2. PERSPECTIVE GLOBALE */}
-    <section className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-xl border border-slate-800 relative overflow-hidden print:bg-white print:border print:text-slate-900 print:shadow-none">
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 print:hidden"><Globe className="w-96 h-96" /></div>
-      <div className="relative z-10 flex items-center space-x-3 mb-8">
-        <div className="p-2 bg-blue-900/50 rounded-sm border border-blue-800 text-blue-300 print:bg-slate-100 print:text-blue-800"><Globe className="h-5 w-5" /></div>
-        <h2 className="text-xl md:text-2xl font-serif font-bold tracking-tight">{text.sections.global}</h2>
-      </div>
-        
-      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">{text.global_stats.world}</span>
-          <span className="text-2xl font-bold text-white print:text-slate-900 block">304 M</span>
-          <div className="w-full bg-slate-700 h-1 mt-2 rounded-sm overflow-hidden print:bg-slate-200"><div className="bg-slate-500 h-full w-full"></div></div>
-        </div>
-        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.europe}</span>
-          <span className="text-2xl font-bold text-white print:text-slate-900 block">94 M</span>
-          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.9%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.9%</span></div>
-        </div>
-        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.asia}</span>
-          <span className="text-2xl font-bold text-white print:text-slate-900 block">92 M</span>
-          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '30.2%'}}></div></div><span className="text-[9px] font-bold text-slate-400">30.2%</span></div>
-        </div>
-        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.na}</span>
-          <span className="text-2xl font-bold text-white print:text-slate-900 block">61 M</span>
-          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '20%'}}></div></div><span className="text-[9px] font-bold text-slate-400">20.1%</span></div>
-        </div>
-        <div className="bg-blue-900/30 p-4 rounded-md border border-blue-700/50 transform hover:scale-105 transition-transform print:bg-blue-50 print:border-blue-200 shadow-md">
-          <span className="text-[10px] font-bold text-blue-300 uppercase tracking-widest block mb-1 print:text-blue-800">{text.global_stats.africa}</span>
-          <span className="text-2xl font-bold text-blue-200 print:text-blue-900 block">29 M</span>
-          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-blue-200"><div className="bg-blue-500 h-full" style={{width: '9.5%'}}></div></div><span className="text-[9px] font-bold text-blue-300 print:text-blue-800">9.5%</span></div>
-        </div>
-        <div className="bg-slate-800/50 p-4 rounded-md border border-slate-700/50 print:bg-slate-50 print:border-slate-200">
-          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest block mb-1">{text.global_stats.latam}</span>
-          <span className="text-2xl font-bold text-white print:text-slate-900 block">17 M</span>
-          <div className="flex justify-between items-center mt-2"><div className="w-full bg-slate-700 h-1 rounded-sm overflow-hidden mr-2 print:bg-slate-200"><div className="bg-slate-400 h-full" style={{width: '5.7%'}}></div></div><span className="text-[9px] font-bold text-slate-400">5.7%</span></div>
-        </div>
-      </div>
-        
-      <div className="relative z-10 mt-8 flex items-start space-x-3 bg-slate-800/50 p-4 rounded-sm border-l-4 border-blue-500 print:bg-slate-50 print:border-slate-200 print:border-l-blue-700">
-        <Info className="w-5 h-5 text-blue-400 shrink-0 mt-0.5 print:text-blue-700" />
-        <p className="text-slate-300 text-sm leading-relaxed print:text-slate-700">{text.global_stats.note}</p>
-      </div>
-    </section>
   </div>
 );
 
