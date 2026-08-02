@@ -1435,10 +1435,8 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 };
 
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
-  // État local pour gérer l'accordéon des CER
   const [expandedRec, setExpandedRec] = useState(null);
 
-  // Données nourries par l'analyse doctorale pour les CER
   const recsList = [
     {
       id: 'cedeao',
@@ -1514,41 +1512,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     }
   ];
 
-  const auFrameworks = [
-    {
-      title: { fr: "Le Traité d'Abuja (1991)", en: "The Abuja Treaty (1991)" },
-      tag: { fr: "Fondation", en: "Foundation" },
-      desc: {
-        fr: "L'acte fondateur de la Communauté économique africaine (CEA), qui consacre l'intégration graduelle et la libre circulation des personnes, des biens, des services et des capitaux comme piliers indissociables de l'unité continentale[cite: 3].",
-        en: "The founding act of the African Economic Community (AEC), establishing gradual integration and the free movement of persons, goods, services, and capital as inseparable pillars of continental unity[cite: 3]."
-      }
-    },
-    {
-      title: { fr: "Le MPFA Révisé (2018-2030)", en: "The Revised MPFA (2018-2030)" },
-      tag: { fr: "Cadre Stratégique", en: "Strategic Framework" },
-      desc: {
-        fr: "Le Cadre de politique migratoire pour l'Afrique guide les États et les CER en reliant la gouvernance des mobilités aux impératifs de développement, de protection des droits et de gestion concertée des marchés du travail intra-africains[cite: 3].",
-        en: "The Migration Policy Framework for Africa guides States and RECs by linking mobility governance to development imperatives, rights protection, and concerted management of intra-African labor markets[cite: 3]."
-      }
-    },
-    {
-      title: { fr: "Protocole sur la Libre Circulation (2018)", en: "Free Movement Protocol (2018)" },
-      tag: { fr: "Horizon d'Intégration", en: "Integration Horizon" },
-      desc: {
-        fr: "Adopté à Kigali, il vise à instituer le droit d'entrée, de résidence et d'établissement. Encore faiblement ratifié (seuls 4 pays dont le Mali et le Rwanda l'ont ratifié en 2024), il illustre la tension entre norme continentale et prudence souveraine dans l'entre-deux national[cite: 4].",
-        en: "Adopted in Kigali, it aims to institute the right of entry, residence, and establishment. Still weakly ratified (only 4 countries including Mali and Rwanda by 2024), it illustrates the tension between continental norms and sovereign caution in the national in-between[cite: 4]."
-      }
-    },
-    {
-      title: { fr: "Conventions de l'OUA (1969) & Kampala (2009)", en: "OAU (1969) & Kampala (2009) Conventions" },
-      tag: { fr: "Protection & Asile", en: "Protection & Asylum" },
-      desc: {
-        fr: "La Convention de 1969 (qui élargit la définition classique du réfugié aux victimes de violences généralisées) et la Convention de Kampala sur les déplacés internes (IDPs) constituent les piliers juridiques de la solidarité continentale et de la protection[cite: 3].",
-        en: "The 1969 Convention (expanding the classical definition of a refugee to victims of generalized violence) and the Kampala Convention on Internally Displaced Persons (IDPs) constitute the legal pillars of continental solidarity and protection[cite: 3]."
-      }
-    }
-  ];
-
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader 
@@ -1559,8 +1522,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       />
       
       <section className="bg-white rounded-xl p-6 md:p-8 border border-slate-200 shadow-sm">
-        
-        {/* Menu de navigation interne : CADRES GLOBAUX d'abord, puis CADRES AFRICAINS */}
+        {/* Navigation par onglets organisée : Cadres globaux d'abord, puis Cadres Africains */}
         <div className="space-y-3 mb-8">
           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">
             {lang === 'fr' ? '1. Cadres Stratégiques Mondiaux' : '1. Global Strategic Frameworks'}
@@ -1587,7 +1549,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
 
           <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1 pt-2">
-            {lang === 'fr' ? '2. Cadres Panafricains & Sous-Régionaux' : '2. Pan-African & Sub-Regional Frameworks'}
+            {lang === 'fr' ? '2. Cadres Stratégiques Panafricains & Régionaux' : '2. Pan-African & Regional Frameworks'}
           </div>
           <div className="flex bg-slate-100 p-1.5 rounded-lg flex-wrap gap-1 border border-slate-200">
             <button 
@@ -1605,9 +1567,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 1. ODD / SDGs (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 1. ODD / SDGs */}
         {activeSdgzTab === 'sdgs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
@@ -1631,9 +1591,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 2. GCM (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 2. GCM */}
         {activeSdgzTab === 'gcm' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
@@ -1657,9 +1615,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 3. GCR (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 3. GCR */}
         {activeSdgzTab === 'gcr' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
@@ -1682,47 +1638,150 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 4. UNION AFRICAINE (AFRIQUE) */}
-        {/* ============================================================== */}
+        {/* 4. UNION AFRICAINE (UA) - Enrichi */}
         {activeSdgzTab === 'au' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
               <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
-                {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
+                {lang === 'fr' ? "Architecture Continentale Endogène" : "Endogenous Continental Architecture"}
               </span>
               <h3 className="font-serif font-bold text-2xl mb-3">
                 {lang === 'fr' ? "L'Union Africaine et le Régime Panafricain des Mobilités" : "The African Union and the Pan-African Mobility Regime"}
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
                 {lang === 'fr' 
-                  ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux : elle s’enracine dans une architecture institutionnelle multiniveaux propre au continent. Structurée par l'Union africaine (UA), cette architecture articule l'intégration régionale, la protection des droits, le développement et la libre circulation par-delà les frontières héritées[cite: 3]."
-                  : "African mobility governance is not reduced to global compacts: it is rooted in a multi-level institutional architecture specific to the continent. Structured by the African Union (AU), this architecture articulates regional integration, rights protection, development, and free movement across inherited borders[cite: 3]."}
+                  ? "La gouvernance des mobilités en Afrique ne se réduit pas aux grands pactes mondiaux : elle s’enracine dans une architecture institutionnelle multiniveaux propre au continent. L'analyse démontre la tension du « normer sans ancrer » : une forte densification normative à l'échelle de l'UA qui se heurte souvent aux capacités et aux réticences souveraines dans l'« entre-deux national »[cite: 2]. Ce régime s'appuie sur plusieurs strates juridiques et épistémiques."
+                  : "African mobility governance is not reduced to global compacts: it is rooted in a multi-level institutional architecture specific to the continent. Analysis shows the tension of 'norming without anchoring': strong normative densification at the AU level that often clashes with sovereign reluctance and capacities in the 'national in-between'[cite: 2]."}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {auFrameworks.map((fw, idx) => (
-                <div key={idx} className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                  <div>
+            <div className="space-y-5">
+              
+              {/* Traité d'Abuja */}
+              <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5">
+                  <div className="flex-1">
                     <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-3">
-                      {lang === 'fr' ? fw.tag.fr : fw.tag.en}
+                      1991
                     </span>
                     <h4 className="font-serif font-bold text-slate-900 text-lg mb-2">
-                      {lang === 'fr' ? fw.title.fr : fw.title.en}
+                      {lang === 'fr' ? "Le Traité d'Abuja (CEA)" : "The Abuja Treaty (AEC)"}
                     </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {lang === 'fr' ? fw.desc.fr : fw.desc.en}
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr' 
+                        ? "Acte fondateur de la Communauté économique africaine (CEA). Son article 43 consacre le droit d'entrée, de résidence et d'établissement pour les ressortissants des États membres, érigeant la libre circulation comme un pilier structurant de l'intégration continentale[cite: 2]."
+                        : "Founding act of the African Economic Community (AEC). Article 43 enshrines the right of entry, residence, and establishment, establishing free movement as a structural pillar of continental integration[cite: 2]."}
                     </p>
                   </div>
-                </div>
-              ))}
+                  <div className="flex flex-col gap-2 md:w-48 shrink-0 justify-center">
+                      <a href="https://au.int/en/treaties/treaty-establishing-african-economic-community" target="_blank" rel="noopener noreferrer" className="text-center bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        📄 {lang === 'fr' ? "Page du Traité & PDF" : "Treaty Page & PDF"}
+                      </a>
+                      <a href="https://au.int/sites/default/files/treaties/7775-sl-TREATY%20ESTABLISHING%20THE%20AFRICAN%20ECONOMIC%20COMMUNITY.pdf" target="_blank" rel="noopener noreferrer" className="text-center bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        ✅ {lang === 'fr' ? "Statut de Ratification" : "Ratification Status"}
+                      </a>
+                  </div>
+              </div>
+
+              {/* Protocole Libre Circulation (2018) */}
+              <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-3">
+                      2018
+                    </span>
+                    <h4 className="font-serif font-bold text-slate-900 text-lg mb-2">
+                      {lang === 'fr' ? "Le Protocole de Kigali sur la Libre Circulation" : "Free Movement Protocol (Kigali)"}
+                    </h4>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr' 
+                        ? "Instrument ambitieux liant entrée, résidence et établissement. Il illustre parfaitement l'énigme du « normer sans ancrer » : largement signé (32 États) mais ratifié par seulement 4 États (dont le Mali et le Rwanda), il se heurte à une forte frilosité souveraine et administrative au niveau national[cite: 2],[cite: 4]."
+                        : "An ambitious instrument linking entry, residence, and establishment. It perfectly illustrates the 'norm without anchoring' enigma: widely signed (32 States) but ratified by only 4 (including Mali and Rwanda), clashing with strong sovereign and administrative reluctance at the national level[cite: 2],[cite: 4]."}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 md:w-48 shrink-0 justify-center">
+                      <a href="https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" target="_blank" rel="noopener noreferrer" className="text-center bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        📄 {lang === 'fr' ? "Page du Protocole & PDF" : "Protocol Page & PDF"}
+                      </a>
+                      <a href="https://au.int/sites/default/files/treaties/36403-sl-PROTOCOL%20TO%20THE%20TREATY%20ESTABLISHING%20THE%20AFRICAN%20ECONOMIC%20COMMUNITY%20RELATING%20TO%20FREE%20MOVEMENT%20OF%20PERSONS%2C%20RIGHT%20OF%20RESIDENCE%20AND%20RIGHT%20OF%20ESTABLISHMENT.pdf" target="_blank" rel="noopener noreferrer" className="text-center bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        ✅ {lang === 'fr' ? "Statut de Ratification" : "Ratification Status"}
+                      </a>
+                  </div>
+              </div>
+
+              {/* Réfugiés & IDPs */}
+              <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-3">
+                      1969 & 2009
+                    </span>
+                    <h4 className="font-serif font-bold text-slate-900 text-lg mb-2">
+                      {lang === 'fr' ? "Conventions de l'OUA et de Kampala" : "OAU and Kampala Conventions"}
+                    </h4>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr' 
+                        ? "Pionnière de la protection, la Convention OUA (1969) a élargi la définition du réfugié aux victimes de violences généralisées et de dominations coloniales[cite: 2]. La Convention de Kampala (2009) est, quant à elle, le premier instrument contraignant protégeant les déplacés internes (IDPs), ajustant l'innovation normative aux conflits régionaux[cite: 2]."
+                        : "A pioneer in protection, the OAU Convention (1969) expanded the refugee definition to victims of generalized violence and colonial domination[cite: 2]. The Kampala Convention (2009) is the first binding instrument protecting internally displaced persons (IDPs), adjusting normative innovation to regional conflicts[cite: 2]."}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 md:w-48 shrink-0 justify-center">
+                      <a href="https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" target="_blank" rel="noopener noreferrer" className="text-center bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        🛡️ {lang === 'fr' ? "Page Conv. Réfugiés" : "Refugee Conv. Page"}
+                      </a>
+                      <a href="https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" target="_blank" rel="noopener noreferrer" className="text-center bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        🛡️ {lang === 'fr' ? "Page Conv. Kampala" : "Kampala Conv. Page"}
+                      </a>
+                  </div>
+              </div>
+
+              {/* MPFA & CAP */}
+              <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-3">
+                      Soft Law & Stratégie
+                    </span>
+                    <h4 className="font-serif font-bold text-slate-900 text-lg mb-2">
+                      {lang === 'fr' ? "MPFA & Positions Communes (CAP)" : "MPFA & Common African Positions"}
+                    </h4>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr' 
+                        ? "Le Cadre de Politique Migratoire (MPFA, révisé 2018-2030) et les Positions Communes de l'UA (2006, 2017) substituent à la gestion purement sécuritaire une lecture de la mobilité comme levier de développement. Ils forgent un langage diplomatique partagé (« One Africa, One Voice ») face aux asymétries de l'externalisation euro-méditerranéenne[cite: 2]."
+                        : "The Migration Policy Framework (MPFA, revised 2018-2030) and Common Positions (2006, 2017) replace pure security management with reading mobility as a development lever. They forge a shared diplomatic language ('One Africa, One Voice') against the asymmetries of Euro-Mediterranean externalization[cite: 2]."}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 md:w-48 shrink-0 justify-center">
+                      <a href="https://au.int/en/documents/20181206/migration-policy-framework-africa-mpfa" target="_blank" rel="noopener noreferrer" className="text-center bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        📄 {lang === 'fr' ? "Document MPFA (PDF)" : "MPFA Document (PDF)"}
+                      </a>
+                  </div>
+              </div>
+
+              {/* OAM */}
+              <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-5">
+                  <div className="flex-1">
+                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-3">
+                      Infrastructures du Savoir
+                    </span>
+                    <h4 className="font-serif font-bold text-slate-900 text-lg mb-2">
+                      {lang === 'fr' ? "L'Observatoire Africain des Migrations (OAM)" : "The African Migration Observatory (AMO)"}
+                    </h4>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr' 
+                        ? "Inauguré à Rabat en 2020, l'OAM est le bras technique de l'UA incarnant la quête de « souveraineté épistémique ». Il harmonise les données, vise à déconstruire les narratifs exogènes de « crise » et dote le continent de preuves statistiques pour orienter des politiques souveraines, malgré de forts défis capacitaires[cite: 2],[cite: 4]."
+                        : "Inaugurated in Rabat in 2020, the AMO is the AU's technical arm embodying the quest for 'epistemic sovereignty'. It harmonizes data, aims to deconstruct exogenous 'crisis' narratives, and provides the continent with statistical evidence to guide sovereign policies, despite major capacity challenges[cite: 2],[cite: 4]."}
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 md:w-48 shrink-0 justify-center">
+                      <a href="https://amo.au.int/" target="_blank" rel="noopener noreferrer" className="text-center bg-blue-900 border border-blue-800 text-white hover:bg-blue-800 px-3 py-2 rounded text-[11px] font-bold shadow-sm transition">
+                        🌐 {lang === 'fr' ? "Portail Officiel OAM" : "AMO Official Portal"}
+                      </a>
+                  </div>
+              </div>
+
             </div>
           </div>
         )}
 
         {/* ============================================================== */}
-        {/* 5. COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (AFRIQUE) - ACCORDÉONS */}
+        {/* 5. COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER) - ACCORDÉONS */}
         {/* ============================================================== */}
         {activeSdgzTab === 'recs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
@@ -1736,7 +1795,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <p className="text-slate-300 text-sm leading-relaxed">
                 {lang === 'fr' 
                   ? "Les CER constituent les « blocs régionalisés » et les piliers opérationnels de l'intégration continentale africaine. L'analyse démontre que chaque sous-région développe une trajectoire, des instruments et des degrés de procéduralisation qui lui sont propres, produisant une consistance à géométrie variable[cite: 3]."
-                  : "RECs constitute the 'regionalized blocs' and operational pillars for continental integration. Analysis demonstrates that each sub-region develops specific trajectories, instruments, and proceduralization degrees, producing a variable-geometry consistency[cite: 3]."}
+                  : "RECs constitute the 'regionalized blocks' and operational pillars for continental integration. Analysis demonstrates that each sub-region develops specific trajectories, instruments, and proceduralization degrees, producing a variable-geometry consistency[cite: 3]."}
               </p>
             </div>
 
