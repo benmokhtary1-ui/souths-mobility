@@ -1511,41 +1511,112 @@ const TabGovernance = ({ text, lang, activeGovTab, setActiveGovTab, expandedRec,
       />
       
       <section className="bg-white rounded-xl p-6 md:p-8 border border-slate-200 shadow-sm">
-        {/* Menu principal de navigation interne de la gouvernance */}
+        {/* Menu de navigation interne : Cadres globaux en premier, puis cadres africains */}
         <div className="flex bg-slate-100 p-1.5 rounded-lg mb-8 flex-wrap gap-1 border border-slate-200">
+          <button 
+            onClick={() => setActiveGovTab('sdgs')} 
+            className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
+          >
+            ODD / SDGs
+          </button>
+          <button 
+            onClick={() => setActiveGovTab('gcm')} 
+            className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
+          >
+            Pacte GCM (23 Obj.)
+          </button>
+          <button 
+            onClick={() => setActiveGovTab('gcr')} 
+            className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
+          >
+            Pacte Réfugiés GCR
+          </button>
           <button 
             onClick={() => setActiveGovTab('au')} 
             className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'au' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
           >
-            🏛️ {lang === 'fr' ? 'Union Africaine (UA)' : 'African Union (AU)'}
+            Union Africaine (UA)
           </button>
           <button 
             onClick={() => setActiveGovTab('recs')} 
-            className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'recs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
+            className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'recs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
           >
-            🌐 {lang === 'fr' ? 'Communautés Économiques (CER)' : 'Regional Economic Communities (RECs)'}
-          </button>
-          <button 
-            onClick={() => setActiveGovTab('sdgs')} 
-            className={`flex-1 min-w-[100px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-          >
-            📊 ODD / SDGs
-          </button>
-          <button 
-            onClick={() => setActiveGovTab('gcm')} 
-            className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-          >
-            📄 Pacte GCM (23 Obj.)
-          </button>
-          <button 
-            onClick={() => setActiveGovTab('gcr')} 
-            className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeGovTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-          >
-            🤝 Pacte Réfugiés GCR
+            Communautés Économiques (CER)
           </button>
         </div>
 
-        {/* 1. ONGLET UNION AFRICAINE (UA) */}
+        {/* 1. CADRES GLOBAUX : ODD / SDGs */}
+        {activeGovTab === 'sdgs' && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <p className="text-slate-700 text-sm leading-relaxed">
+                {text.sdg_section.sdg_desc}
+              </p>
+              <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+                <span>{text.sdg_section.link_text}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {text.sdg_section.sdg_points.map((pt, idx) => (
+                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
+                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 2. CADRES GLOBAUX : Pacte GCM */}
+        {activeGovTab === 'gcm' && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <p className="text-slate-700 text-sm leading-relaxed">
+                {text.sdg_section.gcm_desc}
+              </p>
+              <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+                <span>{text.sdg_section.link_text}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+              {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
+                <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
+                  <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 3. CADRES GLOBAUX : Pacte Réfugiés GCR */}
+        {activeGovTab === 'gcr' && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <p className="text-slate-700 text-sm leading-relaxed">
+                {text.sdg_section.gcr_desc}
+              </p>
+              <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+                <span>{text.sdg_section.link_text}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {text.sdg_section.gcr_objectifs.map((obj, idx) => (
+                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 4. CADRES AFRIQUE : Union Africaine (UA) */}
         {activeGovTab === 'au' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
@@ -1612,7 +1683,7 @@ const TabGovernance = ({ text, lang, activeGovTab, setActiveGovTab, expandedRec,
           </div>
         )}
 
-        {/* 2. ONGLET COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER) - SANS EMOJI */}
+        {/* 5. CADRES AFRIQUE : Communautés Économiques Régionales (CER) - ACCORDÉONS */}
         {activeGovTab === 'recs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
@@ -1659,77 +1730,6 @@ const TabGovernance = ({ text, lang, activeGovTab, setActiveGovTab, expandedRec,
                   </div>
                 );
               })}
-            </div>
-          </div>
-        )}
-
-        {/* 3. ONGLET ODD / SDGS */}
-        {activeGovTab === 'sdgs' && (
-          <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.sdg_desc}
-              </p>
-              <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {text.sdg_section.sdg_points.map((pt, idx) => (
-                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
-                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 4. ONGLET GCM */}
-        {activeGovTab === 'gcm' && (
-          <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.gcm_desc}
-              </p>
-              <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-              {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
-                <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
-                  <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 5. ONGLET GCR */}
-        {activeGovTab === 'gcr' && (
-          <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.gcr_desc}
-              </p>
-              <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {text.sdg_section.gcr_objectifs.map((obj, idx) => (
-                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
-                </div>
-              ))}
             </div>
           </div>
         )}
