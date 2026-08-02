@@ -84,6 +84,28 @@ const EconomicComparison = ({ remittances, aid, lang }) => {
   );
 };
 
+const PageHeader = ({ badge, title, highlight, desc }) => (
+  <header className="bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg mb-8">
+    <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none">
+      <Globe className="w-[400px] h-[400px]" />
+    </div>
+    <div className="relative z-10 max-w-4xl">
+      <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">
+        {badge}
+      </div>
+      <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
+        {title} <br/>
+        <span className="text-blue-300 italic font-normal">
+          {highlight}
+        </span>
+      </h1>
+      <p className="text-slate-300 text-base leading-relaxed font-medium">
+        {desc}
+      </p>
+    </div>
+  </header>
+);
+
 // ============================================================================
 // 2. DONNÉES STATIQUES
 // ============================================================================
@@ -129,6 +151,32 @@ const t = {
         sdg_gcm: "Alignement ODD (SDGs 2030) & Pactes Mondiaux (GCM / GCR 2018)",
         about_title: "À Propos du Projet", 
         method_title: "Ingénierie & Source des Données" 
+      },
+      headers: {
+        explorer: {
+          badge: "Explorateur Macrorégional & National",
+          title: "Cartographier et analyser",
+          highlight: "les dynamiques de mobilité.",
+          desc: "Consultez les profils détaillés par pays ou par sous-région, intégrant les indicateurs de stock démographique, de parité, de rétention sud-sud et les ratifications des traités."
+        },
+        governance: {
+          badge: "Cadres Stratégiques Mondiaux",
+          title: "Alignement institutionnel",
+          highlight: "et cadres de référence.",
+          desc: "Découvrez l'ancrage des politiques de mobilité à travers les Objectifs de Développement Durable (ODD), le Pacte Mondial pour les Migrations (GCM) et le Pacte Mondial sur les Réfugiés (GCR)."
+        },
+        library: {
+          badge: "Centre Documentaire",
+          title: "Bibliothèque",
+          highlight: "et ressources analytiques.",
+          desc: "Un accès centralisé aux rapports de référence, notes de politique (policy briefs), thèses et publications sur la géopolitique des mobilités dans les Suds."
+        },
+        methodology: {
+          badge: "Rigueur & Transparence",
+          title: "Ingénierie méthodologique",
+          highlight: "et cadre d'indicateurs.",
+          desc: "Découvrez l'architecture scientifique du DataHub, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités."
+        }
       },
       global_stats: {
         world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
@@ -211,14 +259,14 @@ const t = {
         data_title: "Une approche fondée sur les données",
         data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
         data_list: [
-          "Commission de l'Union africaine (AUC)",
-          "Nations Unies (UN DESA, UNHCR, OIM, OIT, UNESCO…)",
-          "Banque mondiale",
-          "Banque africaine de développement",
-          "OCDE",
-          "Internal Displacement Monitoring Centre (IDMC)",
-          "Communautés économiques régionales africaines",
-          "Instituts nationaux de statistique"
+          { name: "Commission de l'Union africaine (AUC)", url: "https://au.int/fr" },
+          { name: "Nations Unies (UN DESA, UNHCR, OIM, OIT…)", url: "https://www.un.org/fr" },
+          { name: "Banque mondiale", url: "https://data.worldbank.org/" },
+          { name: "Banque africaine de développement", url: "https://www.afdb.org/fr" },
+          { name: "OCDE", url: "https://data.oecd.org/" },
+          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/" },
+          { name: "Communautés économiques régionales africaines", url: "https://au.int/fr/organs/recs" },
+          { name: "Instituts nationaux de statistique", url: null }
         ],
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
         data_p3: "South(s) Mobility ne produit pas de statistiques officielles. La plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
@@ -226,29 +274,29 @@ const t = {
         south_title: "Une perspective ancrée dans les Suds",
         south_p1: "South(s) Mobility adopte une perspective centrée sur les Suds, en accordant une attention particulière aux dynamiques souvent moins visibles dans les bases de données internationales. Cela inclut notamment :",
         south_list: [
-          "les migrations intra-africaines",
-          "les mobilités Sud-Sud",
-          "les communautés économiques régionales africaines",
-          "les instruments juridiques continentaux",
-          "les politiques africaines de mobilité",
-          "les corridors régionaux",
-          "les diasporas",
-          "les déplacements internes",
-          "les connaissances produites depuis les institutions et les chercheurs des Suds"
+          "Les migrations intra-africaines",
+          "Les mobilités Sud-Sud",
+          "Les communautés économiques régionales africaines",
+          "Les instruments juridiques continentaux",
+          "Les politiques africaines de mobilité",
+          "Les corridors régionaux",
+          "Les diasporas",
+          "Les déplacements internes",
+          "Les connaissances produites depuis les institutions et les chercheurs des Suds"
         ],
         south_p2: "À plus long terme, cette approche a vocation à être progressivement étendue à d'autres régions du monde, notamment l'Amérique latine, les Caraïbes et l'Asie.",
 
         evolution_title: "Une plateforme en évolution permanente",
         evolution_p1: "South(s) Mobility est un projet évolutif. De nouvelles bases de données, cartes interactives, tableaux de bord, visualisations, fiches méthodologiques, analyses, référentiels documentaires et outils de recherche sont ajoutés régulièrement. Les développements en cours comprennent notamment :",
         evolution_list: [
-          "un Observatoire des narratifs sur les migrations",
-          "des profils pays",
-          "des profils des communautés économiques régionales",
-          "un référentiel des instruments juridiques africains",
-          "une bibliothèque documentaire",
-          "des séries chronologiques harmonisées",
-          "des tableaux de bord interactifs",
-          "de nouveaux indicateurs comparatifs"
+          "Un Observatoire des narratifs sur les migrations",
+          "Des profils pays",
+          "Des profils des communautés économiques régionales",
+          "Un référentiel des instruments juridiques africains",
+          "Une bibliothèque documentaire",
+          "Des séries chronologiques harmonisées",
+          "Des tableaux de bord interactifs",
+          "De nouveaux indicateurs comparatifs"
         ],
         evolution_p2: "L'objectif est de construire progressivement une infrastructure de référence pour l'étude des mobilités humaines dans les Suds.",
 
@@ -263,7 +311,7 @@ const t = {
         contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
         disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
         
-        citation_title: "Citation Académique (Norme APA) :",
+        citation_title: "Pour citer ce projet :",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://southsmobility.vercel.app/"
       },
       method: { 
@@ -324,6 +372,32 @@ const t = {
         sdg_gcm: "SDG Alignment (SDGs 2030) & Global Compacts (GCM / GCR 2018)",
         about_title: "About the Project", 
         method_title: "Engineering & Data Sourcing" 
+      },
+      headers: {
+        explorer: {
+          badge: "Macro-Regional & National Explorer",
+          title: "Mapping and analyzing",
+          highlight: "mobility dynamics.",
+          desc: "Explore detailed country or sub-regional profiles featuring demographic stocks, gender parity, South-South retention rates, and treaty ratifications."
+        },
+        governance: {
+          badge: "Global Strategic Frameworks",
+          title: "Institutional alignment",
+          highlight: "and reference frameworks.",
+          desc: "Discover how mobility policies connect with the Sustainable Development Goals (SDGs), the Global Compact for Migration (GCM), and the Global Compact on Refugees (GCR)."
+        },
+        library: {
+          badge: "Documentary Center",
+          title: "Library",
+          highlight: "and analytical resources.",
+          desc: "Centralized access to reference reports, policy briefs, theses, and publications on mobility geopolitics in the Global South."
+        },
+        methodology: {
+          badge: "Rigor & Transparency",
+          title: "Methodological engineering",
+          highlight: "and indicators framework.",
+          desc: "Explore the scientific architecture of the DataHub, the official data harmonization process, and alternative indicators for objective mobility analysis."
+        }
       },
       global_stats: {
         world: "Global Total (2024)", europe: "Europe (2024)", asia: "Asia (2024)", na: "North America (2024)", africa: "Africa (2024)", latam: "Latin America (2024)", share: "Global share:",
@@ -390,7 +464,7 @@ const t = {
         { myth: "Economic growth automatically stops emigration.", real: "The transition paradox (Migration Hump).", stat_text: "Catalyst (2024)", stat_val: 80, color: "bg-rose-700", desc: "Empirically proven: initial income growth provides households with the financial capital needed to undertake regular migration projects." },
         { myth: "Migrant workers are a burden on host economies.", real: "Drivers of local employment and value creation.", stat_text: "+ Value (2021)", stat_val: 85, color: "bg-emerald-700", desc: "AU/ILO Report (2021): 27.5% of employed migrants work in agriculture, filling labor shortages and stimulating local trade." }
       ],
-      about: {
+      about: { 
         intro_title: "About South(s) Mobility",
         intro_subtitle: "An open infrastructure to understand mobility in the Global South",
         intro_p1: "South(s) Mobility DataHub is an independent research, data, and visualization platform dedicated to human mobility in the Global South, with an initial focus on Africa.",
@@ -406,14 +480,14 @@ const t = {
         data_title: "A data-driven approach",
         data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
         data_list: [
-          "African Union Commission (AUC)",
-          "United Nations (UN DESA, UNHCR, IOM, ILO, UNESCO…)",
-          "World Bank",
-          "African Development Bank",
-          "OECD",
-          "Internal Displacement Monitoring Centre (IDMC)",
-          "African Regional Economic Communities",
-          "National Statistical Institutes"
+          { name: "African Union Commission (AUC)", url: "https://au.int/en" },
+          { name: "United Nations (UN DESA, UNHCR, IOM, ILO…)", url: "https://www.un.org/en" },
+          { name: "World Bank", url: "https://data.worldbank.org/" },
+          { name: "African Development Bank", url: "https://www.afdb.org/en" },
+          { name: "OECD", url: "https://data.oecd.org/" },
+          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/" },
+          { name: "African Regional Economic Communities", url: "https://au.int/en/organs/recs" },
+          { name: "National Statistical Institutes", url: null }
         ],
         data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
         data_p3: "South(s) Mobility does not produce official statistics. The platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
@@ -421,14 +495,14 @@ const t = {
         south_title: "A perspective rooted in the Souths",
         south_p1: "South(s) Mobility adopts a Global South-centric perspective, paying special attention to dynamics that are often less visible in international databases. This includes:",
         south_list: [
-          "intra-African migrations",
+          "Intra-African migrations",
           "South-South mobilities",
           "African regional economic communities",
-          "continental legal instruments",
+          "Continental legal instruments",
           "African mobility policies",
-          "regional corridors",
-          "diasporas",
-          "internal displacements",
+          "Regional corridors",
+          "Diasporas",
+          "Internal displacements",
           "knowledge produced by institutions and researchers from the Global South"
         ],
         south_p2: "In the longer term, this approach is intended to be progressively extended to other regions of the world, notably Latin America, the Caribbean, and Asia.",
@@ -436,14 +510,14 @@ const t = {
         evolution_title: "A constantly evolving platform",
         evolution_p1: "South(s) Mobility is an evolving project. New databases, interactive maps, dashboards, visualizations, methodological sheets, analyses, documentary repositories, and research tools are added regularly. Ongoing developments include:",
         evolution_list: [
-          "a Migration Narratives Observatory",
-          "country profiles",
-          "regional economic community profiles",
-          "a repository of African legal instruments",
-          "a documentary library",
-          "harmonized time series",
-          "interactive dashboards",
-          "new comparative indicators"
+          "A Migration Narratives Observatory",
+          "Country profiles",
+          "Regional economic community profiles",
+          "A repository of African legal instruments",
+          "A documentary library",
+          "Harmonized time series",
+          "Interactive dashboards",
+          "New comparative indicators"
         ],
         evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of human mobility in the Global South.",
 
@@ -458,7 +532,7 @@ const t = {
         contact_p: "For any questions, collaboration proposals, or contributions to the project:",
         disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
         
-        citation_title: "Academic Citation (APA format):",
+        citation_title: "To cite this project:",
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://southsmobility.vercel.app/"
       },
       method: { 
@@ -1084,15 +1158,12 @@ const TabEvidenceCheck = ({ text, lang }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [expandedFiche, setExpandedFiche] = useState(null);
 
-  // Extraire les catégories uniques pour la barre de filtres
   const categories = ["All", ...new Set(evidenceCheckData.map(item => item.category))];
 
-  // Filtrer les données en fonction du bouton cliqué
   const filteredData = activeCategory === "All" 
     ? evidenceCheckData 
     : evidenceCheckData.filter(item => item.category === activeCategory);
 
-  // Fonction pour attribuer les bonnes couleurs aux badges GIEC
   const getVerdictStyle = (level) => {
     switch (level) {
       case "🟢": return "bg-emerald-100 text-emerald-800 border-emerald-300";
@@ -1107,29 +1178,15 @@ const TabEvidenceCheck = ({ text, lang }) => {
 
   return (
     <div className="space-y-12 animate-in fade-in zoom-in-95 duration-500">
-      
-      {/* 1. HERO HEADER INTRODUCTIF */}
-      <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
-          <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">
-            {lang === 'fr' ? 'Observatoire des Narratifs' : 'Narratives Observatory'}
-          </div>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
-            {lang === 'fr' ? 'Évaluation des affirmations' : 'Evidence Check'} <br/>
-            <span className="text-blue-300 italic font-normal">
-              {lang === 'fr' ? 'à la lumière des données.' : 'powered by open data.'}
-            </span>
-          </h1>
-          <p className="text-slate-300 max-w-2xl text-base leading-relaxed font-medium">
-            {lang === 'fr' 
-              ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
-              : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
-          </p>
-        </div>
-      </header>
+      <PageHeader 
+        badge={lang === 'fr' ? 'Observatoire des Narratifs' : 'Narratives Observatory'}
+        title={lang === 'fr' ? 'Évaluation des affirmations' : 'Evidence Check'}
+        highlight={lang === 'fr' ? 'à la lumière des données.' : 'powered by open data.'}
+        desc={lang === 'fr' 
+          ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
+          : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
+      />
 
-      {/* 2. SECTION FILTRES */}
       <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
         {categories.map((cat, idx) => (
           <button
@@ -1146,7 +1203,6 @@ const TabEvidenceCheck = ({ text, lang }) => {
         ))}
       </section>
 
-      {/* 3. GRILLE DES FICHES EVIDENCE CHECK */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {filteredData.map((fiche) => {
           const isExpanded = expandedFiche === fiche.id;
@@ -1157,7 +1213,6 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
               }`}
             >
-              {/* En-tête de la carte */}
               <div 
                 className="p-6 cursor-pointer group flex flex-col"
                 onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
@@ -1191,11 +1246,8 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 </div>
               </div>
 
-              {/* Zone extensible */}
               <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                 <div className="p-6 space-y-6">
-                  
-                  {/* Pourquoi ce narratif persiste ? */}
                   {fiche.why_persists && fiche.why_persists.length > 0 && (
                     <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
                       <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
@@ -1212,7 +1264,6 @@ const TabEvidenceCheck = ({ text, lang }) => {
                     </div>
                   )}
 
-                  {/* Sources et Indicateurs */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
@@ -1236,7 +1287,6 @@ const TabEvidenceCheck = ({ text, lang }) => {
                     </div>
                   </div>
 
-                  {/* Limites Méthodologiques */}
                   <div>
                     <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center">
                       <ShieldAlert className="w-3 h-3 mr-1.5" />
@@ -1246,20 +1296,17 @@ const TabEvidenceCheck = ({ text, lang }) => {
                       {fiche.limits}
                     </p>
                   </div>
-
                 </div>
               </div>
             </div>
           );
         })}
       </section>
-
     </div>
   );
 };
 
 const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => {
-  // Liste des cartes de sous-régions
   const regionCards = [
     { id: 'all', icon: '🌍', label: text.all_regions, activeColor: 'bg-blue-800 text-white border-blue-800' },
     { id: 'af_med', icon: '🌊', label: text.regions.af_med, activeColor: 'bg-cyan-700 text-white border-cyan-700' },
@@ -1271,14 +1318,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
   return (
     <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
-      
-      {/* 1. TITRE EXPLORATEUR */}
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div>
-        <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2>
-      </div>
+      <PageHeader 
+        badge={text.headers.explorer.badge}
+        title={text.headers.explorer.title}
+        highlight={text.headers.explorer.highlight}
+        desc={text.headers.explorer.desc}
+      />
 
-      {/* 2. LA CARTE */}
       <div className="mb-10 bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-inner flex flex-col items-center justify-center">
         <img 
           src="/map_africa.png" 
@@ -1290,7 +1336,6 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         </p>
       </div>
 
-      {/* 3. SÉLECTION INTUITIVE DES SOUS-RÉGIONS */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         {regionCards.map(rc => {
           const isActive = activeSubRegion === rc.id;
@@ -1311,10 +1356,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         })}
       </div>
 
-      {/* 4. INTERFACE À DEUX COLONNES (Liste Pays + Dashboard) */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
-        
-        {/* SIDEBAR PAYS */}
         <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
           <div className="p-5 pb-4 border-b border-slate-800/50">
             <div className="relative">
@@ -1339,7 +1381,6 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
           </div>
         </div>
         
-        {/* VUE PRINCIPALE DASHBOARD */}
         <div className="flex-1 p-6 md:p-10 bg-slate-50">
           <div className="flex items-center space-x-5 mb-10">
             <span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span>
@@ -1394,99 +1435,106 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 };
 
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
-  <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm animate-in fade-in zoom-in-95 duration-500">
-    <div className="flex items-center space-x-4 mb-6">
-      <div className="p-3 bg-slate-100 rounded-sm border border-slate-200 text-slate-700"><Target className="h-6 w-6" /></div>
-      <div>
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sdg_section.title}</h2>
-        <p className="text-slate-500 text-sm mt-1">{text.sdg_section.subtitle}</p>
+  <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+    <PageHeader 
+      badge={text.headers.governance.badge}
+      title={text.headers.governance.title}
+      highlight={text.headers.governance.highlight}
+      desc={text.headers.governance.desc}
+    />
+    
+    <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+      <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-xl flex-wrap border border-slate-200">
+        <button onClick={() => setActiveSdgzTab('sdgs')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+          ODD / SDGs
+        </button>
+        <button onClick={() => setActiveSdgzTab('gcm')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+          Pacte GCM (23 Obj.)
+        </button>
+        <button onClick={() => setActiveSdgzTab('gcr')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+          Pacte Réfugiés GCR
+        </button>
       </div>
-    </div>
 
-    <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-xl flex-wrap border border-slate-200">
-      <button onClick={() => setActiveSdgzTab('sdgs')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-        ODD / SDGs
-      </button>
-      <button onClick={() => setActiveSdgzTab('gcm')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-        Pacte GCM (23 Obj.)
-      </button>
-      <button onClick={() => setActiveSdgzTab('gcr')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
-        Pacte Réfugiés GCR
-      </button>
-    </div>
+      {activeSdgzTab === 'sdgs' && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {text.sdg_section.sdg_desc}
+            </p>
+            <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <span>{text.sdg_section.link_text}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {text.sdg_section.sdg_points.map((pt, idx) => (
+              <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
+                <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-    {activeSdgzTab === 'sdgs' && (
-      <div className="space-y-6 animate-in fade-in duration-300">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-slate-700 text-sm leading-relaxed">
-            {text.sdg_section.sdg_desc}
-          </p>
-          <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-            <span>{text.sdg_section.link_text}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+      {activeSdgzTab === 'gcm' && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {text.sdg_section.gcm_desc}
+            </p>
+            <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <span>{text.sdg_section.link_text}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+            {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
+              <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
+                <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {text.sdg_section.sdg_points.map((pt, idx) => (
-            <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
-              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
+      )}
 
-    {activeSdgzTab === 'gcm' && (
-      <div className="space-y-6 animate-in fade-in duration-300">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-slate-700 text-sm leading-relaxed">
-            {text.sdg_section.gcm_desc}
-          </p>
-          <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-            <span>{text.sdg_section.link_text}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+      {activeSdgzTab === 'gcr' && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {text.sdg_section.gcr_desc}
+            </p>
+            <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <span>{text.sdg_section.link_text}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {text.sdg_section.gcr_objectifs.map((obj, idx) => (
+              <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-          {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
-            <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
-              <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
-              <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-
-    {activeSdgzTab === 'gcr' && (
-      <div className="space-y-6 animate-in fade-in duration-300">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-          <p className="text-slate-700 text-sm leading-relaxed">
-            {text.sdg_section.gcr_desc}
-          </p>
-          <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-            <span>{text.sdg_section.link_text}</span>
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {text.sdg_section.gcr_objectifs.map((obj, idx) => (
-            <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    )}
-  </section>
+      )}
+    </section>
+  </div>
 );
 
 const TabLibrary = ({ text, lang }) => (
-  <div className="animate-in fade-in zoom-in-95 duration-500">
+  <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
+    <PageHeader 
+      badge={text.headers.library.badge}
+      title={text.headers.library.title}
+      highlight={text.headers.library.highlight}
+      desc={text.headers.library.desc}
+    />
     <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl shadow-sm">
       <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
       <h2 className="text-2xl font-serif font-bold text-slate-700 mb-2">
@@ -1506,7 +1554,13 @@ const TabLibrary = ({ text, lang }) => (
 
 const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
-    {/* Matrice des Indicateurs */}
+    <PageHeader 
+      badge={text.headers.methodology.badge}
+      title={text.headers.methodology.title}
+      highlight={text.headers.methodology.highlight}
+      desc={text.headers.methodology.desc}
+    />
+
     <section id="data">
       <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
@@ -1551,7 +1605,6 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
                       </p>
                     )}
                       
-                    {/* Zone extensible */}
                     <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                       <div className="space-y-4">
                         <div>
@@ -1564,7 +1617,6 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
                         </div>
                       </div>
                     </div>
-
                   </div>
                 ))}
               </div>
@@ -1574,7 +1626,6 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       </div>
     </section>
 
-    {/* Ingénierie & Source des Données */}
     <section className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
       <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
       <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
@@ -1636,7 +1687,6 @@ const TabAbout = ({ text, lang }) => {
   return (
     <section className="max-w-5xl mx-auto animate-in fade-in zoom-in-95 duration-500 space-y-6">
       
-      {/* HEADER / INTRO */}
       <div className="bg-[#0f172a] rounded-xl p-8 md:p-12 text-white shadow-lg relative overflow-hidden border border-slate-800">
         <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
         <div className="relative z-10">
@@ -1654,10 +1704,8 @@ const TabAbout = ({ text, lang }) => {
         </div>
       </div>
 
-      {/* CORPS DU TEXTE EN GRILLE */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* Née de la recherche */}
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center space-x-3 mb-5">
             <div className="p-2 bg-blue-50 rounded-sm"><BookOpen className="w-5 h-5 text-blue-700" /></div>
@@ -1671,7 +1719,6 @@ const TabAbout = ({ text, lang }) => {
           </div>
         </div>
 
-        {/* Fondée sur les données */}
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center space-x-3 mb-5">
             <div className="p-2 bg-emerald-50 rounded-sm"><Database className="w-5 h-5 text-emerald-700" /></div>
@@ -1679,20 +1726,34 @@ const TabAbout = ({ text, lang }) => {
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed">
             <p>{text.about.data_p1}</p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-4">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
               {text.about.data_list.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 mr-2 shrink-0 mt-0.5" />
-                  <span className="text-xs">{item}</span>
-                </li>
+                item.url ? (
+                  <a 
+                    key={idx}
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors group shadow-sm"
+                  >
+                    <ExternalLink className="w-4 h-4 text-emerald-600 mr-2.5 shrink-0 group-hover:text-emerald-700" />
+                    <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-900">{item.name}</span>
+                  </a>
+                ) : (
+                  <div key={idx} className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-100">
+                    <CheckCircle2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                    <span className="text-xs font-semibold text-slate-600">{item.name}</span>
+                  </div>
+                )
               ))}
-            </ul>
+            </div>
+
             <p>{text.about.data_p2}</p>
             <p className="italic">{text.about.data_p3}</p>
           </div>
         </div>
 
-        {/* Ancrée dans les Suds */}
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center space-x-3 mb-5">
             <div className="p-2 bg-amber-50 rounded-sm"><Globe className="w-5 h-5 text-amber-700" /></div>
@@ -1712,7 +1773,6 @@ const TabAbout = ({ text, lang }) => {
           </div>
         </div>
 
-        {/* Évolution permanente */}
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center space-x-3 mb-5">
             <div className="p-2 bg-purple-50 rounded-sm"><TrendingUp className="w-5 h-5 text-purple-700" /></div>
@@ -1733,10 +1793,7 @@ const TabAbout = ({ text, lang }) => {
         </div>
       </div>
 
-      {/* BLOC FONDATEUR & CONTACT (Pleine largeur) */}
       <div className="bg-slate-50 p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-10">
-        
-        {/* Le Fondateur */}
         <div className="flex-1 space-y-4">
           <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.founder_title}</h2>
           <div className="text-sm text-slate-600 leading-relaxed space-y-3">
@@ -1747,7 +1804,6 @@ const TabAbout = ({ text, lang }) => {
           </div>
         </div>
 
-        {/* Contact & Collaborer */}
         <div className="flex-1 flex flex-col justify-between space-y-6">
           <div>
             <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.collab_title}</h2>
@@ -1775,7 +1831,6 @@ const TabAbout = ({ text, lang }) => {
         </div>
       </div>
 
-      {/* CITATION ACADÉMIQUE */}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm group hover:border-blue-300 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
           <div className="flex items-center space-x-2">
@@ -1796,28 +1851,23 @@ const TabAbout = ({ text, lang }) => {
           {text.about.citation_text}
         </p>
       </div>
-      
     </section>
   );
 };
-
 
 // ============================================================================
 // 4. COMPOSANT PRINCIPAL (App)
 // ============================================================================
 
 export default function App() {
-  // États Globaux
   const [lang, setLang] = useState('fr');
   const [activeTab, setActiveTab] = useState('evidence'); 
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // États Explorateur
   const [activeSubRegion, setActiveSubRegion] = useState('all');
   const [activeSubTab, setActiveSubTab] = useState('perspective');
   const [searchTerm, setSearchTerm] = useState('');
   
-  // États Modal et autres
   const [showModal, setShowModal] = useState(false);
   const [modalView, setModalView] = useState('demography'); 
   const [expandedIndicator, setExpandedIndicator] = useState(null);
@@ -1852,7 +1902,6 @@ export default function App() {
   const display = useMemo(() => {
     const country = currentCountries.find(c => c.id === activeSubTab);
     
-    // Si on a cliqué sur un pays précis
     if (country && activeSubTab !== 'perspective') {
       return { 
         name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, stock: country.stock, female: country.female, evolution: country.evolution,
@@ -1865,7 +1914,6 @@ export default function App() {
       };
     }
     
-    // Si on est sur "Perspective", on charge les données du continent OU de la sous-région
     const fallbackKey = activeSubRegion === 'all' ? 'africa_perspective' : `${activeSubRegion}_perspective`;
     const fallback = aggregates[fallbackKey] || aggregates['africa_perspective'];
     
@@ -1901,7 +1949,6 @@ export default function App() {
     const link = document.createElement("a"); link.href = encodeURI(csvContent); link.download = `Profile_${display.name}.csv`; link.click();
   };
 
-  // Définition de la structure du menu
   const navigation = [
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
@@ -1936,9 +1983,7 @@ export default function App() {
         }
       `}</style>
 
-      {/* ----------------- NAVBAR & ONGLETS ----------------- */}
       <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden">
-        {/* Barre supérieure : Branding & Langue */}
         <div className="border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
             <div className="flex items-center space-x-3">
@@ -1953,7 +1998,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Barre inférieure : Navigation par onglets */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto custom-scrollbar">
           <div className="flex space-x-1 py-2">
             {navigation.map((item) => {
@@ -1978,61 +2022,37 @@ export default function App() {
         </div>
       </nav>
 
-      {/* ----------------- CONTENU PRINCIPAL (ROUTAGE MANUEL) ----------------- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
         {activeTab === 'evidence' && (
-          <TabEvidenceCheck 
-            text={text} 
-            lang={lang} 
-          />
+          <TabEvidenceCheck text={text} lang={lang} />
         )}
         {activeTab === 'explorer' && (
           <TabExplorer 
-            text={text} 
-            lang={lang} 
-            activeSubRegion={activeSubRegion}
-            setActiveSubRegion={setActiveSubRegion}
-            activeSubTab={activeSubTab}
-            setActiveSubTab={setActiveSubTab}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            filteredCountries={filteredCountries}
-            display={display}
-            setShowModal={setShowModal}
+            text={text} lang={lang} 
+            activeSubRegion={activeSubRegion} setActiveSubRegion={setActiveSubRegion}
+            activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab}
+            searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+            filteredCountries={filteredCountries} display={display} setShowModal={setShowModal}
           />
         )}
         {activeTab === 'governance' && (
-          <TabGovernance 
-            text={text} 
-            lang={lang} 
-            activeSdgzTab={activeSdgzTab} 
-            setActiveSdgzTab={setActiveSdgzTab} 
-          />
+          <TabGovernance text={text} lang={lang} activeSdgzTab={activeSdgzTab} setActiveSdgzTab={setActiveSdgzTab} />
         )}
         {activeTab === 'library' && (
-          <TabLibrary 
-            text={text} 
-            lang={lang} 
-          />
+          <TabLibrary text={text} lang={lang} />
         )}
         {activeTab === 'methodology' && (
           <TabMethodology 
-            text={text} 
-            lang={lang} 
-            expandedIndicator={expandedIndicator}
-            setExpandedIndicator={setExpandedIndicator}
+            text={text} lang={lang} 
+            expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
             exportIndicatorsCSV={exportIndicatorsCSV}
           />
         )}
         {activeTab === 'about' && (
-          <TabAbout 
-            text={text} 
-            lang={lang} 
-          />
+          <TabAbout text={text} lang={lang} />
         )}
       </main>
 
-      {/* --- MODAL DÉTAILLÉ (FICHE PAYS) AVEC RATIFICATIONS UA & OIT --- */}
       {showModal && (
         <div 
           onClick={() => setShowModal(false)}
@@ -2042,8 +2062,6 @@ export default function App() {
             onClick={(e) => e.stopPropagation()} 
             className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
-              
-            {/* EN-TÊTE DU MODAL */}
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
               <div className="flex items-center space-x-5">
                 <span className="text-4xl md:text-5xl flag-emoji border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none">{display.flag}</span>
@@ -2053,7 +2071,6 @@ export default function App() {
                 </div>
               </div>
                 
-              {/* BOUTONS D'ONGLETS */}
               <div className="flex bg-slate-100 p-1 rounded-sm border border-slate-200 print:hidden">
                 <button onClick={() => setModalView('demography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'demography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.demo}</button>
                 <button onClick={() => setModalView('geography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'geography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.geo}</button>
@@ -2062,10 +2079,7 @@ export default function App() {
               <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" /></button>
             </div>
 
-            {/* CORPS DU MODAL */}
             <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
-                
-              {/* ONGLET 1 : DÉMOGRAPHIE */}
               <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
                   <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Le Réel Poids Démographique" : "The Real Demographic Weight"}</h3>
@@ -2096,9 +2110,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ONGLET 2 : GÉOGRAPHIE & INTÉGRATION */}
               <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
-                  
                 <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
                   <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 mr-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
@@ -2120,8 +2132,6 @@ export default function App() {
                     
                   {!display.isRegion && (
                     <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
-                        
-                      {/* PROTECTION & VULNÉRABILITÉS */}
                       {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
                           <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 mr-2 text-slate-400" /> {text.modal.idp_title}</h4>
@@ -2158,7 +2168,6 @@ export default function App() {
                         </div>
                       )}
 
-                      {/* INTÉGRATION RÉGIONALE (AVOI) */}
                       {display.avoi !== null && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
                           <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 mr-2 text-slate-400" /> {text.modal.avoi_title}</h4>
@@ -2179,7 +2188,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ONGLET 3 : ÉCONOMIE, NORMES OIT ET INSTRUMENTS DE L'UNION AFRICAINE */}
               <div className={`space-y-8 animate-in fade-in duration-500 ${modalView === 'economy' ? 'block' : 'hidden print:block'} print:space-y-4 print:break-inside-avoid`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                   <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
@@ -2188,7 +2196,6 @@ export default function App() {
                   <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><p className="text-slate-700 text-sm print:text-[10px]">{lang === 'fr' ? "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale." : "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity."}</p></div>
                 </div>
 
-                {/* BLOC INSTRUMENTS ET TRAITÉS CLÉS DE L'UNION AFRICAINE */}
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
@@ -2225,7 +2232,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* BLOC NORMES OIT (NORMLEX) */}
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Évaluation Juridique des Droits (Base NORMLEX OIT)" : "Legal Evaluation of Rights (ILO NORMLEX)"}</h3>
@@ -2287,7 +2293,6 @@ export default function App() {
         </div>
       )}
 
-      {/* FOOTER */}
       <footer className="bg-[#0f172a] text-slate-400 py-12 border-t border-slate-800 mt-12 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
           <div>
