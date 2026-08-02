@@ -6,6 +6,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Mail
 } from 'lucide-react';
+import { evidenceCheckData } from './narrativesData';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -957,119 +958,183 @@ const indicatorThemes = [
 // 3. COMPOSANTS DES ONGLETS
 // ============================================================================
 
-const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
-  <div className="space-y-16 animate-in fade-in zoom-in-95 duration-500">
-    
-    {/* HERO HEADER */}
-    <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg">
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
-        <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">Open Data Initiative</div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">{text.hero_title}<br/><span className="text-blue-300 italic font-normal">{text.hero_highlight}</span></h1>
-        <p className="text-slate-300 max-w-2xl text-base leading-relaxed font-medium">{text.desc}</p>
-      </div>
-    </header>
+const TabEvidenceCheck = ({ text, lang }) => {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [expandedFiche, setExpandedFiche] = useState(null);
 
-    {/* 1. PERSPECTIVE GLOBALE (Déplacée en premier et redesignée) */}
-    <section className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-xl border border-slate-800 relative overflow-hidden print:bg-white print:border print:text-slate-900 print:shadow-none">
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-5 print:hidden"><Globe className="w-96 h-96" /></div>
+  // Extraire les catégories uniques pour la barre de filtres
+  const categories = ["All", ...new Set(evidenceCheckData.map(item => item.category))];
+
+  // Filtrer les données en fonction du bouton cliqué
+  const filteredData = activeCategory === "All" 
+    ? evidenceCheckData 
+    : evidenceCheckData.filter(item => item.category === activeCategory);
+
+  // Fonction pour attribuer les bonnes couleurs aux badges GIEC
+  const getVerdictStyle = (level) => {
+    switch (level) {
+      case "🟢": return "bg-emerald-100 text-emerald-800 border-emerald-300";
+      case "🟢🟡": return "bg-lime-100 text-lime-800 border-lime-300";
+      case "🟡": return "bg-amber-100 text-amber-800 border-amber-300";
+      case "🟠": return "bg-orange-100 text-orange-800 border-orange-300";
+      case "🔴": return "bg-rose-100 text-rose-800 border-rose-300";
+      case "⚪": return "bg-slate-100 text-slate-800 border-slate-300";
+      default: return "bg-slate-100 text-slate-800 border-slate-300";
+    }
+  };
+
+  return (
+    <div className="space-y-12 animate-in fade-in zoom-in-95 duration-500">
       
-      {/* En-tête de la section */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-900/50 rounded-sm border border-blue-800 text-blue-300 print:bg-slate-100 print:text-blue-800"><Globe className="h-5 w-5" /></div>
-          <h2 className="text-xl md:text-2xl font-serif font-bold tracking-tight">{text.sections.global}</h2>
-        </div>
-        <div className="bg-slate-800/80 border border-slate-700 px-5 py-2.5 rounded-md flex items-center gap-3 shadow-inner">
-           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{text.global_stats.world}</span>
-           <span className="text-xl font-bold text-white">304 M</span>
-        </div>
-      </div>
-        
-      {/* Grille des Régions */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-5 gap-5 mb-8">
-        
-        {/* Europe */}
-        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.europe}</span>
-          <span className="text-3xl font-serif font-bold text-white mb-4">94 M</span>
-          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '30.9%'}}></div></div>
-          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">30.9%</span>
-        </div>
-        
-        {/* Asie */}
-        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.asia}</span>
-          <span className="text-3xl font-serif font-bold text-white mb-4">92 M</span>
-          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '30.2%'}}></div></div>
-          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">30.2%</span>
-        </div>
-        
-        {/* Amérique du Nord */}
-        <div className="bg-slate-800/60 p-5 rounded-lg border border-slate-700 flex flex-col justify-between hover:bg-slate-800 transition-colors">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">{text.global_stats.na}</span>
-          <span className="text-3xl font-serif font-bold text-white mb-4">61 M</span>
-          <div className="w-full bg-slate-700/50 h-1.5 rounded-full overflow-hidden"><div className="bg-slate-400 h-full" style={{width: '20.1%'}}></div></div>
-          <span className="text-[10px] font-bold text-slate-500 mt-2 text-right">20.1%</span>
-        </div>
-
-        {/* L'Afrique - Mise en évidence (Prend 2 colonnes) */}
-        <div className="bg-blue-900/40 p-6 rounded-lg border border-blue-500/50 transform hover:scale-[1.02] transition-transform shadow-lg relative overflow-hidden flex flex-col justify-between md:col-span-2">
-          <div className="absolute top-0 right-0 p-4 opacity-10"><Globe className="w-24 h-24 text-blue-300" /></div>
-          <span className="text-xs font-bold text-blue-300 uppercase tracking-widest mb-2 relative z-10">{text.global_stats.africa}</span>
-          <div className="flex items-end gap-3 mb-4 relative z-10">
-            <span className="text-5xl font-serif font-bold text-blue-100">29 M</span>
-            <span className="text-sm font-bold text-blue-400 mb-1.5">({text.global_stats.share} 9.5%)</span>
+      {/* 1. HERO HEADER INTRODUCTIF */}
+      <header className="bg-[#0f172a] text-white py-14 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg">
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none"><Globe className="w-[400px] h-[400px]" /></div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+          <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">
+            {lang === 'fr' ? 'Observatoire des Narratifs' : 'Narratives Observatory'}
           </div>
-          <div className="w-full bg-slate-800/80 h-2 rounded-full overflow-hidden relative z-10"><div className="bg-blue-400 h-full shadow-[0_0_10px_rgba(96,165,250,0.5)]" style={{width: '9.5%'}}></div></div>
+          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
+            {lang === 'fr' ? 'Évaluation des affirmations' : 'Evidence Check'} <br/>
+            <span className="text-blue-300 italic font-normal">
+              {lang === 'fr' ? 'à la lumière des données.' : 'powered by open data.'}
+            </span>
+          </h1>
+          <p className="text-slate-300 max-w-2xl text-base leading-relaxed font-medium">
+            {lang === 'fr' 
+              ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
+              : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
+          </p>
         </div>
+      </header>
 
-      </div>
-        
-      {/* Note d'analyse */}
-      <div className="relative z-10 flex items-start space-x-4 bg-slate-800/80 p-5 rounded-lg border-l-4 border-blue-500 shadow-sm">
-        <Info className="w-6 h-6 text-blue-400 shrink-0 mt-0.5" />
-        <p className="text-slate-200 text-sm leading-relaxed font-medium">{text.global_stats.note}</p>
-      </div>
-    </section>
-
-    {/* 2. DÉCONSTRUCTION (Déplacée en second) */}
-    <section>
-      <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-rose-50 rounded-sm text-rose-800"><ShieldAlert className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.debunk}</h2></div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {text.debunk_cards.map((card, idx) => (
-          <div 
-            key={idx} 
-            onClick={() => setExpandedMyth(expandedMyth === idx ? null : idx)}
-            className={`bg-white rounded-lg p-5 border transition-all duration-300 flex flex-col cursor-pointer ${expandedMyth === idx ? 'border-blue-600 shadow-lg scale-[1.01]' : 'border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300'}`}
+      {/* 2. SECTION FILTRES */}
+      <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
+        {categories.map((cat, idx) => (
+          <button
+            key={idx}
+            onClick={() => { setActiveCategory(cat); setExpandedFiche(null); }}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all shadow-sm border ${
+              activeCategory === cat 
+                ? 'bg-slate-900 text-white border-slate-900 scale-105' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+            }`}
           >
-            <div>
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-[9px] font-bold uppercase text-slate-500 tracking-widest border border-slate-100 px-2 py-0.5 rounded-sm">{text.myth}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-300 ${expandedMyth === idx ? 'rotate-180 text-blue-600' : ''}`} />
-              </div>
-              <p className="text-slate-800 font-serif italic text-sm md:text-base leading-snug mb-3">"{card.myth}"</p>
-            </div>
-            <div className="pt-4 border-t border-slate-100 mt-auto">
-              <span className="text-[9px] font-bold uppercase text-blue-800 tracking-widest bg-blue-50 px-2 py-0.5 rounded-sm">{text.reality}</span>
-              <p className="text-slate-900 font-bold text-base mt-2 mb-2 leading-tight">{card.real}</p>
-              <div className="flex items-center space-x-3">
-                 <div className="w-full bg-slate-100 h-1.5 rounded-sm overflow-hidden">
-                   <div className={`${card.color} h-full transition-all duration-1000 ease-out`} style={{width: `${card.stat_val}%`}}></div>
-                 </div>
-                 <span className={`text-xs font-bold ${card.color.replace('bg-', 'text-')}`}>{card.stat_text}</span>
-              </div>
-            </div>
-            <div className={`overflow-hidden transition-all duration-500 ${expandedMyth === idx ? 'max-h-48 opacity-100 mt-3 pt-3 border-t border-slate-100' : 'max-h-0 opacity-0'}`}>
-              <p className="text-xs text-slate-600 leading-relaxed">{card.desc}</p>
-            </div>
-          </div>
+            {cat === "All" ? (lang === 'fr' ? "Tout voir" : "View All") : cat}
+          </button>
         ))}
-      </div>
-    </section>
+      </section>
 
-  </div>
-);
+      {/* 3. GRILLE DES FICHES EVIDENCE CHECK */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {filteredData.map((fiche) => {
+          const isExpanded = expandedFiche === fiche.id;
+          return (
+            <div 
+              key={fiche.id} 
+              className={`bg-white rounded-xl border transition-all duration-300 flex flex-col shadow-sm ${
+                isExpanded ? 'border-slate-800 shadow-xl scale-[1.01]' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
+              }`}
+            >
+              {/* En-tête de la carte */}
+              <div 
+                className="p-6 cursor-pointer group flex flex-col h-full"
+                onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl">{fiche.category_icon}</span>
+                    <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category}</span>
+                  </div>
+                  <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm flex items-center space-x-1.5 ${getVerdictStyle(fiche.confidence_level)}`}>
+                    <span className="text-sm">{fiche.confidence_level}</span>
+                    <span>{fiche.verdict}</span>
+                  </div>
+                </div>
+                
+                <h3 className="text-slate-900 font-serif font-bold text-lg leading-tight mb-4 group-hover:text-blue-800 transition-colors">
+                  « {fiche.narrative} »
+                </h3>
+
+                <div className="mt-auto pt-4 border-t border-slate-100">
+                  <span className="text-[9px] font-bold uppercase text-slate-400 tracking-widest block mb-2">
+                    {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
+                  </span>
+                  <p className="text-slate-700 text-sm leading-relaxed font-medium">
+                    {fiche.reality}
+                  </p>
+                </div>
+                
+                <div className="flex justify-center mt-5">
+                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-slate-800' : 'group-hover:text-blue-600'}`} />
+                </div>
+              </div>
+
+              {/* Zone extensible : Détails Scientifiques */}
+              <div className={`overflow-hidden transition-all duration-500 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[800px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                <div className="p-6 space-y-6">
+                  
+                  {/* Pourquoi ce narratif persiste ? */}
+                  {fiche.why_persists && fiche.why_persists.length > 0 && (
+                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
+                        <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                        {lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?"}
+                      </h4>
+                      <ul className="space-y-2">
+                        {fiche.why_persists.map((reason, i) => (
+                          <li key={i} className="flex items-start text-xs text-slate-600 leading-relaxed">
+                            <span className="text-blue-400 mr-2 mt-0.5">•</span> {reason}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Sources et Indicateurs */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                        {lang === 'fr' ? "📊 Indicateurs Croisés" : "📊 Crossed Indicators"}
+                      </h4>
+                      <ul className="space-y-1.5">
+                        {fiche.indicators.map((ind, i) => (
+                          <li key={i} className="text-[11px] text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                        {lang === 'fr' ? "🏛️ Sources" : "🏛️ Sources"}
+                      </h4>
+                      <ul className="space-y-1.5">
+                        {fiche.sources.map((src, i) => (
+                          <li key={i} className="text-[11px] font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Limites Méthodologiques */}
+                  <div>
+                    <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center">
+                      <ShieldAlert className="w-3 h-3 mr-1.5" />
+                      {lang === 'fr' ? "Limites méthodologiques :" : "Methodological limits:"}
+                    </h4>
+                    <p className="text-xs text-slate-500 italic">
+                      {fiche.limits}
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+
+    </div>
+  );
+};
 
 const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => {
   // Liste des cartes de sous-régions
@@ -1500,7 +1565,7 @@ const TabAbout = ({ text, lang }) => (
 export default function App() {
   // États Globaux
   const [lang, setLang] = useState('fr');
-  const [activeTab, setActiveTab] = useState('panorama');
+  const [activeTab, setActiveTab] = useState('evidence'); // Corrigé ici
   const [isLoaded, setIsLoaded] = useState(false);
   
   // États Explorateur
@@ -1511,7 +1576,6 @@ export default function App() {
   // États Modal et autres
   const [showModal, setShowModal] = useState(false);
   const [modalView, setModalView] = useState('demography'); 
-  const [expandedMyth, setExpandedMyth] = useState(null);
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
 
@@ -1595,7 +1659,7 @@ export default function App() {
 
   // Définition de la structure du menu
   const navigation = [
-    { id: 'panorama', icon: Globe, label: { fr: 'Panorama & Narratifs', en: 'Overview & Narratives' } },
+    { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } }, // Corrigé ici
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'library', icon: BookOpen, label: { fr: 'Bibliothèque', en: 'Library' } },
@@ -1672,12 +1736,10 @@ export default function App() {
 
       {/* ----------------- CONTENU PRINCIPAL (ROUTAGE MANUEL) ----------------- */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
-        {activeTab === 'panorama' && (
-          <TabPanorama 
+        {activeTab === 'evidence' && ( // Corrigé ici
+          <TabEvidenceCheck 
             text={text} 
             lang={lang} 
-            expandedMyth={expandedMyth} 
-            setExpandedMyth={setExpandedMyth} 
           />
         )}
         {activeTab === 'explorer' && (
