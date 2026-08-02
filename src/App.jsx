@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
-  Globe, ShieldAlert, TrendingUp, Sun, MapPin, Database, 
+  Globe, ShieldAlert, TrendingUp, MapPin, Database, 
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
@@ -369,7 +369,7 @@ const genericDesc = {
 };
 
 // ----------------------------------------------------------------------------
-// NOUVEAU : LES AGRÉGATS DES SOUS-RÉGIONS (Niveau intermédiaire)
+// LES AGRÉGATS DES SOUS-RÉGIONS
 // ----------------------------------------------------------------------------
 const aggregates = {
   'africa_perspective': { 
@@ -1053,84 +1053,140 @@ const TabPanorama = ({ text, lang, expandedMyth, setExpandedMyth }) => (
   </div>
 );
 
-const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
-  <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
-    <div className="flex items-center space-x-3 mb-6"><div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div><h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2></div>
-    <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
+const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => {
+  // Liste des cartes de sous-régions
+  const regionCards = [
+    { id: 'all', icon: '🌍', label: text.all_regions, activeColor: 'bg-blue-800 text-white border-blue-800' },
+    { id: 'af_med', icon: '🌊', label: text.regions.af_med, activeColor: 'bg-cyan-700 text-white border-cyan-700' },
+    { id: 'af_west', icon: '🌳', label: text.regions.af_west, activeColor: 'bg-emerald-700 text-white border-emerald-700' },
+    { id: 'af_central', icon: '🦍', label: text.regions.af_central, activeColor: 'bg-teal-700 text-white border-teal-700' },
+    { id: 'af_east', icon: '⛰️', label: text.regions.af_east, activeColor: 'bg-amber-700 text-white border-amber-700' },
+    { id: 'af_south', icon: '🦓', label: text.regions.af_south, activeColor: 'bg-orange-700 text-white border-orange-700' }
+  ];
+
+  return (
+    <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
       
-      {/* SIDEBAR EXPLORATEUR */}
-      <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
+      {/* 1. LA CARTE EN GRAND (Déplacée ici) */}
+      <div className="mb-10 bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-inner flex flex-col items-center justify-center">
+        <img 
+          src="/map_africa.png" 
+          alt="Carte Afrique" 
+          className="w-full max-w-2xl h-auto drop-shadow-sm opacity-90 mix-blend-multiply" 
+        />
+        <p className="text-[10px] text-slate-400 mt-4 italic uppercase tracking-widest font-bold">
+          {lang === 'fr' ? "Sélectionnez une zone pour explorer les données" : "Select a zone to explore data"}
+        </p>
+      </div>
+
+      {/* 2. TITRE EXPLORATEUR */}
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div>
+        <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2>
+      </div>
+
+      {/* 3. NOUVELLE SÉLECTION INTUITIVE DES SOUS-RÉGIONS */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+        {regionCards.map(rc => {
+          const isActive = activeSubRegion === rc.id;
+          return (
+            <button
+              key={rc.id}
+              onClick={() => { setActiveSubRegion(rc.id); setActiveSubTab('perspective'); }}
+              className={`p-4 rounded-xl border-2 flex flex-col items-center justify-center text-center transition-all duration-300 shadow-sm ${
+                isActive 
+                  ? rc.activeColor + ' shadow-md scale-[1.02]' 
+                  : 'bg-white text-slate-600 border-slate-100 hover:border-slate-300 hover:bg-slate-50'
+              }`}
+            >
+              <span className="text-3xl mb-2 filter drop-shadow-sm">{rc.icon}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest leading-tight">{rc.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 4. INTERFACE À DEUX COLONNES (Liste Pays + Dashboard) */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-md overflow-hidden flex flex-col md:flex-row min-h-[500px]">
         
-        {/* NOUVEAU : LA CARTE AU SOMMET DE L'EXPLORATEUR */}
-        <div className="p-5 pb-0">
-          <div className="bg-slate-800/40 rounded-md border border-slate-700/50 p-3 flex justify-center items-center shadow-inner">
-            <img 
-              src="/map_africa.png" 
-              alt="Carte des régions" 
-              className="w-3/4 h-auto opacity-75 hover:opacity-100 transition-opacity" 
-            />
+        {/* SIDEBAR PAYS */}
+        <div className="w-full md:w-72 bg-[#0f172a] text-white flex flex-col border-r border-slate-800 shrink-0">
+          <div className="p-5 pb-4 border-b border-slate-800/50">
+            <div className="relative">
+              <input type="text" placeholder={text.sidebar.search} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/80 border border-slate-700 rounded-sm py-2 pl-8 pr-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-shadow" />
+              <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar max-h-[500px]">
+            <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+              <Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" />
+              <span className="truncate">
+                {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
+              </span>
+            </button>
+            {filteredCountries.map((item) => (
+              <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                <span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span>
+                <span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>
+                {activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}
+              </button>
+            ))}
           </div>
         </div>
-
-        {/* MENU DÉROULANT DES SOUS-RÉGIONS */}
-        <div className="p-5 border-b border-slate-800 bg-slate-800/30">
-          <h4 className="text-blue-300 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center"><MapIcon className="w-3 h-3 mr-1.5" /> {text.sidebar.subregion}</h4>
-          <select value={activeSubRegion} onChange={(e) => { setActiveSubRegion(e.target.value); setActiveSubTab('perspective'); }} className="w-full bg-[#0f172a] border border-slate-700 rounded-sm py-2 px-3 text-xs font-bold text-slate-200 focus:ring-1 focus:ring-blue-500 outline-none cursor-pointer appearance-none">
-            <option value="all">{text.all_regions}</option>
-            {Object.keys(t[lang].regions).map(regId => (<option key={regId} value={regId}>{text.regions[regId]}</option>))}
-          </select>
-        </div>
-
-        {/* RECHERCHE */}
-        <div className="p-5 pb-2">
-          <div className="relative"><input type="text" placeholder={text.sidebar.search} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-slate-800/80 border border-slate-700 rounded-sm py-2 pl-8 pr-3 text-xs focus:ring-1 focus:ring-blue-500 outline-none transition-shadow" /><Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" /></div>
-        </div>
-
-        {/* LISTE DES BOUTONS */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar max-h-[400px]">
-          <button onClick={() => setActiveSubTab('perspective')} className={`w-full flex items-center p-3 rounded-sm transition-all font-bold text-xs text-left mb-3 border ${activeSubTab === 'perspective' ? 'bg-blue-800 border-blue-700 text-white shadow-md' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><Database className="w-4 h-4 mr-2.5 shrink-0 opacity-80" />
-            <span className="truncate">
-              {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
-            </span>
-          </button>
-          {filteredCountries.map((item) => (
-            <button key={item.id} onClick={() => setActiveSubTab(item.id)} className={`w-full flex items-center p-2.5 rounded-sm transition-all text-xs text-left group border ${activeSubTab === item.id ? 'bg-white border-white text-slate-900 font-bold shadow-sm' : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}><span className="text-xl mr-2.5 shrink-0 flag-emoji">{item.flag}</span><span className="truncate">{item.name?.[lang] || item.name?.fr || "Unknown"}</span>{activeSubTab === item.id && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-600" />}</button>
-          ))}
-        </div>
-      </div>
         
-      {/* VUE PRINCIPALE */}
-      <div className="flex-1 p-6 md:p-10 bg-slate-50">
-        <div className="flex items-center space-x-5 mb-10"><span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span><div><h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">{display.name}</h3><div className="mt-3"><span className="px-3 py-1 bg-white text-blue-800 text-[9px] font-bold uppercase rounded-sm tracking-widest border border-blue-200 shadow-sm">{display.isRegion ? text.badge.regional : text.badge.country}</span></div></div></div>
+        {/* VUE PRINCIPALE DASHBOARD */}
+        <div className="flex-1 p-6 md:p-10 bg-slate-50">
+          <div className="flex items-center space-x-5 mb-10">
+            <span className="text-6xl md:text-7xl shrink-0 flag-emoji border border-slate-200 rounded-sm bg-white p-2 shadow-sm">{display.flag}</span>
+            <div>
+              <h3 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 leading-tight tracking-tight">{display.name}</h3>
+              <div className="mt-3">
+                <span className="px-3 py-1 bg-white text-blue-800 text-[9px] font-bold uppercase rounded-sm tracking-widest border border-blue-200 shadow-sm">
+                  {display.isRegion ? text.badge.regional : text.badge.country}
+                </span>
+              </div>
+            </div>
+          </div>
           
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><Users className="h-4 w-4" /> {text.metrics.stock}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{formatNumber(display.stock)}</span></div>
-          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><HeartPulse className="h-4 w-4" /> {text.metrics.female}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{display.female}%</span></div>
-          <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><BarChart3 className="h-4 w-4" /> {text.metrics.evolution}</div><span className="block text-2xl md:text-3xl font-serif font-bold text-slate-800">{display.evolution}%</span></div>
-        </div>
-
-        {display.isRegion && (
-          <div className="mt-8 p-6 bg-blue-50/50 rounded-lg border border-blue-100 shadow-sm space-y-3">
-            <h4 className="text-blue-900 font-serif font-bold text-base flex items-center">
-              <Activity className="w-5 h-5 mr-2 text-blue-700" />
-              {text.comparative_view_title}
-            </h4>
-            <p className="text-sm text-blue-950 leading-relaxed">
-              {text.comparative_view_desc}
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><Users className="h-4 w-4" /> {text.metrics.stock}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{formatNumber(display.stock)}</span></div>
+            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><HeartPulse className="h-4 w-4" /> {text.metrics.female}</div><span className="block text-3xl md:text-4xl font-serif font-bold text-slate-800">{display.female}%</span></div>
+            <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm"><div className="flex items-center space-x-1.5 text-slate-500 mb-4 font-bold text-[9px] uppercase tracking-widest"><BarChart3 className="h-4 w-4" /> {text.metrics.evolution}</div><span className="block text-2xl md:text-3xl font-serif font-bold text-slate-800">{display.evolution}%</span></div>
           </div>
-        )}
 
-        <div className="mt-10 p-6 bg-[#0f172a] rounded-lg text-white relative overflow-hidden shadow-md group cursor-pointer border border-slate-800" onClick={() => setShowModal(true)}>
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
-            <div className="flex items-center space-x-4"><div className="p-3 bg-blue-900/50 rounded-sm border border-blue-800 group-hover:bg-blue-800 transition-colors">{display.isRegion ? <PieChart className="w-6 h-6 text-blue-300" /> : <TableProperties className="w-6 h-6 text-blue-300" />}</div><div><h4 className="font-serif font-bold text-lg mb-0.5">{display.isRegion ? text.modal.infographic_title : text.modal.raw_data_title}</h4><p className="text-slate-400 text-xs">{lang === 'fr' ? `Consulter l'analyse pour : ${display.name}.` : `View analysis for: ${display.name}.`}</p></div></div>
-            <button className="bg-blue-700 text-white font-bold px-6 py-3 rounded-sm text-xs transition-colors flex items-center shrink-0 shadow-sm group-hover:bg-blue-600">{text.analysis_btn}<ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" /></button>
+          {display.isRegion && (
+            <div className="mt-8 p-6 bg-blue-50/50 rounded-lg border border-blue-100 shadow-sm space-y-3">
+              <h4 className="text-blue-900 font-serif font-bold text-base flex items-center">
+                <Activity className="w-5 h-5 mr-2 text-blue-700" />
+                {text.comparative_view_title}
+              </h4>
+              <p className="text-sm text-blue-950 leading-relaxed">
+                {text.comparative_view_desc}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-10 p-6 bg-[#0f172a] rounded-lg text-white relative overflow-hidden shadow-md group cursor-pointer border border-slate-800" onClick={() => setShowModal(true)}>
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
+              <div className="flex items-center space-x-4">
+                <div className="p-3 bg-blue-900/50 rounded-sm border border-blue-800 group-hover:bg-blue-800 transition-colors">
+                  {display.isRegion ? <PieChart className="w-6 h-6 text-blue-300" /> : <TableProperties className="w-6 h-6 text-blue-300" />}
+                </div>
+                <div>
+                  <h4 className="font-serif font-bold text-lg mb-0.5">{display.isRegion ? text.modal.infographic_title : text.modal.raw_data_title}</h4>
+                  <p className="text-slate-400 text-xs">{lang === 'fr' ? `Consulter l'analyse pour : ${display.name}.` : `View analysis for: ${display.name}.`}</p>
+                </div>
+              </div>
+              <button className="bg-blue-700 text-white font-bold px-6 py-3 rounded-sm text-xs transition-colors flex items-center shrink-0 shadow-sm group-hover:bg-blue-600">
+                {text.analysis_btn}<ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
   <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm animate-in fade-in zoom-in-95 duration-500">
@@ -1483,7 +1539,7 @@ export default function App() {
       };
     }
     
-    // NOUVEAU : Si on est sur "Perspective", on charge les données du continent OU de la sous-région
+    // Si on est sur "Perspective", on charge les données du continent OU de la sous-région
     const fallbackKey = activeSubRegion === 'all' ? 'africa_perspective' : `${activeSubRegion}_perspective`;
     const fallback = aggregates[fallbackKey] || aggregates['africa_perspective'];
     
