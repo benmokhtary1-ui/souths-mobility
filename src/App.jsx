@@ -4,7 +4,7 @@ import {
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
-  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Mail
+  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, Copy, Check, Mail
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -114,7 +114,7 @@ const t = {
         causal_chain: "Chaîne de causes systémiques", trigger: "Déclencheur", response: "Réponse Migratoire", impact: "Impact Socio-économique",
         data_source: "Sources : UNDESA (2024) / Rapport UA-OIT-OIM-CEA (2021) / IDMC (2025) / UNHCR (2025) / OIT NORMLEX (2025)", export_csv: "Exporter (CSV)", export_pdf: "Rapport (PDF)",
         raw_data_title: "Fiche de Données Brutes", infographic_title: "Infographie : Répartition des Flux",
-        idp_title: "Protection & Déplacements Forcés (IDMC/UNHCR 2025)", idp_desc: "L'essentiel de la mobilité contrainte africaine est absorbée à l'intérieur des frontières nationales ou dans les pays limitrophes.",
+        idp_title: "Protection & Déplacements Forcés (IDMC/UNHCR 2025)", idp_desc: "L'essentiel de la mobilité contrainte africaine est absorbé à l'intérieur des frontières nationales ou dans les pays limitrophes.",
         idp_conflict: "Déplacés Internes Conflits (IDMC 2025)", idp_disaster: "Déplacés Internes Climat (IDMC 2025)",
         hcr_hosted: "Réfugiés internationaux accueillis (UNHCR 2025)",
         avoi_title: "Intégration Régionale - Indice AVOI (BAD 2024)", avoi_desc: "Score d'ouverture des frontières aux ressortissants africains.",
@@ -131,7 +131,7 @@ const t = {
       },
       global_stats: {
         world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
-        note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (29 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
+        note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (28,5 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
       },
       sdg_section: {
         title: "Ancrage International : ODD (2030), GCM (2018) & GCR (2018)",
@@ -594,7 +594,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Rep." }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
+      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Republic" }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
       "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
       "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
@@ -716,7 +716,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "480", "name": { "fr": "Maurice", "en": "Maurice" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
+      "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
       "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "2.3", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
@@ -1150,7 +1150,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   return (
     <section id="explorer" className="animate-in fade-in zoom-in-95 duration-500">
       
-      {/* 1. LA CARTE EN GRAND (Déplacée ici) */}
+      {/* --- LE TITRE EST MAINTENANT TOUT EN HAUT --- */}
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div>
+        <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2>
+      </div>
+
+      {/* --- LA CARTE VIENT EN DEUXIÈME --- */}
       <div className="mb-10 bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-inner flex flex-col items-center justify-center">
         <img 
           src="/map_africa.png" 
@@ -1160,12 +1166,6 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         <p className="text-[10px] text-slate-400 mt-4 italic uppercase tracking-widest font-bold">
           {lang === 'fr' ? "Sélectionnez une zone pour explorer les données" : "Select a zone to explore data"}
         </p>
-      </div>
-
-      {/* 2. TITRE EXPLORATEUR */}
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2 bg-slate-200 rounded-sm text-slate-700"><MapPin className="h-5 w-5" /></div>
-        <h2 className="text-xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.explorer}</h2>
       </div>
 
       {/* 3. NOUVELLE SÉLECTION INTUITIVE DES SOUS-RÉGIONS */}
@@ -1498,64 +1498,97 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
   </div>
 );
 
-const TabAbout = ({ text, lang }) => (
-  <section className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
-    <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
-      <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
-      <div>
-        <div className="relative z-10 flex justify-between items-center mb-6">
-          <h2 className="text-xl font-serif font-bold flex items-center text-white">
-            <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
-          </h2>
-        </div>
-        <div className="relative z-10 mb-4">
-          <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
-          <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
-          <div className="mt-4 pt-5 border-t border-slate-700/50">
-            <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
-            <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
-          </div>
-        </div>
-      </div>
+const TabAbout = ({ text, lang }) => {
+  const [isCopied, setIsCopied] = useState(false);
 
-      <div>
-        {/* BLOC CONTACT & COLLABORATIONS */}
-        <div className="relative z-10 bg-slate-800/90 p-6 rounded-md border border-slate-700 mt-6 space-y-4">
-          <div className="flex items-center space-x-2">
-            <Mail className="w-5 h-5 text-blue-400" />
-            <h4 className="text-sm font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
+  const handleCopyCitation = async () => {
+    try {
+      await navigator.clipboard.writeText(text.about.citation_text);
+      setIsCopied(true);
+      // Remet le bouton à son état normal après 2 secondes
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error("Erreur lors de la copie de la citation : ", err);
+    }
+  };
+
+  return (
+    <section className="max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
+      <div className="bg-[#0f172a] rounded-xl p-8 md:p-10 text-white shadow-lg relative overflow-hidden flex flex-col justify-between border border-slate-800">
+        <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
+        <div>
+          <div className="relative z-10 flex justify-between items-center mb-6">
+            <h2 className="text-xl font-serif font-bold flex items-center text-white">
+              <Info className="w-5 h-5 mr-2.5 text-blue-400" /> {text.sections.about_title}
+            </h2>
           </div>
-          <p className="text-sm text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <a 
-              href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
-              className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm transition-colors shadow-sm"
-            >
-              <Mail className="w-4 h-4" />
-              <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
-            </a>
-            <a 
-              href="https://www.linkedin.com/in/yassine-b-m" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm border border-slate-600 transition-colors shadow-sm"
-            >
-              <LinkedInIcon className="w-4 h-4 text-blue-300" />
-              <span>LinkedIn</span>
-              <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-            </a>
+          <div className="relative z-10 mb-4">
+            <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p1}</p>
+            <p className="text-slate-300 leading-relaxed mb-3 text-sm font-medium">{text.about.p2}</p>
+            <div className="mt-4 pt-5 border-t border-slate-700/50">
+              <p className="text-slate-200 leading-relaxed mb-4 text-sm font-medium">{text.about.expanded_p1}</p>
+              <p className="text-slate-200 leading-relaxed text-sm font-medium">{text.about.expanded_p2}</p>
+            </div>
           </div>
         </div>
 
-        {/* CITATION ACADÉMIQUE */}
-        <div className="relative z-10 bg-slate-800/80 p-5 rounded-md border border-slate-700 mt-5">
-          <div className="flex items-center space-x-2 mb-2"><Quote className="w-4 h-4 text-blue-400" /><h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4></div>
-          <p className="text-sm text-slate-300 font-serif italic border-l-2 border-blue-500 pl-3">{text.about.citation_text}</p>
+        <div>
+          {/* BLOC CONTACT & COLLABORATIONS */}
+          <div className="relative z-10 bg-slate-800/90 p-6 rounded-md border border-slate-700 mt-6 space-y-4">
+            <div className="flex items-center space-x-2">
+              <Mail className="w-5 h-5 text-blue-400" />
+              <h4 className="text-sm font-bold uppercase tracking-widest text-blue-300">{text.about.contact_title}</h4>
+            </div>
+            <p className="text-sm text-slate-300 leading-relaxed">{text.about.contact_desc}</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a 
+                href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
+                className="inline-flex items-center space-x-2 bg-blue-700 hover:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm transition-colors shadow-sm"
+              >
+                <Mail className="w-4 h-4" />
+                <span>{lang === 'fr' ? 'Email : benmokhtary1@gmail.com' : 'Email: benmokhtary1@gmail.com'}</span>
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/yassine-b-m" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-flex items-center space-x-2 bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2.5 rounded-sm text-sm border border-slate-600 transition-colors shadow-sm"
+              >
+                <LinkedInIcon className="w-4 h-4 text-blue-300" />
+                <span>LinkedIn</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+              </a>
+            </div>
+          </div>
+
+          {/* CITATION ACADÉMIQUE */}
+          <div className="relative z-10 bg-slate-800/80 p-5 rounded-md border border-slate-700 mt-5 group transition-colors hover:border-slate-600">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+              <div className="flex items-center space-x-2">
+                <Quote className="w-4 h-4 text-blue-400" />
+                <h4 className="text-xs font-bold uppercase tracking-widest text-slate-400">{text.about.citation_title}</h4>
+              </div>
+              
+              {/* Le nouveau bouton de copie */}
+              <button 
+                onClick={handleCopyCitation}
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-sm text-xs font-bold transition-all border shadow-sm self-start sm:self-auto focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 focus:ring-offset-slate-800
+                ${isCopied ? 'bg-emerald-900/50 text-emerald-400 border-emerald-800/50' : 'bg-slate-700 hover:bg-slate-600 text-slate-300 border-slate-600 hover:text-white'}"
+              >
+                {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{isCopied ? (lang === 'fr' ? 'Copié !' : 'Copied!') : (lang === 'fr' ? 'Copier' : 'Copy')}</span>
+              </button>
+            </div>
+            
+            <p className="text-sm text-slate-300 font-serif italic border-l-2 border-blue-500 pl-3 leading-relaxed">
+              {text.about.citation_text}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 
 // ============================================================================
