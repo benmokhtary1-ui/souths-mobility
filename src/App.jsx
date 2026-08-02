@@ -1584,30 +1584,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
   </div>
 );
 
-      {activeSdgzTab === 'gcr' && (
-        <div className="space-y-6 animate-in fade-in duration-300">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-            <p className="text-slate-700 text-sm leading-relaxed">
-              {text.sdg_section.gcr_desc}
-            </p>
-            <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-              <span>{text.sdg_section.link_text}</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {text.sdg_section.gcr_objectifs.map((obj, idx) => (
-              <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
-                <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
-  </div>
-);
 
 const TabLibrary = ({ text, lang }) => (
   <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
