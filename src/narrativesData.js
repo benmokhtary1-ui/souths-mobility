@@ -9,7 +9,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "La majorité des migrations africaines s'effectue à l'intérieur du continent. Environ sept migrants africains sur dix résident dans un autre pays africain. Les mobilités vers l'Europe sont importantes mais ne constituent pas la destination majoritaire.",
     indicators: ["Répartition des migrants africains par région de destination", "Stocks intra-africains", "Stocks Afrique–Europe"],
-    sources: ["UN DESA – International Migrant Stock", "OIM – World Migration Report", "Union africaine"],
+    sources: ["UN DESA – International Migrant Stock (2020)", "OIM – World Migration Report 2024", "UA/OIT/OIM - 3e Rapport sur les statistiques migratoires (2021)"],
     limits: "Les stocks ne permettent pas d'observer les migrations circulaires ou temporaires.",
     why_persists: ["Forte couverture médiatique des arrivées en Europe.", "Biais de disponibilité des images de traversées."]
   },
@@ -22,7 +22,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les migrants internationaux représentent une faible proportion de la population africaine (environ 2 %). La grande majorité des Africains vivent dans leur pays de naissance.",
     indicators: ["Taux de migrants internationaux", "Population totale", "Comparaison intercontinentale"],
-    sources: ["UN DESA", "Banque mondiale"],
+    sources: ["UN DESA - International Migrant Stock (2020)", "Banque Mondiale - Migration and Development Brief (2023)"],
     limits: "Les données ne prennent pas en compte les aspirations migratoires.",
     why_persists: ["Confusion entre croissance démographique globale et taux d'émigration."]
   },
@@ -35,7 +35,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "La plupart des réfugiés africains sont accueillis dans des pays voisins ou dans d'autres pays à revenu faible ou intermédiaire. Les crises de déplacement restent principalement gérées à l'échelle régionale.",
     indicators: ["Pays d'accueil", "Répartition par région", "Répartition selon le niveau de revenu"],
-    sources: ["UNHCR – Global Trends"],
+    sources: ["UNHCR – Global Trends Report 2023"],
     limits: "Les situations évoluent rapidement selon les conflits.",
     why_persists: ["Médiatisation asymétrique des demandes d'asile en Europe vis-à-vis des camps de réfugiés dans le Sud."]
   },
@@ -48,7 +48,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Une grande partie des mobilités africaines est régulière, notamment grâce aux accords régionaux de libre circulation, aux visas, aux permis de séjour ou aux migrations de travail. Les données sur les migrations irrégulières restent incomplètes par définition.",
     indicators: ["Visas délivrés", "Titres de séjour", "Mobilité CEDEAO", "Ratification des protocoles"],
-    sources: ["OIM", "Union africaine", "CEDEAO"],
+    sources: ["OIM - World Migration Report 2024", "UA/OIT/OIM - 3e Rapport sur les statistiques migratoires (2021)", "CEDEAO - Données de libre circulation"],
     limits: "L'irrégularité dépend des législations nationales.",
     why_persists: ["Invisibilité statistique et médiatique de la migration régulière et administrative."]
   },
@@ -61,7 +61,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Le Protocole de l'Union africaine sur la libre circulation (2018) n'est pas encore pleinement en vigueur. Plusieurs CER (comme la CEDEAO) disposent de mécanismes plus avancés, avec des niveaux de mise en œuvre très variables.",
     indicators: ["Ratifications", "Entrée en vigueur", "Africa Visa Openness Index", "Exemptions de visa"],
-    sources: ["Union africaine", "Banque africaine de développement"],
+    sources: ["Union Africaine - Protocole sur la libre circulation (2018)", "BAD/UA - Africa Visa Openness Index 2023"],
     limits: "La ratification d'un texte ne garantit pas son application effective.",
     why_persists: ["Confusion entre les annonces diplomatiques continentales et la réalité des postes-frontières."]
   },
@@ -75,7 +75,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "L'émigration qualifiée entraîne des pénuries (santé, recherche), mais génère des effets positifs : transferts de fonds, réseaux scientifiques, transferts de compétences (brain circulation) et retours temporaires/définitifs.",
     indicators: ["Taux d'émigration des diplômés", "Remises migratoires", "Programmes de retour", "Diaspora Skills Database", "Investissements de la diaspora"],
-    sources: ["Banque mondiale", "OCDE", "OIM", "UNESCO"],
+    sources: ["Banque Mondiale - Migration and Development Brief", "OCDE - Perspectives des migrations internationales", "OIM - Africa Migration Report", "UNESCO - Global Education Monitoring"],
     limits: "Les effets indirects des diasporas sont difficiles à mesurer quantitativement.",
     why_persists: ["Héritage du concept de 'Brain Drain' des années 1970, ignorant les dynamiques transnationales."]
   },
@@ -88,7 +88,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les transferts d'argent sont majeurs, mais les diasporas participent aussi aux investissements, à l'entrepreneuriat, aux transferts de connaissances, aux collaborations universitaires, et aux réseaux diplomatiques.",
     indicators: ["Remittances", "IDE de la diaspora", "Programmes de transfert de compétences", "Réseaux scientifiques", "Entreprises créées"],
-    sources: ["Banque mondiale", "OIM", "OCDE", "Union africaine"],
+    sources: ["Banque Mondiale - Données sur les envois de fonds", "OIM - World Migration Report", "Union Africaine - Cadre politique pour la diaspora"],
     limits: "Les investissements privés de la diaspora restent souvent mal documentés.",
     why_persists: ["Focalisation exclusive des bailleurs et banques centrales sur la balance des paiements."]
   },
@@ -101,7 +101,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "La très grande majorité des déplacements liés aux catastrophes naturelles sont internes. Les mouvements internationaux existent mais restent minoritaires et résultent de facteurs combinés (climat, économie, sécurité).",
     indicators: ["Déplacements internes", "Déplacements transfrontaliers", "Catastrophes naturelles", "Types d'aléas"],
-    sources: ["IDMC", "OIM", "Banque mondiale", "IPCC"],
+    sources: ["IDMC - Global Report on Internal Displacement (GRID)", "Banque Mondiale - Rapport Groundswell", "IPCC - Rapports d'évaluation"],
     limits: "Il n'existe pas de définition juridique internationale des « migrants climatiques ».",
     why_persists: ["Crainte politique des pays du Nord d'une 'vague climatique', relayée par certains discours d'ONG pour alerter sur le climat."]
   },
@@ -114,7 +114,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Les relations euro-africaines jouent un rôle, mais les États, les CER et l'Union africaine développent leurs propres agendas (libre circulation, intégration régionale, diasporas) avec une agencéité propre.",
     indicators: ["Instruments juridiques de l'UA", "Protocoles des CER", "Financements internationaux", "Accords bilatéraux"],
-    sources: ["Union africaine", "ICMPD", "Commission européenne", "OIM"],
+    sources: ["Union Africaine - Cadre de politique migratoire (MPFA)", "ICMPD - Migration Policy Frameworks", "Commission européenne"],
     limits: "L'influence extérieure varie fortement selon les régions et les politiques concernées.",
     why_persists: ["Lecture afro-pessimiste niant l'autonomie diplomatique et politique des institutions africaines."]
   },
@@ -127,7 +127,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Les frontières sont des espaces de contrôle mais aussi de circulation. De nombreuses mobilités économiques, familiales, pastorales et commerciales traversent quotidiennement les frontières grâce aux accords régionaux.",
     indicators: ["Africa Visa Openness Index", "Protocoles régionaux", "Postes-frontières intégrés", "Flux transfrontaliers"],
-    sources: ["BAD", "Union africaine", "CEDEAO", "COMESA", "IGAD"],
+    sources: ["BAD/UA - Africa Visa Openness Index", "Union Africaine", "Rapports CEDEAO / COMESA / IGAD"],
     limits: "Les pratiques frontalières diffèrent souvent des cadres juridiques (racket, informalité).",
     why_persists: ["Focalisation sur le tracé colonial des frontières sans observer les pratiques sociales qui les contournent ou les utilisent."]
   },
@@ -141,7 +141,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les aspirations migratoires sont élevées dans certains pays, mais ne se traduisent pas automatiquement par des projets de départ. Elles varient selon l'âge, l'éducation, et les opportunités locales. Une aspiration n'est pas une migration effective.",
     indicators: ["Aspirations migratoires", "Intentions de départ", "Migrations réalisées", "Profil des répondants"],
-    sources: ["Gallup World Poll", "Afrobarometer", "OIM"],
+    sources: ["Gallup World Poll - Migration Aspirations", "Afrobarometer - Enquêtes d'opinion", "OIM"],
     limits: "Les enquêtes mesurent des intentions déclarées et non des comportements futurs.",
     why_persists: ["Biais cognitif consistant à confondre le 'désir de meilleures opportunités' avec la 'préparation d'un départ imminent'."]
   },
@@ -154,7 +154,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les personnes déplacées internes (IDPs) restent à l'intérieur des frontières de leur propre pays. Elles ne relèvent donc pas des statistiques de migration internationale.",
     indicators: ["Nombre d'IDPs", "Réfugiés", "Demandeurs d'asile", "Retours"],
-    sources: ["IDMC", "UNHCR"],
+    sources: ["IDMC - Global Report on Internal Displacement", "UNHCR - Global Trends Report"],
     limits: "Certaines personnes peuvent devenir réfugiées après avoir d'abord été déplacées internes.",
     why_persists: ["Confusion terminologique récurrente entre les statuts de migrant, réfugié et déplacé interne."]
   },
@@ -167,7 +167,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les femmes représentent près de la moitié des migrants internationaux dans le monde. Les différences concernent davantage les secteurs d'emploi et les conditions de mobilité que leur présence numérique.",
     indicators: ["Part des femmes parmi les migrants", "Secteurs d'activité", "Répartition régionale", "Type de migration"],
-    sources: ["UN DESA", "OIT", "ONU Femmes"],
+    sources: ["UN DESA - International Migrant Stock", "OIT - Estimations mondiales sur les travailleurs migrants", "ONU Femmes"],
     limits: "Les statistiques disponibles documentent peu les migrations informelles.",
     why_persists: ["Représentation persistante du travailleur migrant masculin des Trente Glorieuses ou de la figure du jeune homme traversant la Méditerranée."]
   },
@@ -180,7 +180,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Les migrations résultent d'une combinaison de facteurs. Les plus pauvres disposent souvent des ressources les plus limitées pour migrer à l'international. Dans de nombreux contextes, l'augmentation des revenus favorise la mobilité.",
     indicators: ["PIB par habitant", "Niveau d'éducation", "Chômage", "Réseaux migratoires", "Urbanisation"],
-    sources: ["Banque mondiale", "OIM", "PNUD"],
+    sources: ["Banque Mondiale - Migration and Development", "OIM - Rapports régionaux", "PNUD - Rapport sur le développement humain"],
     limits: "Les déterminants migratoires varient fortement selon les contextes nationaux.",
     why_persists: ["Vision misérabiliste dominante ignorant le coût financier important d'un projet migratoire transnational."]
   },
@@ -193,7 +193,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les migrations répondent à une grande diversité d'objectifs : études, emploi, commerce, regroupement familial, entrepreneuriat. Les déplacements forcés ne représentent qu'une partie des mobilités humaines.",
     indicators: ["Motifs de migration", "Étudiants internationaux", "Travailleurs migrants", "Regroupement familial", "Réfugiés"],
-    sources: ["OIM", "OIT", "UNESCO", "UN DESA"],
+    sources: ["OIM - World Migration Report", "OIT - Rapports mondiaux", "UNESCO - Statistiques de l'éducation", "UN DESA"],
     limits: "Les catégories de motifs sont souvent multiples et évoluent au cours du parcours.",
     why_persists: ["L'attention publique se focalise exclusivement sur les migrations de crise ou de survie."]
   },
@@ -207,7 +207,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Les politiques de contrôle modifient les itinéraires, les coûts et les risques, mais ne suppriment pas les facteurs motivant les départs. Les contrôles déplacent les flux vers des routes alternatives plus dangereuses.",
     indicators: ["Évolution des routes migratoires", "Franchissements détectés", "Coût des traversées", "Décès en migration", "Intensité des contrôles"],
-    sources: ["OIM (Missing Migrants Project)", "Frontex", "Mixed Migration Centre", "UNODC"],
+    sources: ["OIM - Missing Migrants Project", "Frontex - Risk Analysis", "Mixed Migration Centre (MMC)", "UNODC - Rapports sur le trafic illicite"],
     limits: "Les migrations irrégulières sont difficiles à mesurer directement.",
     why_persists: ["Illusion politique du 'mur' comme solution de politique publique à court terme."]
   },
@@ -220,7 +220,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "La relation n'est pas linéaire. Les premières phases du développement s'accompagnent d'une augmentation de la mobilité internationale (le 'migration hump'), les ménages disposant du capital nécessaire pour migrer.",
     indicators: ["PIB par habitant", "Taux d'émigration", "Niveau d'éducation", "Revenus des ménages"],
-    sources: ["Banque mondiale", "OCDE", "OIM", "PNUD"],
+    sources: ["Banque Mondiale", "OCDE", "OIM - World Migration Report", "PNUD"],
     limits: "Le « migration hump » ne s'observe pas avec la même intensité selon les régions et périodes.",
     why_persists: ["L'Aide Publique au Développement (APD) utilise souvent ce narratif pour justifier ses financements face aux opinions publiques du Nord."]
   },
@@ -233,7 +233,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Bien que dépassant l'APD, les remises sont principalement utilisées pour la consommation immédiate, la santé, l'éducation ou le logement. Elles ne remplacent ni les investissements structurels publics, ni les réformes institutionnelles.",
     indicators: ["Montant des remises", "Part du PIB", "Aide publique au développement", "Investissements directs étrangers"],
-    sources: ["Banque mondiale", "KNOMAD", "FMI"],
+    sources: ["Banque Mondiale - Migration and Development Brief", "KNOMAD", "FMI"],
     limits: "Les transferts informels restent largement sous-estimés.",
     why_persists: ["Désengagement partiel des États d'origine qui délèguent la protection sociale à la diaspora."]
   },
@@ -246,7 +246,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les migrations africaines sont majoritairement Sud–Sud, en particulier au sein du continent. Les flux Sud–Nord représentent une composante importante mais structurellement minoritaire.",
     indicators: ["Flux Sud–Sud", "Flux Sud–Nord", "Répartition régionale", "Stocks migratoires"],
-    sources: ["UN DESA", "OIM", "Union africaine"],
+    sources: ["UN DESA - International Migrant Stock", "OIM - Africa Migration Report", "Union Africaine"],
     limits: "Les données sur les migrations Sud–Sud restent moins complètes que celles des pays de l'OCDE.",
     why_persists: ["Eurocentrisme dans la manière de documenter et de débattre des migrations internationales."]
   },
@@ -259,7 +259,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Le volume absolu augmente avec la croissance démographique mondiale. En revanche, leur proportion dans la population mondiale évolue beaucoup plus lentement et reste relativement stable historiquement (~3.5%).",
     indicators: ["Nombre de migrants internationaux", "Part des migrants dans la pop. mondiale", "Croissance démographique"],
-    sources: ["UN DESA", "OIM"],
+    sources: ["UN DESA", "OIM - World Migration Report 2024"],
     limits: "Les comparaisons historiques sont sensibles aux évolutions méthodologiques des statistiques.",
     why_persists: ["Focus constant sur les chiffres absolus (en millions) sans proportionnalité par rapport à la démographie globale."]
   },
@@ -273,7 +273,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "La majorité des mobilités africaines sont des phénomènes structurels liés au travail, au commerce, aux études, ou à l'intégration régionale. Les 'crises' concernent des situations spécifiques mais ne caractérisent pas l'ensemble des mobilités.",
     indicators: ["Déplacements forcés", "Migrations de travail", "Migrations étudiantes", "Flux réguliers", "Flux régionaux"],
-    sources: ["OIM", "UNHCR", "Union africaine", "UN DESA"],
+    sources: ["OIM", "UNHCR - Global Trends", "Union Africaine", "UN DESA"],
     limits: "La notion de « crise » est davantage politique que statistique.",
     why_persists: ["L'exceptionnel, le drame et l'urgence font l'actualité, pas la normalité d'un étudiant ou d'un travailleur transfrontalier."]
   },
@@ -286,7 +286,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les réseaux de passeurs répondent généralement à une demande préexistante de mobilité. Ils facilitent certains parcours mais ne constituent pas la cause première des migrations. L'absence de voies régulières accroît leur rôle.",
     indicators: ["Routes irrégulières", "Coûts des passages", "Accès aux visas", "Demandes de mobilité"],
-    sources: ["UNODC", "OIM", "Mixed Migration Centre"],
+    sources: ["UNODC - Global Study on Smuggling of Migrants", "OIM", "Mixed Migration Centre (MMC)"],
     limits: "Les activités de passage sont clandestines et difficiles à mesurer.",
     why_persists: ["Permet de désigner un 'ennemi' identifiable plutôt que de questionner l'asymétrie mondiale des droits de circulation."]
   },
@@ -299,7 +299,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Bien qu'issues de la période coloniale, ces frontières structurent aujourd'hui les souverainetés, les administrations, et les échanges. Elles sont à la fois des lignes juridiques fermes et des espaces sociaux traversés.",
     indicators: ["Accords frontaliers", "Postes-frontières", "Commerce transfrontalier", "Mobilités quotidiennes"],
-    sources: ["Union africaine", "CEA", "Banque mondiale"],
+    sources: ["Union Africaine - Programme Frontière (AUBP)", "CEA", "Banque Mondiale - Rapports sur le commerce transfrontalier"],
     limits: "Le rôle des frontières varie selon les régions et les communautés frontalières.",
     why_persists: ["Tendance académique à romanticiser 'l'effacement des frontières' en niant l'émergence des États-Nations africains."]
   },
@@ -312,7 +312,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les statistiques migratoires sont des estimations (recensements, registres, enquêtes). Elles comportent des marges d'incertitude importantes, notamment concernant les mobilités temporaires ou informelles.",
     indicators: ["Sources statistiques", "Couverture des données", "Fréquence de mise à jour", "Marges d'incertitude"],
-    sources: ["UN DESA", "OIM", "Eurostat", "Banque mondiale"],
+    sources: ["UN DESA", "OIM - Global Migration Data Analysis Centre (GMDAC)", "Eurostat", "Banque Mondiale"],
     limits: "Les définitions et les méthodes diffèrent selon les institutions.",
     why_persists: ["Illusion de précision conférée par la forme même des tableaux et bases de données institutionnelles."]
   },
@@ -325,7 +325,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les statistiques reposent sur des choix méthodologiques (définitions, catégories, seuils). Deux institutions peuvent produire des estimations différentes sans que l'une soit erronée. L'interprétation dépend du cadre conceptuel.",
     indicators: ["Définitions des migrants", "Sources mobilisées", "Méthodes de calcul", "Comparabilité internationale"],
-    sources: ["UN DESA", "OIM", "OCDE", "Manuel de l'ONU sur les statistiques migratoires"],
+    sources: ["UN DESA", "OIM", "OCDE", "Nations Unies - Manuel sur les statistiques migratoires"],
     limits: "Comparer des jeux de données de méthodologies différentes conduit à des conclusions trompeuses.",
     why_persists: ["Recherche de vérités absolues dans le débat public, où la nuance statistique est perçue comme de la faiblesse."]
   },
@@ -339,7 +339,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Environ 3 à 4 % de la population mondiale vit dans un pays autre que celui de sa naissance. Malgré l'intensification des mobilités, plus de 96 % de la population mondiale réside toujours dans son pays natal.",
     indicators: ["Population mondiale", "Stock de migrants internationaux", "Évolution historique depuis 1960"],
-    sources: ["UN DESA", "OIM"],
+    sources: ["UN DESA - International Migrant Stock", "OIM - World Migration Report"],
     limits: "Les données ne prennent pas en compte les migrations internes.",
     why_persists: ["L'intensification des communications, du tourisme et d'internet donne une illusion d'hyper-mobilité globale."]
   },
@@ -352,7 +352,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les politiques de visas sont des instruments de gestion, pas l'opposé du contrôle. De nombreux États combinent facilitation, contrôles sécuritaires, biométrie, et pré-enregistrement (e-Visas).",
     indicators: ["Africa Visa Openness Index", "Exigences de visa", "e-Visas", "Visas à l'arrivée"],
-    sources: ["Banque africaine de développement", "Union africaine", "IATA"],
+    sources: ["BAD/UA - Africa Visa Openness Index 2023", "Union Africaine", "IATA - Travel Information Manual"],
     limits: "L'ouverture des visas ne reflète pas toujours les conditions d'entrée réelles.",
     why_persists: ["Polémisation extrême de tout assouplissement de la circulation, perçu comme une 'perte de contrôle'."]
   },
@@ -365,7 +365,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les mobilités contemporaines sont souvent circulaires, saisonnières ou temporaires. De nombreux migrants effectuent des allers-retours ou maintiennent des liens économiques et familiaux transnationaux constants.",
     indicators: ["Retour volontaire", "Migration circulaire", "Migration saisonnière", "Durée des séjours"],
-    sources: ["OIM", "OIT", "OCDE"],
+    sources: ["OIM", "OIT - Rapports sur la migration de main-d'œuvre", "OCDE"],
     limits: "Les migrations circulaires sont encore mal documentées statistiquement.",
     why_persists: ["Vision archaïque héritée des grandes migrations d'installation du 19ème ou milieu du 20ème siècle."]
   },
@@ -378,7 +378,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les métropoles africaines sont simultanément des espaces de départ, d'arrivée, de transit, d'installation et de retour. Elles absorbent massivement les mobilités internes et régionales.",
     indicators: ["Urbanisation", "Mobilités internes", "Mobilités internationales", "Croissance métropolitaine"],
-    sources: ["ONU-Habitat", "Banque mondiale", "OIM"],
+    sources: ["ONU-Habitat - Rapports sur les villes africaines", "Banque Mondiale", "OIM"],
     limits: "Les statistiques urbaines restent inégales selon les pays.",
     why_persists: ["Analyse des villes du Sud uniquement sous le prisme de l'antichambre vers le Nord (villes-transit)."]
   },
@@ -391,7 +391,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "La migration internationale nécessite des ressources (financières, sociales, éducationnelles). Les profils migratoires sont très diversifiés (étudiants, entrepreneurs, travailleurs qualifiés) et ne se limitent pas à l'extrême pauvreté.",
     indicators: ["Niveau d'éducation", "Revenu", "Catégorie socioprofessionnelle", "Motifs de migration"],
-    sources: ["Banque mondiale", "OIM", "OCDE"],
+    sources: ["Banque Mondiale", "OIM", "OCDE - Perspectives des migrations internationales"],
     limits: "Les profils diffèrent fortement selon les corridors migratoires.",
     why_persists: ["Homogénéisation de 'l'Africain' dans les représentations collectives globales."]
   },
@@ -405,7 +405,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Le volume augmente (liée à la population mondiale), mais la proportion reste stable (~3-4%). Les évolutions sont cycliques (crises, économie, fermetures de frontières) et non une ligne droite incontrôlée.",
     indicators: ["Stock mondial de migrants", "Part des migrants mondiaux", "Croissance démographique"],
-    sources: ["UN DESA", "OIM"],
+    sources: ["UN DESA - International Migrant Stock", "OIM - World Migration Report"],
     limits: "Séries longues affectées par les changements méthodologiques des recensements.",
     why_persists: ["L'illusion géométrique des chiffres absolus qui augmentent naturellement avec la démographie."]
   },
@@ -418,7 +418,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé",
     reality: "Elles concernent surtout le marché du travail, les études, les dynamiques familiales, et l'intégration économique. La sécurisation n'est qu'une dimension, souvent surdimensionnée dans les discours de l'hémisphère Nord.",
     indicators: ["Motifs de migration", "Travailleurs migrants", "Étudiants internationaux", "Réfugiés"],
-    sources: ["OIM", "OIT", "UN DESA", "ONU"],
+    sources: ["OIM", "OIT", "UN DESA", "Nations Unies - Objectifs de Développement Durable"],
     limits: "Les approches sécuritaires diffèrent fortement selon les États.",
     why_persists: ["La migration est souvent gérée par les ministères de l'Intérieur plutôt que ceux du Travail ou des Affaires Étrangères."]
   },
@@ -431,7 +431,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé",
     reality: "Les villes jouent un rôle central. Les grandes métropoles africaines sont des espaces de redistribution des mobilités et structurent une part croissante des migrations internationales contemporaines.",
     indicators: ["Urbanisation", "Origine des migrants", "Population urbaine", "Corridors métropolitains"],
-    sources: ["ONU-Habitat", "Banque mondiale", "OIM"],
+    sources: ["ONU-Habitat", "Banque Mondiale", "OIM"],
     limits: "Les données sur l'origine résidentielle de départ restent limitées.",
     why_persists: ["L'image stéréotypée du paysan africain migrant directement vers l'Europe sans ancrage urbain."]
   },
@@ -444,7 +444,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Bien qu'il y ait des incertitudes, ces chiffres reposent sur des méthodes robustes (recensements, registres, modélisations) permettant d'identifier des macro-tendances fiables, à condition d'en comprendre les limites.",
     indicators: ["Sources statistiques", "Couverture", "Fréquence", "Comparabilité"],
-    sources: ["UN DESA", "OIM", "Eurostat", "OCDE"],
+    sources: ["UN DESA", "OIM - GMDAC", "Eurostat", "OCDE"],
     limits: "Les migrations irrégulières et circulaires restent sous-documentées.",
     why_persists: ["Défiance générale envers les institutions et incapacité à concevoir la marge d'erreur comme un outil scientifique valide."]
   },
@@ -457,7 +457,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les accords facilitent les déplacements, mais leur impact est régulé par l'économie et les marchés du travail. Ils favorisent souvent davantage les mobilités circulaires et commerciales que les installations définitives.",
     indicators: ["Mobilité régionale", "Entrées et sorties", "Migration circulaire", "Commerce transfrontalier"],
-    sources: ["Union africaine", "CEDEAO", "COMESA", "OIM"],
+    sources: ["Union Africaine", "CEDEAO", "COMESA", "OIM"],
     limits: "Difficile d'isoler l'effet propre des accords de libre circulation par rapport à la conjoncture économique.",
     why_persists: ["Peur de 'l'appel d'air' ancrée dans les imaginaires politiques."]
   },
@@ -471,7 +471,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les migrations font partie des trajectoires de développement. La hausse des revenus et de l'éducation augmente souvent la capacité et l'aspiration à la mobilité internationale à court/moyen terme.",
     indicators: ["PIB par habitant", "Indice de développement humain", "Taux d'émigration", "Niveau d'éducation"],
-    sources: ["Banque mondiale", "PNUD", "OIM", "OCDE"],
+    sources: ["Banque Mondiale", "PNUD", "OIM", "OCDE"],
     limits: "Les relations varient fortement selon les contextes nationaux (structures étatiques, démographie).",
     why_persists: ["Approche sédentariste considérant la mobilité comme une anomalie à 'soigner' par le développement."]
   },
@@ -484,7 +484,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé",
     reality: "L'Afrique dispose d'une vaste architecture normative : Politique migratoire de l'UA, Agenda 2063, Protocoles des CER, stratégies nationales. La difficulté réside dans la mise en œuvre, non dans l'absence de cadres.",
     indicators: ["Ratifications", "Stratégies nationales", "Protocoles régionaux", "Dialogues migratoires"],
-    sources: ["Union africaine", "CER", "OIM"],
+    sources: ["Union Africaine", "Communautés Économiques Régionales (CER)", "OIM"],
     limits: "La qualité de mise en œuvre et le financement varient fortement entre États.",
     why_persists: ["Désinformation sur l'ingénierie diplomatique et administrative du continent africain."]
   },
@@ -497,7 +497,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Une part considérable des migrations mondiales se déroule entre pays du Sud. En Afrique, cette dynamique est écrasante, la majorité des mobilités ayant lieu vers d'autres pays du continent.",
     indicators: ["Corridors Sud-Sud", "Corridors Sud-Nord", "Flux régionaux"],
-    sources: ["UN DESA", "OIM"],
+    sources: ["UN DESA", "OIM - World Migration Report"],
     limits: "Les données sur certains corridors Sud-Sud restent moins détaillées techniquement.",
     why_persists: ["Biais médiatique concentrant la focale sur les frontières occidentales."]
   },
@@ -510,7 +510,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé",
     reality: "Les effets sont souvent indirects ou inattendus (routes déplacées, modification des profils). Les résultats sont percutés par des facteurs macro-économiques, diplomatiques et sociaux indépendants de la politique elle-même.",
     indicators: ["Évolution des routes", "Changements des profils", "Régularisations", "Contrôles"],
-    sources: ["OIM", "OCDE", "Commission européenne", "Union africaine"],
+    sources: ["OIM", "OCDE", "Commission européenne", "Union Africaine"],
     limits: "Il est épistémologiquement très difficile d'établir une causalité directe (Policy Evaluation).",
     why_persists: ["Rhétorique politique volontariste qui surestime la capacité de l'État central à modeler les dynamiques sociales mondiales."]
   },
@@ -523,7 +523,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les mobilités accompagnent l'histoire humaine. Ce qui change, ce sont les volumes absolus, les cadres de souveraineté juridiques, la rapidité des transports et la mesure statistique des États-Nations.",
     indicators: ["Évolution historique des migrations", "Stocks internationaux", "Croissance démographique"],
-    sources: ["OIM", "UN DESA", "Travaux historiques"],
+    sources: ["OIM", "UN DESA", "Travaux historiques et académiques sur les migrations"],
     limits: "Comparaisons limitées par l'absence d'outils statistiques modernes pour les périodes anciennes.",
     why_persists: ["Amnésie historique face à la constitution des États-Nations modernes."]
   },
@@ -537,7 +537,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les effets varient : ils sont parfois en concurrence sur certains segments, mais occupent souvent des emplois complémentaires (care, agriculture), créent des entreprises, relancent la consommation et pallient les pénuries.",
     indicators: ["Taux d'emploi des migrants", "Secteurs d'activité", "Création d'entreprises", "Productivité"],
-    sources: ["OIT", "OCDE", "Banque mondiale"],
+    sources: ["OIT - Statistiques de la main-d'œuvre migrante", "OCDE", "Banque Mondiale"],
     limits: "Les effets diffèrent fortement selon les niveaux de qualification et les structures économiques locales.",
     why_persists: ["Raisonnement économique à 'somme nulle' (le gâteau de l'emploi serait fixe et limité)."]
   },
@@ -550,7 +550,7 @@ export const evidenceCheckData = [
     verdict: "Réducteur",
     reality: "L'interprétation nécessite des cadres théoriques, méthodologiques et locaux. Une multiplication de 'Big Data' sans contextualisation historique et sociologique mène souvent à de graves erreurs d'analyse.",
     indicators: ["Couverture statistique", "Documentation méthodologique", "Métadonnées"],
-    sources: ["ONU", "OIM", "OCDE"],
+    sources: ["Nations Unies - Cadre des ODD", "OIM", "OCDE"],
     limits: "La qualité analytique ne dépend pas uniquement du volume de données produites.",
     why_persists: ["Technosolutionnisme et fascination pour le 'Big Data' dans les institutions internationales."]
   },
@@ -563,7 +563,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les mobilités africaines sont circulaires, intra-continentales, mais aussi dirigées vers le Golfe, l'Amérique, l'Asie. Réduire cela à l'axe Euro-Africain masque la véritable géopolitique migratoire.",
     indicators: ["Corridors migratoires", "Destinations multiples", "Migrations internes"],
-    sources: ["UN DESA", "OIM", "Union africaine"],
+    sources: ["UN DESA", "OIM - Africa Migration Report", "Union Africaine"],
     limits: "Certaines destinations (ex: pays du Golfe) sont parfois sous-représentées dans l'Open Data public.",
     why_persists: ["Hégémonie de l'agenda politique et financier de l'Union Européenne dans le financement de la recherche."]
   },
@@ -576,7 +576,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les migrations internes (exode rural, mobilités inter-villes, saisonnières) représentent l'immense majorité des déplacements. Elles transforment l'économie, les territoires et le développement local bien plus intensément.",
     indicators: ["Déplacements internes", "Urbanisation", "Mobilité résidentielle"],
-    sources: ["Banque mondiale", "ONU", "OIM"],
+    sources: ["Banque Mondiale", "ONU-Habitat", "OIM"],
     limits: "Définitions méthodologiques des migrations internes variables d'un institut national à l'autre.",
     why_persists: ["Focalisation du droit international sur le concept de souveraineté et de franchissement frontalier."]
   },
@@ -589,7 +589,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé / Réducteur",
     reality: "Dans la pratique, la majorité des mobilités se situent sur un 'continuum' de vulnérabilité. Les décisions combinent des choix économiques et des contraintes (climatiques, politiques) de façon intriquée (Mixed Migration).",
     indicators: ["Motifs multiples", "Déplacements mixtes", "Protection internationale"],
-    sources: ["OIM", "UNHCR", "HCR Global Compact Research"],
+    sources: ["OIM", "UNHCR", "Mixed Migration Centre - Research"],
     limits: "Les trajectoires individuelles évoluent souvent au fil du parcours et des routes empruntées.",
     why_persists: ["Le droit international et l'administration des visas exigent des catégorisations binaires rigides."]
   },
@@ -603,9 +603,9 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "La souveraineté s'exerce *en définissant* les conditions de mobilité (visas, accords bilatéraux). Les protocoles de libre circulation sont des abandons de souveraineté partiels et consentis pour maximiser l'influence économique régionale.",
     indicators: ["Accords de libre circulation", "Régimes de visas", "Contrôles aux frontières", "Ratifications des protocoles"],
-    sources: ["Union africaine", "OIM", "Banque africaine de développement"],
+    sources: ["Union Africaine", "OIM", "BAD/UA - Africa Visa Openness Index"],
     limits: "La notion de souveraineté varie selon les traditions juridiques nationales.",
-    why_persists: ["Concept de l'État-ferteresse où le contrôle absolu serait la seule expression valide de la souveraineté territoriale."]
+    why_persists: ["Concept de l'État-forteresse où le contrôle absolu serait la seule expression valide de la souveraineté territoriale."]
   },
   {
     id: "047",
@@ -616,7 +616,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Le continent africain possède une architecture normative très riche (Protocoles, Cadres stratégiques de l'UA, CER). Le déficit se situe au niveau de la mise en œuvre, de l'harmonisation institutionnelle et de l'implémentation opérationnelle.",
     indicators: ["Nombre d'instruments adoptés", "Ratifications", "Stratégies nationales", "Mécanismes de suivi"],
-    sources: ["Union africaine", "CER", "OIM"],
+    sources: ["Union Africaine - Rapports sur les traités", "CER", "OIM"],
     limits: "Mise en œuvre hétérogène et très asymétrique entre les blocs régionaux (CEDEAO vs CEEAC).",
     why_persists: ["Méconnaissance globale du droit communautaire africain et couverture médiatique centrée sur les drames."]
   },
@@ -629,7 +629,7 @@ export const evidenceCheckData = [
     verdict: "Faiblement étayé",
     reality: "Les données permettent d'esquisser des scénarios et macro-tendances démographiques, mais la migration répond à des chocs (conflits, pandémies, fermetures politiques abruptes) par définition imprévisibles statistiquement.",
     indicators: ["Projections démographiques", "Indicateurs économiques", "Conflits", "Aléas climatiques"],
-    sources: ["ONU", "Banque mondiale", "OIM", "IDMC"],
+    sources: ["ONU - Projections démographiques", "Banque Mondiale", "OIM", "IDMC"],
     limits: "Les projections mathématiques reposent toujours sur des hypothèses qui lissent l'incertitude humaine.",
     why_persists: ["Attentes irréalistes des décideurs politiques vis-à-vis de l'intelligence artificielle et de la modélisation prédictive."]
   },
@@ -642,7 +642,7 @@ export const evidenceCheckData = [
     verdict: "À nuancer",
     reality: "Les États poursuivent des objectifs très variables : attirer des talents, pallier des pénuries de main-d'œuvre, intégrer une zone régionale, mobiliser la diaspora. Réduire les flux n'est qu'une des nombreuses options du spectre politique.",
     indicators: ["Programmes de mobilité", "Visas étudiants", "Réinstallation", "Libre circulation", "Politiques Diasporas"],
-    sources: ["OIM", "OIT", "Union africaine", "ONU"],
+    sources: ["OIM", "OIT", "Union Africaine", "Nations Unies"],
     limits: "Les objectifs officiels diffèrent souvent des agendas inavoués de politique intérieure.",
     why_persists: ["Hégémonie de l'agenda sécuritaire électoral sur le discours diplomatique structurel."]
   },
@@ -655,7 +655,7 @@ export const evidenceCheckData = [
     verdict: "Non étayé",
     reality: "Les mobilités résultent d'intrications complexes (démographie, chocs climatiques, gouvernance locale). Aucun macro-indicateur unique ne résume la sociologie, l'économie et la géopolitique d'une trajectoire migratoire.",
     indicators: ["Stocks", "Flux", "Déplacements internes", "Réfugiés", "Diasporas", "Visas", "Ratifications", "Remises"],
-    sources: ["UN DESA", "OIM", "UNHCR", "Banque mondiale", "Union africaine", "IDMC"],
+    sources: ["UN DESA", "OIM", "UNHCR", "Banque Mondiale", "Union Africaine", "IDMC"],
     limits: "Les indicateurs de différents instituts couvrent des réalités conceptuelles non fusionnables.",
     why_persists: ["La dictature de l'audimat et des réseaux sociaux exigeant des conclusions en une phrase."]
   }

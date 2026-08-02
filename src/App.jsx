@@ -1025,19 +1025,19 @@ const TabEvidenceCheck = ({ text, lang }) => {
       </section>
 
       {/* 3. GRILLE DES FICHES EVIDENCE CHECK */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {filteredData.map((fiche) => {
           const isExpanded = expandedFiche === fiche.id;
           return (
             <div 
               key={fiche.id} 
               className={`bg-white rounded-xl border transition-all duration-300 flex flex-col shadow-sm ${
-                isExpanded ? 'border-slate-800 shadow-xl scale-[1.01]' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
+                isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
               }`}
             >
-              {/* En-tête de la carte */}
+              {/* En-tête de la carte (J'ai enlevé le h-full qui causait l'étirement) */}
               <div 
-                className="p-6 cursor-pointer group flex flex-col h-full"
+                className="p-6 cursor-pointer group flex flex-col"
                 onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
               >
                 <div className="flex justify-between items-start mb-4">
@@ -1055,7 +1055,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                   « {fiche.narrative} »
                 </h3>
 
-                <div className="mt-auto pt-4 border-t border-slate-100">
+                <div className="pt-4 border-t border-slate-100 mt-auto">
                   <span className="text-[9px] font-bold uppercase text-slate-400 tracking-widest block mb-2">
                     {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
                   </span>
@@ -1069,8 +1069,8 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 </div>
               </div>
 
-              {/* Zone extensible : Détails Scientifiques */}
-              <div className={`overflow-hidden transition-all duration-500 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[800px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+              {/* Zone extensible (J'ai mis max-h-[2000px] pour éviter que le texte soit coupé) */}
+              <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                 <div className="p-6 space-y-6">
                   
                   {/* Pourquoi ce narratif persiste ? */}
