@@ -160,10 +160,10 @@ const t = {
           desc: "Consultez les profils détaillés par pays ou par sous-région, intégrant les indicateurs de stock démographique, de parité, de rétention sud-sud et les ratifications des traités."
         },
         governance: {
-          badge: "Cadres Stratégiques Mondiaux",
-          title: "Alignement institutionnel",
-          highlight: "et cadres de référence.",
-          desc: "Découvrez l'ancrage des politiques de mobilité à travers les Objectifs de Développement Durable (ODD), le Pacte Mondial pour les Migrations (GCM) et le Pacte Mondial sur les Réfugiés (GCR)."
+          badge: "Gouvernance & Cadres Stratégiques",
+          title: "Architecture panafricaine",
+          highlight: "et cadres internationaux.",
+          desc: "Explorez l'ancrage multiniveaux de la gouvernance des mobilités, de l'Union africaine et ses blocs régionalisés (CER) jusqu'aux pactes et objectifs mondiaux[cite: 1, 3]."
         },
         library: {
           badge: "Centre Documentaire",
@@ -381,10 +381,10 @@ const t = {
           desc: "Explore detailed country or sub-regional profiles featuring demographic stocks, gender parity, South-South retention rates, and treaty ratifications."
         },
         governance: {
-          badge: "Global Strategic Frameworks",
-          title: "Institutional alignment",
-          highlight: "and reference frameworks.",
-          desc: "Discover how mobility policies connect with the Sustainable Development Goals (SDGs), the Global Compact for Migration (GCM), and the Global Compact on Refugees (GCR)."
+          badge: "Governance & Strategic Frameworks",
+          title: "Pan-African architecture",
+          highlight: "and international frameworks.",
+          desc: "Explore the multilevel anchoring of mobility governance, from the African Union and its regional building blocks (RECs) to global compacts and goals[cite: 1, 3]."
         },
         library: {
           badge: "Documentary Center",
@@ -1444,7 +1444,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
     />
     
     <section className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-      <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-xl flex-wrap border border-slate-200">
+      <div className="flex bg-slate-100 p-1 rounded-md mb-6 max-w-4xl flex-wrap border border-slate-200">
+        <button onClick={() => setActiveSdgzTab('au')} className={`flex-1 min-w-[150px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'au' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
+          {lang === 'fr' ? 'Union Africaine & CER' : 'African Union & RECs'}
+        </button>
         <button onClick={() => setActiveSdgzTab('sdgs')} className={`flex-1 min-w-[120px] py-2 px-3 rounded-sm font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>
           ODD / SDGs
         </button>
@@ -1455,6 +1458,60 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
           Pacte Réfugiés GCR
         </button>
       </div>
+
+      {activeSdgzTab === 'au' && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
+            <h3 className="font-serif font-bold text-slate-900 text-lg mb-2">
+              {lang === 'fr' ? "L'Architecture Panafricaine de Gouvernance des Mobilités" : "The Pan-African Mobility Governance Architecture"}
+            </h3>
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {lang === 'fr' 
+                ? "La gouvernance migratoire africaine s'articule autour des interactions multiniveaux entre l'Union africaine (UA), les Communautés économiques régionales (CER) et les États membres[cite: 1, 3]. Elle repose sur une production normative endogène visant à structurer un régime continental propre, articulant intégration régionale, protection des droits et développement[cite: 1]."
+                : "African migration governance is structured around multilevel interactions between the African Union (AU), Regional Economic Communities (RECs), and member states[cite: 1, 3]. It relies on endogenous normative production aimed at structuring a distinct continental regime combining regional integration, rights protection, and development[cite: 1]."}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Traité fondateur</span>
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">Traité d'Abuja (1991)</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {lang === 'fr' 
+                  ? "Instituant la Communauté économique africaine, il pose la libre circulation des personnes et le droit d'établissement comme des fondements essentiels de l'intégration continentale[cite: 1, 3]."
+                  : "Establishing the African Economic Community, it sets the free movement of persons and the right of establishment as essential foundations of continental integration[cite: 1, 3]."}
+              </p>
+            </div>
+            <div className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cadre stratégique</span>
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">MPFA (2018-2030)</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {lang === 'fr' 
+                  ? "Le Cadre de politique migratoire pour l'Afrique oriente les États et les CER dans la gestion de la migration de main-d'œuvre, la gouvernance des frontières et la protection[cite: 1, 3]."
+                  : "The Migration Policy Framework for Africa guides states and RECs in managing labor migration, border governance, and protection[cite: 1, 3]."}
+              </p>
+            </div>
+            <div className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Protocole majeur</span>
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">Libre Circulation (2018)</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {lang === 'fr' 
+                  ? "Adopté à Kigali, il vise à garantir l'entrée, le séjour et l'établissement des citoyens africains sur tout le continent, constituant l'horizon de l'intégration humaine[cite: 1, 3]."
+                  : "Adopted in Kigali, it aims to guarantee entry, stay, and establishment for African citizens across the continent, forming the horizon of human integration[cite: 1, 3]."}
+              </p>
+            </div>
+            <div className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+              <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Protection continentale</span>
+              <h4 className="font-serif font-bold text-slate-900 text-base mb-2">Convention de Kampala (2009)</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {lang === 'fr' 
+                  ? "Premier instrument juridique contraignant au monde sur la protection et l'assistance aux personnes déplacées internes (IDPs)[cite: 1, 3]."
+                  : "The world's first legally binding instrument on the protection and assistance of internally displaced persons (IDPs)[cite: 1, 3]."}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {activeSdgzTab === 'sdgs' && (
         <div className="space-y-6 animate-in fade-in duration-300">
@@ -1501,6 +1558,31 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => (
           </div>
         </div>
       )}
+
+      {activeSdgzTab === 'gcr' && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <p className="text-slate-700 text-sm leading-relaxed">
+              {text.sdg_section.gcr_desc}
+            </p>
+            <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <span>{text.sdg_section.link_text}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {text.sdg_section.gcr_objectifs.map((obj, idx) => (
+              <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
+                <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
+                <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  </div>
+);
 
       {activeSdgzTab === 'gcr' && (
         <div className="space-y-6 animate-in fade-in duration-300">
