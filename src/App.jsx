@@ -603,7 +603,7 @@ const countryData = {
     { 
       "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
       "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.8, "labour_participation": "65.0", "evolution": "0.6", 
-      "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 9, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -611,7 +611,7 @@ const countryData = {
     { 
       "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
       "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 4.9, "labour_participation": "65.0", "evolution": "1.1", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 11, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
@@ -620,7 +620,7 @@ const countryData = {
     { 
       "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
       "history": [ { "year": 1990, "value": "457075" }, { "year": 2024, "value": "897751" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "12.8", 
-      "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 50, 
+      "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 4, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 19, "total": 29, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102919"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -628,7 +628,7 @@ const countryData = {
     { 
       "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
       "history": [ { "year": 1990, "value": "54895" }, { "year": 2024, "value": "111069" } ], "remittances": 8.0, "labour_participation": "65.0", "evolution": "0.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -636,7 +636,7 @@ const countryData = {
     { 
       "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
       "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.0, "labour_participation": "65.0", "evolution": "0.5", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102980"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -646,7 +646,7 @@ const countryData = {
     { 
       "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
       "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "3.0", 
-      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 100, 
+      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 91, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -654,7 +654,7 @@ const countryData = {
     { 
       "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
       "history": [ { "year": 1990, "value": "349652" }, { "year": 2024, "value": "739820" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "3.2", 
-      "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 36, 
       "normlex": {"fundamental": 9, "governance": 4, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103058"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -662,22 +662,22 @@ const countryData = {
     { 
       "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
       "history": [ { "year": 1990, "value": "8931" }, { "year": 2024, "value": "16515" } ], "remittances": 12.6, "labour_participation": "65.0", "evolution": "3.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 86, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 5, "total": 16, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102978"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
-      "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "9.5", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "9.0", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 42, 
       "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
-      "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "8.8", 
+      "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "8.6", 
       "idp_conflict": 0, "idp_disaster": 250, "refugees_hosted": 0, "avoi": 100, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 11, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103004"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
@@ -686,7 +686,7 @@ const countryData = {
     { 
       "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
       "history": [ { "year": 1990, "value": "164851" }, { "year": 2024, "value": "532286" } ], "remittances": 3.0, "labour_participation": "65.0", "evolution": "1.6", 
-      "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 87, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103271"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -694,7 +694,7 @@ const countryData = {
     { 
       "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
       "history": [ { "year": 1990, "value": "403621" }, { "year": 2024, "value": "117416" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 50, "total": 62, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103001"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -702,7 +702,7 @@ const countryData = {
     { 
       "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
       "history": [ { "year": 1990, "value": "15368" }, { "year": 2024, "value": "15064" } ], "remittances": 9.8, "labour_participation": "65.0", "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 26, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 25, "total": 34, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103328"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -710,7 +710,7 @@ const countryData = {
     { 
       "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
       "history": [ { "year": 1990, "value": "94964" }, { "year": 2024, "value": "72423" } ], "remittances": 21.6, "labour_participation": "65.0", "evolution": "1.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 26, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 17, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102941"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -718,7 +718,7 @@ const countryData = {
     { 
       "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
       "history": [ { "year": 1990, "value": "160736" }, { "year": 2024, "value": "545323" } ], "remittances": 4.2, "labour_participation": "65.0", "evolution": "2.3", 
-      "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 41, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 23, "total": 36, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102987"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
       ...genericDesc 
@@ -726,7 +726,7 @@ const countryData = {
     { 
       "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
       "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "4.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 17, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -734,7 +734,7 @@ const countryData = {
     { 
       "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
       "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.7, "labour_participation": "65.0", "evolution": "1.7", 
-      "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
       ...genericDesc 
@@ -742,7 +742,7 @@ const countryData = {
     { 
       "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
       "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 4.0, "labour_participation": "65.0", "evolution": "0.6", 
-      "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 32, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
@@ -751,7 +751,7 @@ const countryData = {
     { 
       "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
       "history": [ { "year": 1990, "value": "270410" }, { "year": 2024, "value": "281867" } ], "remittances": 10.6, "labour_participation": "65.0", "evolution": "1.6", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 79, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103046"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -759,7 +759,7 @@ const countryData = {
     { 
       "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
       "history": [ { "year": 1990, "value": "222148" }, { "year": 2024, "value": "49997" } ], "remittances": 4.6, "labour_participation": "65.0", "evolution": "0.6", 
-      "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 81, 
       "normlex": {"fundamental": 11, "governance": 2, "technical": 33, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103212"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -767,7 +767,7 @@ const countryData = {
     { 
       "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
       "history": [ { "year": 1990, "value": "84844" }, { "year": 2024, "value": "281994" } ], "remittances": 8.7, "labour_participation": "65.0", "evolution": "3.1", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 28, 
       "normlex": {"fundamental": 9, "governance": 4, "technical": 15, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103134"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -777,7 +777,7 @@ const countryData = {
     { 
       "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
       "history": [ { "year": 1990, "value": "33517" }, { "year": 2024, "value": "676507" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
-      "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 30, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102951"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -785,7 +785,7 @@ const countryData = {
     { 
       "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
       "history": [ { "year": 1990, "value": "265967" }, { "year": 2024, "value": "642948" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "2.2", 
-      "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 11, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 39, "total": 51, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102973"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -793,7 +793,7 @@ const countryData = {
     { 
       "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Republic" }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
       "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "1.8", 
-      "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 25, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -801,15 +801,15 @@ const countryData = {
     { 
       "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
       "history": [ { "year": 1990, "value": "74342" }, { "year": 2024, "value": "1269673" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "6.3", 
-      "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 50, 
+      "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 28, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103022"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
-      "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "6.3", 
-      "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 50, 
+      "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "6.1", 
+      "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 22, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 23, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103014"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -817,23 +817,23 @@ const countryData = {
     { 
       "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
       "history": [ { "year": 1990, "value": "754194" }, { "year": 2024, "value": "1085090" } ], "remittances": 4.7, "labour_participation": "65.0", "evolution": "1.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 14, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
-      "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "14.5", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "13.2", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 11, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 6, "total": 14, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103102"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
-      "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.1, "labour_participation": "65.0", "evolution": "18.2", 
-      "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 50, 
+      "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.1, "labour_participation": "65.0", "evolution": "17.7", 
+      "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 17, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 30, "total": 42, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103008"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -841,7 +841,7 @@ const countryData = {
     { 
       "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
       "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 14.2, "labour_participation": "65.0", "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": true, "zlecaf": true },
       ...genericDesc 
@@ -851,7 +851,7 @@ const countryData = {
     { 
       "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
       "history": [ { "year": 1990, "value": "333110" }, { "year": 2024, "value": "387101" } ], "remittances": 5.7, "labour_participation": "65.0", "evolution": "2.6", 
-      "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 82, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 21, "total": 31, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102988"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -859,15 +859,15 @@ const countryData = {
     { 
       "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
       "history": [ { "year": 1990, "value": "14079" }, { "year": 2024, "value": "12449" } ], "remittances": 20.8, "labour_participation": "65.0", "evolution": "1.4", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 26, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103322"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
     },
     { 
       "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
-      "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.5, "labour_participation": "65.0", "evolution": "11.2", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.5, "labour_participation": "65.0", "evolution": "10.8", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 58, "total": 70, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102996"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -875,7 +875,7 @@ const countryData = {
     { 
       "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
       "history": [ { "year": 1990, "value": "11848" }, { "year": 2024, "value": "12512" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 81, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 0, "total": 8, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103290"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -883,7 +883,7 @@ const countryData = {
     { 
       "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
       "history": [ { "year": 1990, "value": "875325" }, { "year": 2024, "value": "1168455" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "0.9", 
-      "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 50, 
+      "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 73, 
       "normlex": {"fundamental": 9, "governance": 1, "technical": 13, "total": 23, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102950"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -891,7 +891,7 @@ const countryData = {
     { 
       "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
       "history": [ { "year": 1990, "value": "298089" }, { "year": 2024, "value": "992536" } ], "remittances": 3.9, "labour_participation": "65.0", "evolution": "1.8", 
-      "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 96, 
       "normlex": {"fundamental": 7, "governance": 3, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103315"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -899,7 +899,7 @@ const countryData = {
     { 
       "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
       "history": [ { "year": 1990, "value": "23917" }, { "year": 2024, "value": "38625" } ], "remittances": 1.9, "labour_participation": "65.0", "evolution": "0.1", 
-      "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 79, 
       "normlex": {"fundamental": 11, "governance": 4, "technical": 38, "total": 53, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102956"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -907,7 +907,7 @@ const countryData = {
     { 
       "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
       "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.4, "labour_participation": "65.0", "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 47, 
       "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -915,7 +915,7 @@ const countryData = {
     { 
       "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
       "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 2.2, "labour_participation": "65.0", "evolution": "2.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 83, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -923,7 +923,7 @@ const countryData = {
     { 
       "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
       "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.2, "labour_participation": "65.0", "evolution": "1.1", 
-      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 84, 
       "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -938,8 +938,8 @@ const countryData = {
     },
     { 
       "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
-      "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.5, "labour_participation": "65.0", "evolution": "12.5", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 100, 
+      "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.5, "labour_participation": "65.0", "evolution": "10.2", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 0, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -947,7 +947,7 @@ const countryData = {
     { 
       "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
       "history": [ { "year": 1990, "value": "478294" }, { "year": 2024, "value": "77972" } ], "remittances": 0.0, "labour_participation": "65.0", "evolution": "0.4", 
-      "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 19, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -955,7 +955,7 @@ const countryData = {
     { 
       "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
       "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.5, "labour_participation": "65.0", "evolution": "8.0", 
-      "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 50, 
+      "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 9, 
       "normlex": {"fundamental": 7, "governance": 0, "technical": 0, "total": 7, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103154"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -963,7 +963,7 @@ const countryData = {
     { 
       "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
       "history": [ { "year": 1990, "value": "1402896" }, { "year": 2024, "value": "2397113" } ], "remittances": 2.9, "labour_participation": "65.0", "evolution": "4.8", 
-      "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 50, 
+      "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 3, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102958"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -971,7 +971,7 @@ const countryData = {
     { 
       "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
       "history": [ { "year": 1990, "value": "574025" }, { "year": 2024, "value": "462371" } ], "remittances": 1.6, "labour_participation": "65.0", "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 71, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 28, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103136"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -979,7 +979,7 @@ const countryData = {
     { 
       "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
       "history": [ { "year": 1990, "value": "560570" }, { "year": 2024, "value": "2057759" } ], "remittances": 3.1, "labour_participation": "65.0", "evolution": "4.3", 
-      "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 50, 
+      "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 40, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 21, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103324"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -987,7 +987,7 @@ const countryData = {
     { 
       "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
       "history": [ { "year": 1990, "value": "279463" }, { "year": 2024, "value": "249205" } ], "remittances": 0.9, "labour_participation": "65.0", "evolution": "1.2", 
-      "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 48, 
       "normlex": {"fundamental": 10, "governance": 4, "technical": 35, "total": 49, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103233"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -995,7 +995,7 @@ const countryData = {
     { 
       "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
       "history": [ { "year": 1990, "value": "634621" }, { "year": 2024, "value": "429108" } ], "remittances": 9.2, "labour_participation": "65.0", "evolution": "2.6", 
-      "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 47, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1005,7 +1005,7 @@ const countryData = {
     { 
       "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
       "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.4, "labour_participation": "65.0", "evolution": "4.4", 
-      "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 6, "total": 17, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103184"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1013,7 +1013,7 @@ const countryData = {
     { 
       "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
       "history": [ { "year": 1990, "value": "74991" }, { "year": 2024, "value": "33268" } ], "remittances": 1.7, "labour_participation": "65.0", "evolution": "2.7", 
-      "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 32, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 23, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103185"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1021,7 +1021,7 @@ const countryData = {
     { 
       "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
       "history": [ { "year": 1990, "value": "8240" }, { "year": 2024, "value": "15039" } ], "remittances": 22.5, "labour_participation": "65.0", "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 30, 
       "normlex": {"fundamental": 11, "governance": 2, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103186"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1029,7 +1029,7 @@ const countryData = {
     { 
       "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
       "history": [ { "year": 1990, "value": "120641" }, { "year": 2024, "value": "116035" } ], "remittances": 0.7, "labour_participation": "65.0", "evolution": "4.3", 
-      "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 65, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103187"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1037,7 +1037,7 @@ const countryData = {
     { 
       "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
       "history": [ { "year": 1990, "value": "1285707" }, { "year": 2024, "value": "2631100" } ], "remittances": 0.2, "labour_participation": "65.0", "evolution": "4.3", 
-      "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 50, 
+      "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103188"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
