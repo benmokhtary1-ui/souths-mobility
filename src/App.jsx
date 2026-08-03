@@ -1462,7 +1462,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const recsList = [
     {
       id: 'cedeao',
-      name: 'CEDEAO / ECOWAS (Afrique de l’Ouest)',
+      name: { fr: 'CEDEAO / ECOWAS (Afrique de l’Ouest)', en: 'ECOWAS (West Africa)' },
       tag: lang === 'fr' ? 'Ouverture standardisée & pionnière' : 'Pioneering & standardized openness',
       desc: {
         fr: "La CEDEAO constitue le bloc de référence du régime continental. L'ouverture y est une présomption stabilisée dans les pratiques administratives, malgré la sécession en 2024-2025 de l'Alliance des États du Sahel (AES - Mali, Burkina Faso, Niger) qui vient fragmenter l'acquis historique de 1979.",
@@ -1479,7 +1479,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'cae',
-      name: 'CAE / EAC (Communauté d’Afrique de l’Est)',
+      name: { fr: 'CAE / EAC (Communauté d’Afrique de l’Est)', en: 'EAC (East African Community)' },
       tag: lang === 'fr' ? 'Citoyenneté de marché & corridors' : 'Market citizenship & corridors',
       desc: {
         fr: "La CAE fonde son intégration sur une citoyenneté de marché. La mobilité y est pensée comme une condition de crédibilité du marché commun, articulant droit au travail, résidence et établissement de manière asymétrique.",
@@ -1496,7 +1496,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'sadc',
-      name: 'SADC (Communauté de Développement de l’Afrique Australe)',
+      name: { fr: 'SADC (Communauté de Développement de l’Afrique Australe)', en: 'SADC (Southern African Development Community)' },
       tag: lang === 'fr' ? 'Procéduralisation sectorielle & prudence' : 'Sectoral approach & caution',
       desc: {
         fr: "Face aux réticences souverainistes (notamment de l'Afrique du Sud), la SADC déploie une intégration asymétrique et sélective, privilégiant la gestion logistique des corridors et l'attraction des talents plutôt qu'une ouverture universelle.",
@@ -1513,7 +1513,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'comesa',
-      name: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)',
+      name: { fr: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)', en: 'COMESA (Common Market for Eastern and Southern Africa)' },
       tag: lang === 'fr' ? 'Facilitation macro-régionale' : 'Macro-regional facilitation',
       desc: {
         fr: "Vaste bloc de 21 États (de la Tunisie à l'Eswatini) où l'intégration humaine avance par accumulation technique (visas d'affaires) afin de réduire les coûts de transaction commerciale dans un espace hétérogène.",
@@ -1530,7 +1530,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'igad',
-      name: 'IGAD (Autorité Intergouvernementale pour le Développement)',
+      name: { fr: 'IGAD (Autorité Intergouvernementale pour le Développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
       tag: lang === 'fr' ? 'Nexus sécurité-climat-mobilité' : 'Security-climate-mobility nexus',
       desc: {
         fr: "Dans une Corne de l'Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l'IGAD à l'articulation exacte entre sécurité régionale, transhumance de survie et développement.",
@@ -1547,7 +1547,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'ceeac',
-      name: 'CEEAC & CEMAC (Afrique Centrale)',
+      name: { fr: 'CEEAC & CEMAC (Afrique Centrale)', en: 'ECCAS & CEMAC (Central Africa)' },
       tag: lang === 'fr' ? 'Configuration à deux étages' : 'Two-tier configuration',
       desc: {
         fr: "L'Afrique Centrale repose sur une intégration à double vitesse où le noyau dense (CEMAC) porte la facilitation, tandis que le vaste ensemble CEEAC demeure entravé par les contraintes d'enclavement physique.",
@@ -1564,7 +1564,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'uma',
-      name: 'UMA (Union du Maghreb Arabe)',
+      name: { fr: 'UMA (Union du Maghreb Arabe)', en: 'AMU (Arab Maghreb Union)' },
       tag: lang === 'fr' ? 'Normativité d’horizon & gel institutionnel' : 'Horizon normativity & institutional freeze',
       desc: {
         fr: "La paralysie géopolitique structurelle gèle l'ambition fondatrice de 1989. L'intégration de la mobilité maghrébine se fait aujourd'hui par défaut, via l'externalisation sécuritaire européenne et des accords bilatéraux épars.",
@@ -1581,7 +1581,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'censad',
-      name: 'CEN-SAD (Communauté des États Sahélo-Sahariens)',
+      name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
       desc: {
         fr: "Avec 25 États membres englobant plusieurs autres CER, la CEN-SAD fonctionne davantage comme un forum politique et sécuritaire que comme un régime juridique autonome de libre circulation, même si le traité fondateur inscrit la libre circulation des personnes parmi ses objectifs centraux.",
@@ -1687,463 +1687,571 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   // ========================================================================
   const legalMatrixData = [
     {
-      region: "Afrique Méditerranéenne",
-      intro: "La région méditerranéenne se caractérise par des systèmes d'immigration codifiés, influencés par le droit civil (Maghreb) ou des systèmes mixtes (Égypte, Soudan). Le seuil de résidence y est strictement policé, exigeant souvent une sortie du territoire ou des démarches bureaucratiques complexes pour étendre le séjour au-delà de l'allocation touristique standard.",
+      region: { fr: "Afrique Méditerranéenne", en: "Mediterranean Africa" },
+      intro: { fr: "La région méditerranéenne se caractérise par des systèmes d'immigration codifiés, influencés par le droit civil (Maghreb) ou des systèmes mixtes (Égypte, Soudan). Le seuil de résidence y est strictement policé, exigeant souvent une sortie du territoire ou des démarches bureaucratiques complexes pour étendre le séjour au-delà de l'allocation touristique standard.", en: "The Mediterranean region is characterized by codified immigration systems, shaped by civil law (Maghreb) or mixed systems (Egypt, Sudan). The residence threshold is strictly policed, often requiring an exit from the territory or complex bureaucratic steps to extend a stay beyond the standard tourist allowance." },
       countries: [
         {
-          name: "Algérie", threshold: "90 Jours", tableNotes: "Max 180 jours/an. Carte de résident requise après 90 jours.",
-          instrument: "Loi N° 08-11 du 25 juin 2008 relative aux conditions d'entrée, de séjour et de circulation des étrangers.",
+          name: { fr: "Algérie", en: "Algeria" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Max 180 jours/an. Carte de résident requise après 90 jours.", en: "Max 180 days/year. Resident card required after 90 days." },
+          instrument: { fr: "Loi N° 08-11 du 25 juin 2008 relative aux conditions d'entrée, de séjour et de circulation des étrangers.", en: "Law N° 08-11 of 25 June 2008 on the conditions of entry, stay and movement of foreigners." },
           details: [
-            { label: "Analyse Juridique", text: "La durée maximale de séjour autorisé à chaque entrée est de 90 jours. Cette durée peut être exceptionnellement prorogée de 90 jours supplémentaires, mais le séjour effectif cumulé ne peut excéder 180 jours par an." },
-            { label: "Obligation de Résidence", text: "Tout étranger souhaitant séjourner au-delà de la validité de son visa (ou de l'extension) doit solliciter une « Carte de Résident ». La loi opère une distinction nette entre le « visa de court séjour » et le permis de résidence. Le défaut d'obtention de la carte de résident après l'expiration du visa constitue un séjour illégal passible de sanctions pénales et administratives." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "La durée maximale de séjour autorisé à chaque entrée est de 90 jours. Cette durée peut être exceptionnellement prorogée de 90 jours supplémentaires, mais le séjour effectif cumulé ne peut excéder 180 jours par an.", en: "The maximum authorized stay per entry is 90 days. This may exceptionally be extended by a further 90 days, but the cumulative effective stay cannot exceed 180 days per year." } },
+            { label: { fr: "Obligation de Résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner au-delà de la validité de son visa (ou de l'extension) doit solliciter une « Carte de Résident ». La loi opère une distinction nette entre le « visa de court séjour » et le permis de résidence. Le défaut d'obtention de la carte de résident après l'expiration du visa constitue un séjour illégal passible de sanctions pénales et administratives.", en: "Any foreigner wishing to stay beyond the validity of their visa (or its extension) must apply for a \"Resident Card\". The law draws a clear distinction between the \"short-stay visa\" and the residence permit. Failure to obtain the resident card after visa expiry constitutes an unlawful stay liable to criminal and administrative sanctions." } }
           ]
         },
         {
-          name: "Égypte", threshold: "30-90 Jours", tableNotes: "Enregistrement requis sous 7 jours. Permis après expiration visa.",
-          instrument: "Loi N° 89 de 1960 sur l'entrée et le séjour des étrangers (amendée par Loi 88/2005 et Loi 173/2018).",
+          name: { fr: "Égypte", en: "Egypt" },
+          threshold: { fr: "30-90 Jours", en: "30-90 Days" },
+          tableNotes: { fr: "Enregistrement requis sous 7 jours. Permis après expiration visa.", en: "Registration required within 7 days. Permit after visa expiry." },
+          instrument: { fr: "Loi N° 89 de 1960 sur l'entrée et le séjour des étrangers (amendée par Loi 88/2005 et Loi 173/2018).", en: "Law N° 89 of 1960 on the entry and residence of foreigners (amended by Law 88/2005 and Law 173/2018)." },
           details: [
-            { label: "Analyse Juridique", text: "Les visas touristiques standard sont généralement délivrés pour 30 jours. Toutefois, la loi catégorise la résidence en trois niveaux temporels distincts : « Spéciale », « Ordinaire » et « Temporaire »." },
-            { label: "Mécanisme de Transition", text: "Un visiteur souhaitant rester doit demander un permis de résidence temporaire (souvent valide pour 6 mois à 1 an) avant l'expiration de son visa touristique. Récemment, des décrets ont instauré une période de grâce pour la régularisation des résidents illégaux moyennant le paiement d'amendes (env. 1 000 USD), soulignant la volonté de l'État d'imposer le permis de résidence." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas touristiques standard sont généralement délivrés pour 30 jours. Toutefois, la loi catégorise la résidence en trois niveaux temporels distincts : « Spéciale », « Ordinaire » et « Temporaire ».", en: "Standard tourist visas are generally issued for 30 days. However, the law categorizes residence into three distinct time-based tiers: \"Special\", \"Ordinary\" and \"Temporary\"." } },
+            { label: { fr: "Mécanisme de Transition", en: "Transition Mechanism" }, text: { fr: "Un visiteur souhaitant rester doit demander un permis de résidence temporaire (souvent valide pour 6 mois à 1 an) avant l'expiration de son visa touristique. Récemment, des décrets ont instauré une période de grâce pour la régularisation des résidents illégaux moyennant le paiement d'amendes (env. 1 000 USD), soulignant la volonté de l'État d'imposer le permis de résidence.", en: "A visitor wishing to stay must apply for a temporary residence permit (often valid 6 months to 1 year) before their tourist visa expires. Recent decrees have introduced a grace period for regularizing unlawful residents against payment of fines (approx. USD 1,000), underlining the State's intent to enforce the residence permit." } }
           ]
         },
         {
-          name: "Libye", threshold: "90 Jours (3 Mois)", tableNotes: "Visa de Résidence requis pour séjours > 3 mois.",
-          instrument: "Loi N° 6 de 1987 organisant l'entrée, le séjour et la sortie des étrangers.",
+          name: { fr: "Libye", en: "Libya" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Visa de Résidence requis pour séjours > 3 mois.", en: "Residence Visa required for stays > 3 months." },
+          instrument: { fr: "Loi N° 6 de 1987 organisant l'entrée, le séjour et la sortie des étrangers.", en: "Law N° 6 of 1987 organizing the entry, residence and exit of foreigners." },
           details: [
-            { label: "Analyse Juridique", text: "Les visas d'entrée autorisent un séjour maximal de trois mois. L'article 5 de la loi classifie explicitement les visas en : entrée, transit, sortie et résidence." },
-            { label: "Obligation d'Enregistrement", text: "Pour séjourner au-delà de trois mois, un étranger doit obtenir un « Visa de Résidence » puis un permis. La loi impose une exigence d'enregistrement stricte : tout étranger doit s'enregistrer auprès de l'autorité des passeports la plus proche dans les sept jours suivant son arrivée. C'est l'une des fenêtres de surveillance administrative les plus étroites du continent." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas d'entrée autorisent un séjour maximal de trois mois. L'article 5 de la loi classifie explicitement les visas en : entrée, transit, sortie et résidence.", en: "Entry visas authorize a maximum stay of three months. Article 5 of the law explicitly classifies visas into: entry, transit, exit and residence." } },
+            { label: { fr: "Obligation d'Enregistrement", en: "Registration Obligation" }, text: { fr: "Pour séjourner au-delà de trois mois, un étranger doit obtenir un « Visa de Résidence » puis un permis. La loi impose une exigence d'enregistrement stricte : tout étranger doit s'enregistrer auprès de l'autorité des passeports la plus proche dans les sept jours suivant son arrivée. C'est l'une des fenêtres de surveillance administrative les plus étroites du continent.", en: "To stay beyond three months, a foreigner must obtain a \"Residence Visa\" and then a permit. The law imposes a strict registration requirement: every foreigner must register with the nearest passport authority within seven days of arrival — one of the narrowest administrative surveillance windows on the continent." } }
           ]
         },
         {
-          name: "Maroc", threshold: "90 Jours", tableNotes: "Extension possible, mais carte d'immatriculation requise > 90 jours.",
-          instrument: "Loi N° 02-03 relative à l'entrée et au séjour des étrangers au Royaume du Maroc.",
+          name: { fr: "Maroc", en: "Morocco" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Extension possible, mais carte d'immatriculation requise > 90 jours.", en: "Extension possible, but registration card required > 90 days." },
+          instrument: { fr: "Loi N° 02-03 relative à l'entrée et au séjour des étrangers au Royaume du Maroc.", en: "Law N° 02-03 on the entry and residence of foreigners in the Kingdom of Morocco." },
           details: [
-            { label: "Analyse Juridique", text: "L'article 8 de la Loi 02-03 stipule explicitement que tout étranger souhaitant séjourner sur le territoire marocain pour une durée supérieure à 90 jours est tenu de demander une « Carte d'Immatriculation »." },
-            { label: "Sanctions", text: "Le dépassement de ce seuil de 90 jours sans dépôt de demande de carte constitue une infraction. Bien que des prolongations de visa soient possibles pour des motifs exceptionnels, la norme juridique fixe la fin du statut de simple visiteur au 90e jour." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "L'article 8 de la Loi 02-03 stipule explicitement que tout étranger souhaitant séjourner sur le territoire marocain pour une durée supérieure à 90 jours est tenu de demander une « Carte d'Immatriculation ».", en: "Article 8 of Law 02-03 explicitly states that any foreigner wishing to stay in Moroccan territory for longer than 90 days must apply for a \"Registration Card\"." } },
+            { label: { fr: "Sanctions", en: "Sanctions" }, text: { fr: "Le dépassement de ce seuil de 90 jours sans dépôt de demande de carte constitue une infraction. Bien que des prolongations de visa soient possibles pour des motifs exceptionnels, la norme juridique fixe la fin du statut de simple visiteur au 90e jour.", en: "Exceeding this 90-day threshold without filing a card application constitutes an offence. While visa extensions are possible on exceptional grounds, the legal norm sets the end of simple visitor status at day 90." } }
           ]
         },
         {
-          name: "Mauritanie", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi N° 1965-046 et Décrets subséquents.",
+          name: { fr: "Mauritanie", en: "Mauritania" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi N° 1965-046 et Décrets subséquents.", en: "Law N° 1965-046 and subsequent decrees." },
           details: [
-            { label: "Analyse Juridique", text: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de Séjour »." },
-            { label: "Réforme", text: "Récemment, la validité de la carte de séjour a été étendue d'un an à cinq ans, facilitant la vie des résidents à long terme, mais le seuil d'entrée déclenchant cette obligation demeure l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de Séjour ».", en: "Visas are issued for 30 to 90 days. A foreigner wishing to stay beyond the visa's validity must apply for a \"Residence Card\"." } },
+            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "Récemment, la validité de la carte de séjour a été étendue d'un an à cinq ans, facilitant la vie des résidents à long terme, mais le seuil d'entrée déclenchant cette obligation demeure l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence.", en: "The residence card's validity was recently extended from one year to five, easing life for long-term residents, but the triggering threshold remains the expiry of the short-stay visa. The \"e-visa\" system facilitates entry but confers no right of residence." } }
           ]
         },
         {
-          name: "Tunisie", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour obligatoire après 3 mois consécutifs.",
-          instrument: "Loi N° 68-7 du 8 mars 1968 relative à la condition des étrangers.",
+          name: { fr: "Tunisie", en: "Tunisia" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Carte de séjour obligatoire après 3 mois consécutifs.", en: "Residence card mandatory after 3 consecutive months." },
+          instrument: { fr: "Loi N° 68-7 du 8 mars 1968 relative à la condition des étrangers.", en: "Law N° 68-7 of 8 March 1968 on the status of foreigners." },
           details: [
-            { label: "Analyse Juridique", text: "L'article 7 précise que le visa d'entrée spécifie la durée de séjour autorisée, qui ne peut excéder trois mois." },
-            { label: "Obligation de Résidence", text: "Tout étranger souhaitant séjourner plus de 3 mois consécutifs ou 6 mois au total par an doit demander une « Carte de Séjour » et un « Visa de Séjour ». La règle des 3 mois est appliquée rigoureusement, avec des pénalités hebdomadaires pour tout dépassement non régularisé à la sortie." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "L'article 7 précise que le visa d'entrée spécifie la durée de séjour autorisée, qui ne peut excéder trois mois.", en: "Article 7 specifies that the entry visa states the authorized length of stay, which cannot exceed three months." } },
+            { label: { fr: "Obligation de Résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner plus de 3 mois consécutifs ou 6 mois au total par an doit demander une « Carte de Séjour » et un « Visa de Séjour ». La règle des 3 mois est appliquée rigoureusement, avec des pénalités hebdomadaires pour tout dépassement non régularisé à la sortie.", en: "Any foreigner wishing to stay more than 3 consecutive months, or 6 months total per year, must apply for a \"Residence Card\" and a \"Residence Visa\". The 3-month rule is strictly enforced, with weekly penalties for any overstay not regularized on exit." } }
           ]
         }
       ]
     },
     {
-      region: "Afrique de l'Ouest",
-      intro: "L'Afrique de l'Ouest présente un régime d'immigration dual : l'un pour les citoyens de la CEDEAO et l'autre pour les ressortissants tiers. Le Protocole A/P.1/5/79 de la CEDEAO établit un privilège de 90 jours sans visa, qui est devenu le seuil de facto pour définir le « visiteur » dans toute la région. Reste la zone la plus intégrée avec 15 pays offrant une libre circulation totale.",
+      region: { fr: "Afrique de l'Ouest", en: "West Africa" },
+      intro: { fr: "L'Afrique de l'Ouest présente un régime d'immigration dual : l'un pour les citoyens de la CEDEAO et l'autre pour les ressortissants tiers. Le Protocole A/P.1/5/79 de la CEDEAO établit un privilège de 90 jours sans visa, qui est devenu le seuil de facto pour définir le « visiteur » dans toute la région. Reste la zone la plus intégrée avec 15 pays offrant une libre circulation totale.", en: "West Africa has a dual immigration regime: one for ECOWAS citizens, another for third-country nationals. ECOWAS Protocol A/P.1/5/79 establishes a 90-day visa-free privilege, which has become the de facto threshold defining a \"visitor\" across the region. It remains the most integrated zone, with 15 countries offering full free movement." },
       countries: [
         {
-          name: "Bénin", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi N° 2022-31 / Loi N° 2025-15 (Nouvelle).",
+          name: { fr: "Bénin", en: "Benin" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi N° 2022-31 / Loi N° 2025-15 (Nouvelle).", en: "Law N° 2022-31 / Law N° 2025-15 (New)." },
           details: [
-            { label: "Analyse", text: "Les e-visas de court séjour sont disponibles pour 30 ou 90 jours." },
-            { label: "Obligation", text: "« Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ». La nouvelle Loi 2025-15 renforce ces conditions, maintenant le seuil de 90 jours comme la ligne de démarcation entre visiteur et résident." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les e-visas de court séjour sont disponibles pour 30 ou 90 jours.", en: "Short-stay e-visas are available for 30 or 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ». La nouvelle Loi 2025-15 renforce ces conditions, maintenant le seuil de 90 jours comme la ligne de démarcation entre visiteur et résident.", en: "\"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\" The new Law 2025-15 reinforces these conditions, keeping the 90-day threshold as the dividing line between visitor and resident." } }
           ]
         },
         {
-          name: "Burkina Faso", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
-          instrument: "Loi 2024 (remplaçant l'Ordonnance n°84-049).",
+          name: { fr: "Burkina Faso", en: "Burkina Faso" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
+          instrument: { fr: "Loi 2024 (remplaçant l'Ordonnance n°84-049).", en: "2024 Law (replacing Ordinance n°84-049)." },
           details: [
-            { label: "Analyse", text: "« Tout étranger souhaitant séjourner au Burkina Faso pour une période excédant quatre-vingt-dix (90) jours doit détenir soit un visa long séjour, soit un permis de résidence »." },
-            { label: "Transition", text: "Le visa long séjour (valide 1 an) ou la « Carte de Résident » est requis immédiatement après l'expiration de la période visiteur de 90 jours. La loi de 2024 a durci les contrôles aux frontières." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tout étranger souhaitant séjourner au Burkina Faso pour une période excédant quatre-vingt-dix (90) jours doit détenir soit un visa long séjour, soit un permis de résidence ».", en: "\"Any foreigner wishing to stay in Burkina Faso for a period exceeding ninety (90) days must hold either a long-stay visa or a residence permit.\"" } },
+            { label: { fr: "Transition", en: "Transition" }, text: { fr: "Le visa long séjour (valide 1 an) ou la « Carte de Résident » est requis immédiatement après l'expiration de la période visiteur de 90 jours. La loi de 2024 a durci les contrôles aux frontières.", en: "The long-stay visa (valid 1 year) or the \"Resident Card\" is required immediately upon expiry of the 90-day visitor period. The 2024 law tightened border controls." } }
           ]
         },
         {
-          name: "Cap-Vert", threshold: "90 Jours", tableNotes: "Visa extensible, mais autorisation résidence nécessaire > 90 jours.",
-          instrument: "Loi N° 66/VIII/2014.",
+          name: { fr: "Cap-Vert", en: "Cabo Verde" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Visa extensible, mais autorisation résidence nécessaire > 90 jours.", en: "Extendable visa, but residence authorization required > 90 days." },
+          instrument: { fr: "Loi N° 66/VIII/2014.", en: "Law N° 66/VIII/2014." },
           details: [
-            { label: "Analyse", text: "Les visas touristiques permettent un séjour jusqu'à 90 jours, prolongeable une fois. Pour les citoyens exemptés de visa, l'enregistrement EASE permet 30 jours." },
-            { label: "Obligation", text: "Les séjours dépassant la limite du visa (90 jours) nécessitent une « Autorização de Residência ». La loi distingue strictement le « Visa » de la « Résidence ». Des changements récents facilitent l'accès pour la CPLP." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques permettent un séjour jusqu'à 90 jours, prolongeable une fois. Pour les citoyens exemptés de visa, l'enregistrement EASE permet 30 jours.", en: "Tourist visas allow a stay of up to 90 days, extendable once. For visa-exempt citizens, EASE registration allows 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours dépassant la limite du visa (90 jours) nécessitent une « Autorização de Residência ». La loi distingue strictement le « Visa » de la « Résidence ». Des changements récents facilitent l'accès pour la CPLP.", en: "Stays exceeding the visa limit (90 days) require an \"Autorização de Residência\". The law strictly distinguishes the \"Visa\" from \"Residence\". Recent changes ease access for CPLP nationals." } }
           ]
         },
         {
-          name: "Côte d'Ivoire", threshold: "90 Jours (3 Mois)", tableNotes: "Titre de séjour obligatoire après 3 mois.",
-          instrument: "Loi N° 2004-303 (et Loi N° 2002-03).",
+          name: { fr: "Côte d'Ivoire", en: "Côte d'Ivoire" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Titre de séjour obligatoire après 3 mois.", en: "Residence permit mandatory after 3 months." },
+          instrument: { fr: "Loi N° 2004-303 (et Loi N° 2002-03).", en: "Law N° 2004-303 (and Law N° 2002-03)." },
           details: [
-            { label: "Analyse", text: "Un permis de résidence (« Titre de Séjour ») est obligatoire pour quiconque a l'intention de séjourner plus de trois mois." },
-            { label: "Obligation", text: "S'applique aux travailleurs, étudiants et dépendants. La « Carte de Résident » est valide 5 ans pour les nationaux CEDEAO et 1 an pour les autres. Le système est biométrique et exige une présence à l'Office National d'Identification." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un permis de résidence (« Titre de Séjour ») est obligatoire pour quiconque a l'intention de séjourner plus de trois mois.", en: "A residence permit (\"Titre de Séjour\") is mandatory for anyone intending to stay more than three months." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "S'applique aux travailleurs, étudiants et dépendants. La « Carte de Résident » est valide 5 ans pour les nationaux CEDEAO et 1 an pour les autres. Le système est biométrique et exige une présence à l'Office National d'Identification.", en: "Applies to workers, students and dependents. The \"Resident Card\" is valid 5 years for ECOWAS nationals and 1 year for others. The system is biometric and requires an in-person appearance at the National Identification Office." } }
           ]
         },
         {
-          name: "Gambie", threshold: "28-90 Jours", tableNotes: "Non-CEDEAO besoin permis après 56-90 jours.",
-          instrument: "Immigration Act (Cap 16:02).",
+          name: { fr: "Gambie", en: "Gambia" },
+          threshold: { fr: "28-90 Jours", en: "28-90 Days" },
+          tableNotes: { fr: "Non-CEDEAO besoin permis après 56-90 jours.", en: "Non-ECOWAS nationals need a permit after 56-90 days." },
+          instrument: { fr: "Immigration Act (Cap 16:02).", en: "Immigration Act (Cap 16:02)." },
           details: [
-            { label: "Entrée Standard", text: "Les visiteurs reçoivent généralement un tampon de 28 jours initialement, extensible." },
-            { label: "Nationaux non-CEDEAO", text: "Sont tenus d'obtenir un permis de résidence (« Alien Card » + « Residential Permit B ») s'ils séjournent au-delà de 56 jours, bien que 90 jours soit souvent la limite pratique maximale pour les extensions avant l'application stricte de la résidence." }
+            { label: { fr: "Entrée Standard", en: "Standard Entry" }, text: { fr: "Les visiteurs reçoivent généralement un tampon de 28 jours initialement, extensible.", en: "Visitors generally receive an initial 28-day stamp, extendable." } },
+            { label: { fr: "Nationaux non-CEDEAO", en: "Non-ECOWAS Nationals" }, text: { fr: "Sont tenus d'obtenir un permis de résidence (« Alien Card » + « Residential Permit B ») s'ils séjournent au-delà de 56 jours, bien que 90 jours soit souvent la limite pratique maximale pour les extensions avant l'application stricte de la résidence.", en: "Required to obtain a residence permit (\"Alien Card\" + \"Residential Permit B\") if staying beyond 56 days, although 90 days is often the practical maximum for extensions before residence is strictly enforced." } }
           ]
         },
         {
-          name: "Ghana", threshold: "60-90 Jours", tableNotes: "Max 90 jours (CEDEAO). Permis résidence pour > 90 jours.",
-          instrument: "Immigration Act, 2000 (Act 573).",
+          name: { fr: "Ghana", en: "Ghana" },
+          threshold: { fr: "60-90 Jours", en: "60-90 Days" },
+          tableNotes: { fr: "Max 90 jours (CEDEAO). Permis résidence pour > 90 jours.", en: "Max 90 days (ECOWAS). Residence permit for > 90 days." },
+          instrument: { fr: "Immigration Act, 2000 (Act 573).", en: "Immigration Act, 2000 (Act 573)." },
           details: [
-            { label: "Analyse", text: "Les visiteurs se voient accorder un maximum de 60 jours initialement (90 jours pour la CEDEAO). Cela peut être étendu jusqu'à 90 jours." },
-            { label: "Obligation", text: "Tout non-Ghanéen ayant l'intention de résider pour plus de 90 jours (ou extension maximale de 6 mois) doit obtenir un permis de résidence. La résidence indéfinie est possible après 5 ans." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visiteurs se voient accorder un maximum de 60 jours initialement (90 jours pour la CEDEAO). Cela peut être étendu jusqu'à 90 jours.", en: "Visitors are initially granted a maximum of 60 days (90 days for ECOWAS nationals). This can be extended up to 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Tout non-Ghanéen ayant l'intention de résider pour plus de 90 jours (ou extension maximale de 6 mois) doit obtenir un permis de résidence. La résidence indéfinie est possible après 5 ans.", en: "Any non-Ghanaian intending to reside for more than 90 days (or a maximum extension of 6 months) must obtain a residence permit. Indefinite residence is possible after 5 years." } }
           ]
         },
         {
-          name: "Guinée", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi L/94/019/CTRN (1994).",
+          name: { fr: "Guinée", en: "Guinea" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi L/94/019/CTRN (1994).", en: "Law L/94/019/CTRN (1994)." },
           details: [
-            { label: "Analyse", text: "Le « Visa de court séjour » est valide jusqu'à 90 jours." },
-            { label: "Obligation", text: "Les étrangers ayant l'intention de rester plus longtemps doivent demander une « Carte de Séjour ». La validité du visa permet l'entrée, mais la carte est le document de résidence requis sur le territoire." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de court séjour » est valide jusqu'à 90 jours.", en: "The \"short-stay visa\" is valid for up to 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les étrangers ayant l'intention de rester plus longtemps doivent demander une « Carte de Séjour ». La validité du visa permet l'entrée, mais la carte est le document de résidence requis sur le territoire.", en: "Foreigners intending to stay longer must apply for a \"Residence Card\". The visa's validity permits entry, but the card is the required residence document within the territory." } }
           ]
         },
         {
-          name: "Guinée-Bissau", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
-          instrument: "Loi N° 2/92 (Citoyenneté) et Décret-Loi sur les Étrangers.",
+          name: { fr: "Guinée-Bissau", en: "Guinea-Bissau" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
+          instrument: { fr: "Loi N° 2/92 (Citoyenneté) et Décret-Loi sur les Étrangers.", en: "Law N° 2/92 (Citizenship) and Decree-Law on Foreigners." },
           details: [
-            { label: "Analyse", text: "Les visas à l'arrivée sont valides pour un maximum de 90 jours." },
-            { label: "Obligation", text: "Pour les séjours dépassant cette période, une « Autorização de Residência » est requise. La loi mandate l'enregistrement pour tout séjour impliquant un établissement." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas à l'arrivée sont valides pour un maximum de 90 jours.", en: "Visas on arrival are valid for a maximum of 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour les séjours dépassant cette période, une « Autorização de Residência » est requise. La loi mandate l'enregistrement pour tout séjour impliquant un établissement.", en: "For stays exceeding this period, an \"Autorização de Residência\" is required. The law mandates registration for any stay involving settlement." } }
           ]
         },
         {
-          name: "Liberia", threshold: "60 Jours", tableNotes: "Séjour initial 60 jours. Permis résidence pour plus long.",
-          instrument: "Aliens and Nationality Law (Titre 4).",
+          name: { fr: "Liberia", en: "Liberia" },
+          threshold: { fr: "60 Jours", en: "60 Days" },
+          tableNotes: { fr: "Séjour initial 60 jours. Permis résidence pour plus long.", en: "Initial 60-day stay. Residence permit for longer stays." },
+          instrument: { fr: "Aliens and Nationality Law (Titre 4).", en: "Aliens and Nationality Law (Title 4)." },
           details: [
-            { label: "Analyse", text: "« La période pour laquelle un visiteur étranger est autorisé à entrer au Liberia sera fixée [...] pour une période de 60 jours »." },
-            { label: "Obligation", text: "Ce seuil est notablement plus court que la norme régionale de 90 jours. Pour tout séjour à long terme, un « Residence Permit » est requis immédiatement à l'expiration de l'admission visiteur de 60 jours." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La période pour laquelle un visiteur étranger est autorisé à entrer au Liberia sera fixée [...] pour une période de 60 jours ».", en: "\"The period for which an alien visitor is permitted to enter Liberia shall be fixed [...] for a period of 60 days.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Ce seuil est notablement plus court que la norme régionale de 90 jours. Pour tout séjour à long terme, un « Residence Permit » est requis immédiatement à l'expiration de l'admission visiteur de 60 jours.", en: "This threshold is notably shorter than the regional 90-day norm. For any long-term stay, a \"Residence Permit\" is required immediately upon expiry of the 60-day visitor admission." } }
           ]
         },
         {
-          name: "Mali", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi N° 04-058 (2004).",
+          name: { fr: "Mali", en: "Mali" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi N° 04-058 (2004).", en: "Law N° 04-058 (2004)." },
           details: [
-            { label: "Analyse", text: "Le « Visa Long Séjour » est requis pour les séjours excédant 90 jours." },
-            { label: "Obligation", text: "Dès l'arrivée avec un visa long séjour (ou après 90 jours sur un visa régulier), l'étranger doit solliciter une « Carte de Séjour ». L'article 22 prévoit l'emprisonnement pour séjour sans permis." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa Long Séjour » est requis pour les séjours excédant 90 jours.", en: "The \"Long-Stay Visa\" is required for stays exceeding 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Dès l'arrivée avec un visa long séjour (ou après 90 jours sur un visa régulier), l'étranger doit solliciter une « Carte de Séjour ». L'article 22 prévoit l'emprisonnement pour séjour sans permis.", en: "Upon arrival with a long-stay visa (or after 90 days on a regular visa), the foreigner must apply for a \"Residence Card\". Article 22 provides for imprisonment for staying without a permit." } }
           ]
         },
         {
-          name: "Niger", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Ordonnance N° 81-40 (1981).",
+          name: { fr: "Niger", en: "Niger" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Ordonnance N° 81-40 (1981).", en: "Ordinance N° 81-40 (1981)." },
           details: [
-            { label: "Analyse", text: "Les ressortissants étrangers ayant l'intention de séjourner plus de 90 jours doivent demander une « Carte de Séjour » (Permis de Résidence Temporaire)." },
-            { label: "Procédure", text: "Cette ordonnance reste le socle du droit de l'immigration au Niger. Les citoyens de la CEDEAO nécessitent également des cartes de séjour pour l'établissement, bien que la procédure soit simplifiée." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les ressortissants étrangers ayant l'intention de séjourner plus de 90 jours doivent demander une « Carte de Séjour » (Permis de Résidence Temporaire).", en: "Foreign nationals intending to stay more than 90 days must apply for a \"Residence Card\" (Temporary Residence Permit)." } },
+            { label: { fr: "Procédure", en: "Procedure" }, text: { fr: "Cette ordonnance reste le socle du droit de l'immigration au Niger. Les citoyens de la CEDEAO nécessitent également des cartes de séjour pour l'établissement, bien que la procédure soit simplifiée.", en: "This ordinance remains the foundation of Nigerien immigration law. ECOWAS citizens also require residence cards for settlement, though the procedure is simplified." } }
           ]
         },
         {
-          name: "Nigeria", threshold: "90 Jours", tableNotes: "CERPAC requis pour emploi ou séjour > 90 jours (non-CEDEAO).",
-          instrument: "Immigration Act 2015.",
+          name: { fr: "Nigeria", en: "Nigeria" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "CERPAC requis pour emploi ou séjour > 90 jours (non-CEDEAO).", en: "CERPAC required for employment or stay > 90 days (non-ECOWAS)." },
+          instrument: { fr: "Immigration Act 2015.", en: "Immigration Act 2015." },
           details: [
-            { label: "Analyse", text: "« Les Visas de Court Séjour permettent aux voyageurs de visiter le Nigeria pour une période n'excédant pas trois mois (90 jours) »." },
-            { label: "Obligation", text: "Pour l'emploi ou la résidence au-delà de 90 jours, le CERPAC est obligatoire. Une mise à jour politique de 2025 a introduit des amendes journalières (15 USD) pour les dépassements de séjour, soulignant la rigueur de la limite." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les Visas de Court Séjour permettent aux voyageurs de visiter le Nigeria pour une période n'excédant pas trois mois (90 jours) ».", en: "\"Short-Stay Visas allow travellers to visit Nigeria for a period not exceeding three months (90 days).\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour l'emploi ou la résidence au-delà de 90 jours, le CERPAC est obligatoire. Une mise à jour politique de 2025 a introduit des amendes journalières (15 USD) pour les dépassements de séjour, soulignant la rigueur de la limite.", en: "For employment or residence beyond 90 days, the CERPAC is mandatory. A 2025 policy update introduced daily fines (USD 15) for overstays, underlining the strictness of the limit." } }
           ]
         },
         {
-          name: "Sénégal", threshold: "90 Jours", tableNotes: "Carte d'identité d'étranger obligatoire après 90 jours.",
-          instrument: "Loi N° 71-10 (1971) et Décret 71-860.",
+          name: { fr: "Sénégal", en: "Senegal" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte d'identité d'étranger obligatoire après 90 jours.", en: "Foreigner's ID card mandatory after 90 days." },
+          instrument: { fr: "Loi N° 71-10 (1971) et Décret 71-860.", en: "Law N° 71-10 (1971) and Decree 71-860." },
           details: [
-            { label: "Analyse", text: "« Pour séjourner au Sénégal plus de 90 jours, vous devez obtenir une carte nationale d'identité étrangère (Carte d'Identité d'Étranger) »." },
-            { label: "Note", text: "Ceci s'applique même aux ressortissants exemptés de visa (comme les Français ou citoyens CEDEAO). La marque des 90 jours est le déclencheur légal définitif." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Pour séjourner au Sénégal plus de 90 jours, vous devez obtenir une carte nationale d'identité étrangère (Carte d'Identité d'Étranger) ».", en: "\"To stay in Senegal beyond 90 days, you must obtain a foreigner's national identity card (Carte d'Identité d'Étranger).\"" } },
+            { label: { fr: "Note", en: "Note" }, text: { fr: "Ceci s'applique même aux ressortissants exemptés de visa (comme les Français ou citoyens CEDEAO). La marque des 90 jours est le déclencheur légal définitif.", en: "This applies even to visa-exempt nationals (such as French or ECOWAS citizens). The 90-day mark is the definitive legal trigger." } }
           ]
         },
         {
-          name: "Sierra Leone", threshold: "30-90 Jours", tableNotes: "Permis de résidence requis pour séjours > 90 jours.",
-          instrument: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965.",
+          name: { fr: "Sierra Leone", en: "Sierra Leone" },
+          threshold: { fr: "30-90 Jours", en: "30-90 Days" },
+          tableNotes: { fr: "Permis de résidence requis pour séjours > 90 jours.", en: "Residence permit required for stays > 90 days." },
+          instrument: { fr: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965.", en: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965." },
           details: [
-            { label: "Analyse", text: "Les visas à entrer unique sont valides 90 jours à l'émission pour des visites jusqu'à un maximum de 30 jours." },
-            { label: "Obligation", text: "« Un Permis de Travail & Résidence doit être obtenu dans les 30 jours suivant l'arrivée » pour ceux qui ont l'intention de rester. L'un des seuils les plus courts du continent." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas à entrer unique sont valides 90 jours à l'émission pour des visites jusqu'à un maximum de 30 jours.", en: "Single-entry visas are valid for 90 days from issuance, for visits of up to a maximum of 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Un Permis de Travail & Résidence doit être obtenu dans les 30 jours suivant l'arrivée » pour ceux qui ont l'intention de rester. L'un des seuils les plus courts du continent.", en: "\"A Work & Residence Permit must be obtained within 30 days of arrival\" for those intending to stay. One of the shortest thresholds on the continent." } }
           ]
         },
         {
-          name: "Togo", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi sur la Police des Étrangers (1987, actualisée 2022).",
+          name: { fr: "Togo", en: "Togo" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi sur la Police des Étrangers (1987, actualisée 2022).", en: "Law on the Policing of Foreigners (1987, updated 2022)." },
           details: [
-            { label: "Analyse", text: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour »." },
-            { label: "Réforme", text: "La nouvelle loi de 2022 a renforcé les pénalités pour dépassement de séjour et rationalisé le processus de permis de résidence." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ».", en: "Tourist visas are valid for up to 90 days. \"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\"" } },
+            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La nouvelle loi de 2022 a renforcé les pénalités pour dépassement de séjour et rationalisé le processus de permis de résidence.", en: "The new 2022 law strengthened overstay penalties and streamlined the residence permit process." } }
           ]
         }
       ]
     },
     {
-      region: "Afrique Centrale",
-      intro: "La région CEMAC soutient théoriquement la libre circulation, mais la mise en œuvre nationale est caractérisée par une haute sécurisation. Le seuil pour les visiteurs est généralement de 90 jours, mais l'exigence de permis de résidence (souvent liée à des cautions de rapatriement) est strictement appliquée.",
+      region: { fr: "Afrique Centrale", en: "Central Africa" },
+      intro: { fr: "La région CEMAC soutient théoriquement la libre circulation, mais la mise en œuvre nationale est caractérisée par une haute sécurisation. Le seuil pour les visiteurs est généralement de 90 jours, mais l'exigence de permis de résidence (souvent liée à des cautions de rapatriement) est strictement appliquée.", en: "The CEMAC zone theoretically supports free movement, but national implementation is marked by high securitization. The visitor threshold is generally 90 days, but the residence permit requirement (often tied to repatriation bonds) is strictly enforced." },
       countries: [
         {
-          name: "Cameroun", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour requise après 3 mois.",
-          instrument: "Loi N° 97/012 (1997).",
+          name: { fr: "Cameroun", en: "Cameroon" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Carte de séjour requise après 3 mois.", en: "Residence card required after 3 months." },
+          instrument: { fr: "Loi N° 97/012 (1997).", en: "Law N° 97/012 (1997)." },
           details: [
-            { label: "Analyse", text: "L'article 17 stipule : « Tout étranger [...] doit, dans un délai de trois (3) mois [...] se présenter aux autorités compétentes pour solliciter une carte de séjour »." },
-            { label: "Mandat", text: "La marque des 3 mois est l'échéance statutaire pour demander une carte de séjour. Les visiteurs restant moins de ce délai sont des « visiteurs temporaires »." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "L'article 17 stipule : « Tout étranger [...] doit, dans un délai de trois (3) mois [...] se présenter aux autorités compétentes pour solliciter une carte de séjour ».", en: "Article 17 states: \"Any foreigner [...] must, within three (3) months [...] appear before the competent authorities to apply for a residence card.\"" } },
+            { label: { fr: "Mandat", en: "Mandate" }, text: { fr: "La marque des 3 mois est l'échéance statutaire pour demander une carte de séjour. Les visiteurs restant moins de ce délai sont des « visiteurs temporaires ».", en: "The 3-month mark is the statutory deadline to apply for a residence card. Visitors staying less than this period are \"temporary visitors\"." } }
           ]
         },
         {
-          name: "RCA", threshold: "90 Jours (3 Mois)", tableNotes: "Titre de séjour requis après 3 mois.",
-          instrument: "Code de l'Immigration.",
+          name: { fr: "RCA", en: "CAR" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Titre de séjour requis après 3 mois.", en: "Residence permit required after 3 months." },
+          instrument: { fr: "Code de l'Immigration.", en: "Immigration Code." },
           details: [
-            { label: "Analyse", text: "Les exemptions de visa (pour la CEMAC) vont jusqu'à 90 jours. Pour les autres, les visas court séjour couvrent la même période." },
-            { label: "Obligation", text: "« À l'arrivée, l'individu doit demander un permis de résidence (Titre de Séjour) pour tout séjour supérieur à trois mois »." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les exemptions de visa (pour la CEMAC) vont jusqu'à 90 jours. Pour les autres, les visas court séjour couvrent la même période.", en: "Visa exemptions (for CEMAC nationals) run up to 90 days. For others, short-stay visas cover the same period." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« À l'arrivée, l'individu doit demander un permis de résidence (Titre de Séjour) pour tout séjour supérieur à trois mois ».", en: "\"Upon arrival, the individual must apply for a residence permit (Titre de Séjour) for any stay exceeding three months.\"" } }
           ]
         },
         {
-          name: "Tchad", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour requise après 3 mois.",
-          instrument: "Ordonnance N° 27-62.",
+          name: { fr: "Tchad", en: "Chad" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Carte de séjour requise après 3 mois.", en: "Residence card required after 3 months." },
+          instrument: { fr: "Ordonnance N° 27-62.", en: "Ordinance N° 27-62." },
           details: [
-            { label: "Analyse", text: "Similaire aux autres États de la CEMAC, la période visiteur est plafonnée à 3 mois. « Une carte de séjour est requise pour les expatriés »." },
-            { label: "Enregistrement", text: "L'enregistrement auprès de l'immigration est requis dans les 72 heures suivant l'arrivée, une mesure de sécurité commune au Sahel." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Similaire aux autres États de la CEMAC, la période visiteur est plafonnée à 3 mois. « Une carte de séjour est requise pour les expatriés ».", en: "Similar to other CEMAC states, the visitor period is capped at 3 months. \"A residence card is required for expatriates.\"" } },
+            { label: { fr: "Enregistrement", en: "Registration" }, text: { fr: "L'enregistrement auprès de l'immigration est requis dans les 72 heures suivant l'arrivée, une mesure de sécurité commune au Sahel.", en: "Registration with immigration authorities is required within 72 hours of arrival, a security measure common across the Sahel." } }
           ]
         },
         {
-          name: "Congo (Rep)", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3 mois.",
-          instrument: "Loi N° 23-96 (1996).",
+          name: { fr: "Congo (Rep)", en: "Congo (Rep.)" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Permis de résidence requis après 3 mois.", en: "Residence permit required after 3 months." },
+          instrument: { fr: "Loi N° 23-96 (1996).", en: "Law N° 23-96 (1996)." },
           details: [
-            { label: "Analyse", text: "« Les étrangers séjournant [...] devront dans les trois mois, se soumettre aux dispositions qui précèdent » (concernant la résidence)." },
-            { label: "Exigence", text: "Un permis de résidence est obligatoire après l'expiration de la fenêtre visiteur de 3 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers séjournant [...] devront dans les trois mois, se soumettre aux dispositions qui précèdent » (concernant la résidence).", en: "\"Foreigners staying [...] must, within three months, comply with the aforementioned provisions\" (regarding residence)." } },
+            { label: { fr: "Exigence", en: "Requirement" }, text: { fr: "Un permis de résidence est obligatoire après l'expiration de la fenêtre visiteur de 3 mois.", en: "A residence permit is mandatory upon expiry of the 3-month visitor window." } }
           ]
         },
         {
-          name: "RDC", threshold: "~6 Mois", tableNotes: "Visa voyage max 6 mois. Visa établissement pour résidence.",
-          instrument: "Ordonnance-Loi 83-033 relative à la Police des Étrangers.",
+          name: { fr: "RDC", en: "DR Congo" },
+          threshold: { fr: "~6 Mois", en: "~6 Months" },
+          tableNotes: { fr: "Visa voyage max 6 mois. Visa établissement pour résidence.", en: "Travel visa max 6 months. Settlement visa for residence." },
+          instrument: { fr: "Ordonnance-Loi 83-033 relative à la Police des Étrangers.", en: "Ordinance-Law 83-033 on the Policing of Foreigners." },
           details: [
-            { label: "Analyse", text: "Le « Visa de Voyage » autorise un séjour jusqu'à 6 mois. C'est toutefois la limite supérieure pour un visiteur." },
-            { label: "Obligation", text: "Pour l'« établissement » (résidence), un « Visa d'Établissement » spécifique est requis. La RDC permet une validité de visa visiteur jusqu'à 6 mois, mais l'intention de résidence doit être déclarée plus tôt." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de Voyage » autorise un séjour jusqu'à 6 mois. C'est toutefois la limite supérieure pour un visiteur.", en: "The \"Travel Visa\" authorizes a stay of up to 6 months. This is nonetheless the upper limit for a visitor." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour l'« établissement » (résidence), un « Visa d'Établissement » spécifique est requis. La RDC permet une validité de visa visiteur jusqu'à 6 mois, mais l'intention de résidence doit être déclarée plus tôt.", en: "For \"settlement\" (residence), a specific \"Settlement Visa\" is required. The DRC allows a visitor visa validity of up to 6 months, but intent to reside must be declared earlier." } }
           ]
         },
         {
-          name: "Guinée Équatoriale", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
-          instrument: "Loi Organique N° 3/2010.",
+          name: { fr: "Guinée Équatoriale", en: "Equatorial Guinea" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
+          instrument: { fr: "Loi Organique N° 3/2010.", en: "Organic Law N° 3/2010." },
           details: [
-            { label: "Analyse", text: "« Les visas de court terme sont valides pour 90 jours. Pour des séjours plus longs, vous devez vous adresser aux postes de police locaux »." },
-            { label: "Exigence", text: "Les permis de résidence sont requis pour tout séjour à long terme au-delà de la limite de 3 mois. Les nationaux CEMAC peuvent entrer avec une CNI, mais le seuil s'applique." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visas de court terme sont valides pour 90 jours. Pour des séjours plus longs, vous devez vous adresser aux postes de police locaux ».", en: "\"Short-term visas are valid for 90 days. For longer stays, you must apply at local police stations.\"" } },
+            { label: { fr: "Exigence", en: "Requirement" }, text: { fr: "Les permis de résidence sont requis pour tout séjour à long terme au-delà de la limite de 3 mois. Les nationaux CEMAC peuvent entrer avec une CNI, mais le seuil s'applique.", en: "Residence permits are required for any long-term stay beyond the 3-month limit. CEMAC nationals may enter with a national ID card, but the threshold still applies." } }
           ]
         },
         {
-          name: "Gabon", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi N° 5/86.",
+          name: { fr: "Gabon", en: "Gabon" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi N° 5/86.", en: "Law N° 5/86." },
           details: [
-            { label: "Analyse", text: "« Les visiteurs qui souhaitent rester dans le pays pour plus de 90 jours doivent obtenir un permis de résidence (carte de séjour) »." },
-            { label: "Application", text: "Stricte. Les visas de sortie ne sont plus requis pour les résidents, mais la carte de séjour est obligatoire après 3 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs qui souhaitent rester dans le pays pour plus de 90 jours doivent obtenir un permis de résidence (carte de séjour) ».", en: "\"Visitors wishing to remain in the country for more than 90 days must obtain a residence permit (residence card).\"" } },
+            { label: { fr: "Application", en: "Enforcement" }, text: { fr: "Stricte. Les visas de sortie ne sont plus requis pour les résidents, mais la carte de séjour est obligatoire après 3 mois.", en: "Strict. Exit visas are no longer required for residents, but the residence card is mandatory after 3 months." } }
           ]
         },
         {
-          name: "Sao Tomé", threshold: "15-30 Jours", tableNotes: "Seuil très court. Résidence requise après 30-90 jours.",
-          instrument: "Loi N° 5/2008.",
+          name: { fr: "Sao Tomé", en: "Sao Tome" },
+          threshold: { fr: "15-30 Jours", en: "15-30 Days" },
+          tableNotes: { fr: "Seuil très court. Résidence requise après 30-90 jours.", en: "Very short threshold. Residence required after 30-90 days." },
+          instrument: { fr: "Loi N° 5/2008.", en: "Law N° 5/2008." },
           details: [
-            { label: "Analyse", text: "Les exemptions de visa sont souvent de 15 jours. Les visas touristiques sont généralement valides pour 30 jours." },
-            { label: "Obligation", text: "Pour les séjours plus longs que ces courtes durées, un permis de résidence est requis. Le seuil initial de visiteur est notablement plus court que la moyenne continentale." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les exemptions de visa sont souvent de 15 jours. Les visas touristiques sont généralement valides pour 30 jours.", en: "Visa exemptions are often 15 days. Tourist visas are generally valid for 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour les séjours plus longs que ces courtes durées, un permis de résidence est requis. Le seuil initial de visiteur est notablement plus court que la moyenne continentale.", en: "For stays longer than these short periods, a residence permit is required. The initial visitor threshold is notably shorter than the continental average." } }
           ]
         },
         {
-          name: "Angola", threshold: "90 Jours (Agrégé)", tableNotes: "30 jours par visite, max 90 jours/an.",
-          instrument: "Loi N° 13/19 (2019).",
+          name: { fr: "Angola", en: "Angola" },
+          threshold: { fr: "90 Jours (Agrégé)", en: "90 Days (Aggregate)" },
+          tableNotes: { fr: "30 jours par visite, max 90 jours/an.", en: "30 days per visit, max 90 days/year." },
+          instrument: { fr: "Loi N° 13/19 (2019).", en: "Law N° 13/19 (2019)." },
           details: [
-            { label: "Analyse", text: "Les visas touristiques sont valides pour 120 jours, permettant des entrées multiples pour un séjour de jusqu'à 30 jours par visite. Crucialement, le séjour total ne peut excéder 90 jours par an." },
-            { label: "Obligation", text: "Les permis de résidence sont requis pour l'établissement au-delà de cette limite agrégée." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques sont valides pour 120 jours, permettant des entrées multiples pour un séjour de jusqu'à 30 jours par visite. Crucialement, le séjour total ne peut excéder 90 jours par an.", en: "Tourist visas are valid for 120 days, allowing multiple entries for stays of up to 30 days per visit. Crucially, the total stay cannot exceed 90 days per year." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les permis de résidence sont requis pour l'établissement au-delà de cette limite agrégée.", en: "Residence permits are required for settlement beyond this aggregate limit." } }
           ]
         },
         {
-          name: "Burundi", threshold: "30 Jours (extensible)", tableNotes: "Permis de résidence généralement requis après 3 mois.",
-          instrument: "Loi N° 1/13 (2011).",
+          name: { fr: "Burundi", en: "Burundi" },
+          threshold: { fr: "30 Jours (extensible)", en: "30 Days (extendable)" },
+          tableNotes: { fr: "Permis de résidence généralement requis après 3 mois.", en: "Residence permit generally required after 3 months." },
+          instrument: { fr: "Loi N° 1/13 (2011).", en: "Law N° 1/13 (2011)." },
           details: [
-            { label: "Analyse", text: "Les voyageurs obtiennent un visa de 30 jours à l'arrivée. Ceci peut être étendu. « Ceux qui restent plus de 30 jours peuvent aussi demander un visa de trois mois [...] Permis de résidence requis pour plus longtemps »." },
-            { label: "Limite", text: "Le plafond visiteur est généralement fixé à 3 mois avant que le permis de résidence ne devienne nécessaire." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les voyageurs obtiennent un visa de 30 jours à l'arrivée. Ceci peut être étendu. « Ceux qui restent plus de 30 jours peuvent aussi demander un visa de trois mois [...] Permis de résidence requis pour plus longtemps ».", en: "Travellers obtain a 30-day visa on arrival. This can be extended. \"Those staying more than 30 days may also apply for a three-month visa [...] A residence permit is required for longer stays.\"" } },
+            { label: { fr: "Limite", en: "Limit" }, text: { fr: "Le plafond visiteur est généralement fixé à 3 mois avant que le permis de résidence ne devienne nécessaire.", en: "The visitor cap is generally set at 3 months before a residence permit becomes necessary." } }
           ]
         },
         {
-          name: "Rwanda", threshold: "30-90 Jours", tableNotes: "Permis requis après 30/90 jours selon origine.",
-          instrument: "Loi N° 57/2018.",
+          name: { fr: "Rwanda", en: "Rwanda" },
+          threshold: { fr: "30-90 Jours", en: "30-90 Days" },
+          tableNotes: { fr: "Permis requis après 30/90 jours selon origine.", en: "Permit required after 30/90 days depending on origin." },
+          instrument: { fr: "Loi N° 57/2018.", en: "Law N° 57/2018." },
           details: [
-            { label: "Analyse", text: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA)." },
-            { label: "Obligation", text: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA).", en: "30 days for many nationals; 90 days under specific agreements (e.g. EAC, AU)." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa.", en: "\"Temporary residence permit [...] 15-day grace period upon arrival [...] to apply.\" Pure visitors may stay until their visa's validity expires." } }
           ]
         }
       ]
     },
     {
-      region: "Afrique de l'Est",
-      intro: "La Communauté d'Afrique de l'Est (CAE) fournit un cadre robuste pour le mouvement, mais des lois nationales distinctes s'appliquent aux non-citoyens de la CAE. Le seuil est généralement de 90 jours, avec des allocations spécifiques (souvent 6 mois) pour les visiteurs régionaux. Forte progression de la réciprocité, notamment entre la RDC, l'Ouganda et le Sud-Soudan.",
+      region: { fr: "Afrique de l'Est", en: "East Africa" },
+      intro: { fr: "La Communauté d'Afrique de l'Est (CAE) fournit un cadre robuste pour le mouvement, mais des lois nationales distinctes s'appliquent aux non-citoyens de la CAE. Le seuil est généralement de 90 jours, avec des allocations spécifiques (souvent 6 mois) pour les visiteurs régionaux. Forte progression de la réciprocité, notamment entre la RDC, l'Ouganda et le Sud-Soudan.", en: "The East African Community (EAC) provides a robust framework for movement, but distinct national laws apply to non-EAC citizens. The threshold is generally 90 days, with specific allowances (often 6 months) for regional visitors. Strong progress on reciprocity, notably between the DRC, Uganda and South Sudan." },
       countries: [
         {
-          name: "Comores", threshold: "45 Jours", tableNotes: "Visa à l'arrivée 45 jours. Permis résidence pour plus long.",
-          instrument: "Loi N° 88-025 (1988).",
+          name: { fr: "Comores", en: "Comoros" },
+          threshold: { fr: "45 Jours", en: "45 Days" },
+          tableNotes: { fr: "Visa à l'arrivée 45 jours. Permis résidence pour plus long.", en: "45-day visa on arrival. Residence permit for longer stays." },
+          instrument: { fr: "Loi N° 88-025 (1988).", en: "Law N° 88-025 (1988)." },
           details: [
-            { label: "Analyse", text: "Le visa à l'arrivée est valide pour 45 jours." },
-            { label: "Obligation", text: "Tout étranger souhaitant rester au-delà de cette période doit demander un permis de résidence. C'est une durée spécifique à l'archipel, légèrement plus courte que les 90 jours standards." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le visa à l'arrivée est valide pour 45 jours.", en: "The visa on arrival is valid for 45 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Tout étranger souhaitant rester au-delà de cette période doit demander un permis de résidence. C'est une durée spécifique à l'archipel, légèrement plus courte que les 90 jours standards.", en: "Any foreigner wishing to stay beyond this period must apply for a residence permit. This is an archipelago-specific duration, slightly shorter than the standard 90 days." } }
           ]
         },
         {
-          name: "Djibouti", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
-          instrument: "Loi N° 201/AN/07.",
+          name: { fr: "Djibouti", en: "Djibouti" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
+          instrument: { fr: "Loi N° 201/AN/07.", en: "Law N° 201/AN/07." },
           details: [
-            { label: "Analyse", text: "« La loi sur l'immigration djiboutienne permet aux visiteurs d'entrer et de rester pour 90 jours avec un eVisa »." },
-            { label: "Obligation", text: "« Ceux souhaitant rester plus de 90 jours doivent travailler avec les autorités pour ajuster leur statut » (Carte de Séjour)." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La loi sur l'immigration djiboutienne permet aux visiteurs d'entrer et de rester pour 90 jours avec un eVisa ».", en: "\"Djiboutian immigration law allows visitors to enter and stay for 90 days with an eVisa.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Ceux souhaitant rester plus de 90 jours doivent travailler avec les autorités pour ajuster leur statut » (Carte de Séjour).", en: "\"Those wishing to stay longer than 90 days must work with the authorities to adjust their status\" (Residence Card)." } }
           ]
         },
         {
-          name: "Érythrée", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3-6 mois.",
-          instrument: "Proclamation N° 24/1992.",
+          name: { fr: "Érythrée", en: "Eritrea" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Permis de résidence requis après 3-6 mois.", en: "Residence permit required after 3-6 months." },
+          instrument: { fr: "Proclamation N° 24/1992.", en: "Proclamation N° 24/1992." },
           details: [
-            { label: "Analyse", text: "« Un visa touristique [...] peut permettre au titulaire de rester en Érythrée pendant les trois mois »." },
-            { label: "Obligation", text: "« Tout étranger qui [...] a séjourné pour pas plus de six mois doit demander un permis de résidence ». Bien que le visa touristique soit de 3 mois, la date limite absolue pour la résidence semble être de 6 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un visa touristique [...] peut permettre au titulaire de rester en Érythrée pendant les trois mois ».", en: "\"A tourist visa [...] may allow the holder to stay in Eritrea for the three months.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a séjourné pour pas plus de six mois doit demander un permis de résidence ». Bien que le visa touristique soit de 3 mois, la date limite absolue pour la résidence semble être de 6 mois.", en: "\"Any foreigner who [...] has stayed for no more than six months must apply for a residence permit.\" While the tourist visa is 3 months, the absolute deadline for residence appears to be 6 months." } }
           ]
         },
         {
-          name: "Éthiopie", threshold: "90 Jours", tableNotes: "ID de Résidence requise après 90 jours.",
-          instrument: "Immigration Proclamation N° 354/2003.",
+          name: { fr: "Éthiopie", en: "Ethiopia" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "ID de Résidence requise après 90 jours.", en: "Residence ID required after 90 days." },
+          instrument: { fr: "Immigration Proclamation N° 354/2003.", en: "Immigration Proclamation N° 354/2003." },
           details: [
-            { label: "Analyse", text: "Lese-visas touristiques sont émis pour 30 ou 90 jours." },
-            { label: "Obligation", text: "« Tout étranger qui [...] a l'intention de rester pour plus de quatre-vingt-dix jours [...] doit s'enregistrer dans les trente jours suivant son arrivée ». La marque des 90 jours est le seuil critique." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Lese-visas touristiques sont émis pour 30 ou 90 jours.", en: "Tourist e-visas are issued for 30 or 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a l'intention de rester pour plus de quatre-vingt-dix jours [...] doit s'enregistrer dans les trente jours suivant son arrivée ». La marque des 90 jours est le seuil critique.", en: "\"Any foreigner who [...] intends to stay for more than ninety days [...] must register within thirty days of arrival.\" The 90-day mark is the critical threshold." } }
           ]
         },
         {
-          name: "Kenya", threshold: "90 Jours (extensible)", tableNotes: "Max 6 mois pass visiteur. Permis requis ensuite.",
-          instrument: "Kenya Citizenship and Immigration Act 2011.",
+          name: { fr: "Kenya", en: "Kenya" },
+          threshold: { fr: "90 Jours (extensible)", en: "90 Days (extendable)" },
+          tableNotes: { fr: "Max 6 mois pass visiteur. Permis requis ensuite.", en: "Max 6 months visitor pass. Permit required thereafter." },
+          instrument: { fr: "Kenya Citizenship and Immigration Act 2011.", en: "Kenya Citizenship and Immigration Act 2011." },
           details: [
-            { label: "Analyse", text: "Un pass visiteur est valide pour 3 mois initialement. Il peut être étendu pour 3 autres mois. La période agrégée maximale est de 6 mois." },
-            { label: "Obligation", text: "Au-delà de 6 mois, un Permis (Classe K, etc.) est strictement requis. La transition de Visiteur à Résident doit se produire avant le plafond de 6 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un pass visiteur est valide pour 3 mois initialement. Il peut être étendu pour 3 autres mois. La période agrégée maximale est de 6 mois.", en: "A visitor's pass is initially valid for 3 months. It can be extended for a further 3 months. The maximum aggregate period is 6 months." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Au-delà de 6 mois, un Permis (Classe K, etc.) est strictement requis. La transition de Visiteur à Résident doit se produire avant le plafond de 6 mois.", en: "Beyond 6 months, a Permit (Class K, etc.) is strictly required. The transition from Visitor to Resident must occur before the 6-month cap." } }
           ]
         },
         {
-          name: "Madagascar", threshold: "90 Jours", tableNotes: "Carte de résident requise après 3 mois.",
-          instrument: "Loi N° 62-006 (1962).",
+          name: { fr: "Madagascar", en: "Madagascar" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Carte de résident requise après 3 mois.", en: "Resident card required after 3 months." },
+          instrument: { fr: "Loi N° 62-006 (1962).", en: "Law N° 62-006 (1962)." },
           details: [
-            { label: "Analyse", text: "« Les étrangers entrant à Madagascar pour une période n'excédant pas trois mois sont des non-immigrants »." },
-            { label: "Obligation", text: "« Les étrangers séjournant [...] durant une période supérieure à trois mois sont des immigrants ». Ainsi, le seuil de résidence est de 3 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers entrant à Madagascar pour une période n'excédant pas trois mois sont des non-immigrants ».", en: "\"Foreigners entering Madagascar for a period not exceeding three months are non-immigrants.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les étrangers séjournant [...] durant une période supérieure à trois mois sont des immigrants ». Ainsi, le seuil de résidence est de 3 mois.", en: "\"Foreigners staying [...] for a period exceeding three months are immigrants.\" The residence threshold is thus 3 months." } }
           ]
         },
         {
-          name: "Maurice", threshold: "90-180 Jours", tableNotes: "Max 180 jours/an touriste. Permis pour plus long/travail.",
-          instrument: "Immigration Act 2022.",
+          name: { fr: "Maurice", en: "Mauritius" },
+          threshold: { fr: "90-180 Jours", en: "90-180 Days" },
+          tableNotes: { fr: "Max 180 jours/an touriste. Permis pour plus long/travail.", en: "Max 180 tourist days/year. Permit for longer stays/work." },
+          instrument: { fr: "Immigration Act 2022.", en: "Immigration Act 2022." },
           details: [
-            { label: "Analyse", text: "Les visas touristiques permettent un séjour cumulatif de 180 jours par an. Toutefois, une visite unique est souvent plafonnée à 90 jours." },
-            { label: "Premium Visa", text: "Maurice a introduit un « Premium Visa » permettant un séjour d'1 an pour les nomades numériques. Les permis de résidence standards sont pour l'emploi/investissement." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques permettent un séjour cumulatif de 180 jours par an. Toutefois, une visite unique est souvent plafonnée à 90 jours.", en: "Tourist visas allow a cumulative stay of 180 days per year. However, a single visit is often capped at 90 days." } },
+            { label: { fr: "Premium Visa", en: "Premium Visa" }, text: { fr: "Maurice a introduit un « Premium Visa » permettant un séjour d'1 an pour les nomades numériques. Les permis de résidence standards sont pour l'emploi/investissement.", en: "Mauritius introduced a \"Premium Visa\" allowing a 1-year stay for digital nomads. Standard residence permits are for employment/investment." } }
           ]
         },
         {
-          name: "Seychelles", threshold: "3 Mois", tableNotes: "Permis visiteur extensible jusqu'à 12 mois.",
-          instrument: "Immigration Decree 1979.",
+          name: { fr: "Seychelles", en: "Seychelles" },
+          threshold: { fr: "3 Mois", en: "3 Months" },
+          tableNotes: { fr: "Permis visiteur extensible jusqu'à 12 mois.", en: "Visitor permit extendable up to 12 months." },
+          instrument: { fr: "Immigration Decree 1979.", en: "Immigration Decree 1979." },
           details: [
-            { label: "Analyse", text: "Un permis visiteur est valide pour 3 mois initialement." },
-            { label: "Extension", text: "Il peut être étendu par tranches de 3 mois jusqu'à un maximum de 12 mois. On peut rester « visiteur » jusqu'à un an, mais cela exige une extension active." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un permis visiteur est valide pour 3 mois initialement.", en: "A visitor's permit is initially valid for 3 months." } },
+            { label: { fr: "Extension", en: "Extension" }, text: { fr: "Il peut être étendu par tranches de 3 mois jusqu'à un maximum de 12 mois. On peut rester « visiteur » jusqu'à un an, mais cela exige une extension active.", en: "It can be extended in 3-month increments up to a maximum of 12 months. One can remain a \"visitor\" for up to a year, but this requires active extension." } }
           ]
         },
         {
-          name: "Somalie", threshold: "30 Jours", tableNotes: "Permis de résidence requis pour plus long.",
-          instrument: "Immigration Law 1966.",
+          name: { fr: "Somalie", en: "Somalia" },
+          threshold: { fr: "30 Jours", en: "30 Days" },
+          tableNotes: { fr: "Permis de résidence requis pour plus long.", en: "Residence permit required for longer stays." },
+          instrument: { fr: "Immigration Law 1966.", en: "Immigration Law 1966." },
           details: [
-            { label: "Analyse", text: "Le visa à l'arrivée est valide pour 30 jours." },
-            { label: "Obligation", text: "« Les visas long terme ont une durée qui excède 90 jours [...] les détenteurs de ces types de visas reçoivent la résidence ». La limite visiteur est très courte." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le visa à l'arrivée est valide pour 30 jours.", en: "The visa on arrival is valid for 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les visas long terme ont une durée qui excède 90 jours [...] les détenteurs de ces types de visas reçoivent la résidence ». La limite visiteur est très courte.", en: "\"Long-term visas have a duration exceeding 90 days [...] holders of these visa types receive residence.\" The visitor limit is very short." } }
           ]
         },
         {
-          name: "Soudan", threshold: "90 Jours (3 Mois)", tableNotes: "Enregistrement étranger requis après 3 mois.",
-          instrument: "Passports and Immigration Act de 1994.",
+          name: { fr: "Soudan", en: "Sudan" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Enregistrement étranger requis après 3 mois.", en: "Foreigner registration required after 3 months." },
+          instrument: { fr: "Passports and Immigration Act de 1994.", en: "Passports and Immigration Act of 1994." },
           details: [
-            { label: "Analyse Juridique", text: "La loi dispose qu'« aucun visa n'est requis pour les visiteurs qui ne restent pas au Soudan plus de trois mois »." },
-            { label: "Obligation de Résidence", text: "La section 25 impose que « tout étranger résidant au Soudan pour plus de trois mois doit s'adresser à l'officier d'enregistrement [...] pour se faire enregistrer ». De plus, les étrangers doivent signaler leur présence dans les 3 jours suivant l'arrivée." }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "La loi dispose qu'« aucun visa n'est requis pour les visiteurs qui ne restent pas au Soudan plus de trois mois ».", en: "The law provides that \"no visa is required for visitors who do not remain in Sudan for more than three months.\"" } },
+            { label: { fr: "Obligation de Résidence", en: "Residence Obligation" }, text: { fr: "La section 25 impose que « tout étranger résidant au Soudan pour plus de trois mois doit s'adresser à l'officier d'enregistrement [...] pour se faire enregistrer ». De plus, les étrangers doivent signaler leur présence dans les 3 jours suivant l'arrivée.", en: "Section 25 requires that \"any foreigner residing in Sudan for more than three months must apply to the registration officer [...] to be registered.\" Foreigners must also report their presence within 3 days of arrival." } }
           ]
         },
         {
-          name: "Soudan du Sud", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3 mois.",
-          instrument: "Passports and Immigration Act, 2011.",
+          name: { fr: "Soudan du Sud", en: "South Sudan" },
+          threshold: { fr: "90 Jours (3 Mois)", en: "90 Days (3 Months)" },
+          tableNotes: { fr: "Permis de résidence requis après 3 mois.", en: "Residence permit required after 3 months." },
+          instrument: { fr: "Passports and Immigration Act, 2011.", en: "Passports and Immigration Act, 2011." },
           details: [
-            { label: "Analyse", text: "« Les touristes séjournant pour une période n'excédant pas trois mois au Nouveau Soudan sont exemptés de prendre des permis de résidence »." },
-            { label: "Obligation", text: "Permis de résidence requis strictement après 3 mois." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les touristes séjournant pour une période n'excédant pas trois mois au Nouveau Soudan sont exemptés de prendre des permis de résidence ».", en: "\"Tourists staying for a period not exceeding three months in New Sudan are exempted from obtaining residence permits.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Permis de résidence requis strictement après 3 mois.", en: "Residence permit strictly required after 3 months." } }
           ]
         },
         {
-          name: "Tanzanie", threshold: "90 Jours", tableNotes: "Permis de Résidence requis après 90 jours.",
-          instrument: "Immigration Act 1995 (Cap 54).",
+          name: { fr: "Tanzanie", en: "Tanzania" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Permis de Résidence requis après 90 jours.", en: "Residence Permit required after 90 days." },
+          instrument: { fr: "Immigration Act 1995 (Cap 54).", en: "Immigration Act 1995 (Cap 54)." },
           details: [
-            { label: "Analyse", text: "« La validité du Pass Visiteur n'excédera pas 90 jours »." },
-            { label: "Obligation", text: "Tout séjour au-delà de 90 jours nécessite un Permis de Résidence (Classe A, B, ou C)." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La validité du Pass Visiteur n'excédera pas 90 jours ».", en: "\"The validity of the Visitor's Pass shall not exceed 90 days.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Tout séjour au-delà de 90 jours nécessite un Permis de Résidence (Classe A, B, ou C).", en: "Any stay beyond 90 days requires a Residence Permit (Class A, B, or C)." } }
           ]
         },
         {
-          name: "Ouganda", threshold: "90 Jours", tableNotes: "Special Pass ou Entry Permit requis après 90 jours.",
-          instrument: "Citizenship and Immigration Control Act (Cap 66).",
+          name: { fr: "Ouganda", en: "Uganda" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Special Pass ou Entry Permit requis après 90 jours.", en: "Special Pass or Entry Permit required after 90 days." },
+          instrument: { fr: "Citizenship and Immigration Control Act (Cap 66).", en: "Citizenship and Immigration Control Act (Cap 66)." },
           details: [
-            { label: "Analyse", text: "« Un étranger en possession d'un pass visiteur valide ou spécial dont la période de séjour n'excède pas quatre-vingt-dix jours » est exempté de l'enregistrement des étrangers." },
-            { label: "Obligation", text: "Les séjours au-delà de 90 jours nécessitent généralement un Special Pass (pour courtes extensions) ou un Entry Permit (Travail/Résidence)." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un étranger en possession d'un pass visiteur valide ou spécial dont la période de séjour n'excède pas quatre-vingt-dix jours » est exempté de l'enregistrement des étrangers.", en: "\"A foreigner in possession of a valid visitor's or special pass whose period of stay does not exceed ninety days\" is exempt from alien registration." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de 90 jours nécessitent généralement un Special Pass (pour courtes extensions) ou un Entry Permit (Travail/Résidence).", en: "Stays beyond 90 days generally require a Special Pass (for short extensions) or an Entry Permit (Work/Residence)." } }
           ]
         }
       ]
     },
     {
-      region: "Afrique Australe",
-      intro: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Contrairement à d'autres régions où une sortie et réentrée (« border run ») réinitialise le compteur de 90 jours, les pays de la SADC comme l'Afrique du Sud et le Botswana appliquent souvent une limite annuelle agrégée pour empêcher la résidence de fait.",
+      region: { fr: "Afrique Australe", en: "Southern Africa" },
+      intro: { fr: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Contrairement à d'autres régions où une sortie et réentrée (« border run ») réinitialise le compteur de 90 jours, les pays de la SADC comme l'Afrique du Sud et le Botswana appliquent souvent une limite annuelle agrégée pour empêcher la résidence de fait.", en: "The SADC region is characterized by a \"days per year\" calculation for visitors. Unlike other regions where an exit-and-re-entry (\"border run\") resets the 90-day counter, SADC countries such as South Africa and Botswana often apply an aggregate annual cap to prevent de facto residence." },
       countries: [
         {
-          name: "Botswana", threshold: "90 Jours (Agrégé)", tableNotes: "Limite stricte de 90 jours par année civile.",
-          instrument: "Immigration Act 2011.",
+          name: { fr: "Botswana", en: "Botswana" },
+          threshold: { fr: "90 Jours (Agrégé)", en: "90 Days (Aggregate)" },
+          tableNotes: { fr: "Limite stricte de 90 jours par année civile.", en: "Strict 90-day limit per calendar year." },
+          instrument: { fr: "Immigration Act 2011.", en: "Immigration Act 2011." },
           details: [
-            { label: "Analyse", text: "« Un non-citoyen [...] ne restera pas au Botswana pour plus de 90 jours au total dans une année quelconque »." },
-            { label: "Limite Stricte", text: "Rester au-delà de 90 jours dans une année civile est strictement interdit sans un permis de résidence ou une dérogation spéciale." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un non-citoyen [...] ne restera pas au Botswana pour plus de 90 jours au total dans une année quelconque ».", en: "\"A non-citizen [...] shall not remain in Botswana for more than 90 days in aggregate in any given year.\"" } },
+            { label: { fr: "Limite Stricte", en: "Strict Limit" }, text: { fr: "Rester au-delà de 90 jours dans une année civile est strictement interdit sans un permis de résidence ou une dérogation spéciale.", en: "Staying beyond 90 days in a calendar year is strictly prohibited without a residence permit or special exemption." } }
           ]
         },
         {
-          name: "Eswatini", threshold: "60 Jours", tableNotes: "30 jours + 30 extension. Permis résidence après 60 jours.",
-          instrument: "Immigration Act 1982.",
+          name: { fr: "Eswatini", en: "Eswatini" },
+          threshold: { fr: "60 Jours", en: "60 Days" },
+          tableNotes: { fr: "30 jours + 30 extension. Permis résidence après 60 jours.", en: "30 days + 30-day extension. Residence permit after 60 days." },
+          instrument: { fr: "Immigration Act 1982.", en: "Immigration Act 1982." },
           details: [
-            { label: "Analyse", text: "L'entrée sans visa (ou visa à l'arrivée) est typiquement pour 30 jours. Elle peut être étendue pour 30 autres jours." },
-            { label: "Obligation", text: "« Si vous voulez rester plus de 60 jours, vous devez demander un permis de résidence temporaire ». C'est plus serré que la norme de 90 jours." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "L'entrée sans visa (ou visa à l'arrivée) est typiquement pour 30 jours. Elle peut être étendue pour 30 autres jours.", en: "Visa-free (or on-arrival visa) entry is typically for 30 days. It can be extended for a further 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Si vous voulez rester plus de 60 jours, vous devez demander un permis de résidence temporaire ». C'est plus serré que la norme de 90 jours.", en: "\"If you want to stay longer than 60 days, you must apply for a temporary residence permit.\" This is tighter than the 90-day norm." } }
           ]
         },
         {
-          name: "Lesotho", threshold: "44-90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
-          instrument: "Aliens Control Act 1966.",
+          name: { fr: "Lesotho", en: "Lesotho" },
+          threshold: { fr: "44-90 Jours", en: "44-90 Days" },
+          tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
+          instrument: { fr: "Aliens Control Act 1966.", en: "Aliens Control Act 1966." },
           details: [
-            { label: "Analyse", text: "« Les visiteurs avec un visa à entrer unique [...] peuvent rester pour une période maximale de 44 jours ». Des permis temporaires peuvent être émis jusqu'à 90 jours." },
-            { label: "Obligation", text: "Les séjours au-delà de la limite du permis temporaire (90 jours) exigent un permis de résidence." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs avec un visa à entrer unique [...] peuvent rester pour une période maximale de 44 jours ». Des permis temporaires peuvent être émis jusqu'à 90 jours.", en: "\"Visitors with a single-entry visa [...] may stay for a maximum period of 44 days.\" Temporary permits may be issued for up to 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de la limite du permis temporaire (90 jours) exigent un permis de résidence.", en: "Stays beyond the temporary permit limit (90 days) require a residence permit." } }
           ]
         },
         {
-          name: "Malawi", threshold: "90 Jours", tableNotes: "Permis Résidence Temporaire requis après 90 jours.",
-          instrument: "Immigration Act (Cap 15:03).",
+          name: { fr: "Malawi", en: "Malawi" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Permis Résidence Temporaire requis après 90 jours.", en: "Temporary Residence Permit required after 90 days." },
+          instrument: { fr: "Immigration Act (Cap 15:03).", en: "Immigration Act (Cap 15:03)." },
           details: [
-            { label: "Analyse", text: "Le permis visiteur est valide pour 30 jours, extensible pour 60 jours (Total 90)." },
-            { label: "Obligation", text: "« Délivré à un visiteur [...] qui a résidé au Malawi pour le maximum de 90 jours [...] Un Permis de Résidence Temporaire » est alors requis." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le permis visiteur est valide pour 30 jours, extensible pour 60 jours (Total 90).", en: "The visitor's permit is valid for 30 days, extendable for 60 days (total 90)." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Délivré à un visiteur [...] qui a résidé au Malawi pour le maximum de 90 jours [...] Un Permis de Résidence Temporaire » est alors requis.", en: "\"Issued to a visitor [...] who has resided in Malawi for the maximum of 90 days [...] A Temporary Residence Permit\" is then required." } }
           ]
         },
         {
-          name: "Mozambique", threshold: "90 Jours", tableNotes: "Nouvelle loi permet 90 jours. Résidence (DIRE) pour plus long.",
-          instrument: "Loi N° 23/2022 (Nouvelle Loi Immigration).",
+          name: { fr: "Mozambique", en: "Mozambique" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Nouvelle loi permet 90 jours. Résidence (DIRE) pour plus long.", en: "New law allows 90 days. Residence (DIRE) for longer stays." },
+          instrument: { fr: "Loi N° 23/2022 (Nouvelle Loi Immigration).", en: "Law N° 23/2022 (New Immigration Law)." },
           details: [
-            { label: "Analyse", text: "« Les citoyens étrangers avec un visa touristique peuvent maintenant rester dans le pays pour une période de 90 jours, continus ou interrompus durant 12 mois »." },
-            { label: "Obligation", text: "« Le Permis de Résidence Temporaire du Mozambique est requis pour les nationaux étrangers qui ont l'intention de rester [...] pour plus de trois mois »." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les citoyens étrangers avec un visa touristique peuvent maintenant rester dans le pays pour une période de 90 jours, continus ou interrompus durant 12 mois ».", en: "\"Foreign nationals with a tourist visa may now stay in the country for a period of 90 days, continuous or interrupted, within 12 months.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Le Permis de Résidence Temporaire du Mozambique est requis pour les nationaux étrangers qui ont l'intention de rester [...] pour plus de trois mois ».", en: "\"Mozambique's Temporary Residence Permit is required for foreign nationals intending to stay [...] for more than three months.\"" } }
           ]
         },
         {
-          name: "Namibie", threshold: "90 Jours (Agrégé)", tableNotes: "Limite stricte de 90 jours par année civile.",
-          instrument: "Immigration Control Act 7 of 1993.",
+          name: { fr: "Namibie", en: "Namibia" },
+          threshold: { fr: "90 Jours (Agrégé)", en: "90 Days (Aggregate)" },
+          tableNotes: { fr: "Limite stricte de 90 jours par année civile.", en: "Strict 90-day limit per calendar year." },
+          instrument: { fr: "Immigration Control Act 7 of 1993.", en: "Immigration Control Act 7 of 1993." },
           details: [
-            { label: "Analyse", text: "« Le maximum de quatre-vingt-dix (90) jours par an pour visite peut être pris en une fois ou en partie »." },
-            { label: "Limite Stricte", text: "Similaire au Botswana, la limite annuelle de 90 jours est strictement appliquée pour empêcher le tourisme perpétuel." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Le maximum de quatre-vingt-dix (90) jours par an pour visite peut être pris en une fois ou en partie ».", en: "\"The maximum of ninety (90) days per year for a visit may be taken all at once or in parts.\"" } },
+            { label: { fr: "Limite Stricte", en: "Strict Limit" }, text: { fr: "Similaire au Botswana, la limite annuelle de 90 jours est strictement appliquée pour empêcher le tourisme perpétuel.", en: "Similar to Botswana, the 90-day annual limit is strictly enforced to prevent perpetual tourism." } }
           ]
         },
         {
-          name: "Afrique du Sud", threshold: "90 Jours (+90 ext)", tableNotes: "Max 180 jours. Visa Résidence requis pour > 3 mois.",
-          instrument: "Immigration Act 13 of 2002.",
+          name: { fr: "Afrique du Sud", en: "South Africa" },
+          threshold: { fr: "90 Jours (+90 ext)", en: "90 Days (+90 ext)" },
+          tableNotes: { fr: "Max 180 jours. Visa Résidence requis pour > 3 mois.", en: "Max 180 days. Residence Visa required for > 3 months." },
+          instrument: { fr: "Immigration Act 13 of 2002.", en: "Immigration Act 13 of 2002." },
           details: [
-            { label: "Analyse", text: "Le visa visiteur est valide pour 90 jours. Il peut être étendu une fois pour 90 autres jours (Total 180)." },
-            { label: "Obligation", text: "Pour des séjours excédant 3 mois (qui ne sont pas de simples extensions touristiques) ou 3 ans (visa visiteur long séjour), un Visa de Résidence Temporaire (TRV) est requis." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le visa visiteur est valide pour 90 jours. Il peut être étendu une fois pour 90 autres jours (Total 180).", en: "The visitor's visa is valid for 90 days. It can be extended once for a further 90 days (total 180)." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour des séjours excédant 3 mois (qui ne sont pas de simples extensions touristiques) ou 3 ans (visa visiteur long séjour), un Visa de Résidence Temporaire (TRV) est requis.", en: "For stays exceeding 3 months (that are not simple tourist extensions) or 3 years (long-stay visitor visa), a Temporary Residence Visa (TRV) is required." } }
           ]
         },
         {
-          name: "Zambie", threshold: "90 Jours", tableNotes: "Visiting Permit pour > 90 jours.",
-          instrument: "Immigration and Deportation Act 2010.",
+          name: { fr: "Zambie", en: "Zambia" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Visiting Permit pour > 90 jours.", en: "Visiting Permit for > 90 days." },
+          instrument: { fr: "Immigration and Deportation Act 2010.", en: "Immigration and Deportation Act 2010." },
           details: [
-            { label: "Analyse", text: "« Tous les visiteurs ordinaires et touristes ont droit à une visite gratuite de quatre-vingt-dix (90) jours dans toute période de douze (12) mois ». Les visiteurs d'affaires sont limités à 30 jours." },
-            { label: "Obligation", text: "Pour rester plus longtemps, il faut demander un « Visiting Permit » (valide 3 mois, jusqu'à 9 mois total) ou un Permis de Résidence." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tous les visiteurs ordinaires et touristes ont droit à une visite gratuite de quatre-vingt-dix (90) jours dans toute période de douze (12) mois ». Les visiteurs d'affaires sont limités à 30 jours.", en: "\"All ordinary visitors and tourists are entitled to a free ninety (90) day visit within any twelve (12) month period.\" Business visitors are limited to 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour rester plus longtemps, il faut demander un « Visiting Permit » (valide 3 mois, jusqu'à 9 mois total) ou un Permis de Résidence.", en: "To stay longer, one must apply for a \"Visiting Permit\" (valid 3 months, up to 9 months total) or a Residence Permit." } }
           ]
         },
         {
-          name: "Zimbabwe", threshold: "90 Jours", tableNotes: "Max 90 jours touriste. Permis requis ensuite.",
-          instrument: "Immigration Act (Chapitre 4:02).",
+          name: { fr: "Zimbabwe", en: "Zimbabwe" },
+          threshold: { fr: "90 Jours", en: "90 Days" },
+          tableNotes: { fr: "Max 90 jours touriste. Permis requis ensuite.", en: "Max 90 tourist days. Permit required thereafter." },
+          instrument: { fr: "Immigration Act (Chapitre 4:02).", en: "Immigration Act (Chapter 4:02)." },
           details: [
-            { label: "Analyse", text: "« Vous pouvez demander 2 extensions consécutives (pour un total de 90 jours) »." },
-            { label: "Obligation", text: "Les séjours au-delà de 90 jours exigent un permis (Étudiant, Emploi, ou Résidence)." }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Vous pouvez demander 2 extensions consécutives (pour un total de 90 jours) ».", en: "\"You may apply for 2 consecutive extensions (for a total of 90 days).\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de 90 jours exigent un permis (Étudiant, Emploi, ou Résidence).", en: "Stays beyond 90 days require a permit (Student, Employment, or Residence)." } }
           ]
         }
       ]
@@ -2165,38 +2273,38 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         
         {/* NOUVEAU MENU EN 3 COLONNES */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          
+
           {/* Bloc 1 : Global */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <Globe className="w-3.5 h-3.5 mr-1.5" /> 1. Cadres Mondiaux
+              <Globe className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "1. Cadres Mondiaux" : "1. Global Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('sdgs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>ODD / SDGs (Agenda 2030)</button>
-              <button onClick={() => setActiveSdgzTab('gcm')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Pacte GCM (Migrations)</button>
-              <button onClick={() => setActiveSdgzTab('gcr')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Pacte GCR (Réfugiés)</button>
+              <button onClick={() => setActiveSdgzTab('sdgs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "ODD / SDGs (Agenda 2030)" : "SDGs (2030 Agenda)"}</button>
+              <button onClick={() => setActiveSdgzTab('gcm')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Pacte GCM (Migrations)" : "GCM Compact (Migration)"}</button>
+              <button onClick={() => setActiveSdgzTab('gcr')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Pacte GCR (Réfugiés)" : "GCR Compact (Refugees)"}</button>
             </div>
           </div>
 
           {/* Bloc 2 : Africain */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <MapIcon className="w-3.5 h-3.5 mr-1.5" /> 2. Cadres Africains
+              <MapIcon className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "2. Cadres Africains" : "2. African Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('au')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'au' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Union Africaine (Traités & Agences)</button>
-              <button onClick={() => setActiveSdgzTab('recs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'recs' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>CER (Régions & Processus)</button>
+              <button onClick={() => setActiveSdgzTab('au')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'au' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Union Africaine (Traités & Agences)" : "African Union (Treaties & Agencies)"}</button>
+              <button onClick={() => setActiveSdgzTab('recs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'recs' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "CER (Régions & Processus)" : "RECs (Regions & Processes)"}</button>
             </div>
           </div>
 
           {/* Bloc 3 : États Juridiques (54 pays) */}
           <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <Scale className="w-3.5 h-3.5 mr-1.5" /> 3. États Juridiques
+              <Scale className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "3. États Juridiques" : "3. Legal Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
               <button onClick={() => setActiveSdgzTab('matrix')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all flex justify-between items-center ${activeSdgzTab === 'matrix' ? 'bg-slate-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>
-                <span>Entrées & Séjours (54 pays)</span>
+                <span>{lang === 'fr' ? "Entrées & Séjours (54 pays)" : "Entry & Residence (54 countries)"}</span>
                 <ChevronRight className="w-3 h-3 opacity-50" />
               </button>
             </div>
@@ -2360,14 +2468,22 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {/* JLMP & Coordination */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <h4 className="flex items-center text-sm font-bold text-slate-800 mb-3"><ShieldAlert className="w-4 h-4 mr-2 text-rose-700" /> Conventions de protection</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs).</p>
+                  <h4 className="flex items-center text-sm font-bold text-slate-800 mb-3"><ShieldAlert className="w-4 h-4 mr-2 text-rose-700" /> {lang === 'fr' ? "Conventions de protection" : "Protection Conventions"}</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {lang === 'fr'
+                      ? "Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs)."
+                      : "A pioneer, the 1969 OAU Convention broadened the refugee definition to victims of generalized violence. The Kampala Convention (2009) is the world's first binding legal instrument specifically protecting internally displaced persons (IDPs)."}
+                  </p>
                 </div>
                 <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm flex items-start gap-4">
                   <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                   <div>
-                    <h4 className="text-sm font-bold text-blue-900 mb-2">Le programme JLMP (OIT, OIM, UA)</h4>
-                    <p className="text-xs text-blue-800 leading-relaxed">Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres.</p>
+                    <h4 className="text-sm font-bold text-blue-900 mb-2">{lang === 'fr' ? "Le programme JLMP (OIT, OIM, UA)" : "The JLMP Programme (ILO, IOM, AU)"}</h4>
+                    <p className="text-xs text-blue-800 leading-relaxed">
+                      {lang === 'fr'
+                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres."
+                        : "Where pure law stalls (Kigali), governance advances through technical means. The JLMP is the most concrete initiative for harmonizing labour migration, offsetting member states' administrative capacity gaps."}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -2399,7 +2515,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
                     <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div>
-                        <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name}</h4>
+                        <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name[lang]}</h4>
                         <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
                           {rec.tag}
                         </span>
@@ -2412,11 +2528,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <p className="text-sm text-slate-800 leading-relaxed font-medium">{lang === 'fr' ? rec.desc.fr : rec.desc.en}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Instruments Clés</h5>
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> {lang === 'fr' ? "Instruments Clés" : "Key Instruments"}</h5>
                             <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.instruments.fr : rec.instruments.en}</p>
                           </div>
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Dynamique & Défis</h5>
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> {lang === 'fr' ? "Dynamique & Défis" : "Dynamics & Challenges"}</h5>
                             <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}</p>
                           </div>
                         </div>
@@ -2436,13 +2552,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
               <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
-                Cartographie Réglementaire Continentale
+                {lang === 'fr' ? "Cartographie Réglementaire Continentale" : "Continental Regulatory Mapping"}
               </span>
               <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
-                Matrices de réciprocité des visas et profils d’entrée et de séjour (54 pays)
+                {lang === 'fr' ? "Matrices de réciprocité des visas et profils d'entrée et de séjour (54 pays)" : "Visa reciprocity matrices and entry/residence profiles (54 countries)"}
               </h3>
               <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
-                L'analyse des seuils d'entrée et de l'obligation de résidence démontre la persistance d'une frontière juridique stricte entre le statut de « visiteur » (toléré pour le commerce ou le tourisme de courte durée) et celui d'« immigrant » (soumis au pouvoir discrétionnaire de l'État pour l'établissement). Le seuil standard en Afrique est de 90 jours.
+                {lang === 'fr'
+                  ? "L'analyse des seuils d'entrée et de l'obligation de résidence démontre la persistance d'une frontière juridique stricte entre le statut de « visiteur » (toléré pour le commerce ou le tourisme de courte durée) et celui d'« immigrant » (soumis au pouvoir discrétionnaire de l'État pour l'établissement). Le seuil standard en Afrique est de 90 jours."
+                  : "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border between \"visitor\" status (tolerated for short-term trade or tourism) and \"immigrant\" status (subject to the State's discretionary power over settlement). The standard threshold across Africa is 90 days."}
               </p>
             </div>
 
@@ -2451,9 +2569,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="flex items-start">
                 <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 mr-3 shrink-0" />
                 <div>
-                  <h4 className="text-sm font-bold text-amber-900 mb-1">À propos de ces données</h4>
+                  <h4 className="text-sm font-bold text-amber-900 mb-1">{lang === 'fr' ? "À propos de ces données" : "About this data"}</h4>
                   <p className="text-xs text-amber-800 leading-relaxed">
-                    Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).
+                    {lang === 'fr' ? (
+                      <>Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).</>
+                    ) : (
+                      <>This summary table and the detailed country sheets result from a <strong>comparative analysis of national legal instruments</strong> (immigration laws and codes on foreigners) in force across the continent in 2025. This data contextualizes the Africa Visa Openness Index (AfDB) indicators.</>
+                    )}
                   </p>
                 </div>
               </div>
@@ -2461,17 +2583,17 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             {/* Toggle Vue Tableau / Vue Fiches */}
             <div className="flex bg-slate-200 p-1.5 rounded-lg w-fit mx-auto md:mx-0">
-              <button 
-                onClick={() => setMatrixView('table')} 
+              <button
+                onClick={() => setMatrixView('table')}
                 className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
-                <TableProperties className="w-3.5 h-3.5 mr-2" /> Vue Tableau (Synthèse)
+                <TableProperties className="w-3.5 h-3.5 mr-2" /> {lang === 'fr' ? "Vue Tableau (Synthèse)" : "Table View (Summary)"}
               </button>
-              <button 
-                onClick={() => setMatrixView('details')} 
+              <button
+                onClick={() => setMatrixView('details')}
                 className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'details' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
-                <FileText className="w-3.5 h-3.5 mr-2" /> Fiches Détaillées
+                <FileText className="w-3.5 h-3.5 mr-2" /> {lang === 'fr' ? "Fiches Détaillées" : "Detailed Sheets"}
               </button>
             </div>
 
@@ -2482,10 +2604,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <table className="w-full text-left border-collapse text-sm">
                     <thead>
                       <tr className="bg-slate-100 border-b border-slate-200 text-slate-600">
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Région</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Pays</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Seuil Légal Visiteur</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Notes sur l'Obligation de Résidence</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Région" : "Region"}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Pays" : "Country"}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Seuil Légal Visiteur" : "Legal Visitor Threshold"}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Notes sur l'Obligation de Résidence" : "Notes on the Residence Obligation"}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -2495,16 +2617,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             <tr key={cIdx} className="hover:bg-slate-50 transition-colors">
                               {cIdx === 0 && (
                                 <td rowSpan={regionObj.countries.length} className="py-3 px-4 font-bold text-slate-900 bg-slate-50/50 align-top border-r border-slate-100">
-                                  {regionObj.region}
+                                  {regionObj.region[lang]}
                                 </td>
                               )}
-                              <td className="py-3 px-4 font-bold text-slate-800">{country.name}</td>
+                              <td className="py-3 px-4 font-bold text-slate-800">{country.name[lang]}</td>
                               <td className="py-3 px-4">
                                 <span className="inline-block bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap">
-                                  {country.threshold}
+                                  {country.threshold[lang]}
                                 </span>
                               </td>
-                              <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">{country.tableNotes}</td>
+                              <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">{country.tableNotes[lang]}</td>
                             </tr>
                           ))}
                         </React.Fragment>
@@ -2520,25 +2642,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="space-y-8 animate-in fade-in">
                 {legalMatrixData.map((regionObj, rIdx) => (
                   <div key={rIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{regionObj.region}</h4>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic">{regionObj.intro}</p>
-                    
+                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{regionObj.region[lang]}</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic">{regionObj.intro[lang]}</p>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {regionObj.countries.map((country, cIdx) => (
                         <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
                           <div className="flex justify-between items-start mb-3">
-                            <h5 className="font-bold text-slate-900 text-lg">{country.name}</h5>
-                            <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold}</span>
+                            <h5 className="font-bold text-slate-900 text-lg">{country.name[lang]}</h5>
+                            <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold[lang]}</span>
                           </div>
                           <div className="text-[10px] text-slate-500 mb-4 pb-3 border-b border-slate-200">
-                            <strong className="text-slate-700 uppercase tracking-widest">Instrument : </strong>
-                            <span className="italic">{country.instrument}</span>
+                            <strong className="text-slate-700 uppercase tracking-widest">{lang === 'fr' ? "Instrument : " : "Instrument: "}</strong>
+                            <span className="italic">{country.instrument[lang]}</span>
                           </div>
                           <div className="space-y-3 flex-grow">
                             {country.details.map((detail, dIdx) => (
                               <div key={dIdx}>
-                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{detail.label}</h6>
-                                <p className="text-xs text-slate-800 leading-relaxed">{detail.text}</p>
+                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{detail.label[lang]}</h6>
+                                <p className="text-xs text-slate-800 leading-relaxed">{detail.text[lang]}</p>
                               </div>
                             ))}
                           </div>
@@ -2554,19 +2676,36 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-8">
               <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center">
                 <BookOpen className="w-4 h-4 mr-2 text-slate-400" />
-                Liste des Instruments Juridiques Analysés (Sources)
+                {lang === 'fr' ? "Liste des Instruments Juridiques Analysés (Sources)" : "List of Legal Instruments Analyzed (Sources)"}
               </h4>
               <div className="h-48 overflow-y-auto pr-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
-                <p><strong>Afrique méditerranéenne :</strong><br/>
-                Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
-                <p><strong>Afrique de l'Ouest :</strong><br/>
-                Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
-                <p><strong>Afrique Centrale :</strong><br/>
-                Angola : Loi n° 13/19. Burundi : Loi n° 1/13. Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Rwanda : Loi n° 57/2018. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
-                <p><strong>Afrique de l'Est :</strong><br/>
-                Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
-                <p><strong>Afrique Australe :</strong><br/>
-                Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
+                {lang === 'fr' ? (
+                  <>
+                    <p><strong>Afrique méditerranéenne :</strong><br/>
+                    Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
+                    <p><strong>Afrique de l'Ouest :</strong><br/>
+                    Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
+                    <p><strong>Afrique Centrale :</strong><br/>
+                    Angola : Loi n° 13/19. Burundi : Loi n° 1/13. Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Rwanda : Loi n° 57/2018. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
+                    <p><strong>Afrique de l'Est :</strong><br/>
+                    Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
+                    <p><strong>Afrique Australe :</strong><br/>
+                    Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
+                  </>
+                ) : (
+                  <>
+                    <p><strong>Mediterranean Africa:</strong><br/>
+                    Algeria: Law No. 08-11 (2008). Egypt: Law No. 89 (1960, am. 2018). Libya: Law No. 6 (1987). Morocco: Law No. 02-03 (2003). Mauritania: Law No. 1965-046. Sudan: Passports and Immigration Act (1994). Tunisia: Law No. 68-7 (1968).</p>
+                    <p><strong>West Africa:</strong><br/>
+                    Benin: Law No. 2025-15. Burkina Faso: 2024 Law. Cabo Verde: Law No. 66/VIII/2014. Côte d'Ivoire: Law No. 2004-303. Gambia: Immigration Act (Cap. 16:02). Ghana: Immigration Act (2000). Guinea: Law L/94/019. Guinea-Bissau: Law No. 2/92. Liberia: Aliens and Nationality Law. Mali: Law No. 04-058. Niger: Ordinance No. 81-40. Nigeria: Immigration Act 2015. Senegal: Law No. 71-10. Sierra Leone: Non-Citizens Act (1965). Togo: Law on the Policing of Foreigners (2022).</p>
+                    <p><strong>Central Africa:</strong><br/>
+                    Angola: Law No. 13/19. Burundi: Law No. 1/13. Cameroon: Law No. 97/012. Gabon: Law No. 5/86. Equatorial Guinea: Organic Law No. 3/2010. CAR: Immigration Code. DRC: Ordinance No. 83-033. Congo (Rep.): Law No. 23-96. Rwanda: Law No. 57/2018. Sao Tome: Law No. 5/2008. Chad: Ordinance No. 27-62.</p>
+                    <p><strong>East Africa:</strong><br/>
+                    Comoros: Law No. 88-025. Djibouti: Law No. 201/AN/07. Eritrea: Proclamation No. 24/1992. Ethiopia: Proclamation No. 354/2003. Kenya: Citizenship and Immigration Act (2011). Madagascar: Law No. 62-006. Mauritius: Immigration Act 2022. Uganda: Act (Cap. 66). Seychelles: Decree 1979. Somalia: Law 1966. South Sudan: Act 2011. Tanzania: Act 1995.</p>
+                    <p><strong>Southern Africa:</strong><br/>
+                    South Africa: Act 13 (2002). Botswana: Act 2011. Eswatini: Act 1982. Lesotho: Act 1966. Malawi: Act (Cap. 15:03). Mozambique: Law No. 23/2022. Namibia: Act 7 (1993). Zambia: Act 2010. Zimbabwe: Act (Chapter 4:02).</p>
+                  </>
+                )}
               </div>
             </div>
 
