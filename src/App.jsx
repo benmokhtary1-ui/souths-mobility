@@ -1579,6 +1579,119 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     }
   ];
 
+        {/* 4. UNION AFRICAINE */}
+        {activeSdgzTab === 'au' && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800 relative overflow-hidden">
+              <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-10 pointer-events-none">
+                <Landmark className="w-48 h-48" />
+              </div>
+              <div className="relative z-10">
+                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
+                  {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
+                </span>
+                <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
+                  {lang === 'fr' ? "L'Union Africaine et le Régime Panafricain des Mobilités" : "The African Union and the Pan-African Mobility Regime"}
+                </h3>
+                <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
+                  {lang === 'fr' 
+                    ? "La gouvernance des mobilités en Afrique s'enracine dans une architecture institutionnelle propre. Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, agences) qui se heurte souvent aux résistances des États souverains. Le régime repose sur la construction d'une souveraineté épistémique et un maillage de textes pionniers."
+                    : "African mobility governance is rooted in its own institutional architecture. This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with sovereign State resistance. The regime relies on building epistemic sovereignty and pioneering legal texts."}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {/* Textes Fondateurs */}
+              <div>
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">
+                  <FileText className="w-5 h-5 mr-2 text-blue-700" />
+                  {lang === 'fr' ? "Traités & Cadres Juridiques Majeurs" : "Major Treaties & Legal Frameworks"}
+                </h4>
+                
+                <div className="space-y-4">
+                  {auFrameworks.map((fw, idx) => (
+                    <div key={idx} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/3 shrink-0">
+                        <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">
+                          {fw.tag[lang]}
+                        </span>
+                        <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
+                        <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
+                      </div>
+                      
+                      <div className="md:w-2/3 bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-col justify-center relative">
+                        <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-200" />
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref}</span>
+                        <p className="text-sm font-serif italic text-slate-800 leading-relaxed ml-6 relative z-10">
+                          {lang === 'fr' ? fw.article.textFr : fw.article.textEn}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Agences et Infrastructures */}
+              <div>
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 mt-10 border-b border-slate-200 pb-2">
+                  <Database className="w-5 h-5 mr-2 text-indigo-700" />
+                  {lang === 'fr' ? "Agences Spécialisées & Souveraineté Épistémique" : "Specialized Agencies & Epistemic Sovereignty"}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  
+                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                    <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Rabat, Maroc (2020)</span>
+                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                      {lang === 'fr' ? "Observatoire Africain des Migrations. Bras technique centralisant la donnée pour déconstruire les récits exogènes (Evidence-based policy)." : "African Migration Observatory. Technical arm centralizing data to deconstruct exogenous narratives."}
+                    </p>
+                  </div>
+
+                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                    <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Bamako, Mali</span>
+                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                      {lang === 'fr' ? "Centre d’études et recherches sur la migration. Think tank continental orientant la recherche académique." : "Centre for the Study and Research on Migration. Continental think tank guiding academic research."}
+                    </p>
+                  </div>
+
+                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                    <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Khartoum, Soudan</span>
+                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                      {lang === 'fr' ? "Centre opérationnel pour la lutte contre la migration irrégulière et la traite (actuellement paralysé par le conflit au Soudan)." : "Operational Centre fighting irregular migration and trafficking (currently paralyzed by the Sudan conflict)."}
+                    </p>
+                  </div>
+
+                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                    <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Kenya / Tunisie</span>
+                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                      {lang === 'fr' ? "Institut africain pour les transferts de fonds (AIR) capte l'économie de la diaspora. STATAFRIC coordonne l'architecture statistique." : "African Institute for Remittances (AIR) leverages diaspora economy. STATAFRIC coordinates statistics."}
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+              
+              {/* JLMP & Coordination */}
+              <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-xl mt-6 flex items-start gap-4">
+                <Activity className="w-8 h-8 text-emerald-600 shrink-0 mt-1" />
+                <div>
+                  <h5 className="font-bold text-emerald-900 text-sm mb-2">{lang === 'fr' ? "Gouvernance par l'action : Le programme JLMP" : "Governance through action: The JLMP Program"}</h5>
+                  <p className="text-xs text-emerald-800 leading-relaxed">
+                    {lang === 'fr' 
+                      ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP (Joint Labour Migration Programme - associant l'UA, l'OIT, l'OIM et la CEA) est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres."
+                      : "Where pure law stalls (Kigali), governance advances through technicality. The JLMP (Joint Labour Migration Programme - associating AU, ILO, IOM, ECA) is the most concrete initiative to harmonize labor migration, overcoming Member States' lack of administrative capacity."}
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader 
