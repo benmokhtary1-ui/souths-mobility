@@ -1635,18 +1635,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         </div>
 
-        {/* ============================================================== */}
-        {/* 1. ODD / SDGs (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 1. ODD / SDGs */}
         {activeSdgzTab === 'sdgs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.sdg_desc}
-              </p>
+              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.sdg_desc}</p>
               <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1661,18 +1656,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 2. GCM (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 2. GCM */}
         {activeSdgzTab === 'gcm' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.gcm_desc}
-              </p>
+              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcm_desc}</p>
               <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
@@ -1687,18 +1677,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 3. GCR (GLOBAL) */}
-        {/* ============================================================== */}
+        {/* 3. GCR */}
         {activeSdgzTab === 'gcr' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-slate-700 text-sm leading-relaxed">
-                {text.sdg_section.gcr_desc}
-              </p>
+              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcr_desc}</p>
               <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
-                <span>{text.sdg_section.link_text}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1712,9 +1697,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 4. UNION AFRICAINE (AFRIQUE) */}
-        {/* ============================================================== */}
+        {/* 4. UNION AFRICAINE */}
         {activeSdgzTab === 'au' && (
           <div className="space-y-8 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800 relative overflow-hidden">
@@ -1736,133 +1719,93 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
             </div>
 
-            {/* SECTIONS UA */}
             <div className="space-y-6">
-              
-              {/* SECTION A : Cadres Politiques & Traités */}
+              {/* Textes Fondateurs */}
               <div>
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">
                   <FileText className="w-5 h-5 mr-2 text-blue-700" />
                   {lang === 'fr' ? "Textes Fondateurs & Cadres Politiques" : "Foundational Texts & Policy Frameworks"}
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">1991</span>
-                    <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "Traité d'Abuja (CEA)" : "Abuja Treaty (AEC)"}</h5>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                      {lang === 'fr' ? "L'acte fondateur de la Communauté économique africaine. Son article 43 consacre le droit d'entrée, de résidence et d'établissement, érigeant la libre circulation comme pilier de l'intégration continentale." : "The founding act of the AEC. Article 43 enshrines the right of entry, residence, and establishment, making free movement a pillar of continental integration."}
-                    </p>
-                    <a href="https://au.int/en/treaties/treaty-establishing-african-economic-community" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-[10px] font-bold text-blue-600 hover:underline">
-                      {lang === 'fr' ? "Consulter le Traité" : "View Treaty"} <ExternalLink className="w-3 h-3 ml-1" />
-                    </a>
-                  </div>
-
-                  <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                    <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">2006 / 2018</span>
-                    <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "MPFA & CAP" : "MPFA & CAP"}</h5>
-                    <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                      {lang === 'fr' ? "Le Cadre de politique migratoire (MPFA, révisé 2018-2030) et les Positions Communes Africaines (CAP) substituent au contrôle sécuritaire exogène une lecture liant mobilité et développement, forgeant la posture diplomatique « One Africa, One Voice »." : "The Migration Policy Framework (MPFA) and Common African Positions (CAP) replace exogenous security control with a mobility-development nexus, forging the 'One Africa, One Voice' diplomatic stance."}
-                    </p>
-                    <a href="https://au.int/en/documents/20181206/migration-policy-framework-africa-mpfa" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-[10px] font-bold text-blue-600 hover:underline">
-                      {lang === 'fr' ? "Télécharger MPFA (PDF)" : "Download MPFA (PDF)"} <ExternalLink className="w-3 h-3 ml-1" />
-                    </a>
-                  </div>
-
-                  <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm md:col-span-2">
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <div>
-                        <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">2018</span>
-                        <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "Protocole de Kigali (Libre Circulation)" : "Kigali Protocol (Free Movement)"}</h5>
-                        <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
-                          {lang === 'fr' ? "Instrument juridique majeur liant entrée, résidence et établissement. Il incarne parfaitement le paradoxe du « normer sans ancrer » : bien qu'adopté et largement signé (32 États), il n'est ratifié en 2024 que par 4 pays (dont le Mali et le Rwanda), se heurtant aux résistances étatiques dans l'entre-deux national." : "A major legal instrument linking entry, residence, and establishment. It embodies the 'norming without anchoring' paradox: widely signed (32 States) but ratified by only 4 (including Mali and Rwanda) by 2024, facing State resistance in the national in-between."}
+                
+                <div className="space-y-4">
+                  {auFrameworks.map((fw, idx) => (
+                    <div key={idx} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/3 shrink-0">
+                        <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">
+                          {fw.tag[lang]}
+                        </span>
+                        <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
+                        <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
+                      </div>
+                      
+                      <div className="md:w-2/3 bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-col justify-center relative">
+                        <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-200" />
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref}</span>
+                        <p className="text-sm font-serif italic text-slate-800 leading-relaxed ml-6 relative z-10">
+                          {lang === 'fr' ? fw.article.textFr : fw.article.textEn}
                         </p>
                       </div>
-                      <div className="flex flex-col gap-2 shrink-0">
-                        <a href="https://au.int/sites/default/files/treaties/36403-sl-PROTOCOL%20TO%20THE%20TREATY%20ESTABLISHING%20THE%20AFRICAN%20ECONOMIC%20COMMUNITY%20RELATING%20TO%20FREE%20MOVEMENT%20OF%20PERSONS%2C%20RIGHT%20OF%20RESIDENCE%20AND%20RIGHT%20OF%20ESTABLISHMENT.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 rounded text-[11px] font-bold hover:bg-blue-100 transition">
-                          ✅ {lang === 'fr' ? "Statut de Ratification" : "Ratification Status"}
-                        </a>
-                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              {/* SECTION B : Agences et Infrastructures du savoir */}
+              {/* Agences et Infrastructures */}
               <div>
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 mt-10 border-b border-slate-200 pb-2">
                   <Database className="w-5 h-5 mr-2 text-indigo-700" />
                   {lang === 'fr' ? "Agences Spécialisées & Souveraineté Épistémique" : "Specialized Agencies & Epistemic Sovereignty"}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   
-                  {/* OAM */}
                   <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Rabat, Maroc (2020)</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "L'Observatoire Africain des Migrations est le bras technique de l'UA. Il centralise et harmonise les données migratoires pour déconstruire les récits exogènes et produire des politiques fondées sur des preuves (Evidence-based)." : "The African Migration Observatory is the AU's technical arm. It harmonizes data to deconstruct exogenous narratives and produce evidence-based policies."}
+                      {lang === 'fr' ? "Observatoire Africain des Migrations. Bras technique centralisant la donnée pour déconstruire les récits exogènes (Evidence-based policy)." : "African Migration Observatory. Technical arm centralizing data to deconstruct exogenous narratives."}
                     </p>
                     <a href="https://amo.au.int/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center text-[10px] font-bold text-indigo-700 hover:underline">
                       {lang === 'fr' ? "Site de l'OAM" : "AMO Website"} <ExternalLink className="w-3 h-3 ml-1" />
                     </a>
                   </div>
 
-                  {/* ACSRM */}
                   <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Bamako, Mali</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Le Centre africain d’études et de recherches sur la migration agit comme think tank continental, orientant la recherche académique et l'analyse stratégique des mobilités." : "The African Centre for the Study and Research on Migration acts as a continental think tank, guiding academic research and strategic analysis of mobilities."}
+                      {lang === 'fr' ? "Centre d’études et recherches sur la migration. Think tank continental orientant la recherche académique." : "Centre for the Study and Research on Migration. Continental think tank guiding academic research."}
                     </p>
                   </div>
 
-                  {/* COC */}
                   <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Khartoum, Soudan</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Le Centre opérationnel continental coordonne la lutte interétatique contre la migration irrégulière, le trafic illicite de migrants et la traite des êtres humains (actuellement impacté par le conflit)." : "The Continental Operational Centre coordinates the inter-state fight against irregular migration, migrant smuggling, and human trafficking (currently impacted by conflict)."}
+                      {lang === 'fr' ? "Centre opérationnel pour la lutte contre la migration irrégulière et la traite (actuellement paralysé par le conflit au Soudan)." : "Operational Centre fighting irregular migration and trafficking (currently paralyzed by the Sudan conflict)."}
                     </p>
                   </div>
 
-                  {/* AIR */}
                   <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Kenya / Tunisie</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "L'Institut africain pour les transferts de fonds (AIR) capte la puissance financière des diasporas. STATAFRIC (Tunis) coordonne l'architecture statistique globale de l'Union." : "The African Institute for Remittances (AIR) leverages diaspora financial power. STATAFRIC (Tunis) coordinates the Union's overall statistical architecture."}
+                      {lang === 'fr' ? "Institut africain pour les transferts de fonds (AIR) capte l'économie de la diaspora. STATAFRIC coordonne l'architecture statistique." : "African Institute for Remittances (AIR) leverages diaspora economy. STATAFRIC coordinates statistics."}
                     </p>
                   </div>
 
                 </div>
               </div>
-
-              {/* SECTION C : Protection, Coordination & Programmes */}
-              <div>
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">
-                  <ShieldAlert className="w-5 h-5 mr-2 text-emerald-700" />
-                  {lang === 'fr' ? "Protection & Coordination Transnationale" : "Protection & Transnational Coordination"}
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  
-                  <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                    <h5 className="font-bold text-slate-900 text-sm mb-2">{lang === 'fr' ? "Conventions de protection (1969 & 2009)" : "Protection Conventions (1969 & 2009)"}</h5>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {lang === 'fr' 
-                        ? "Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs)." 
-                        : "A pioneer, the 1969 OAU Convention expanded the refugee definition to victims of generalized violence. The Kampala Convention (2009) is the world's first binding legal instrument specifically protecting internally displaced persons (IDPs)."}
-                    </p>
-                  </div>
-
-                  <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-                    <h5 className="font-bold text-slate-900 text-sm mb-2">{lang === 'fr' ? "Organes de Coordination (CTS-MRIDPs & JLMP)" : "Coordination Bodies (CTS-MRIDPs & JLMP)"}</h5>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      {lang === 'fr' 
-                        ? "Le CTS-MRIDPs (Comité Technique Spécialisé de l'UA) valide politiquement l'agenda migratoire. Le JLMP (Programme conjoint UA, OIT, OIM, CEA) opérationnalise la gestion concertée des migrations de travail au sein du continent." 
-                        : "The CTS-MRIDPs (AU Specialized Technical Committee) politically validates the migration agenda. The JLMP (Joint Programme AU, ILO, IOM, ECA) operationalizes the concerted management of labor migration within the continent."}
-                    </p>
-                  </div>
-
+              
+              {/* JLMP & Coordination */}
+              <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-xl mt-6 flex items-start gap-4">
+                <Activity className="w-8 h-8 text-emerald-600 shrink-0 mt-1" />
+                <div>
+                  <h5 className="font-bold text-emerald-900 text-sm mb-2">{lang === 'fr' ? "Gouvernance par l'action : Le programme JLMP" : "Governance through action: The JLMP Program"}</h5>
+                  <p className="text-xs text-emerald-800 leading-relaxed">
+                    {lang === 'fr' 
+                      ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP (Joint Labour Migration Programme - associant l'UA, l'OIT, l'OIM et la CEA) est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres."
+                      : "Where pure law stalls (Kigali), governance advances through technicality. The JLMP (Joint Labour Migration Programme - associating AU, ILO, IOM, ECA) is the most concrete initiative to harmonize labor migration, overcoming Member States' lack of administrative capacity."}
+                  </p>
                 </div>
               </div>
 
@@ -1870,9 +1813,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* ============================================================== */}
-        {/* 5. COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER) - ACCORDÉONS */}
-        {/* ============================================================== */}
+        {/* 5. CER (Accordéons) */}
         {activeSdgzTab === 'recs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
@@ -1884,8 +1825,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
                 {lang === 'fr' 
-                  ? "Les CER constituent les « blocs régionalisés » et les piliers opérationnels de l'intégration continentale africaine. L'analyse démontre que chaque sous-région développe une trajectoire, des instruments et des degrés de procéduralisation qui lui sont propres, produisant une consistance à géométrie variable."
-                  : "RECs constitute the 'regionalized blocks' and operational pillars for continental integration. Analysis demonstrates that each sub-region develops specific trajectories, instruments, and proceduralization degrees, producing a variable-geometry consistency."}
+                  ? "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires."
+                  : "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges."}
               </p>
             </div>
 
@@ -1918,7 +1859,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <div className="bg-white p-4 rounded-md border border-slate-200 shadow-sm">
                             <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2">
                               <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                              {lang === 'fr' ? "Instruments Clés" : "Key Instruments"}
+                              {lang === 'fr' ? "Instruments Clés & Processus" : "Key Instruments & Processes"}
                             </h5>
                             <p className="text-xs text-slate-700 leading-relaxed">
                               {lang === 'fr' ? rec.instruments.fr : rec.instruments.en}
@@ -1927,7 +1868,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <div className="bg-white p-4 rounded-md border border-slate-200 shadow-sm">
                             <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2">
                               <Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
-                              {lang === 'fr' ? "Dynamique Récente" : "Current Dynamics"}
+                              {lang === 'fr' ? "Dynamique & Défis actuels" : "Current Dynamics & Challenges"}
                             </h5>
                             <p className="text-xs text-slate-700 leading-relaxed">
                               {lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}
