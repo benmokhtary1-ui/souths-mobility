@@ -33,6 +33,20 @@ const formatNumber = (val) => {
   return num.toLocaleString('fr-FR'); 
 };
 
+const flagSizes = {
+  sm: "w-5 h-[0.9375rem]",
+  md: "w-8 h-6",
+  lg: "w-11 h-[2.0625rem] md:w-14 md:h-[2.625rem]",
+};
+
+const CountryFlag = ({ iso2, emoji, size = "md", className = "" }) => {
+  if (iso2) {
+    return <img src={`/flags/${iso2}.svg`} alt="" className={`inline-block align-middle object-cover ${flagSizes[size] || flagSizes.md} ${className}`} />;
+  }
+  const emojiTextSize = size === "sm" ? "text-base" : size === "lg" ? "text-4xl md:text-5xl" : "text-3xl";
+  return <span className={`flag-emoji ${emojiTextSize} ${className}`}>{emoji}</span>;
+};
+
 const LinkedInIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
@@ -638,7 +652,7 @@ const aggregates = {
 const countryData = {
   "af_med": [
     { 
-      "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
+      "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "iso2": "dz", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
       "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.67, "labour_participation": "40.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.6", 
       "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 9, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
@@ -646,7 +660,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
+      "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "iso2": "eg", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
       "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 11.37, "labour_participation": "59.9", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.1", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 11, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
@@ -655,7 +669,7 @@ const countryData = {
       "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
     },
     { 
-      "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
+      "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "iso2": "ly", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
       "history": [ { "year": 1990, "value": "457075" }, { "year": 2024, "value": "897751" } ], "remittances": null, "labour_participation": "61.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "12.8", 
       "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 4, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 19, "total": 29, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102919"},
@@ -663,7 +677,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
+      "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "iso2": "ma", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
       "history": [ { "year": 1990, "value": "54895" }, { "year": 2024, "value": "111069" } ], "remittances": 7.49, "labour_participation": "46.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.3", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
@@ -671,17 +685,25 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
+      "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "iso2": "tn", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
       "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.34, "labour_participation": "52.4", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.5", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102980"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
+    },
+    { 
+      "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "iso2": "mr", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
+      "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 0.87, "labour_participation": "68.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.0", 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 17, 
+      "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
     }
   ],
   "af_west": [
     { 
-      "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
+      "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "iso2": "bj", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
       "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.72, "labour_participation": "64.4", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "3.0", 
       "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 91, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
@@ -689,7 +711,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
+      "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "iso2": "bf", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
       "history": [ { "year": 1990, "value": "349652" }, { "year": 2024, "value": "739820" } ], "remittances": 2.57, "labour_participation": "64.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "3.2", 
       "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 36, 
       "normlex": {"fundamental": 9, "governance": 4, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103058"},
@@ -697,7 +719,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
+      "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "iso2": "cv", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
       "history": [ { "year": 1990, "value": "8931" }, { "year": 2024, "value": "16515" } ], "remittances": 11.67, "labour_participation": "72.2", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "3.0", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 86, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 5, "total": 16, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102978"},
@@ -705,7 +727,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
+      "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "iso2": "ci", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
       "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 2.03, "labour_participation": "74.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "9.0", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 42, 
       "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
@@ -713,7 +735,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
+      "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "iso2": "gm", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
       "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 22.0, "labour_participation": "72.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "8.6", 
       "idp_conflict": 0, "idp_disaster": 250, "refugees_hosted": 0, "avoi": 100, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 11, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103004"},
@@ -721,7 +743,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
+      "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "iso2": "gh", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
       "history": [ { "year": 1990, "value": "164851" }, { "year": 2024, "value": "532286" } ], "remittances": 2.12, "labour_participation": "64.4", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.6", 
       "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 87, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103271"},
@@ -729,7 +751,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
+      "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "iso2": "gn", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
       "history": [ { "year": 1990, "value": "403621" }, { "year": 2024, "value": "117416" } ], "remittances": 2.46, "labour_participation": "44.0", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
       "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 50, "total": 62, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103001"},
@@ -737,7 +759,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
+      "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "iso2": "gw", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
       "history": [ { "year": 1990, "value": "15368" }, { "year": 2024, "value": "15064" } ], "remittances": 9.88, "labour_participation": "61.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.7", 
       "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 26, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 25, "total": 34, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103328"},
@@ -745,7 +767,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
+      "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "iso2": "lr", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
       "history": [ { "year": 1990, "value": "94964" }, { "year": 2024, "value": "72423" } ], "remittances": 21.28, "labour_participation": "60.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.3", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 26, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 17, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102941"},
@@ -753,7 +775,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
+      "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "iso2": "ml", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
       "history": [ { "year": 1990, "value": "160736" }, { "year": 2024, "value": "545323" } ], "remittances": 3.99, "labour_participation": "76.0", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.3", 
       "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 41, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 23, "total": 36, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102987"},
@@ -761,15 +783,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
-      "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 0.87, "labour_participation": "68.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 17, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
+      "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "iso2": "ne", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
       "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.3, "labour_participation": "50.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.7", 
       "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
@@ -777,7 +791,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
+      "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "iso2": "ng", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
       "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 7.84, "labour_participation": "84.7", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.6", 
       "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 32, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
@@ -786,7 +800,7 @@ const countryData = {
       "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
     },
     { 
-      "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
+      "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "iso2": "sn", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
       "history": [ { "year": 1990, "value": "270410" }, { "year": 2024, "value": "281867" } ], "remittances": 10.64, "labour_participation": "55.7", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "1.6", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 79, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103046"},
@@ -794,7 +808,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
+      "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "iso2": "sl", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
       "history": [ { "year": 1990, "value": "222148" }, { "year": 2024, "value": "49997" } ], "remittances": 4.6, "labour_participation": "68.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.6", 
       "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 81, 
       "normlex": {"fundamental": 11, "governance": 2, "technical": 33, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103212"},
@@ -802,7 +816,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
+      "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "iso2": "tg", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
       "history": [ { "year": 1990, "value": "84844" }, { "year": 2024, "value": "281994" } ], "remittances": 8.69, "labour_participation": "59.0", "remittances_year": 2020, "labour_participation_year": 2022, "evolution": "3.1", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 28, 
       "normlex": {"fundamental": 9, "governance": 4, "technical": 15, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103134"},
@@ -812,7 +826,7 @@ const countryData = {
   ],
   "af_central": [
     { 
-      "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
+      "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "iso2": "ao", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
       "history": [ { "year": 1990, "value": "33517" }, { "year": 2024, "value": "676507" } ], "remittances": 0.04, "labour_participation": "80.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.8", 
       "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 30, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102951"},
@@ -820,7 +834,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
+      "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "iso2": "cm", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
       "history": [ { "year": 1990, "value": "265967" }, { "year": 2024, "value": "642948" } ], "remittances": 1.29, "labour_participation": "84.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.2", 
       "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 11, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 39, "total": 51, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102973"},
@@ -828,7 +842,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Republic" }, "flag": "🇨🇫", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
+      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Republic" }, "flag": "🇨🇫", "iso2": "cf", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
       "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": null, "labour_participation": "77.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "1.8", 
       "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 25, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
@@ -836,7 +850,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
+      "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "iso2": "td", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
       "history": [ { "year": 1990, "value": "74342" }, { "year": 2024, "value": "1269673" } ], "remittances": null, "labour_participation": "60.5", "remittances_year": null, "labour_participation_year": 2022, "evolution": "6.3", 
       "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 28, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103022"},
@@ -844,7 +858,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
+      "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "iso2": "cg", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
       "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 0.3, "labour_participation": "60.6", "remittances_year": 2021, "labour_participation_year": 2022, "evolution": "6.1", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 22, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 23, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103014"},
@@ -852,7 +866,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
+      "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "iso2": "cd", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
       "history": [ { "year": 1990, "value": "754194" }, { "year": 2024, "value": "1085090" } ], "remittances": 3.65, "labour_participation": "62.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.0", 
       "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 14, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
@@ -860,7 +874,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
+      "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "iso2": "gq", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
       "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": null, "labour_participation": "78.0", "remittances_year": null, "labour_participation_year": 2022, "evolution": "13.2", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 11, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 6, "total": 14, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103102"},
@@ -868,7 +882,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
+      "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "iso2": "ga", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
       "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.13, "labour_participation": "64.7", "remittances_year": 2015, "labour_participation_year": 2022, "evolution": "17.7", 
       "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 17, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 30, "total": 42, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103008"},
@@ -876,17 +890,15 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
+      "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "iso2": "st", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
       "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 9.71, "labour_participation": "51.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": true, "zlecaf": true },
       ...genericDesc 
-    }
-  ],
-  "af_east": [
+    },
     { 
-      "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
+      "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "iso2": "bi", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
       "history": [ { "year": 1990, "value": "333110" }, { "year": 2024, "value": "387101" } ], "remittances": 8.12, "labour_participation": "69.7", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "2.6", 
       "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 82, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 21, "total": 31, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102988"},
@@ -894,7 +906,17 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
+      "id": "646", "name": { "fr": "Rwanda", "en": "Rwanda" }, "flag": "🇷🇼", "iso2": "rw", "retention": 95, "aid": 12.5, "stock": "513316", "female": "49.4", 
+      "history": [ { "year": 1990, "value": "160024" }, { "year": 2024, "value": "513316" } ], "remittances": 3.42, "labour_participation": "63.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "3.6", 
+      "idp_conflict": 0, "idp_disaster": 81, "refugees_hosted": 0, "avoi": 100, 
+      "normlex": {"fundamental": 10, "governance": 3, "technical": 22, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103153"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
+      ...genericDesc 
+    }
+  ],
+  "af_east": [
+    { 
+      "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "iso2": "km", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
       "history": [ { "year": 1990, "value": "14079" }, { "year": 2024, "value": "12449" } ], "remittances": 20.84, "labour_participation": "36.7", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "1.4", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 26, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103322"},
@@ -902,7 +924,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
+      "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "iso2": "dj", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
       "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.35, "labour_participation": "44.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "10.8", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 58, "total": 70, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102996"},
@@ -910,7 +932,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
+      "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "iso2": "er", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
       "history": [ { "year": 1990, "value": "11848" }, { "year": 2024, "value": "12512" } ], "remittances": null, "labour_participation": "80.6", "remittances_year": null, "labour_participation_year": 2022, "evolution": "0.3", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 81, 
       "normlex": {"fundamental": 8, "governance": 0, "technical": 0, "total": 8, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103290"},
@@ -918,7 +940,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
+      "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "iso2": "et", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
       "history": [ { "year": 1990, "value": "875325" }, { "year": 2024, "value": "1168455" } ], "remittances": 4.77, "labour_participation": "65.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.9", 
       "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 73, 
       "normlex": {"fundamental": 9, "governance": 1, "technical": 13, "total": 23, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102950"},
@@ -926,7 +948,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
+      "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "iso2": "ke", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
       "history": [ { "year": 1990, "value": "298089" }, { "year": 2024, "value": "992536" } ], "remittances": 4.15, "labour_participation": "64.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.8", 
       "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 96, 
       "normlex": {"fundamental": 7, "governance": 3, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103315"},
@@ -934,7 +956,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
+      "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "iso2": "mg", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
       "history": [ { "year": 1990, "value": "23917" }, { "year": 2024, "value": "38625" } ], "remittances": 2.31, "labour_participation": "71.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.1", 
       "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 79, 
       "normlex": {"fundamental": 11, "governance": 4, "technical": 38, "total": 53, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102956"},
@@ -942,15 +964,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
-      "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.65, "labour_participation": "70.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 47, 
-      "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
+      "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "iso2": "mu", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
       "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 1.92, "labour_participation": "73.4", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.3", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 83, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
@@ -958,23 +972,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
-      "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.17, "labour_participation": "82.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.1", 
-      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 84, 
-      "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "646", "name": { "fr": "Rwanda", "en": "Rwanda" }, "flag": "🇷🇼", "retention": 95, "aid": 12.5, "stock": "513316", "female": "49.4", 
-      "history": [ { "year": 1990, "value": "160024" }, { "year": 2024, "value": "513316" } ], "remittances": 3.42, "labour_participation": "63.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "3.6", 
-      "idp_conflict": 0, "idp_disaster": 81, "refugees_hosted": 0, "avoi": 100, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 22, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103153"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
+      "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "iso2": "sc", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
       "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.54, "labour_participation": null, "remittances_year": 2024, "labour_participation_year": null, "evolution": "10.2", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 0, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
@@ -982,7 +980,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
+      "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "iso2": "so", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
       "history": [ { "year": 1990, "value": "478294" }, { "year": 2024, "value": "77972" } ], "remittances": null, "labour_participation": "41.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "0.4", 
       "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 19, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
@@ -990,7 +988,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
+      "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
       "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.49, "labour_participation": "76.8", "remittances_year": 2015, "labour_participation_year": 2022, "evolution": "8.0", 
       "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 9, 
       "normlex": {"fundamental": 7, "governance": 0, "technical": 0, "total": 7, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103154"},
@@ -998,7 +996,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
+      "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "iso2": "sd", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
       "history": [ { "year": 1990, "value": "1402896" }, { "year": 2024, "value": "2397113" } ], "remittances": 2.9, "labour_participation": "28.9", "remittances_year": 2022, "labour_participation_year": 2022, "evolution": "4.8", 
       "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 3, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102958"},
@@ -1006,7 +1004,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
+      "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "iso2": "tz", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
       "history": [ { "year": 1990, "value": "574025" }, { "year": 2024, "value": "462371" } ], "remittances": 1.42, "labour_participation": "78.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.7", 
       "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 71, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 28, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103136"},
@@ -1014,15 +1012,33 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
+      "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "iso2": "ug", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
       "history": [ { "year": 1990, "value": "560570" }, { "year": 2024, "value": "2057759" } ], "remittances": 2.65, "labour_participation": "68.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.3", 
       "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 40, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 21, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103324"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
+    }
+  ],
+  "af_south": [
+    { 
+      "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "iso2": "mw", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
+      "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.65, "labour_participation": "70.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
+      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 47, 
+      "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
     },
     { 
-      "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
+      "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "iso2": "mz", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
+      "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.17, "labour_participation": "82.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.1", 
+      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 84, 
+      "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
+      ...genericDesc 
+    },
+    { 
+      "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "iso2": "zm", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
       "history": [ { "year": 1990, "value": "279463" }, { "year": 2024, "value": "249205" } ], "remittances": 1.32, "labour_participation": "66.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.2", 
       "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 48, 
       "normlex": {"fundamental": 10, "governance": 4, "technical": 35, "total": 49, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103233"},
@@ -1030,17 +1046,15 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
+      "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "iso2": "zw", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
       "history": [ { "year": 1990, "value": "634621" }, { "year": 2024, "value": "429108" } ], "remittances": 8.45, "labour_participation": "69.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.6", 
       "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 47, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc 
-    }
-  ],
-  "af_south": [
+    },
     { 
-      "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
+      "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "iso2": "bw", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
       "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.67, "labour_participation": "76.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.4", 
       "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 34, 
       "normlex": {"fundamental": 8, "governance": 3, "technical": 6, "total": 17, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103184"},
@@ -1048,7 +1062,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
+      "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "iso2": "sz", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
       "history": [ { "year": 1990, "value": "74991" }, { "year": 2024, "value": "33268" } ], "remittances": 0.69, "labour_participation": "67.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.7", 
       "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 32, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 23, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103185"},
@@ -1056,7 +1070,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
+      "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "iso2": "ls", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
       "history": [ { "year": 1990, "value": "8240" }, { "year": 2024, "value": "15039" } ], "remittances": 20.72, "labour_participation": "63.8", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.7", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 30, 
       "normlex": {"fundamental": 11, "governance": 2, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103186"},
@@ -1064,7 +1078,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
+      "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "iso2": "na", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
       "history": [ { "year": 1990, "value": "120641" }, { "year": 2024, "value": "116035" } ], "remittances": 0.71, "labour_participation": "70.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.3", 
       "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 65, 
       "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103187"},
@@ -1072,7 +1086,7 @@ const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
+      "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "iso2": "za", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
       "history": [ { "year": 1990, "value": "1285707" }, { "year": 2024, "value": "2631100" } ], "remittances": 0.24, "labour_participation": "72.5", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "4.3", 
       "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 38, 
       "normlex": {"fundamental": 9, "governance": 2, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103188"},
@@ -1459,8 +1473,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affichait l'indice AVOI le plus élevé (0,597), prouvant la force de son architecture. L'enjeu de 2026 est de gérer juridiquement le statut des millions de ressortissants de l'AES vivant en zone CEDEAO (notamment en Côte d'Ivoire).",
-        en: "The region showed the highest AVOI index (0.597), proving the strength of its architecture. The 2026 challenge is legally managing the status of millions of AES citizens living in the ECOWAS zone (notably in Côte d'Ivoire)."
+        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. L'enjeu de 2026 est de gérer juridiquement le statut des millions de ressortissants de l'AES vivant en zone CEDEAO (notamment en Côte d'Ivoire).",
+        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The 2026 challenge is legally managing the status of millions of AES citizens living in the ECOWAS zone (notably in Côte d'Ivoire)."
       }
     },
     {
@@ -1476,8 +1490,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI élevé (~0,54) porté par le Rwanda et le Kenya (qui dispense d'ETA les membres de la CAE pour 180 jours). L'intégration de la RDC et de la Somalie ajoute cependant des défis sécuritaires complexes.",
-        en: "A high AVOI score (~0.54) driven by Rwanda and Kenya (which exempts EAC members from ETA for 180 days). The integration of the DRC and Somalia, however, adds complex security challenges."
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya (qui dispense d'ETA les membres de la CAE pour 180 jours). L'intégration de la RDC et de la Somalie ajoute cependant des défis sécuritaires complexes.",
+        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya (which exempts EAC members from ETA for 180 days). The integration of the DRC and Somalia, however, adds complex security challenges."
       }
     },
     {
@@ -1493,8 +1507,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "2005 Protocol, Labour migration plan (2020-2025). Consultative process: MIDSA (Migration Dialogue for Southern Africa)."
       },
       dynamics: {
-        fr: "Un espace dominé par la prudence (score AVOI de 0,491), polarisé par Pretoria (réforme BMA et White Paper de 2024). L'innovation passe par des accords bilatéraux (ex: utilisation de la carte d'identité entre le Botswana et la Namibie).",
-        en: "A space dominated by caution (AVOI score of 0.491), polarized by Pretoria (BMA reform and 2024 White Paper). Innovation comes through bilateral agreements (e.g., ID card usage between Botswana and Namibia)."
+        fr: "Deuxième CER la plus ouverte du continent avec un score AVOI de 0,547 en 2024, en progression continue, portée notamment par l'Angola qui a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
+        en: "The second-most open REC on the continent with an AVOI score of 0.547 in 2024, on a continuing upward trend, driven notably by Angola which nearly doubled the number of nationalities granted visa-free access in late 2023. The space remains polarized by Pretoria (BMA reform and 2024 White Paper); innovation also comes through bilateral agreements (e.g. the joint Botswana-Namibia ID card)."
       }
     },
     {
@@ -1510,8 +1524,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1984 and 1998 Protocols (uneven application). Consultative process: MIDCOM. Massive production of technical capacity-building tools."
       },
       dynamics: {
-        fr: "L'obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
-        en: "The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
+        fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne continentale (0,501). L'obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
+        en: "AVOI score of 0.463 in 2024, slightly below the continental average (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
       }
     },
     {
@@ -1527,8 +1541,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
-        fr: "A enregistré une forte progression de son ouverture (~0,50 AVOI) au début des années 2020, mais l'homogénéisation reste suspendue à l'instabilité géopolitique chronique de la sous-région (guerre au Soudan).",
-        en: "Recorded strong progress in openness (~0.50 AVOI) in the early 2020s, but homogenization remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan)."
+        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale (0,501) et parmi les plus bas du continent : l'homogénéisation de l'ouverture reste suspendue à l'instabilité géopolitique chronique de la sous-région (guerre au Soudan).",
+        en: "An AVOI score of 0.376 in 2024, well below the continental average (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan)."
       }
     },
     {
@@ -1544,8 +1558,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Revised ECCAS Treaty (2019). CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90 days and the community biometric passport."
       },
       dynamics: {
-        fr: "Le défi est la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).",
-        en: "The challenge is converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea)."
+        fr: "Score AVOI le plus bas du continent avec l'UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là. Le défi reste la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).",
+        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, continental average: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year. The challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea)."
       }
     },
     {
@@ -1561,8 +1575,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Marrakech Treaty (1989) as a pure normative horizon."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent. L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale.",
-        en: "The bloc shows the lowest openness average on the continent. Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration."
+        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale.",
+        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, continental average: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration."
+      }
+    },
+    {
+      id: 'censad',
+      name: 'CEN-SAD (Communauté des États Sahélo-Sahariens)',
+      tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
+      desc: {
+        fr: "Avec 25 États membres englobant plusieurs autres CER, la CEN-SAD fonctionne davantage comme un forum politique et sécuritaire que comme un régime juridique autonome de libre circulation, même si le traité fondateur inscrit la libre circulation des personnes parmi ses objectifs centraux.",
+        en: "With 25 member states overlapping several other RECs, CEN-SAD functions more as a political and security forum than as an autonomous legal regime of free movement, even though its founding treaty lists free movement of persons among its core objectives."
+      },
+      instruments: {
+        fr: "Traité de 1998 (révisé 2013). La libre circulation des personnes figure parmi les objectifs fondateurs, sans protocole dédié équivalent à ceux de la CEDEAO ou de l'IGAD.",
+        en: "1998 Treaty (revised 2013). Free movement of persons is listed among the founding objectives, without a dedicated protocol equivalent to those of ECOWAS or IGAD."
+      },
+      dynamics: {
+        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique important avec la CEDEAO explique une part de cette ouverture : plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre à la CEN-SAD.",
+        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself."
       }
     }
   ];
@@ -1889,13 +1920,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             { label: "Analyse", text: "Les exemptions de visa sont souvent de 15 jours. Les visas touristiques sont généralement valides pour 30 jours." },
             { label: "Obligation", text: "Pour les séjours plus longs que ces courtes durées, un permis de résidence est requis. Le seuil initial de visiteur est notablement plus court que la moyenne continentale." }
           ]
-        }
-      ]
-    },
-    {
-      region: "Afrique de l'Est",
-      intro: "La Communauté d'Afrique de l'Est (CAE) fournit un cadre robuste pour le mouvement, mais des lois nationales distinctes s'appliquent aux non-citoyens de la CAE. Le seuil est généralement de 90 jours, avec des allocations spécifiques (souvent 6 mois) pour les visiteurs régionaux. Forte progression de la réciprocité, notamment entre la RDC, l'Ouganda et le Sud-Soudan.",
-      countries: [
+        },
+        {
+          name: "Angola", threshold: "90 Jours (Agrégé)", tableNotes: "30 jours par visite, max 90 jours/an.",
+          instrument: "Loi N° 13/19 (2019).",
+          details: [
+            { label: "Analyse", text: "Les visas touristiques sont valides pour 120 jours, permettant des entrées multiples pour un séjour de jusqu'à 30 jours par visite. Crucialement, le séjour total ne peut excéder 90 jours par an." },
+            { label: "Obligation", text: "Les permis de résidence sont requis pour l'établissement au-delà de cette limite agrégée." }
+          ]
+        },
         {
           name: "Burundi", threshold: "30 Jours (extensible)", tableNotes: "Permis de résidence généralement requis après 3 mois.",
           instrument: "Loi N° 1/13 (2011).",
@@ -1904,6 +1937,20 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             { label: "Limite", text: "Le plafond visiteur est généralement fixé à 3 mois avant que le permis de résidence ne devienne nécessaire." }
           ]
         },
+        {
+          name: "Rwanda", threshold: "30-90 Jours", tableNotes: "Permis requis après 30/90 jours selon origine.",
+          instrument: "Loi N° 57/2018.",
+          details: [
+            { label: "Analyse", text: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA)." },
+            { label: "Obligation", text: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa." }
+          ]
+        }
+      ]
+    },
+    {
+      region: "Afrique de l'Est",
+      intro: "La Communauté d'Afrique de l'Est (CAE) fournit un cadre robuste pour le mouvement, mais des lois nationales distinctes s'appliquent aux non-citoyens de la CAE. Le seuil est généralement de 90 jours, avec des allocations spécifiques (souvent 6 mois) pour les visiteurs régionaux. Forte progression de la réciprocité, notamment entre la RDC, l'Ouganda et le Sud-Soudan.",
+      countries: [
         {
           name: "Comores", threshold: "45 Jours", tableNotes: "Visa à l'arrivée 45 jours. Permis résidence pour plus long.",
           instrument: "Loi N° 88-025 (1988).",
@@ -1961,14 +2008,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           ]
         },
         {
-          name: "Rwanda", threshold: "30-90 Jours", tableNotes: "Permis requis après 30/90 jours selon origine.",
-          instrument: "Loi N° 57/2018.",
-          details: [
-            { label: "Analyse", text: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA)." },
-            { label: "Obligation", text: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa." }
-          ]
-        },
-        {
           name: "Seychelles", threshold: "3 Mois", tableNotes: "Permis visiteur extensible jusqu'à 12 mois.",
           instrument: "Immigration Decree 1979.",
           details: [
@@ -2022,14 +2061,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       region: "Afrique Australe",
       intro: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Contrairement à d'autres régions où une sortie et réentrée (« border run ») réinitialise le compteur de 90 jours, les pays de la SADC comme l'Afrique du Sud et le Botswana appliquent souvent une limite annuelle agrégée pour empêcher la résidence de fait.",
       countries: [
-        {
-          name: "Angola", threshold: "90 Jours (Agrégé)", tableNotes: "30 jours par visite, max 90 jours/an.",
-          instrument: "Loi N° 13/19 (2019).",
-          details: [
-            { label: "Analyse", text: "Les visas touristiques sont valides pour 120 jours, permettant des entrées multiples pour un séjour de jusqu'à 30 jours par visite. Crucialement, le séjour total ne peut excéder 90 jours par an." },
-            { label: "Obligation", text: "Les permis de résidence sont requis pour l'établissement au-delà de cette limite agrégée." }
-          ]
-        },
         {
           name: "Botswana", threshold: "90 Jours (Agrégé)", tableNotes: "Limite stricte de 90 jours par année civile.",
           instrument: "Immigration Act 2011.",
@@ -2286,7 +2317,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Rabat, Maroc (2020)</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Observatoire Africain des Migrations. Bras technique centralisant la donnée pour déconstruire les récits exogènes (Evidence-based policy)." : "African Migration Observatory. Technical arm centralizing data to deconstruct exogenous narratives."}
+                      {lang === 'fr' ? "Observatoire Africain des Migrations, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (2018, données factuelles). Bras technique centralisant la donnée pour déconstruire les récits exogènes, mais dont le financement reste largement extrabudgétaire." : "African Migration Observatory, established following the 2016 New York Declaration and Objective 1 of the Global Compact (2018, factual data). Technical arm centralizing data to deconstruct exogenous narratives, though largely funded off the AU's regular budget."}
                     </p>
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
@@ -2311,8 +2342,47 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </p>
                   </div>
                 </div>
+                <div className="mt-4 bg-slate-50 p-5 rounded-lg border border-slate-200">
+                  <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                    {lang === 'fr' ? "Ce que révèle le terrain (observation participante, 2023-2025)" : "What fieldwork reveals (participant observation, 2023-2025)"}
+                  </h5>
+                  <p className="text-xs text-slate-700 leading-relaxed">
+                    {lang === 'fr'
+                      ? "Quinze mois d'immersion au sein de l'OAM documentent une organisation « de nouvelle génération » qui doit constamment négocier sa place face à des dispositifs statistiques préexistants (STATAFRIC, COC, ACSRM, instituts nationaux, CER), tout en dépendant d'un financement essentiellement extrabudgétaire et de mandats renégociés en continu avec les 54 États membres. Ce constat déplace le diagnostic : les retards observés relèvent moins d'un manque de volonté politique que d'un chevauchement de mandats et d'une architecture de financement structurellement fragile."
+                      : "Fifteen months embedded within AMO document a \"next-generation\" organization that must constantly negotiate its place against pre-existing statistical bodies (STATAFRIC, COC, ACSRM, national institutes, RECs), while depending on largely off-budget funding and mandates continuously renegotiated with the 54 member states. This shifts the diagnosis: observed delays owe less to a lack of political will than to overlapping mandates and a structurally fragile funding architecture."}
+                  </p>
+                </div>
               </div>
-              
+
+              {/* Les 7 dimensions du régime africain */}
+              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-2 border-b border-slate-100 pb-3">
+                  <GitMerge className="w-5 h-5 mr-2 text-blue-700" />
+                  {lang === 'fr' ? "Les sept dimensions du régime africain de gouvernance migratoire" : "The seven dimensions of the African migration governance regime"}
+                </h4>
+                <p className="text-xs text-slate-500 mb-6 italic">
+                  {lang === 'fr'
+                    ? "Cadre analytique issu d'une recherche doctorale sur la gouvernance des migrations africaines (Ben Mokhtar, thèse en cours)."
+                    : "Analytical framework from doctoral research on African migration governance (Ben Mokhtar, ongoing thesis)."}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { fr: "Ancrage dans les réalités africaines", en: "Grounded in African realities" },
+                    { fr: "Coopération multiniveaux (intercontinental, continental, régional, interrégional, national, local)", en: "Multi-level cooperation (intercontinental, continental, regional, interregional, national, local)" },
+                    { fr: "Équilibre intégration, sécurité et droits humains", en: "Balance between integration, security and human rights" },
+                    { fr: "Rôle actif et reconnu des diasporas", en: "Active, recognized role for diasporas" },
+                    { fr: "Adaptabilité aux crises et contextes changeants", en: "Adaptability to crises and shifting contexts" },
+                    { fr: "Gouvernance structurée de la migration de travail", en: "Structured governance of labour migration" },
+                    { fr: "Prise en compte renforcée des mobilités contraintes et forcées", en: "Stronger consideration of constrained and forced mobility" },
+                  ].map((dim, i) => (
+                    <div key={i} className="bg-blue-50/50 p-4 rounded-lg border border-blue-100 flex items-start gap-3">
+                      <span className="text-[10px] font-bold text-blue-700 bg-white border border-blue-200 rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                      <p className="text-xs text-slate-700 leading-relaxed font-medium">{lang === 'fr' ? dim.fr : dim.en}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* JLMP & Coordination */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -2518,11 +2588,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <p><strong>Afrique de l'Ouest :</strong><br/>
                 Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
                 <p><strong>Afrique Centrale :</strong><br/>
-                Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
+                Angola : Loi n° 13/19. Burundi : Loi n° 1/13. Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Rwanda : Loi n° 57/2018. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
                 <p><strong>Afrique de l'Est :</strong><br/>
-                Burundi : Loi n° 1/13. Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Rwanda : Loi n° 57/2018. Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
+                Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
                 <p><strong>Afrique Australe :</strong><br/>
-                Afrique du Sud : Act 13 (2002). Angola : Loi n° 13/19. Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
+                Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
               </div>
             </div>
 
@@ -2705,7 +2775,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                       : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                   }`}
                 >
-                  <span className="text-base flag-emoji">{c.flag}</span>
+                  <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
                   <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
                 </button>
               ))}
@@ -2725,7 +2795,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                       {text.badge.country}
                     </span>
                     <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
-                      <span className="mr-3 text-3xl flag-emoji">{display.flag}</span>
+                      <CountryFlag iso2={display.iso2} emoji={display.flag} size="md" className="mr-3" />
                       {display.name}
                     </h2>
                   </div>
@@ -2922,13 +2992,13 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       <div className="mt-8 pt-6 border-t border-slate-100">
         <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
           <MapIcon className="w-3.5 h-3.5 mr-1.5" />
-          {lang === 'fr' ? "Régionalisation : M49 (ONU) vs Union africaine" : "Regionalization: M49 (UN) vs African Union"}
+          {lang === 'fr' ? "Régionalisation : Union africaine (et non M49/ONU)" : "Regionalization: African Union (not UN M49)"}
         </h4>
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           <p className="text-xs text-slate-700 leading-relaxed">
             {lang === 'fr'
-              ? "Les sous-régions affichées dans l'Explorateur (Méditerranée, Ouest, Centre, Est, Australe) suivent le découpage M49 des Nations Unies, utilisé par UNDESA pour publier les stocks migratoires — et non le découpage officiel des cinq régions de l'Union africaine. Les deux grilles divergent sensiblement : par exemple la Mauritanie est classée en Afrique du Nord par l'UA mais en Afrique de l'Ouest dans la nomenclature M49 ; l'Angola, la Zambie, le Zimbabwe, le Malawi, le Mozambique et la Tanzanie relèvent de l'Afrique australe pour l'UA mais sont répartis entre Afrique centrale/de l'Est/australe dans le découpage M49 retenu ici. Ce choix, dicté par la source des données, est documenté pour éviter toute lecture erronée au regard du cadrage institutionnel de l'UA utilisé par ailleurs sur ce site."
-              : "The sub-regions shown in the Explorer (Mediterranean, West, Central, East, Southern) follow the UN M49 classification used by UNDESA to publish migrant stock data — not the African Union's official five-region breakdown. The two groupings diverge meaningfully: for instance Mauritania sits in Northern Africa under the AU but in West Africa under M49; Angola, Zambia, Zimbabwe, Malawi, Mozambique and Tanzania belong to Southern Africa under the AU but are split across Central/East/Southern Africa in the M49 breakdown used here. This choice, driven by the data source, is documented explicitly to avoid misreadings against the AU institutional framing used elsewhere on this site."}
+              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel en cinq régions de l'Union africaine — et non le découpage M49 des Nations Unies qu'utilise UNDESA pour publier ses propres tableaux de stocks migratoires. Les deux grilles divergent sur sept pays : la Mauritanie (Afrique du Nord pour l'UA, Afrique de l'Ouest pour l'ONU) ; le Burundi et le Rwanda (Afrique Centrale pour l'UA, Afrique de l'Est pour l'ONU) ; le Malawi, le Mozambique, la Zambie et le Zimbabwe (Afrique Australe pour l'UA, Afrique de l'Est pour l'ONU). Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
+              : "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries: Mauritania (North Africa under the AU, West Africa under the UN); Burundi and Rwanda (Central Africa under the AU, East Africa under the UN); and Malawi, Mozambique, Zambia and Zimbabwe (Southern Africa under the AU, East Africa under the UN). As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section."}
           </p>
         </div>
       </div>
@@ -3171,7 +3241,7 @@ export default function App() {
     
     if (country && activeSubTab !== 'perspective') {
       return {
-        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
+        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, iso2: country.iso2, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
         retention: country.retention ?? 50,
         remittances: country.remittances ?? null, remittances_year: country.remittances_year ?? null,
         labour_participation: country.labour_participation ?? null, labour_participation_year: country.labour_participation_year ?? null,
@@ -3191,6 +3261,7 @@ export default function App() {
     return {
       name: typeof fallback.name === 'object' ? (fallback.name?.[lang] || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
       flag: null,
+      iso2: null,
       flagIcon: fallback.flagIcon,
       flagColor: fallback.flagColor,
       stock: formatNumber(Math.round(agg.stock)),
@@ -3239,8 +3310,7 @@ export default function App() {
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'library', icon: BookOpen, label: { fr: 'Bibliothèque', en: 'Library' } },
-    { id: 'methodology', icon: Database, label: { fr: 'Méthodologie', en: 'Methodology' } },
-    { id: 'about', icon: Info, label: { fr: 'À Propos', en: 'About' } },
+    { id: 'about', icon: Info, label: { fr: 'À Propos & Méthodologie', en: 'About & Methodology' } },
   ];
 
   return (
@@ -3326,15 +3396,15 @@ export default function App() {
         {activeTab === 'library' && (
           <TabLibrary text={text} lang={lang} />
         )}
-        {activeTab === 'methodology' && (
-          <TabMethodology 
-            text={text} lang={lang} 
-            expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
-            exportIndicatorsCSV={exportIndicatorsCSV}
-          />
-        )}
         {activeTab === 'about' && (
-          <TabAbout text={text} lang={lang} />
+          <div className="space-y-10">
+            <TabAbout text={text} lang={lang} />
+            <TabMethodology
+              text={text} lang={lang}
+              expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
+              exportIndicatorsCSV={exportIndicatorsCSV}
+            />
+          </div>
         )}
       </main>
 
@@ -3354,7 +3424,7 @@ export default function App() {
                     <display.flagIcon className="w-8 h-8 md:w-9 md:h-9" />
                   </span>
                 ) : (
-                  <span className="text-4xl md:text-5xl flag-emoji border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none">{display.flag}</span>
+                  <CountryFlag iso2={display.iso2} emoji={display.flag} size="lg" className="border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none" />
                 )}
                 <div>
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight">{display.name}</h2>
