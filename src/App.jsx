@@ -1666,6 +1666,19 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (...) est obligée de quitter sa résidence habituelle. »",
         textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (...) is compelled to leave his place of habitual residence. »"
       }
+    },
+    {
+      title: { fr: "La Déclaration de Kampala sur Migration, Environnement et Climat (2022)", en: "The Kampala Declaration on Migration, Environment and Climate Change (2022)" },
+      tag: { fr: "Mobilité Climatique", en: "Climate Mobility" },
+      desc: {
+        fr: "Adoptée en juillet 2022 par 11 États d'Afrique de l'Est et de la Corne de l'Afrique, puis étendue à 48 pays du continent. Elle énonce 12 engagements pour répondre aux effets du changement climatique sur les mobilités humaines, en amont de tout instrument contraignant équivalent à l'échelle mondiale.",
+        en: "Adopted in July 2022 by 11 East African and Horn of Africa states, later expanded to 48 countries across the continent. It sets out 12 commitments to address the effects of climate change on human mobility, ahead of any equivalent binding instrument at the global level."
+      },
+      article: {
+        ref: "KDMECC (2022) - 12 engagements",
+        textFr: "La déclaration engage notamment les signataires à intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation, à renforcer les données sur les déplacements environnementaux, et à protéger les personnes déplacées par des chocs climatiques dans le cadre des instruments existants (Convention de Kampala 2009).",
+        en: "The declaration commits signatories in particular to mainstream climate-related mobility into national adaptation strategies, strengthen data on environmental displacement, and protect people displaced by climate shocks under existing instruments (2009 Kampala Convention)."
+      }
     }
   ];
 
@@ -2342,45 +2355,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 bg-slate-50 p-5 rounded-lg border border-slate-200">
-                  <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-                    {lang === 'fr' ? "Ce que révèle le terrain (observation participante, 2023-2025)" : "What fieldwork reveals (participant observation, 2023-2025)"}
-                  </h5>
-                  <p className="text-xs text-slate-700 leading-relaxed">
-                    {lang === 'fr'
-                      ? "Quinze mois d'immersion au sein de l'OAM documentent une organisation « de nouvelle génération » qui doit constamment négocier sa place face à des dispositifs statistiques préexistants (STATAFRIC, COC, ACSRM, instituts nationaux, CER), tout en dépendant d'un financement essentiellement extrabudgétaire et de mandats renégociés en continu avec les 54 États membres. Ce constat déplace le diagnostic : les retards observés relèvent moins d'un manque de volonté politique que d'un chevauchement de mandats et d'une architecture de financement structurellement fragile."
-                      : "Fifteen months embedded within AMO document a \"next-generation\" organization that must constantly negotiate its place against pre-existing statistical bodies (STATAFRIC, COC, ACSRM, national institutes, RECs), while depending on largely off-budget funding and mandates continuously renegotiated with the 54 member states. This shifts the diagnosis: observed delays owe less to a lack of political will than to overlapping mandates and a structurally fragile funding architecture."}
-                  </p>
-                </div>
-              </div>
-
-              {/* Les 7 dimensions du régime africain */}
-              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-2 border-b border-slate-100 pb-3">
-                  <GitMerge className="w-5 h-5 mr-2 text-blue-700" />
-                  {lang === 'fr' ? "Les sept dimensions du régime africain de gouvernance migratoire" : "The seven dimensions of the African migration governance regime"}
-                </h4>
-                <p className="text-xs text-slate-500 mb-6 italic">
-                  {lang === 'fr'
-                    ? "Cadre analytique issu d'une recherche doctorale sur la gouvernance des migrations africaines (Ben Mokhtar, thèse en cours)."
-                    : "Analytical framework from doctoral research on African migration governance (Ben Mokhtar, ongoing thesis)."}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { fr: "Ancrage dans les réalités africaines", en: "Grounded in African realities" },
-                    { fr: "Coopération multiniveaux (intercontinental, continental, régional, interrégional, national, local)", en: "Multi-level cooperation (intercontinental, continental, regional, interregional, national, local)" },
-                    { fr: "Équilibre intégration, sécurité et droits humains", en: "Balance between integration, security and human rights" },
-                    { fr: "Rôle actif et reconnu des diasporas", en: "Active, recognized role for diasporas" },
-                    { fr: "Adaptabilité aux crises et contextes changeants", en: "Adaptability to crises and shifting contexts" },
-                    { fr: "Gouvernance structurée de la migration de travail", en: "Structured governance of labour migration" },
-                    { fr: "Prise en compte renforcée des mobilités contraintes et forcées", en: "Stronger consideration of constrained and forced mobility" },
-                  ].map((dim, i) => (
-                    <div key={i} className="bg-blue-50/50 p-4 rounded-lg border border-blue-100 flex items-start gap-3">
-                      <span className="text-[10px] font-bold text-blue-700 bg-white border border-blue-200 rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-                      <p className="text-xs text-slate-700 leading-relaxed font-medium">{lang === 'fr' ? dim.fr : dim.en}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* JLMP & Coordination */}
@@ -2479,7 +2453,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div>
                   <h4 className="text-sm font-bold text-amber-900 mb-1">À propos de ces données</h4>
                   <p className="text-xs text-amber-800 leading-relaxed">
-                    Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative personnelle des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).
+                    Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).
                   </p>
                 </div>
               </div>
