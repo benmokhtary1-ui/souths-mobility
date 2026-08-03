@@ -4,8 +4,8 @@ import {
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
   Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
-  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText, 
-  Copy, Check, Mail
+  PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
+  Copy, Check, Mail, AlertCircle
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -2874,6 +2874,20 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
           </a>
         </div>
       </div>
+
+      <div className="mt-8 pt-6 border-t border-slate-100">
+        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
+          <MapIcon className="w-3.5 h-3.5 mr-1.5" />
+          {lang === 'fr' ? "Régionalisation : M49 (ONU) vs Union africaine" : "Regionalization: M49 (UN) vs African Union"}
+        </h4>
+        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+          <p className="text-xs text-slate-700 leading-relaxed">
+            {lang === 'fr'
+              ? "Les sous-régions affichées dans l'Explorateur (Méditerranée, Ouest, Centre, Est, Australe) suivent le découpage M49 des Nations Unies, utilisé par UNDESA pour publier les stocks migratoires — et non le découpage officiel des cinq régions de l'Union africaine. Les deux grilles divergent sensiblement : par exemple la Mauritanie est classée en Afrique du Nord par l'UA mais en Afrique de l'Ouest dans la nomenclature M49 ; l'Angola, la Zambie, le Zimbabwe, le Malawi, le Mozambique et la Tanzanie relèvent de l'Afrique australe pour l'UA mais sont répartis entre Afrique centrale/de l'Est/australe dans le découpage M49 retenu ici. Ce choix, dicté par la source des données, est documenté pour éviter toute lecture erronée au regard du cadrage institutionnel de l'UA utilisé par ailleurs sur ce site."
+              : "The sub-regions shown in the Explorer (Mediterranean, West, Central, East, Southern) follow the UN M49 classification used by UNDESA to publish migrant stock data — not the African Union's official five-region breakdown. The two groupings diverge meaningfully: for instance Mauritania sits in Northern Africa under the AU but in West Africa under M49; Angola, Zambia, Zimbabwe, Malawi, Mozambique and Tanzania belong to Southern Africa under the AU but are split across Central/East/Southern Africa in the M49 breakdown used here. This choice, driven by the data source, is documented explicitly to avoid misreadings against the AU institutional framing used elsewhere on this site."}
+          </p>
+        </div>
+      </div>
     </section>
   </div>
 );
@@ -3318,7 +3332,9 @@ export default function App() {
                     </div>
                   </div>
                   <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
-                    <h4 className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">{text.modal.evo_title}</h4>
+                    <h4 className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">
+                      {display.isRegion ? text.modal.evo_title : (lang === 'fr' ? "Évolution du stock migratoire absolu (1990-2024)" : "Absolute migrant stock evolution (1990-2024)")}
+                    </h4>
                     <HistoricalChart data={display.history} colorClass="bg-blue-700" />
                   </div>
                 </div>
@@ -3332,6 +3348,33 @@ export default function App() {
                      </div>
                    </div>
                    <p className="text-center text-sm text-slate-600 mt-6 max-w-xs leading-relaxed print:mt-3 print:text-[10px]">{lang === 'fr' ? "La migration n'est pas qu'une affaire d'hommes fuyant la misère. Elle est structurellement féminisée." : "Migration is not just men fleeing poverty. It is structurally feminized."}</p>
+                </div>
+              </div>
+
+              <div className={`animate-in fade-in duration-500 ${modalView === 'demography' ? 'block' : 'hidden print:block'} print:mb-6`}>
+                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-6 print:p-4">
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center print:w-12 print:h-12">
+                      <Activity className="w-7 h-7 text-emerald-700 print:w-5 print:h-5" />
+                    </div>
+                    <div>
+                      <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
+                        {display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (lang === 'fr' ? 'N/D' : 'N/A')}
+                      </span>
+                      <span className="block text-[10px] font-bold text-emerald-700 uppercase tracking-widest mt-0.5">
+                        {lang === 'fr' ? `Taux d'activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}` : `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}`}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-l border-slate-100 sm:pl-6 pt-4 sm:pt-0">
+                    {display.labour_participation !== null && display.labour_participation !== undefined
+                      ? (lang === 'fr'
+                          ? "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d'emploi), estimation modélisée par l'OIT — un indicateur direct de l'insertion économique, distinct du volume migratoire lui-même."
+                          : "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself.")
+                      : (lang === 'fr'
+                          ? "L'OIT ne publie pas d'estimation modélisée pour cette entité (échantillon insuffisant)."
+                          : "The ILO does not publish a modelled estimate for this entity (insufficient sample).")}
+                  </p>
                 </div>
               </div>
 
@@ -3429,30 +3472,24 @@ export default function App() {
                       {lang === 'fr' ? "→ Consulter la base des traités de l'UA" : "→ View AU Treaties Database"}
                     </a>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.constitutive ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Acte Constitutif UA</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.constitutive ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.constitutive ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.abuja ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Traité d'Abuja (AEC)</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.abuja ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.abuja ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.refugees_1969 ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Conv. Réfugiés (1969)</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.refugees_1969 ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.refugees_1969 ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.kampala ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Conv. de Kampala (IDPs)</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.kampala ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.kampala ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.free_movement ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Protocole Libre Circ.</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.free_movement ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.free_movement ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
-                      <div className={`p-3 rounded-md border flex items-center justify-between ${display.au_treaties.zlecaf ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                        <span className="text-xs font-bold">Accord ZLECAf</span>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${display.au_treaties.zlecaf ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>{display.au_treaties.zlecaf ? 'Ratifié' : 'Non ratifié'}</span>
-                      </div>
+                      {[
+                        { key: 'constitutive', fr: "Acte Constitutif UA", en: "AU Constitutive Act" },
+                        { key: 'abuja', fr: "Traité d'Abuja (AEC)", en: "Abuja Treaty (AEC)" },
+                        { key: 'refugees_1969', fr: "Conv. Réfugiés (1969)", en: "Refugee Conv. (1969)" },
+                        { key: 'kampala', fr: "Conv. de Kampala (IDPs)", en: "Kampala Conv. (IDPs)" },
+                        { key: 'free_movement', fr: "Protocole Libre Circ.", en: "Free Movement Protocol" },
+                        { key: 'zlecaf', fr: "Accord ZLECAf", en: "AfCFTA Agreement" },
+                      ].map((t) => {
+                        const ratified = display.au_treaties[t.key];
+                        return (
+                          <div key={t.key} className={`p-3 rounded-md border flex items-center justify-between ${ratified ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+                            <span className="text-xs font-bold">{lang === 'fr' ? t.fr : t.en}</span>
+                            <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${ratified ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>
+                              {ratified ? (lang === 'fr' ? 'Ratifié' : 'Ratified') : (lang === 'fr' ? 'Non ratifié' : 'Not ratified')}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
