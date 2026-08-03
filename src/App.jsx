@@ -1410,9 +1410,10 @@ const TabEvidenceCheck = ({ text, lang }) => {
 
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const [expandedRec, setExpandedRec] = useState(null);
+  const [matrixView, setMatrixView] = useState('table'); // 'table' ou 'details'
 
   // ========================================================================
-  // 1. LES COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER) - ENRICHIES
+  // 1. LES COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER)
   // ========================================================================
   const recsList = [
     {
@@ -1607,6 +1608,474 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     }
   ];
 
+  // ========================================================================
+  // 3. MATRICES ET PROFILS JURIDIQUES (54 PAYS)
+  // ========================================================================
+  const legalMatrixData = [
+    {
+      region: "Afrique Méditerranéenne",
+      intro: "La région méditerranéenne se caractérise par des systèmes d'immigration codifiés, influencés par le droit civil (Maghreb) ou des systèmes mixtes (Égypte, Soudan). Le seuil de résidence y est strictement policé, exigeant souvent une sortie du territoire ou des démarches bureaucratiques complexes pour étendre le séjour au-delà de l'allocation touristique standard.",
+      countries: [
+        {
+          name: "Algérie", threshold: "90 Jours", tableNotes: "Max 180 jours/an. Carte de résident requise après 90 jours.",
+          instrument: "Loi N° 08-11 du 25 juin 2008 relative aux conditions d'entrée, de séjour et de circulation des étrangers.",
+          details: [
+            { label: "Analyse Juridique", text: "La durée maximale de séjour autorisé à chaque entrée est de 90 jours. Cette durée peut être exceptionnellement prorogée de 90 jours supplémentaires, mais le séjour effectif cumulé ne peut excéder 180 jours par an." },
+            { label: "Obligation de Résidence", text: "Tout étranger souhaitant séjourner au-delà de la validité de son visa (ou de l'extension) doit solliciter une « Carte de Résident ». La loi opère une distinction nette entre le « visa de court séjour » et le permis de résidence. Le défaut d'obtention de la carte de résident après l'expiration du visa constitue un séjour illégal passible de sanctions pénales et administratives." }
+          ]
+        },
+        {
+          name: "Égypte", threshold: "30-90 Jours", tableNotes: "Enregistrement requis sous 7 jours. Permis après expiration visa.",
+          instrument: "Loi N° 89 de 1960 sur l'entrée et le séjour des étrangers (amendée par Loi 88/2005 et Loi 173/2018).",
+          details: [
+            { label: "Analyse Juridique", text: "Les visas touristiques standard sont généralement délivrés pour 30 jours. Toutefois, la loi catégorise la résidence en trois niveaux temporels distincts : « Spéciale », « Ordinaire » et « Temporaire »." },
+            { label: "Mécanisme de Transition", text: "Un visiteur souhaitant rester doit demander un permis de résidence temporaire (souvent valide pour 6 mois à 1 an) avant l'expiration de son visa touristique. Récemment, des décrets ont instauré une période de grâce pour la régularisation des résidents illégaux moyennant le paiement d'amendes (env. 1 000 USD), soulignant la volonté de l'État d'imposer le permis de résidence." }
+          ]
+        },
+        {
+          name: "Libye", threshold: "90 Jours (3 Mois)", tableNotes: "Visa de Résidence requis pour séjours > 3 mois.",
+          instrument: "Loi N° 6 de 1987 organisant l'entrée, le séjour et la sortie des étrangers.",
+          details: [
+            { label: "Analyse Juridique", text: "Les visas d'entrée autorisent un séjour maximal de trois mois. L'article 5 de la loi classifie explicitement les visas en : entrée, transit, sortie et résidence." },
+            { label: "Obligation d'Enregistrement", text: "Pour séjourner au-delà de trois mois, un étranger doit obtenir un « Visa de Résidence » puis un permis. La loi impose une exigence d'enregistrement stricte : tout étranger doit s'enregistrer auprès de l'autorité des passeports la plus proche dans les sept jours suivant son arrivée. C'est l'une des fenêtres de surveillance administrative les plus étroites du continent." }
+          ]
+        },
+        {
+          name: "Maroc", threshold: "90 Jours", tableNotes: "Extension possible, mais carte d'immatriculation requise > 90 jours.",
+          instrument: "Loi N° 02-03 relative à l'entrée et au séjour des étrangers au Royaume du Maroc.",
+          details: [
+            { label: "Analyse Juridique", text: "L'article 8 de la Loi 02-03 stipule explicitement que tout étranger souhaitant séjourner sur le territoire marocain pour une durée supérieure à 90 jours est tenu de demander une « Carte d'Immatriculation »." },
+            { label: "Sanctions", text: "Le dépassement de ce seuil de 90 jours sans dépôt de demande de carte constitue une infraction. Bien que des prolongations de visa soient possibles pour des motifs exceptionnels, la norme juridique fixe la fin du statut de simple visiteur au 90e jour." }
+          ]
+        },
+        {
+          name: "Mauritanie", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi N° 1965-046 et Décrets subséquents.",
+          details: [
+            { label: "Analyse Juridique", text: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de Séjour »." },
+            { label: "Réforme", text: "Récemment, la validité de la carte de séjour a été étendue d'un an à cinq ans, facilitant la vie des résidents à long terme, mais le seuil d'entrée déclenchant cette obligation demeure l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence." }
+          ]
+        },
+        {
+          name: "Tunisie", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour obligatoire après 3 mois consécutifs.",
+          instrument: "Loi N° 68-7 du 8 mars 1968 relative à la condition des étrangers.",
+          details: [
+            { label: "Analyse Juridique", text: "L'article 7 précise que le visa d'entrée spécifie la durée de séjour autorisée, qui ne peut excéder trois mois." },
+            { label: "Obligation de Résidence", text: "Tout étranger souhaitant séjourner plus de 3 mois consécutifs ou 6 mois au total par an doit demander une « Carte de Séjour » et un « Visa de Séjour ». La règle des 3 mois est appliquée rigoureusement, avec des pénalités hebdomadaires pour tout dépassement non régularisé à la sortie." }
+          ]
+        }
+      ]
+    },
+    {
+      region: "Afrique de l'Ouest",
+      intro: "L'Afrique de l'Ouest présente un régime d'immigration dual : l'un pour les citoyens de la CEDEAO et l'autre pour les ressortissants tiers. Le Protocole A/P.1/5/79 de la CEDEAO établit un privilège de 90 jours sans visa, qui est devenu le seuil de facto pour définir le « visiteur » dans toute la région. Reste la zone la plus intégrée avec 15 pays offrant une libre circulation totale.",
+      countries: [
+        {
+          name: "Bénin", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi N° 2022-31 / Loi N° 2025-15 (Nouvelle).",
+          details: [
+            { label: "Analyse", text: "Les e-visas de court séjour sont disponibles pour 30 ou 90 jours." },
+            { label: "Obligation", text: "« Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ». La nouvelle Loi 2025-15 renforce ces conditions, maintenant le seuil de 90 jours comme la ligne de démarcation entre visiteur et résident." }
+          ]
+        },
+        {
+          name: "Burkina Faso", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
+          instrument: "Loi 2024 (remplaçant l'Ordonnance n°84-049).",
+          details: [
+            { label: "Analyse", text: "« Tout étranger souhaitant séjourner au Burkina Faso pour une période excédant quatre-vingt-dix (90) jours doit détenir soit un visa long séjour, soit un permis de résidence »." },
+            { label: "Transition", text: "Le visa long séjour (valide 1 an) ou la « Carte de Résident » est requis immédiatement après l'expiration de la période visiteur de 90 jours. La loi de 2024 a durci les contrôles aux frontières." }
+          ]
+        },
+        {
+          name: "Cap-Vert", threshold: "90 Jours", tableNotes: "Visa extensible, mais autorisation résidence nécessaire > 90 jours.",
+          instrument: "Loi N° 66/VIII/2014.",
+          details: [
+            { label: "Analyse", text: "Les visas touristiques permettent un séjour jusqu'à 90 jours, prolongeable une fois. Pour les citoyens exemptés de visa, l'enregistrement EASE permet 30 jours." },
+            { label: "Obligation", text: "Les séjours dépassant la limite du visa (90 jours) nécessitent une « Autorização de Residência ». La loi distingue strictement le « Visa » de la « Résidence ». Des changements récents facilitent l'accès pour la CPLP." }
+          ]
+        },
+        {
+          name: "Côte d'Ivoire", threshold: "90 Jours (3 Mois)", tableNotes: "Titre de séjour obligatoire après 3 mois.",
+          instrument: "Loi N° 2004-303 (et Loi N° 2002-03).",
+          details: [
+            { label: "Analyse", text: "Un permis de résidence (« Titre de Séjour ») est obligatoire pour quiconque a l'intention de séjourner plus de trois mois." },
+            { label: "Obligation", text: "S'applique aux travailleurs, étudiants et dépendants. La « Carte de Résident » est valide 5 ans pour les nationaux CEDEAO et 1 an pour les autres. Le système est biométrique et exige une présence à l'Office National d'Identification." }
+          ]
+        },
+        {
+          name: "Gambie", threshold: "28-90 Jours", tableNotes: "Non-CEDEAO besoin permis après 56-90 jours.",
+          instrument: "Immigration Act (Cap 16:02).",
+          details: [
+            { label: "Entrée Standard", text: "Les visiteurs reçoivent généralement un tampon de 28 jours initialement, extensible." },
+            { label: "Nationaux non-CEDEAO", text: "Sont tenus d'obtenir un permis de résidence (« Alien Card » + « Residential Permit B ») s'ils séjournent au-delà de 56 jours, bien que 90 jours soit souvent la limite pratique maximale pour les extensions avant l'application stricte de la résidence." }
+          ]
+        },
+        {
+          name: "Ghana", threshold: "60-90 Jours", tableNotes: "Max 90 jours (CEDEAO). Permis résidence pour > 90 jours.",
+          instrument: "Immigration Act, 2000 (Act 573).",
+          details: [
+            { label: "Analyse", text: "Les visiteurs se voient accorder un maximum de 60 jours initialement (90 jours pour la CEDEAO). Cela peut être étendu jusqu'à 90 jours." },
+            { label: "Obligation", text: "Tout non-Ghanéen ayant l'intention de résider pour plus de 90 jours (ou extension maximale de 6 mois) doit obtenir un permis de résidence. La résidence indéfinie est possible après 5 ans." }
+          ]
+        },
+        {
+          name: "Guinée", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi L/94/019/CTRN (1994).",
+          details: [
+            { label: "Analyse", text: "Le « Visa de court séjour » est valide jusqu'à 90 jours." },
+            { label: "Obligation", text: "Les étrangers ayant l'intention de rester plus longtemps doivent demander une « Carte de Séjour ». La validité du visa permet l'entrée, mais la carte est le document de résidence requis sur le territoire." }
+          ]
+        },
+        {
+          name: "Guinée-Bissau", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
+          instrument: "Loi N° 2/92 (Citoyenneté) et Décret-Loi sur les Étrangers.",
+          details: [
+            { label: "Analyse", text: "Les visas à l'arrivée sont valides pour un maximum de 90 jours." },
+            { label: "Obligation", text: "Pour les séjours dépassant cette période, une « Autorização de Residência » est requise. La loi mandate l'enregistrement pour tout séjour impliquant un établissement." }
+          ]
+        },
+        {
+          name: "Liberia", threshold: "60 Jours", tableNotes: "Séjour initial 60 jours. Permis résidence pour plus long.",
+          instrument: "Aliens and Nationality Law (Titre 4).",
+          details: [
+            { label: "Analyse", text: "« La période pour laquelle un visiteur étranger est autorisé à entrer au Liberia sera fixée [...] pour une période de 60 jours »." },
+            { label: "Obligation", text: "Ce seuil est notablement plus court que la norme régionale de 90 jours. Pour tout séjour à long terme, un « Residence Permit » est requis immédiatement à l'expiration de l'admission visiteur de 60 jours." }
+          ]
+        },
+        {
+          name: "Mali", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi N° 04-058 (2004).",
+          details: [
+            { label: "Analyse", text: "Le « Visa Long Séjour » est requis pour les séjours excédant 90 jours." },
+            { label: "Obligation", text: "Dès l'arrivée avec un visa long séjour (ou après 90 jours sur un visa régulier), l'étranger doit solliciter une « Carte de Séjour ». L'article 22 prévoit l'emprisonnement pour séjour sans permis." }
+          ]
+        },
+        {
+          name: "Niger", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Ordonnance N° 81-40 (1981).",
+          details: [
+            { label: "Analyse", text: "Les ressortissants étrangers ayant l'intention de séjourner plus de 90 jours doivent demander une « Carte de Séjour » (Permis de Résidence Temporaire)." },
+            { label: "Procédure", text: "Cette ordonnance reste le socle du droit de l'immigration au Niger. Les citoyens de la CEDEAO nécessitent également des cartes de séjour pour l'établissement, bien que la procédure soit simplifiée." }
+          ]
+        },
+        {
+          name: "Nigeria", threshold: "90 Jours", tableNotes: "CERPAC requis pour emploi ou séjour > 90 jours (non-CEDEAO).",
+          instrument: "Immigration Act 2015.",
+          details: [
+            { label: "Analyse", text: "« Les Visas de Court Séjour permettent aux voyageurs de visiter le Nigeria pour une période n'excédant pas trois mois (90 jours) »." },
+            { label: "Obligation", text: "Pour l'emploi ou la résidence au-delà de 90 jours, le CERPAC est obligatoire. Une mise à jour politique de 2025 a introduit des amendes journalières (15 USD) pour les dépassements de séjour, soulignant la rigueur de la limite." }
+          ]
+        },
+        {
+          name: "Sénégal", threshold: "90 Jours", tableNotes: "Carte d'identité d'étranger obligatoire après 90 jours.",
+          instrument: "Loi N° 71-10 (1971) et Décret 71-860.",
+          details: [
+            { label: "Analyse", text: "« Pour séjourner au Sénégal plus de 90 jours, vous devez obtenir une carte nationale d'identité étrangère (Carte d'Identité d'Étranger) »." },
+            { label: "Note", text: "Ceci s'applique même aux ressortissants exemptés de visa (comme les Français ou citoyens CEDEAO). La marque des 90 jours est le déclencheur légal définitif." }
+          ]
+        },
+        {
+          name: "Sierra Leone", threshold: "30-90 Jours", tableNotes: "Permis de résidence requis pour séjours > 90 jours.",
+          instrument: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965.",
+          details: [
+            { label: "Analyse", text: "Les visas à entrer unique sont valides 90 jours à l'émission pour des visites jusqu'à un maximum de 30 jours." },
+            { label: "Obligation", text: "« Un Permis de Travail & Résidence doit être obtenu dans les 30 jours suivant l'arrivée » pour ceux qui ont l'intention de rester. L'un des seuils les plus courts du continent." }
+          ]
+        },
+        {
+          name: "Togo", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi sur la Police des Étrangers (1987, actualisée 2022).",
+          details: [
+            { label: "Analyse", text: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour »." },
+            { label: "Réforme", text: "La nouvelle loi de 2022 a renforcé les pénalités pour dépassement de séjour et rationalisé le processus de permis de résidence." }
+          ]
+        }
+      ]
+    },
+    {
+      region: "Afrique Centrale",
+      intro: "La région CEMAC soutient théoriquement la libre circulation, mais la mise en œuvre nationale est caractérisée par une haute sécurisation. Le seuil pour les visiteurs est généralement de 90 jours, mais l'exigence de permis de résidence (souvent liée à des cautions de rapatriement) est strictement appliquée.",
+      countries: [
+        {
+          name: "Cameroun", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour requise après 3 mois.",
+          instrument: "Loi N° 97/012 (1997).",
+          details: [
+            { label: "Analyse", text: "L'article 17 stipule : « Tout étranger [...] doit, dans un délai de trois (3) mois [...] se présenter aux autorités compétentes pour solliciter une carte de séjour »." },
+            { label: "Mandat", text: "La marque des 3 mois est l'échéance statutaire pour demander une carte de séjour. Les visiteurs restant moins de ce délai sont des « visiteurs temporaires »." }
+          ]
+        },
+        {
+          name: "RCA", threshold: "90 Jours (3 Mois)", tableNotes: "Titre de séjour requis après 3 mois.",
+          instrument: "Code de l'Immigration.",
+          details: [
+            { label: "Analyse", text: "Les exemptions de visa (pour la CEMAC) vont jusqu'à 90 jours. Pour les autres, les visas court séjour couvrent la même période." },
+            { label: "Obligation", text: "« À l'arrivée, l'individu doit demander un permis de résidence (Titre de Séjour) pour tout séjour supérieur à trois mois »." }
+          ]
+        },
+        {
+          name: "Tchad", threshold: "90 Jours (3 Mois)", tableNotes: "Carte de séjour requise après 3 mois.",
+          instrument: "Ordonnance N° 27-62.",
+          details: [
+            { label: "Analyse", text: "Similaire aux autres États de la CEMAC, la période visiteur est plafonnée à 3 mois. « Une carte de séjour est requise pour les expatriés »." },
+            { label: "Enregistrement", text: "L'enregistrement auprès de l'immigration est requis dans les 72 heures suivant l'arrivée, une mesure de sécurité commune au Sahel." }
+          ]
+        },
+        {
+          name: "Congo (Rep)", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3 mois.",
+          instrument: "Loi N° 23-96 (1996).",
+          details: [
+            { label: "Analyse", text: "« Les étrangers séjournant [...] devront dans les trois mois, se soumettre aux dispositions qui précèdent » (concernant la résidence)." },
+            { label: "Exigence", text: "Un permis de résidence est obligatoire après l'expiration de la fenêtre visiteur de 3 mois." }
+          ]
+        },
+        {
+          name: "RDC", threshold: "~6 Mois", tableNotes: "Visa voyage max 6 mois. Visa établissement pour résidence.",
+          instrument: "Ordonnance-Loi 83-033 relative à la Police des Étrangers.",
+          details: [
+            { label: "Analyse", text: "Le « Visa de Voyage » autorise un séjour jusqu'à 6 mois. C'est toutefois la limite supérieure pour un visiteur." },
+            { label: "Obligation", text: "Pour l'« établissement » (résidence), un « Visa d'Établissement » spécifique est requis. La RDC permet une validité de visa visiteur jusqu'à 6 mois, mais l'intention de résidence doit être déclarée plus tôt." }
+          ]
+        },
+        {
+          name: "Guinée Équatoriale", threshold: "90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
+          instrument: "Loi Organique N° 3/2010.",
+          details: [
+            { label: "Analyse", text: "« Les visas de court terme sont valides pour 90 jours. Pour des séjours plus longs, vous devez vous adresser aux postes de police locaux »." },
+            { label: "Exigence", text: "Les permis de résidence sont requis pour tout séjour à long terme au-delà de la limite de 3 mois. Les nationaux CEMAC peuvent entrer avec une CNI, mais le seuil s'applique." }
+          ]
+        },
+        {
+          name: "Gabon", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi N° 5/86.",
+          details: [
+            { label: "Analyse", text: "« Les visiteurs qui souhaitent rester dans le pays pour plus de 90 jours doivent obtenir un permis de résidence (carte de séjour) »." },
+            { label: "Application", text: "Stricte. Les visas de sortie ne sont plus requis pour les résidents, mais la carte de séjour est obligatoire après 3 mois." }
+          ]
+        },
+        {
+          name: "Sao Tomé", threshold: "15-30 Jours", tableNotes: "Seuil très court. Résidence requise après 30-90 jours.",
+          instrument: "Loi N° 5/2008.",
+          details: [
+            { label: "Analyse", text: "Les exemptions de visa sont souvent de 15 jours. Les visas touristiques sont généralement valides pour 30 jours." },
+            { label: "Obligation", text: "Pour les séjours plus longs que ces courtes durées, un permis de résidence est requis. Le seuil initial de visiteur est notablement plus court que la moyenne continentale." }
+          ]
+        }
+      ]
+    },
+    {
+      region: "Afrique de l'Est",
+      intro: "La Communauté d'Afrique de l'Est (CAE) fournit un cadre robuste pour le mouvement, mais des lois nationales distinctes s'appliquent aux non-citoyens de la CAE. Le seuil est généralement de 90 jours, avec des allocations spécifiques (souvent 6 mois) pour les visiteurs régionaux. Forte progression de la réciprocité, notamment entre la RDC, l'Ouganda et le Sud-Soudan.",
+      countries: [
+        {
+          name: "Burundi", threshold: "30 Jours (extensible)", tableNotes: "Permis de résidence généralement requis après 3 mois.",
+          instrument: "Loi N° 1/13 (2011).",
+          details: [
+            { label: "Analyse", text: "Les voyageurs obtiennent un visa de 30 jours à l'arrivée. Ceci peut être étendu. « Ceux qui restent plus de 30 jours peuvent aussi demander un visa de trois mois [...] Permis de résidence requis pour plus longtemps »." },
+            { label: "Limite", text: "Le plafond visiteur est généralement fixé à 3 mois avant que le permis de résidence ne devienne nécessaire." }
+          ]
+        },
+        {
+          name: "Comores", threshold: "45 Jours", tableNotes: "Visa à l'arrivée 45 jours. Permis résidence pour plus long.",
+          instrument: "Loi N° 88-025 (1988).",
+          details: [
+            { label: "Analyse", text: "Le visa à l'arrivée est valide pour 45 jours." },
+            { label: "Obligation", text: "Tout étranger souhaitant rester au-delà de cette période doit demander un permis de résidence. C'est une durée spécifique à l'archipel, légèrement plus courte que les 90 jours standards." }
+          ]
+        },
+        {
+          name: "Djibouti", threshold: "90 Jours", tableNotes: "Carte de séjour requise après 90 jours.",
+          instrument: "Loi N° 201/AN/07.",
+          details: [
+            { label: "Analyse", text: "« La loi sur l'immigration djiboutienne permet aux visiteurs d'entrer et de rester pour 90 jours avec un eVisa »." },
+            { label: "Obligation", text: "« Ceux souhaitant rester plus de 90 jours doivent travailler avec les autorités pour ajuster leur statut » (Carte de Séjour)." }
+          ]
+        },
+        {
+          name: "Érythrée", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3-6 mois.",
+          instrument: "Proclamation N° 24/1992.",
+          details: [
+            { label: "Analyse", text: "« Un visa touristique [...] peut permettre au titulaire de rester en Érythrée pendant les trois mois »." },
+            { label: "Obligation", text: "« Tout étranger qui [...] a séjourné pour pas plus de six mois doit demander un permis de résidence ». Bien que le visa touristique soit de 3 mois, la date limite absolue pour la résidence semble être de 6 mois." }
+          ]
+        },
+        {
+          name: "Éthiopie", threshold: "90 Jours", tableNotes: "ID de Résidence requise après 90 jours.",
+          instrument: "Immigration Proclamation N° 354/2003.",
+          details: [
+            { label: "Analyse", text: "Lese-visas touristiques sont émis pour 30 ou 90 jours." },
+            { label: "Obligation", text: "« Tout étranger qui [...] a l'intention de rester pour plus de quatre-vingt-dix jours [...] doit s'enregistrer dans les trente jours suivant son arrivée ». La marque des 90 jours est le seuil critique." }
+          ]
+        },
+        {
+          name: "Kenya", threshold: "90 Jours (extensible)", tableNotes: "Max 6 mois pass visiteur. Permis requis ensuite.",
+          instrument: "Kenya Citizenship and Immigration Act 2011.",
+          details: [
+            { label: "Analyse", text: "Un pass visiteur est valide pour 3 mois initialement. Il peut être étendu pour 3 autres mois. La période agrégée maximale est de 6 mois." },
+            { label: "Obligation", text: "Au-delà de 6 mois, un Permis (Classe K, etc.) est strictement requis. La transition de Visiteur à Résident doit se produire avant le plafond de 6 mois." }
+          ]
+        },
+        {
+          name: "Madagascar", threshold: "90 Jours", tableNotes: "Carte de résident requise après 3 mois.",
+          instrument: "Loi N° 62-006 (1962).",
+          details: [
+            { label: "Analyse", text: "« Les étrangers entrant à Madagascar pour une période n'excédant pas trois mois sont des non-immigrants »." },
+            { label: "Obligation", text: "« Les étrangers séjournant [...] durant une période supérieure à trois mois sont des immigrants ». Ainsi, le seuil de résidence est de 3 mois." }
+          ]
+        },
+        {
+          name: "Maurice", threshold: "90-180 Jours", tableNotes: "Max 180 jours/an touriste. Permis pour plus long/travail.",
+          instrument: "Immigration Act 2022.",
+          details: [
+            { label: "Analyse", text: "Les visas touristiques permettent un séjour cumulatif de 180 jours par an. Toutefois, une visite unique est souvent plafonnée à 90 jours." },
+            { label: "Premium Visa", text: "Maurice a introduit un « Premium Visa » permettant un séjour d'1 an pour les nomades numériques. Les permis de résidence standards sont pour l'emploi/investissement." }
+          ]
+        },
+        {
+          name: "Rwanda", threshold: "30-90 Jours", tableNotes: "Permis requis après 30/90 jours selon origine.",
+          instrument: "Loi N° 57/2018.",
+          details: [
+            { label: "Analyse", text: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA)." },
+            { label: "Obligation", text: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa." }
+          ]
+        },
+        {
+          name: "Seychelles", threshold: "3 Mois", tableNotes: "Permis visiteur extensible jusqu'à 12 mois.",
+          instrument: "Immigration Decree 1979.",
+          details: [
+            { label: "Analyse", text: "Un permis visiteur est valide pour 3 mois initialement." },
+            { label: "Extension", text: "Il peut être étendu par tranches de 3 mois jusqu'à un maximum de 12 mois. On peut rester « visiteur » jusqu'à un an, mais cela exige une extension active." }
+          ]
+        },
+        {
+          name: "Somalie", threshold: "30 Jours", tableNotes: "Permis de résidence requis pour plus long.",
+          instrument: "Immigration Law 1966.",
+          details: [
+            { label: "Analyse", text: "Le visa à l'arrivée est valide pour 30 jours." },
+            { label: "Obligation", text: "« Les visas long terme ont une durée qui excède 90 jours [...] les détenteurs de ces types de visas reçoivent la résidence ». La limite visiteur est très courte." }
+          ]
+        },
+        {
+          name: "Soudan", threshold: "90 Jours (3 Mois)", tableNotes: "Enregistrement étranger requis après 3 mois.",
+          instrument: "Passports and Immigration Act de 1994.",
+          details: [
+            { label: "Analyse Juridique", text: "La loi dispose qu'« aucun visa n'est requis pour les visiteurs qui ne restent pas au Soudan plus de trois mois »." },
+            { label: "Obligation de Résidence", text: "La section 25 impose que « tout étranger résidant au Soudan pour plus de trois mois doit s'adresser à l'officier d'enregistrement [...] pour se faire enregistrer ». De plus, les étrangers doivent signaler leur présence dans les 3 jours suivant l'arrivée." }
+          ]
+        },
+        {
+          name: "Soudan du Sud", threshold: "90 Jours (3 Mois)", tableNotes: "Permis de résidence requis après 3 mois.",
+          instrument: "Passports and Immigration Act, 2011.",
+          details: [
+            { label: "Analyse", text: "« Les touristes séjournant pour une période n'excédant pas trois mois au Nouveau Soudan sont exemptés de prendre des permis de résidence »." },
+            { label: "Obligation", text: "Permis de résidence requis strictement après 3 mois." }
+          ]
+        },
+        {
+          name: "Tanzanie", threshold: "90 Jours", tableNotes: "Permis de Résidence requis après 90 jours.",
+          instrument: "Immigration Act 1995 (Cap 54).",
+          details: [
+            { label: "Analyse", text: "« La validité du Pass Visiteur n'excédera pas 90 jours »." },
+            { label: "Obligation", text: "Tout séjour au-delà de 90 jours nécessite un Permis de Résidence (Classe A, B, ou C)." }
+          ]
+        },
+        {
+          name: "Ouganda", threshold: "90 Jours", tableNotes: "Special Pass ou Entry Permit requis après 90 jours.",
+          instrument: "Citizenship and Immigration Control Act (Cap 66).",
+          details: [
+            { label: "Analyse", text: "« Un étranger en possession d'un pass visiteur valide ou spécial dont la période de séjour n'excède pas quatre-vingt-dix jours » est exempté de l'enregistrement des étrangers." },
+            { label: "Obligation", text: "Les séjours au-delà de 90 jours nécessitent généralement un Special Pass (pour courtes extensions) ou un Entry Permit (Travail/Résidence)." }
+          ]
+        }
+      ]
+    },
+    {
+      region: "Afrique Australe",
+      intro: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Contrairement à d'autres régions où une sortie et réentrée (« border run ») réinitialise le compteur de 90 jours, les pays de la SADC comme l'Afrique du Sud et le Botswana appliquent souvent une limite annuelle agrégée pour empêcher la résidence de fait.",
+      countries: [
+        {
+          name: "Angola", threshold: "90 Jours (Agrégé)", tableNotes: "30 jours par visite, max 90 jours/an.",
+          instrument: "Loi N° 13/19 (2019).",
+          details: [
+            { label: "Analyse", text: "Les visas touristiques sont valides pour 120 jours, permettant des entrées multiples pour un séjour de jusqu'à 30 jours par visite. Crucialement, le séjour total ne peut excéder 90 jours par an." },
+            { label: "Obligation", text: "Les permis de résidence sont requis pour l'établissement au-delà de cette limite agrégée." }
+          ]
+        },
+        {
+          name: "Botswana", threshold: "90 Jours (Agrégé)", tableNotes: "Limite stricte de 90 jours par année civile.",
+          instrument: "Immigration Act 2011.",
+          details: [
+            { label: "Analyse", text: "« Un non-citoyen [...] ne restera pas au Botswana pour plus de 90 jours au total dans une année quelconque »." },
+            { label: "Limite Stricte", text: "Rester au-delà de 90 jours dans une année civile est strictement interdit sans un permis de résidence ou une dérogation spéciale." }
+          ]
+        },
+        {
+          name: "Eswatini", threshold: "60 Jours", tableNotes: "30 jours + 30 extension. Permis résidence après 60 jours.",
+          instrument: "Immigration Act 1982.",
+          details: [
+            { label: "Analyse", text: "L'entrée sans visa (ou visa à l'arrivée) est typiquement pour 30 jours. Elle peut être étendue pour 30 autres jours." },
+            { label: "Obligation", text: "« Si vous voulez rester plus de 60 jours, vous devez demander un permis de résidence temporaire ». C'est plus serré que la norme de 90 jours." }
+          ]
+        },
+        {
+          name: "Lesotho", threshold: "44-90 Jours", tableNotes: "Permis de résidence requis après 90 jours.",
+          instrument: "Aliens Control Act 1966.",
+          details: [
+            { label: "Analyse", text: "« Les visiteurs avec un visa à entrer unique [...] peuvent rester pour une période maximale de 44 jours ». Des permis temporaires peuvent être émis jusqu'à 90 jours." },
+            { label: "Obligation", text: "Les séjours au-delà de la limite du permis temporaire (90 jours) exigent un permis de résidence." }
+          ]
+        },
+        {
+          name: "Malawi", threshold: "90 Jours", tableNotes: "Permis Résidence Temporaire requis après 90 jours.",
+          instrument: "Immigration Act (Cap 15:03).",
+          details: [
+            { label: "Analyse", text: "Le permis visiteur est valide pour 30 jours, extensible pour 60 jours (Total 90)." },
+            { label: "Obligation", text: "« Délivré à un visiteur [...] qui a résidé au Malawi pour le maximum de 90 jours [...] Un Permis de Résidence Temporaire » est alors requis." }
+          ]
+        },
+        {
+          name: "Mozambique", threshold: "90 Jours", tableNotes: "Nouvelle loi permet 90 jours. Résidence (DIRE) pour plus long.",
+          instrument: "Loi N° 23/2022 (Nouvelle Loi Immigration).",
+          details: [
+            { label: "Analyse", text: "« Les citoyens étrangers avec un visa touristique peuvent maintenant rester dans le pays pour une période de 90 jours, continus ou interrompus durant 12 mois »." },
+            { label: "Obligation", text: "« Le Permis de Résidence Temporaire du Mozambique est requis pour les nationaux étrangers qui ont l'intention de rester [...] pour plus de trois mois »." }
+          ]
+        },
+        {
+          name: "Namibie", threshold: "90 Jours (Agrégé)", tableNotes: "Limite stricte de 90 jours par année civile.",
+          instrument: "Immigration Control Act 7 of 1993.",
+          details: [
+            { label: "Analyse", text: "« Le maximum de quatre-vingt-dix (90) jours par an pour visite peut être pris en une fois ou en partie »." },
+            { label: "Limite Stricte", text: "Similaire au Botswana, la limite annuelle de 90 jours est strictement appliquée pour empêcher le tourisme perpétuel." }
+          ]
+        },
+        {
+          name: "Afrique du Sud", threshold: "90 Jours (+90 ext)", tableNotes: "Max 180 jours. Visa Résidence requis pour > 3 mois.",
+          instrument: "Immigration Act 13 of 2002.",
+          details: [
+            { label: "Analyse", text: "Le visa visiteur est valide pour 90 jours. Il peut être étendu une fois pour 90 autres jours (Total 180)." },
+            { label: "Obligation", text: "Pour des séjours excédant 3 mois (qui ne sont pas de simples extensions touristiques) ou 3 ans (visa visiteur long séjour), un Visa de Résidence Temporaire (TRV) est requis." }
+          ]
+        },
+        {
+          name: "Zambie", threshold: "90 Jours", tableNotes: "Visiting Permit pour > 90 jours.",
+          instrument: "Immigration and Deportation Act 2010.",
+          details: [
+            { label: "Analyse", text: "« Tous les visiteurs ordinaires et touristes ont droit à une visite gratuite de quatre-vingt-dix (90) jours dans toute période de douze (12) mois ». Les visiteurs d'affaires sont limités à 30 jours." },
+            { label: "Obligation", text: "Pour rester plus longtemps, il faut demander un « Visiting Permit » (valide 3 mois, jusqu'à 9 mois total) ou un Permis de Résidence." }
+          ]
+        },
+        {
+          name: "Zimbabwe", threshold: "90 Jours", tableNotes: "Max 90 jours touriste. Permis requis ensuite.",
+          instrument: "Immigration Act (Chapitre 4:02).",
+          details: [
+            { label: "Analyse", text: "« Vous pouvez demander 2 extensions consécutives (pour un total de 90 jours) »." },
+            { label: "Obligation", text: "Les séjours au-delà de 90 jours exigent un permis (Étudiant, Emploi, ou Résidence)." }
+          ]
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader 
@@ -1616,57 +2085,55 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         desc={text.headers.governance.desc}
       />
       
-      <section className="bg-white rounded-xl p-6 md:p-8 border border-slate-200 shadow-sm">
+      <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
-        {/* Menu de navigation interne : CADRES GLOBAUX d'abord, puis CADRES AFRICAINS */}
-        <div className="space-y-3 mb-8">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">
-            {lang === 'fr' ? '1. Cadres Stratégiques Mondiaux' : '1. Global Strategic Frameworks'}
-          </div>
-          <div className="flex bg-slate-100 p-1.5 rounded-lg flex-wrap gap-1 border border-slate-200">
-            <button 
-              onClick={() => setActiveSdgzTab('sdgs')} 
-              className={`flex-1 min-w-[120px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeSdgzTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-            >
-              ODD / SDGs
-            </button>
-            <button 
-              onClick={() => setActiveSdgzTab('gcm')} 
-              className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeSdgzTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-            >
-              Pacte GCM (23 Obj.)
-            </button>
-            <button 
-              onClick={() => setActiveSdgzTab('gcr')} 
-              className={`flex-1 min-w-[140px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeSdgzTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-            >
-              Pacte Réfugiés GCR
-            </button>
+        {/* NOUVEAU MENU EN 3 COLONNES */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          
+          {/* Bloc 1 : Global */}
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
+              <Globe className="w-3.5 h-3.5 mr-1.5" /> 1. Cadres Mondiaux
+            </div>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => setActiveSdgzTab('sdgs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>ODD / SDGs (Agenda 2030)</button>
+              <button onClick={() => setActiveSdgzTab('gcm')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Pacte GCM (Migrations)</button>
+              <button onClick={() => setActiveSdgzTab('gcr')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Pacte GCR (Réfugiés)</button>
+            </div>
           </div>
 
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1 pt-2">
-            {lang === 'fr' ? '2. Cadres Panafricains & Sous-Régionaux' : '2. Pan-African & Sub-Regional Frameworks'}
+          {/* Bloc 2 : Africain */}
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
+              <MapIcon className="w-3.5 h-3.5 mr-1.5" /> 2. Cadres Africains
+            </div>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => setActiveSdgzTab('au')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'au' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>Union Africaine (Traités & Agences)</button>
+              <button onClick={() => setActiveSdgzTab('recs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'recs' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>CER (Régions & Processus)</button>
+            </div>
           </div>
-          <div className="flex bg-slate-100 p-1.5 rounded-lg flex-wrap gap-1 border border-slate-200">
-            <button 
-              onClick={() => setActiveSdgzTab('au')} 
-              className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeSdgzTab === 'au' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-            >
-              {lang === 'fr' ? 'Union Africaine (UA)' : 'African Union (AU)'}
-            </button>
-            <button 
-              onClick={() => setActiveSdgzTab('recs')} 
-              className={`flex-1 min-w-[180px] py-2.5 px-4 rounded-md font-bold text-xs transition-all shadow-sm ${activeSdgzTab === 'recs' ? 'bg-blue-900 text-white shadow' : 'text-slate-600 hover:bg-white hover:text-slate-900'}`}
-            >
-              {lang === 'fr' ? 'Communautés Économiques (CER)' : 'Regional Economic Communities (RECs)'}
-            </button>
+
+          {/* Bloc 3 : États Juridiques (54 pays) */}
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
+              <Scale className="w-3.5 h-3.5 mr-1.5" /> 3. États Juridiques
+            </div>
+            <div className="flex flex-col gap-2">
+              <button onClick={() => setActiveSdgzTab('matrix')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all flex justify-between items-center ${activeSdgzTab === 'matrix' ? 'bg-slate-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>
+                <span>Entrées & Séjours (54 pays)</span>
+                <ChevronRight className="w-3 h-3 opacity-50" />
+              </button>
+            </div>
           </div>
+
         </div>
 
-        {/* 1. ODD / SDGs */}
+        {/* ============================================================== */}
+        {/* Rendu des Onglets Globaux (ODD, GCM, GCR) */}
+        {/* ============================================================== */}
         {activeSdgzTab === 'sdgs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
               <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.sdg_desc}</p>
               <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
@@ -1684,16 +2151,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* 2. GCM */}
         {activeSdgzTab === 'gcm' && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
               <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcm_desc}</p>
               <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
               {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
@@ -1705,10 +2171,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* 3. GCR */}
         {activeSdgzTab === 'gcr' && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
               <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcr_desc}</p>
               <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
@@ -1725,21 +2190,23 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* 4. UNION AFRICAINE */}
+        {/* ============================================================== */}
+        {/* Rendu des Onglets Africains (UA, CER) */}
+        {/* ============================================================== */}
         {activeSdgzTab === 'au' && (
           <div className="space-y-8 animate-in fade-in duration-300">
-            <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800 relative overflow-hidden">
+            <div className="bg-emerald-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-emerald-800 relative overflow-hidden">
               <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-10 pointer-events-none">
                 <Landmark className="w-48 h-48" />
               </div>
               <div className="relative z-10">
-                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
+                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2">
                   {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
                 </span>
                 <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                   {lang === 'fr' ? "L'Union Africaine et le Régime Panafricain des Mobilités" : "The African Union and the Pan-African Mobility Regime"}
                 </h3>
-                <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
+                <p className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl">
                   {lang === 'fr' 
                     ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national ». Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
                     : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between'. The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
@@ -1749,25 +2216,23 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             <div className="space-y-6">
               {/* Textes Fondateurs */}
-              <div>
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 border-b border-slate-200 pb-2">
-                  <FileText className="w-5 h-5 mr-2 text-blue-700" />
+              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                  <FileText className="w-5 h-5 mr-2 text-emerald-700" />
                   {lang === 'fr' ? "Textes Fondateurs & Cadres Politiques" : "Foundational Texts & Policy Frameworks"}
                 </h4>
-                
                 <div className="space-y-4">
                   {auFrameworks.map((fw, idx) => (
-                    <div key={idx} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-6">
+                    <div key={idx} className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/3 shrink-0">
-                        <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/50 px-2 py-0.5 rounded border border-emerald-200 uppercase tracking-widest inline-block mb-2">
                           {fw.tag[lang]}
                         </span>
                         <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
                         <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
                       </div>
-                      
-                      <div className="md:w-2/3 bg-slate-50 p-5 rounded-lg border border-slate-100 flex flex-col justify-center relative">
-                        <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-200" />
+                      <div className="md:w-2/3 bg-white p-5 rounded-lg border border-slate-200 flex flex-col justify-center relative shadow-sm">
+                        <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-100" />
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref}</span>
                         <p className="text-sm font-serif italic text-slate-800 leading-relaxed ml-6 relative z-10">
                           {lang === 'fr' ? fw.article.textFr : fw.article.textEn}
@@ -1779,61 +2244,55 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               {/* Agences et Infrastructures */}
-              <div>
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-4 mt-10 border-b border-slate-200 pb-2">
+              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Database className="w-5 h-5 mr-2 text-indigo-700" />
                   {lang === 'fr' ? "Agences Spécialisées & Souveraineté Épistémique" : "Specialized Agencies & Epistemic Sovereignty"}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  
-                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Rabat, Maroc (2020)</span>
-                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Rabat, Maroc (2020)</span>
+                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Observatoire Africain des Migrations. Bras technique centralisant la donnée pour déconstruire les récits exogènes (Evidence-based policy)." : "African Migration Observatory. Technical arm centralizing data to deconstruct exogenous narratives."}
                     </p>
-                    <a href="https://amo.au.int/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center text-[10px] font-bold text-indigo-700 hover:underline">
-                      {lang === 'fr' ? "Site de l'OAM" : "AMO Website"} <ExternalLink className="w-3 h-3 ml-1" />
-                    </a>
                   </div>
-
-                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Bamako, Mali</span>
-                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Bamako, Mali</span>
+                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Centre d’études et recherches sur la migration. Think tank continental orientant la recherche académique." : "Centre for the Study and Research on Migration. Continental think tank guiding academic research."}
                     </p>
                   </div>
-
-                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Khartoum, Soudan</span>
-                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Khartoum, Soudan</span>
+                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Centre opérationnel pour la lutte contre la migration irrégulière et la traite (actuellement paralysé par le conflit au Soudan)." : "Operational Centre fighting irregular migration and trafficking (currently paralyzed by the Sudan conflict)."}
                     </p>
                   </div>
-
-                  <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
+                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Kenya / Tunisie</span>
-                    <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Kenya / Tunisie</span>
+                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Institut africain pour les transferts de fonds (AIR) capte l'économie de la diaspora. STATAFRIC coordonne l'architecture statistique." : "African Institute for Remittances (AIR) leverages diaspora economy. STATAFRIC coordinates statistics."}
                     </p>
                   </div>
-
                 </div>
               </div>
               
               {/* JLMP & Coordination */}
-              <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-xl mt-6 flex items-start gap-4">
-                <Activity className="w-8 h-8 text-emerald-600 shrink-0 mt-1" />
-                <div>
-                  <h5 className="font-bold text-emerald-900 text-sm mb-2">{lang === 'fr' ? "Gouvernance par l'action : Le programme JLMP" : "Governance through action: The JLMP Program"}</h5>
-                  <p className="text-xs text-emerald-800 leading-relaxed">
-                    {lang === 'fr' 
-                      ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP (Joint Labour Migration Programme - associant l'UA, l'OIT, l'OIM et la CEA) est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres."
-                      : "Where pure law stalls (Kigali), governance advances through technicality. The JLMP (Joint Labour Migration Programme - associating AU, ILO, IOM, ECA) is the most concrete initiative to harmonize labor migration, overcoming Member States' lack of administrative capacity."}
-                  </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h4 className="flex items-center text-sm font-bold text-slate-800 mb-3"><ShieldAlert className="w-4 h-4 mr-2 text-rose-700" /> Conventions de protection</h4>
+                  <p className="text-xs text-slate-600 leading-relaxed">Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs).</p>
+                </div>
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm flex items-start gap-4">
+                  <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900 mb-2">Le programme JLMP (OIT, OIM, UA)</h4>
+                    <p className="text-xs text-blue-800 leading-relaxed">Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres.</p>
+                  </div>
                 </div>
               </div>
 
@@ -1841,17 +2300,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           </div>
         )}
 
-        {/* 5. CER (Accordéons) */}
         {activeSdgzTab === 'recs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
-            <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
+            <div className="bg-emerald-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-emerald-800">
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2">
                 {lang === 'fr' ? 'Les Blocs Régionalisés du Régime Continental' : 'Regionalized Blocs of the Continental Regime'}
               </span>
               <h3 className="font-serif font-bold text-2xl mb-3">
                 {lang === 'fr' ? "Les Communautés Économiques Régionales (CER)" : "Regional Economic Communities (RECs)"}
               </h3>
-              <p className="text-slate-300 text-sm leading-relaxed">
+              <p className="text-emerald-100 text-sm leading-relaxed">
                 {lang === 'fr' 
                   ? "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires."
                   : "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges."}
@@ -1862,51 +2320,29 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {recsList.map((rec) => {
                 const isOpen = expandedRec === rec.id;
                 return (
-                  <div key={rec.id} className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
-                    <button
-                      onClick={() => setExpandedRec(isOpen ? null : rec.id)}
-                      className="w-full p-5 text-left flex items-center justify-between bg-white hover:bg-slate-100/60 transition-colors"
-                    >
+                  <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
+                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div>
                         <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name}</h4>
-                        <span className="text-[10px] font-bold uppercase text-blue-700 tracking-wider bg-blue-50 px-2 py-0.5 rounded border border-blue-100 mt-1.5 inline-block">
+                        <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
                           {rec.tag}
                         </span>
                       </div>
-                      <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-blue-700' : ''}`} />
+                      <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
                     </button>
 
                     {isOpen && (
                       <div className="p-6 bg-slate-50 border-t border-slate-200 animate-in fade-in duration-300 space-y-5">
-                        
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium">
-                          {lang === 'fr' ? rec.desc.fr : rec.desc.en}
-                        </p>
-                        
+                        <p className="text-sm text-slate-800 leading-relaxed font-medium">{lang === 'fr' ? rec.desc.fr : rec.desc.en}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-white p-4 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2">
-                              <FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                              {lang === 'fr' ? "Instruments Clés & Processus" : "Key Instruments & Processes"}
-                            </h5>
-                            <p className="text-xs text-slate-700 leading-relaxed">
-                              {lang === 'fr' ? rec.instruments.fr : rec.instruments.en}
-                            </p>
+                          <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> Instruments Clés</h5>
+                            <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.instruments.fr : rec.instruments.en}</p>
                           </div>
-                          <div className="bg-white p-4 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2">
-                              <Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" />
-                              {lang === 'fr' ? "Dynamique & Défis actuels" : "Current Dynamics & Challenges"}
-                            </h5>
-                            <p className="text-xs text-slate-700 leading-relaxed">
-                              {lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}
-                            </p>
+                          <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> Dynamique & Défis</h5>
+                            <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}</p>
                           </div>
-                        </div>
-
-                        <div className="pt-3 border-t border-slate-200/60 flex items-center justify-between text-[10px] text-slate-500 italic">
-                          <span>{lang === 'fr' ? 'Analyse des blocs régionalisés' : 'Regionalized blocs analysis'}</span>
-                          <span className="font-bold text-slate-700">Architecture Multiniveaux UA / CER</span>
                         </div>
                       </div>
                     )}
@@ -1916,6 +2352,151 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             </div>
           </div>
         )}
+
+        {/* ============================================================== */}
+        {/* NOUVEAU TAB 3 : ÉTATS JURIDIQUES ET MATRICE DES 54 PAYS */}
+        {/* ============================================================== */}
+        {activeSdgzTab === 'matrix' && (
+          <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
+              <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
+                Cartographie Réglementaire Continentale
+              </span>
+              <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
+                Matrices de réciprocité des visas et profils d’entrée et de séjour (54 pays)
+              </h3>
+              <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
+                L'analyse des seuils d'entrée et de l'obligation de résidence démontre la persistance d'une frontière juridique stricte entre le statut de « visiteur » (toléré pour le commerce ou le tourisme de courte durée) et celui d'« immigrant » (soumis au pouvoir discrétionnaire de l'État pour l'établissement). Le seuil standard en Afrique est de 90 jours.
+              </p>
+            </div>
+
+            {/* Disclaimer Methodologique */}
+            <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg shadow-sm">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 mr-3 shrink-0" />
+                <div>
+                  <h4 className="text-sm font-bold text-amber-900 mb-1">À propos de ces données</h4>
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative personnelle des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Toggle Vue Tableau / Vue Fiches */}
+            <div className="flex bg-slate-200 p-1.5 rounded-lg w-fit mx-auto md:mx-0">
+              <button 
+                onClick={() => setMatrixView('table')} 
+                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+              >
+                <TableProperties className="w-3.5 h-3.5 mr-2" /> Vue Tableau (Synthèse)
+              </button>
+              <button 
+                onClick={() => setMatrixView('details')} 
+                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'details' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+              >
+                <FileText className="w-3.5 h-3.5 mr-2" /> Fiches Détaillées
+              </button>
+            </div>
+
+            {/* VUE : TABLEAU */}
+            {matrixView === 'table' && (
+              <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden animate-in fade-in">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-slate-100 border-b border-slate-200 text-slate-600">
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Région</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Pays</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Seuil Légal Visiteur</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">Notes sur l'Obligation de Résidence</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {legalMatrixData.map((regionObj, rIdx) => (
+                        <React.Fragment key={rIdx}>
+                          {regionObj.countries.map((country, cIdx) => (
+                            <tr key={cIdx} className="hover:bg-slate-50 transition-colors">
+                              {cIdx === 0 && (
+                                <td rowSpan={regionObj.countries.length} className="py-3 px-4 font-bold text-slate-900 bg-slate-50/50 align-top border-r border-slate-100">
+                                  {regionObj.region}
+                                </td>
+                              )}
+                              <td className="py-3 px-4 font-bold text-slate-800">{country.name}</td>
+                              <td className="py-3 px-4">
+                                <span className="inline-block bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap">
+                                  {country.threshold}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">{country.tableNotes}</td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* VUE : FICHES DÉTAILLÉES */}
+            {matrixView === 'details' && (
+              <div className="space-y-8 animate-in fade-in">
+                {legalMatrixData.map((regionObj, rIdx) => (
+                  <div key={rIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{regionObj.region}</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic">{regionObj.intro}</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      {regionObj.countries.map((country, cIdx) => (
+                        <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
+                          <div className="flex justify-between items-start mb-3">
+                            <h5 className="font-bold text-slate-900 text-lg">{country.name}</h5>
+                            <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-500 mb-4 pb-3 border-b border-slate-200">
+                            <strong className="text-slate-700 uppercase tracking-widest">Instrument : </strong>
+                            <span className="italic">{country.instrument}</span>
+                          </div>
+                          <div className="space-y-3 flex-grow">
+                            {country.details.map((detail, dIdx) => (
+                              <div key={dIdx}>
+                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{detail.label}</h6>
+                                <p className="text-xs text-slate-800 leading-relaxed">{detail.text}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Sources Légales */}
+            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-8">
+              <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                <BookOpen className="w-4 h-4 mr-2 text-slate-400" />
+                Liste des Instruments Juridiques Analysés (Sources)
+              </h4>
+              <div className="h-48 overflow-y-auto pr-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
+                <p><strong>Afrique méditerranéenne :</strong><br/>
+                Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
+                <p><strong>Afrique de l'Ouest :</strong><br/>
+                Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
+                <p><strong>Afrique Centrale :</strong><br/>
+                Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
+                <p><strong>Afrique de l'Est :</strong><br/>
+                Burundi : Loi n° 1/13. Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Rwanda : Loi n° 57/2018. Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
+                <p><strong>Afrique Australe :</strong><br/>
+                Afrique du Sud : Act 13 (2002). Angola : Loi n° 13/19. Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
+              </div>
+            </div>
+
+          </div>
+        )}
+
       </section>
     </div>
   );
