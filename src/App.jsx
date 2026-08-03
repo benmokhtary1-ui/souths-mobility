@@ -1232,11 +1232,14 @@ const TabEvidenceCheck = ({ text, lang }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [expandedFiche, setExpandedFiche] = useState(null);
 
-  const categories = ["All", ...new Set(evidenceCheckData.map(item => item.category))];
+  // Extraire les catégories uniques depuis les données
+  const categoriesList = [...new Set(evidenceCheckData.map(item => item.category))];
+  const allFilters = ["All", ...categoriesList];
 
-  const filteredData = activeCategory === "All" 
-    ? evidenceCheckData 
-    : evidenceCheckData.filter(item => item.category === activeCategory);
+  // Déterminer quelles catégories afficher selon le filtre actif
+  const displayCategories = activeCategory === "All" 
+    ? categoriesList 
+    : [activeCategory];
 
   const getVerdictStyle = (level) => {
     switch (level) {
@@ -1261,8 +1264,9 @@ const TabEvidenceCheck = ({ text, lang }) => {
           : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
       />
 
+      {/* Boutons de filtrage en haut */}
       <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
-        {categories.map((cat, idx) => (
+        {allFilters.map((cat, idx) => (
           <button
             key={idx}
             onClick={() => { setActiveCategory(cat); setExpandedFiche(null); }}
@@ -1277,105 +1281,129 @@ const TabEvidenceCheck = ({ text, lang }) => {
         ))}
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        {filteredData.map((fiche) => {
-          const isExpanded = expandedFiche === fiche.id;
+      {/* Rendu dynamique groupé par catégories */}
+      <div className="space-y-16">
+        {displayCategories.map((categoryName) => {
+          // Filtrer les fiches appartenant à cette catégorie
+          const catFiches = evidenceCheckData.filter(fiche => fiche.category === categoryName);
+          // Récupérer l'icône de la catégorie depuis la première fiche
+          const catIcon = catFiches.length > 0 ? catFiches[0].category_icon : '';
+
           return (
-            <div 
-              key={fiche.id} 
-              className={`bg-white rounded-xl border transition-all duration-300 flex flex-col shadow-sm ${
-                isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
-              }`}
-            >
-              <div 
-                className="p-6 cursor-pointer group flex flex-col"
-                onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl">{fiche.category_icon}</span>
-                    <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category}</span>
-                  </div>
-                  <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm flex items-center space-x-1.5 ${getVerdictStyle(fiche.confidence_level)}`}>
-                    <span className="text-sm">{fiche.confidence_level}</span>
-                    <span>{fiche.verdict}</span>
-                  </div>
-                </div>
-                
-                <h3 className="text-slate-900 font-serif font-bold text-lg leading-tight mb-4 group-hover:text-blue-800 transition-colors">
-                  « {fiche.narrative} »
-                </h3>
-
-                <div className="pt-4 border-t border-slate-100 mt-auto">
-                  <span className="text-[9px] font-bold uppercase text-slate-400 tracking-widest block mb-2">
-                    {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
-                  </span>
-                  <p className="text-slate-700 text-sm leading-relaxed font-medium">
-                    {fiche.reality}
-                  </p>
-                </div>
-                
-                <div className="flex justify-center mt-5">
-                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-slate-800' : 'group-hover:text-blue-600'}`} />
-                </div>
+            <section key={categoryName} className="space-y-6 animate-in fade-in duration-500">
+              
+              {/* Titre de la section (Catégorie) */}
+              <div className="flex items-center space-x-3 border-b border-slate-200 pb-3">
+                <span className="text-3xl bg-white border border-slate-200 shadow-sm p-2 rounded-lg">{catIcon}</span>
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 tracking-tight">
+                  {categoryName}
+                </h2>
               </div>
 
-              <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
-                <div className="p-6 space-y-6">
-                  {fiche.why_persists && fiche.why_persists.length > 0 && (
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
-                        <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                        {lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?"}
-                      </h4>
-                      <ul className="space-y-2">
-                        {fiche.why_persists.map((reason, i) => (
-                          <li key={i} className="flex items-start text-xs text-slate-600 leading-relaxed">
-                            <span className="text-blue-400 mr-2 mt-0.5">•</span> {reason}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+              {/* Grille des fiches pour cette catégorie */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                {catFiches.map((fiche) => {
+                  const isExpanded = expandedFiche === fiche.id;
+                  return (
+                    <div 
+                      key={fiche.id} 
+                      className={`bg-white rounded-xl border transition-all duration-300 flex flex-col shadow-sm ${
+                        isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
+                      }`}
+                    >
+                      <div 
+                        className="p-6 cursor-pointer group flex flex-col h-full"
+                        onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xl">{fiche.category_icon}</span>
+                            <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category}</span>
+                          </div>
+                          <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm flex items-center space-x-1.5 ${getVerdictStyle(fiche.confidence_level)}`}>
+                            <span className="text-sm">{fiche.confidence_level}</span>
+                            <span>{fiche.verdict}</span>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-slate-900 font-serif font-bold text-lg leading-tight mb-4 group-hover:text-blue-800 transition-colors">
+                          « {fiche.narrative} »
+                        </h3>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-                        {lang === 'fr' ? "📊 Indicateurs Croisés" : "📊 Crossed Indicators"}
-                      </h4>
-                      <ul className="space-y-1.5">
-                        {fiche.indicators.map((ind, i) => (
-                          <li key={i} className="text-[11px] text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-                        {lang === 'fr' ? "🏛️ Sources" : "🏛️ Sources"}
-                      </h4>
-                      <ul className="space-y-1.5">
-                        {fiche.sources.map((src, i) => (
-                          <li key={i} className="text-[11px] font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                        <div className="pt-4 border-t border-slate-100 mt-auto">
+                          <span className="text-[9px] font-bold uppercase text-slate-400 tracking-widest block mb-2">
+                            {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
+                          </span>
+                          <p className="text-slate-700 text-sm leading-relaxed font-medium">
+                            {fiche.reality}
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-center mt-5">
+                          <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-slate-800' : 'group-hover:text-blue-600'}`} />
+                        </div>
+                      </div>
 
-                  <div>
-                    <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center">
-                      <ShieldAlert className="w-3 h-3 mr-1.5" />
-                      {lang === 'fr' ? "Limites méthodologiques :" : "Methodological limits:"}
-                    </h4>
-                    <p className="text-xs text-slate-500 italic">
-                      {fiche.limits}
-                    </p>
-                  </div>
-                </div>
+                      <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                        <div className="p-6 space-y-6">
+                          {fiche.why_persists && fiche.why_persists.length > 0 && (
+                            <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+                              <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
+                                <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                                {lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?"}
+                              </h4>
+                              <ul className="space-y-2">
+                                {fiche.why_persists.map((reason, i) => (
+                                  <li key={i} className="flex items-start text-xs text-slate-600 leading-relaxed">
+                                    <span className="text-blue-400 mr-2 mt-0.5">•</span> {reason}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                                {lang === 'fr' ? "📊 Indicateurs Croisés" : "📊 Crossed Indicators"}
+                              </h4>
+                              <ul className="space-y-1.5">
+                                {fiche.indicators.map((ind, i) => (
+                                  <li key={i} className="text-[11px] text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                                {lang === 'fr' ? "🏛️ Sources" : "🏛️ Sources"}
+                              </h4>
+                              <ul className="space-y-1.5">
+                                {fiche.sources.map((src, i) => (
+                                  <li key={i} className="text-[11px] font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center">
+                              <ShieldAlert className="w-3 h-3 mr-1.5" />
+                              {lang === 'fr' ? "Limites méthodologiques :" : "Methodological limits:"}
+                            </h4>
+                            <p className="text-xs text-slate-500 italic">
+                              {fiche.limits}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            </section>
           );
         })}
-      </section>
+      </div>
     </div>
   );
 };
