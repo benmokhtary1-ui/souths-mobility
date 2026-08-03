@@ -2261,8 +2261,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       </section>
     </div>
   );
-};
-
+  
 const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader 
