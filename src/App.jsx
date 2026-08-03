@@ -107,27 +107,38 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
   );
 };
 
-const PageHeader = ({ badge, title, highlight, desc }) => (
-  <header className="bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border border-blue-900/50 shadow-lg mb-8">
-    <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.02] pointer-events-none">
-      <Globe className="w-[400px] h-[400px]" />
-    </div>
-    <div className="relative z-10 max-w-4xl">
-      <div className="inline-block px-3 py-1 rounded-sm bg-blue-900/50 border border-blue-800 text-[10px] font-bold text-blue-200 mb-4 uppercase tracking-widest shadow-sm">
-        {badge}
+const headerAccents = {
+  blue: { badge: "bg-blue-900/50 border-blue-800 text-blue-200", highlight: "text-blue-300", border: "border-blue-900/50" },
+  emerald: { badge: "bg-emerald-900/50 border-emerald-800 text-emerald-200", highlight: "text-emerald-300", border: "border-emerald-900/50" },
+  indigo: { badge: "bg-indigo-900/50 border-indigo-800 text-indigo-200", highlight: "text-indigo-300", border: "border-indigo-900/50" },
+  amber: { badge: "bg-amber-900/50 border-amber-800 text-amber-200", highlight: "text-amber-300", border: "border-amber-900/50" },
+  teal: { badge: "bg-teal-900/50 border-teal-800 text-teal-200", highlight: "text-teal-300", border: "border-teal-900/50" },
+};
+
+const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent = 'blue' }) => {
+  const a = headerAccents[accent] || headerAccents.blue;
+  return (
+    <header className={`bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border ${a.border} shadow-lg mb-8`}>
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.03] pointer-events-none">
+        <Icon className="w-[400px] h-[400px]" />
       </div>
-      <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
-        {title} <br/>
-        <span className="text-blue-300 italic font-normal">
-          {highlight}
-        </span>
-      </h1>
-      <p className="text-slate-300 text-base leading-relaxed font-medium">
-        {desc}
-      </p>
-    </div>
-  </header>
-);
+      <div className="relative z-10 max-w-4xl">
+        <div className={`inline-block px-3 py-1 rounded-sm border text-[10px] font-bold mb-4 uppercase tracking-widest shadow-sm ${a.badge}`}>
+          {badge}
+        </div>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
+          {title} <br/>
+          <span className={`italic font-normal ${a.highlight}`}>
+            {highlight}
+          </span>
+        </h1>
+        <p className="text-slate-300 text-base leading-relaxed font-medium">
+          {desc}
+        </p>
+      </div>
+    </header>
+  );
+};
 
 // ============================================================================
 // 2. DONNÉES STATIQUES
@@ -596,31 +607,31 @@ const genericDesc = {
 // depuis countryData par computeRegionAggregate() : les valeurs ci-dessous ne servent que de filet de sécurité.
 // ----------------------------------------------------------------------------
 const aggregates = {
-  'africa_perspective': { 
-    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flag: "🌍", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
+  'africa_perspective': {
+    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flagIcon: Globe, flagColor: "text-blue-700", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
     history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
     distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
     ...genericDesc
   },
-  'af_med_perspective': { 
-    name: { fr: "Afrique Méditerranéenne (Sous-région)", en: "Mediterranean Africa (Sub-region)" }, flag: "🌊", stock: '3,4 M', female: '43.7', evolution: '1.8', retention: 65, remittances: 3.9, aid: 1.3,
-    history: [{ year: 1990, value: '1.0' }, { year: 2024, value: '3.4' }], ...genericDesc 
+  'af_med_perspective': {
+    name: { fr: "Afrique Méditerranéenne (Sous-région)", en: "Mediterranean Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-teal-700", stock: '3,4 M', female: '43.7', evolution: '1.8', retention: 65, remittances: 3.9, aid: 1.3,
+    history: [{ year: 1990, value: '1.0' }, { year: 2024, value: '3.4' }], ...genericDesc
   },
-  'af_west_perspective': { 
-    name: { fr: "Afrique de l'Ouest (Sous-région)", en: "West Africa (Sub-region)" }, flag: "🌳", stock: '7,6 M', female: '47.6', evolution: '2.1', retention: 84, remittances: 5.1, aid: 4.8,
-    history: [{ year: 1990, value: '3.5' }, { year: 2024, value: '7.6' }], ...genericDesc 
+  'af_west_perspective': {
+    name: { fr: "Afrique de l'Ouest (Sous-région)", en: "West Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-amber-700", stock: '7,6 M', female: '47.6', evolution: '2.1', retention: 84, remittances: 5.1, aid: 4.8,
+    history: [{ year: 1990, value: '3.5' }, { year: 2024, value: '7.6' }], ...genericDesc
   },
-  'af_central_perspective': { 
-    name: { fr: "Afrique Centrale (Sous-région)", en: "Central Africa (Sub-region)" }, flag: "🦍", stock: '4,2 M', female: '48.9', evolution: '3.5', retention: 92, remittances: 1.5, aid: 5.9,
-    history: [{ year: 1990, value: '1.5' }, { year: 2024, value: '4.2' }], ...genericDesc 
+  'af_central_perspective': {
+    name: { fr: "Afrique Centrale (Sous-région)", en: "Central Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-emerald-700", stock: '4,2 M', female: '48.9', evolution: '3.5', retention: 92, remittances: 1.5, aid: 5.9,
+    history: [{ year: 1990, value: '1.5' }, { year: 2024, value: '4.2' }], ...genericDesc
   },
-  'af_east_perspective': { 
-    name: { fr: "Afrique de l'Est (Sous-région)", en: "East Africa (Sub-region)" }, flag: "⛰️", stock: '6,8 M', female: '49.1', evolution: '1.6', retention: 88, remittances: 2.8, aid: 5.1,
-    history: [{ year: 1990, value: '4.5' }, { year: 2024, value: '6.8' }], ...genericDesc 
+  'af_east_perspective': {
+    name: { fr: "Afrique de l'Est (Sous-région)", en: "East Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-indigo-700", stock: '6,8 M', female: '49.1', evolution: '1.6', retention: 88, remittances: 2.8, aid: 5.1,
+    history: [{ year: 1990, value: '4.5' }, { year: 2024, value: '6.8' }], ...genericDesc
   },
-  'af_south_perspective': { 
-    name: { fr: "Afrique Australe (Sous-région)", en: "Southern Africa (Sub-region)" }, flag: "🦓", stock: '4,5 M', female: '44.8', evolution: '3.2', retention: 95, remittances: 1.9, aid: 2.3,
-    history: [{ year: 1990, value: '2.5' }, { year: 2024, value: '4.5' }], ...genericDesc 
+  'af_south_perspective': {
+    name: { fr: "Afrique Australe (Sous-région)", en: "Southern Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-rose-700", stock: '4,5 M', female: '44.8', evolution: '3.2', retention: 95, remittances: 1.9, aid: 2.3,
+    history: [{ year: 1990, value: '2.5' }, { year: 2024, value: '4.5' }], ...genericDesc
   }
 };
 
@@ -1270,9 +1281,11 @@ const TabEvidenceCheck = ({ text, lang }) => {
         badge={lang === 'fr' ? 'Observatoire des Narratifs' : 'Narratives Observatory'}
         title={lang === 'fr' ? 'Évaluation des affirmations' : 'Evidence Check'}
         highlight={lang === 'fr' ? 'à la lumière des données.' : 'powered by open data.'}
-        desc={lang === 'fr' 
+        desc={lang === 'fr'
           ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
           : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
+        icon={Search}
+        accent="blue"
       />
 
       {/* Boutons de filtrage en haut */}
@@ -2095,11 +2108,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
-      <PageHeader 
+      <PageHeader
         badge={text.headers.governance.badge}
         title={text.headers.governance.title}
         highlight={text.headers.governance.highlight}
         desc={text.headers.governance.desc}
+        icon={Landmark}
+        accent="indigo"
       />
       
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
@@ -2521,11 +2536,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
 const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
-    <PageHeader 
+    <PageHeader
       badge={text.headers.explorer.badge}
       title={text.headers.explorer.title}
       highlight={text.headers.explorer.highlight}
       desc={text.headers.explorer.desc}
+      icon={MapIcon}
+      accent="emerald"
     />
 
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -2610,7 +2627,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                   {text.badge.regional}
                 </span>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
-                  <span className="mr-3 text-3xl">{display.flag}</span>
+                  {display.flagIcon ? (
+                    <span className={`mr-3 p-1.5 rounded-lg bg-slate-50 border border-slate-200 ${display.flagColor || 'text-blue-700'}`}>
+                      <display.flagIcon className="w-6 h-6" />
+                    </span>
+                  ) : (
+                    <span className="mr-3 text-3xl">{display.flag}</span>
+                  )}
                   {display.name}
                 </h2>
               </div>
@@ -2753,11 +2776,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
 const TabLibrary = ({ text, lang }) => (
   <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
-    <PageHeader 
+    <PageHeader
       badge={text.headers.library.badge}
       title={text.headers.library.title}
       highlight={text.headers.library.highlight}
       desc={text.headers.library.desc}
+      icon={BookOpen}
+      accent="amber"
     />
     <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl shadow-sm">
       <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -2778,11 +2803,13 @@ const TabLibrary = ({ text, lang }) => (
 
 const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
-    <PageHeader 
+    <PageHeader
       badge={text.headers.methodology.badge}
       title={text.headers.methodology.title}
       highlight={text.headers.methodology.highlight}
       desc={text.headers.methodology.desc}
+      icon={Database}
+      accent="teal"
     />
 
     <section id="data">
@@ -3144,7 +3171,7 @@ export default function App() {
     
     if (country && activeSubTab !== 'perspective') {
       return {
-        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, stock: country.stock, female: country.female, evolution: country.evolution,
+        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
         retention: country.retention ?? 50,
         remittances: country.remittances ?? null, remittances_year: country.remittances_year ?? null,
         labour_participation: country.labour_participation ?? null, labour_participation_year: country.labour_participation_year ?? null,
@@ -3163,7 +3190,9 @@ export default function App() {
 
     return {
       name: typeof fallback.name === 'object' ? (fallback.name?.[lang] || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
-      flag: fallback.flag,
+      flag: null,
+      flagIcon: fallback.flagIcon,
+      flagColor: fallback.flagColor,
       stock: formatNumber(Math.round(agg.stock)),
       female: agg.female ?? fallback.female,
       evolution: fallback.evolution,
@@ -3320,7 +3349,13 @@ export default function App() {
           >
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
               <div className="flex items-center space-x-5">
-                <span className="text-4xl md:text-5xl flag-emoji border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none">{display.flag}</span>
+                {display.flagIcon ? (
+                  <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2.5 shadow-sm print:border-none ${display.flagColor || 'text-blue-700'}`}>
+                    <display.flagIcon className="w-8 h-8 md:w-9 md:h-9" />
+                  </span>
+                ) : (
+                  <span className="text-4xl md:text-5xl flag-emoji border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none">{display.flag}</span>
+                )}
                 <div>
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight">{display.name}</h2>
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm">{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</p>
