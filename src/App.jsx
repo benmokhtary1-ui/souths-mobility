@@ -1390,16 +1390,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'CEDEAO / ECOWAS (Afrique de l’Ouest)',
       tag: lang === 'fr' ? 'Ouverture standardisée & pionnière' : 'Pioneering & standardized openness',
       desc: {
-        fr: "La CEDEAO constitue le bloc de référence du régime continental. L'ouverture y est une présomption stabilisée dans les pratiques administratives, malgré la crise récente liée au retrait de l'Alliance des États du Sahel (AES) en 2025[cite: 3].",
-        en: "ECOWAS constitutes the reference bloc of the continental regime. Openness is a stabilized presumption in administrative practices, despite the recent crisis linked to the withdrawal of the Alliance of Sahel States (AES) in 2025[cite: 3]."
+        fr: "La CEDEAO constitue le bloc de référence du régime continental. L'ouverture y est une présomption stabilisée dans les pratiques administratives, malgré la crise récente liée au retrait de l'Alliance des États du Sahel (AES) en 2025.",
+        en: "ECOWAS constitutes the reference bloc of the continental regime. Openness is a stabilized presumption in administrative practices, despite the recent crisis linked to the withdrawal of the Alliance of Sahel States (AES) in 2025."
       },
       instruments: {
-        fr: "Protocole de 1979 et Actes additionnels de 2014 supprimant la limite de 90 jours et le permis de résidence pour les citoyens communautaires. Appuyé par le processus MIDWA (2000)[cite: 3].",
-        en: "1979 Protocol and 2014 Additional Acts removing the 90-day limit and residence permit for community citizens. Supported by the MIDWA process (2000)[cite: 3]."
+        fr: "Protocole de 1979 et Actes additionnels de 2014 supprimant la limite de 90 jours et le permis de résidence pour les citoyens communautaires. Appuyé par le processus MIDWA (2000).",
+        en: "1979 Protocol and 2014 Additional Acts removing the 90-day limit and residence permit for community citizens. Supported by the MIDWA process (2000)."
       },
       dynamics: {
-        fr: "La région affiche l'indice d'ouverture (AVOI) le plus élevé en 2025 (0,597), prouvant la force de son architecture procédurale et documentaire, même si des frictions persistent aux guichets frontaliers[cite: 3].",
-        en: "The region shows the highest openness index (AVOI) in 2025 (0.597), proving the strength of its procedural and documentary architecture, even if frictions persist at border counters[cite: 3]."
+        fr: "La région affiche l'indice d'ouverture (AVOI) le plus élevé en 2025 (0,597), prouvant la force de son architecture procédurale et documentaire, même si des frictions persistent aux guichets frontaliers.",
+        en: "The region shows the highest openness index (AVOI) in 2025 (0.597), proving the strength of its procedural and documentary architecture, even if frictions persist at border counters."
       }
     },
     {
@@ -1407,16 +1407,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'CAE / EAC (Communauté d’Afrique de l’Est)',
       tag: lang === 'fr' ? 'Citoyenneté de marché & corridors' : 'Market citizenship & corridors',
       desc: {
-        fr: "La CAE fonde son intégration sur une citoyenneté de marché. La mobilité y est pensée comme une condition de crédibilité du marché commun, articulant droit au travail, résidence et établissement[cite: 3].",
-        en: "The EAC bases its integration on market citizenship. Mobility is seen as a condition for the credibility of the common market, articulating the right to work, residence, and establishment[cite: 3]."
+        fr: "La CAE fonde son intégration sur une citoyenneté de marché. La mobilité y est pensée comme une condition de crédibilité du marché commun, articulant droit au travail, résidence et établissement.",
+        en: "The EAC bases its integration on market citizenship. Mobility is seen as a condition for the credibility of the common market, articulating the right to work, residence, and establishment."
       },
       instruments: {
-        fr: "Protocole du Marché commun (2010), politique de migration de travail (2025-2030), et forte procéduralisation via les Postes-frontières à arrêt unique (OSBP)[cite: 3].",
-        en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong proceduralization via One-Stop Border Posts (OSBP)[cite: 3]."
+        fr: "Protocole du Marché commun (2010), politique de migration de travail (2025-2030), et forte procéduralisation via les Postes-frontières à arrêt unique (OSBP).",
+        en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI élevé (~0,54 en 2025) porté par le Rwanda et le Kenya (qui dispense d'ETA les membres de la CAE pour 180 jours), mais l'ouverture reste hétérogène (Somalie, RDC, Soudan du Sud en retrait)[cite: 3].",
-        en: "A high AVOI score (~0.54 in 2025) driven by Rwanda and Kenya (which exempts EAC members from ETA for 180 days), but openness remains heterogeneous (Somalia, DRC, South Sudan lagging behind)[cite: 3]."
+        fr: "Un score AVOI élevé (~0,54 en 2025) porté par le Rwanda et le Kenya (qui dispense d'ETA les membres de la CAE pour 180 jours), mais l'ouverture reste hétérogène (Somalie, RDC, Soudan du Sud en retrait).",
+        en: "A high AVOI score (~0.54 in 2025) driven by Rwanda and Kenya (which exempts EAC members from ETA for 180 days), but openness remains heterogeneous (Somalia, DRC, South Sudan lagging behind)."
       }
     },
     {
@@ -1424,16 +1424,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'SADC (Communauté de Développement de l’Afrique Australe)',
       tag: lang === 'fr' ? 'Procéduralisation sectorielle & prudence' : 'Sectoral approach & caution',
       desc: {
-        fr: "Face aux réticences souverainistes (notamment de l'Afrique du Sud), la SADC déploie une intégration asymétrique et sélective, privilégiant la gestion logistique des corridors et l'attraction des talents plutôt qu'une ouverture totale[cite: 3].",
-        en: "Faced with sovereign reluctance (notably from South Africa), SADC deploys an asymmetric and selective integration, prioritizing logistics corridor management and talent attraction over total openness[cite: 3]."
+        fr: "Face aux réticences souverainistes (notamment de l'Afrique du Sud), la SADC déploie une intégration asymétrique et sélective, privilégiant la gestion logistique des corridors et l'attraction des talents plutôt qu'une ouverture totale.",
+        en: "Faced with sovereign reluctance (notably from South Africa), SADC deploys an asymmetric and selective integration, prioritizing logistics corridor management and talent attraction over total openness."
       },
       instruments: {
-        fr: "Protocole de 2005 (faiblement ratifié), plan d'action sur la migration de travail (2020-2025), portabilité des droits sociaux, et accords bilatéraux innovants (carte d'identité Botswana-Namibie)[cite: 3].",
-        en: "2005 Protocol (weakly ratified), labor migration action plan (2020-2025), social rights portability, and innovative bilateral agreements (Botswana-Namibia ID card)[cite: 3]."
+        fr: "Protocole de 2005 (faiblement ratifié), plan d'action sur la migration de travail (2020-2025), portabilité des droits sociaux, et accords bilatéraux innovants (carte d'identité Botswana-Namibie).",
+        en: "2005 Protocol (weakly ratified), labor migration action plan (2020-2025), social rights portability, and innovative bilateral agreements (Botswana-Namibia ID card)."
       },
       dynamics: {
-        fr: "Un espace dominé par la prudence sécuritaire et le filtrage administratif (score AVOI de 0,491 en 2025), polarisé par l'économie sud-africaine (réforme BMA et White Paper de 2024)[cite: 3].",
-        en: "A space dominated by security caution and administrative filtering (AVOI score of 0.491 in 2025), polarized by the South African economy (BMA reform and 2024 White Paper)[cite: 3]."
+        fr: "Un espace dominé par la prudence sécuritaire et le filtrage administratif (score AVOI de 0,491 en 2025), polarisé par l'économie sud-africaine (réforme BMA et White Paper de 2024).",
+        en: "A space dominated by security caution and administrative filtering (AVOI score of 0.491 in 2025), polarized by the South African economy (BMA reform and 2024 White Paper)."
       }
     },
     {
@@ -1441,16 +1441,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)',
       tag: lang === 'fr' ? 'Facilitation graduelle asymétrique' : 'Gradual asymmetric facilitation',
       desc: {
-        fr: "Vaste bloc de 21 États où l'intégration humaine avance par accumulation technique et harmonisation douanière, afin de réduire les coûts de coordination dans un espace extrêmement hétérogène géographiquement[cite: 3].",
-        en: "Vast bloc of 21 States where human integration advances through technical accumulation and customs harmonization, to reduce coordination costs in a geographically extremely heterogeneous space[cite: 3]."
+        fr: "Vaste bloc de 21 États où l'intégration humaine avance par accumulation technique et harmonisation douanière, afin de réduire les coûts de coordination dans un espace extrêmement hétérogène géographiquement.",
+        en: "Vast bloc of 21 States where human integration advances through technical accumulation and customs harmonization, to reduce coordination costs in a geographically extremely heterogeneous space."
       },
       instruments: {
-        fr: "Protocoles de 1984 et 1998 (application inégale), processus consultatif MIDCOM (2013), et forte production d'outils de capacitation technique (modèles de lois, manuels de procédures)[cite: 3].",
-        en: "1984 and 1998 Protocols (uneven application), MIDCOM consultative process (2013), and strong production of technical capacity-building tools (model laws, procedure manuals)[cite: 3]."
+        fr: "Protocoles de 1984 et 1998 (application inégale), processus consultatif MIDCOM (2013), et forte production d'outils de capacitation technique (modèles de lois, manuels de procédures).",
+        en: "1984 and 1998 Protocols (uneven application), MIDCOM consultative process (2013), and strong production of technical capacity-building tools (model laws, procedure manuals)."
       },
       dynamics: {
-        fr: "L'obligation juridique de libre circulation y est partiellement suspendue au profit d'une rationalisation pragmatique et sectorielle (visa d'affaires, facilitation commerciale)[cite: 3].",
-        en: "The legal obligation of free movement is partially suspended in favor of pragmatic and sectoral rationalization (business visa, trade facilitation)[cite: 3]."
+        fr: "L'obligation juridique de libre circulation y est partiellement suspendue au profit d'une rationalisation pragmatique et sectorielle (visa d'affaires, facilitation commerciale).",
+        en: "The legal obligation of free movement is partially suspended in favor of pragmatic and sectoral rationalization (business visa, trade facilitation)."
       }
     },
     {
@@ -1458,16 +1458,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'IGAD (Autorité Intergouvernementale pour le Développement)',
       tag: lang === 'fr' ? 'Nexus sécurité-développement & juridicisation' : 'Security-development nexus',
       desc: {
-        fr: "Dans une Corne de l'Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l'IGAD à l'articulation entre sécurité, aide humanitaire et développement[cite: 3].",
-        en: "In a Horn of Africa marked by conflicts and climate shocks, mobility is captured by IGAD at the articulation between security, humanitarian aid, and development[cite: 3]."
+        fr: "Dans une Corne de l'Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l'IGAD à l'articulation entre sécurité, aide humanitaire et développement.",
+        en: "In a Horn of Africa marked by conflicts and climate shocks, mobility is captured by IGAD at the articulation between security, humanitarian aid, and development."
       },
       instruments: {
-        fr: "Cadre politique de 2012, et adoption pionnière en 2020 de deux protocoles : l'un sur la libre circulation des personnes, l'autre spécifiquement dédié à la transhumance pastorale transfrontalière[cite: 3].",
-        en: "2012 policy framework, and pioneering adoption in 2020 of two protocols: one on free movement of persons, the other specifically dedicated to cross-border pastoral transhumance[cite: 3]."
+        fr: "Cadre politique de 2012, et adoption pionnière en 2020 de deux protocoles : l'un sur la libre circulation des personnes, l'autre spécifiquement dédié à la transhumance pastorale transfrontalière.",
+        en: "2012 policy framework, and pioneering adoption in 2020 of two protocols: one on free movement of persons, the other specifically dedicated to cross-border pastoral transhumance."
       },
       dynamics: {
-        fr: "Enregistre la plus forte progression du continent en matière d'ouverture des visas en 2025 (~0,50 AVOI), bien que l'homogénéisation des pratiques soit vulnérable à l'instabilité géopolitique (retrait érythréen)[cite: 3].",
-        en: "Records the continent's strongest progress in visa openness in 2025 (~0.50 AVOI), although the homogenization of practices is vulnerable to geopolitical instability (Eritrean withdrawal)[cite: 3]."
+        fr: "Enregistre la plus forte progression du continent en matière d'ouverture des visas en 2025 (~0,50 AVOI), bien que l'homogénéisation des pratiques soit vulnérable à l'instabilité géopolitique (retrait érythréen).",
+        en: "Records the continent's strongest progress in visa openness in 2025 (~0.50 AVOI), although the homogenization of practices is vulnerable to geopolitical instability (Eritrean withdrawal)."
       }
     },
     {
@@ -1475,16 +1475,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'CEEAC & CEMAC (Afrique Centrale)',
       tag: lang === 'fr' ? 'Configuration à deux étages' : 'Two-tier configuration',
       desc: {
-        fr: "L'Afrique Centrale repose sur une intégration à double vitesse où le noyau dense (CEMAC) porte la facilitation, tandis que le vaste ensemble CEEAC demeure entravé par les contraintes d'enclavement et d'infrastructures[cite: 3].",
-        en: "Central Africa relies on a two-tier integration where the dense core (CEMAC) carries facilitation, while the vast ECCAS whole remains hampered by landlocked constraints and infrastructure issues[cite: 3]."
+        fr: "L'Afrique Centrale repose sur une intégration à double vitesse où le noyau dense (CEMAC) porte la facilitation, tandis que le vaste ensemble CEEAC demeure entravé par les contraintes d'enclavement et d'infrastructures.",
+        en: "Central Africa relies on a two-tier integration where the dense core (CEMAC) carries facilitation, while the vast ECCAS whole remains hampered by landlocked constraints and infrastructure issues."
       },
       instruments: {
-        fr: "Traité révisé de la CEEAC (2019) à valeur programmatique. Actes additionnels CEMAC (2013, 2017) instituant la suppression des visas pour les séjours de 90 jours et la reconnaissance documentaire[cite: 3].",
-        en: "Revised ECCAS Treaty (2019) with programmatic value. CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90-day stays and documentary recognition[cite: 3]."
+        fr: "Traité révisé de la CEEAC (2019) à valeur programmatique. Actes additionnels CEMAC (2013, 2017) instituant la suppression des visas pour les séjours de 90 jours et la reconnaissance documentaire.",
+        en: "Revised ECCAS Treaty (2019) with programmatic value. CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90-day stays and documentary recognition."
       },
       dynamics: {
-        fr: "Le défi principal est la conversion de l'acquis CEMAC (droit d'entrée effectif) vers les piliers de résidence/établissement et son extension au périmètre entier de la CEEAC (AVOI moyen de 0,327)[cite: 3].",
-        en: "The main challenge is the conversion of the CEMAC acquis (effective right of entry) towards residence/establishment pillars and its extension to the entire ECCAS perimeter (average AVOI of 0.327)[cite: 3]."
+        fr: "Le défi principal est la conversion de l'acquis CEMAC (droit d'entrée effectif) vers les piliers de résidence/établissement et son extension au périmètre entier de la CEEAC (AVOI moyen de 0,327).",
+        en: "The main challenge is the conversion of the CEMAC acquis (effective right of entry) towards residence/establishment pillars and its extension to the entire ECCAS perimeter (average AVOI of 0.327)."
       }
     },
     {
@@ -1492,16 +1492,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'UMA (Union du Maghreb Arabe)',
       tag: lang === 'fr' ? 'Normativité d’horizon & gel institutionnel' : 'Horizon normativity & institutional freeze',
       desc: {
-        fr: "La paralysie géopolitique (tensions Rabat-Alger) gèle l'ambition d'intégration humaine de 1989. L'UMA survit par des coopérations de substitution et une asymétrie documentaire forte[cite: 3].",
-        en: "Geopolitical paralysis (Rabat-Algiers tensions) freezes the 1989 human integration ambition. AMU survives through substitute cooperation and strong documentary asymmetry[cite: 3]."
+        fr: "La paralysie géopolitique (tensions Rabat-Alger) gèle l'ambition d'intégration humaine de 1989. L'UMA survit par des coopérations de substitution et une asymétrie documentaire forte.",
+        en: "Geopolitical paralysis (Rabat-Algiers tensions) freezes the 1989 human integration ambition. AMU survives through substitute cooperation and strong documentary asymmetry."
       },
       instruments: {
-        fr: "Traité de Marrakech (1989) comme horizon normatif, aujourd'hui supplanté de facto par des accords bilatéraux et les cadres d'externalisation sécuritaire de l'Union Européenne[cite: 3].",
-        en: "Marrakech Treaty (1989) as a normative horizon, now de facto supplanted by bilateral agreements and European Union security externalization frameworks[cite: 3]."
+        fr: "Traité de Marrakech (1989) comme horizon normatif, aujourd'hui supplanté de facto par des accords bilatéraux et les cadres d'externalisation sécuritaire de l'Union Européenne.",
+        en: "Marrakech Treaty (1989) as a normative horizon, now de facto supplanted by bilateral agreements and European Union security externalization frameworks."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,166 en 2025). Néanmoins, une activité technique résiliente persiste, notamment via la participation à l'Observatoire Africain des Migrations (OAM)[cite: 3].",
-        en: "The bloc shows the lowest openness average on the continent (0.166 in 2025). Nevertheless, resilient technical activity persists, notably via participation in the African Migration Observatory (AMO)[cite: 3]."
+        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,166 en 2025). Néanmoins, une activité technique résiliente persiste, notamment via la participation à l'Observatoire Africain des Migrations (OAM).",
+        en: "The bloc shows the lowest openness average on the continent (0.166 in 2025). Nevertheless, resilient technical activity persists, notably via participation in the African Migration Observatory (AMO)."
       }
     },
     {
@@ -1509,16 +1509,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: 'CEN-SAD (Communauté des États Sahélo-Sahariens)',
       tag: lang === 'fr' ? 'Coordination de surcouche transrégionale' : 'Transregional overlay coordination',
       desc: {
-        fr: "Avec 25 États membres englobant d'autres CER, la CEN-SAD fonctionne comme un forum macro-politique et sécuritaire plutôt que comme un régime juridique autonome de libre circulation[cite: 3].",
-        en: "With 25 member states encompassing other RECs, CEN-SAD functions as a macro-political and security forum rather than an autonomous legal regime for free movement[cite: 3]."
+        fr: "Avec 25 États membres englobant d'autres CER, la CEN-SAD fonctionne comme un forum macro-politique et sécuritaire plutôt que comme un régime juridique autonome de libre circulation.",
+        en: "With 25 member states encompassing other RECs, CEN-SAD functions as a macro-political and security forum rather than an autonomous legal regime for free movement."
       },
       instruments: {
-        fr: "Traité de 1998 (révisé 2013) et Stratégie 2022-2026. L'action est polarisée sur la lutte antiterroriste, les corridors sahélo-sahariens et les infrastructures de transport[cite: 3].",
-        en: "1998 Treaty (revised 2013) and 2022-2026 Strategy. Action is polarized on counter-terrorism, Sahel-Saharan corridors, and transport infrastructure[cite: 3]."
+        fr: "Traité de 1998 (révisé 2013) et Stratégie 2022-2026. L'action est polarisée sur la lutte antiterroriste, les corridors sahélo-sahariens et les infrastructures de transport.",
+        en: "1998 Treaty (revised 2013) and 2022-2026 Strategy. Action is polarized on counter-terrorism, Sahel-Saharan corridors, and transport infrastructure."
       },
       dynamics: {
-        fr: "L'institutionnalisation des droits d'entrée y est très faible, les États s'en remettant aux obligations contractées dans leurs CER d'appartenance primaire (CEDEAO, CEEAC, etc.)[cite: 3].",
-        en: "The institutionalization of entry rights is very weak, with states relying on obligations contracted in their primary RECs of membership (ECOWAS, ECCAS, etc.)[cite: 3]."
+        fr: "L'institutionnalisation des droits d'entrée y est très faible, les États s'en remettant aux obligations contractées dans leurs CER d'appartenance primaire (CEDEAO, CEEAC, etc.).",
+        en: "The institutionalization of entry rights is very weak, with states relying on obligations contracted in their primary RECs of membership (ECOWAS, ECCAS, etc.)."
       }
     }
   ];
@@ -1528,32 +1528,32 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       title: { fr: "Le Traité d'Abuja (1991)", en: "The Abuja Treaty (1991)" },
       tag: { fr: "Fondation", en: "Foundation" },
       desc: {
-        fr: "L'acte fondateur de la Communauté économique africaine (CEA), qui consacre l'intégration graduelle et la libre circulation des personnes, des biens, des services et des capitaux comme piliers indissociables de l'unité continentale[cite: 3].",
-        en: "The founding act of the African Economic Community (AEC), establishing gradual integration and the free movement of persons, goods, services, and capital as inseparable pillars of continental unity[cite: 3]."
+        fr: "L'acte fondateur de la Communauté économique africaine (CEA), qui consacre l'intégration graduelle et la libre circulation des personnes, des biens, des services et des capitaux comme piliers indissociables de l'unité continentale.",
+        en: "The founding act of the African Economic Community (AEC), establishing gradual integration and the free movement of persons, goods, services, and capital as inseparable pillars of continental unity."
       }
     },
     {
       title: { fr: "Le MPFA Révisé (2018-2030)", en: "The Revised MPFA (2018-2030)" },
       tag: { fr: "Cadre Stratégique", en: "Strategic Framework" },
       desc: {
-        fr: "Le Cadre de politique migratoire pour l'Afrique guide les États et les CER en reliant la gouvernance des mobilités aux impératifs de développement, de protection des droits et de gestion concertée des marchés du travail intra-africains[cite: 3].",
-        en: "The Migration Policy Framework for Africa guides States and RECs by linking mobility governance to development imperatives, rights protection, and concerted management of intra-African labor markets[cite: 3]."
+        fr: "Le Cadre de politique migratoire pour l'Afrique guide les États et les CER en reliant la gouvernance des mobilités aux impératifs de développement, de protection des droits et de gestion concertée des marchés du travail intra-africains.",
+        en: "The Migration Policy Framework for Africa guides States and RECs by linking mobility governance to development imperatives, rights protection, and concerted management of intra-African labor markets."
       }
     },
     {
       title: { fr: "Protocole sur la Libre Circulation (2018)", en: "Free Movement Protocol (2018)" },
       tag: { fr: "Horizon d'Intégration", en: "Integration Horizon" },
       desc: {
-        fr: "Adopté à Kigali, il vise à instituer le droit d'entrée, de résidence et d'établissement. Encore faiblement ratifié (seuls 4 pays dont le Mali et le Rwanda l'ont ratifié en 2024), il illustre la tension entre norme continentale et prudence souveraine dans l'entre-deux national[cite: 4].",
-        en: "Adopted in Kigali, it aims to institute the right of entry, residence, and establishment. Still weakly ratified (only 4 countries including Mali and Rwanda by 2024), it illustrates the tension between continental norms and sovereign caution in the national in-between[cite: 4]."
+        fr: "Adopté à Kigali, il vise à instituer le droit d'entrée, de résidence et d'établissement. Encore faiblement ratifié (seuls 4 pays dont le Mali et le Rwanda l'ont ratifié en 2024), il illustre la tension entre norme continentale et prudence souveraine dans l'entre-deux national.",
+        en: "Adopted in Kigali, it aims to institute the right of entry, residence, and establishment. Still weakly ratified (only 4 countries including Mali and Rwanda by 2024), it illustrates the tension between continental norms and sovereign caution in the national in-between."
       }
     },
     {
       title: { fr: "Conventions de l'OUA (1969) & Kampala (2009)", en: "OAU (1969) & Kampala (2009) Conventions" },
       tag: { fr: "Protection & Asile", en: "Protection & Asylum" },
       desc: {
-        fr: "La Convention de 1969 (qui élargit la définition classique du réfugié aux victimes de violences généralisées) et la Convention de Kampala sur les déplacés internes (IDPs) constituent les piliers juridiques de la solidarité continentale et de la protection[cite: 3].",
-        en: "The 1969 Convention (expanding the classical definition of a refugee to victims of generalized violence) and the Kampala Convention on Internally Displaced Persons (IDPs) constitute the legal pillars of continental solidarity and protection[cite: 3]."
+        fr: "La Convention de 1969 (qui élargit la définition classique du réfugié aux victimes de violences généralisées) et la Convention de Kampala sur les déplacés internes (IDPs) constituent les piliers juridiques de la solidarité continentale et de la protection.",
+        en: "The 1969 Convention (expanding the classical definition of a refugee to victims of generalized violence) and the Kampala Convention on Internally Displaced Persons (IDPs) constitute the legal pillars of continental solidarity and protection."
       }
     }
   ];
@@ -1709,8 +1709,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </h3>
                 <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
                   {lang === 'fr' 
-                    ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national »[cite: 2]. Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés[cite: 2]."
-                    : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between'[cite: 2]. The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies[cite: 2]."}
+                    ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national ». Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
+                    : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between'. The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
                 </p>
               </div>
             </div>
@@ -1729,7 +1729,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">1991</span>
                     <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "Traité d'Abuja (CEA)" : "Abuja Treaty (AEC)"}</h5>
                     <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                      {lang === 'fr' ? "L'acte fondateur de la Communauté économique africaine. Son article 43 consacre le droit d'entrée, de résidence et d'établissement, érigeant la libre circulation comme pilier de l'intégration continentale[cite: 2]." : "The founding act of the AEC. Article 43 enshrines the right of entry, residence, and establishment, making free movement a pillar of continental integration[cite: 2]."}
+                      {lang === 'fr' ? "L'acte fondateur de la Communauté économique africaine. Son article 43 consacre le droit d'entrée, de résidence et d'établissement, érigeant la libre circulation comme pilier de l'intégration continentale." : "The founding act of the AEC. Article 43 enshrines the right of entry, residence, and establishment, making free movement a pillar of continental integration."}
                     </p>
                     <a href="https://au.int/en/treaties/treaty-establishing-african-economic-community" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-[10px] font-bold text-blue-600 hover:underline">
                       {lang === 'fr' ? "Consulter le Traité" : "View Treaty"} <ExternalLink className="w-3 h-3 ml-1" />
@@ -1740,7 +1740,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">2006 / 2018</span>
                     <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "MPFA & CAP" : "MPFA & CAP"}</h5>
                     <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                      {lang === 'fr' ? "Le Cadre de politique migratoire (MPFA, révisé 2018-2030) et les Positions Communes Africaines (CAP) substituent au contrôle sécuritaire exogène une lecture liant mobilité et développement, forgeant la posture diplomatique « One Africa, One Voice »[cite: 2]." : "The Migration Policy Framework (MPFA) and Common African Positions (CAP) replace exogenous security control with a mobility-development nexus, forging the 'One Africa, One Voice' diplomatic stance[cite: 2]."}
+                      {lang === 'fr' ? "Le Cadre de politique migratoire (MPFA, révisé 2018-2030) et les Positions Communes Africaines (CAP) substituent au contrôle sécuritaire exogène une lecture liant mobilité et développement, forgeant la posture diplomatique « One Africa, One Voice »." : "The Migration Policy Framework (MPFA) and Common African Positions (CAP) replace exogenous security control with a mobility-development nexus, forging the 'One Africa, One Voice' diplomatic stance."}
                     </p>
                     <a href="https://au.int/en/documents/20181206/migration-policy-framework-africa-mpfa" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-[10px] font-bold text-blue-600 hover:underline">
                       {lang === 'fr' ? "Télécharger MPFA (PDF)" : "Download MPFA (PDF)"} <ExternalLink className="w-3 h-3 ml-1" />
@@ -1753,7 +1753,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest inline-block mb-2">2018</span>
                         <h5 className="font-bold text-slate-900 text-base mb-1">{lang === 'fr' ? "Protocole de Kigali (Libre Circulation)" : "Kigali Protocol (Free Movement)"}</h5>
                         <p className="text-xs text-slate-600 leading-relaxed max-w-3xl">
-                          {lang === 'fr' ? "Instrument juridique majeur liant entrée, résidence et établissement. Il incarne parfaitement le paradoxe du « normer sans ancrer » : bien qu'adopté et largement signé (32 États), il n'est ratifié en 2024 que par 4 pays (dont le Mali et le Rwanda), se heurtant aux résistances étatiques dans l'entre-deux national[cite: 2],[cite: 4]." : "A major legal instrument linking entry, residence, and establishment. It embodies the 'norming without anchoring' paradox: widely signed (32 States) but ratified by only 4 (including Mali and Rwanda) by 2024, facing State resistance in the national in-between[cite: 2],[cite: 4]."}
+                          {lang === 'fr' ? "Instrument juridique majeur liant entrée, résidence et établissement. Il incarne parfaitement le paradoxe du « normer sans ancrer » : bien qu'adopté et largement signé (32 États), il n'est ratifié en 2024 que par 4 pays (dont le Mali et le Rwanda), se heurtant aux résistances étatiques dans l'entre-deux national." : "A major legal instrument linking entry, residence, and establishment. It embodies the 'norming without anchoring' paradox: widely signed (32 States) but ratified by only 4 (including Mali and Rwanda) by 2024, facing State resistance in the national in-between."}
                         </p>
                       </div>
                       <div className="flex flex-col gap-2 shrink-0">
@@ -1779,7 +1779,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Rabat, Maroc (2020)</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "L'Observatoire Africain des Migrations est le bras technique de l'UA. Il centralise et harmonise les données migratoires pour déconstruire les récits exogènes et produire des politiques fondées sur des preuves (Evidence-based)[cite: 2]." : "The African Migration Observatory is the AU's technical arm. It harmonizes data to deconstruct exogenous narratives and produce evidence-based policies[cite: 2]."}
+                      {lang === 'fr' ? "L'Observatoire Africain des Migrations est le bras technique de l'UA. Il centralise et harmonise les données migratoires pour déconstruire les récits exogènes et produire des politiques fondées sur des preuves (Evidence-based)." : "The African Migration Observatory is the AU's technical arm. It harmonizes data to deconstruct exogenous narratives and produce evidence-based policies."}
                     </p>
                     <a href="https://amo.au.int/" target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center text-[10px] font-bold text-indigo-700 hover:underline">
                       {lang === 'fr' ? "Site de l'OAM" : "AMO Website"} <ExternalLink className="w-3 h-3 ml-1" />
@@ -1791,7 +1791,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Bamako, Mali</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Le Centre africain d’études et de recherches sur la migration agit comme think tank continental, orientant la recherche académique et l'analyse stratégique des mobilités[cite: 2]." : "The African Centre for the Study and Research on Migration acts as a continental think tank, guiding academic research and strategic analysis of mobilities[cite: 2]."}
+                      {lang === 'fr' ? "Le Centre africain d’études et de recherches sur la migration agit comme think tank continental, orientant la recherche académique et l'analyse stratégique des mobilités." : "The African Centre for the Study and Research on Migration acts as a continental think tank, guiding academic research and strategic analysis of mobilities."}
                     </p>
                   </div>
 
@@ -1800,7 +1800,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Khartoum, Soudan</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Le Centre opérationnel continental coordonne la lutte interétatique contre la migration irrégulière, le trafic illicite de migrants et la traite des êtres humains (actuellement impacté par le conflit)[cite: 2]." : "The Continental Operational Centre coordinates the inter-state fight against irregular migration, migrant smuggling, and human trafficking (currently impacted by conflict)[cite: 2]."}
+                      {lang === 'fr' ? "Le Centre opérationnel continental coordonne la lutte interétatique contre la migration irrégulière, le trafic illicite de migrants et la traite des êtres humains (actuellement impacté par le conflit)." : "The Continental Operational Centre coordinates the inter-state fight against irregular migration, migrant smuggling, and human trafficking (currently impacted by conflict)."}
                     </p>
                   </div>
 
@@ -1809,7 +1809,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-2 block">Kenya / Tunisie</span>
                     <p className="text-[11px] text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "L'Institut africain pour les transferts de fonds (AIR) capte la puissance financière des diasporas. STATAFRIC (Tunis) coordonne l'architecture statistique globale de l'Union[cite: 2]." : "The African Institute for Remittances (AIR) leverages diaspora financial power. STATAFRIC (Tunis) coordinates the Union's overall statistical architecture[cite: 2]."}
+                      {lang === 'fr' ? "L'Institut africain pour les transferts de fonds (AIR) capte la puissance financière des diasporas. STATAFRIC (Tunis) coordonne l'architecture statistique globale de l'Union." : "The African Institute for Remittances (AIR) leverages diaspora financial power. STATAFRIC (Tunis) coordinates the Union's overall statistical architecture."}
                     </p>
                   </div>
 
@@ -1828,8 +1828,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-slate-900 text-sm mb-2">{lang === 'fr' ? "Conventions de protection (1969 & 2009)" : "Protection Conventions (1969 & 2009)"}</h5>
                     <p className="text-xs text-slate-600 leading-relaxed">
                       {lang === 'fr' 
-                        ? "Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs)[cite: 2]." 
-                        : "A pioneer, the 1969 OAU Convention expanded the refugee definition to victims of generalized violence. The Kampala Convention (2009) is the world's first binding legal instrument specifically protecting internally displaced persons (IDPs)[cite: 2]."}
+                        ? "Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs)." 
+                        : "A pioneer, the 1969 OAU Convention expanded the refugee definition to victims of generalized violence. The Kampala Convention (2009) is the world's first binding legal instrument specifically protecting internally displaced persons (IDPs)."}
                     </p>
                   </div>
 
@@ -1837,8 +1837,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h5 className="font-bold text-slate-900 text-sm mb-2">{lang === 'fr' ? "Organes de Coordination (CTS-MRIDPs & JLMP)" : "Coordination Bodies (CTS-MRIDPs & JLMP)"}</h5>
                     <p className="text-xs text-slate-600 leading-relaxed">
                       {lang === 'fr' 
-                        ? "Le CTS-MRIDPs (Comité Technique Spécialisé de l'UA) valide politiquement l'agenda migratoire. Le JLMP (Programme conjoint UA, OIT, OIM, CEA) opérationnalise la gestion concertée des migrations de travail au sein du continent[cite: 2]." 
-                        : "The CTS-MRIDPs (AU Specialized Technical Committee) politically validates the migration agenda. The JLMP (Joint Programme AU, ILO, IOM, ECA) operationalizes the concerted management of labor migration within the continent[cite: 2]."}
+                        ? "Le CTS-MRIDPs (Comité Technique Spécialisé de l'UA) valide politiquement l'agenda migratoire. Le JLMP (Programme conjoint UA, OIT, OIM, CEA) opérationnalise la gestion concertée des migrations de travail au sein du continent." 
+                        : "The CTS-MRIDPs (AU Specialized Technical Committee) politically validates the migration agenda. The JLMP (Joint Programme AU, ILO, IOM, ECA) operationalizes the concerted management of labor migration within the continent."}
                     </p>
                   </div>
 
@@ -1863,8 +1863,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </h3>
               <p className="text-slate-300 text-sm leading-relaxed">
                 {lang === 'fr' 
-                  ? "Les CER constituent les « blocs régionalisés » et les piliers opérationnels de l'intégration continentale africaine. L'analyse démontre que chaque sous-région développe une trajectoire, des instruments et des degrés de procéduralisation qui lui sont propres, produisant une consistance à géométrie variable[cite: 3]."
-                  : "RECs constitute the 'regionalized blocks' and operational pillars for continental integration. Analysis demonstrates that each sub-region develops specific trajectories, instruments, and proceduralization degrees, producing a variable-geometry consistency[cite: 3]."}
+                  ? "Les CER constituent les « blocs régionalisés » et les piliers opérationnels de l'intégration continentale africaine. L'analyse démontre que chaque sous-région développe une trajectoire, des instruments et des degrés de procéduralisation qui lui sont propres, produisant une consistance à géométrie variable."
+                  : "RECs constitute the 'regionalized blocks' and operational pillars for continental integration. Analysis demonstrates that each sub-region develops specific trajectories, instruments, and proceduralization degrees, producing a variable-geometry consistency."}
               </p>
             </div>
 
