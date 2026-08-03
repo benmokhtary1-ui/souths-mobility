@@ -2502,237 +2502,236 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   );
 };
 
-const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
-  <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
-    <PageHeader 
-      badge={text.headers.explorer.badge}
-      title={text.headers.explorer.title}
-      highlight={text.headers.explorer.highlight}
-      desc={text.headers.explorer.desc}
-    />
+const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => {
+  const activeCountry = filteredCountries.find(c => c.id === activeSubTab);
 
-    <div className="flex flex-col lg:flex-row gap-8 items-start">
-      
-      {/* SIDEBAR GAUCHE : NAVIGATION */}
-      <div className="w-full lg:w-1/4 space-y-6 lg:sticky lg:top-24">
+  return (
+    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+      <PageHeader 
+        badge={text.headers.explorer.badge}
+        title={text.headers.explorer.title}
+        highlight={text.headers.explorer.highlight}
+        desc={text.headers.explorer.desc}
+      />
+
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
         
-        {/* RECHERCHE */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
-          <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder={text.sidebar.search}
-            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        {/* SIDEBAR GAUCHE : NAVIGATION */}
+        <div className="w-full lg:w-1/4 space-y-6 lg:sticky lg:top-24">
+          
+          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
+            <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder={text.sidebar.search}
+              className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-        {/* FILTRES DE RÉGION */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-            <MapIcon className="w-3.5 h-3.5 mr-1.5" />
-            {text.sidebar.title}
-          </h3>
-          <div className="space-y-1.5">
-            <button
-              onClick={() => { setActiveSubRegion('all'); setActiveSubTab('perspective'); setSearchTerm(''); }}
-              className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center ${activeSubRegion === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
-            >
-              <Globe className={`w-4 h-4 mr-2.5 ${activeSubRegion === 'all' ? 'text-blue-400' : 'text-slate-400'}`} />
-              {text.all_regions}
-            </button>
-            
-            <div className="pt-3 pb-2">
-              <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest px-4">{text.sidebar.subregion}</span>
-            </div>
-            
-            {Object.keys(text.regions).map(regionKey => (
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center">
+              <MapIcon className="w-3.5 h-3.5 mr-1.5" />
+              {text.sidebar.title}
+            </h3>
+            <div className="space-y-1.5">
               <button
-                key={regionKey}
-                onClick={() => { setActiveSubRegion(regionKey); setActiveSubTab('perspective'); setSearchTerm(''); }}
-                className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex justify-between items-center group ${activeSubRegion === regionKey ? 'bg-blue-50 text-blue-800 border border-blue-100 shadow-sm' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}`}
+                onClick={() => { setActiveSubRegion('all'); setActiveSubTab('perspective'); setSearchTerm(''); }}
+                className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center ${activeSubRegion === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
               >
-                <span>{text.regions[regionKey]}</span>
-                <ChevronRight className={`w-4 h-4 transition-transform ${activeSubRegion === regionKey ? 'text-blue-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
+                <Globe className={`w-4 h-4 mr-2.5 ${activeSubRegion === 'all' ? 'text-blue-400' : 'text-slate-400'}`} />
+                {text.all_regions}
               </button>
-            ))}
+              
+              <div className="pt-3 pb-2">
+                <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest px-4">{text.sidebar.subregion}</span>
+              </div>
+              
+              {Object.keys(text.regions).map(regionKey => (
+                <button
+                  key={regionKey}
+                  onClick={() => { setActiveSubRegion(regionKey); setActiveSubTab('perspective'); setSearchTerm(''); }}
+                  className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex justify-between items-center group ${activeSubRegion === regionKey ? 'bg-blue-50 text-blue-800 border border-blue-100 shadow-sm' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}`}
+                >
+                  <span>{text.regions[regionKey]}</span>
+                  <ChevronRight className={`w-4 h-4 transition-transform ${activeSubRegion === regionKey ? 'text-blue-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ZONE PRINCIPALE : RÉSULTATS */}
-      <div className="w-full lg:w-3/4 space-y-6">
-        
-        {/* TABS (Perspective globale vs Liste de pays) */}
-        <div className="flex bg-slate-200 p-1.5 rounded-xl">
-          <button
-            onClick={() => setActiveSubTab('perspective')}
-            className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab === 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
-          </button>
-          <button
-            onClick={() => {
-              if (filteredCountries.length > 0) {
-                setActiveSubTab(filteredCountries[0].id);
-              }
-            }}
-            className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab !== 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            {lang === 'fr' ? 'Profils Nationaux' : 'National Profiles'} ({filteredCountries.length})
-          </button>
-        </div>
+        {/* ZONE PRINCIPALE : RÉSULTATS */}
+        <div className="w-full lg:w-3/4 space-y-6">
+          
+          <div className="flex bg-slate-200 p-1.5 rounded-xl">
+            <button
+              onClick={() => setActiveSubTab('perspective')}
+              className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab === 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
+            </button>
+            <button
+              onClick={() => {
+                if (filteredCountries.length > 0) {
+                  setActiveSubTab(filteredCountries[0].id);
+                }
+              }}
+              className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab !== 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+              {lang === 'fr' ? 'Profils Nationaux' : 'National Profiles'} ({filteredCountries.length})
+            </button>
+          </div>
 
-        {/* CONTENU (Vue Perspective) */}
-        {activeSubTab === 'perspective' && (
-          <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
-            <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
-              <div>
-                <span className="inline-block px-2.5 py-1 rounded bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-widest mb-3">
-                  {text.badge.regional}
-                </span>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
-                  <span className="mr-3 text-3xl">{display.flag}</span>
-                  {display.name}
-                </h2>
+          {/* CONTENU (Vue Perspective) */}
+          {activeSubTab === 'perspective' && (
+            <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
+              <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
+                <div>
+                  <span className="inline-block px-2.5 py-1 rounded bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-widest mb-3">
+                    {text.badge.regional}
+                  </span>
+                  <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
+                    <span className="mr-3 text-3xl">{display.flag}</span>
+                    {display.name}
+                  </h2>
+                </div>
+                <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+                  <BarChart3 className="w-4 h-4" />
+                  <span>{text.analysis_btn}</span>
+                </button>
               </div>
-              <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 mr-1.5" /> {text.metrics.stock}</span>
+                  <div className="text-3xl font-serif font-bold text-slate-900">{display.stock}</div>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><PieChart className="w-3 h-3 mr-1.5" /> {text.metrics.evolution}</span>
+                  <div className="text-3xl font-serif font-bold text-blue-700">{display.evolution}%</div>
+                </div>
+                <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 mr-1.5" /> {text.metrics.female}</span>
+                  <div className="text-3xl font-serif font-bold text-rose-700">{display.female}%</div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50/50 p-6 rounded-lg border border-blue-100">
+                <h3 className="font-bold text-blue-900 mb-3 text-sm uppercase tracking-widest flex items-center">
+                  <TableProperties className="w-4 h-4 mr-2" />
+                  {text.comparative_view_title}
+                </h3>
+                <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                  {text.comparative_view_desc}
+                </p>
+                
+                {display.distribution && (
+                  <div className="mt-6 pt-5 border-t border-blue-200/50">
+                    <div className="flex justify-between text-xs font-bold mb-2">
+                      <span className="text-blue-800">{display.distribution[0].label[lang]} ({display.distribution[0].value}%)</span>
+                      <span className="text-slate-600">{display.distribution[1].label[lang]} ({display.distribution[1].value}%)</span>
+                    </div>
+                    <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
+                      <div className="h-full bg-blue-600 transition-all duration-1000" style={{width: `${display.distribution[0].value}%`}}></div>
+                      <div className="h-full bg-slate-500 transition-all duration-1000" style={{width: `${display.distribution[1].value}%`}}></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <button onClick={() => setShowModal(true)} className="w-full mt-6 md:hidden flex justify-center items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
                 <BarChart3 className="w-4 h-4" />
                 <span>{text.analysis_btn}</span>
               </button>
             </div>
+          )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 mr-1.5" /> {text.metrics.stock}</span>
-                <div className="text-3xl font-serif font-bold text-slate-900">{display.stock}</div>
-              </div>
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><PieChart className="w-3 h-3 mr-1.5" /> {text.metrics.evolution}</span>
-                <div className="text-3xl font-serif font-bold text-blue-700">{display.evolution}%</div>
-              </div>
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 mr-1.5" /> {text.metrics.female}</span>
-                <div className="text-3xl font-serif font-bold text-rose-700">{display.female}%</div>
-              </div>
-            </div>
-
-            <div className="bg-blue-50/50 p-6 rounded-lg border border-blue-100">
-              <h3 className="font-bold text-blue-900 mb-3 text-sm uppercase tracking-widest flex items-center">
-                <TableProperties className="w-4 h-4 mr-2" />
-                {text.comparative_view_title}
-              </h3>
-              <p className="text-sm text-slate-700 leading-relaxed font-medium">
-                {text.comparative_view_desc}
-              </p>
+          {/* CONTENU (Liste des Pays) */}
+          {activeSubTab !== 'perspective' && (
+            <div className="space-y-4">
               
-              {/* Distribution Bar if available (for 'all' regions view) */}
-              {display.distribution && (
-                <div className="mt-6 pt-5 border-t border-blue-200/50">
-                  <div className="flex justify-between text-xs font-bold mb-2">
-                    <span className="text-blue-800">{display.distribution[0].label[lang]} ({display.distribution[0].value}%)</span>
-                    <span className="text-slate-600">{display.distribution[1].label[lang]} ({display.distribution[1].value}%)</span>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-2">
+                {filteredCountries.map(c => (
+                  <button
+                    key={c.id}
+                    onClick={() => setActiveSubTab(c.id)}
+                    className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                      activeSubTab === c.id 
+                        ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md' 
+                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="text-base flag-emoji">{c.flag || ''}</span>
+                    <span className="hidden sm:inline">{c.name?.[lang] || c.name?.fr || 'Unknown'}</span>
+                  </button>
+                ))}
+                {filteredCountries.length === 0 && (
+                  <div className="w-full p-4 text-center text-slate-400 text-sm">
+                    {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
                   </div>
-                  <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
-                    <div className="h-full bg-blue-600 transition-all duration-1000" style={{width: `${display.distribution[0].value}%`}}></div>
-                    <div className="h-full bg-slate-500 transition-all duration-1000" style={{width: `${display.distribution[1].value}%`}}></div>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <button onClick={() => setShowModal(true)} className="w-full mt-6 md:hidden flex justify-center items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
-              <BarChart3 className="w-4 h-4" />
-              <span>{text.analysis_btn}</span>
-            </button>
-          </div>
-        )}
+                )}
+              </div>
 
-        {/* CONTENU (Liste des Pays) */}
-        {activeSubTab !== 'perspective' && (
-          <div className="space-y-4">
-            
-            {/* Grille des drapeaux pour navigation rapide */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-2">
-              {filteredCountries.map(c => (
-                <button
-                  key={c.id}
-                  onClick={() => setActiveSubTab(c.id)}
-                  className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
-                    activeSubTab === c.id 
-                      ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md' 
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                  }`}
-                >
-                  <span className="text-base flag-emoji">{c.flag}</span>
-                  <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
-                </button>
-              ))}
-              {filteredCountries.length === 0 && (
-                <div className="w-full p-4 text-center text-slate-400 text-sm">
-                  {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
-                </div>
-              )}
-            </div>
-
-            {/* Profil du pays sélectionné */}
-            {filteredCountries.find(c => c.id === activeSubTab) && (
-              <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
-                <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
-                  <div>
-                    <span className="inline-block px-2.5 py-1 rounded bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest mb-3">
-                      {text.badge.country}
-                    </span>
-                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
-                      <span className="mr-3 text-3xl flag-emoji">{display.flag}</span>
-                      {display.name}
-                    </h2>
+              {/* Profil du pays sélectionné */}
+              {activeCountry && (
+                <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
+                  <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
+                    <div>
+                      <span className="inline-block px-2.5 py-1 rounded bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest mb-3">
+                        {text.badge.country}
+                      </span>
+                      <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
+                        <span className="mr-3 text-3xl flag-emoji">{display.flag}</span>
+                        {display.name}
+                      </h2>
+                    </div>
+                    <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+                      <Target className="w-4 h-4" />
+                      <span>{text.analysis_btn}</span>
+                    </button>
                   </div>
-                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block">Total (2024)</span>
+                      <div className="text-xl font-serif font-bold text-slate-900">{formatNumber(display.stock)}</div>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                      <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1.5 block">% Pop. Nat.</span>
+                      <div className="text-xl font-serif font-bold text-blue-800">{display.evolution}%</div>
+                    </div>
+                    <div className="bg-rose-50 p-4 rounded-lg border border-rose-100">
+                      <span className="text-[9px] font-bold text-rose-600 uppercase tracking-widest mb-1.5 block">% Femmes</span>
+                      <div className="text-xl font-serif font-bold text-rose-800">{display.female}%</div>
+                    </div>
+                    <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                      <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block">Rétention (Sud)</span>
+                      <div className="text-xl font-serif font-bold text-emerald-800">{display.retention}%</div>
+                    </div>
+                  </div>
+
+                  {typeof display.impact === 'string' && display.impact.trim() !== '' && (
+                     <div className="bg-amber-50 p-5 rounded-lg border border-amber-100 flex items-start mb-6">
+                       <Info className="w-5 h-5 text-amber-600 mr-3 shrink-0 mt-0.5" />
+                       <p className="text-sm text-amber-900 font-medium leading-relaxed">{display.impact}</p>
+                     </div>
+                  )}
+                  
+                  <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
                     <Target className="w-4 h-4" />
                     <span>{text.analysis_btn}</span>
                   </button>
                 </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block">Total (2024)</span>
-                    <div className="text-xl font-serif font-bold text-slate-900">{formatNumber(display.stock)}</div>
-                  </div>
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1.5 block">% Pop. Nat.</span>
-                    <div className="text-xl font-serif font-bold text-blue-800">{display.evolution}%</div>
-                  </div>
-                  <div className="bg-rose-50 p-4 rounded-lg border border-rose-100">
-                    <span className="text-[9px] font-bold text-rose-600 uppercase tracking-widest mb-1.5 block">% Femmes</span>
-                    <div className="text-xl font-serif font-bold text-rose-800">{display.female}%</div>
-                  </div>
-                  <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-                    <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block">Rétention (Sud)</span>
-                    <div className="text-xl font-serif font-bold text-emerald-800">{display.retention}%</div>
-                  </div>
-                </div>
-
-                {display.impact && (
-                   <div className="bg-amber-50 p-5 rounded-lg border border-amber-100 flex items-start mb-6">
-                     <Info className="w-5 h-5 text-amber-600 mr-3 shrink-0 mt-0.5" />
-                     <p className="text-sm text-amber-900 font-medium leading-relaxed">{display.impact}</p>
-                   </div>
-                )}
-                
-                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
-                  <Target className="w-4 h-4" />
-                  <span>{text.analysis_btn}</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+}
 
 const TabLibrary = ({ text, lang }) => (
   <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
@@ -3113,13 +3112,27 @@ export default function App() {
     
     if (country && activeSubTab !== 'perspective') {
       return {
-        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, stock: country.stock, female: country.female, evolution: country.evolution,
+        name: country.name?.[lang] || country.name?.fr || 'Unknown', 
+        flag: country.flag || '', 
+        stock: country.stock || '0', 
+        female: country.female || '0', 
+        evolution: country.evolution || '0',
         retention: country.retention ?? 50,
-        remittances: country.remittances ?? null, remittances_year: country.remittances_year ?? null,
-        labour_participation: country.labour_participation ?? null, labour_participation_year: country.labour_participation_year ?? null,
-        aid: country.aid ?? 0, history: country.history || [],
-        evo_desc: country.evo_desc?.[lang] || country.evo_desc?.fr || "", origDest: country.origDest?.[lang] || country.origDest?.fr || "", trigger: country.trigger?.[lang] || country.trigger?.fr || "", response: country.response?.[lang] || country.response?.fr || "", impact: country.impact?.[lang] || country.impact?.fr || "",
-        idp_conflict: country.idp_conflict || 0, idp_disaster: country.idp_disaster || 0, refugees_hosted: country.refugees_hosted || 0, avoi: country.avoi || null,
+        remittances: country.remittances ?? null, 
+        remittances_year: country.remittances_year ?? null,
+        labour_participation: country.labour_participation ?? null, 
+        labour_participation_year: country.labour_participation_year ?? null,
+        aid: country.aid ?? 0, 
+        history: country.history || [],
+        evo_desc: typeof country.evo_desc === 'object' ? (country.evo_desc?.[lang] || country.evo_desc?.fr || "") : (country.evo_desc || ""),
+        origDest: typeof country.origDest === 'object' ? (country.origDest?.[lang] || country.origDest?.fr || "") : (country.origDest || ""),
+        trigger: typeof country.trigger === 'object' ? (country.trigger?.[lang] || country.trigger?.fr || "") : (country.trigger || ""),
+        response: typeof country.response === 'object' ? (country.response?.[lang] || country.response?.fr || "") : (country.response || ""),
+        impact: typeof country.impact === 'object' ? (country.impact?.[lang] || country.impact?.fr || "") : (country.impact || ""),
+        idp_conflict: country.idp_conflict || 0, 
+        idp_disaster: country.idp_disaster || 0, 
+        refugees_hosted: country.refugees_hosted || 0, 
+        avoi: country.avoi || null,
         normlex: country.normlex || null,
         au_treaties: country.au_treaties || null,
         isRegion: false
@@ -3132,7 +3145,7 @@ export default function App() {
 
     return {
       name: typeof fallback.name === 'object' ? (fallback.name?.[lang] || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
-      flag: fallback.flag,
+      flag: fallback.flag || '',
       stock: formatNumber(Math.round(agg.stock)),
       female: agg.female ?? fallback.female,
       evolution: fallback.evolution,
@@ -3142,7 +3155,8 @@ export default function App() {
       labour_participation: agg.labourParticipation,
       labour_participation_year: null,
       aid: agg.aid ?? (fallback.aid || 0),
-      history: fallback.history, distribution: fallback.distribution || null,
+      history: fallback.history || [], 
+      distribution: fallback.distribution || null,
       evo_desc: typeof fallback.evo_desc === 'object' ? (fallback.evo_desc?.[lang] || fallback.evo_desc?.fr || "") : (fallback.evo_desc || ""),
       origDest: typeof fallback.origDest === 'object' ? (fallback.origDest?.[lang] || fallback.origDest?.fr || "") : (fallback.origDest || ""),
       trigger: typeof fallback.trigger === 'object' ? (fallback.trigger?.[lang] || fallback.trigger?.fr || "") : (fallback.trigger || ""),
