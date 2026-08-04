@@ -3498,38 +3498,303 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
 const glossaryData = [
   {
-    category: { fr: "Concepts Théoriques", en: "Theoretical Concepts" },
-    icon: Brain,
+    category: { fr: "Typologie des Mobilités", en: "Mobility Typology" },
+    icon: Globe,
     terms: [
-      { term: "Entre-deux national", en_term: "National In-Between", fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les administrations nationales. Concept central de la thèse à l'origine de ce DataHub (Ben Mokhtar, 2026).", en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national administrations. A central concept of the thesis behind this DataHub (Ben Mokhtar, 2026)." },
-      { term: "Capabilités de mouvement", en_term: "Capabilities of Movement", fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que sur une dichotomie volontaire/forcé.", en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, rather than a voluntary/forced dichotomy." },
-      { term: "Diplomatie migratoire", en_term: "Migration Diplomacy", fr: "Usage stratégique de la coopération migratoire par les États comme levier de négociation diplomatique — financement, reconnaissance, contreparties (Adamson & Tsourapas, 2019).", en: "The strategic use of migration cooperation by states as a diplomatic bargaining lever — funding, recognition, reciprocal concessions (Adamson & Tsourapas, 2019)." },
-      { term: "Communs migratoires vernaculaires", en_term: "Vernacular Migratory Commons", fr: "Arrangements informels d'entraide, d'alerte et de réciprocité qui régulent concrètement certains corridors migratoires (Sahara central, marchés-frontières) en l'absence — ou en complément — des cadres institutionnels formels.", en: "Informal mutual-aid, alert, and reciprocity arrangements that concretely regulate certain migration corridors (central Sahara, border markets) in the absence of — or alongside — formal institutional frameworks." },
-      { term: "Extraversion", en_term: "Extraversion", fr: "Théorie (Bayart, 2000) selon laquelle les élites et institutions africaines mobilisent stratégiquement leurs relations avec l'extérieur comme ressource de pouvoir interne, plutôt que de la subir passivement.", en: "Theory (Bayart, 2000) holding that African elites and institutions strategically mobilize external relations as a resource for internal power, rather than passively enduring them." },
-      { term: "Gouvernementalité", en_term: "Governmentality", fr: "Chez Foucault, l'ensemble des techniques, savoirs et institutions par lesquels un problème (ici la migration) est rendu gouvernable — au-delà du seul droit ou de la contrainte physique.", en: "In Foucault, the set of techniques, knowledge, and institutions through which a problem (here, migration) is rendered governable — beyond law or physical coercion alone." },
-      { term: "Lecture décoloniale", en_term: "Decolonial Reading", fr: "Approche qui interroge les asymétries structurelles héritées de l'ordre colonial dans les régimes juridiques et institutionnels contemporains, y compris les cadres internationaux de gouvernance des migrations (Achiume, 2019).", en: "An approach that questions the structural asymmetries inherited from the colonial order within contemporary legal and institutional regimes, including international migration governance frameworks (Achiume, 2019)." },
-      { term: "Régime (de gouvernance migratoire)", en_term: "Regime (of Migration Governance)", fr: "Ensemble de principes, normes, règles et procédures — implicites ou explicites — autour desquels convergent les attentes des acteurs dans un domaine donné (Krasner, 1982), cadre repris et appliqué au cas africain par Ben Mokhtar (2026).", en: "A set of principles, norms, rules, and procedures — implicit or explicit — around which actor expectations converge in a given issue area (Krasner, 1982), a framework taken up and applied to the African case by Ben Mokhtar (2026)." },
+      {
+        term: "Migration",
+        en_term: "Migration",
+        fr: "Le mouvement d'une personne ou d'un groupe de personnes d'une unité géographique à une autre à travers une frontière administrative ou politique, avec l'intention de s'installer indéfiniment ou temporairement dans un lieu autre que son lieu d'origine (Statut de l'OAM)[cite: 2].",
+        en: "The movement of a person or group of persons from one geographical unit to another across an administrative or political border, with the intention of settling indefinitely or temporarily in a place other than their place of origin (AMO Statute)[cite: 2]."
+      },
+      {
+        term: "Migration internationale",
+        en_term: "International Migration",
+        fr: "Mouvement d'individus à travers des frontières étatiques internationalement reconnues avec l'intention d'établir une résidence. À des fins statistiques, l'ONU (UNDESA) et l'OIM définissent un migrant international comme une personne qui change de pays de résidence habituelle pour une période d'au moins 12 mois[cite: 2].",
+        en: "Movement of individuals across internationally recognized state borders with the intention of establishing residence. For statistical purposes, the UN (UNDESA) and IOM define an international migrant as a person who moves to a country other than their usual residence for at least 12 months[cite: 2]."
+      },
+      {
+        term: "Migration interne",
+        en_term: "Internal Migration",
+        fr: "Mouvement de personnes à l'intérieur d'un État impliquant l'établissement d'une nouvelle résidence temporaire ou permanente (ex: rural vers urbain). C'est la forme de migration la plus courante (OIM)[cite: 2].",
+        en: "Movement of people within a State involving the establishment of a new temporary or permanent residence (e.g., rural-to-urban). It is the most common form of migration (IOM)[cite: 2]."
+      },
+      {
+        term: "Migration de travail",
+        en_term: "Labor Migration",
+        fr: "Mouvement d'individus de leur pays d'origine vers un autre pays à des fins d'emploi. L'OIT et le MPFA (2018-2030) soulignent qu'elle peut générer un « triple gain » (pour le pays d'origine, de destination et le migrant) si elle est bien gouvernée[cite: 2].",
+        en: "Movement of individuals from their home country to another country for the purpose of employment. The ILO and MPFA (2018-2030) emphasize that it can create a 'triple win' scenario if well-governed[cite: 2]."
+      },
+      {
+        term: "Migration circulaire",
+        en_term: "Circular Migration",
+        fr: "Mouvement temporaire et répété d'individus entre leur pays d'origine et un ou plusieurs pays d'accueil, souvent à des fins économiques, permettant le maintien de liens forts avec les communautés d'origine (OIM)[cite: 2].",
+        en: "Temporary and repeated movement of individuals between their country of origin and one or more host countries, typically for economic purposes, allowing the maintenance of strong links with home communities (IOM)[cite: 2]."
+      },
+      {
+        term: "Migration saisonnière",
+        en_term: "Seasonal Migration (Labor)",
+        fr: "Déplacement temporaire lié aux fluctuations saisonnières de secteurs spécifiques (agriculture, tourisme). En Afrique, c'est une stratégie de subsistance traditionnelle facilitée par des protocoles régionaux comme celui de la CEDEAO[cite: 2].",
+        en: "Temporary movement linked to seasonal fluctuations in specific industries (agriculture, tourism). In Africa, it is a traditional livelihood strategy facilitated by regional protocols like ECOWAS[cite: 2]."
+      },
+      {
+        term: "Mobilité induite par le climat",
+        en_term: "Climate-Induced Mobility",
+        fr: "Mouvement (interne ou transfrontalier, volontaire ou forcé) déclenché par des changements climatiques soudains (inondations) ou progressifs (sécheresse). Bien que le terme « réfugié climatique » n'ait pas d'existence légale sous la Convention de 1951, ces populations nécessitent une protection (HCR, Déclaration de Kampala 2022)[cite: 2].",
+        en: "Movement (internal or cross-border, voluntary or forced) driven by sudden (floods) or progressive (drought) climate changes. While the term 'climate refugee' has no legal standing under the 1951 Convention, these populations require protection (UNHCR, Kampala Declaration 2022)[cite: 2]."
+      },
+      {
+        term: "Migration régulière",
+        en_term: "Regular Migration",
+        fr: "Mouvement s'effectuant en conformité avec les lois et règlements des pays d'origine, de transit et de destination (OIM). Le Pacte Mondial (GCM) encourage l'expansion des voies régulières pour réduire les vulnérabilités[cite: 2].",
+        en: "Movement that occurs in compliance with the laws and regulations of sending, transit, and receiving states (IOM). The Global Compact (GCM) encourages expanding regular pathways to reduce vulnerabilities[cite: 2]."
+      },
+      {
+        term: "Migration irrégulière",
+        en_term: "Irregular Migration",
+        fr: "Mouvement de personnes s'opérant en dehors des lois, règlements ou accords internationaux régissant l'entrée ou la sortie (OIM). Cela inclut le franchissement non autorisé des frontières ou le dépassement de la durée de validité d'un visa (overstaying)[cite: 2].",
+        en: "Movement of persons that takes place outside the laws, regulations, or international agreements governing entry or exit (IOM). This includes unauthorized border crossings or visa overstaying[cite: 2]."
+      },
+      {
+        term: "Dépassement de séjour (Overstaying)",
+        en_term: "Overstaying",
+        fr: "Fait de rester dans un pays au-delà de la période autorisée par un visa ou un permis. C'est l'une des formes les plus courantes de migration irrégulière, souvent liée à des lenteurs administratives ou à l'absence de voies de régularisation claires[cite: 2].",
+        en: "Remaining in a country beyond the authorized period granted by a visa or permit. It is one of the most common forms of irregular migration, often linked to administrative delays or lack of clear regularization pathways[cite: 2]."
+      }
     ]
   },
   {
-    category: { fr: "Termes Techniques & Institutions", en: "Technical Terms & Institutions" },
-    icon: Landmark,
+    category: { fr: "Personnes & Statuts Juridiques", en: "People & Legal Statuses" },
+    icon: Users,
     terms: [
-      { term: "Migrant international", en_term: "International Migrant", fr: "Personne résidant dans un pays autre que son pays de naissance ou de nationalité, indépendamment du motif ou du statut légal du séjour (UN DESA).", en: "A person residing in a country other than their country of birth or nationality, regardless of the reason for or legal status of their stay (UN DESA)." },
-      { term: "Personne déplacée interne (PDI)", en_term: "Internally Displaced Person (IDP)", fr: "Ce DataHub retient la définition de la Convention de Kampala (2009, Art. 1) — premier traité contraignant au monde sur les PDI, adopté par l'UA : personne forcée de fuir son foyer du fait d'un conflit armé, de violences généralisées, de violations des droits humains ou de catastrophes, sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale (IDMC).", en: "This DataHub follows the Kampala Convention's definition (2009, Art. 1) — the world's first binding treaty on IDPs, adopted by the AU: a person forced to flee their home due to armed conflict, generalized violence, human rights violations, or disasters, without crossing an international border. Not counted in international migration statistics (IDMC)." },
-      { term: "Réfugié", en_term: "Refugee", fr: "Ce DataHub retient prioritairement la définition élargie de la Convention de l'OUA (1969, Art. 1.2) — plus inclusive que la Convention de Genève (1951) dont elle est issue : toute personne contrainte de fuir du fait d'une agression, d'une occupation extérieure, d'une domination étrangère ou d'événements troublant gravement l'ordre public, et non plus seulement d'une persécution individuelle ciblée.", en: "This DataHub prioritizes the broader definition set by the 1969 OAU Convention (Art. 1.2) — more inclusive than the 1951 Geneva Convention it builds on: any person compelled to flee due to external aggression, occupation, foreign domination, or events seriously disturbing public order, not only targeted individual persecution." },
-      { term: "AVOI (Africa Visa Openness Index)", en_term: "AVOI (Africa Visa Openness Index)", fr: "Indice conjoint BAD/UA mesurant le degré d'ouverture des frontières nationales aux ressortissants africains (0 à 100 par pays, moyennes agrégées par CER).", en: "Joint AfDB/AU index measuring how open national borders are to fellow African nationals (0 to 100 per country, averaged into REC scores)." },
-      { term: "CER (Communauté Économique Régionale)", en_term: "REC (Regional Economic Community)", fr: "Bloc régional reconnu par l'UA comme pilier de l'intégration continentale (ex : CEDEAO, CAE, SADC) ; 8 CER structurent le continent.", en: "A regional bloc recognized by the AU as a pillar of continental integration (e.g. ECOWAS, EAC, SADC); 8 RECs structure the continent." },
-      { term: "Libre circulation", en_term: "Free Movement", fr: "Droit d'entrer, de résider et de s'établir dans un autre État sans visa ni titre de séjour préalable ; réalisé progressivement en 3 phases par le Protocole de Kigali (2018).", en: "The right to enter, reside, and establish oneself in another state without a prior visa or residence permit; to be achieved progressively in 3 phases under the Kigali Protocol (2018)." },
-      { term: "Rétention (Sud-Sud)", en_term: "Retention (South-South)", fr: "Part des migrants originaires d'une région qui restent au sein de leur propre continent ou sous-région plutôt que d'émigrer vers le Nord.", en: "The share of migrants from a region who remain within their own continent or sub-region rather than emigrating northward." },
-      { term: "Transferts de fonds (remises)", en_term: "Remittances", fr: "Sommes envoyées par les migrants à leur pays d'origine ; première source de financement externe pour de nombreux pays africains, devant l'aide publique au développement.", en: "Money sent by migrants to their country of origin; the leading source of external financing for many African countries, ahead of official development assistance." },
-      { term: "STC-MRIDPs", en_term: "STC-MRIDPs", fr: "Comité Technique Spécialisé de l'UA sur la Migration, les Réfugiés et les Personnes Déplacées Internes ; organe politique de tutelle réuni tous les deux ans au niveau ministériel.", en: "The AU's Specialized Technical Committee on Migration, Refugees and Internally Displaced Persons; the political oversight organ meeting every two years at ministerial level." },
-      { term: "OAM (Observatoire Africain des Migrations)", en_term: "AMO (African Migration Observatory)", fr: "Bureau technique spécialisé de l'UA basé à Rabat (Maroc), chargé de centraliser et d'harmoniser les données migratoires continentales.", en: "The AU's specialized technical office based in Rabat, Morocco, tasked with centralizing and harmonizing continental migration data." },
-      { term: "PAFoM (Forum Panafricain sur la Migration)", en_term: "PAFoM (Pan-African Forum on Migration)", fr: "Processus consultatif continental créé en 2006, réunissant États membres, CER et partenaires pour façonner les politiques migratoires africaines.", en: "Continental consultative process created in 2006, bringing together member states, RECs, and partners to shape African migration policy." },
-      { term: "JLMP (Programme Conjoint sur la Migration de Main-d'œuvre)", en_term: "JLMP (Joint Labour Migration Programme)", fr: "Programme conjoint UA/OIT/OIM, principale initiative d'harmonisation de la migration de travail en Afrique.", en: "Joint AU/ILO/IOM programme, the leading initiative for harmonizing labour migration in Africa." },
-      { term: "ZLECAf (AfCFTA)", en_term: "AfCFTA", fr: "Zone de Libre-Échange Continentale Africaine ; force indirectement la mobilité des travailleurs qualifiés liés au commerce des services via son « Mode 4 ».", en: "African Continental Free Trade Area; indirectly drives the mobility of trade-linked skilled workers through its \"Mode 4\" services provisions." },
-      { term: "GCM (Pacte mondial pour les migrations)", en_term: "GCM (Global Compact for Migration)", fr: "Pacte mondial pour des migrations sûres, ordonnées et régulières (Marrakech, 2018) ; 23 objectifs non contraignants.", en: "Global Compact for Safe, Orderly and Regular Migration (Marrakech, 2018); 23 non-binding objectives." },
-      { term: "GCR (Pacte mondial sur les réfugiés)", en_term: "GCR (Global Compact on Refugees)", fr: "Pacte mondial sur les réfugiés (2018) ; cadre de partage équitable des charges d'accueil.", en: "Global Compact on Refugees (2018); a framework for equitable responsibility-sharing among host countries." },
+      {
+        term: "Migrant international",
+        en_term: "International Migrant",
+        fr: "Toute personne résidant dans un pays autre que son pays de naissance ou de nationalité, indépendamment de son statut légal ou du motif de son déplacement (UN DESA)[cite: 2].",
+        en: "Any person residing in a country other than their country of birth or nationality, regardless of their legal status or the reason for their movement (UN DESA)[cite: 2]."
+      },
+      {
+        term: "Réfugié",
+        en_term: "Refugee",
+        fr: "La Convention de l'OUA (1969) définit le réfugié de manière plus large que la Convention de Genève (1951) : elle inclut toute personne contrainte de fuir non seulement par crainte de persécution individuelle, mais aussi du fait d'une agression extérieure, d'une occupation ou d'événements troublant gravement l'ordre public[cite: 2].",
+        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order[cite: 2]."
+      },
+      {
+        term: "Demandeur d'asile",
+        en_term: "Asylum Seeker",
+        fr: "Individu ayant quitté son pays d'origine et formellement demandé une protection internationale, mais dont la demande de statut de réfugié n'a pas encore été statuée (HCR). Contrairement au réfugié, son statut juridique est en cours d'évaluation[cite: 2].",
+        en: "An individual who has left their country of origin and formally applied for international protection, but whose claim for refugee status has not yet been determined (UNHCR). Unlike a refugee, their legal status is pending assessment[cite: 2]."
+      },
+      {
+        term: "Personne déplacée interne (PDI)",
+        en_term: "Internally Displaced Person (IDP)",
+        fr: "Selon la Convention de Kampala (2009, Art. 1) : personne ou groupe forcé de fuir son foyer (conflit, violences, catastrophes) sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale[cite: 2].",
+        en: "Under the Kampala Convention (2009, Art. 1): persons or groups forced to flee their homes (conflict, violence, disasters) without crossing an internationally recognized State border. They are not counted in international migration statistics[cite: 2]."
+      },
+      {
+        term: "Apatride",
+        en_term: "Stateless Person",
+        fr: "Personne qu'aucun État ne considère comme son ressortissant par l'application de sa législation (Convention de 1954). Cette situation prive l'individu de l'accès aux droits fondamentaux, à l'identité légale et aux services de base[cite: 2].",
+        en: "A person who is not considered as a national by any State under the operation of its law (1954 Convention). This condition deprives individuals of access to fundamental rights, legal identity, and basic services[cite: 2]."
+      },
+      {
+        term: "Mineur non accompagné",
+        en_term: "Unaccompanied Migrant Minor",
+        fr: "Enfant (moins de 18 ans) séparé de ses parents ou de son tuteur légal lors d'un mouvement migratoire. L'approche juridique (Charte africaine des droits et du bien-être de l'enfant) exige que « l'intérêt supérieur de l'enfant » prime sur toute décision migratoire[cite: 2].",
+        en: "A child (under 18) separated from both parents and legally responsible caregivers during a migratory movement. The legal approach (African Charter on the Rights and Welfare of the Child) requires that the 'best interests of the child' be the primary consideration[cite: 2]."
+      },
+      {
+        term: "Travailleur transfrontalier",
+        en_term: "Cross-Border Worker",
+        fr: "Individu maintenant sa résidence principale dans un pays tout en se rendant régulièrement dans un autre pour y travailler. Une pratique courante en Afrique, facilitée par les zones de libre circulation des CER (CEDEAO, CAE)[cite: 2].",
+        en: "An individual maintaining their primary residence in one country while regularly traveling to another for employment. A common practice in Africa, facilitated by REC free movement zones (ECOWAS, EAC)[cite: 2]."
+      },
+      {
+        term: "Survivant de la traite",
+        en_term: "Survivor of Human Trafficking",
+        fr: "Personne ayant subi une exploitation (travail forcé, exploitation sexuelle) via le recrutement ou le transfert par la menace, la force ou la tromperie (Protocole de Palerme). Le terme « survivant » (plutôt que victime) reconnaît l'agentivité de l'individu dans sa reconstruction[cite: 2].",
+        en: "A person who has experienced exploitation (forced labor, sexual exploitation) through recruitment or transfer by means of threat, force, or deception (Palermo Protocol). The term 'survivor' (rather than victim) acknowledges the individual's agency in recovery[cite: 2]."
+      }
+    ]
+  },
+  {
+    category: { fr: "Frontières, Droits & Protection", en: "Borders, Rights & Protection" },
+    icon: ShieldAlert,
+    terms: [
+      {
+        term: "Gestion intégrée des frontières",
+        en_term: "Integrated Border Management",
+        fr: "Administration globale et coordonnée visant à réguler les flux transfrontaliers, harmonisant les contrôles d'immigration, les douanes et la sécurité, tout en identifiant les personnes vulnérables nécessitant une protection (OIM, 2019)[cite: 2].",
+        en: "Comprehensive and coordinated administration to regulate cross-border flows, harmonizing immigration, customs, and security controls, while identifying vulnerable persons requiring protection (IOM, 2019)[cite: 2]."
+      },
+      {
+        term: "Principe de non-refoulement",
+        en_term: "Non-Refoulement Principle",
+        fr: "Norme impérative (jus cogens) du droit international interdisant à un État d'expulser ou de renvoyer un individu vers un territoire où sa vie ou sa liberté seraient menacées (Art. 33 de la Convention de Genève 1951 ; Art. II(3) de la Convention de l'OUA 1969)[cite: 2].",
+        en: "Peremptory norm (jus cogens) of international law prohibiting a state from expelling or returning an individual to a territory where their life or freedom would be threatened (Art. 33 of the 1951 Geneva Convention; Art. II(3) of the 1969 OAU Convention)[cite: 2]."
+      },
+      {
+        term: "Trafic illicite de migrants",
+        en_term: "Smuggling of Migrants",
+        fr: "Fait d'assurer, afin d'en tirer un avantage financier, l'entrée illégale d'une personne dans un État (Protocole de Palerme, 2000). Contrairement à la traite, le trafic implique le consentement initial du migrant et prend fin une fois la frontière franchie, bien que les risques d'abus soient immenses[cite: 2].",
+        en: "The procurement, for financial benefit, of the illegal entry of a person into a State (Palermo Protocol, 2000). Unlike trafficking, smuggling involves the initial consent of the migrant and ends once the border is crossed, though the risks of abuse are immense[cite: 2]."
+      },
+      {
+        term: "Traite des êtres humains",
+        en_term: "Human Trafficking",
+        fr: "Recrutement, transport, transfert ou hébergement de personnes par la force, la contrainte ou la tromperie à des fins d'exploitation (travail forcé, servitude, exploitation sexuelle). Elle n'implique pas nécessairement le franchissement d'une frontière internationale (Protocole de Palerme)[cite: 2].",
+        en: "Recruitment, transportation, transfer, or harboring of persons by force, coercion, or deception for the purpose of exploitation (forced labor, servitude, sexual exploitation). It does not necessarily involve crossing an international border (Palermo Protocol)[cite: 2]."
+      },
+      {
+        term: "Vulnérabilités des migrants",
+        en_term: "Migrant Vulnerabilities",
+        fr: "Capacité diminuée d'un individu à résister ou se relever de l'exploitation, de la violence ou des violations de droits (OIM, 2019). Ces vulnérabilités naissent de l'interaction entre des facteurs personnels (âge, sexe, santé) et structurels (absence de statut légal, pauvreté, discrimination)[cite: 2].",
+        en: "The diminished capacity of an individual to resist or recover from exploitation, violence, or rights violations (IOM, 2019). These vulnerabilities arise from the interaction of personal factors (age, gender, health) and structural factors (lack of legal status, poverty, discrimination)[cite: 2]."
+      },
+      {
+        term: "Identité légale",
+        en_term: "Legal Identity",
+        fr: "Reconnaissance de l'identité d'un individu par l'État (enregistrement des naissances, documents de voyage). Sans identité légale, les migrants sont exposés à l'exclusion systémique, à la détention arbitraire et au risque d'apatridie (Cible ODD 16.9)[cite: 2].",
+        en: "State recognition of an individual's identity (birth registration, travel documents). Without legal identity, migrants face systemic exclusion, arbitrary detention, and the risk of statelessness (SDG Target 16.9)[cite: 2]."
+      }
+    ]
+  },
+  {
+    category: { fr: "Retour, Intégration & Résidence", en: "Return, Integration & Residence" },
+    icon: MapPin,
+    terms: [
+      {
+        term: "Retour (Volontaire vs Forcé)",
+        en_term: "Return (Voluntary vs Forced)",
+        fr: "Processus par lequel un migrant regagne son pays d'origine. Le retour est « volontaire » lorsqu'il repose sur un consentement libre et éclairé. Il est « forcé » (expulsion, déportation) lorsqu'imposé par l'État hôte, devant toutefois respecter les droits humains et le non-refoulement (MPFA 2018-2030)[cite: 2].",
+        en: "Process by which a migrant goes back to their country of origin. Return is 'voluntary' when based on free and informed consent. It is 'forced' (expulsion, deportation) when imposed by the host state, though it must respect human rights and non-refoulement (MPFA 2018-2030)[cite: 2]."
+      },
+      {
+        term: "Rapatriement",
+        en_term: "Repatriation",
+        fr: "Droit d'un réfugié ou d'une personne déplacée à retourner dans son pays d'origine dans des conditions de sécurité et de dignité, telles que définies par le droit international (Convention de Genève, Convention de l'OUA 1969)[cite: 2].",
+        en: "The right of a refugee or displaced person to return to their country of origin in safety and dignity, as defined by international law (Geneva Convention, 1969 OAU Convention)[cite: 2]."
+      },
+      {
+        term: "Réintégration",
+        en_term: "Reintegration",
+        fr: "Processus permettant aux migrants de retour de se réinsérer économiquement, socialement et psychologiquement dans leur communauté d'origine. Une réintégration durable prévient la réémigration irrégulière (MPFA 2018-2030)[cite: 2].",
+        en: "Process through which returning migrants re-establish themselves economically, socially, and psychologically in their community of origin. Sustainable reintegration prevents irregular re-migration (MPFA 2018-2030)[cite: 2]."
+      },
+      {
+        term: "Résidence (Droit de)",
+        en_term: "Residence",
+        fr: "Statut légal accordé à un non-ressortissant pour séjourner légalement sur le territoire. Le Protocole de Kigali de l'UA (2018) promeut le droit de résidence pour l'emploi ou l'établissement commercial pour tous les citoyens africains[cite: 2].",
+        en: "Legal status granted to a non-citizen to lawfully stay in the territory. The AU Kigali Protocol (2018) promotes the right of residence for employment or business establishment for all African citizens[cite: 2]."
+      },
+      {
+        term: "Naturalisation",
+        en_term: "Naturalization",
+        fr: "Processus légal (souvent discrétionnaire) par lequel un non-national acquiert la citoyenneté d'un pays d'accueil. Reconnue comme un levier d'intégration sociale et de réduction de l'apatridie (Déclaration d'Abidjan, 2015)[cite: 2].",
+        en: "Legal process (often discretionary) by which a non-national acquires the citizenship of a host country. Recognized as a tool for social integration and reducing statelessness (Abidjan Declaration, 2015)[cite: 2]."
+      },
+      {
+        term: "Résilience des migrants",
+        en_term: "Resilience of Migrants",
+        fr: "Capacité des migrants à s'adapter, résister et se remettre des chocs (économiques, climatiques, discriminatoires) rencontrés durant le parcours migratoire, souvent soutenue par les réseaux de la diaspora et les cadres d'inclusion locaux[cite: 2].",
+        en: "The capacity of migrants to adapt, resist, and recover from shocks (economic, climatic, discriminatory) encountered during the migration journey, often supported by diaspora networks and local inclusion frameworks[cite: 2]."
+      }
+    ]
+  },
+  {
+    category: { fr: "Économie, Compétences & Développement", en: "Economy, Skills & Development" },
+    icon: Briefcase,
+    terms: [
+      {
+        term: "Transferts de fonds (Remittances)",
+        en_term: "Remittances",
+        fr: "Fonds ou biens transférés par les migrants vers leur pays d'origine. Les remises migratoires constituent souvent la première source de financement externe en Afrique, dépassant l'Aide publique au développement (OIM, 2019)[cite: 2].",
+        en: "Money or goods transferred by migrants to their country of origin. Remittances are often the leading source of external financing in Africa, exceeding Official Development Assistance (IOM, 2019)[cite: 2]."
+      },
+      {
+        term: "Fuite des cerveaux (Brain Drain)",
+        en_term: "Brain Drain",
+        fr: "Émigration d'individus hautement qualifiés entraînant l'épuisement du capital humain du pays d'origine, un défi critique pour les secteurs de la santé et de l'éducation en Afrique[cite: 2].",
+        en: "Emigration of highly skilled individuals leading to the depletion of the source country's human capital, a critical challenge for Africa's health and education sectors[cite: 2]."
+      },
+      {
+        term: "Gain de compétences (Brain Gain)",
+        en_term: "Brain Gain",
+        fr: "Bénéfice tiré par un pays grâce à l'immigration de professionnels hautement qualifiés ou au retour de ses nationaux ayant acquis une expertise à l'étranger (Réseaux de la diaspora)[cite: 2].",
+        en: "The benefit a country derives from the immigration of highly qualified professionals or the return of its nationals who acquired expertise abroad (Diaspora networks)[cite: 2]."
+      },
+      {
+        term: "Gaspillage de compétences (Brain Waste)",
+        en_term: "Brain Waste",
+        fr: "Situation où des migrants hautement qualifiés occupent des emplois sans rapport avec leurs diplômes, souvent en raison de la non-reconnaissance de leurs qualifications étrangères ou de barrières systémiques[cite: 2].",
+        en: "Situation where highly skilled migrants are employed in jobs unrelated to their qualifications, often due to the non-recognition of foreign credentials or systemic barriers[cite: 2]."
+      },
+      {
+        term: "Coût de la fuite (Brain Cost)",
+        en_term: "Brain Cost",
+        fr: "Pertes économiques, sociales et développementales (incluant les fonds publics investis dans l'éducation de l'individu) subies par l'État d'origine lorsque ses travailleurs qualifiés émigrent définitivement[cite: 2].",
+        en: "The economic, social, and developmental losses (including public funds invested in the individual's education) incurred by the origin State when its skilled workers emigrate permanently[cite: 2]."
+      },
+      {
+        term: "Investissement des diasporas",
+        en_term: "Investment by Migrants",
+        fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs[cite: 2].",
+        en: "Economic contributions of migrants beyond basic family remittances: entrepreneurship, real estate, diaspora bonds, technology transfer, and capital investment in productive sectors[cite: 2]."
+      }
+    ]
+  },
+  {
+    category: { fr: "Gouvernance, Données & Concepts Théoriques", en: "Governance, Data & Theoretical Concepts" },
+    icon: Brain,
+    terms: [
+      {
+        term: "Entre-deux national",
+        en_term: "National In-Between",
+        fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les bureaucraties nationales. Concept central de la thèse à l'origine de ce DataHub (Ben Mokhtar, 2026)[cite: 2].",
+        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this DataHub (Ben Mokhtar, 2026)[cite: 2]."
+      },
+      {
+        term: "Capabilités de mouvement",
+        en_term: "Capabilities of Movement",
+        fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, dépassant la dichotomie simpliste volontaire/forcé[cite: 2].",
+        en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, moving beyond the simplistic voluntary/forced dichotomy[cite: 2]."
+      },
+      {
+        term: "Gouvernance des migrations",
+        en_term: "Migration Governance",
+        fr: "Ensemble des normes juridiques, politiques, institutions et processus (du niveau local au niveau mondial) façonnant la gestion des mobilités, les droits des migrants et la coopération entre États (OIM, 2015 ; MPFA, 2018)[cite: 2].",
+        en: "The combined frameworks of legal norms, policies, institutions, and processes (from local to global levels) shaping the management of mobility, migrant rights, and inter-state cooperation (IOM, 2015; MPFA, 2018)[cite: 2]."
+      },
+      {
+        term: "Sécurisation (Securitization)",
+        en_term: "Securitization",
+        fr: "Processus par lequel la migration est progressivement traitée comme une menace sécuritaire (contrôle des frontières, criminalisation) au détriment de ses dimensions développementales et des droits humains[cite: 2].",
+        en: "The process by which migration is increasingly framed and governed as a security threat (border control, criminalization) at the expense of its developmental and human rights dimensions[cite: 2]."
+      },
+      {
+        term: "Désagrégation des données",
+        en_term: "Data Disaggregation",
+        fr: "Processus technique consistant à ventiler des données statistiques agrégées en sous-catégories (par âge, sexe, statut migratoire) pour identifier les disparités et orienter l'élaboration de politiques basées sur des preuves (Cible ODD 17.18)[cite: 2].",
+        en: "The technical process of breaking down aggregated statistical data into subcategories (by age, gender, migration status) to identify disparities and guide evidence-based policymaking (SDG Target 17.18)[cite: 2]."
+      },
+      {
+        term: "Facteurs Push & Pull (Causes profondes)",
+        en_term: "Push & Pull Factors (Root Causes)",
+        fr: "Conditions structurelles motivant le départ d'une région (Push : pauvreté, chocs climatiques, conflits) ou l'attraction vers une autre (Pull : emploi, réseaux familiaux, stabilité). Le GCM et le MPFA appellent à traiter ces causes profondes pour faire de la migration un choix et non une nécessité vitale[cite: 2].",
+        en: "Structural conditions motivating departure from a region (Push: poverty, climate shocks, conflict) or attraction to another (Pull: jobs, family networks, stability). The GCM and MPFA call for addressing these root causes to make migration a choice rather than a necessity[cite: 2]."
+      },
+      {
+        term: "Diplomatie migratoire",
+        en_term: "Migration Diplomacy",
+        fr: "Utilisation stratégique de la coopération migratoire par les États dans l'arène internationale, s'en servant comme levier de négociation pour obtenir des financements, une reconnaissance politique ou des accords commerciaux (Adamson & Tsourapas, 2019)[cite: 2].",
+        en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019)[cite: 2]."
+      },
+      {
+        term: "Observatoire Africain des Migrations (OAM)",
+        en_term: "African Migration Observatory (AMO)",
+        fr: "Bureau technique spécialisé de la Commission de l'UA basé à Rabat. Chargé de centraliser, harmoniser et fournir des données fiables sur les mobilités pour soutenir la souveraineté épistémique du continent et l'élaboration de politiques basées sur des preuves[cite: 2].",
+        en: "Specialized technical office of the AU Commission based in Rabat. Tasked with centralizing, harmonizing, and providing reliable mobility data to support the continent's epistemic sovereignty and evidence-based policymaking[cite: 2]."
+      }
     ]
   }
 ];
