@@ -6,7 +6,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb, Compass, Star
+  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -167,6 +167,33 @@ const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent 
   );
 };
 
+const PRINT_CITATION = {
+  fr: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Thèse doctorale). Université Internationale de Rabat (UIR).",
+  en: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire: Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Doctoral thesis). International University of Rabat (UIR)."
+};
+
+const PrintCitationFooter = ({ lang, sectionLabel }) => {
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'South(s) Mobility DataHub';
+  const printDate = new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  return (
+    <div className="hidden print:block mt-8 pt-4 border-t-2 border-slate-900 break-inside-avoid">
+      <div className="flex items-center gap-2 mb-1.5">
+        <Globe className="w-3.5 h-3.5 text-slate-700" />
+        <span className="font-serif font-bold text-slate-900 text-xs">South(s) Mobility DataHub</span>
+        {sectionLabel && <span className="text-slate-400 text-[10px]">— {sectionLabel}</span>}
+      </div>
+      <p className="text-[10px] text-slate-600">{siteUrl}</p>
+      <p className="text-[10px] text-slate-600 mt-1.5 leading-relaxed">
+        {lang === 'fr' ? 'Citation suggérée : ' : 'Suggested citation: '}
+        <span className="italic">{PRINT_CITATION[lang]}</span>
+      </p>
+      <p className="text-[9px] text-slate-400 mt-1.5">
+        {lang === 'fr' ? 'Document généré le' : 'Document generated on'} {printDate} — © 2026 Yassine Ben Mokhtar
+      </p>
+    </div>
+  );
+};
+
 const institutionLogos = [
   { key: 'un', name: "United Nations", src: "/logos/un.svg" },
   { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
@@ -301,7 +328,9 @@ const t = {
       home_editorial: {
         badge: "Note de Cadrage Scientifique",
         title: "Pourquoi ce DataHub ?",
-        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Les migrants internationaux représentent environ 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 — et l'Afrique ne pèse que 9,5 % du stock migratoire international, loin derrière l'Europe et l'Asie (UN DESA, 2024). Plus de sept migrants africains sur dix restent sur le continent. Cet écart entre le proportionnel et le perçu n'est pas un simple biais cognitif : il structure des politiques publiques, oriente des financements et façonne un imaginaire sécuritaire dont les coûts, humains et économiques, sont réels (de Haas, 2023).",
+        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. Chaque année, les chocs climatiques et les crises sécuritaires déplacent des millions de personnes à l'intérieur même des frontières nationales — un phénomène rigoureusement quantifié par l'IDMC (voir la section Explorateur), mais largement absent des récits dominants sur « la migration africaine », alors qu'il en constitue la composante la plus massive.",
+        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Ce DataHub travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Le terme « migrant international », en particulier, suit ici la définition onusienne standard — voir le Glossaire pour une définition précise et ses limites.",
         p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains ne sont pas de simples récepteurs passifs des agendas migratoires du Nord, mais des acteurs qui négocient, retournent et instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie systématiquement la proportion à la valeur absolue, la comparaison à l'anecdote, et l'architecture institutionnelle africaine (Union africaine, Communautés économiques régionales) aux seuls cadres normatifs venus du Nord — sans nier les asymétries de pouvoir et de financement qui structurent concrètement ce régime (Bakewell, 2008 ; Bayart, 2000).",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
@@ -548,7 +577,9 @@ const t = {
       home_editorial: {
         badge: "Scientific Framing Note",
         title: "Why this DataHub?",
-        p1: "A measurable gap separates public perception of African mobility from its statistical reality. International migrants make up about 3.6% of the world's population — a share that has remained remarkably stable since 1990 — and Africa accounts for only 9.5% of the global migrant stock, far behind Europe and Asia (UN DESA, 2024). More than seven in ten African migrants remain on the continent. This gap between the proportional and the perceived is not a mere cognitive bias: it shapes public policy, directs funding, and fuels a securitized imaginary whose human and economic costs are real (de Haas, 2023).",
+        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts only about 29 million international migrants on its soil, or 9.5% of the world stock: far behind Europe and Asia, and well below the continent's demographic weight (close to 18% of the world's population). This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
+        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent is not international but internal. Every year, climate shocks and security crises displace millions of people within national borders — a phenomenon rigorously quantified by IDMC (see the Explorer section), yet largely absent from dominant narratives about \"African migration\", even though it is by far its largest component.",
+        caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This DataHub works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. The term \"international migrant\", in particular, follows the standard UN definition here — see the Glossary for a precise definition and its limits.",
         p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states are not mere passive recipients of Northern migration agendas, but actors who negotiate, redirect, and instrumentalize migration cooperation to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
@@ -765,6 +796,36 @@ const aggregates = {
     name: { fr: "Afrique Australe (Sous-région)", en: "Southern Africa (Sub-region)" }, flagIcon: MapIcon, flagColor: "text-rose-700", stock: '4,5 M', female: '44.8', evolution: '3.2', retention: 95, remittances: 1.9, aid: 2.3,
     history: [{ year: 1990, value: '2.5' }, { year: 2024, value: '4.5' }], ...genericDesc
   }
+};
+
+// Affiliation aux Communautés Économiques Régionales (CER), pays par pays.
+// Sources : sites officiels de chaque CER (ECOWAS, ECCAS, EAC, IGAD, COMESA, SADC, CEN-SAD, UMA), consultés août 2026.
+// Ne reflète pas l'AES (Alliance des États du Sahel) : alliance politico-militaire hors des 8 CER reconnues par l'UA.
+const recNames = {
+  cedeao: { fr: 'CEDEAO', en: 'ECOWAS' },
+  cae: { fr: 'CAE', en: 'EAC' },
+  sadc: { fr: 'SADC', en: 'SADC' },
+  comesa: { fr: 'COMESA', en: 'COMESA' },
+  igad: { fr: 'IGAD', en: 'IGAD' },
+  ceeac: { fr: 'CEEAC', en: 'ECCAS' },
+  uma: { fr: 'UMA', en: 'AMU' },
+  censad: { fr: 'CEN-SAD', en: 'CEN-SAD' },
+};
+
+const countryRecAffiliations = {
+  dz: ['uma'], eg: ['censad', 'comesa'], ly: ['uma', 'censad', 'comesa'], ma: ['uma', 'censad'], tn: ['uma', 'censad', 'comesa'], mr: ['uma', 'censad'],
+  bj: ['cedeao', 'censad'], bf: ['censad'], cv: ['cedeao'], ci: ['cedeao', 'censad'], gm: ['cedeao', 'censad'], gh: ['cedeao', 'censad'], gn: ['cedeao'], gw: ['cedeao', 'censad'], lr: ['cedeao'], ml: ['censad'], ne: ['censad'], ng: ['cedeao', 'censad'], sn: ['cedeao', 'censad'], sl: ['cedeao', 'censad'], tg: ['cedeao', 'censad'],
+  ao: ['ceeac', 'sadc'], cm: ['ceeac'], cf: ['ceeac', 'censad'], td: ['ceeac', 'censad'], cg: ['ceeac'], cd: ['ceeac', 'cae', 'comesa', 'sadc'], gq: ['ceeac'], ga: ['ceeac'], st: ['ceeac'],
+  bi: ['cae', 'comesa', 'ceeac'], rw: ['cae', 'comesa'], km: ['censad', 'comesa', 'sadc'], dj: ['censad', 'comesa', 'igad'], er: ['censad', 'comesa'], et: ['igad', 'comesa'], ke: ['cae', 'igad', 'comesa'], mg: ['comesa', 'sadc'], mu: ['comesa', 'sadc'], sc: ['comesa', 'sadc'], so: ['cae', 'igad', 'comesa', 'censad'], ss: ['cae', 'igad'], sd: ['igad', 'comesa', 'censad'], tz: ['cae', 'sadc'], ug: ['cae', 'igad', 'comesa'],
+  mw: ['comesa', 'sadc'], mz: ['sadc'], zm: ['comesa', 'sadc'], zw: ['comesa', 'sadc'], bw: ['sadc'], sz: ['comesa', 'sadc'], ls: ['sadc'], na: ['sadc'], za: ['sadc'],
+};
+
+const countryRecNotes = {
+  bf: { fr: "A quitté la CEDEAO en janvier 2025 (avec le Mali et le Niger, Alliance des États du Sahel).", en: "Left ECOWAS in January 2025 (with Mali and Niger, Alliance of Sahel States)." },
+  ml: { fr: "A quitté la CEDEAO en janvier 2025 (avec le Burkina Faso et le Niger, Alliance des États du Sahel).", en: "Left ECOWAS in January 2025 (with Burkina Faso and Niger, Alliance of Sahel States)." },
+  ne: { fr: "A quitté la CEDEAO en janvier 2025 (avec le Mali et le Burkina Faso, Alliance des États du Sahel).", en: "Left ECOWAS in January 2025 (with Mali and Burkina Faso, Alliance of Sahel States)." },
+  rw: { fr: "Retrait de la CEEAC annoncé en juin 2025, effectif fin 2025.", en: "ECCAS withdrawal announced June 2025, effective end of 2025." },
+  er: { fr: "Retrait de l'IGAD annoncé en décembre 2025, après un retour à l'organisation en 2023.", en: "Withdrew from IGAD in December 2025, after rejoining the organisation in 2023." },
 };
 
 const countryData = {
@@ -1396,11 +1457,47 @@ const homeCardAccents = {
   amber: "hover:border-amber-300 group-hover:text-amber-700",
 };
 
+const homeCardIconBg = {
+  blue: "bg-blue-50 text-blue-600",
+  emerald: "bg-emerald-50 text-emerald-600",
+  indigo: "bg-indigo-50 text-indigo-600",
+  amber: "bg-amber-50 text-amber-600",
+};
+
+const whatsNew = [
+  {
+    tab: 'governance', accent: 'indigo',
+    fr: "Suivi des ratifications de l'UA (Kigali, Kampala, ZLECAf…) avec statut « en vigueur » en temps réel, et historique complet des sessions du STC-MRIDPs et du PAFoM.",
+    en: "AU ratification tracking (Kigali, Kampala, AfCFTA…) with live \"in force\" status, plus the full session history of the STC-MRIDPs and PAFoM."
+  },
+  {
+    tab: 'about', accent: 'blue',
+    fr: "Nouveau glossaire des concepts et de la terminologie clés de la gouvernance migratoire.",
+    en: "New glossary of key migration governance concepts and terminology."
+  },
+  {
+    tab: 'explorer', accent: 'emerald',
+    fr: "Profils pays et régionaux enrichis, exportables en PDF avec source et citation intégrées.",
+    en: "Enriched country and regional profiles, exportable to PDF with source and citation included."
+  },
+];
+
 const TabHome = ({ text, lang, setActiveTab }) => {
   const totalCountries = Object.values(countryData).flat().length;
   const totalRegions = Object.keys(countryData).length;
   const totalEvidence = evidenceCheckData.length;
   const totalLibrary = libraryData.reduce((sum, s) => sum + s.items.length, 0);
+
+  const statTiles = [
+    { value: totalCountries, label: { fr: "Pays Couverts", en: "Countries Covered" }, tab: 'explorer' },
+    { value: totalRegions, label: { fr: "Sous-Régions (UA)", en: "Sub-Regions (AU)" }, tab: 'explorer' },
+    { value: totalEvidence, label: { fr: "Affirmations Vérifiées", en: "Claims Fact-Checked" }, tab: 'evidence' },
+    { value: totalLibrary, label: { fr: "Sources Documentaires", en: "Documentary Sources" }, tab: 'library' },
+  ];
+
+  const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p5, text.home_editorial.p4]
+    .join(' ').trim().split(/\s+/).length;
+  const readingMinutes = Math.max(1, Math.round(essayWordCount / 200));
 
   return (
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-10">
@@ -1413,52 +1510,17 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         accent="blue"
       />
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
-        <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-4">
-          {text.home_editorial.badge}
-        </span>
-        <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
-        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p>{text.home_editorial.p1}</p>
-          <p>{text.home_editorial.p2}</p>
-          <p>{text.home_editorial.p3}</p>
-          <blockquote className="border-l-4 border-amber-400 pl-5 py-1 italic text-slate-800 not-italic font-serif text-base my-2">
-            {text.home_editorial.pullquote}
-          </blockquote>
-          <p>{text.home_editorial.p5}</p>
-          <p className="font-medium text-slate-800">{text.home_editorial.p4}</p>
-        </div>
-        <div className="mt-8 pt-6 border-t border-slate-100">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
-          <ul className="space-y-1.5">
-            {text.home_editorial.refs.map((ref, idx) => (
-              <li key={idx} className="text-[11px] text-slate-500 leading-relaxed">
-                {ref.url ? (
-                  <a href={ref.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 hover:underline">{ref.text}</a>
-                ) : ref.text}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
-          <div className="text-3xl font-serif font-bold text-slate-900">{totalCountries}</div>
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Pays Couverts" : "Countries Covered"}</span>
-        </div>
-        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
-          <div className="text-3xl font-serif font-bold text-slate-900">{totalRegions}</div>
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sous-Régions (UA)" : "Sub-Regions (AU)"}</span>
-        </div>
-        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
-          <div className="text-3xl font-serif font-bold text-slate-900">{totalEvidence}</div>
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Affirmations Vérifiées" : "Claims Fact-Checked"}</span>
-        </div>
-        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
-          <div className="text-3xl font-serif font-bold text-slate-900">{totalLibrary}</div>
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sources Documentaires" : "Documentary Sources"}</span>
-        </div>
+        {statTiles.map((stat, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveTab(stat.tab)}
+            className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-blue-300 group"
+          >
+            <div className="text-3xl font-serif font-bold text-slate-900">{stat.value}</div>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block group-hover:text-blue-700">{stat.label[lang]}</span>
+          </button>
+        ))}
       </div>
 
       <div>
@@ -1472,7 +1534,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                 onClick={() => setActiveTab(card.id)}
                 className={`text-left p-6 bg-white rounded-xl border border-slate-200 shadow-sm transition-all duration-300 group flex flex-col h-full ${homeCardAccents[card.accent]} hover:shadow-md hover:-translate-y-0.5`}
               >
-                <Icon className="w-7 h-7 text-slate-400 mb-4 group-hover:scale-110 transition-transform" />
+                <span className={`inline-flex items-center justify-center w-11 h-11 rounded-lg mb-4 transition-transform group-hover:scale-110 ${homeCardIconBg[card.accent]}`}>
+                  <Icon className="w-5 h-5" />
+                </span>
                 <h3 className={`font-serif font-bold text-slate-900 mb-2 ${homeCardAccents[card.accent].split(' ')[1]}`}>{card.label[lang]}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang]}</p>
                 <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4 group-hover:text-slate-700">
@@ -1481,6 +1545,67 @@ const TabHome = ({ text, lang, setActiveTab }) => {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
+        <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
+          <Sparkles className="w-4 h-4 mr-2 text-amber-500" /> {lang === 'fr' ? "Récemment enrichi" : "Recently Enriched"}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {whatsNew.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveTab(item.tab)}
+              className={`text-left p-4 rounded-lg border border-slate-200 bg-slate-50 hover:bg-white transition-all duration-300 group ${homeCardAccents[item.accent]} hover:shadow-sm`}
+            >
+              <p className="text-xs text-slate-600 leading-relaxed">{lang === 'fr' ? item.fr : item.en}</p>
+              <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-3 group-hover:text-slate-700">
+                {lang === 'fr' ? "Voir" : "View"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
+        <div className="flex flex-wrap items-center gap-3 mb-4">
+          <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest">
+            {text.home_editorial.badge}
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <Clock className="w-3 h-3" /> {readingMinutes} {lang === 'fr' ? "min de lecture" : "min read"}
+          </span>
+        </div>
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+          <p>{text.home_editorial.p1}</p>
+          <p>{text.home_editorial.p1b}</p>
+        </div>
+        <div className="max-w-4xl bg-slate-50 border border-slate-200 rounded-lg p-5 my-5 flex items-start gap-3">
+          <AlertTriangle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+          <p className="text-xs text-slate-600 leading-relaxed text-justify">{text.home_editorial.caveats}</p>
+        </div>
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+          <p>{text.home_editorial.p2}</p>
+          <p>{text.home_editorial.p3}</p>
+          <blockquote className="border-l-4 border-amber-400 pl-5 py-1 italic text-slate-800 not-italic font-serif text-base my-2">
+            {text.home_editorial.pullquote}
+          </blockquote>
+          <p>{text.home_editorial.p5}</p>
+          <p className="font-medium text-slate-800">{text.home_editorial.p4}</p>
+        </div>
+        <div className="mt-8 pt-6 border-t border-slate-100">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
+          <ul className="space-y-1.5">
+            {text.home_editorial.refs.map((ref, idx) => (
+              <li key={idx} className="text-xs text-slate-500 leading-relaxed">
+                {ref.url ? (
+                  <a href={ref.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 hover:underline">{ref.text}</a>
+                ) : ref.text}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -1495,7 +1620,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             </div>
           ))}
         </div>
-        <p className="text-center text-[10px] text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed">
+        <p className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed">
           {lang === 'fr'
             ? "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation ou un endossement de South(s) Mobility DataHub."
             : "These institutions are cited as sources of open public data. Their presence does not constitute a partnership, endorsement, or validation of South(s) Mobility DataHub."}
@@ -1679,7 +1804,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                               </h4>
                               <ul className="space-y-1.5">
                                 {fiche.indicators[lang].map((ind, i) => (
-                                  <li key={i} className="text-[11px] text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
+                                  <li key={i} className="text-xs text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
                                 ))}
                               </ul>
                             </div>
@@ -1690,7 +1815,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                               </h4>
                               <ul className="space-y-1.5">
                                 {fiche.sources[lang].map((src, i) => (
-                                  <li key={i} className="text-[11px] font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
+                                  <li key={i} className="text-xs font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
                                 ))}
                               </ul>
                             </div>
@@ -1719,9 +1844,30 @@ const TabEvidenceCheck = ({ text, lang }) => {
   );
 };
 
+const stcSessions = [
+  { num: { fr: "1re session", en: "1st session" }, date: { fr: "16-20 nov. 2015, Addis-Abeba", en: "16-20 Nov. 2015, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Installation du CTS, humanitaire, Convention de Kampala", en: "Establishing the STC, humanitarian affairs, Kampala Convention" }, outcome: { fr: "Mise en ordre procédurale : adoption du Règlement intérieur ; consolidation de la position africaine pour le Sommet humanitaire mondial et opérationnalisation du suivi de la Convention de Kampala.", en: "Procedural set-up: adoption of Rules of Procedure; consolidation of the African position for the World Humanitarian Summit and operationalization of Kampala Convention follow-up." } },
+  { num: { fr: "2e session", en: "2nd session" }, date: { fr: "16-21 oct. 2017, Kigali", en: "16-21 Oct. 2017, Kigali" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Libre circulation, MPFA, passeport africain", en: "Free movement, MPFA, African passport" }, outcome: { fr: "Tournant normatif : validation technique du Protocole sur la libre circulation des personnes, adoption du Cadre de politique migratoire révisé (MPFA 2018-2030) et de son plan d'action décennal.", en: "Normative turning point: technical validation of the Free Movement of Persons Protocol, adoption of the revised Migration Policy Framework (MPFA 2018-2030) and its ten-year action plan." } },
+  { num: { fr: "3e session", en: "3rd session" }, date: { fr: "5-8 nov. 2019, Addis-Abeba", en: "5-8 Nov. 2019, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Réfugiés (thème de l'année), architecture institutionnelle", en: "Refugees (theme of the year), institutional architecture" }, outcome: { fr: "Densification par outillage : adoption des projets de statuts de quatre agences clés (OAM, AIR, COC, Agence Humanitaire Africaine) ; validation de la position sur l'apatridie.", en: "Densification through institution-building: adoption of draft statutes for four key agencies (AMO, AIR, COC, African Humanitarian Agency); validation of the position on statelessness." } },
+  { num: { fr: "4e session", en: "4th session" }, date: { fr: "23-24 mai 2022, Malabo", en: "23-24 May 2022, Malabo" }, format: { fr: "Ministérielle (Sommet extraordinaire)", en: "Ministerial (Extraordinary Summit)" }, focus: { fr: "Urgence humanitaire, climat, nutrition", en: "Humanitarian emergency, climate, nutrition" }, outcome: { fr: "Traduction politique : préparation de la Déclaration de Malabo, conversion de l'agenda politique d'urgence en mandats techniques et mécanismes de suivi post-sommet.", en: "Political translation: preparation of the Malabo Declaration, converting the emergency political agenda into technical mandates and post-summit follow-up mechanisms." } },
+  { num: { fr: "5e session", en: "5th session" }, date: { fr: "10-14 nov. 2025, Addis-Abeba", en: "10-14 Nov. 2025, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Retour/réadmission/réintégration, GCM, traite et trafic", en: "Return/readmission/reintegration, GCM, trafficking and smuggling" }, outcome: { fr: "Virage opérationnel : adoption des lignes directrices continentales sur le retour et la réintégration durable, des plans d'action sur la traite et le trafic, et du plan d'action africain pour la mise en œuvre du GCM ; examen des rapports de l'OAM, du COC et de l'ACSRM.", en: "Operational shift: adoption of continental guidelines on return and sustainable reintegration, action plans on trafficking and smuggling, and the African action plan for implementing the GCM; review of AMO, COC, and ACSRM reports." } },
+];
+
+const pafomSessions = [
+  { num: "PAFoM 1", date: { fr: "Accra, 16-18 sept. 2015", en: "Accra, 16-18 Sept. 2015" }, focus: { fr: "Mobilité intrarégionale, libre circulation, migration de travail", en: "Intra-regional mobility, free movement, labour migration" }, outcome: { fr: "Point de départ du forum comme scène continentale de coordination ; nourrit la préparation africaine du Sommet de La Valette.", en: "Starting point for the forum as a continental coordination venue; fed into African preparation for the Valletta Summit." } },
+  { num: "PAFoM 2", date: { fr: "Lusaka, 4-6 mai 2016", en: "Lusaka, 4-6 May 2016" }, focus: { fr: "Facilitation des mobilités, commerce, gestion intégrée des frontières", en: "Mobility facilitation, trade, integrated border management" }, outcome: { fr: "Prolonge la dynamique d'Accra en liant explicitement mobilité, commerce et intégration régionale.", en: "Extends the Accra momentum by explicitly linking mobility, trade, and regional integration." } },
+  { num: "PAFoM 3", date: { fr: "Kampala, 15-17 mai 2017", en: "Kampala, 15-17 May 2017" }, focus: { fr: "Préparation de la position africaine sur le GCM", en: "Preparing the African position on the GCM" }, outcome: { fr: "Cadre initial de discussion et de consultation africaine sur le Pacte mondial pour les migrations.", en: "Initial framework for African discussion and consultation on the Global Compact for Migration." } },
+  { num: "PAFoM 4", date: { fr: "Djibouti, 19-21 nov. 2018", en: "Djibouti, 19-21 Nov. 2018" }, focus: { fr: "Libre circulation et bénéfices du régime continental", en: "Free movement and benefits of the continental regime" }, outcome: { fr: "Recentre les échanges sur les bénéfices de la libre circulation après l'adoption du Protocole de Kigali.", en: "Refocuses discussion on the benefits of free movement following the Kigali Protocol's adoption." } },
+  { num: "PAFoM 5", date: { fr: "Le Caire, sept. 2019", en: "Cairo, Sept. 2019" }, focus: { fr: "Données migratoires et recherche pour des politiques fondées sur la preuve", en: "Migration data and research for evidence-based policy" }, outcome: { fr: "Déplace l'agenda vers la production de données comme condition d'une gouvernance migratoire outillée.", en: "Shifts the agenda toward data production as a precondition for well-equipped migration governance." } },
+  { num: "PAFoM 6", date: { fr: "Dakar, 11-12 sept. 2021", en: "Dakar, 11-12 Sept. 2021" }, focus: { fr: "Gouvernance de la migration de travail en contexte pandémique", en: "Labour migration governance in the pandemic context" }, outcome: { fr: "Recentre le forum sur la migration de travail, la reprise socio-économique et l'intégration continentale.", en: "Refocuses the forum on labour migration, socio-economic recovery, and continental integration." } },
+  { num: "PAFoM 7", date: { fr: "Kigali, 18-21 oct. 2022", en: "Kigali, 18-21 Oct. 2022" }, focus: { fr: "Changement climatique, mobilité humaine et déplacements", en: "Climate change, human mobility, and displacement" }, outcome: { fr: "Ouvre plus nettement le forum aux liens entre climat, mobilité et résilience des communautés.", en: "Opens the forum more clearly to the links between climate, mobility, and community resilience." } },
+  { num: "PAFoM 8", date: { fr: "Gaborone, 31 oct. - 2 nov. 2023", en: "Gaborone, 31 Oct. - 2 Nov. 2023" }, focus: { fr: "Libre circulation, migration de travail et nexus commerce-ZLECAf", en: "Free movement, labour migration, and the AfCFTA-trade nexus" }, outcome: { fr: "Relie directement la libre circulation et la migration de travail à la mise en œuvre de la ZLECAf.", en: "Directly links free movement and labour migration to AfCFTA implementation." } },
+  { num: "PAFoM 9", date: { fr: "Le Cap, 16-18 déc. 2025", en: "Cape Town, 16-18 Dec. 2025" }, focus: { fr: "Digitalisation et intégration des systèmes de gestion des frontières", en: "Digitalization and integration of border management systems" }, outcome: { fr: "Confirme la pérennité du forum avec un accent nouveau sur les frontières numériques et l'interopérabilité.", en: "Confirms the forum's continuity with a new emphasis on digital borders and interoperability." } },
+];
+
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const [expandedRec, setExpandedRec] = useState(null);
   const [matrixView, setMatrixView] = useState('table'); // 'table' ou 'details'
+  const [expandedGovBody, setExpandedGovBody] = useState(null); // 'stc' | 'pafom' | null
 
   // ========================================================================
   // 1. LES COMMUNAUTÉS ÉCONOMIQUES RÉGIONALES (CER)
@@ -1893,6 +2039,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       title: { fr: "Le Traité d'Abuja (1991)", en: "The Abuja Treaty (1991)" },
       tag: { fr: "Acte Fondateur", en: "Foundational Act" },
+      badge: { fr: "En vigueur depuis le 12 mai 1994", en: "In force since 12 May 1994" },
       desc: {
         fr: "L'acte fondateur de la Communauté économique africaine (CEA). Il ancre juridiquement la libre circulation comme condition sine qua non de l'intégration des marchés.",
         en: "The founding act of the African Economic Community (AEC). It legally anchors free movement as a sine qua non condition for market integration."
@@ -1906,7 +2053,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       title: { fr: "Le Protocole de Kigali (2018)", en: "The Kigali Protocol (2018)" },
       tag: { fr: "Le Droit Entravé", en: "Hindered Law" },
-      stat: { value: 4, total: 54, label: { fr: "États ayant ratifié", en: "States having ratified" } },
+      stats: [{ value: 4, total: 54, threshold: 15, label: { fr: "États ayant ratifié (seuil : 15)", en: "States having ratified (threshold: 15)" } }],
       desc: {
         fr: "Le Protocole sur la Libre Circulation vise à opérationnaliser l'Art. 43 d'Abuja. Paradoxe : ratifié par 4 pays seulement (Rwanda, Sao Tomé, Mali, Niger - ces deux derniers ayant pourtant quitté la CEDEAO pour l'AES).",
         en: "The Protocol on Free Movement aims to operationalize Art. 43 of Abuja. Paradox: ratified by only 4 countries (Rwanda, Sao Tome, Mali, Niger - the latter two having nevertheless left ECOWAS for the AES)."
@@ -1920,6 +2067,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       title: { fr: "La ZLECAf & Le 'Mode 4' (2018)", en: "AfCFTA & 'Mode 4' (2018)" },
       tag: { fr: "Le Cheval de Troie Économique", en: "Economic Trojan Horse" },
+      stats: [{ value: 50, total: 54, threshold: 15, label: { fr: "États ayant ratifié (oct. 2025)", en: "States having ratified (Oct. 2025)" } }],
       desc: {
         fr: "Face au blocage politique du Protocole de Kigali, l'Accord sur la Zone de Libre-Échange force la mobilité par le prisme économique (les services), obligeant les États à laisser circuler les travailleurs qualifiés liés au commerce.",
         en: "Facing the political blockage of the Kigali Protocol, the Free Trade Area Agreement forces mobility through the economic prism (services), compelling States to allow trade-related skilled workers to circulate."
@@ -1931,16 +2079,31 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       }
     },
     {
-      title: { fr: "Conventions sur la Protection (1969 & 2009)", en: "Protection Conventions (1969 & 2009)" },
-      tag: { fr: "Asile & Solidarité", en: "Asylum & Solidarity" },
+      title: { fr: "La Convention de l'OUA sur les Réfugiés (1969)", en: "The OAU Refugee Convention (1969)" },
+      tag: { fr: "Asile Élargi", en: "Broadened Asylum" },
+      stats: [{ value: 46, total: 54, threshold: 15, label: { fr: "États parties", en: "States parties" } }],
       desc: {
-        fr: "L'Afrique a inventé une définition du réfugié plus inclusive que l'ONU (Convention OUA 1969) et est le seul continent avec un traité contraignant protégeant les déplacés internes (Convention de Kampala 2009).",
-        en: "Africa invented a more inclusive refugee definition than the UN (1969 OAU Convention) and is the only continent with a binding treaty protecting internally displaced persons (2009 Kampala Convention)."
+        fr: "L'Afrique a inventé une définition du réfugié plus inclusive que celle des Nations Unies (Convention de Genève, 1951), en l'étendant aux victimes de violences généralisées et non plus à la seule persécution individuelle ciblée.",
+        en: "Africa pioneered a more inclusive refugee definition than the United Nations' (1951 Geneva Convention), extending it to victims of generalized violence rather than targeted individual persecution alone."
       },
       article: {
         ref: { fr: "Article 1.2 - Convention OUA 1969", en: "Article 1.2 - 1969 OAU Convention" },
         textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (...) est obligée de quitter sa résidence habituelle. »",
         textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (...) is compelled to leave his place of habitual residence. »"
+      }
+    },
+    {
+      title: { fr: "La Convention de Kampala (2009)", en: "The Kampala Convention (2009)" },
+      tag: { fr: "Protection des PDI", en: "IDP Protection" },
+      stats: [{ value: 33, total: 54, threshold: 15, label: { fr: "États parties (fin 2021)", en: "States parties (end 2021)" } }],
+      desc: {
+        fr: "L'Afrique est le seul continent doté d'un traité contraignant protégeant spécifiquement les personnes déplacées internes (PDI). Entrée en vigueur le 6 décembre 2012, elle couvre les déplacements liés aux conflits, aux violences généralisées, aux violations des droits humains et aux catastrophes.",
+        en: "Africa is the only continent with a binding treaty specifically protecting internally displaced persons (IDPs). It entered into force on 6 December 2012 and covers displacement linked to conflict, generalized violence, human rights violations, and disasters."
+      },
+      article: {
+        ref: { fr: "Article 1 - Convention de Kampala", en: "Article 1 - Kampala Convention" },
+        textFr: "« [Les personnes déplacées internes sont] des personnes ou groupes de personnes qui ont été forcés ou obligés de fuir ou de quitter leur foyer (...) notamment en raison d'un conflit armé, de situations de violence généralisée, de violations des droits de l'homme ou de catastrophes naturelles ou provoquées par l'homme, et qui n'ont pas franchi les frontières internationalement reconnues d'un État. »",
+        textEn: "« [Internally displaced persons are] persons or groups of persons who have been forced or obliged to flee or to leave their homes (...) in particular as a result of or in order to avoid the effects of armed conflict, situations of generalized violence, violations of human rights or natural or human-made disasters, and who have not crossed an internationally recognized state border. »"
       }
     },
     {
@@ -2544,7 +2707,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         icon={Landmark}
         accent="indigo"
       />
-      
+
+      <div className="flex justify-end print:hidden">
+        <button onClick={() => window.print()} className="flex items-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
+          <Printer className="w-3.5 h-3.5" /> <span>{lang === 'fr' ? "Exporter cette section (PDF)" : "Export this section (PDF)"}</span>
+        </button>
+      </div>
+
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
         {/* NOUVEAU MENU EN 3 COLONNES */}
@@ -2629,7 +2798,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
                   <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">{obj.desc}</p>
+                  <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
                 </div>
               ))}
             </div>
@@ -2695,17 +2864,34 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         </span>
                         <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
                         <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
-                        {fw.stat && (
+                        {fw.stats && fw.stats.map((stat, sIdx) => {
+                          const inForce = stat.value >= (stat.threshold || 15);
+                          const barColor = inForce ? 'bg-emerald-600' : 'bg-rose-600';
+                          const textColor = inForce ? 'text-emerald-700' : 'text-rose-700';
+                          return (
+                            <div key={sIdx} className="mt-4 pt-4 border-t border-slate-200">
+                              <div className="flex items-baseline justify-between gap-2 mb-1.5 flex-wrap">
+                                <div className="flex items-baseline gap-2">
+                                  <span className={`text-2xl font-serif font-bold ${textColor}`}>{stat.value}</span>
+                                  <span className="text-xs font-bold text-slate-500">/ {stat.total} {stat.label[lang]}</span>
+                                </div>
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border shrink-0 ${inForce ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-700'}`}>
+                                  {inForce ? (lang === 'fr' ? 'En vigueur' : 'In force') : (lang === 'fr' ? 'Pas encore en vigueur' : 'Not yet in force')}
+                                </span>
+                              </div>
+                              <div className="flex gap-1">
+                                {Array.from({ length: stat.total }).map((_, i) => (
+                                  <span key={i} className={`h-2 flex-1 rounded-sm ${i < stat.value ? barColor : 'bg-slate-200'}`}></span>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                        {fw.badge && (
                           <div className="mt-4 pt-4 border-t border-slate-200">
-                            <div className="flex items-baseline gap-2 mb-1.5">
-                              <span className="text-2xl font-serif font-bold text-rose-700">{fw.stat.value}</span>
-                              <span className="text-xs font-bold text-slate-500">/ {fw.stat.total} {fw.stat.label[lang]}</span>
-                            </div>
-                            <div className="flex gap-1">
-                              {Array.from({ length: fw.stat.total }).map((_, i) => (
-                                <span key={i} className={`h-2 flex-1 rounded-sm ${i < fw.stat.value ? 'bg-rose-600' : 'bg-slate-200'}`}></span>
-                              ))}
-                            </div>
+                            <span className="inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm border bg-emerald-50 border-emerald-200 text-emerald-700">
+                              {fw.badge[lang]}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -2728,36 +2914,96 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   {lang === 'fr' ? "Pilotage Politique & Forum Consultatif" : "Political Steering & Consultative Forum"}
                 </h4>
                 <div className="space-y-4">
-                  <div className="bg-emerald-50/50 p-6 rounded-lg border border-emerald-100">
-                    <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
-                      <h5 className="font-bold text-emerald-900 text-base">
-                        {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
-                      </h5>
-                      <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
-                        {lang === 'fr' ? "Niveau ministériel" : "Ministerial level"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-700 leading-relaxed">
+                  <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
+                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')} className="w-full text-left p-6 hover:bg-emerald-50 transition-colors">
+                      <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                        <h5 className="font-bold text-emerald-900 text-base">
+                          {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
+                        </h5>
+                        <span className="flex items-center gap-2 shrink-0">
+                          <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
+                            {lang === 'fr' ? "5 sessions depuis 2015" : "5 sessions since 2015"}
+                          </span>
+                          <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ${expandedGovBody === 'stc' ? 'rotate-180' : ''}`} />
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-700 leading-relaxed">
+                        {lang === 'fr'
+                          ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux."
+                          : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work."}
+                      </p>
+                    </button>
+                    {expandedGovBody === 'stc' && (
+                      <div className="px-6 pb-6 pt-2 border-t border-emerald-100 space-y-3 animate-in fade-in duration-300">
+                        {stcSessions.map((s, idx) => (
+                          <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200">
+                            <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
+                              <span className="font-bold text-slate-900 text-xs">{s.num[lang]} — {s.date[lang]}</span>
+                              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.format[lang]}</span>
+                            </div>
+                            <p className="text-xs text-emerald-700 font-bold mb-1.5">{s.focus[lang]}</p>
+                            <p className="text-xs text-slate-600 leading-relaxed">{s.outcome[lang]}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-amber-50/50 rounded-lg border border-amber-100 overflow-hidden">
+                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')} className="w-full text-left p-6 hover:bg-amber-50 transition-colors">
+                      <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                        <h5 className="font-bold text-amber-900 text-base">
+                          {lang === 'fr' ? "Forum Panafricain sur la Migration (PAFoM)" : "Pan-African Forum on Migration (PAFoM)"}
+                        </h5>
+                        <span className="flex items-center gap-2 shrink-0">
+                          <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
+                            {lang === 'fr' ? "9 sessions depuis 2015" : "9 sessions since 2015"}
+                          </span>
+                          <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${expandedGovBody === 'pafom' ? 'rotate-180' : ''}`} />
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-700 leading-relaxed">
+                        {lang === 'fr'
+                          ? "Créé par la Décision EX.CL/276(IX) du Conseil Exécutif (2006), le PAFoM est le processus consultatif continental de référence, réuni pour la première fois à Accra en 2015 : il rassemble les États membres de l'UA, les CER, les processus régionaux (Rabat, Khartoum) et les agences onusiennes pour façonner les politiques migratoires africaines."
+                          : "Created by Executive Council Decision EX.CL/276(IX) (2006), PAFoM is the continent's flagship consultative process, first convened in Accra in 2015: it brings together AU member states, RECs, regional processes (Rabat, Khartoum), and UN agencies to shape African migration policy."}
+                      </p>
+                    </button>
+                    {expandedGovBody === 'pafom' && (
+                      <div className="px-6 pb-6 pt-2 border-t border-amber-100 space-y-3 animate-in fade-in duration-300">
+                        {pafomSessions.map((s, idx) => (
+                          <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200">
+                            <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
+                              <span className="font-bold text-slate-900 text-xs">{s.num} — {s.date[lang]}</span>
+                            </div>
+                            <p className="text-xs text-amber-700 font-bold mb-1.5">{s.focus[lang]}</p>
+                            <p className="text-xs text-slate-600 leading-relaxed">{s.outcome[lang]}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* JLMP */}
+              <div className="bg-blue-50 p-6 md:p-7 rounded-xl border border-blue-200 shadow-sm">
+                <div className="flex items-start gap-4 mb-5">
+                  <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
+                  <div>
+                    <h4 className="text-sm font-bold text-blue-900 mb-1.5">{lang === 'fr' ? "Le Programme Conjoint sur la Migration de Main-d'œuvre (JLMP)" : "The Joint Labour Migration Programme (JLMP)"}</h4>
+                    <p className="text-xs text-blue-800 leading-relaxed">
                       {lang === 'fr'
-                        ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit tous les deux ans au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux. Sa 5e session ordinaire s'est tenue en novembre 2025."
-                        : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets every two years at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work. Its 5th ordinary session was held in November 2025."}
+                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA (+ PNUD), le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015), en ciblant la portabilité des compétences, la portabilité des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants."
+                        : "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM, and ECA (+ UNDP), the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment, targeting skills portability, social security portability, fair recruitment, and migrant worker protection."}
                     </p>
                   </div>
-                  <div className="bg-amber-50/50 p-6 rounded-lg border border-amber-100">
-                    <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
-                      <h5 className="font-bold text-amber-900 text-base">
-                        {lang === 'fr' ? "Forum Panafricain sur la Migration (PAFoM)" : "Pan-African Forum on Migration (PAFoM)"}
-                      </h5>
-                      <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
-                        {lang === 'fr' ? "9 sessions depuis 2006" : "9 sessions since 2006"}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-700 leading-relaxed">
-                      {lang === 'fr'
-                        ? "Créé par la Décision EX.CL/276(IX) du Conseil Exécutif (2006), le PAFoM est le processus consultatif continental de référence : il réunit les États membres de l'UA, les CER, les processus régionaux (Rabat, Khartoum) et les agences onusiennes pour façonner les politiques migratoires africaines. La 9e édition s'est tenue au Cap en décembre 2025 sur la gestion intelligente et sécurisée des frontières — la 8e (Gaborone, 2023) portait sur l'articulation entre libre circulation et ZLECAf."
-                        : "Created by Executive Council Decision EX.CL/276(IX) (2006), PAFoM is the continent's flagship consultative process: it brings together all member states, RECs, regional processes (Rabat, Khartoum), and UN agencies to shape African migration policy. The 9th edition was held in Cape Town in December 2025 on smart, secure border management — the 8th (Gaborone, 2023) addressed the link between free movement and the AfCFTA."}
-                    </p>
-                  </div>
+                </div>
+                <div className="bg-white/70 p-4 rounded-lg border border-blue-100">
+                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "Phase actuelle — JLMP Action (jusqu'à déc. 2024)" : "Current Phase — JLMP Action (through Dec. 2024)"}</span>
+                  <p className="text-xs text-blue-900 leading-relaxed">
+                    {lang === 'fr'
+                      ? "Déploiement ciblé dans 5 États membres (Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc) et 2 CER partenaires (CEEAC, COMESA) — un choix pilote plutôt qu'une couverture continentale immédiate, financé par la SIDA (Suède) depuis la phase « JLMP Priority » (2018)."
+                      : "Targeted rollout in 5 member states (Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco) and 2 partner RECs (ECCAS, COMESA) — a pilot approach rather than immediate continental coverage, funded by SIDA (Sweden) since the \"JLMP Priority\" phase (2018)."}
+                  </p>
                 </div>
               </div>
 
@@ -2814,7 +3060,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ? "Chronologie construite à partir des documents publics de l'UA — notamment le Rapport d'activités de l'Observatoire Africain des Migrations (2021-2024) — et des communiqués officiels de l'UA."
                     : "Chronology built from public AU documents — notably the African Migration Observatory's Activity Report (2021-2024) — and official AU press releases."}
                 </p>
-                <a href="https://amo.au.int/en" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 hover:underline mb-6 pb-4 border-b border-slate-100 w-full">
+                <a href="https://amo.au.int/en" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline mb-6 pb-4 border-b border-slate-100 w-full">
                   {lang === 'fr' ? "→ Consulter le site officiel de l'OAM" : "→ Visit the AMO's official site"} <ExternalLink className="w-3 h-3" />
                 </a>
                 <div className="space-y-5">
@@ -2861,29 +3107,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       <p className="text-xs text-slate-700 leading-relaxed pb-1">{lang === 'fr' ? item.fr : item.en}</p>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* JLMP & Coordination */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <h4 className="flex items-center text-sm font-bold text-slate-800 mb-3"><ShieldAlert className="w-4 h-4 mr-2 text-rose-700" /> {lang === 'fr' ? "Conventions de protection" : "Protection Conventions"}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {lang === 'fr'
-                      ? "Pionnière, la Convention OUA de 1969 a élargi la définition du réfugié aux victimes de violences généralisées. La Convention de Kampala (2009) est le premier instrument juridique contraignant au monde protégeant spécifiquement les personnes déplacées internes (IDPs)."
-                      : "A pioneer, the 1969 OAU Convention broadened the refugee definition to victims of generalized violence. The Kampala Convention (2009) is the world's first binding legal instrument specifically protecting internally displaced persons (IDPs)."}
-                  </p>
-                </div>
-                <div className="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm flex items-start gap-4">
-                  <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
-                  <div>
-                    <h4 className="text-sm font-bold text-blue-900 mb-2">{lang === 'fr' ? "Le programme JLMP (OIT, OIM, UA)" : "The JLMP Programme (ILO, IOM, AU)"}</h4>
-                    <p className="text-xs text-blue-800 leading-relaxed">
-                      {lang === 'fr'
-                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Le JLMP est l'initiative la plus concrète d'harmonisation de la migration de travail, palliant le manque de capacités administratives des États membres."
-                        : "Where pure law stalls (Kigali), governance advances through technical means. The JLMP is the most concrete initiative for harmonizing labour migration, offsetting member states' administrative capacity gaps."}
-                    </p>
-                  </div>
                 </div>
               </div>
 
@@ -2935,14 +3158,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 const isOpen = expandedRec === rec.id;
                 return (
                   <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
-                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div>
-                        <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name[lang]}</h4>
-                        <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
-                          {rec.tag}
+                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
+                      <div className="flex items-center gap-4 min-w-0">
+                        <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
+                          {rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}
                         </span>
+                        <div className="min-w-0">
+                          <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name[lang]}</h4>
+                          <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
+                            {rec.tag}
+                          </span>
+                        </div>
                       </div>
-                      <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
+                      <div className="flex items-center gap-4 shrink-0">
+                        <div className="text-right hidden sm:block">
+                          <div className="text-sm font-serif font-bold text-slate-800 tabular-nums">{rec.avoi.toFixed(3)}</div>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">AVOI</span>
+                        </div>
+                        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
+                      </div>
                     </button>
 
                     {isOpen && (
@@ -3132,7 +3366,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             <h5 className="font-bold text-slate-900 text-lg">{country.name[lang]}</h5>
                             <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold[lang]}</span>
                           </div>
-                          <div className="text-[10px] text-slate-500 mb-4 pb-3 border-b border-slate-200">
+                          <div className="text-xs text-slate-500 mb-4 pb-3 border-b border-slate-200">
                             <strong className="text-slate-700 uppercase tracking-widest">{lang === 'fr' ? "Instrument : " : "Instrument: "}</strong>
                             <span className="italic">{country.instrument[lang]}</span>
                           </div>
@@ -3888,7 +4122,7 @@ const LibraryCard = ({ item, lang, essential = false }) => {
         <span className={`font-bold text-slate-800 leading-snug group-hover:text-amber-900 ${essential ? 'text-sm' : 'text-xs'}`}>{item.title}</span>
         {item.url && !essential && <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0 mt-0.5" />}
       </div>
-      <p className={`text-slate-500 leading-relaxed ${essential ? 'text-xs flex-1' : 'text-[11px]'}`}>{item.desc[lang]}</p>
+      <p className={`text-slate-500 leading-relaxed text-xs ${essential ? 'flex-1' : ''}`}>{item.desc[lang]}</p>
       {essential && (
         <span className="text-[10px] font-bold text-amber-700 flex items-center gap-1 mt-1">
           {item.url ? <>{lang === 'fr' ? 'Consulter' : 'View source'} <ExternalLink className="w-3 h-3" /></> : (lang === 'fr' ? `Année ${item.year}` : `Year ${item.year}`)}
@@ -4150,7 +4384,7 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
                       </p>
                     )}
                       
-                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                       <div className="space-y-4">
                         <div>
                           <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{lang === 'fr' ? "Méthodologie & Collecte" : "Methodology & Data Collection"}</span>
@@ -4560,6 +4794,11 @@ export default function App() {
     { id: 'about', icon: Info, label: { fr: 'À Propos & Méthodologie', en: 'About & Methodology' } },
   ];
 
+  // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
+  // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
+  // denses en grilles/tableaux, conservent la pleine largeur.
+  const mainMaxWidth = ['home', 'about'].includes(activeTab) ? 'max-w-5xl' : ['evidence', 'library'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
+
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
       <style type="text/css">
@@ -4574,6 +4813,9 @@ export default function App() {
           @page { size: A4; margin: 12mm; }
           body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; }
           .print\\:hidden { display: none !important; }
+          .break-inside-avoid, .print\\:break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
+          a { text-decoration: none; }
+          h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
         `}
       </style>
       <style>{`
@@ -4651,7 +4893,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
+      <main className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-[max-width] duration-300 ${showModal ? 'print:hidden' : ''}`}>
         {activeTab === 'home' && (
           <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
         )}
@@ -4695,6 +4937,11 @@ export default function App() {
                 <Brain className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Glossaire' : 'Glossary'}
               </button>
             </div>
+            <div className="flex justify-end print:hidden">
+              <button onClick={() => window.print()} className="flex items-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-blue-700 hover:border-blue-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
+                <Printer className="w-3.5 h-3.5" /> <span>{lang === 'fr' ? "Exporter cette section (PDF)" : "Export this section (PDF)"}</span>
+              </button>
+            </div>
             {activeAboutTab === 'about' && <TabAbout text={text} lang={lang} />}
             {activeAboutTab === 'methodology' && (
               <TabMethodology
@@ -4706,6 +4953,7 @@ export default function App() {
             {activeAboutTab === 'glossary' && <TabGlossary lang={lang} />}
           </div>
         )}
+        <PrintCitationFooter lang={lang} sectionLabel={navigation.find(i => i.id === activeTab)?.label?.[lang]} />
       </main>
 
       {showModal && (
@@ -4855,7 +5103,7 @@ export default function App() {
                               </div>
                             )}
                           </div>
-                          <p className="text-[10px] text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]">{text.modal.idp_desc}</p>
+                          <p className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]">{text.modal.idp_desc}</p>
                         </div>
                       )}
 
@@ -4874,11 +5122,11 @@ export default function App() {
                               )}
                             </div>
                             {continentalAvoiAvg !== null && (
-                              <p className="text-[9px] text-amber-700 mt-1.5 font-bold">
+                              <p className="text-xs text-amber-700 mt-1.5 font-bold">
                                 {lang === 'fr' ? `Moyenne continentale : ${continentalAvoiAvg}/100` : `Continental average: ${continentalAvoiAvg}/100`}
                               </p>
                             )}
-                            <p className="text-[10px] text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5">{text.modal.avoi_desc}</p>
+                            <p className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5">{text.modal.avoi_desc}</p>
                           </div>
                         </div>
                       )}
@@ -4899,7 +5147,7 @@ export default function App() {
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
                     <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
-                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-block text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
                       {lang === 'fr' ? "→ Consulter la base des traités de l'UA" : "→ View AU Treaties Database"}
                     </a>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -4925,12 +5173,34 @@ export default function App() {
                   </div>
                 )}
 
+                {display.iso2 && countryRecAffiliations[display.iso2] && (
+                  <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
+                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Affiliation aux Communautés Économiques Régionales" : "Regional Economic Community Affiliation"}</h3>
+                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Blocs régionaux dont le pays est membre (l'appartenance à plusieurs CER est courante en Afrique)." : "Regional blocs the country belongs to (multiple REC membership is common in Africa)."}</p>
+                    <div className="flex flex-wrap gap-3">
+                      {countryRecAffiliations[display.iso2].map((recId) => (
+                        <div key={recId} className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-full pl-1.5 pr-4 py-1.5 print:bg-white">
+                          <span className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[9px] shrink-0">
+                            {recId === 'censad' ? 'CS' : recId.toUpperCase()}
+                          </span>
+                          <span className="text-xs font-bold text-emerald-900">{recNames[recId][lang]}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {countryRecNotes[display.iso2] && (
+                      <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4 flex items-start gap-2 print:bg-white">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {countryRecNotes[display.iso2][lang]}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Évaluation Juridique des Droits (Base NORMLEX OIT)" : "Legal Evaluation of Rights (ILO NORMLEX)"}</h3>
                     <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
                     {display.normlex.link && (
-                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-block text-[10px] text-blue-700 font-bold hover:underline mb-6 print:hidden">
+                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-block text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
                         {lang === 'fr' ? "→ Consulter le profil national NORMLEX" : "→ View NORMLEX National Profile"}
                       </a>
                     )}
@@ -4972,6 +5242,8 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
+                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (lang === 'fr' ? 'Profil Régional' : 'Regional Profile') : (lang === 'fr' ? 'Profil Pays' : 'Country Profile')} />
               </div>
             </div>
 
