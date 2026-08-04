@@ -122,17 +122,30 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
 };
 
 const headerAccents = {
-  blue: { badge: "bg-blue-900/50 border-blue-800 text-blue-200", highlight: "text-blue-300", border: "border-blue-900/50" },
-  emerald: { badge: "bg-emerald-900/50 border-emerald-800 text-emerald-200", highlight: "text-emerald-300", border: "border-emerald-900/50" },
-  indigo: { badge: "bg-indigo-900/50 border-indigo-800 text-indigo-200", highlight: "text-indigo-300", border: "border-indigo-900/50" },
-  amber: { badge: "bg-amber-900/50 border-amber-800 text-amber-200", highlight: "text-amber-300", border: "border-amber-900/50" },
-  teal: { badge: "bg-teal-900/50 border-teal-800 text-teal-200", highlight: "text-teal-300", border: "border-teal-900/50" },
+  blue: { badge: "bg-blue-900/50 border-blue-800 text-blue-200", highlight: "text-blue-300", border: "border-blue-900/50", bar: "from-blue-500 via-blue-400 to-transparent" },
+  emerald: { badge: "bg-emerald-900/50 border-emerald-800 text-emerald-200", highlight: "text-emerald-300", border: "border-emerald-900/50", bar: "from-emerald-500 via-emerald-400 to-transparent" },
+  indigo: { badge: "bg-indigo-900/50 border-indigo-800 text-indigo-200", highlight: "text-indigo-300", border: "border-indigo-900/50", bar: "from-indigo-500 via-indigo-400 to-transparent" },
+  amber: { badge: "bg-amber-900/50 border-amber-800 text-amber-200", highlight: "text-amber-300", border: "border-amber-900/50", bar: "from-amber-500 via-amber-400 to-transparent" },
+  teal: { badge: "bg-teal-900/50 border-teal-800 text-teal-200", highlight: "text-teal-300", border: "border-teal-900/50", bar: "from-teal-500 via-teal-400 to-transparent" },
+};
+
+const navAccentMap = {
+  home: { bg: 'bg-blue-800', border: 'border-t-blue-400', icon: 'text-blue-200' },
+  evidence: { bg: 'bg-blue-800', border: 'border-t-blue-400', icon: 'text-blue-200' },
+  explorer: { bg: 'bg-emerald-800', border: 'border-t-emerald-400', icon: 'text-emerald-200' },
+  governance: { bg: 'bg-indigo-800', border: 'border-t-indigo-400', icon: 'text-indigo-200' },
+  library: { bg: 'bg-amber-800', border: 'border-t-amber-400', icon: 'text-amber-200' },
+  about: { bg: 'bg-teal-800', border: 'border-t-teal-400', icon: 'text-teal-200' },
 };
 
 const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent = 'blue' }) => {
   const a = headerAccents[accent] || headerAccents.blue;
   return (
-    <header className={`bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border ${a.border} shadow-lg mb-8`}>
+    <header
+      className={`bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border ${a.border} shadow-lg mb-8`}
+      style={{ backgroundImage: 'radial-gradient(circle at 12% 20%, rgba(255,255,255,0.05), transparent 42%), radial-gradient(circle at 92% 88%, rgba(255,255,255,0.035), transparent 45%)' }}
+    >
+      <div className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r ${a.bar} opacity-60`}></div>
       <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.03] pointer-events-none">
         <Icon className="w-[400px] h-[400px]" />
       </div>
@@ -291,8 +304,8 @@ const t = {
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Les migrants internationaux représentent environ 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 — et l'Afrique ne pèse que 9,5 % du stock migratoire international, loin derrière l'Europe et l'Asie (UN DESA, 2024). Plus de sept migrants africains sur dix restent sur le continent. Cet écart entre le proportionnel et le perçu n'est pas un simple biais cognitif : il structure des politiques publiques, oriente des financements et façonne un imaginaire sécuritaire dont les coûts, humains et économiques, sont réels (de Haas, 2023).",
         p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains ne sont pas de simples récepteurs passifs des agendas migratoires du Nord, mais des acteurs qui négocient, retournent et instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie systématiquement la proportion à la valeur absolue, la comparaison à l'anecdote, et l'architecture institutionnelle africaine (Union africaine, Communautés économiques régionales) aux seuls cadres normatifs venus du Nord — sans nier les asymétries de pouvoir et de financement qui structurent concrètement ce régime (Bakewell, 2008 ; Bayart, 2000).",
-        pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement.",
-        p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance. Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
+        pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
+        p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance (Ben Mokhtar, 2026). Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
         p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde.",
         refs_title: "Pour aller plus loin",
         refs: [
@@ -538,8 +551,8 @@ const t = {
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. International migrants make up about 3.6% of the world's population — a share that has remained remarkably stable since 1990 — and Africa accounts for only 9.5% of the global migrant stock, far behind Europe and Asia (UN DESA, 2024). More than seven in ten African migrants remain on the continent. This gap between the proportional and the perceived is not a mere cognitive bias: it shapes public policy, directs funding, and fuels a securitized imaginary whose human and economic costs are real (de Haas, 2023).",
         p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states are not mere passive recipients of Northern migration agendas, but actors who negotiate, redirect, and instrumentalize migration cooperation to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
-        pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out.",
-        p5: "This framing owes, finally, to fieldwork: participant observation conducted between 2023 and 2025 within the African Migration Observatory (Rabat), documented in the Governance section. It gives access to the regime's ordinary bureaucratic fabric — workshops, budgetary trade-offs, validation circuits — where normative frameworks, examined alone, show only their façade.",
+        pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
+        p5: "This framing owes, finally, to fieldwork: participant observation conducted between 2023 and 2025 within the African Migration Observatory (Rabat), documented in the Governance section (Ben Mokhtar, 2026). It gives access to the regime's ordinary bureaucratic fabric — workshops, budgetary trade-offs, validation circuits — where normative frameworks, examined alone, show only their façade.",
         p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it.",
         refs_title: "Further Reading",
         refs: [
@@ -1457,7 +1470,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
               <button
                 key={card.id}
                 onClick={() => setActiveTab(card.id)}
-                className={`text-left p-6 bg-white rounded-xl border border-slate-200 shadow-sm transition-all group flex flex-col h-full ${homeCardAccents[card.accent]} hover:shadow-md`}
+                className={`text-left p-6 bg-white rounded-xl border border-slate-200 shadow-sm transition-all duration-300 group flex flex-col h-full ${homeCardAccents[card.accent]} hover:shadow-md hover:-translate-y-0.5`}
               >
                 <Icon className="w-7 h-7 text-slate-400 mb-4 group-hover:scale-110 transition-transform" />
                 <h3 className={`font-serif font-bold text-slate-900 mb-2 ${homeCardAccents[card.accent].split(' ')[1]}`}>{card.label[lang]}</h3>
@@ -2660,8 +2673,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </h3>
                 <p className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify">
                   {lang === 'fr'
-                    ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national ». Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
-                    : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between'. The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
+                    ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
+                    : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
                 </p>
               </div>
             </div>
@@ -2796,11 +2809,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <MapPin className="w-5 h-5 mr-2 text-indigo-700" />
                   {lang === 'fr' ? "Gros Plan : l'OAM, une institution en construction" : "Close-Up: The AMO, an Institution Under Construction"}
                 </h4>
-                <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4">
+                <p className="text-xs text-slate-500 mb-2">
                   {lang === 'fr'
-                    ? "Chronologie reconstituée par observation participante (programme doctoral, février 2024 – juin 2025) et documents institutionnels de l'UA (Rapport d'activités OAM, 2021-2024)."
-                    : "Chronology reconstructed via participant observation (doctoral fieldwork, February 2024 – June 2025) and AU institutional documents (AMO Activity Report, 2021-2024)."}
+                    ? "Chronologie construite à partir des documents publics de l'UA — notamment le Rapport d'activités de l'Observatoire Africain des Migrations (2021-2024) — et des communiqués officiels de l'UA."
+                    : "Chronology built from public AU documents — notably the African Migration Observatory's Activity Report (2021-2024) — and official AU press releases."}
                 </p>
+                <a href="https://amo.au.int/en" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 hover:underline mb-6 pb-4 border-b border-slate-100 w-full">
+                  {lang === 'fr' ? "→ Consulter le site officiel de l'OAM" : "→ Visit the AMO's official site"} <ExternalLink className="w-3 h-3" />
+                </a>
                 <div className="space-y-5">
                   {[
                     {
@@ -2846,11 +2862,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </div>
                   ))}
                 </div>
-                <p className="text-[10px] text-slate-400 italic mt-6 pt-4 border-t border-slate-100">
-                  {lang === 'fr'
-                    ? "Cette chronologie illustre une institutionnalisation « par couches successives » : la capacité continentale ne se décrète pas, elle s'accumule par ateliers, pilotes, documents et arbitrages ordinaires — au fil de contraintes budgétaires réelles (financement largement extrabudgétaire) et d'une équipe réduite face à un mandat continental très large."
-                    : "This chronology illustrates institutionalization \"by successive layers\": continental capacity is not decreed, it accumulates through workshops, pilots, documents, and ordinary trade-offs — against real budgetary constraints (largely off-budget funding) and a small team facing a very broad continental mandate."}
-                </p>
               </div>
 
               {/* JLMP & Coordination */}
@@ -3490,14 +3501,14 @@ const glossaryData = [
     category: { fr: "Concepts Théoriques", en: "Theoretical Concepts" },
     icon: Brain,
     terms: [
-      { term: "Entre-deux national", en_term: "National In-Between", fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les administrations nationales. Concept central de la thèse à l'origine de ce DataHub.", en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national administrations. A central concept of the thesis behind this DataHub." },
+      { term: "Entre-deux national", en_term: "National In-Between", fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les administrations nationales. Concept central de la thèse à l'origine de ce DataHub (Ben Mokhtar, 2026).", en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national administrations. A central concept of the thesis behind this DataHub (Ben Mokhtar, 2026)." },
       { term: "Capabilités de mouvement", en_term: "Capabilities of Movement", fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que sur une dichotomie volontaire/forcé.", en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, rather than a voluntary/forced dichotomy." },
       { term: "Diplomatie migratoire", en_term: "Migration Diplomacy", fr: "Usage stratégique de la coopération migratoire par les États comme levier de négociation diplomatique — financement, reconnaissance, contreparties (Adamson & Tsourapas, 2019).", en: "The strategic use of migration cooperation by states as a diplomatic bargaining lever — funding, recognition, reciprocal concessions (Adamson & Tsourapas, 2019)." },
       { term: "Communs migratoires vernaculaires", en_term: "Vernacular Migratory Commons", fr: "Arrangements informels d'entraide, d'alerte et de réciprocité qui régulent concrètement certains corridors migratoires (Sahara central, marchés-frontières) en l'absence — ou en complément — des cadres institutionnels formels.", en: "Informal mutual-aid, alert, and reciprocity arrangements that concretely regulate certain migration corridors (central Sahara, border markets) in the absence of — or alongside — formal institutional frameworks." },
       { term: "Extraversion", en_term: "Extraversion", fr: "Théorie (Bayart, 2000) selon laquelle les élites et institutions africaines mobilisent stratégiquement leurs relations avec l'extérieur comme ressource de pouvoir interne, plutôt que de la subir passivement.", en: "Theory (Bayart, 2000) holding that African elites and institutions strategically mobilize external relations as a resource for internal power, rather than passively enduring them." },
       { term: "Gouvernementalité", en_term: "Governmentality", fr: "Chez Foucault, l'ensemble des techniques, savoirs et institutions par lesquels un problème (ici la migration) est rendu gouvernable — au-delà du seul droit ou de la contrainte physique.", en: "In Foucault, the set of techniques, knowledge, and institutions through which a problem (here, migration) is rendered governable — beyond law or physical coercion alone." },
       { term: "Lecture décoloniale", en_term: "Decolonial Reading", fr: "Approche qui interroge les asymétries structurelles héritées de l'ordre colonial dans les régimes juridiques et institutionnels contemporains, y compris les cadres internationaux de gouvernance des migrations (Achiume, 2019).", en: "An approach that questions the structural asymmetries inherited from the colonial order within contemporary legal and institutional regimes, including international migration governance frameworks (Achiume, 2019)." },
-      { term: "Régime (de gouvernance migratoire)", en_term: "Regime (of Migration Governance)", fr: "Ensemble de principes, normes, règles et procédures — implicites ou explicites — autour desquels convergent les attentes des acteurs dans un domaine donné (Krasner, 1982), appliqué ici à la migration africaine.", en: "A set of principles, norms, rules, and procedures — implicit or explicit — around which actor expectations converge in a given issue area (Krasner, 1982), applied here to African migration." },
+      { term: "Régime (de gouvernance migratoire)", en_term: "Regime (of Migration Governance)", fr: "Ensemble de principes, normes, règles et procédures — implicites ou explicites — autour desquels convergent les attentes des acteurs dans un domaine donné (Krasner, 1982), cadre repris et appliqué au cas africain par Ben Mokhtar (2026).", en: "A set of principles, norms, rules, and procedures — implicit or explicit — around which actor expectations converge in a given issue area (Krasner, 1982), a framework taken up and applied to the African case by Ben Mokhtar (2026)." },
     ]
   },
   {
@@ -3583,7 +3594,7 @@ const LibraryCard = ({ item, lang, essential = false }) => {
     <CardTag
       {...cardProps}
       className={essential
-        ? `p-5 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white shadow-sm flex flex-col gap-2 transition-all ${item.url ? 'hover:shadow-md hover:border-amber-400 group cursor-pointer' : ''}`
+        ? `p-5 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white shadow-sm flex flex-col gap-2 transition-all duration-300 ${item.url ? 'hover:shadow-md hover:border-amber-400 hover:-translate-y-0.5 group cursor-pointer' : ''}`
         : `p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5 transition-colors ${item.url ? 'hover:border-amber-300 hover:bg-amber-50/50 group cursor-pointer' : ''}`}
     >
       <div className="flex items-center justify-between gap-2">
@@ -4289,6 +4300,32 @@ export default function App() {
           display: inline-block;
           vertical-align: middle;
         }
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+        ::selection {
+          background-color: #bfdbfe;
+          color: #1e3a8a;
+        }
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e1 transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 6px;
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #cbd5e1;
+          border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #94a3b8;
+        }
       `}</style>
 
       <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden">
@@ -4311,17 +4348,18 @@ export default function App() {
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
+              const navAccent = navAccentMap[item.id] || navAccentMap.home;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center px-4 py-2.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap ${
-                    isActive 
-                      ? 'bg-blue-800 text-white shadow-inner border-t-2 border-t-blue-400' 
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border-t-2 border-t-transparent'
+                  className={`flex items-center px-4 py-2.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap border-t-2 ${
+                    isActive
+                      ? `${navAccent.bg} text-white shadow-inner ${navAccent.border}`
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border-t-transparent'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 mr-2 ${isActive ? 'text-blue-200' : 'text-slate-500'}`} />
+                  <Icon className={`w-4 h-4 mr-2 ${isActive ? navAccent.icon : 'text-slate-500'}`} />
                   {item.label[lang]}
                 </button>
               );
