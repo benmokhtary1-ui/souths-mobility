@@ -6,7 +6,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb
+  Briefcase, Brain, Lightbulb, Compass
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -154,6 +154,56 @@ const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent 
   );
 };
 
+const institutionLogos = [
+  { key: 'un', name: "United Nations", src: "https://upload.wikimedia.org/wikipedia/commons/5/52/Emblem_of_the_United_Nations.svg" },
+  { key: 'worldbank', name: "World Bank", src: "https://upload.wikimedia.org/wikipedia/commons/c/ca/World_Bank_Group_logo.svg" },
+  { key: 'au', name: "African Union", src: "https://upload.wikimedia.org/wikipedia/commons/2/23/African_Union_logo.png" },
+  { key: 'unhcr', name: "UNHCR", src: "https://upload.wikimedia.org/wikipedia/commons/8/88/UNHCR.svg" },
+  { key: 'ilo', name: "ILO", src: "https://upload.wikimedia.org/wikipedia/commons/1/11/ILO-Logo.svg" },
+  { key: 'iom', name: "IOM", src: null },
+  { key: 'afdb', name: "AfDB", src: "https://upload.wikimedia.org/wikipedia/commons/3/36/Logo_Afrikanische_Entwicklungsbank.svg" },
+  { key: 'oecd', name: "OECD", src: "https://upload.wikimedia.org/wikipedia/commons/a/a2/OECD_logo.svg" },
+  { key: 'idmc', name: "IDMC", src: null },
+  { key: 'uneca', name: "UNECA", src: "https://upload.wikimedia.org/wikipedia/commons/6/69/United_Nations_Economic_Commission_for_Africa_Logo.svg" },
+];
+
+const aboutLogoMap = [
+  institutionLogos.find(i => i.key === 'au'),
+  institutionLogos.find(i => i.key === 'un'),
+  institutionLogos.find(i => i.key === 'worldbank'),
+  institutionLogos.find(i => i.key === 'afdb'),
+  institutionLogos.find(i => i.key === 'oecd'),
+  institutionLogos.find(i => i.key === 'idmc'),
+  null,
+  null,
+];
+
+const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
+  const [failed, setFailed] = useState(!src);
+
+  useEffect(() => {
+    if (!src) return;
+    setFailed(false);
+    const timer = setTimeout(() => setFailed(true), 5000);
+    return () => clearTimeout(timer);
+  }, [src]);
+
+  if (failed) {
+    const initials = name.includes(' ') ? name.split(/\s+/).map(w => w[0]).slice(0, 3).join('') : name;
+    return <span className="font-serif font-bold text-slate-400 text-xs tracking-wide">{initials}</span>;
+  }
+  return (
+    <img
+      src={src}
+      alt={name}
+      loading="lazy"
+      onLoad={(e) => { e.currentTarget.dataset.loaded = 'true'; }}
+      onError={() => setFailed(true)}
+      className={`${className} object-contain grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300`}
+    />
+  );
+};
+
 // ============================================================================
 // 2. DONNÉES STATIQUES
 // ============================================================================
@@ -201,6 +251,12 @@ const t = {
         method_title: "Ingénierie & Source des Données" 
       },
       headers: {
+        home: {
+          badge: "South(s) Mobility DataHub",
+          title: "Objectiver les mobilités",
+          highlight: "par la science des données.",
+          desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées."
+        },
         explorer: {
           badge: "Explorateur Macrorégional & National",
           title: "Cartographier et analyser",
@@ -380,8 +436,7 @@ const t = {
       },
       myth: "Postulat", reality: "Donnée Factuelle",
       footer: { tag: "L'ingénierie des données au service d'un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque Mondiale (2024)" },
-      analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport",
-      hero_title: "Objectiver les mobilités", hero_highlight: "par la science des données."
+      analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
       title: "South(s) Mobility", subtitle: "DataHub",
@@ -422,6 +477,12 @@ const t = {
         method_title: "Engineering & Data Sourcing" 
       },
       headers: {
+        home: {
+          badge: "South(s) Mobility DataHub",
+          title: "Objectifying mobilities",
+          highlight: "through data science.",
+          desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources."
+        },
         explorer: {
           badge: "Macro-Regional & National Explorer",
           title: "Mapping and analyzing",
@@ -601,8 +662,7 @@ const t = {
       },
       myth: "Premise", reality: "Factual Data",
       footer: { tag: "Data engineering serving a new factual narrative on mobilities.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
-      analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report",
-      hero_title: "Objectifying mobilities", hero_highlight: "through data science."
+      analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report"
     }
 };
 
@@ -1254,17 +1314,110 @@ const indicatorThemes = [
 // 3. COMPOSANTS DES ONGLETS
 // ============================================================================
 
+const homeCards = [
+  { id: 'evidence', icon: Globe, accent: 'blue', label: { fr: 'Evidence Check', en: 'Evidence Check' }, desc: { fr: `${evidenceCheckData.length} affirmations courantes sur les migrations confrontées aux meilleures données disponibles.`, en: `${evidenceCheckData.length} common migration claims tested against the best available data.` } },
+  { id: 'explorer', icon: MapPin, accent: 'emerald', label: { fr: 'Explorateur', en: 'Data Explorer' }, desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.", en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
+  { id: 'governance', icon: Landmark, accent: 'indigo', label: { fr: 'Gouvernance', en: 'Governance' }, desc: { fr: "L'architecture juridique panafricaine, des CER à l'Union africaine et aux pactes mondiaux.", en: "The pan-African legal architecture, from RECs to the AU and global compacts." } },
+  { id: 'library', icon: BookOpen, accent: 'amber', label: { fr: 'Bibliothèque', en: 'Library' }, desc: { fr: "32 sources institutionnelles, juridiques et académiques vérifiées.", en: "32 verified institutional, legal, and academic sources." } },
+];
+
+const homeCardAccents = {
+  blue: "hover:border-blue-300 group-hover:text-blue-700",
+  emerald: "hover:border-emerald-300 group-hover:text-emerald-700",
+  indigo: "hover:border-indigo-300 group-hover:text-indigo-700",
+  amber: "hover:border-amber-300 group-hover:text-amber-700",
+};
+
+const TabHome = ({ text, lang, setActiveTab }) => {
+  const totalCountries = Object.values(countryData).flat().length;
+  const totalRegions = Object.keys(countryData).length;
+  const totalEvidence = evidenceCheckData.length;
+  const totalLibrary = libraryData.reduce((sum, s) => sum + s.items.length, 0);
+
+  return (
+    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-10">
+      <PageHeader
+        badge={text.headers.home.badge}
+        title={text.headers.home.title}
+        highlight={text.headers.home.highlight}
+        desc={text.headers.home.desc}
+        icon={Globe}
+        accent="blue"
+      />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
+          <div className="text-3xl font-serif font-bold text-slate-900">{totalCountries}</div>
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Pays Couverts" : "Countries Covered"}</span>
+        </div>
+        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
+          <div className="text-3xl font-serif font-bold text-slate-900">{totalRegions}</div>
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sous-Régions (UA)" : "Sub-Regions (AU)"}</span>
+        </div>
+        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
+          <div className="text-3xl font-serif font-bold text-slate-900">{totalEvidence}</div>
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Affirmations Vérifiées" : "Claims Fact-Checked"}</span>
+        </div>
+        <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
+          <div className="text-3xl font-serif font-bold text-slate-900">{totalLibrary}</div>
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sources Documentaires" : "Documentary Sources"}</span>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le DataHub" : "Explore the DataHub"}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {homeCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <button
+                key={card.id}
+                onClick={() => setActiveTab(card.id)}
+                className={`text-left p-6 bg-white rounded-xl border border-slate-200 shadow-sm transition-all group flex flex-col h-full ${homeCardAccents[card.accent]} hover:shadow-md`}
+              >
+                <Icon className="w-7 h-7 text-slate-400 mb-4 group-hover:scale-110 transition-transform" />
+                <h3 className={`font-serif font-bold text-slate-900 mb-2 ${homeCardAccents[card.accent].split(' ')[1]}`}>{card.label[lang]}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang]}</p>
+                <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4 group-hover:text-slate-700">
+                  {lang === 'fr' ? "Découvrir" : "Discover"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 md:p-10">
+        <h4 className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
+          {lang === 'fr' ? "Données croisées et vérifiées à partir des sources institutionnelles suivantes" : "Data cross-checked and verified against the following institutional sources"}
+        </h4>
+        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+          {institutionLogos.map((inst) => (
+            <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.name}>
+              <InstitutionLogo name={inst.name} src={inst.src} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TabEvidenceCheck = ({ text, lang }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [expandedFiche, setExpandedFiche] = useState(null);
 
-  // Extraire les catégories uniques depuis les données
-  const categoriesList = [...new Set(evidenceCheckData.map(item => item.category))];
+  // Extraire les catégories uniques depuis les données (clé stable = fr, affichage = lang)
+  const categoriesList = [...new Set(evidenceCheckData.map(item => item.category.fr))];
   const allFilters = ["All", ...categoriesList];
+  const categoryLabel = (categoryKey) => {
+    const found = evidenceCheckData.find((item) => item.category.fr === categoryKey);
+    return found ? found.category[lang] : categoryKey;
+  };
 
   // Déterminer quelles catégories afficher selon le filtre actif
-  const displayCategories = activeCategory === "All" 
-    ? categoriesList 
+  const displayCategories = activeCategory === "All"
+    ? categoriesList
     : [activeCategory];
 
   const verdictMeta = {
@@ -1302,6 +1455,43 @@ const TabEvidenceCheck = ({ text, lang }) => {
         accent="blue"
       />
 
+      {/* Vue d'ensemble : distribution des verdicts (calculée en direct) */}
+      {(() => {
+        const tierMeta = [
+          { level: '🔴', labelFr: 'Non étayé', labelEn: 'Not substantiated', Icon: XCircle, bar: 'bg-rose-600', text: 'text-rose-700' },
+          { level: '🟠', labelFr: 'Faiblement étayé', labelEn: 'Weakly substantiated', Icon: AlertTriangle, bar: 'bg-orange-500', text: 'text-orange-700' },
+          { level: '🟡', labelFr: 'À nuancer', labelEn: 'Needs nuance', Icon: HelpCircle, bar: 'bg-amber-500', text: 'text-amber-700' },
+        ];
+        const total = evidenceCheckData.length;
+        const tiers = tierMeta.map((t) => ({
+          ...t,
+          count: evidenceCheckData.filter((f) => f.confidence_level === t.level).length,
+        }));
+        return (
+          <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
+              {lang === 'fr' ? `Vue d'ensemble : ${total} affirmations examinées` : `Overview: ${total} claims examined`}
+            </h3>
+            <div className="flex h-3 w-full rounded-full overflow-hidden mb-5">
+              {tiers.map((t) => (
+                <div key={t.level} className={t.bar} style={{ width: `${(t.count / total) * 100}%` }} title={`${lang === 'fr' ? t.labelFr : t.labelEn}: ${t.count}`}></div>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {tiers.map((t) => (
+                <div key={t.level} className="flex items-center gap-3">
+                  <t.Icon className={`w-6 h-6 shrink-0 ${t.text}`} />
+                  <div>
+                    <span className={`text-xl font-serif font-bold ${t.text}`}>{t.count}</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide ml-1.5">{lang === 'fr' ? t.labelFr : t.labelEn}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })()}
+
       {/* Boutons de filtrage en haut */}
       <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
         {allFilters.map((cat, idx) => (
@@ -1314,21 +1504,22 @@ const TabEvidenceCheck = ({ text, lang }) => {
                 : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            {cat === "All" ? (lang === 'fr' ? "Tout voir" : "View All") : cat}
+            {cat === "All" ? (lang === 'fr' ? "Tout voir" : "View All") : categoryLabel(cat)}
           </button>
         ))}
       </section>
 
       {/* Rendu dynamique groupé par catégories */}
       <div className="space-y-16">
-        {displayCategories.map((categoryName) => {
-          // Filtrer les fiches appartenant à cette catégorie
-          const catFiches = evidenceCheckData.filter(fiche => fiche.category === categoryName);
+        {displayCategories.map((categoryKey) => {
+          // Filtrer les fiches appartenant à cette catégorie (clé stable = fr)
+          const catFiches = evidenceCheckData.filter(fiche => fiche.category.fr === categoryKey);
           // Icône de la catégorie (système Lucide unifié, plus d'emoji)
-          const CatIcon = getCategoryIcon(categoryName);
+          const CatIcon = getCategoryIcon(categoryKey);
+          const categoryName = categoryLabel(categoryKey);
 
           return (
-            <section key={categoryName} className="space-y-6 animate-in fade-in duration-500">
+            <section key={categoryKey} className="space-y-6 animate-in fade-in duration-500">
 
               {/* Titre de la section (Catégorie) */}
               <div className="flex items-center space-x-3 border-b border-slate-200 pb-3">
@@ -1344,7 +1535,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 {catFiches.map((fiche) => {
                   const isExpanded = expandedFiche === fiche.id;
-                  const FicheIcon = getCategoryIcon(fiche.category);
+                  const FicheIcon = getCategoryIcon(fiche.category.fr);
                   const { Icon: VerdictIcon, style: verdictStyle } = getVerdictMeta(fiche.confidence_level);
                   return (
                     <div
@@ -1360,16 +1551,16 @@ const TabEvidenceCheck = ({ text, lang }) => {
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center space-x-2">
                             <FicheIcon className="w-4 h-4 text-slate-400" />
-                            <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category}</span>
+                            <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category[lang]}</span>
                           </div>
                           <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm flex items-center space-x-1.5 ${verdictStyle}`}>
                             <VerdictIcon className="w-3.5 h-3.5" />
-                            <span>{fiche.verdict}</span>
+                            <span>{fiche.verdict[lang]}</span>
                           </div>
                         </div>
 
                         <h3 className="text-slate-900 font-serif font-bold text-lg leading-tight mb-4 group-hover:text-blue-800 transition-colors">
-                          « {fiche.narrative} »
+                          « {fiche.narrative[lang]} »
                         </h3>
 
                         <div className="pt-4 border-t border-slate-100 mt-auto">
@@ -1377,7 +1568,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                             {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
                           </span>
                           <p className="text-slate-700 text-sm leading-relaxed font-medium">
-                            {fiche.reality}
+                            {fiche.reality[lang]}
                           </p>
                         </div>
                         
@@ -1388,14 +1579,14 @@ const TabEvidenceCheck = ({ text, lang }) => {
 
                       <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                         <div className="p-6 space-y-6">
-                          {fiche.why_persists && fiche.why_persists.length > 0 && (
+                          {fiche.why_persists && fiche.why_persists[lang].length > 0 && (
                             <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
                               <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
                                 <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
                                 {lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?"}
                               </h4>
                               <ul className="space-y-2">
-                                {fiche.why_persists.map((reason, i) => (
+                                {fiche.why_persists[lang].map((reason, i) => (
                                   <li key={i} className="flex items-start text-xs text-slate-600 leading-relaxed">
                                     <span className="text-blue-400 mr-2 mt-0.5">•</span> {reason}
                                   </li>
@@ -1411,7 +1602,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                                 {lang === 'fr' ? "Indicateurs Croisés" : "Crossed Indicators"}
                               </h4>
                               <ul className="space-y-1.5">
-                                {fiche.indicators.map((ind, i) => (
+                                {fiche.indicators[lang].map((ind, i) => (
                                   <li key={i} className="text-[11px] text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
                                 ))}
                               </ul>
@@ -1422,7 +1613,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                                 {lang === 'fr' ? "Sources" : "Sources"}
                               </h4>
                               <ul className="space-y-1.5">
-                                {fiche.sources.map((src, i) => (
+                                {fiche.sources[lang].map((src, i) => (
                                   <li key={i} className="text-[11px] font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
                                 ))}
                               </ul>
@@ -1435,7 +1626,7 @@ const TabEvidenceCheck = ({ text, lang }) => {
                               {lang === 'fr' ? "Limites méthodologiques :" : "Methodological limits:"}
                             </h4>
                             <p className="text-xs text-slate-500 italic">
-                              {fiche.limits}
+                              {fiche.limits[lang]}
                             </p>
                           </div>
                         </div>
@@ -1462,6 +1653,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const recsList = [
     {
       id: 'cedeao',
+      avoi: 0.629,
       name: { fr: 'CEDEAO / ECOWAS (Afrique de l’Ouest)', en: 'ECOWAS (West Africa)' },
       tag: lang === 'fr' ? 'Ouverture standardisée & pionnière' : 'Pioneering & standardized openness',
       desc: {
@@ -1479,6 +1671,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'cae',
+      avoi: 0.504,
       name: { fr: 'CAE / EAC (Communauté d’Afrique de l’Est)', en: 'EAC (East African Community)' },
       tag: lang === 'fr' ? 'Citoyenneté de marché & corridors' : 'Market citizenship & corridors',
       desc: {
@@ -1496,6 +1689,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'sadc',
+      avoi: 0.547,
       name: { fr: 'SADC (Communauté de Développement de l’Afrique Australe)', en: 'SADC (Southern African Development Community)' },
       tag: lang === 'fr' ? 'Procéduralisation sectorielle & prudence' : 'Sectoral approach & caution',
       desc: {
@@ -1513,6 +1707,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'comesa',
+      avoi: 0.463,
       name: { fr: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)', en: 'COMESA (Common Market for Eastern and Southern Africa)' },
       tag: lang === 'fr' ? 'Facilitation macro-régionale' : 'Macro-regional facilitation',
       desc: {
@@ -1530,6 +1725,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'igad',
+      avoi: 0.376,
       name: { fr: 'IGAD (Autorité Intergouvernementale pour le Développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
       tag: lang === 'fr' ? 'Nexus sécurité-climat-mobilité' : 'Security-climate-mobility nexus',
       desc: {
@@ -1547,6 +1743,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'ceeac',
+      avoi: 0.320,
       name: { fr: 'CEEAC & CEMAC (Afrique Centrale)', en: 'ECCAS & CEMAC (Central Africa)' },
       tag: lang === 'fr' ? 'Configuration à deux étages' : 'Two-tier configuration',
       desc: {
@@ -1564,6 +1761,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'uma',
+      avoi: 0.306,
       name: { fr: 'UMA (Union du Maghreb Arabe)', en: 'AMU (Arab Maghreb Union)' },
       tag: lang === 'fr' ? 'Normativité d’horizon & gel institutionnel' : 'Horizon normativity & institutional freeze',
       desc: {
@@ -1581,6 +1779,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       id: 'censad',
+      avoi: 0.519,
       name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
       desc: {
@@ -1610,7 +1809,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Adopted in 2015, it is the Union's overarching strategic umbrella. Its Second Ten-Year Implementation Plan (STYIP) places free movement at the heart of development."
       },
       article: {
-        ref: "Aspiration N°2 (Agenda 2063)",
+        ref: { fr: "Aspiration N°2 (Agenda 2063)", en: "Aspiration N°2 (Agenda 2063)" },
         textFr: "« Un continent intégré, politiquement uni, basé sur les idéaux du Panafricanisme et la vision de la Renaissance africaine. (...) L'introduction d'un passeport africain et l'abolition de l'obligation de visa pour tous les citoyens africains. »",
         textEn: "« An integrated continent, politically united and based on the ideals of Pan-Africanism and the vision of Africa’s Renaissance. (...) The introduction of an African passport and the abolition of visa requirements for all African citizens. »"
       }
@@ -1623,7 +1822,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "The founding act of the African Economic Community (AEC). It legally anchors free movement as a sine qua non condition for market integration."
       },
       article: {
-        ref: "Article 43 - Chapitre VI",
+        ref: { fr: "Article 43 - Chapitre VI", en: "Article 43 - Chapter VI" },
         textFr: "« Les États membres conviennent d’adopter, individuellement, à l’échelon bilatéral ou régional, les mesures nécessaires en vue de réaliser progressivement la libre circulation des personnes, et de garantir la jouissance du droit de résidence et d’établissement à leurs ressortissants. »",
         textEn: "« Member States agree to adopt, individually, at bilateral or regional levels, the necessary measures, in order to achieve progressively the free movement of persons, and to ensure the enjoyment of the right of residence and the right of establishment by their nationals. »"
       }
@@ -1631,12 +1830,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       title: { fr: "Le Protocole de Kigali (2018)", en: "The Kigali Protocol (2018)" },
       tag: { fr: "Le Droit Entravé", en: "Hindered Law" },
+      stat: { value: 4, total: 54, label: { fr: "États ayant ratifié", en: "States having ratified" } },
       desc: {
         fr: "Le Protocole sur la Libre Circulation vise à opérationnaliser l'Art. 43 d'Abuja. Paradoxe : ratifié par 4 pays seulement (Rwanda, Sao Tomé, Mali, Niger - ces deux derniers ayant pourtant quitté la CEDEAO pour l'AES).",
         en: "The Protocol on Free Movement aims to operationalize Art. 43 of Abuja. Paradox: ratified by only 4 countries (Rwanda, Sao Tome, Mali, Niger - the latter two having nevertheless left ECOWAS for the AES)."
       },
       article: {
-        ref: "Article 4 - Réalisation progressive",
+        ref: { fr: "Article 4 - Réalisation progressive", en: "Article 4 - Progressive Realization" },
         textFr: "« La libre circulation des personnes, le droit de résidence et le droit d'établissement sont réalisés en trois (3) phases : Première phase - Droit d'entrée; Deuxième phase - Droit de résidence; Troisième phase - Droit d'établissement. »",
         textEn: "« The free movement of persons, right of residence and right of establishment shall be achieved in three (3) phases: Phase One - Right of Entry; Phase Two - Right of Residence; Phase Three - Right of Establishment. »"
       }
@@ -1649,7 +1849,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Facing the political blockage of the Kigali Protocol, the Free Trade Area Agreement forces mobility through the economic prism (services), compelling States to allow trade-related skilled workers to circulate."
       },
       article: {
-        ref: "Protocole sur le Commerce des Services - Art. 1(p)",
+        ref: { fr: "Protocole sur le Commerce des Services - Art. 1(p)", en: "Protocol on Trade in Services - Art. 1(p)" },
         textFr: "« Fourniture d'un service par la présence de personnes physiques (Mode 4) d'un État partie sur le territoire d'un autre État partie. (...) Les États parties négocient des engagements spécifiques applicables au mouvement des personnes physiques. »",
         textEn: "« Supply of a service by the presence of natural persons (Mode 4) of a State Party in the territory of any other State Party. (...) State Parties shall negotiate specific commitments applying to the movement of natural persons. »"
       }
@@ -1662,7 +1862,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Africa invented a more inclusive refugee definition than the UN (1969 OAU Convention) and is the only continent with a binding treaty protecting internally displaced persons (2009 Kampala Convention)."
       },
       article: {
-        ref: "Article 1.2 - Convention OUA 1969",
+        ref: { fr: "Article 1.2 - Convention OUA 1969", en: "Article 1.2 - 1969 OAU Convention" },
         textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (...) est obligée de quitter sa résidence habituelle. »",
         textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (...) is compelled to leave his place of habitual residence. »"
       }
@@ -1675,7 +1875,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Adopted in July 2022 by 11 East African and Horn of Africa states, later expanded to 48 countries across the continent. It sets out 12 commitments to address the effects of climate change on human mobility, ahead of any equivalent binding instrument at the global level."
       },
       article: {
-        ref: "KDMECC (2022) - 12 engagements",
+        ref: { fr: "KDMECC (2022) - 12 engagements", en: "KDMECC (2022) - 12 commitments" },
         textFr: "La déclaration engage notamment les signataires à intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation, à renforcer les données sur les déplacements environnementaux, et à protéger les personnes déplacées par des chocs climatiques dans le cadre des instruments existants (Convention de Kampala 2009).",
         en: "The declaration commits signatories in particular to mainstream climate-related mobility into national adaptation strategies, strengthen data on environmental displacement, and protect people displaced by climate shocks under existing instruments (2009 Kampala Convention)."
       }
@@ -2326,7 +2526,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {text.sdg_section.sdg_points.map((pt, idx) => (
                 <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">Cible ONU</span>
+                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{lang === 'fr' ? "Cible ONU" : "UN Target"}</span>
                   <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
                   <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
                 </div>
@@ -2414,10 +2614,23 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         </span>
                         <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
                         <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
+                        {fw.stat && (
+                          <div className="mt-4 pt-4 border-t border-slate-200">
+                            <div className="flex items-baseline gap-2 mb-1.5">
+                              <span className="text-2xl font-serif font-bold text-rose-700">{fw.stat.value}</span>
+                              <span className="text-xs font-bold text-slate-500">/ {fw.stat.total} {fw.stat.label[lang]}</span>
+                            </div>
+                            <div className="flex gap-1">
+                              {Array.from({ length: fw.stat.total }).map((_, i) => (
+                                <span key={i} className={`h-2 flex-1 rounded-sm ${i < fw.stat.value ? 'bg-rose-600' : 'bg-slate-200'}`}></span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className="md:w-2/3 bg-white p-5 rounded-lg border border-slate-200 flex flex-col justify-center relative shadow-sm">
                         <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-100" />
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref}</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref[lang]}</span>
                         <p className="text-sm font-serif italic text-slate-800 leading-relaxed ml-6 relative z-10">
                           {lang === 'fr' ? fw.article.textFr : fw.article.textEn}
                         </p>
@@ -2436,7 +2649,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Rabat, Maroc (2020)</span>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Rabat, Maroc (2020)" : "Rabat, Morocco (2020)"}</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Observatoire Africain des Migrations, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (2018, données factuelles). Bras technique centralisant la donnée pour déconstruire les récits exogènes, mais dont le financement reste largement extrabudgétaire." : "African Migration Observatory, established following the 2016 New York Declaration and Objective 1 of the Global Compact (2018, factual data). Technical arm centralizing data to deconstruct exogenous narratives, though largely funded off the AU's regular budget."}
                     </p>
@@ -2450,14 +2663,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Khartoum, Soudan</span>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Khartoum, Soudan" : "Khartoum, Sudan"}</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Centre opérationnel pour la lutte contre la migration irrégulière et la traite (actuellement paralysé par le conflit au Soudan)." : "Operational Centre fighting irregular migration and trafficking (currently paralyzed by the Sudan conflict)."}
                     </p>
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Kenya / Tunisie</span>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Kenya / Tunisie" : "Kenya / Tunisia"}</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
                       {lang === 'fr' ? "Institut africain pour les transferts de fonds (AIR) capte l'économie de la diaspora. STATAFRIC coordonne l'architecture statistique." : "African Institute for Remittances (AIR) leverages diaspora economy. STATAFRIC coordinates statistics."}
                     </p>
@@ -2506,6 +2719,29 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   ? "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires."
                   : "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges."}
               </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+              <h4 className="text-sm font-bold text-slate-800 mb-1">
+                {lang === 'fr' ? "Classement de l'ouverture visa (indice AVOI, 2024)" : "Visa openness ranking (AVOI index, 2024)"}
+              </h4>
+              <p className="text-xs text-slate-500 mb-5">
+                {lang === 'fr'
+                  ? "Score moyen par CER (BAD/UA). Le repère vertical marque la moyenne continentale des 8 CER (0,501)."
+                  : "Average score per REC (AfDB/AU). The vertical marker shows the continental average across the 8 RECs (0.501)."}
+              </p>
+              <div className="space-y-3">
+                {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
+                  <div key={rec.id} className="flex items-center gap-3" title={`${rec.name[lang]}: ${rec.avoi.toFixed(3)}`}>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
+                    <div className="flex-1 relative h-4 bg-slate-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-700 rounded-full transition-all duration-700" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
+                      <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
+                    </div>
+                    <span className="text-xs font-bold text-slate-700 w-12 text-right shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -2580,6 +2816,64 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               </div>
             </div>
+
+            {/* Distribution des seuils légaux (54 pays) */}
+            {(() => {
+              const parseThresholdDays = (str) => {
+                const hasDays = /\d+\s*(Jours?|Days?)/i.test(str);
+                if (!hasDays) {
+                  const monthMatch = str.match(/(\d+)\s*(Mois|Months?)/i);
+                  if (monthMatch) return parseInt(monthMatch[1], 10) * 30;
+                }
+                const nums = str.match(/\d+/g);
+                if (!nums) return null;
+                return Math.max(...nums.map(Number));
+              };
+              const buckets = [
+                { key: '<=30', labelFr: '≤ 30 jours', labelEn: '≤ 30 days', test: (d) => d <= 30 },
+                { key: '31-89', labelFr: '31-89 jours', labelEn: '31-89 days', test: (d) => d > 30 && d < 90 },
+                { key: '90', labelFr: '90 jours (la norme)', labelEn: '90 days (the norm)', test: (d) => d === 90 },
+                { key: '91-179', labelFr: '91-179 jours', labelEn: '91-179 days', test: (d) => d > 90 && d < 180 },
+                { key: '>=180', labelFr: '≥ 180 jours', labelEn: '≥ 180 days', test: (d) => d >= 180 },
+              ];
+              const allCountries = legalMatrixData.flatMap((r) => r.countries);
+              const counts = buckets.map((b) => ({
+                ...b,
+                count: allCountries.filter((c) => {
+                  const d = parseThresholdDays(c.threshold.en);
+                  return d !== null && b.test(d);
+                }).length,
+              }));
+              const maxCount = Math.max(...counts.map((c) => c.count), 1);
+              return (
+                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                  <h4 className="text-sm font-bold text-slate-800 mb-1">
+                    {lang === 'fr' ? "Distribution des seuils légaux de visiteur (54 pays)" : "Distribution of legal visitor thresholds (54 countries)"}
+                  </h4>
+                  <p className="text-xs text-slate-500 mb-5">
+                    {lang === 'fr'
+                      ? "Nombre de pays par palier de seuil, calculé en direct depuis la matrice ci-dessous."
+                      : "Number of countries per threshold band, computed live from the matrix below."}
+                  </p>
+                  <div className="space-y-3">
+                    {counts.map((b) => (
+                      <div key={b.key} className="flex items-center gap-3">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
+                        <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
+                            style={{ width: `${Math.max(3, (b.count / maxCount) * 100)}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-xs font-bold text-slate-700 w-16 text-right shrink-0 tabular-nums">
+                          {b.count} {lang === 'fr' ? 'pays' : 'countries'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Toggle Vue Tableau / Vue Fiches */}
             <div className="flex bg-slate-200 p-1.5 rounded-lg w-fit mx-auto md:mx-0">
@@ -2920,19 +3214,19 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block">Total (2024)</span>
+                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "Total (2024)" : "Total (2024)"}</span>
                     <div className="text-xl font-serif font-bold text-slate-900">{formatNumber(display.stock)}</div>
                   </div>
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1.5 block">% Pop. Nat.</span>
+                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "% Pop. Nat." : "% Nat. Pop."}</span>
                     <div className="text-xl font-serif font-bold text-blue-800">{display.evolution}%</div>
                   </div>
                   <div className="bg-rose-50 p-4 rounded-lg border border-rose-100">
-                    <span className="text-[9px] font-bold text-rose-600 uppercase tracking-widest mb-1.5 block">% Femmes</span>
+                    <span className="text-[9px] font-bold text-rose-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "% Femmes" : "% Women"}</span>
                     <div className="text-xl font-serif font-bold text-rose-800">{display.female}%</div>
                   </div>
                   <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
-                    <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block">Rétention (Sud)</span>
+                    <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "Rétention (Sud)" : "Retention (South)"}</span>
                     <div className="text-xl font-serif font-bold text-emerald-800">{display.retention}%</div>
                   </div>
                 </div>
@@ -2957,7 +3251,62 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   </div>
 );
 
-const TabLibrary = ({ text, lang }) => (
+const libraryData = [
+  {
+    section: { fr: "Rapports Institutionnels & Données", en: "Institutional Reports & Data" },
+    icon: Database,
+    items: [
+      { title: "UN DESA — International Migrant Stock (2024)", year: 2024, type: { fr: "Données", en: "Data" }, desc: { fr: "Stocks migratoires mondiaux par pays d'origine et de destination.", en: "Global migrant stocks by country of origin and destination." }, url: "https://www.un.org/development/desa/pd/data/international-migrant-stock" },
+      { title: "UNHCR — Global Trends Report (2025)", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Statistiques mondiales sur les réfugiés et demandeurs d'asile.", en: "Global statistics on refugees and asylum seekers." }, url: "https://www.unhcr.org/refugee-statistics/" },
+      { title: "IDMC — Global Report on Internal Displacement / GRID (2025)", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Déplacements internes liés aux conflits et aux catastrophes.", en: "Internal displacement linked to conflict and disasters." }, url: "https://www.internal-displacement.org/database/displacement-data/" },
+      { title: "IOM — World Migration Report (2024)", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Panorama biennal des tendances migratoires mondiales.", en: "Biennial overview of global migration trends." }, url: "https://www.iom.int/" },
+      { title: "AfDB & AUC — Africa Visa Openness Report (2024)", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Indice d'ouverture des visas par pays et par CER.", en: "Visa openness index by country and REC." }, url: "https://www.afdb.org/en" },
+      { title: "World Bank — Remittances Data (2024)", year: 2024, type: { fr: "Données", en: "Data" }, desc: { fr: "Transferts de fonds des diasporas, par pays et par an.", en: "Diaspora remittances, by country and year." }, url: "https://data.worldbank.org/" },
+      { title: "World Bank / KNOMAD — Migration and Development Brief 39", year: 2023, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Analyse semestrielle des flux de transferts de fonds mondiaux et régionaux.", en: "Biannual analysis of global and regional remittance flows." }, url: "https://www.knomad.org/publication/migration-and-development-brief-39" },
+      { title: "AUC & IOM — Africa Migration Report, 2nd Edition", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Panorama continental reliant politiques, pratiques et bien-être des migrants africains.", en: "Continental overview linking policy, practice, and the welfare of African migrants." }, url: "https://publications.iom.int/system/files/pdf/pub2023-132-r-iom-au-africa-migration-report-second-edition_3.pdf" },
+      { title: "AUC, AfDB & UNECA — Africa Regional Integration Index (ARII)", year: 2019, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Indice comparatif de l'intégration régionale, incluant la dimension libre circulation.", en: "Comparative regional integration index, including the free movement dimension." }, url: "https://www.arii.uneca.org" },
+      { title: "AUC, ILO, IOM & UNECA — Labour Migration Statistics Report in Africa, 3rd Ed.", year: 2021, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Statistiques comparées sur la migration de main-d'œuvre en Afrique.", en: "Comparative statistics on labour migration in Africa." }, url: "https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" },
+    ]
+  },
+  {
+    section: { fr: "Cadres Juridiques & Instruments", en: "Legal Frameworks & Instruments" },
+    icon: Scale,
+    items: [
+      { title: "African Union — Treaties, Conventions & Protocols Database", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Textes et statuts de ratification des instruments de l'UA.", en: "Texts and ratification status of AU instruments." }, url: "https://au.int/en/treaties" },
+      { title: "ILO NORMLEX — International Labour Standards Database", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Ratifications des conventions de l'OIT, pays par pays.", en: "ILO convention ratifications, country by country." }, url: "https://normlex.ilo.org/" },
+      { title: "AU Protocol on Free Movement of Persons, Right of Residence and Right of Establishment", year: 2018, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Protocole continental sur la libre circulation, la résidence et l'établissement.", en: "Continental protocol on free movement, residence, and establishment." }, url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
+      { title: "AU Convention for the Protection and Assistance of IDPs (Kampala Convention)", year: 2009, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Premier traité contraignant au monde sur les personnes déplacées internes.", en: "World's first binding treaty on internally displaced persons." }, url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
+      { title: "Treaty Establishing the African Economic Community (Abuja Treaty)", year: 1991, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Traité fondateur du projet d'intégration économique continentale.", en: "Founding treaty of the continental economic integration project." }, url: "https://au.int/en/treaties/treaty-establishing-african-economic-community" },
+      { title: "Migration Policy Framework for Africa and Plan of Action (2018–2030)", year: 2018, type: { fr: "Cadre politique", en: "Policy Framework" }, desc: { fr: "Cadre stratégique continental de référence en matière de gouvernance des migrations.", en: "The continent's reference strategic framework for migration governance." }, url: "https://au.int/sites/default/files/documents/35956-doc-2018_mpfa_english_version.pdf" },
+      { title: "Global Compact for Migration (GCM)", year: 2018, type: { fr: "Pacte mondial", en: "Global Compact" }, desc: { fr: "Texte intégral et portail officiel du pacte de Marrakech.", en: "Full text and official portal of the Marrakech Compact." }, url: "https://www.iom.int/global-compact-migration" },
+      { title: "Global Compact on Refugees (GCR)", year: 2018, type: { fr: "Pacte mondial", en: "Global Compact" }, desc: { fr: "Cadre de partage équitable des charges pour les réfugiés.", en: "Framework for equitable responsibility-sharing on refugees." }, url: "https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" },
+      { title: "UN Sustainable Development Goals — Agenda 2030", year: 2015, type: { fr: "Cadre mondial", en: "Global Framework" }, desc: { fr: "Cibles 10.7, 10.c, 17.18 et 8.8 sur la mobilité et le travail.", en: "Targets 10.7, 10.c, 17.18 and 8.8 on mobility and labour." }, url: "https://www.un.org/sustainabledevelopment/" },
+    ]
+  },
+  {
+    section: { fr: "Recherche & Références Académiques", en: "Research & Academic References" },
+    icon: BookOpen,
+    items: [
+      { title: "Ben Mokhtar, Y. — E Pluribus Unum : Gouverner la Migration en Afrique", year: 2026, type: { fr: "Thèse doctorale", en: "Doctoral Thesis" }, desc: { fr: "Thèse doctorale sur le régime africain de gouvernance migratoire, à l'origine de ce DataHub.", en: "Doctoral thesis on the African migration governance regime, the origin of this DataHub." }, url: null },
+      { title: "de Haas, H. (2021) — A Theory of Migration: The Aspirations–Capabilities Framework", year: 2021, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Cadre analytique des capabilités de mouvement (Comparative Migration Studies).", en: "Analytical framework of movement capabilities (Comparative Migration Studies)." }, url: "https://doi.org/10.1186/s40878-020-00210-4" },
+      { title: "de Haas, H. (2023) — How Migration Really Works", year: 2023, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Guide factuel contre les principaux mythes du débat migratoire contemporain.", en: "A factful guide against the major myths of the contemporary migration debate." }, url: null },
+      { title: "Adamson, F. & Tsourapas, G. (2019) — Migration Diplomacy in World Politics", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Concept de diplomatie migratoire (International Studies Perspectives).", en: "The concept of migration diplomacy (International Studies Perspectives)." }, url: "https://doi.org/10.1093/isp/eky015" },
+      { title: "Achiume, E. T. (2019) — Migration as Decolonization", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Relit le droit international de la migration à travers le prisme décolonial.", en: "Reframes international migration law through a decolonial lens." }, url: "https://ssrn.com/abstract=3330353" },
+      { title: "Bakewell, O. (2008) — 'Keeping Them in Their Place'", year: 2008, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Critique le lien ambivalent entre développement et migration en Afrique.", en: "Critiques the ambivalent relationship between development and migration in Africa." }, url: "https://doi.org/10.1080/01436590802386492" },
+      { title: "Flahaux, M.-L. & de Haas, H. (2016) — African Migration: Trends, Patterns, Drivers", year: 2016, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Synthèse des grandes tendances et moteurs des migrations africaines.", en: "Synthesis of the major trends and drivers of African migration." }, url: "https://doi.org/10.1186/s40878-015-0015-6" },
+      { title: "Mbembe, A. & Sarr, F. (dir., 2017) — Écrire l'Afrique-Monde", year: 2017, type: { fr: "Ouvrage collectif", en: "Edited Volume" }, desc: { fr: "Perspective panafricaine sur les recompositions du monde contemporain.", en: "A pan-African perspective on the reconfigurations of the contemporary world." }, url: null },
+      { title: "Mamdani, M. (1996) — Citizen and Subject", year: 1996, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Analyse fondatrice de l'héritage institutionnel colonial en Afrique.", en: "Foundational analysis of the colonial institutional legacy in Africa." }, url: null },
+      { title: "Landau, L. B. (2019) — A Chronotope of Containment Development", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Analyse la reterritorialisation de l'Afrique face à la crise migratoire européenne.", en: "Analyzes Africa's reterritorialization in response to Europe's migration crisis." }, url: "https://doi.org/10.1111/anti.12420" },
+      { title: "De Genova, N. (2013) — Spectacles of Migrant 'Illegality'", year: 2013, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Déconstruit la fabrication politique de l'« illégalité » migratoire.", en: "Deconstructs the political production of migrant 'illegality'." }, url: "https://doi.org/10.1080/01419870.2013.783710" },
+      { title: "Adepoju, A. (2008) — Migration in Sub-Saharan Africa", year: 2008, type: { fr: "Chapitre d'ouvrage", en: "Book Chapter" }, desc: { fr: "Chapitre de référence sur les dynamiques migratoires subsahariennes.", en: "Reference chapter on Sub-Saharan African migration dynamics." }, url: "https://publications.iom.int/books/migration-and-development-perspectives-south" },
+      { title: "Bayart, J.-F. (2000) — Africa in the World: A History of Extraversion", year: 2000, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Théorie de l'extraversion comme stratégie historique des élites africaines.", en: "Theory of extraversion as a historical strategy of African elites." }, url: "https://doi.org/10.1093/afraf/99.395.217" },
+    ]
+  }
+];
+
+const TabLibrary = ({ text, lang }) => {
+  const totalDocs = libraryData.reduce((sum, s) => sum + s.items.length, 0);
+  return (
   <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
     <PageHeader
       badge={text.headers.library.badge}
@@ -2967,22 +3316,59 @@ const TabLibrary = ({ text, lang }) => (
       icon={BookOpen}
       accent="amber"
     />
-    <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl shadow-sm">
-      <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-      <h2 className="text-2xl font-serif font-bold text-slate-700 mb-2">
-        {lang === 'fr' ? 'Bibliothèque Documentaire' : 'Migration Library'}
-      </h2>
-      <p className="text-slate-500 max-w-lg mx-auto">
-        {lang === 'fr' 
-          ? 'Cette section accueillera prochainement une base de données filtrable de rapports, thèses et policy briefs sur les mobilités.'
-          : 'This section will soon host a filterable database of reports, theses, and policy briefs on mobility.'}
-      </p>
-      <div className="mt-6 inline-block bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-sm uppercase tracking-widest border border-blue-200">
-        En construction
+
+    <div className="grid grid-cols-3 gap-4">
+      {libraryData.map((section, i) => (
+        <div key={i} className="bg-amber-50 p-4 rounded-lg border border-amber-100 text-center">
+          <div className="text-2xl font-serif font-bold text-amber-800">{section.items.length}</div>
+          <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mt-1 block leading-tight">{section.section[lang]}</span>
+        </div>
+      ))}
+    </div>
+
+    <div className="space-y-8">
+      {libraryData.map((section, sIdx) => (
+        <div key={sIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+          <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
+            <section.icon className="w-5 h-5 mr-2.5 text-amber-700" />
+            {section.section[lang]}
+            <span className="ml-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{section.items.length}</span>
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {section.items.map((item, iIdx) => {
+              const CardTag = item.url ? 'a' : 'div';
+              const cardProps = item.url ? { href: item.url, target: "_blank", rel: "noopener noreferrer" } : {};
+              return (
+                <CardTag
+                  key={iIdx}
+                  {...cardProps}
+                  className={`p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5 transition-colors ${item.url ? 'hover:border-amber-300 hover:bg-amber-50/50 group cursor-pointer' : ''}`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-sm uppercase tracking-widest">{item.type[lang]}</span>
+                    <span className="text-[9px] font-bold text-slate-400">{item.year}</span>
+                  </div>
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-xs font-bold text-slate-800 leading-snug group-hover:text-amber-900">{item.title}</span>
+                    {item.url && <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0 mt-0.5" />}
+                  </div>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">{item.desc[lang]}</p>
+                </CardTag>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs text-amber-800 leading-relaxed">
+        {lang === 'fr'
+          ? `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l'origine de ce DataHub. Chaque référence pointe vers son texte ou portail officiel lorsqu'un lien stable existe.`
+          : `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this DataHub. Each reference links to its official text or portal where a stable link exists.`}
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
@@ -2994,6 +3380,25 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       icon={Database}
       accent="teal"
     />
+
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="bg-teal-50 p-4 rounded-lg border border-teal-100 text-center">
+        <div className="text-2xl font-serif font-bold text-teal-800">{indicatorThemes.length}</div>
+        <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Axes Thématiques" : "Thematic Axes"}</span>
+      </div>
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 text-center">
+        <div className="text-2xl font-serif font-bold text-blue-800">{indicatorThemes.reduce((sum, th) => sum + th.items.length, 0)}</div>
+        <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Indicateurs Originaux" : "Original Indicators"}</span>
+      </div>
+      <div className="bg-slate-100 p-4 rounded-lg border border-slate-200 text-center">
+        <div className="text-2xl font-serif font-bold text-slate-800">{Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length}</div>
+        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sources Primaires" : "Primary Sources"}</span>
+      </div>
+      <div className="bg-amber-50 p-4 rounded-lg border border-amber-100 text-center">
+        <div className="text-2xl font-serif font-bold text-amber-800">{Object.values(countryData).flat().length}</div>
+        <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Pays Couverts (UA)" : "Countries Covered (AU)"}</span>
+      </div>
+    </div>
 
     <section id="data">
       <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
@@ -3075,29 +3480,37 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       <div className="mt-8 pt-6 border-t border-slate-100">
         <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <a href="https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
+          </a>
           <a href="https://www.un.org/development/desa/pd/data/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
           </a>
           <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Users className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s3}</span>
           </a>
           <a href="https://www.internal-displacement.org/database/displacement-data/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <MapPin className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s3}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s4}</span>
           </a>
           <a href="https://www.iom.int/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Globe className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s4}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s5}</span>
           </a>
           <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Scale className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s5}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s6}</span>
           </a>
           <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Landmark className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
-            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s6}</span>
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s7}</span>
+          </a>
+          <a href="https://data.worldbank.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+            <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s8}</span>
           </a>
         </div>
       </div>
@@ -3176,25 +3589,31 @@ const TabAbout = ({ text, lang }) => {
             <p>{text.about.data_p1}</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
-              {text.about.data_list.map((item, idx) => (
-                item.url ? (
-                  <a 
+              {text.about.data_list.map((item, idx) => {
+                const logo = aboutLogoMap[idx];
+                const logoBox = logo && (
+                  <span className="w-8 h-8 rounded-sm bg-white border border-slate-200 flex items-center justify-center p-1 mr-2.5 shrink-0">
+                    <InstitutionLogo name={logo.name} src={logo.src} className="max-h-5 max-w-full" />
+                  </span>
+                );
+                return item.url ? (
+                  <a
                     key={idx}
-                    href={item.url} 
-                    target="_blank" 
+                    href={item.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors group shadow-sm"
                   >
-                    <ExternalLink className="w-4 h-4 text-emerald-600 mr-2.5 shrink-0 group-hover:text-emerald-700" />
+                    {logoBox || <ExternalLink className="w-4 h-4 text-emerald-600 mr-2.5 shrink-0 group-hover:text-emerald-700" />}
                     <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-900">{item.name}</span>
                   </a>
                 ) : (
                   <div key={idx} className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-100">
-                    <CheckCircle2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />
+                    {logoBox || <CheckCircle2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />}
                     <span className="text-xs font-semibold text-slate-600">{item.name}</span>
                   </div>
-                )
-              ))}
+                );
+              })}
             </div>
 
             <p>{text.about.data_p2}</p>
@@ -3309,7 +3728,7 @@ const TabAbout = ({ text, lang }) => {
 
 export default function App() {
   const [lang, setLang] = useState('fr');
-  const [activeTab, setActiveTab] = useState('evidence'); 
+  const [activeTab, setActiveTab] = useState('home');
   const [isLoaded, setIsLoaded] = useState(false);
   
   const [activeSubRegion, setActiveSubRegion] = useState('all');
@@ -3320,6 +3739,7 @@ export default function App() {
   const [modalView, setModalView] = useState('demography'); 
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
+  const [activeAboutTab, setActiveAboutTab] = useState('about');
 
   useEffect(() => { setIsLoaded(true); }, []);
 
@@ -3419,6 +3839,7 @@ export default function App() {
   };
 
   const navigation = [
+    { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
@@ -3491,6 +3912,9 @@ export default function App() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 print:hidden">
+        {activeTab === 'home' && (
+          <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
+        )}
         {activeTab === 'evidence' && (
           <TabEvidenceCheck text={text} lang={lang} />
         )}
@@ -3510,13 +3934,30 @@ export default function App() {
           <TabLibrary text={text} lang={lang} />
         )}
         {activeTab === 'about' && (
-          <div className="space-y-10">
-            <TabAbout text={text} lang={lang} />
-            <TabMethodology
-              text={text} lang={lang}
-              expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
-              exportIndicatorsCSV={exportIndicatorsCSV}
-            />
+          <div className="space-y-8">
+            <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-md mx-auto">
+              <button
+                onClick={() => setActiveAboutTab('about')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'about' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <Info className="w-3.5 h-3.5" /> {lang === 'fr' ? 'À Propos' : 'About'}
+              </button>
+              <button
+                onClick={() => setActiveAboutTab('methodology')}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                <Database className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Méthodologie' : 'Methodology'}
+              </button>
+            </div>
+            {activeAboutTab === 'about' ? (
+              <TabAbout text={text} lang={lang} />
+            ) : (
+              <TabMethodology
+                text={text} lang={lang}
+                expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
+                exportIndicatorsCSV={exportIndicatorsCSV}
+              />
+            )}
           </div>
         )}
       </main>
