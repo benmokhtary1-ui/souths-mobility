@@ -3560,7 +3560,13 @@ const glossaryData = [
         en_term: "Overstaying",
         fr: "Fait de rester dans un pays au-delà de la période autorisée par un visa ou un permis. C'est l'une des formes les plus courantes de migration irrégulière, souvent liée à des lenteurs administratives ou à l'absence de voies de régularisation claires[cite: 2].",
         en: "Remaining in a country beyond the authorized period granted by a visa or permit. It is one of the most common forms of irregular migration, often linked to administrative delays or lack of clear regularization pathways[cite: 2]."
-      }
+      },
+      { 
+        term: "Nomadisme & Pastoralisme", 
+        en_term: "Nomadism & Mobile Pastoralism", 
+        fr: "Forme traditionnelle et adaptative de mobilité où les communautés se déplacent pour assurer leurs moyens de subsistance, étroitement liée à la gestion du bétail et aux variations climatiques. Le MPFA souligne la nécessité de sécuriser cette mobilité vitale, souvent menacée par le changement climatique et l'expansion agricole sédentaire.", 
+        en: "Traditional and adaptive form of mobility where communities move to sustain their livelihoods, closely tied to livestock management and climatic variations. The MPFA highlights the need to secure this vital mobility, often threatened by climate change and sedentary agricultural expansion." 
+      },
     ]
   },
   {
@@ -3789,12 +3795,24 @@ const glossaryData = [
         fr: "Utilisation stratégique de la coopération migratoire par les États dans l'arène internationale, s'en servant comme levier de négociation pour obtenir des financements, une reconnaissance politique ou des accords commerciaux (Adamson & Tsourapas, 2019)[cite: 2].",
         en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019)[cite: 2]."
       },
-      {
-        term: "Observatoire Africain des Migrations (OAM)",
-        en_term: "African Migration Observatory (AMO)",
-        fr: "Bureau technique spécialisé de la Commission de l'UA basé à Rabat. Chargé de centraliser, harmoniser et fournir des données fiables sur les mobilités pour soutenir la souveraineté épistémique du continent et l'élaboration de politiques basées sur des preuves[cite: 2].",
-        en: "Specialized technical office of the AU Commission based in Rabat. Tasked with centralizing, harmonizing, and providing reliable mobility data to support the continent's epistemic sovereignty and evidence-based policymaking[cite: 2]."
-      }
+      { 
+        term: "Nord Global & Sud Global", 
+        en_term: "Global North & Global South", 
+        fr: "Dichotomie socio-économique et politique. Le Sud Global ne désigne pas une géographie stricte, mais un ensemble d'économies en développement partageant des héritages historiques de colonialisme, d'exploitation des ressources et d'inégalités structurelles dans les accords commerciaux mondiaux[cite: 2].", 
+        en: "Socio-economic and political dichotomy. The Global South does not refer to a strict geography, but rather developing economies sharing historical legacies of colonialism, resource exploitation, and structural inequalities in global trade agreements[cite: 2]." 
+      },
+      { 
+        term: "Numérisation de la gouvernance (Digitalization)", 
+        en_term: "Digitalization of Migration Governance", 
+        fr: "Intégration de technologies numériques (biométrie, e-visas, systèmes de surveillance) pour gérer les migrations. L'utilisation généralisée d'outils développés hors du continent soulève des préoccupations majeures quant à l'appropriation africaine (African ownership) et à la souveraineté épistémique des données[cite: 2].", 
+        en: "Integration of digital technologies (biometrics, e-visas, surveillance systems) to manage migration. The widespread use of tools developed outside the continent raises major concerns regarding African ownership and the epistemic sovereignty of data[cite: 2]." 
+      },
+      { 
+        term: "Processus Consultatifs Régionaux (RCPs)", 
+        en_term: "Regional Consultative Processes (RCPs)", 
+        fr: "Plateformes étatiques, informelles et non contraignantes de dialogue sur les migrations (ex: MIDWA en Afrique de l'Ouest, MIDSA en Afrique Australe). Les Processus de Rabat et de Khartoum illustrent cette dynamique en structurant la coopération entre l'Afrique et l'Europe[cite: 2].", 
+        en: "State-led, informal, and non-binding platforms for migration dialogue (e.g., MIDWA in West Africa, MIDSA in Southern Africa). The Rabat and Khartoum Processes illustrate this dynamic by structuring cooperation between Africa and Europe[cite: 2]." 
+      },
     ]
   }
 ];
