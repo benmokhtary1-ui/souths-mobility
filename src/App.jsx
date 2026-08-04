@@ -285,6 +285,23 @@ const t = {
           desc: "Découvrez l'architecture scientifique du DataHub, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités."
         }
       },
+      home_editorial: {
+        badge: "Note de Cadrage Scientifique",
+        title: "Pourquoi ce DataHub ?",
+        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Les migrants internationaux représentent environ 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 — et l'Afrique ne pèse que 9,5 % du stock migratoire international, loin derrière l'Europe et l'Asie (UN DESA, 2024). Plus de sept migrants africains sur dix restent sur le continent. Cet écart entre le proportionnel et le perçu n'est pas un simple biais cognitif : il structure des politiques publiques, oriente des financements et façonne un imaginaire sécuritaire dont les coûts, humains et économiques, sont réels (de Haas, 2023).",
+        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains ne sont pas de simples récepteurs passifs des agendas migratoires du Nord, mais des acteurs qui négocient, retournent et instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie systématiquement la proportion à la valeur absolue, la comparaison à l'anecdote, et l'architecture institutionnelle africaine (Union africaine, Communautés économiques régionales) aux seuls cadres normatifs venus du Nord — sans nier les asymétries de pouvoir et de financement qui structurent concrètement ce régime (Bakewell, 2008 ; Bayart, 2000).",
+        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde.",
+        refs_title: "Pour aller plus loin",
+        refs: [
+          { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
+          { text: "de Haas, H. (2023). How Migration Really Works. Penguin Books.", url: null },
+          { text: "de Haas, H. (2017, 29 mars). Myths of migration: Much of what we think we know is wrong. Der Spiegel.", url: null },
+          { text: "Adamson, F. & Tsourapas, G. (2019). Migration Diplomacy in World Politics. International Studies Perspectives.", url: "https://doi.org/10.1093/isp/eky015" },
+          { text: "Achiume, E. T. (2019). Migration as Decolonization. Stanford Law Review.", url: "https://ssrn.com/abstract=3330353" },
+          { text: "Bakewell, O. (2008). 'Keeping Them in Their Place'. Third World Quarterly.", url: "https://doi.org/10.1080/01436590802386492" },
+        ]
+      },
       global_stats: {
         world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
         note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (28,5 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
@@ -512,6 +529,23 @@ const t = {
           highlight: "and indicators framework.",
           desc: "Explore the scientific architecture of the DataHub, the official data harmonization process, and alternative indicators for objective mobility analysis."
         }
+      },
+      home_editorial: {
+        badge: "Scientific Framing Note",
+        title: "Why this DataHub?",
+        p1: "A measurable gap separates public perception of African mobility from its statistical reality. International migrants make up about 3.6% of the world's population — a share that has remained remarkably stable since 1990 — and Africa accounts for only 9.5% of the global migrant stock, far behind Europe and Asia (UN DESA, 2024). More than seven in ten African migrants remain on the continent. This gap between the proportional and the perceived is not a mere cognitive bias: it shapes public policy, directs funding, and fuels a securitized imaginary whose human and economic costs are real (de Haas, 2023).",
+        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states are not mere passive recipients of Northern migration agendas, but actors who negotiate, redirect, and instrumentalize migration cooperation to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
+        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it.",
+        refs_title: "Further Reading",
+        refs: [
+          { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
+          { text: "de Haas, H. (2023). How Migration Really Works. Penguin Books.", url: null },
+          { text: "de Haas, H. (2017, March 29). Myths of migration: Much of what we think we know is wrong. Der Spiegel.", url: null },
+          { text: "Adamson, F. & Tsourapas, G. (2019). Migration Diplomacy in World Politics. International Studies Perspectives.", url: "https://doi.org/10.1093/isp/eky015" },
+          { text: "Achiume, E. T. (2019). Migration as Decolonization. Stanford Law Review.", url: "https://ssrn.com/abstract=3330353" },
+          { text: "Bakewell, O. (2008). 'Keeping Them in Their Place'. Third World Quarterly.", url: "https://doi.org/10.1080/01436590802386492" },
+        ]
       },
       global_stats: {
         world: "Global Total (2024)", europe: "Europe (2024)", asia: "Asia (2024)", na: "North America (2024)", africa: "Africa (2024)", latam: "Latin America (2024)", share: "Global share:",
@@ -1361,6 +1395,31 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         icon={Globe}
         accent="blue"
       />
+
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
+        <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-4">
+          {text.home_editorial.badge}
+        </span>
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl">
+          <p>{text.home_editorial.p1}</p>
+          <p>{text.home_editorial.p2}</p>
+          <p>{text.home_editorial.p3}</p>
+          <p className="font-medium text-slate-800">{text.home_editorial.p4}</p>
+        </div>
+        <div className="mt-8 pt-6 border-t border-slate-100">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
+          <ul className="space-y-1.5">
+            {text.home_editorial.refs.map((ref, idx) => (
+              <li key={idx} className="text-[11px] text-slate-500 leading-relaxed">
+                {ref.url ? (
+                  <a href={ref.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 hover:underline">{ref.text}</a>
+                ) : ref.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm">
@@ -2641,26 +2700,43 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               </div>
 
-              {/* Organe de pilotage politique */}
+              {/* Organe de pilotage politique & forum consultatif */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Landmark className="w-5 h-5 mr-2 text-emerald-700" />
-                  {lang === 'fr' ? "L'Organe de Pilotage Politique" : "The Political Steering Organ"}
+                  {lang === 'fr' ? "Pilotage Politique & Forum Consultatif" : "Political Steering & Consultative Forum"}
                 </h4>
-                <div className="bg-emerald-50/50 p-6 rounded-lg border border-emerald-100">
-                  <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
-                    <h5 className="font-bold text-emerald-900 text-base">
-                      {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
-                    </h5>
-                    <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
-                      {lang === 'fr' ? "Niveau ministériel" : "Ministerial level"}
-                    </span>
+                <div className="space-y-4">
+                  <div className="bg-emerald-50/50 p-6 rounded-lg border border-emerald-100">
+                    <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                      <h5 className="font-bold text-emerald-900 text-base">
+                        {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
+                      </h5>
+                      <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
+                        {lang === 'fr' ? "Niveau ministériel" : "Ministerial level"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr'
+                        ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit tous les deux ans au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux. Sa 5e session ordinaire s'est tenue en novembre 2025."
+                        : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets every two years at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work. Its 5th ordinary session was held in November 2025."}
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-700 leading-relaxed">
-                    {lang === 'fr'
-                      ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit tous les deux ans au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux. Sa 5e session ordinaire s'est tenue en novembre 2025."
-                      : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets every two years at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work. Its 5th ordinary session was held in November 2025."}
-                  </p>
+                  <div className="bg-amber-50/50 p-6 rounded-lg border border-amber-100">
+                    <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                      <h5 className="font-bold text-amber-900 text-base">
+                        {lang === 'fr' ? "Forum Panafricain sur la Migration (PAFoM)" : "Pan-African Forum on Migration (PAFoM)"}
+                      </h5>
+                      <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
+                        {lang === 'fr' ? "9 sessions depuis 2006" : "9 sessions since 2006"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      {lang === 'fr'
+                        ? "Créé par la Décision EX.CL/276(IX) du Conseil Exécutif (2006), le PAFoM est le processus consultatif continental de référence : il réunit les États membres de l'UA, les CER, les processus régionaux (Rabat, Khartoum) et les agences onusiennes pour façonner les politiques migratoires africaines. La 9e édition s'est tenue au Cap en décembre 2025 sur la gestion intelligente et sécurisée des frontières — la 8e (Gaborone, 2023) portait sur l'articulation entre libre circulation et ZLECAf."
+                        : "Created by Executive Council Decision EX.CL/276(IX) (2006), PAFoM is the continent's flagship consultative process: it brings together all member states, RECs, regional processes (Rabat, Khartoum), and UN agencies to shape African migration policy. The 9th edition was held in Cape Town in December 2025 on smart, secure border management — the 8th (Gaborone, 2023) addressed the link between free movement and the AfCFTA."}
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -2680,16 +2756,20 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">Bamako, Mali</span>
+                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Bamako, Mali (2021)" : "Bamako, Mali (2021)"}</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Centre d’études et recherches sur la migration. Think tank continental orientant la recherche académique." : "Centre for the Study and Research on Migration. Continental think tank guiding academic research."}
+                      {lang === 'fr'
+                        ? "Bureau Technique Spécialisé de la CUA établi par décision de la 33e Assemblée de l'UA (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire des connaissances sur les migrations africaines (« African Migration Policy Briefs »), suivre les cadres de politique migratoire et renforcer les capacités des États et des CER."
+                        : "Specialized Technical Office of the AUC established by the 33rd AU Assembly decision (February 2020) and officially launched on 19 March 2021. Continent-wide mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring migration policy frameworks, and building the capacity of States and RECs."}
                     </p>
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
                     <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
                     <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Khartoum, Soudan" : "Khartoum, Sudan"}</span>
                     <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Centre opérationnel pour la lutte contre la migration irrégulière et la traite (actuellement paralysé par le conflit au Soudan)." : "Operational Centre fighting irregular migration and trafficking (currently paralyzed by the Sudan conflict)."}
+                      {lang === 'fr'
+                        ? "Bureau Technique Spécialisé doté d'un statut propre (Conseil de gestion, Secrétariat) dédié à la lutte contre la migration irrégulière, la traite des personnes et le trafic de migrants. Plateforme de coopération policière continentale, actuellement fragilisée par le conflit au Soudan."
+                        : "Specialized Technical Office with its own statute (Management Board, Secretariat) dedicated to fighting irregular migration, human trafficking, and migrant smuggling. A continental law-enforcement cooperation platform, currently weakened by the conflict in Sudan."}
                     </p>
                   </div>
                   <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
