@@ -155,17 +155,19 @@ const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent 
 };
 
 const institutionLogos = [
-  { key: 'un', name: "United Nations", src: "https://upload.wikimedia.org/wikipedia/commons/5/52/Emblem_of_the_United_Nations.svg" },
-  { key: 'worldbank', name: "World Bank", src: "https://upload.wikimedia.org/wikipedia/commons/c/ca/World_Bank_Group_logo.svg" },
-  { key: 'au', name: "African Union", src: "https://upload.wikimedia.org/wikipedia/commons/2/23/African_Union_logo.png" },
-  { key: 'unhcr', name: "UNHCR", src: "https://upload.wikimedia.org/wikipedia/commons/8/88/UNHCR.svg" },
-  { key: 'ilo', name: "ILO", src: "https://upload.wikimedia.org/wikipedia/commons/1/11/ILO-Logo.svg" },
+  { key: 'un', name: "United Nations", src: "/logos/un.svg" },
+  { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
+  { key: 'au', name: "African Union", src: "/logos/au.png" },
+  { key: 'unhcr', name: "UNHCR", src: "/logos/unhcr.svg" },
+  { key: 'ilo', name: "ILO", src: "/logos/ilo.svg" },
   { key: 'iom', name: "IOM", src: null },
-  { key: 'afdb', name: "AfDB", src: "https://upload.wikimedia.org/wikipedia/commons/3/36/Logo_Afrikanische_Entwicklungsbank.svg" },
-  { key: 'oecd', name: "OECD", src: "https://upload.wikimedia.org/wikipedia/commons/a/a2/OECD_logo.svg" },
+  { key: 'afdb', name: "AfDB", src: "/logos/afdb.svg" },
+  { key: 'oecd', name: "OECD", src: "/logos/oecd.svg" },
   { key: 'idmc', name: "IDMC", src: null },
-  { key: 'uneca', name: "UNECA", src: "https://upload.wikimedia.org/wikipedia/commons/6/69/United_Nations_Economic_Commission_for_Africa_Logo.svg" },
+  { key: 'uneca', name: "UNECA", src: "/logos/uneca.svg" },
 ];
+
+const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
 
 const aboutLogoMap = [
   institutionLogos.find(i => i.key === 'au'),
@@ -179,16 +181,18 @@ const aboutLogoMap = [
 ];
 
 const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
-  const [failed, setFailed] = useState(!src);
+  const [status, setStatus] = useState(src ? 'loading' : 'failed');
 
   useEffect(() => {
-    if (!src) return;
-    setFailed(false);
-    const timer = setTimeout(() => setFailed(true), 5000);
+    if (!src) { setStatus('failed'); return; }
+    setStatus('loading');
+    const timer = setTimeout(() => {
+      setStatus((s) => (s === 'loading' ? 'failed' : s));
+    }, 8000);
     return () => clearTimeout(timer);
   }, [src]);
 
-  if (failed) {
+  if (status === 'failed') {
     const initials = name.includes(' ') ? name.split(/\s+/).map(w => w[0]).slice(0, 3).join('') : name;
     return <span className="font-serif font-bold text-slate-400 text-xs tracking-wide">{initials}</span>;
   }
@@ -196,9 +200,8 @@ const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
     <img
       src={src}
       alt={name}
-      loading="lazy"
-      onLoad={(e) => { e.currentTarget.dataset.loaded = 'true'; }}
-      onError={() => setFailed(true)}
+      onLoad={() => setStatus('loaded')}
+      onError={() => setStatus('failed')}
       className={`${className} object-contain grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300`}
     />
   );
@@ -297,10 +300,12 @@ const t = {
         gcr_desc: "Affirmé en 2018, le Pacte Mondial sur les Réfugiés (GCR) établit un cadre de partage équitable des charges pour soutenir les pays du Sud qui accueillent 76% des réfugiés mondiaux.",
         link_text: "Accéder au portail officiel",
         sdg_points: [
-          { title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées." },
-          { title: "Cible 10.c (Réduction des coûts de transfert)", desc: "Ramener à moins de 3% les coûts de transaction des envois de fonds des diasporas (Banque Mondiale)." },
-          { title: "Cible 17.18 (Désagrégation des données)", desc: "Renforcer les capacités statistiques nationales pour ventiler les données selon le statut migratoire." },
-          { title: "Cible 8.8 (Droits des travailleurs migrants)", desc: "Protéger les droits du travail et promouvoir un environnement sûr pour tous les travailleurs migrants (OIT)." }
+          { goal: 10, title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées. Pierre angulaire de l'Agenda 2030 pour la migration, suivie par 4 indicateurs (coûts de recrutement, gouvernance, sécurité des parcours, réfugiés)." },
+          { goal: 10, title: "Cible 10.c (Réduction des coûts de transfert)", desc: "Ramener à moins de 3% les coûts de transaction des envois de fonds des diasporas (Banque Mondiale)." },
+          { goal: 17, title: "Cible 17.18 (Désagrégation des données)", desc: "Renforcer les capacités statistiques nationales pour ventiler les données selon le statut migratoire." },
+          { goal: 8, title: "Cible 8.8 (Droits des travailleurs migrants)", desc: "Protéger les droits du travail et promouvoir un environnement sûr pour tous les travailleurs migrants, en particulier les femmes (OIT)." },
+          { goal: 4, title: "Cible 4.b (Mobilité étudiante & bourses)", desc: "Développer les bourses offertes aux pays en développement pour l'enseignement supérieur — un vecteur direct de circulation intra-africaine et Sud-Sud des compétences." },
+          { goal: 16, title: "Cible 16.9 (Identité légale pour tous)", desc: "Garantir à tous une identité juridique, notamment via l'enregistrement des naissances — condition préalable à l'accès aux documents de voyage et à la mobilité régulière." }
         ],
         gcm_objectives_list: [
           { num: "Obj. 1", title: "Données factuelles", desc: "Recueillir et utiliser des données factuelles et ventilées pour l'élaboration de politiques." },
@@ -523,10 +528,12 @@ const t = {
         gcr_desc: "Affirmed in 2018, the Global Compact on Refugees (GCR) provides a framework for equitable responsibility-sharing to support Southern countries hosting 76% of world refugees.",
         link_text: "Access official portal",
         sdg_points: [
-          { title: "Target 10.7 (Migration Governance)", desc: "Facilitate orderly, safe, regular and responsible migration through planned and well-managed policies." },
-          { title: "Target 10.c (Remittance Costs)", desc: "Reduce transaction costs of diaspora remittances to less than 3% (World Bank)." },
-          { title: "Target 17.18 (Data Disaggregation)", desc: "Enhance national statistical capacities to disaggregate data by migratory status." },
-          { title: "Target 8.8 (Migrant Workers' Rights)", desc: "Protect labor rights and promote safe working environments for all migrant workers (ILO)." }
+          { goal: 10, title: "Target 10.7 (Migration Governance)", desc: "Facilitate orderly, safe, regular and responsible migration through planned and well-managed policies. The centerpiece migration target of the 2030 Agenda, tracked through 4 indicators (recruitment costs, governance, safe journeys, refugees)." },
+          { goal: 10, title: "Target 10.c (Remittance Costs)", desc: "Reduce transaction costs of diaspora remittances to less than 3% (World Bank)." },
+          { goal: 17, title: "Target 17.18 (Data Disaggregation)", desc: "Enhance national statistical capacities to disaggregate data by migratory status." },
+          { goal: 8, title: "Target 8.8 (Migrant Workers' Rights)", desc: "Protect labor rights and promote safe working environments for all migrant workers, particularly women (ILO)." },
+          { goal: 4, title: "Target 4.b (Student Mobility & Scholarships)", desc: "Expand scholarships available to developing countries for higher education — a direct vector of intra-African and South-South skills circulation." },
+          { goal: 16, title: "Target 16.9 (Legal Identity for All)", desc: "Provide legal identity for all, including birth registration — a prerequisite for accessing travel documents and regular mobility." }
         ],
         gcm_objectives_list: [
           { num: "Obj. 1", title: "Factual Data", desc: "Collect and utilize factual and disaggregated data for policy making." },
@@ -1178,6 +1185,16 @@ const weightedAverage = (countries, getter) => {
   return weightSum > 0 ? valSum / weightSum : null;
 };
 
+const countryRegionMap = {};
+Object.entries(countryData).forEach(([regionKey, countries]) => {
+  countries.forEach(c => { countryRegionMap[c.id] = regionKey; });
+});
+
+const continentalAvoiAvg = (() => {
+  const scores = Object.values(countryData).flat().map(c => c.avoi).filter(v => v !== null && v !== undefined);
+  return scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : null;
+})();
+
 const computeRegionAggregate = (countries) => {
   const totalStock = countries.reduce((sum, c) => sum + parseStockNumber(c.stock), 0);
   const female = weightedAverage(countries, c => c.female);
@@ -1398,6 +1415,11 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             </div>
           ))}
         </div>
+        <p className="text-center text-[10px] text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed">
+          {lang === 'fr'
+            ? "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation ou un endossement de South(s) Mobility DataHub."
+            : "These institutions are cited as sources of open public data. Their presence does not constitute a partnership, endorsement, or validation of South(s) Mobility DataHub."}
+        </p>
       </div>
     </div>
   );
@@ -1455,42 +1477,14 @@ const TabEvidenceCheck = ({ text, lang }) => {
         accent="blue"
       />
 
-      {/* Vue d'ensemble : distribution des verdicts (calculée en direct) */}
-      {(() => {
-        const tierMeta = [
-          { level: '🔴', labelFr: 'Non étayé', labelEn: 'Not substantiated', Icon: XCircle, bar: 'bg-rose-600', text: 'text-rose-700' },
-          { level: '🟠', labelFr: 'Faiblement étayé', labelEn: 'Weakly substantiated', Icon: AlertTriangle, bar: 'bg-orange-500', text: 'text-orange-700' },
-          { level: '🟡', labelFr: 'À nuancer', labelEn: 'Needs nuance', Icon: HelpCircle, bar: 'bg-amber-500', text: 'text-amber-700' },
-        ];
-        const total = evidenceCheckData.length;
-        const tiers = tierMeta.map((t) => ({
-          ...t,
-          count: evidenceCheckData.filter((f) => f.confidence_level === t.level).length,
-        }));
-        return (
-          <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
-              {lang === 'fr' ? `Vue d'ensemble : ${total} affirmations examinées` : `Overview: ${total} claims examined`}
-            </h3>
-            <div className="flex h-3 w-full rounded-full overflow-hidden mb-5">
-              {tiers.map((t) => (
-                <div key={t.level} className={t.bar} style={{ width: `${(t.count / total) * 100}%` }} title={`${lang === 'fr' ? t.labelFr : t.labelEn}: ${t.count}`}></div>
-              ))}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {tiers.map((t) => (
-                <div key={t.level} className="flex items-center gap-3">
-                  <t.Icon className={`w-6 h-6 shrink-0 ${t.text}`} />
-                  <div>
-                    <span className={`text-xl font-serif font-bold ${t.text}`}>{t.count}</span>
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-wide ml-1.5">{lang === 'fr' ? t.labelFr : t.labelEn}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        );
-      })()}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+        <p className="text-xs text-amber-800 leading-relaxed">
+          {lang === 'fr'
+            ? "Les affirmations examinées ci-dessous sont formulées par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Il ne s'agit pas de citations directes issues de médias ou d'institutions identifiées : seules les sections « Ce que montrent les données » sont sourcées auprès d'institutions vérifiables (voir Sources)."
+            : "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."}
+        </p>
+      </div>
 
       {/* Boutons de filtrage en haut */}
       <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
@@ -1583,7 +1577,9 @@ const TabEvidenceCheck = ({ text, lang }) => {
                             <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
                               <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
                                 <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                                {lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?"}
+                                {(fiche.confidence_level === '🟢' || fiche.confidence_level === '🟢🟡')
+                                  ? (lang === 'fr' ? "Pourquoi cette réalité reste peu visible ?" : "Why is this reality under-recognized?")
+                                  : (lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?")}
                               </h4>
                               <ul className="space-y-2">
                                 {fiche.why_persists[lang].map((reason, i) => (
@@ -2525,10 +2521,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {text.sdg_section.sdg_points.map((pt, idx) => (
-                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{lang === 'fr' ? "Cible ONU" : "UN Target"}</span>
-                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
+                <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm flex gap-4">
+                  {sdgIcons[pt.goal] && (
+                    <img src={sdgIcons[pt.goal]} alt={`SDG ${pt.goal}`} className="w-14 h-14 rounded-md shrink-0 shadow-sm" />
+                  )}
+                  <div>
+                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{lang === 'fr' ? "Cible ONU" : "UN Target"}</span>
+                    <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -2640,6 +2641,29 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               </div>
 
+              {/* Organe de pilotage politique */}
+              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                  <Landmark className="w-5 h-5 mr-2 text-emerald-700" />
+                  {lang === 'fr' ? "L'Organe de Pilotage Politique" : "The Political Steering Organ"}
+                </h4>
+                <div className="bg-emerald-50/50 p-6 rounded-lg border border-emerald-100">
+                  <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                    <h5 className="font-bold text-emerald-900 text-base">
+                      {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
+                    </h5>
+                    <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest shrink-0">
+                      {lang === 'fr' ? "Niveau ministériel" : "Ministerial level"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed">
+                    {lang === 'fr'
+                      ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit tous les deux ans au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux. Sa 5e session ordinaire s'est tenue en novembre 2025."
+                      : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets every two years at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work. Its 5th ordinary session was held in November 2025."}
+                  </p>
+                </div>
+              </div>
+
               {/* Agences et Infrastructures */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
@@ -2676,6 +2700,69 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              {/* Chronologie OAM : institutionnalisation par couches successives */}
+              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-2">
+                  <MapPin className="w-5 h-5 mr-2 text-indigo-700" />
+                  {lang === 'fr' ? "Gros Plan : l'OAM, une institution en construction" : "Close-Up: The AMO, an Institution Under Construction"}
+                </h4>
+                <p className="text-xs text-slate-500 mb-6 border-b border-slate-100 pb-4">
+                  {lang === 'fr'
+                    ? "Chronologie reconstituée par observation participante (programme doctoral, février 2024 – juin 2025) et documents institutionnels de l'UA (Rapport d'activités OAM, 2021-2024)."
+                    : "Chronology reconstructed via participant observation (doctoral fieldwork, February 2024 – June 2025) and AU institutional documents (AMO Activity Report, 2021-2024)."}
+                </p>
+                <div className="space-y-5">
+                  {[
+                    {
+                      year: "2018",
+                      fr: "Décision d'établissement de l'Observatoire au Maroc par l'Assemblée de l'UA (Assembly/AU/Dec.695(XXXI)).",
+                      en: "AU Assembly decision establishing the Observatory in Morocco (Assembly/AU/Dec.695(XXXI))."
+                    },
+                    {
+                      year: "2020",
+                      fr: "Inauguration officielle à Rabat le 18 décembre. Le siège de Mahaj Riad — bâtiment de 4 étages mis à disposition par le gouvernement marocain via l'AMCI, conformément à l'accord de siège — donne à l'OAM une existence territoriale et matérielle dans l'architecture continentale.",
+                      en: "Official inauguration in Rabat on December 18. The Mahaj Riad headquarters — a 4-storey building provided by the Moroccan government via AMCI, under the host-country agreement — gives the AMO a territorial and material presence in the continental architecture."
+                    },
+                    {
+                      year: "2021–2022",
+                      fr: "Première phase d'activation technique : ateliers de Hammamet, Marrakech et Le Caire sur la désagrégation et l'harmonisation des données migratoires (statuts, définitions, méthodologies).",
+                      en: "First technical activation phase: workshops in Hammamet, Marrakech, and Cairo on disaggregating and harmonizing migration data (statuses, definitions, methodologies)."
+                    },
+                    {
+                      year: "2023",
+                      fr: "Densification : ateliers de Lomé et Marrakech (avec les CER, sur les « Migration Data Hubs »), puis ateliers pilotes nationaux à Windhoek et Kampala.",
+                      en: "Densification: workshops in Lomé and Marrakech (with the RECs, on \"Migration Data Hubs\"), followed by national pilot workshops in Windhoek and Kampala."
+                    },
+                    {
+                      year: "2024",
+                      fr: "Rapport d'activités 2021-2024 structuré autour de 4 axes (harmonisation des données, formations ciblées, Data Hubs régionaux, forums internationaux) ; lancement du projet AU-UMA Migration Data Hub ; side event à l'Assemblée générale de l'ONU sur la « narrative africaine » des données migratoires.",
+                      en: "2021-2024 activity report structured around 4 pillars (data harmonization, targeted training, regional Data Hubs, international forums); launch of the AU-UMA Migration Data Hub project; UN General Assembly side event on the African \"narrative\" of migration data."
+                    },
+                    {
+                      year: "2025",
+                      fr: "Exposition aux circuits de reddition de comptes de l'UA (réunions du STC-MRIDPs à Addis-Abeba, février) ; lancement du site web officiel ; publication d'un glossaire africain des termes de migration et mobilité ; 2e session de travail OAM-CER à Casablanca.",
+                      en: "Exposure to the AU's accountability circuits (STC-MRIDPs meetings in Addis Ababa, February); launch of the official website; publication of an African glossary of migration and mobility terms; 2nd AMO-REC working session in Casablanca."
+                    }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex gap-4">
+                      <div className="shrink-0 w-16 text-right">
+                        <span className="text-xs font-bold text-indigo-700">{item.year}</span>
+                      </div>
+                      <div className="shrink-0 flex flex-col items-center pt-1">
+                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                        {idx < 5 && <span className="w-px flex-1 bg-slate-200 mt-1"></span>}
+                      </div>
+                      <p className="text-xs text-slate-700 leading-relaxed pb-1">{lang === 'fr' ? item.fr : item.en}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] text-slate-400 italic mt-6 pt-4 border-t border-slate-100">
+                  {lang === 'fr'
+                    ? "Cette chronologie illustre une institutionnalisation « par couches successives » : la capacité continentale ne se décrète pas, elle s'accumule par ateliers, pilotes, documents et arbitrages ordinaires — au fil de contraintes budgétaires réelles (financement largement extrabudgétaire) et d'une équipe réduite face à un mandat continental très large."
+                    : "This chronology illustrates institutionalization \"by successive layers\": continental capacity is not decreed, it accumulates through workshops, pilots, documents, and ordinary trade-offs — against real budgetary constraints (largely off-budget funding) and a small team facing a very broad continental mandate."}
+                </p>
               </div>
 
               {/* JLMP & Coordination */}
@@ -3120,7 +3207,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 mr-1.5" /> {text.metrics.stock}</span>
                 <div className="text-3xl font-serif font-bold text-slate-900">{display.stock}</div>
@@ -3132,6 +3219,21 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 mr-1.5" /> {text.metrics.female}</span>
                 <div className="text-3xl font-serif font-bold text-rose-700">{display.female}%</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-emerald-50/60 p-5 rounded-lg border border-emerald-100">
+                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block flex items-center"><ArrowRight className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Rétention (Sud)" : "Retention (South)"}</span>
+                <div className="text-3xl font-serif font-bold text-emerald-700">{display.retention}%</div>
+              </div>
+              <div className="bg-amber-50/60 p-5 rounded-lg border border-amber-100">
+                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 block flex items-center"><TrendingUp className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Transferts (% PIB, moy.)" : "Remittances (% GDP, avg.)"}</span>
+                <div className="text-3xl font-serif font-bold text-amber-700">{display.remittances !== null && display.remittances !== undefined ? `${display.remittances}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
+              </div>
+              <div className="bg-indigo-50/60 p-5 rounded-lg border border-indigo-100">
+                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 block flex items-center"><Briefcase className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Activité Migrants (OIT, moy.)" : "Migrant Activity (ILO, avg.)"}</span>
+                <div className="text-3xl font-serif font-bold text-indigo-700">{display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
               </div>
             </div>
 
@@ -3171,24 +3273,58 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
           <div className="space-y-4">
             
             {/* Grille des drapeaux pour navigation rapide */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-2">
-              {filteredCountries.map(c => (
-                <button
-                  key={c.id}
-                  onClick={() => setActiveSubTab(c.id)}
-                  className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
-                    activeSubTab === c.id 
-                      ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md' 
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                  }`}
-                >
-                  <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                  <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
-                </button>
-              ))}
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
               {filteredCountries.length === 0 && (
                 <div className="w-full p-4 text-center text-slate-400 text-sm">
                   {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
+                </div>
+              )}
+              {activeSubRegion === 'all' && filteredCountries.length > 0 ? (
+                <div className="space-y-4">
+                  {Object.keys(text.regions).map(regionKey => {
+                    const regionCountries = filteredCountries.filter(c => countryRegionMap[c.id] === regionKey);
+                    if (regionCountries.length === 0) return null;
+                    return (
+                      <div key={regionKey}>
+                        <h4 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 px-0.5">
+                          {text.regions[regionKey]} <span className="text-slate-300">({regionCountries.length})</span>
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {regionCountries.map(c => (
+                            <button
+                              key={c.id}
+                              onClick={() => setActiveSubTab(c.id)}
+                              className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                                activeSubTab === c.id
+                                  ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
+                                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                              }`}
+                            >
+                              <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
+                              <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {filteredCountries.map(c => (
+                    <button
+                      key={c.id}
+                      onClick={() => setActiveSubTab(c.id)}
+                      className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                        activeSubTab === c.id
+                          ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                      }`}
+                    >
+                      <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
+                      <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -3212,7 +3348,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                   <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
                     <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "Total (2024)" : "Total (2024)"}</span>
                     <div className="text-xl font-serif font-bold text-slate-900">{formatNumber(display.stock)}</div>
@@ -3225,9 +3361,19 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     <span className="text-[9px] font-bold text-rose-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "% Femmes" : "% Women"}</span>
                     <div className="text-xl font-serif font-bold text-rose-800">{display.female}%</div>
                   </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                   <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
                     <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "Rétention (Sud)" : "Retention (South)"}</span>
                     <div className="text-xl font-serif font-bold text-emerald-800">{display.retention}%</div>
+                  </div>
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                    <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? `Transferts (% PIB${display.remittances_year ? `, ${display.remittances_year}` : ''})` : `Remittances (% GDP${display.remittances_year ? `, ${display.remittances_year}` : ''})`}</span>
+                    <div className="text-xl font-serif font-bold text-amber-800">{display.remittances !== null && display.remittances !== undefined ? `${display.remittances}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
+                  </div>
+                  <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                    <span className="text-[9px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 block">{lang === 'fr' ? "Activité Migrants (OIT)" : "Migrant Activity (ILO)"}</span>
+                    <div className="text-xl font-serif font-bold text-indigo-800">{display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
                   </div>
                 </div>
 
@@ -3615,6 +3761,11 @@ const TabAbout = ({ text, lang }) => {
                 );
               })}
             </div>
+            <p className="text-xs italic text-slate-400">
+              {lang === 'fr'
+                ? "Ces institutions sont citées comme sources de données publiques ouvertes ; leur présence ne constitue ni un partenariat ni un endossement du projet."
+                : "These institutions are cited as sources of open public data; their presence does not constitute a partnership or endorsement of the project."}
+            </p>
 
             <p>{text.about.data_p2}</p>
             <p className="italic">{text.about.data_p3}</p>
@@ -4000,11 +4151,12 @@ export default function App() {
                   <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Le Réel Poids Démographique" : "The Real Demographic Weight"}</h3>
                   <p className="text-sm text-slate-600 mb-6 print:mb-3">{lang === 'fr' ? "La population migrante comparée à la population totale." : "Migrant population compared to total population."}</p>
                   <div className="relative pt-6 pb-3 print:pt-4">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-2xl font-serif font-bold text-blue-800 print:text-lg">{display.evolution}%</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'fr' ? "Population totale" : "Total population"}</span>
+                    </div>
                     <div className="h-10 w-full bg-slate-100 rounded-sm relative overflow-hidden flex items-center border border-slate-200 print:h-8 print:!bg-slate-100">
-                      <span className="absolute right-3 text-[10px] font-bold text-slate-400">POPULATION TOTALE</span>
-                      <div className="h-full bg-blue-700 flex items-center px-3 transition-all duration-1000 print:!bg-blue-700" style={{width: `${Math.max(5, parseFloat(display.evolution))}%`}}>
-                        <span className="text-white font-bold text-base print:text-xs">{display.evolution}%</span>
-                      </div>
+                      <div className="h-full bg-blue-700 transition-all duration-1000 print:!bg-blue-700" style={{width: `${Math.max(5, parseFloat(display.evolution))}%`}}></div>
                     </div>
                   </div>
                   <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
@@ -4120,9 +4272,17 @@ export default function App() {
                               <span className="text-slate-600 print:!text-slate-600">Score</span>
                               <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
                             </div>
-                            <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200">
+                            <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
                               <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
+                              {continentalAvoiAvg !== null && (
+                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${lang === 'fr' ? 'Moyenne continentale' : 'Continental average'}: ${continentalAvoiAvg}/100`}></div>
+                              )}
                             </div>
+                            {continentalAvoiAvg !== null && (
+                              <p className="text-[9px] text-amber-700 mt-1.5 font-bold">
+                                {lang === 'fr' ? `Moyenne continentale : ${continentalAvoiAvg}/100` : `Continental average: ${continentalAvoiAvg}/100`}
+                              </p>
+                            )}
                             <p className="text-[10px] text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5">{text.modal.avoi_desc}</p>
                           </div>
                         </div>
@@ -4204,16 +4364,16 @@ export default function App() {
                   <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
                     <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-slate-400 print:text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-2 block">{text.modal.trigger}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800">{display.trigger}</p>
+                      <span className="text-amber-400 print:text-amber-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
                     </div>
                     <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-slate-400 print:text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-2 block">{text.modal.response}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800">{display.response}</p>
+                      <span className="text-blue-400 print:text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
                     </div>
                     <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-slate-400 print:text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-2 block">{text.modal.impact}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800">{display.impact}</p>
+                      <span className="text-emerald-400 print:text-emerald-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
                     </div>
                   </div>
                 </div>

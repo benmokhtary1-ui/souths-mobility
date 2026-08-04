@@ -313,16 +313,16 @@ export const evidenceCheckData = [
   },
   {
     id: "025",
-    category: { fr: "Méthodologie & Données", en: "Methodology & Data" },
-    category_icon: "📚",
-    narrative: { fr: "Les données parlent d'elles-mêmes.", en: "The data speaks for itself." },
-    confidence_level: "🟡",
-    verdict: { fr: "À nuancer", en: "Needs nuance" },
-    reality: { fr: "Les statistiques reposent sur des choix méthodologiques (définitions, catégories, seuils). Deux institutions peuvent produire des estimations différentes sans que l'une soit erronée. L'interprétation dépend du cadre conceptuel.", en: "Statistics rest on methodological choices (definitions, categories, thresholds). Two institutions can produce different estimates without either being wrong. Interpretation depends on the conceptual framework." },
-    indicators: { fr: ["Définitions des migrants", "Sources mobilisées", "Méthodes de calcul", "Comparabilité internationale"], en: ["Migrant definitions", "Sources used", "Calculation methods", "International comparability"] },
-    sources: { fr: ["UN DESA", "OIM", "OCDE", "Nations Unies - Manuel sur les statistiques migratoires"], en: ["UN DESA", "IOM", "OECD", "United Nations - Manual on Migration Statistics"] },
-    limits: { fr: "Comparer des jeux de données de méthodologies différentes conduit à des conclusions trompeuses.", en: "Comparing datasets with different methodologies leads to misleading conclusions." },
-    why_persists: { fr: ["Recherche de vérités absolues dans le débat public, où la nuance statistique est perçue comme de la faiblesse."], en: ["A search for absolute truths in public debate, where statistical nuance is perceived as weakness."] }
+    category: { fr: "Économie & Diasporas", en: "Economy & Diasporas" },
+    category_icon: "💼",
+    narrative: { fr: "Les transferts de fonds de la diaspora africaine dépassent désormais l'aide publique au développement (APD) reçue par le continent.", en: "Diaspora remittances to Africa now exceed the official development assistance (ODA) the continent receives." },
+    confidence_level: "🟢",
+    verdict: { fr: "Étayé", en: "Substantiated" },
+    reality: { fr: "Les données de la Banque mondiale confirment cette tendance, observée depuis le début des années 2010 : les envois de fonds constituent aujourd'hui la première source de financement externe pour de nombreux pays africains, devant l'APD et souvent devant les investissements directs étrangers (IDE). Le constat reste néanmoins à nuancer : contrairement à l'APD, les remises sont des flux privés dispersés entre des millions de ménages, et ne se substituent pas à l'investissement public structurel.", en: "World Bank data confirms this trend, observed since the early 2010s: remittances are now the leading source of external financing for many African countries, ahead of ODA and often ahead of foreign direct investment (FDI). The finding still needs nuance: unlike ODA, remittances are private flows dispersed across millions of households, and are no substitute for structural public investment." },
+    indicators: { fr: ["Volume des remises vs APD reçue", "Part des remises dans le PIB national", "Comparaison remises/IDE"], en: ["Remittance volume vs. ODA received", "Remittances as a share of national GDP", "Remittances-to-FDI comparison"] },
+    sources: { fr: ["Banque Mondiale - Migration and Development Brief 39 (2023)", "KNOMAD - Données sur les envois de fonds", "UA/OIT/OIM - 3e Rapport sur les statistiques migratoires (2021)"], en: ["World Bank - Migration and Development Brief 39 (2023)", "KNOMAD - Remittances Data", "AU/ILO/IOM - 3rd Report on Labour Migration Statistics (2021)"] },
+    limits: { fr: "L'écart varie fortement selon les pays ; certains États à faible diaspora restent structurellement dépendants de l'APD.", en: "The gap varies greatly by country; some states with a small diaspora remain structurally dependent on ODA." },
+    why_persists: { fr: ["Ce basculement reste peu intégré dans les discours publics sur le « développement par l'aide ».", "Les flux privés et dispersés sont statistiquement moins visibles qu'une ligne budgétaire d'APD centralisée."], en: ["This shift remains poorly integrated into public discourse on 'development through aid'.", "Dispersed private flows are statistically less visible than a centralized ODA budget line."] }
   },
   {
     id: "026",
@@ -534,16 +534,16 @@ export const evidenceCheckData = [
   },
   {
     id: "042",
-    category: { fr: "Méthodologie & Données", en: "Methodology & Data" },
-    category_icon: "📚",
-    narrative: { fr: "Accumuler davantage de données suffit à mieux comprendre les migrations.", en: "Accumulating more data is enough to better understand migration." },
-    confidence_level: "🟠",
-    verdict: { fr: "Réducteur", en: "Reductive" },
-    reality: { fr: "L'interprétation nécessite des cadres théoriques, méthodologiques et locaux. Une multiplication de 'Big Data' sans contextualisation historique et sociologique mène souvent à de graves erreurs d'analyse.", en: "Interpretation requires theoretical, methodological, and local frameworks. Multiplying 'Big Data' without historical and sociological context often leads to serious analytical errors." },
-    indicators: { fr: ["Couverture statistique", "Documentation méthodologique", "Métadonnées"], en: ["Statistical coverage", "Methodological documentation", "Metadata"] },
-    sources: { fr: ["Nations Unies - Cadre des ODD", "OIM", "OCDE"], en: ["United Nations - SDG Framework", "IOM", "OECD"] },
-    limits: { fr: "La qualité analytique ne dépend pas uniquement du volume de données produites.", en: "Analytical quality does not depend solely on the volume of data produced." },
-    why_persists: { fr: ["Technosolutionnisme et fascination pour le 'Big Data' dans les institutions internationales."], en: ["Technosolutionism and a fascination with 'Big Data' within international institutions."] }
+    category: { fr: "Politiques & Gouvernance", en: "Policy & Governance" },
+    category_icon: "⚖️",
+    narrative: { fr: "La CEDEAO est le bloc régional africain le plus avancé en matière de libre circulation des personnes.", en: "ECOWAS is Africa's most advanced regional bloc for the free movement of persons." },
+    confidence_level: "🟢",
+    verdict: { fr: "Étayé", en: "Substantiated" },
+    reality: { fr: "Ce constat est corroboré par les données disponibles : le Protocole CEDEAO sur la libre circulation (1979) est le plus ancien du continent et l'un des mieux appliqués, et la région affiche le score le plus élevé de l'indice d'ouverture des visas africain (AVOI : 0,629 en 2024, contre une moyenne continentale de 0,501). La majorité des citoyens ouest-africains peuvent circuler dans la région sans visa.", en: "This is corroborated by the available data: the ECOWAS Protocol on Free Movement (1979) is the continent's oldest and among its best implemented, and the region posts the highest score on the African visa openness index (AVOI: 0.629 in 2024, against a continental average of 0.501). Most West African citizens can travel within the region visa-free." },
+    indicators: { fr: ["Score AVOI par CER", "Ancienneté et taux de ratification du protocole", "Part des citoyens exemptés de visa dans la région"], en: ["AVOI score by REC", "Protocol age and ratification rate", "Share of citizens exempt from visas in the region"] },
+    sources: { fr: ["Banque africaine de développement & Commission de l'Union africaine - Africa Visa Openness Report (2024)", "CEDEAO - Protocole A/P.1/5/79 sur la libre circulation des personnes"], en: ["African Development Bank & African Union Commission - Africa Visa Openness Report (2024)", "ECOWAS - Protocol A/P.1/5/79 on Free Movement of Persons"] },
+    limits: { fr: "L'avance de la CEDEAO ne garantit pas une application uniforme à chaque poste-frontière ; des restrictions pratiques subsistent localement.", en: "ECOWAS's lead does not guarantee uniform application at every border post; practical restrictions persist locally." },
+    why_persists: { fr: ["Ce leadership régional reste peu valorisé dans les discours internationaux centrés sur les migrations Sud-Nord.", "La comparaison entre CER reste un exercice technique rarement médiatisé."], en: ["This regional leadership remains underappreciated in international discourse centered on South-North migration.", "Comparisons between RECs remain a technical exercise rarely covered by the media."] }
   },
   {
     id: "043",
@@ -778,5 +778,18 @@ export const evidenceCheckData = [
     sources: { fr: ["Alarm Phone Sahara (2024), rapports de terrain", "Mixed Migration Centre (2023), rapports sur le Sahara central", "Hess & Ostrom (2006), sur les communs informationnels ; Scheele (2012), sur l'ordre vernaculaire saharien"], en: ["Alarm Phone Sahara (2024), field reports", "Mixed Migration Centre (2023), reports on the central Sahara", "Hess & Ostrom (2006), on informational commons; Scheele (2012), on the Saharan vernacular order"] },
     limits: { fr: "Ces communs vernaculaires restent traversés par des rapports de pouvoir et des formes de violence ou d'exploitation documentées ; ils ne sont ni universels ni égalitaires.", en: "These vernacular commons remain shot through with power relations and documented forms of violence or exploitation; they are neither universal nor equal." },
     why_persists: { fr: ["Le prisme strictement juridico-institutionnel de la « gouvernance » exclut par construction les régulations sociales non étatiques.", "Ces arrangements, qualifiés d'« informels », sont perçus comme un simple résidu plutôt que comme une grammaire sociale à part entière."], en: ["A strictly legal-institutional lens on 'governance' excludes non-state social regulation by construction.", "These arrangements, labelled 'informal', are seen as a mere residue rather than a social grammar in their own right."] }
+  },
+  {
+    id: "061",
+    category: { fr: "Réfugiés & Sécurité", en: "Refugees & Security" },
+    category_icon: "🛡️",
+    narrative: { fr: "La grande majorité des réfugiés dans le monde sont accueillis par des pays à revenu faible ou intermédiaire, et non par les pays riches.", en: "The vast majority of the world's refugees are hosted by low- and middle-income countries, not wealthy nations." },
+    confidence_level: "🟢",
+    verdict: { fr: "Étayé", en: "Substantiated" },
+    reality: { fr: "Ce constat est solidement documenté par le HCR : environ trois quarts des réfugiés relevant de son mandat sont accueillis par des pays à revenu faible ou intermédiaire, souvent voisins des zones de crise. Les principaux pays d'accueil au monde figurent parmi les pays en développement, à l'image de plusieurs États d'Afrique de l'Est et australe.", en: "This is solidly documented by UNHCR: roughly three-quarters of refugees under its mandate are hosted by low- and middle-income countries, often neighboring crisis zones. The world's leading host countries are overwhelmingly developing nations, including several in East and Southern Africa." },
+    indicators: { fr: ["Part des réfugiés accueillis par niveau de revenu national", "Classement des principaux pays d'accueil", "Ratio réfugiés/population dans les pays voisins"], en: ["Share of refugees hosted by national income level", "Ranking of leading host countries", "Refugee-to-population ratio in neighboring countries"] },
+    sources: { fr: ["UNHCR - Global Trends Report (2025)"], en: ["UNHCR - Global Trends Report (2025)"] },
+    limits: { fr: "La répartition varie fortement d'une année à l'autre selon l'évolution des crises et des politiques d'asile nationales.", en: "The distribution varies significantly year to year depending on the evolution of crises and national asylum policies." },
+    why_persists: { fr: ["Le débat public dans les pays riches se concentre sur les arrivées de demandeurs d'asile sur leur propre sol, non sur la répartition mondiale.", "L'effort d'accueil des pays voisins des crises reçoit une couverture médiatique bien moindre."], en: ["Public debate in wealthy countries focuses on asylum arrivals on their own soil, not the global distribution.", "The hosting effort made by countries neighboring crises receives far less media coverage."] }
   }
 ];
