@@ -791,5 +791,70 @@ export const evidenceCheckData = [
     sources: { fr: ["UNHCR - Global Trends Report (2025)"], en: ["UNHCR - Global Trends Report (2025)"] },
     limits: { fr: "La répartition varie fortement d'une année à l'autre selon l'évolution des crises et des politiques d'asile nationales.", en: "The distribution varies significantly year to year depending on the evolution of crises and national asylum policies." },
     why_persists: { fr: ["Le débat public dans les pays riches se concentre sur les arrivées de demandeurs d'asile sur leur propre sol, non sur la répartition mondiale.", "L'effort d'accueil des pays voisins des crises reçoit une couverture médiatique bien moindre."], en: ["Public debate in wealthy countries focuses on asylum arrivals on their own soil, not the global distribution.", "The hosting effort made by countries neighboring crises receives far less media coverage."] }
+  },
+  {
+    id: "062",
+    category: { fr: "Économie & Diasporas", en: "Economy & Diasporas" },
+    category_icon: "💼",
+    narrative: { fr: "L'émigration des travailleurs africains qualifiés représente une perte nette et irréversible pour le continent (« fuite des cerveaux »).", en: "The emigration of skilled African workers is a net, irreversible loss for the continent (\"brain drain\")." },
+    confidence_level: "🟠",
+    verdict: { fr: "Faiblement étayé / Réducteur", en: "Weakly substantiated / Reductive" },
+    reality: { fr: "Le cadre de la « perte nette » ignore les transferts de fonds des diasporas qualifiées, les réseaux de transfert de savoirs et de capitaux, et la migration de retour ou circulaire (« circulation des cerveaux »). Le phénomène n'est cependant pas fictif dans certains secteurs précis : l'OMS maintient une Liste de soutien et de sauvegarde du personnel de santé recensant les pays confrontés aux pénuries les plus critiques de personnel médical, largement concentrés en Afrique subsaharienne.", en: "The \"net loss\" framing ignores skilled-diaspora remittances, knowledge and capital transfer networks, and return or circular migration (\"brain circulation\"). The phenomenon is not fictitious in specific sectors, however: the WHO maintains a Health Workforce Support and Safeguards List of countries facing the most critical health-personnel shortages, heavily concentrated in Sub-Saharan Africa." },
+    indicators: { fr: ["Transferts de fonds des diasporas qualifiées", "Taux de retour et de migration circulaire", "Liste OMS des pénuries critiques de personnel de santé"], en: ["Skilled-diaspora remittances", "Return and circular migration rates", "WHO critical health-workforce shortage list"] },
+    sources: { fr: ["OMS - Health Workforce Support and Safeguards List (2023)", "Banque Mondiale - Migration and Development Brief"], en: ["WHO - Health Workforce Support and Safeguards List (2023)", "World Bank - Migration and Development Brief"] },
+    limits: { fr: "L'ampleur de la perte varie fortement par secteur (santé, ingénierie, recherche) et par pays d'origine.", en: "The scale of the loss varies significantly by sector (health, engineering, research) and country of origin." },
+    why_persists: { fr: ["Le récit de la « fuite » est plus simple à raconter que celui, plus lent et diffus, de la circulation ou du retour.", "Les success stories de la diaspora sont moins visibles dans le débat public que les départs eux-mêmes."], en: ["The \"drain\" narrative is simpler to tell than the slower, more diffuse story of circulation or return.", "Diaspora success stories are less visible in public debate than the departures themselves."] }
+  },
+  {
+    id: "063",
+    category: { fr: "Concepts & Aspirations", en: "Concepts & Aspirations" },
+    category_icon: "🧠",
+    narrative: { fr: "Les Africains sont majoritairement réticents à l'idée d'ouvrir leurs frontières à d'autres Africains.", en: "Africans are largely reluctant to open their borders to other Africans." },
+    confidence_level: "🔴",
+    verdict: { fr: "Non étayé", en: "Not substantiated" },
+    reality: { fr: "Selon Afrobarometer, une majorité de 59 % des Africains interrogés se déclarent favorables à la libre circulation des personnes et des biens à travers les frontières de leur région. Des exceptions réelles existent : le Botswana (68 %), le Gabon (52 %) et l'Afrique du Sud (51 %) sont les seuls pays où une majorité préfère au contraire limiter cette circulation.", en: "According to Afrobarometer, a 59% majority of surveyed Africans support the free movement of people and goods across their region's borders. Real exceptions exist: Botswana (68%), Gabon (52%), and South Africa (51%) are the only countries where a majority instead prefers to limit that movement." },
+    indicators: { fr: ["Part des répondants favorables à la libre circulation régionale", "Variation par pays", "Écarts frontaliers (proximité de la frontière et attitude)"], en: ["Share of respondents favoring regional free movement", "Country-level variation", "Border-proximity attitude gaps"] },
+    sources: { fr: ["Afrobarometer - Enquêtes sur les attitudes migratoires (2019-2026)"], en: ["Afrobarometer - Migration attitudes surveys (2019-2026)"] },
+    limits: { fr: "Le soutien de principe à la libre circulation coexiste avec des attitudes plus ambivalentes envers les migrants concrets, notamment en Afrique du Sud.", en: "Principled support for free movement coexists with more ambivalent attitudes toward actual migrants, notably in South Africa." },
+    why_persists: { fr: ["Les épisodes de tensions xénophobes les plus médiatisés (Afrique du Sud) sont pris pour une tendance continentale généralisée.", "L'attitude envers la libre circulation en principe est confondue avec l'attitude envers des migrants réels en contexte de tension économique."], en: ["The most widely covered xenophobic-tension episodes (South Africa) are mistaken for a generalized continental trend.", "Attitudes toward free movement in principle are conflated with attitudes toward actual migrants amid economic strain."] }
+  },
+  {
+    id: "064",
+    category: { fr: "Climat & Environnement", en: "Climate & Environment" },
+    category_icon: "🌱",
+    narrative: { fr: "Le changement climatique va provoquer un exode massif d'Africains vers l'Europe via la « migration climatique ».", en: "Climate change will drive a massive exodus of Africans toward Europe through \"climate migration\"." },
+    confidence_level: "🔴",
+    verdict: { fr: "Non étayé", en: "Not substantiated" },
+    reality: { fr: "Le rapport Groundswell de la Banque Mondiale projette jusqu'à 216 millions de migrants climatiques internes d'ici 2050 à l'échelle mondiale, dont environ 86 millions pour la seule Afrique subsaharienne — la région la plus concernée. L'écrasante majorité de ces mouvements est projetée comme interne aux pays, et non comme transcontinentale vers l'Europe.", en: "The World Bank's Groundswell report projects up to 216 million internal climate migrants worldwide by 2050, including roughly 86 million in Sub-Saharan Africa alone — the most affected region. The overwhelming majority of this movement is projected to be internal to countries, not transcontinental toward Europe." },
+    indicators: { fr: ["Projections de migration climatique interne par région (2050)", "Part de l'Afrique subsaharienne dans les projections mondiales", "Potentiel de réduction via l'action climatique"], en: ["Regional internal climate-migration projections (2050)", "Sub-Saharan Africa's share of global projections", "Reduction potential through climate action"] },
+    sources: { fr: ["Banque Mondiale - Groundswell : Acting on Internal Climate Migration (2021, actualisé)"], en: ["World Bank - Groundswell: Acting on Internal Climate Migration (2021, updated)"] },
+    limits: { fr: "Les projections à 2050 restent des scénarios, sensibles à la trajectoire réelle des émissions et des politiques d'adaptation.", en: "2050 projections remain scenarios, sensitive to the actual trajectory of emissions and adaptation policies." },
+    why_persists: { fr: ["Le terme « réfugié climatique » évoque intuitivement un déplacement vers le Nord, alors qu'il n'a même pas d'existence légale sous la Convention de 1951.", "Les rares cas de mobilité climatique transcontinentale sont surreprésentés dans le débat médiatique européen."], en: ["The term \"climate refugee\" intuitively evokes movement toward the North, even though it has no legal standing under the 1951 Convention.", "The rare cases of transcontinental climate mobility are overrepresented in European media debate."] }
+  },
+  {
+    id: "065",
+    category: { fr: "Démographie", en: "Demographics" },
+    category_icon: "👥",
+    narrative: { fr: "La migration est majoritairement un phénomène masculin — ce sont surtout des hommes qui partent.", en: "Migration is predominantly a male phenomenon — it's mainly men who leave." },
+    confidence_level: "🟠",
+    verdict: { fr: "Faiblement étayé / Réducteur", en: "Weakly substantiated / Reductive" },
+    reality: { fr: "Selon UN DESA, les femmes représentaient 48 % du stock mondial de migrants internationaux mi-2024 (146 millions de personnes) — une quasi-parité, avec des variations régionales (42 % en Asie, jusqu'à 52 % en Europe). Le portrait d'une migration essentiellement masculine ne se vérifie donc pas à l'échelle globale, même si certains corridors de travail spécifiques restent très masculinisés.", en: "According to UN DESA, women accounted for 48% of the global international migrant stock in mid-2024 (146 million people) — near parity, with regional variation (42% in Asia, up to 52% in Europe). The portrait of an essentially male migration does not hold globally, even though specific labour corridors remain heavily male-dominated." },
+    indicators: { fr: ["Part des femmes dans le stock mondial de migrants", "Variation régionale de la parité migratoire", "Corridors de travail genrés (BTP, domesticité, soins)"], en: ["Share of women in the global migrant stock", "Regional variation in migration gender parity", "Gendered labour corridors (construction, domestic work, care)"] },
+    sources: { fr: ["UN DESA - International Migrant Stock, Key Facts and Figures (2024)"], en: ["UN DESA - International Migrant Stock, Key Facts and Figures (2024)"] },
+    limits: { fr: "La parité globale masque de fortes disparités sectorielles et par corridor : la migration de travail vers le Golfe reste très masculine, tandis que la migration pour le travail domestique et le soin est majoritairement féminine.", en: "Global parity masks strong sectoral and corridor-level disparities: labour migration to the Gulf remains heavily male, while migration for domestic and care work is majority female." },
+    why_persists: { fr: ["Les images médiatiques dominantes de la migration (traversées, chantiers) surreprésentent les hommes.", "La migration féminine, souvent domestique ou moins visible publiquement, reçoit une couverture médiatique moindre."], en: ["Dominant media images of migration (crossings, construction sites) overrepresent men.", "Female migration, often domestic or less publicly visible, receives less media coverage."] }
+  },
+  {
+    id: "066",
+    category: { fr: "Géographie & Flux", en: "Geography & Flows" },
+    category_icon: "🌍",
+    narrative: { fr: "La croissance rapide des villes africaines est largement alimentée par l'arrivée de migrants internationaux.", en: "The rapid growth of African cities is largely fueled by international migrants." },
+    confidence_level: "🔴",
+    verdict: { fr: "Non étayé", en: "Not substantiated" },
+    reality: { fr: "L'urbanisation africaine est avant tout un phénomène interne : la part de la migration rurale-urbaine dans la croissance urbaine du continent est passée d'environ 15 % dans les années 1960 à 43 % en 2018, le reste provenant de l'accroissement naturel et de la reclassification de localités en villes. La migration internationale y joue un rôle comparativement mineur.", en: "African urbanization is primarily an internal phenomenon: the share of rural-to-urban migration in the continent's urban growth rose from around 15% in the 1960s to 43% in 2018, with the remainder coming from natural increase and the reclassification of settlements as urban. International migration plays a comparatively minor role in this process." },
+    indicators: { fr: ["Part de la migration rurale-urbaine dans la croissance urbaine (1960-2018)", "Part de l'accroissement naturel et de la reclassification", "Coût et fréquence de la migration internationale depuis les zones rurales"], en: ["Share of rural-to-urban migration in urban growth (1960-2018)", "Share of natural increase and reclassification", "Cost and frequency of international migration from rural areas"] },
+    sources: { fr: ["ONU - Drivers of Migration and Urbanization in Africa (DESA)", "OIM - Linkages between Urbanization, Rural-Urban Migration and Poverty Outcomes in Africa"], en: ["UN - Drivers of Migration and Urbanization in Africa (DESA)", "IOM - Linkages between Urbanization, Rural-Urban Migration and Poverty Outcomes in Africa"] },
+    limits: { fr: "La part respective de la migration, de l'accroissement naturel et de la reclassification administrative varie fortement d'une ville et d'un pays à l'autre.", en: "The respective shares of migration, natural increase, and administrative reclassification vary significantly from one city and country to another." },
+    why_persists: { fr: ["Les grandes villes africaines (Lagos, Nairobi, Le Caire) sont aussi des points d'entrée visibles pour la migration internationale, ce qui brouille la perception de son poids réel dans la croissance urbaine.", "La migration interne, bien plus massive, reste statistiquement moins visible car elle ne franchit aucune frontière à surveiller."], en: ["Major African cities (Lagos, Nairobi, Cairo) are also visible entry points for international migration, which blurs perceptions of its real weight in urban growth.", "Internal migration, far larger in scale, remains statistically less visible since it crosses no monitored border."] }
   }
 ];

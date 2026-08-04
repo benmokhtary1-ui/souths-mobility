@@ -6,7 +6,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles
+  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 
@@ -254,7 +254,7 @@ const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
 const t = {
     fr: {
       title: "South(s) Mobility",
-      subtitle: "DataHub",
+      subtitle: "Savoirs & Données",
       desc: "Analyse citoyenne des migrations mondiales. Une lecture empirique et décolonisée privilégiant la proportionnalité, la gouvernance de l'Union Africaine (CUA) et les dynamiques de transition démographique.",
       sidebar: { title: "Niveaux d'Analyse", subregion: "Sous-région", search: "Rechercher un pays..." },
       all_regions: "Toute l'Afrique",
@@ -295,7 +295,7 @@ const t = {
       },
       headers: {
         home: {
-          badge: "South(s) Mobility DataHub",
+          badge: "Plateforme de Savoirs & de Données",
           title: "Objectiver les mobilités",
           highlight: "par la science des données.",
           desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées."
@@ -327,7 +327,7 @@ const t = {
       },
       home_editorial: {
         badge: "Note de Cadrage Scientifique",
-        title: "Pourquoi ce DataHub ?",
+        title: "Pourquoi ce Knowledge Hub ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. Chaque année, les chocs climatiques et les crises sécuritaires déplacent des millions de personnes à l'intérieur même des frontières nationales — un phénomène rigoureusement quantifié par l'IDMC (voir la section Explorateur), mais largement absent des récits dominants sur « la migration africaine », alors qu'il en constitue la composante la plus massive.",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Ce DataHub travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Le terme « migrant international », en particulier, suit ici la définition onusienne standard — voir le Glossaire pour une définition précise et ses limites.",
@@ -505,7 +505,7 @@ const t = {
       analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
-      title: "South(s) Mobility", subtitle: "DataHub",
+      title: "South(s) Mobility", subtitle: "Knowledge & Data",
       desc: "Citizen analysis of global migrations. An empirical, decolonized reading prioritizing mathematical proportionality, African Union (AU) governance frameworks, and demographic transition dynamics.",
       sidebar: { title: "Analysis Levels", subregion: "Sub-region", search: "Search country..." },
       all_regions: "All Africa",
@@ -544,7 +544,7 @@ const t = {
       },
       headers: {
         home: {
-          badge: "South(s) Mobility DataHub",
+          badge: "Knowledge & Data Platform",
           title: "Objectifying mobilities",
           highlight: "through data science.",
           desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources."
@@ -576,7 +576,7 @@ const t = {
       },
       home_editorial: {
         badge: "Scientific Framing Note",
-        title: "Why this DataHub?",
+        title: "Why this Knowledge Hub?",
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts only about 29 million international migrants on its soil, or 9.5% of the world stock: far behind Europe and Asia, and well below the continent's demographic weight (close to 18% of the world's population). This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
         p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent is not international but internal. Every year, climate shocks and security crises displace millions of people within national borders — a phenomenon rigorously quantified by IDMC (see the Explorer section), yet largely absent from dominant narratives about \"African migration\", even though it is by far its largest component.",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This DataHub works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. The term \"international migrant\", in particular, follows the standard UN definition here — see the Glossary for a precise definition and its limits.",
@@ -845,6 +845,7 @@ const countryData = {
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
+      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe : l'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens, et les pays du Golfe fournissent plus de 40% des 19,5 milliards de dollars de transferts de fonds reçus par le pays en 2023 (Banque Mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians, and Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
       "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
     },
     { 
@@ -861,9 +862,10 @@ const countryData = {
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
+      ...genericDesc,
+      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l'Espagne (env. 770 000) et l'Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
     },
-    { 
+    {
       "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "iso2": "tn", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
       "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.34, "labour_participation": "52.4", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.5", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 38, 
@@ -976,6 +978,7 @@ const countryData = {
       "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
+      "origDest": { "fr": "Malgré une diaspora nombreuse au Royaume-Uni et aux États-Unis, les premières destinations réelles des Nigérians sont des pays voisins : le Cameroun et le Niger accueillent à eux deux plus de 320 000 Nigérians, davantage que le Royaume-Uni (OIM, Rapport sur les migrations dans le monde 2024).", "en": "Despite a large diaspora in the UK and US, Nigerians' top real destinations are neighboring countries: Cameroon and Niger together host over 320,000 Nigerians, more than the UK (IOM, World Migration Report 2024)." },
       "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
     },
     { 
@@ -1050,9 +1053,10 @@ const countryData = {
       "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 14, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
+      ...genericDesc,
+      "origDest": { "fr": "Plus de 1,2 million de Congolais réfugiés sont hébergés en Afrique, près de la moitié en Ouganda seul (env. 560 000-575 000 personnes), avec le Burundi, la Tanzanie, le Rwanda et la Zambie comme autres pays d'accueil majeurs (HCR, 2025).", "en": "Over 1.2 million Congolese refugees are hosted across Africa, nearly half in Uganda alone (approx. 560,000-575,000 people), with Burundi, Tanzania, Rwanda, and Zambia as other major host countries (UNHCR, 2025)." }
     },
-    { 
+    {
       "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "iso2": "gq", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
       "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": null, "labour_participation": "78.0", "remittances_year": null, "labour_participation_year": 2022, "evolution": "13.2", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 11, 
@@ -1164,9 +1168,10 @@ const countryData = {
       "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 19, 
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
+      ...genericDesc,
+      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens sur le continent — près de 450 000 rien qu'au Kenya, dont la majorité dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
     },
-    { 
+    {
       "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
       "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.49, "labour_participation": "76.8", "remittances_year": 2015, "labour_participation_year": 2022, "evolution": "8.0", 
       "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 9, 
@@ -1230,9 +1235,10 @@ const countryData = {
       "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 47, 
       "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
+      ...genericDesc,
+      "origDest": { "fr": "L'Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
     },
-    { 
+    {
       "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "iso2": "bw", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
       "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.67, "labour_participation": "76.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.4", 
       "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 34, 
@@ -1524,7 +1530,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       </div>
 
       <div>
-        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le DataHub" : "Explore the DataHub"}</h2>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le Knowledge Hub" : "Explore the Knowledge Hub"}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {homeCards.map((card) => {
             const Icon = card.icon;
@@ -1876,6 +1882,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'cedeao',
       avoi: 0.629,
+      founded: 1975,
+      hq: { fr: 'Abuja, Nigeria', en: 'Abuja, Nigeria' },
       name: { fr: 'CEDEAO / ECOWAS (Afrique de l’Ouest)', en: 'ECOWAS (West Africa)' },
       tag: lang === 'fr' ? 'Ouverture standardisée & pionnière' : 'Pioneering & standardized openness',
       desc: {
@@ -1894,6 +1902,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'cae',
       avoi: 0.504,
+      founded: 2000,
+      hq: { fr: 'Arusha, Tanzanie', en: 'Arusha, Tanzania' },
       name: { fr: 'CAE / EAC (Communauté d’Afrique de l’Est)', en: 'EAC (East African Community)' },
       tag: lang === 'fr' ? 'Citoyenneté de marché & corridors' : 'Market citizenship & corridors',
       desc: {
@@ -1912,6 +1922,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'sadc',
       avoi: 0.547,
+      founded: 1992,
+      hq: { fr: 'Gaborone, Botswana', en: 'Gaborone, Botswana' },
       name: { fr: 'SADC (Communauté de Développement de l’Afrique Australe)', en: 'SADC (Southern African Development Community)' },
       tag: lang === 'fr' ? 'Procéduralisation sectorielle & prudence' : 'Sectoral approach & caution',
       desc: {
@@ -1930,6 +1942,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'comesa',
       avoi: 0.463,
+      founded: 1994,
+      hq: { fr: 'Lusaka, Zambie', en: 'Lusaka, Zambia' },
       name: { fr: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)', en: 'COMESA (Common Market for Eastern and Southern Africa)' },
       tag: lang === 'fr' ? 'Facilitation macro-régionale' : 'Macro-regional facilitation',
       desc: {
@@ -1948,6 +1962,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'igad',
       avoi: 0.376,
+      founded: 1996,
+      hq: { fr: 'Djibouti, Djibouti', en: 'Djibouti City, Djibouti' },
       name: { fr: 'IGAD (Autorité Intergouvernementale pour le Développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
       tag: lang === 'fr' ? 'Nexus sécurité-climat-mobilité' : 'Security-climate-mobility nexus',
       desc: {
@@ -1966,6 +1982,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'ceeac',
       avoi: 0.320,
+      founded: 1983,
+      hq: { fr: 'Libreville, Gabon', en: 'Libreville, Gabon' },
       name: { fr: 'CEEAC & CEMAC (Afrique Centrale)', en: 'ECCAS & CEMAC (Central Africa)' },
       tag: lang === 'fr' ? 'Configuration à deux étages' : 'Two-tier configuration',
       desc: {
@@ -1984,6 +2002,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'uma',
       avoi: 0.306,
+      founded: 1989,
+      hq: { fr: 'Rabat, Maroc (Secrétariat)', en: 'Rabat, Morocco (Secretariat)' },
       name: { fr: 'UMA (Union du Maghreb Arabe)', en: 'AMU (Arab Maghreb Union)' },
       tag: lang === 'fr' ? 'Normativité d’horizon & gel institutionnel' : 'Horizon normativity & institutional freeze',
       desc: {
@@ -2002,6 +2022,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     {
       id: 'censad',
       avoi: 0.519,
+      founded: 1998,
+      hq: { fr: 'Tripoli, Libye', en: 'Tripoli, Libya' },
       name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
       desc: {
@@ -2845,6 +2867,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
                     : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
                 </p>
+                <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-xs text-emerald-100"><span className="font-bold text-white">2002</span> — {lang === 'fr' ? 'succède à l\'OUA (fondée en 1963)' : 'succeeds the OAU (founded 1963)'}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-xs text-emerald-100 font-bold text-white">{lang === 'fr' ? 'Addis-Abeba, Éthiopie' : 'Addis Ababa, Ethiopia'}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -3004,6 +3036,35 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       ? "Déploiement ciblé dans 5 États membres (Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc) et 2 CER partenaires (CEEAC, COMESA) — un choix pilote plutôt qu'une couverture continentale immédiate, financé par la SIDA (Suède) depuis la phase « JLMP Priority » (2018)."
                       : "Targeted rollout in 5 member states (Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco) and 2 partner RECs (ECCAS, COMESA) — a pilot approach rather than immediate continental coverage, funded by SIDA (Sweden) since the \"JLMP Priority\" phase (2018)."}
                   </p>
+                </div>
+              </div>
+
+              {/* Partenariats de Compétences */}
+              <div className="bg-teal-50 p-6 md:p-7 rounded-xl border border-teal-200 shadow-sm">
+                <div className="flex items-start gap-4 mb-5">
+                  <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
+                  <div>
+                    <h4 className="text-sm font-bold text-teal-900 mb-1.5">{lang === 'fr' ? "Partenariats de Compétences (Global Skills Partnerships) en Action" : "Global Skills Partnerships in Action"}</h4>
+                    <p className="text-xs text-teal-800 leading-relaxed">
+                      {lang === 'fr'
+                        ? "Au-delà des cadres continentaux, des accords bilatéraux concrets appliquent déjà le modèle du « partenariat de compétences » (voir Glossaire) entre États africains et européens — une alternative testée à la fuite des cerveaux, où la formation est financée conjointement avant le départ."
+                        : "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure."}
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "PALIM — Maroc ↔ Belgique (depuis 2019)" : "PALIM — Morocco ↔ Belgium (since 2019)"}</span>
+                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche." : "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss."}</p>
+                  </div>
+                  <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "THAMM / THAMM Plus (2019-2027)" : "THAMM / THAMM Plus (2019-2027)"}</span>
+                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "Développement de compétences en Égypte, au Maroc et en Tunisie, avec des passerelles de mobilité vers la Belgique, la France et l'Allemagne." : "Skills development in Egypt, Morocco, and Tunisia, with mobility pathways to Belgium, France, and Germany."}</p>
+                  </div>
+                  <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "Sénégal / Ghana ↔ Allemagne (dès 2026)" : "Senegal / Ghana ↔ Germany (from 2026)"}</span>
+                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "Formation professionnelle dans le secteur du bâtiment, avec un premier départ de candidats prévu durant l'été 2026." : "Vocational training in the construction sector, with the first candidates' departure planned for summer 2026."}</p>
+                  </div>
                 </div>
               </div>
 
@@ -3181,6 +3242,20 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
                     {isOpen && (
                       <div className="p-6 bg-slate-50 border-t border-slate-200 animate-in fade-in duration-300 space-y-5">
+                        <div className="flex flex-wrap gap-4 pb-4 border-b border-slate-200">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{rec.founded}</span> — {lang === 'fr' ? 'fondation' : 'founded'}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-xs text-slate-600 font-bold text-slate-800">{rec.hq[lang]}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Users className="w-3.5 h-3.5 text-slate-400" />
+                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{Object.values(countryRecAffiliations).filter(a => a.includes(rec.id)).length}</span> {lang === 'fr' ? 'États membres' : 'member states'}</span>
+                          </div>
+                        </div>
                         <p className="text-sm text-slate-800 leading-relaxed font-medium">{lang === 'fr' ? rec.desc.fr : rec.desc.en}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
@@ -3964,6 +4039,12 @@ const glossaryData = [
         en: "The benefit a country derives from the immigration of highly qualified professionals or the return of its nationals who acquired expertise abroad (Diaspora networks)."
       },
       {
+        term: "Circulation des cerveaux (Brain Circulation)",
+        en_term: "Brain Circulation",
+        fr: "Mouvement répété et bidirectionnel de professionnels qualifiés entre pays d'origine et de destination, par opposition à un départ ou un retour définitifs. Ce cadre déplace le débat de la « fuite » (perte nette et irréversible) vers un échange continu de compétences, de capitaux et de réseaux.",
+        en: "Repeated, bidirectional movement of skilled professionals between origin and destination countries, as opposed to a one-way departure or permanent return. This framework shifts the debate from \"drain\" (a net, irreversible loss) toward a continuous exchange of skills, capital, and networks."
+      },
+      {
         term: "Gaspillage de compétences (Brain Waste)",
         en_term: "Brain Waste",
         fr: "Situation où des migrants hautement qualifiés occupent des emplois sans rapport avec leurs diplômes, souvent en raison de la non-reconnaissance de leurs qualifications étrangères ou de barrières systémiques.",
@@ -3980,6 +4061,12 @@ const glossaryData = [
         en_term: "Investment by Migrants",
         fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs.",
         en: "Economic contributions of migrants beyond basic family remittances: entrepreneurship, real estate, diaspora bonds, technology transfer, and capital investment in productive sectors."
+      },
+      {
+        term: "Partenariat de compétences (Global Skills Partnership)",
+        en_term: "Global Skills Partnership",
+        fr: "Accord bilatéral entre un pays d'origine et un pays de destination finançant conjointement la formation de travailleurs, avant leur départ, dans des compétences utiles aux deux économies — conçu pour convertir la mobilité de main-d'œuvre en investissement partagé plutôt qu'en simple prélèvement de capital humain déjà formé.",
+        en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital."
       }
     ]
   },
@@ -3987,6 +4074,12 @@ const glossaryData = [
     category: { fr: "Gouvernance, Données & Concepts Théoriques", en: "Governance, Data & Theoretical Concepts" },
     icon: Brain,
     terms: [
+      {
+        term: "Corridor migratoire",
+        en_term: "Migration Corridor",
+        fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants, unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque Mondiale) — permet de voir au-delà des agrégats nationaux la géographie réelle des déplacements.",
+        en: "An origin-destination country pair linked by a significant migrant flow or stock, the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank) — lets the real geography of movement be seen beyond national aggregates."
+      },
       {
         term: "Entre-deux national",
         en_term: "National In-Between",
@@ -4066,6 +4159,9 @@ const libraryData = [
       { title: "AUC & IOM — Africa Migration Report, 2nd Edition", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Panorama continental reliant politiques, pratiques et bien-être des migrants africains.", en: "Continental overview linking policy, practice, and the welfare of African migrants." }, url: "https://publications.iom.int/system/files/pdf/pub2023-132-r-iom-au-africa-migration-report-second-edition_3.pdf" },
       { title: "AUC, AfDB & UNECA — Africa Regional Integration Index (ARII)", year: 2019, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Indice comparatif de l'intégration régionale, incluant la dimension libre circulation.", en: "Comparative regional integration index, including the free movement dimension." }, url: "https://www.arii.uneca.org" },
       { title: "AUC, ILO, IOM & UNECA — Labour Migration Statistics Report in Africa, 3rd Ed.", year: 2021, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Statistiques comparées sur la migration de main-d'œuvre en Afrique.", en: "Comparative statistics on labour migration in Africa." }, url: "https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" },
+      { title: "Mixed Migration Centre — 4Mi Data Explorer", year: 2026, essential: true, type: { fr: "Données de terrain", en: "Field Data" }, desc: { fr: "Plus de 100 000 entretiens directs avec des migrants et réfugiés sur leur parcours, leurs motivations et les risques rencontrés — une contrepartie empirique de terrain aux statistiques agrégées des organisations internationales.", en: "Over 100,000 direct interviews with migrants and refugees on their journeys, motivations, and risks faced — a field-level empirical counterpart to international organizations' aggregate statistics." }, url: "https://mixedmigration.org/4mi-data-explorer/en" },
+      { title: "Afrobarometer — Attitudes on Migration & Cross-Border Mobility", year: 2026, type: { fr: "Enquête d'opinion", en: "Opinion Survey" }, desc: { fr: "Sondages d'opinion publique menés dans plus de 30 pays africains sur les perceptions de l'immigration, de l'émigration et de la libre circulation — rare source de données sur ce que pensent les citoyens africains eux-mêmes, plutôt que sur les seules statistiques de flux.", en: "Public opinion surveys conducted in 30+ African countries on perceptions of immigration, emigration, and free movement — a rare source of data on what African citizens themselves think, rather than flow statistics alone." }, url: "https://www.afrobarometer.org/" },
+      { title: "ISS African Futures — Migration & Demographic Projections", year: 2026, type: { fr: "Recherche & prospective", en: "Research & Foresight" }, desc: { fr: "Modélisation prospective des dynamiques migratoires et démographiques africaines par l'Institute for Security Studies (Pretoria).", en: "Forward-looking modelling of African migration and demographic dynamics by the Institute for Security Studies (Pretoria)." }, url: "https://futures.issafrica.org/" },
     ]
   },
   {
@@ -4935,11 +5031,6 @@ export default function App() {
                 className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 <Brain className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Glossaire' : 'Glossary'}
-              </button>
-            </div>
-            <div className="flex justify-end print:hidden">
-              <button onClick={() => window.print()} className="flex items-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-blue-700 hover:border-blue-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
-                <Printer className="w-3.5 h-3.5" /> <span>{lang === 'fr' ? "Exporter cette section (PDF)" : "Export this section (PDF)"}</span>
               </button>
             </div>
             {activeAboutTab === 'about' && <TabAbout text={text} lang={lang} />}
