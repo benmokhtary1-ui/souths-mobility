@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   Globe, ShieldAlert, TrendingUp, MapPin, Database, 
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
@@ -6,9 +6,10 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar
+  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
+import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -31,6 +32,127 @@ const formatNumber = (val) => {
   const num = parseInt(strVal.replace(/\s/g, ''), 10);
   if (isNaN(num)) return val;
   return num.toLocaleString('fr-FR'); 
+};
+
+// Respecte le réglage système « réduire les animations ».
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Révèle un bloc à l'entrée dans le champ de vision (effet éditorial, pas de dépendance externe).
+const Reveal = ({ children, delay = 0, className = '' }) => {
+  const ref = useRef(null);
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (prefersReducedMotion() || typeof IntersectionObserver === 'undefined') {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) {
+      setShown(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+    );
+    io.observe(el);
+    // Filet de sécurité : si l'observateur ne se déclenche jamais (onglet non composité,
+    // navigateur exotique), on affiche quand même le contenu plutôt que de le laisser invisible.
+    const failsafe = setTimeout(() => setShown(true), 1200);
+    return () => { io.disconnect(); clearTimeout(failsafe); };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'none' : 'translateY(14px)',
+        transition: `opacity 620ms cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 620ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Compteur animé : le chiffre monte lorsqu'il devient visible.
+const CountUp = ({ value, duration = 1100, className = '' }) => {
+  const ref = useRef(null);
+  const [display, setDisplay] = useState(prefersReducedMotion() ? value : 0);
+
+  useEffect(() => {
+    if (prefersReducedMotion() || typeof IntersectionObserver === 'undefined') {
+      setDisplay(value);
+      return;
+    }
+    const el = ref.current;
+    if (!el) {
+      setDisplay(value);
+      return;
+    }
+    let raf;
+    let done = false;
+    const run = () => {
+      if (done) return;
+      done = true;
+      io.disconnect();
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplay(Math.round(value * eased));
+        if (t < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) run(); },
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+    // Filet de sécurité : garantit que le chiffre final s'affiche même sans déclenchement.
+    const failsafe = setTimeout(() => { if (!done) { done = true; io.disconnect(); setDisplay(value); } }, 1400);
+    return () => { io.disconnect(); clearTimeout(failsafe); if (raf) cancelAnimationFrame(raf); };
+  }, [value, duration]);
+
+  return <span ref={ref} className={className}>{display}</span>;
+};
+
+// Barre de progression de lecture (repère éditorial discret sous la navigation).
+const ScrollProgress = () => {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      setPct(h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+  return (
+    <div className="h-0.5 w-full bg-slate-800/60 print:hidden" aria-hidden="true">
+      <div
+        className="h-full bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-400 transition-[width] duration-150 ease-out"
+        style={{ width: `${pct}%` }}
+      />
+    </div>
+  );
 };
 
 const flagSizes = {
@@ -208,6 +330,19 @@ const institutionLogos = [
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
+
+// Emblèmes officiels des CER (fichiers librement licenciés, Wikimedia Commons).
+// COMESA et CEEAC n'ont pas d'emblème librement licencié disponible : repli sur le sigle.
+const recLogos = {
+  cedeao: "/logos/rec-cedeao.png",
+  cae: "/logos/rec-cae.svg",
+  sadc: "/logos/rec-sadc.svg",
+  igad: "/logos/rec-igad.svg",
+  uma: "/logos/rec-uma.svg",
+  censad: "/logos/rec-censad.jpg",
+  comesa: null,
+  ceeac: null,
+};
 
 const aboutLogoMap = [
   institutionLogos.find(i => i.key === 'au'),
@@ -1303,6 +1438,99 @@ const weightedAverage = (countries, getter) => {
   return weightSum > 0 ? valSum / weightSum : null;
 };
 
+// Pays africains ouvrant leur territoire à l'ensemble des ressortissants africains.
+// Vérifié août 2026 ; distingue l'exemption de visa réelle du simple gratuité de visa.
+// Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA).
+const visaOpenToAllAfrica = {
+  bj: { tier: 'full', since: 2017, note: { fr: "Exemption de visa pour tous les ressortissants africains depuis 2017.", en: "Visa-free entry for all African nationals since 2017." } },
+  gm: { tier: 'full', since: 2019, note: { fr: "Exemption de visa pour tous les ressortissants africains depuis 2019.", en: "Visa-free entry for all African nationals since 2019." } },
+  rw: { tier: 'full', since: 2023, note: { fr: "Exemption de visa pour tous les ressortissants africains, annoncée en novembre 2023.", en: "Visa-free entry for all African nationals, announced November 2023." } },
+  sc: { tier: 'full', since: null, note: { fr: "Pionnier continental : aucune obligation de visa préalable, pour toutes les nationalités.", en: "Continental pioneer: no prior visa requirement, for all nationalities." } },
+  ke: { tier: 'partial', since: 2025, note: { fr: "Exemption d'autorisation électronique (eTA) étendue à tous les États africains sauf la Somalie et la Libye (Conseil des ministres, janvier 2025 ; mise en œuvre 2025). Séjour de 2 mois ; 6 mois pour les ressortissants de la CAE.", en: "Electronic travel authorisation (eTA) exemption extended to all African states except Somalia and Libya (Cabinet, January 2025; implemented 2025). Two-month stay; six months for EAC nationals." } },
+  gh: { tier: 'announced', since: 2026, note: { fr: "Visa gratuit — et non supprimé — pour tous les passeports africains à compter du 25 mai 2026 : la demande en ligne reste requise, seuls les frais sont levés.", en: "Free visa — not abolished — for all African passports from 25 May 2026: an online application is still required, only the fee is waived." } },
+  cg: { tier: 'announced', since: 2027, note: { fr: "Exemption de visa pour tous les ressortissants africains annoncée à compter de 2027 (non encore en vigueur).", en: "Visa-free entry for all African nationals announced from 2027 (not yet in force)." } },
+};
+
+const visaOpenTiers = {
+  full: {
+    label: { fr: "Ouvert à toute l'Afrique", en: "Open to all of Africa" },
+    style: "bg-emerald-50 text-emerald-800 border-emerald-300",
+    dot: "text-emerald-500 fill-emerald-400",
+  },
+  partial: {
+    label: { fr: "Ouvert avec exceptions", en: "Open with exceptions" },
+    style: "bg-lime-50 text-lime-800 border-lime-300",
+    dot: "text-lime-500 fill-lime-400",
+  },
+  announced: {
+    label: { fr: "Annoncé, pas encore effectif", en: "Announced, not yet in force" },
+    style: "bg-amber-50 text-amber-800 border-amber-300",
+    dot: "text-amber-500 fill-amber-400",
+  },
+};
+
+// Carte d'appartenance : identifiant numérique (M49) -> { iso2, nom } pour les 54 pays.
+const countryIdIndex = {};
+Object.values(countryData).flat().forEach(c => {
+  countryIdIndex[c.id] = { iso2: c.iso2, name: c.name };
+});
+
+// Carte de l'Afrique mettant en évidence les membres d'une CER, avec survol interactif.
+const AfricaRecMap = ({ recId, lang, accent = '#047857' }) => {
+  const [hovered, setHovered] = useState(null);
+
+  const memberIds = useMemo(() => {
+    const set = new Set();
+    Object.entries(countryIdIndex).forEach(([id, meta]) => {
+      if ((countryRecAffiliations[meta.iso2] || []).includes(recId)) set.add(id);
+    });
+    return set;
+  }, [recId]);
+
+  const hoveredMeta = hovered ? countryIdIndex[hovered] : null;
+  const hoveredIsMember = hovered ? memberIds.has(hovered) : false;
+
+  return (
+    <div className="relative">
+      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[26rem] mx-auto block" role="img"
+           aria-label={lang === 'fr' ? "Carte des États membres" : "Map of member states"}>
+        {Object.entries(africaCountryPaths).map(([id, d]) => {
+          const isMember = memberIds.has(id);
+          const isHovered = hovered === id;
+          return (
+            <path
+              key={id}
+              d={d}
+              fill={isMember ? accent : '#e2e8f0'}
+              stroke="#ffffff"
+              strokeWidth={isHovered ? 2.2 : 0.8}
+              className="transition-all duration-200 cursor-default"
+              style={{ opacity: isHovered ? 1 : isMember ? 0.92 : 0.75, filter: isHovered ? 'brightness(1.12)' : 'none' }}
+              onMouseEnter={() => setHovered(id)}
+              onMouseLeave={() => setHovered((h) => (h === id ? null : h))}
+            />
+          );
+        })}
+      </svg>
+
+      <div className="absolute top-2 left-2 pointer-events-none">
+        {hoveredMeta ? (
+          <div className="bg-white/95 backdrop-blur-sm border border-slate-200 shadow-md rounded-md px-3 py-2 animate-in fade-in duration-150">
+            <span className="text-xs font-bold text-slate-900 block">{hoveredMeta.name[lang] || hoveredMeta.name.fr}</span>
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${hoveredIsMember ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {hoveredIsMember ? (lang === 'fr' ? 'État membre' : 'Member state') : (lang === 'fr' ? 'Non membre' : 'Not a member')}
+            </span>
+          </div>
+        ) : (
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            {lang === 'fr' ? 'Survolez la carte' : 'Hover the map'}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const countryRegionMap = {};
 Object.entries(countryData).forEach(([regionKey, countries]) => {
   countries.forEach(c => { countryRegionMap[c.id] = regionKey; });
@@ -1453,7 +1681,8 @@ const homeCards = [
   { id: 'evidence', icon: Globe, accent: 'blue', label: { fr: 'Evidence Check', en: 'Evidence Check' }, desc: { fr: `${evidenceCheckData.length} affirmations courantes sur les migrations confrontées aux meilleures données disponibles.`, en: `${evidenceCheckData.length} common migration claims tested against the best available data.` } },
   { id: 'explorer', icon: MapPin, accent: 'emerald', label: { fr: 'Explorateur', en: 'Data Explorer' }, desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.", en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
   { id: 'governance', icon: Landmark, accent: 'indigo', label: { fr: 'Gouvernance', en: 'Governance' }, desc: { fr: "L'architecture juridique panafricaine, des CER à l'Union africaine et aux pactes mondiaux.", en: "The pan-African legal architecture, from RECs to the AU and global compacts." } },
-  { id: 'library', icon: BookOpen, accent: 'amber', label: { fr: 'Bibliothèque', en: 'Library' }, desc: { fr: "32 sources institutionnelles, juridiques et académiques vérifiées.", en: "32 verified institutional, legal, and academic sources." } },
+  // {count} est substitué au rendu (libraryData est déclaré plus bas dans le module).
+  { id: 'library', icon: BookOpen, accent: 'amber', label: { fr: 'Bibliothèque', en: 'Library' }, desc: { fr: "{count} sources institutionnelles, juridiques et académiques vérifiées.", en: "{count} verified institutional, legal, and academic sources." } },
 ];
 
 const homeCardAccents = {
@@ -1469,24 +1698,6 @@ const homeCardIconBg = {
   indigo: "bg-indigo-50 text-indigo-600",
   amber: "bg-amber-50 text-amber-600",
 };
-
-const whatsNew = [
-  {
-    tab: 'governance', accent: 'indigo',
-    fr: "Suivi des ratifications de l'UA (Kigali, Kampala, ZLECAf…) avec statut « en vigueur » en temps réel, et historique complet des sessions du STC-MRIDPs et du PAFoM.",
-    en: "AU ratification tracking (Kigali, Kampala, AfCFTA…) with live \"in force\" status, plus the full session history of the STC-MRIDPs and PAFoM."
-  },
-  {
-    tab: 'about', accent: 'blue',
-    fr: "Nouveau glossaire des concepts et de la terminologie clés de la gouvernance migratoire.",
-    en: "New glossary of key migration governance concepts and terminology."
-  },
-  {
-    tab: 'explorer', accent: 'emerald',
-    fr: "Profils pays et régionaux enrichis, exportables en PDF avec source et citation intégrées.",
-    en: "Enriched country and regional profiles, exportable to PDF with source and citation included."
-  },
-];
 
 const TabHome = ({ text, lang, setActiveTab }) => {
   const totalCountries = Object.values(countryData).flat().length;
@@ -1516,20 +1727,25 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         accent="blue"
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {statTiles.map((stat, idx) => (
-          <button
-            key={idx}
-            onClick={() => setActiveTab(stat.tab)}
-            className="bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-blue-300 group"
-          >
-            <div className="text-3xl font-serif font-bold text-slate-900">{stat.value}</div>
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block group-hover:text-blue-700">{stat.label[lang]}</span>
-          </button>
-        ))}
-      </div>
+      <Reveal>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {statTiles.map((stat, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveTab(stat.tab)}
+              className="relative overflow-hidden bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-blue-300 group"
+            >
+              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums">
+                <CountUp value={stat.value} />
+              </div>
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block group-hover:text-blue-700">{stat.label[lang]}</span>
+            </button>
+          ))}
+        </div>
+      </Reveal>
 
-      <div>
+      <Reveal delay={60}>
         <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le Knowledge Hub" : "Explore the Knowledge Hub"}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {homeCards.map((card) => {
@@ -1552,29 +1768,24 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             );
           })}
         </div>
-      </div>
+      </Reveal>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
+      <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
         <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
           <Sparkles className="w-4 h-4 mr-2 text-amber-500" /> {lang === 'fr' ? "Récemment enrichi" : "Recently Enriched"}
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {whatsNew.map((item, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveTab(item.tab)}
-              className={`text-left p-4 rounded-lg border border-slate-200 bg-slate-50 hover:bg-white transition-all duration-300 group ${homeCardAccents[item.accent]} hover:shadow-sm`}
-            >
-              <p className="text-xs text-slate-600 leading-relaxed">{lang === 'fr' ? item.fr : item.en}</p>
-              <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-3 group-hover:text-slate-700">
-                {lang === 'fr' ? "Voir" : "View"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </button>
-          ))}
+        <div className="border border-dashed border-slate-300 rounded-lg py-10 px-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
+          <Clock className="w-5 h-5 text-slate-300 mb-3" />
+          <p className="text-sm font-serif font-bold text-slate-500">{lang === 'fr' ? "À venir" : "Coming soon"}</p>
+          <p className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed">
+            {lang === 'fr'
+              ? "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication."
+              : "This space will flag the platform's recent additions as they are published."}
+          </p>
         </div>
-      </div>
+      </Reveal>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
+      <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest">
             {text.home_editorial.badge}
@@ -1613,9 +1824,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             ))}
           </ul>
         </div>
-      </div>
+      </Reveal>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 md:p-10">
+      <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 md:p-10">
         <h4 className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
           {lang === 'fr' ? "Données croisées et vérifiées à partir des sources institutionnelles suivantes" : "Data cross-checked and verified against the following institutional sources"}
         </h4>
@@ -1631,7 +1842,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             ? "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation ou un endossement de South(s) Mobility DataHub."
             : "These institutions are cited as sources of open public data. Their presence does not constitute a partnership, endorsement, or validation of South(s) Mobility DataHub."}
         </p>
-      </div>
+      </Reveal>
     </div>
   );
 };
@@ -1895,9 +2106,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. L'enjeu de 2026 est de gérer juridiquement le statut des millions de ressortissants de l'AES vivant en zone CEDEAO (notamment en Côte d'Ivoire).",
-        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The 2026 challenge is legally managing the status of millions of AES citizens living in the ECOWAS zone (notably in Côte d'Ivoire)."
-      }
+        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger le 29 janvier 2025 ramène la Communauté à douze membres ; la CEDEAO a toutefois demandé à ses États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays et de maintenir leurs ressortissants en circulation sans visa, découplant de fait la sortie politique du régime de mobilité.",
+        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso, and Niger on 29 January 2025 brings the Community down to twelve members; ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards and to maintain visa-free movement for their nationals, effectively decoupling the political exit from the mobility regime."
+      },
+      sources: [
+        { label: "CEDEAO — Retrait du Burkina Faso, du Mali et du Niger (2025)", url: "https://www.ecowas.int/burkina-faso-mali-and-nigers-withdrawal-from-ecowas-is-now-a-reality/" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+        { label: "Union africaine — Fiche CER : CEDEAO", url: "https://au.int/en/recs/ecowas" },
+      ]
     },
     {
       id: 'cae',
@@ -1915,9 +2131,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya (qui dispense d'ETA les membres de la CAE pour 180 jours). L'intégration de la RDC et de la Somalie ajoute cependant des défis sécuritaires complexes.",
-        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya (which exempts EAC members from ETA for 180 days). The integration of the DRC and Somalia, however, adds complex security challenges."
-      }
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans — RDC (11 juillet 2022) puis Somalie (membre de plein droit le 4 mars 2024) —, un élargissement rapide qui étend le marché commun à des espaces sécuritairement complexes et dont les feuilles de route d'intégration restent en cours de négociation.",
+        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years — DRC (11 July 2022) then Somalia (full member on 4 March 2024) — a rapid enlargement extending the common market into security-complex areas, with integration roadmaps still under negotiation."
+      },
+      sources: [
+        { label: "CAE — Vue d'ensemble et États partenaires", url: "https://www.eac.int/overview-of-eac" },
+        { label: "CAE — Adhésion de la Somalie comme 8e État partenaire", url: "https://www.eac.int/press-releases/3049-somalia-finally-joins-eac-as-the-bloc-s-8th-partner-state" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+      ]
     },
     {
       id: 'sadc',
@@ -1937,7 +2158,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       dynamics: {
         fr: "Deuxième CER la plus ouverte du continent avec un score AVOI de 0,547 en 2024, en progression continue, portée notamment par l'Angola qui a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
         en: "The second-most open REC on the continent with an AVOI score of 0.547 in 2024, on a continuing upward trend, driven notably by Angola which nearly doubled the number of nationalities granted visa-free access in late 2023. The space remains polarized by Pretoria (BMA reform and 2024 White Paper); innovation also comes through bilateral agreements (e.g. the joint Botswana-Namibia ID card)."
-      }
+      },
+      sources: [
+        { label: "SADC — États membres", url: "https://www.sadc.int/member-states" },
+        { label: "SADC — Histoire et Traité", url: "https://www.sadc.int/pages/history-and-treaty" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+      ]
     },
     {
       id: 'comesa',
@@ -1957,7 +2183,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       dynamics: {
         fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne continentale (0,501). L'obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
         en: "AVOI score of 0.463 in 2024, slightly below the continental average (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
-      }
+      },
+      sources: [
+        { label: "COMESA — États membres", url: "https://www.comesa.int/comesa-members-states/" },
+        { label: "Union africaine — Fiche CER : COMESA", url: "https://au.int/en/recs/comesa" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+      ]
     },
     {
       id: 'igad',
@@ -1975,9 +2206,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale (0,501) et parmi les plus bas du continent : l'homogénéisation de l'ouverture reste suspendue à l'instabilité géopolitique chronique de la sous-région (guerre au Soudan).",
-        en: "An AVOI score of 0.376 in 2024, well below the continental average (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan)."
-      }
+        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale (0,501) et parmi les plus bas du continent : l'homogénéisation de l'ouverture reste suspendue à l'instabilité géopolitique chronique de la sous-région (guerre au Soudan). Le retrait formel de l'Érythrée, notifié en décembre 2025 — deux ans seulement après son retour au sein de l'organisation en juin 2023 —, ramène l'Autorité à sept membres et illustre la fragilité du multilatéralisme régional dans la Corne.",
+        en: "An AVOI score of 0.376 in 2024, well below the continental average (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea's formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
+      },
+      sources: [
+        { label: "IGAD — Communiqué sur le retrait de l'Érythrée (2025)", url: "https://igad.int/igad-regrets-eritreas-decision-to-withdraw-from-the-organisation/" },
+        { label: "IGAD — Présentation et structure", url: "https://igad.int/about/" },
+        { label: "Union africaine — Fiche CER : IGAD", url: "https://au.int/en/recs/igad" },
+      ]
     },
     {
       id: 'ceeac',
@@ -1995,9 +2231,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Revised ECCAS Treaty (2019). CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90 days and the community biometric passport."
       },
       dynamics: {
-        fr: "Score AVOI le plus bas du continent avec l'UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là. Le défi reste la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).",
-        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, continental average: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year. The challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea)."
-      }
+        fr: "Score AVOI le plus bas du continent avec l'UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là. Le défi reste la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale). Le retrait du Rwanda, annoncé en juin 2025 à la suite d'un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
+        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, continental average: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year. The challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea). Rwanda's announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
+      },
+      sources: [
+        { label: "CEEAC — Présentation de la Communauté", url: "https://www.ceeac-eccas.org/2023/05/28/eccas-in-brief/" },
+        { label: "Union africaine — Fiche CER : CEEAC", url: "https://au.int/en/recs/eccas" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+      ]
     },
     {
       id: 'uma',
@@ -2015,9 +2256,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Marrakech Treaty (1989) as a pure normative horizon."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale.",
-        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, continental average: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration."
-      }
+        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d'État ne s'est tenu depuis des décennies : l'UMA subsiste comme coquille juridique plus que comme institution opérante.",
+        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, continental average: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
+      },
+      sources: [
+        { label: "UMA — Historique et institutions", url: "https://maghrebarabe.org/en/historical/" },
+        { label: "Union africaine — Fiche CER : UMA", url: "https://au.int/en/recs/uma" },
+        { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
+      ]
     },
     {
       id: 'censad',
@@ -2035,9 +2281,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1998 Treaty (revised 2013). Free movement of persons is listed among the founding objectives, without a dedicated protocol equivalent to those of ECOWAS or IGAD."
       },
       dynamics: {
-        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique important avec la CEDEAO explique une part de cette ouverture : plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre à la CEN-SAD.",
-        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself."
-      }
+        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique important avec la CEDEAO explique une part de cette ouverture : plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre à la CEN-SAD. Institutionnellement en sommeil après le conflit libyen de 2011 — son secrétariat ayant été replié à N'Djamena —, la Communauté a rouvert son siège de Tripoli en avril 2026 en présence de onze ministres des Affaires étrangères des États membres, une réactivation dont les effets opérationnels restent à observer.",
+        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself. Institutionally dormant after the 2011 Libyan conflict — its secretariat having relocated to N'Djamena — the Community reopened its Tripoli headquarters in April 2026 in the presence of eleven member-state foreign ministers, a reactivation whose operational effects remain to be seen."
+      },
+      sources: [
+        { label: "CEN-SAD — États membres et Secrétariat exécutif", url: "https://censad.int/en/who-are-we/member-states/" },
+        { label: "Union africaine — Fiche CER : CEN-SAD", url: "https://au.int/en/recs/censad" },
+        { label: "Xinhua — Réouverture du siège de la CEN-SAD à Tripoli (2026)", url: "https://english.news.cn/20260412/160868c2d62b40ff917e3c2b511748a0/c.html" },
+      ]
     }
   ];
 
@@ -3221,8 +3472,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
                     <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-4 min-w-0">
-                        <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
-                          {rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}
+                        <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-white border border-emerald-200 flex items-center justify-center overflow-hidden text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
+                          {recLogos[rec.id]
+                            ? <img src={recLogos[rec.id]} alt="" className="max-h-8 max-w-9 object-contain" />
+                            : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
                         </span>
                         <div className="min-w-0">
                           <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name[lang]}</h4>
@@ -3257,6 +3510,42 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           </div>
                         </div>
                         <p className="text-sm text-slate-800 leading-relaxed font-medium">{lang === 'fr' ? rec.desc.fr : rec.desc.en}</p>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                          <div className="lg:col-span-2 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
+                            <AfricaRecMap recId={rec.id} lang={lang} />
+                          </div>
+                          <div className="lg:col-span-3 bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-3">
+                              <Users className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> {lang === 'fr' ? "États membres" : "Member states"}
+                            </h5>
+                            <div className="flex flex-wrap gap-1.5">
+                              {Object.entries(countryRecAffiliations)
+                                .filter(([, recs]) => recs.includes(rec.id))
+                                .map(([iso2]) => {
+                                  const meta = Object.values(countryIdIndex).find(m => m.iso2 === iso2);
+                                  const note = countryRecNotes[iso2];
+                                  return (
+                                    <span
+                                      key={iso2}
+                                      title={note ? note[lang] : undefined}
+                                      className="group/chip relative inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-default transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 hover:-translate-y-0.5 hover:shadow-sm"
+                                    >
+                                      <CountryFlag iso2={iso2} emoji="" size="sm" />
+                                      {meta ? (meta.name[lang] || meta.name.fr) : iso2.toUpperCase()}
+                                      {note && <AlertTriangle className="w-3 h-3 text-amber-500" />}
+                                    </span>
+                                  );
+                                })}
+                            </div>
+                            <p className="text-[10px] text-slate-400 italic mt-3">
+                              {lang === 'fr'
+                                ? "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours."
+                                : "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal."}
+                            </p>
+                          </div>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
                             <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> {lang === 'fr' ? "Instruments Clés" : "Key Instruments"}</h5>
@@ -3267,6 +3556,24 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}</p>
                           </div>
                         </div>
+
+                        {rec.sources && (
+                          <div className="pt-4 border-t border-slate-200">
+                            <h5 className="flex items-center font-bold text-[10px] uppercase tracking-widest text-slate-400 mb-2">
+                              <BookOpen className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Sources" : "Sources"}
+                            </h5>
+                            <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
+                              {rec.sources.map((s, si) => (
+                                <li key={si}>
+                                  <a href={s.url} target="_blank" rel="noopener noreferrer"
+                                     className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-blue-700 hover:underline">
+                                    {s.label} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -3332,13 +3639,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 { key: '>=180', labelFr: '≥ 180 jours', labelEn: '≥ 180 days', test: (d) => d >= 180 },
               ];
               const allCountries = legalMatrixData.flatMap((r) => r.countries);
-              const counts = buckets.map((b) => ({
-                ...b,
-                count: allCountries.filter((c) => {
+              const counts = buckets.map((b) => {
+                const members = allCountries.filter((c) => {
                   const d = parseThresholdDays(c.threshold.en);
                   return d !== null && b.test(d);
-                }).length,
-              }));
+                });
+                return { ...b, count: members.length, members };
+              });
               const maxCount = Math.max(...counts.map((c) => c.count), 1);
               return (
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -3352,20 +3659,36 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </p>
                   <div className="space-y-3">
                     {counts.map((b) => (
-                      <div key={b.key} className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
-                        <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
-                            style={{ width: `${Math.max(3, (b.count / maxCount) * 100)}%` }}
-                          ></div>
+                      <div key={b.key}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
+                          <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
+                              style={{ width: `${Math.max(3, (b.count / maxCount) * 100)}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-xs font-bold text-slate-700 w-16 text-right shrink-0 tabular-nums">
+                            {b.count} {lang === 'fr' ? 'pays' : 'countries'}
+                          </span>
                         </div>
-                        <span className="text-xs font-bold text-slate-700 w-16 text-right shrink-0 tabular-nums">
-                          {b.count} {lang === 'fr' ? 'pays' : 'countries'}
-                        </span>
+                        {b.key !== '90' && b.count > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-1.5 ml-[7.75rem] mr-[4rem]">
+                            {b.members.map((m, mi) => (
+                              <span key={mi} className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm">
+                                {m.name[lang]}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
+                  <p className="text-[10px] text-slate-400 italic mt-4 pt-3 border-t border-slate-100">
+                    {lang === 'fr'
+                      ? "Les pays sont nommés pour chaque palier s'écartant de la norme continentale des 90 jours."
+                      : "Countries are named for every band departing from the 90-day continental norm."}
+                  </p>
                 </div>
               );
             })()}
@@ -3698,20 +4021,25 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                           {text.regions[regionKey]} <span className="text-slate-300">({regionCountries.length})</span>
                         </h4>
                         <div className="flex flex-wrap gap-2">
-                          {regionCountries.map(c => (
-                            <button
-                              key={c.id}
-                              onClick={() => setActiveSubTab(c.id)}
-                              className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
-                                activeSubTab === c.id
-                                  ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
-                                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                              }`}
-                            >
-                              <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                              <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
-                            </button>
-                          ))}
+                          {regionCountries.map(c => {
+                            const openness = visaOpenToAllAfrica[c.iso2];
+                            return (
+                              <button
+                                key={c.id}
+                                onClick={() => setActiveSubTab(c.id)}
+                                title={openness ? `${visaOpenTiers[openness.tier].label[lang]} — ${openness.note[lang]}` : undefined}
+                                className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                                  activeSubTab === c.id
+                                    ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
+                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                                }`}
+                              >
+                                <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
+                                <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                                {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     );
@@ -3719,22 +4047,39 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2">
-                  {filteredCountries.map(c => (
-                    <button
-                      key={c.id}
-                      onClick={() => setActiveSubTab(c.id)}
-                      className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
-                        activeSubTab === c.id
-                          ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
-                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                      }`}
-                    >
-                      <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                      <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
-                    </button>
-                  ))}
+                  {filteredCountries.map(c => {
+                    const openness = visaOpenToAllAfrica[c.iso2];
+                    return (
+                      <button
+                        key={c.id}
+                        onClick={() => setActiveSubTab(c.id)}
+                        title={openness ? `${visaOpenTiers[openness.tier].label[lang]} — ${openness.note[lang]}` : undefined}
+                        className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                          activeSubTab === c.id
+                            ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                        }`}
+                      >
+                        <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
+                        <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                        {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
+
+              <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-x-5 gap-y-2">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                  {lang === 'fr' ? "Ouverture aux ressortissants africains" : "Openness to African nationals"}
+                </span>
+                {Object.entries(visaOpenTiers).map(([key, tier]) => (
+                  <span key={key} className="flex items-center gap-1.5">
+                    <Star className={`w-3 h-3 ${tier.dot}`} />
+                    <span className="text-[10px] font-bold text-slate-500">{tier.label[lang]}</span>
+                  </span>
+                ))}
+              </div>
             </div>
 
             {/* Profil du pays sélectionné */}
@@ -4568,6 +4913,67 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
   </div>
 );
 
+// Publications et interventions médiatiques de l'auteur (source : CV, août 2026).
+const authorPublications = [
+  {
+    ref: "Ben Mokhtar, Y. « Dynamiques migratoires africaines : enjeux, défis et perspectives de gouvernance ». Afrique(s) en mouvement 6, no 2 (2023) : 104-107.",
+    kind: { fr: "Article de revue à comité de lecture", en: "Peer-reviewed journal article" },
+    year: 2023,
+    url: "https://doi.org/10.3917/aem.006.0104"
+  },
+  {
+    ref: "Ben Mokhtar, Y. « Post-August 2022 shifts: Examining the evolution of governance for the Moroccans of the world ». In Transformation Issues in Current Arab Societies, dir. M. Younes et F. Bendridi, 29-72. AlphaDoc, 2025.",
+    kind: { fr: "Chapitre d'ouvrage à comité de lecture", en: "Peer-reviewed book chapter" },
+    year: 2025,
+    url: null
+  },
+  {
+    ref: "Ben Mokhtar, Y. « Un “modèle” africain ? Gouverner les mobilités en Afrique, entre ambitions continentales et prises administratives ». In ouvrage collectif dir. Chadia Arab et Leila Bouasria. En Toutes Lettres, 2026.",
+    kind: { fr: "Chapitre d'ouvrage à comité de lecture", en: "Peer-reviewed book chapter" },
+    year: 2026,
+    url: null
+  },
+  {
+    ref: "Ben Mokhtar, Y. « Promises on Paper, Precarity in Practice: (Un)governing Undocumented Migrant Workers in Africa ». In Making Human Rights a Reality for Undocumented and Precarious Migrant Workers, dir. J. Dez et Y. Arbaoui. Amsterdam University Press, à paraître 2026.",
+    kind: { fr: "Chapitre d'ouvrage à comité de lecture (à paraître)", en: "Peer-reviewed book chapter (forthcoming)" },
+    year: 2026,
+    url: null
+  },
+  {
+    ref: "El Asri, F., S. Jorio, Y. Ben Mokhtar et al. Ethnographic Study on the Return of Moroccan Global Talents. CCME / UIR, à paraître 2026.",
+    kind: { fr: "Étude collective (à paraître)", en: "Collaborative study (forthcoming)" },
+    year: 2026,
+    url: null
+  },
+];
+
+const authorMedia = [
+  {
+    outlet: "Medi1TV Afrique",
+    title: { fr: "Journée internationale des migrants : état des lieux", en: "International Migrants Day: state of play" },
+    date: { fr: "18 déc. 2024", en: "18 Dec. 2024" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique",
+    title: { fr: "Lutte contre les migrations clandestines : le point sur la visite de Sánchez en Afrique", en: "Countering irregular migration: assessing Sánchez's Africa visit" },
+    date: { fr: "27 août 2024", en: "27 Aug. 2024" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "TelQuel",
+    title: { fr: "« Il ne s'agit pas d'un retour des MRE à proprement parler, plutôt d'un véritable départ vers l'étranger »", en: "\"This is not really a return of Moroccans abroad, but rather a genuine departure overseas\"" },
+    date: { fr: "22 déc. 2023", en: "22 Dec. 2023" },
+    role: { fr: "Entretien de presse", en: "Press interview" }
+  },
+  {
+    outlet: "Medi1TV Afrique",
+    title: { fr: "Migrations en Afrique, défis et opportunités", en: "Migration in Africa: challenges and opportunities" },
+    date: { fr: "21 déc. 2023", en: "21 Dec. 2023" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+];
+
 const TabAbout = ({ text, lang }) => {
   const [isCopied, setIsCopied] = useState(false);
 
@@ -4582,7 +4988,7 @@ const TabAbout = ({ text, lang }) => {
   };
 
   return (
-    <section className="max-w-5xl mx-auto animate-in fade-in zoom-in-95 duration-500 space-y-6">
+    <section className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       
       <div className="bg-[#0f172a] rounded-xl p-8 md:p-12 text-white shadow-lg relative overflow-hidden border border-slate-800">
         <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
@@ -4736,6 +5142,46 @@ const TabAbout = ({ text, lang }) => {
           <div className="bg-amber-50 text-amber-800 text-xs p-4 rounded-md border border-amber-200 leading-relaxed">
             {text.about.disclaimer}
           </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-slate-100 rounded-sm"><FileText className="w-5 h-5 text-slate-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{lang === 'fr' ? "Publications de l'auteur" : "Author's Publications"}</h2>
+          </div>
+          <ul className="space-y-4">
+            {authorPublications.map((pub, idx) => (
+              <li key={idx} className="border-l-2 border-slate-200 pl-4 hover:border-blue-400 transition-colors">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-1">{pub.kind[lang]}</span>
+                <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
+                {pub.url && (
+                  <a href={pub.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline mt-1.5">
+                    {lang === 'fr' ? "Consulter (DOI)" : "View (DOI)"} <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+          <div className="flex items-center space-x-3 mb-5">
+            <div className="p-2 bg-rose-50 rounded-sm"><Mic className="w-5 h-5 text-rose-700" /></div>
+            <h2 className="text-xl font-serif font-bold text-slate-900">{lang === 'fr' ? "Interventions médiatiques" : "Media Appearances"}</h2>
+          </div>
+          <ul className="space-y-4">
+            {authorMedia.map((m, idx) => (
+              <li key={idx} className="border-l-2 border-slate-200 pl-4 hover:border-rose-400 transition-colors">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-sm">{m.outlet}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{m.role[lang]} — {m.date[lang]}</span>
+                </div>
+                <p className="text-xs text-slate-700 leading-relaxed italic">{m.title[lang]}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -4893,7 +5339,7 @@ export default function App() {
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
   // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
   // denses en grilles/tableaux, conservent la pleine largeur.
-  const mainMaxWidth = ['home', 'about'].includes(activeTab) ? 'max-w-5xl' : ['evidence', 'library'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
+  const mainMaxWidth = ['home', 'about'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
 
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
@@ -4987,6 +5433,7 @@ export default function App() {
             })}
           </div>
         </div>
+        <ScrollProgress />
       </nav>
 
       <main className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-[max-width] duration-300 ${showModal ? 'print:hidden' : ''}`}>
@@ -5283,6 +5730,19 @@ export default function App() {
                         <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {countryRecNotes[display.iso2][lang]}
                       </p>
                     )}
+                    {visaOpenToAllAfrica[display.iso2] && (() => {
+                      const openness = visaOpenToAllAfrica[display.iso2];
+                      const tier = visaOpenTiers[openness.tier];
+                      return (
+                        <div className={`mt-4 p-4 rounded-md border flex items-start gap-3 print:bg-white ${tier.style}`}>
+                          <Star className={`w-4 h-4 shrink-0 mt-0.5 ${tier.dot}`} />
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block mb-1">{tier.label[lang]}</span>
+                            <p className="text-xs leading-relaxed">{openness.note[lang]}</p>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
 
