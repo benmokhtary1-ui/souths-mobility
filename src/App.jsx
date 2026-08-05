@@ -831,11 +831,13 @@ const t = {
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://southsmobility.vercel.app/"
       },
       method: { 
-        summary: "Architecture méthodologique fondée sur la consolidation et l'harmonisation de bases de données certifiées :",
-        m1: "Extraction & Harmonisation : Traitement croisé des recensements nationaux et des registres de la CUA, OIT, UNHCR, IDMC et UNDESA.", 
-        m2: "Analyse Proportionnelle : Normalisation des flux et stocks par rapport à la population globale et active.", 
-        m3: "Évaluation Juridique : Recensement des ratifications des traités phares de l'Union Africaine et des conventions NORMLEX de l'OIT.",
-        m4: "Open Source & Indépendance : Code source ouvert et souveraineté complète du traitement des données.",
+        summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
+        m1: "Traçabilité de la source. Chaque indicateur est rattaché à une institution productrice nommée (UN DESA, HCR, IDMC, OIT, Banque mondiale, BAD, CUA, OIM) et à une série publiquement consultable. Les 58 références mobilisées sont listées dans la Bibliothèque ; aucune valeur n'est retenue sans provenance identifiable.",
+        m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Le Sahara occidental est intégré au Maroc, y compris cartographiquement. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
+        m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d'observation. Aucune interpolation n'est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d'une réserve plutôt que lissé.",
+        m4: "Proportion plutôt que valeur absolue. Les effectifs sont systématiquement rapportés à la population de référence. Les échelles ne sont jamais mélangées dans une même représentation (l'indice AVOI est stocké de 0 à 100 au niveau des pays, de 0 à 1 au niveau des CER). Les cartes choroplèthes utilisent un découpage par quantiles, robuste aux distributions très asymétriques comme celle des déplacés internes.",
+        m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur — 15 États parties pour cette catégorie de protocoles — est stocké par instrument et pilote directement l'affichage du statut « en vigueur » ou « pas encore en vigueur ».",
+        m6: "Restitution reproductible. Les huit jeux de données affichés sont exportables en CSV conforme au format RFC 4180, et chaque dossier PDF embarque sa source, l'adresse de la plateforme et la référence de citation. Les fonds cartographiques dérivent de Natural Earth (50 m), en projection Mercator, simplifiés par l'algorithme de Douglas-Peucker.",
         sources_title: "Accès aux Datasets Originaux, Rapports & Cadres Légaux :",
         s1: "Union Africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires (2021)",
         s2: "UNDESA - Stock migratoire mondial (2024)",
@@ -1083,11 +1085,13 @@ const t = {
         citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://southsmobility.vercel.app/"
       },
       method: { 
-        summary: "Methodological architecture based on the consolidation and harmonization of certified open datasets:",
-        m1: "Extraction & Harmonization: Cross-referencing national censuses with registries from AUC, ILO, UNHCR, IDMC, and UNDESA.", 
-        m2: "Proportional Analysis: Normalizing stock and flow data against active and total population baselines.", 
-        m3: "Legal Assessment: Reviewing ratification statuses of key African Union treaties and ILO NORMLEX conventions.",
-        m4: "Open Source & Integrity: Open source codebase and full data processing independence.",
+        summary: "The platform produces no primary data: it consolidates public series and documents every operation applied to them. Six principles govern that processing.",
+        m1: "Source traceability. Each indicator is tied to a named producing institution (UN DESA, UNHCR, IDMC, ILO, World Bank, AfDB, AUC, IOM) and to a publicly consultable series. The 58 references drawn upon are listed in the Library; no value is retained without identifiable provenance.",
+        m2: "Perimeter harmonisation. Series are brought onto a 54-country perimeter and the African Union's regional breakdown — not the UN M49 nomenclature. Western Sahara is integrated into Morocco, including on maps. An alias table reconciles naming variants across datasets (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\") without renaming the sources.",
+        m3: "Field-level dating. Vintages are not artificially aligned: remittances, migrant activity, and ratifications each carry their own observation year. No interpolation is applied to manufacture surface-level homogeneity, and an unverifiable figure is shown dated and caveated rather than smoothed.",
+        m4: "Proportion over absolute value. Counts are systematically related to their reference population. Scales are never mixed within a single representation (the AVOI index is stored 0-100 at country level, 0-1 at REC level). Choropleth maps use quantile binning, which is robust to heavily skewed distributions such as internal displacement.",
+        m5: "Threshold-driven legal assessment. Ratification counts are checked against official portals before publication. The entry-into-force threshold — 15 states parties for this class of protocol — is stored per instrument and directly drives the \"in force\" or \"not yet in force\" status shown.",
+        m6: "Reproducible output. The eight displayed datasets are exportable as RFC 4180-compliant CSV, and every PDF dossier embeds its source, the platform address, and the citation reference. Map bases derive from Natural Earth (50m), in Mercator projection, simplified with the Douglas-Peucker algorithm.",
         sources_title: "Access Original Datasets, Reports & Legal Frameworks:",
         s1: "African Union & AUC / ILO / IOM / ECA - 3rd Labour Migration Statistics Report (2021)",
         s2: "UNDESA - International Migrant Stock Data (2024)",
@@ -5611,12 +5615,24 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
       <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
       <div className="mt-6 pt-6 border-t border-slate-100">
-        <ul className="space-y-5">
-          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '1. Sourcing : ' : '1. Sourcing: '}</strong>{text.method.m1}</p></li>
-          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '2. Analyse Proportionnelle : ' : '2. Proportional Analysis: '}</strong>{text.method.m2}</p></li>
-          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '3. Évaluation Juridique : ' : '3. Legal Assessment: '}</strong>{text.method.m3}</p></li>
-          <li className="flex items-start"><CheckCircle2 className="w-5 h-5 text-slate-400 mr-3 shrink-0 mt-0.5" /><p className="text-slate-600 text-sm leading-relaxed"><strong className="text-slate-900">{lang === 'fr' ? '4. Open Source & Intégrité : ' : '4. Open Source & Integrity: '}</strong>{text.method.m4}</p></li>
-        </ul>
+        <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+          {['m1', 'm2', 'm3', 'm4', 'm5', 'm6'].filter(k => text.method[k]).map((k, i) => {
+            const raw = text.method[k];
+            const split = raw.indexOf('.');
+            const head = split > 0 ? raw.slice(0, split + 1) : '';
+            const body = split > 0 ? raw.slice(split + 1).trim() : raw;
+            return (
+              <li key={k} className="flex items-start gap-3">
+                <span className="shrink-0 w-6 h-6 rounded-md bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center mt-0.5 tabular-nums">
+                  {i + 1}
+                </span>
+                <p className="text-slate-600 text-sm leading-relaxed text-justify">
+                  <strong className="text-slate-900">{head}</strong> {body}
+                </p>
+              </li>
+            );
+          })}
+        </ol>
       </div>
         
       <div className="mt-8 pt-6 border-t border-slate-100">
