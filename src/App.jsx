@@ -457,7 +457,7 @@ const t = {
           badge: "Rigueur & Transparence",
           title: "Ingénierie méthodologique",
           highlight: "et cadre d'indicateurs.",
-          desc: "Découvrez l'architecture scientifique du DataHub, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités."
+          desc: "Découvrez l'architecture scientifique de la plateforme, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités."
         }
       },
       home_editorial: {
@@ -465,7 +465,7 @@ const t = {
         title: "Pourquoi ce Knowledge Hub ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. Chaque année, les chocs climatiques et les crises sécuritaires déplacent des millions de personnes à l'intérieur même des frontières nationales — un phénomène rigoureusement quantifié par l'IDMC (voir la section Explorateur), mais largement absent des récits dominants sur « la migration africaine », alors qu'il en constitue la composante la plus massive.",
-        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Ce DataHub travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Le terme « migrant international », en particulier, suit ici la définition onusienne standard — voir le Glossaire pour une définition précise et ses limites.",
+        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Le terme « migrant international », en particulier, suit ici la définition onusienne standard — voir le Glossaire pour une définition précise et ses limites.",
         p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains ne sont pas de simples récepteurs passifs des agendas migratoires du Nord, mais des acteurs qui négocient, retournent et instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie systématiquement la proportion à la valeur absolue, la comparaison à l'anecdote, et l'architecture institutionnelle africaine (Union africaine, Communautés économiques régionales) aux seuls cadres normatifs venus du Nord — sans nier les asymétries de pouvoir et de financement qui structurent concrètement ce régime (Bakewell, 2008 ; Bayart, 2000).",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
@@ -706,7 +706,7 @@ const t = {
           badge: "Rigor & Transparency",
           title: "Methodological engineering",
           highlight: "and indicators framework.",
-          desc: "Explore the scientific architecture of the DataHub, the official data harmonization process, and alternative indicators for objective mobility analysis."
+          desc: "Explore the scientific architecture of the platform, the official data harmonization process, and alternative indicators for objective mobility analysis."
         }
       },
       home_editorial: {
@@ -714,7 +714,7 @@ const t = {
         title: "Why this Knowledge Hub?",
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts only about 29 million international migrants on its soil, or 9.5% of the world stock: far behind Europe and Asia, and well below the continent's demographic weight (close to 18% of the world's population). This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
         p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent is not international but internal. Every year, climate shocks and security crises displace millions of people within national borders — a phenomenon rigorously quantified by IDMC (see the Explorer section), yet largely absent from dominant narratives about \"African migration\", even though it is by far its largest component.",
-        caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This DataHub works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. The term \"international migrant\", in particular, follows the standard UN definition here — see the Glossary for a precise definition and its limits.",
+        caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. The term \"international migrant\", in particular, follows the standard UN definition here — see the Glossary for a precise definition and its limits.",
         p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states are not mere passive recipients of Northern migration agendas, but actors who negotiate, redirect, and instrumentalize migration cooperation to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
@@ -1021,7 +1021,7 @@ const countryData = {
     { 
       "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "iso2": "bj", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
       "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.72, "labour_participation": "64.4", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "3.0", 
-      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 91, 
+      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 100, 
       "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc 
@@ -1292,7 +1292,7 @@ const countryData = {
     { 
       "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "iso2": "sc", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
       "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.54, "labour_participation": null, "remittances_year": 2024, "labour_participation_year": null, "evolution": "10.2", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 0, 
+      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 100,
       "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc 
@@ -1474,6 +1474,30 @@ const countryIdIndex = {};
 Object.values(countryData).flat().forEach(c => {
   countryIdIndex[c.id] = { iso2: c.iso2, name: c.name };
 });
+
+// Recherche par nom (la matrice juridique ne porte pas de code iso2).
+const countryNameToIso = {};
+Object.values(countryData).flat().forEach(c => {
+  if (c.name?.fr) countryNameToIso[c.name.fr.toLowerCase()] = c.iso2;
+  if (c.name?.en) countryNameToIso[c.name.en.toLowerCase()] = c.iso2;
+});
+// La matrice juridique emploie des variantes de dénomination ; on les réconcilie ici
+// plutôt que de renommer les jeux de données (les deux libellés sont légitimes à l'affichage).
+const countryNameAliases = {
+  'congo (rep)': 'cg',
+  'rdc': 'cd',
+  'rca': 'cf',
+  'cap-vert': 'cv',
+  'liberia': 'lr',
+  'nigeria': 'ng',
+  'sao tomé': 'st',
+};
+
+const opennessByName = (name) => {
+  const key = String(name || '').toLowerCase();
+  const iso = countryNameToIso[key] || countryNameAliases[key];
+  return iso ? visaOpenToAllAfrica[iso] : undefined;
+};
 
 // Carte de l'Afrique mettant en évidence les membres d'une CER, avec survol interactif.
 const AfricaRecMap = ({ recId, lang, accent = '#047857' }) => {
@@ -1760,7 +1784,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                   <Icon className="w-5 h-5" />
                 </span>
                 <h3 className={`font-serif font-bold text-slate-900 mb-2 ${homeCardAccents[card.accent].split(' ')[1]}`}>{card.label[lang]}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang]}</p>
+                <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang].replace('{count}', totalLibrary)}</p>
                 <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4 group-hover:text-slate-700">
                   {lang === 'fr' ? "Découvrir" : "Discover"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -2273,8 +2297,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
       desc: {
-        fr: "Avec 25 États membres englobant plusieurs autres CER, la CEN-SAD fonctionne davantage comme un forum politique et sécuritaire que comme un régime juridique autonome de libre circulation, même si le traité fondateur inscrit la libre circulation des personnes parmi ses objectifs centraux.",
-        en: "With 25 member states overlapping several other RECs, CEN-SAD functions more as a political and security forum than as an autonomous legal regime of free movement, even though its founding treaty lists free movement of persons among its core objectives."
+        fr: "Avec 24 États membres englobant plusieurs autres CER, la CEN-SAD fonctionne davantage comme un forum politique et sécuritaire que comme un régime juridique autonome de libre circulation, même si letraité fondateur inscrit la libre circulation des personnes parmi ses objectifs centraux.",
+        en: "With 24 member states overlapping several other RECs, CEN-SAD functions more as a political and security forum than as an autonomous legal regime of free movement, even though its founding treaty lists free movement of persons among its core objectives."
       },
       instruments: {
         fr: "Traité de 1998 (révisé 2013). La libre circulation des personnes figure parmi les objectifs fondateurs, sans protocole dédié équivalent à ceux de la CEDEAO ou de l'IGAD.",
@@ -3732,7 +3756,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   {regionObj.region[lang]}
                                 </td>
                               )}
-                              <td className="py-3 px-4 font-bold text-slate-800">{country.name[lang]}</td>
+                              <td className="py-3 px-4 font-bold text-slate-800">
+                                <span className="inline-flex items-center gap-1.5">
+                                  {country.name[lang]}
+                                  {(() => {
+                                    const o = opennessByName(country.name.fr);
+                                    return o ? <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${visaOpenTiers[o.tier].label[lang]} — ${o.note[lang]}`} /> : null;
+                                  })()}
+                                </span>
+                              </td>
                               <td className="py-3 px-4">
                                 <span className="inline-block bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap">
                                   {country.threshold[lang]}
@@ -3761,7 +3793,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       {regionObj.countries.map((country, cIdx) => (
                         <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
                           <div className="flex justify-between items-start mb-3">
-                            <h5 className="font-bold text-slate-900 text-lg">{country.name[lang]}</h5>
+                            <h5 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+                              {country.name[lang]}
+                              {(() => {
+                                const o = opennessByName(country.name.fr);
+                                return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${visaOpenTiers[o.tier].label[lang]} — ${o.note[lang]}`} /> : null;
+                              })()}
+                            </h5>
                             <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold[lang]}</span>
                           </div>
                           <div className="text-xs text-slate-500 mb-4 pb-3 border-b border-slate-200">
@@ -4090,12 +4128,28 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     <span className="inline-block px-2.5 py-1 rounded bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest mb-3">
                       {text.badge.country}
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
+                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center flex-wrap gap-y-2">
                       <CountryFlag iso2={display.iso2} emoji={display.flag} size="md" className="mr-3" />
                       {display.name}
+                      {visaOpenToAllAfrica[display.iso2] && (
+                        <Star className={`w-5 h-5 ml-3 ${visaOpenTiers[visaOpenToAllAfrica[display.iso2].tier].dot}`} />
+                      )}
                     </h2>
+                    {visaOpenToAllAfrica[display.iso2] && (() => {
+                      const o = visaOpenToAllAfrica[display.iso2];
+                      const tier = visaOpenTiers[o.tier];
+                      return (
+                        <div className={`mt-3 inline-flex items-start gap-2 px-3 py-2 rounded-md border max-w-2xl ${tier.style}`}>
+                          <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.dot}`} />
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block">{tier.label[lang]}</span>
+                            <span className="text-xs leading-relaxed block mt-0.5">{o.note[lang]}</span>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
-                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-blue-700 text-white hover:bg-blue-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm shrink-0 self-start">
                     <Target className="w-4 h-4" />
                     <span>{text.analysis_btn}</span>
                   </button>
@@ -4428,8 +4482,8 @@ const glossaryData = [
       {
         term: "Entre-deux national",
         en_term: "National In-Between",
-        fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les bureaucraties nationales. Concept central de la thèse à l'origine de ce DataHub (Ben Mokhtar, 2026).",
-        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this DataHub (Ben Mokhtar, 2026)."
+        fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les bureaucraties nationales. Concept central de la thèse à l'origine de cette plateforme (Ben Mokhtar, 2026).",
+        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this platform (Ben Mokhtar, 2026)."
       },
       {
         term: "Capabilités de mouvement",
@@ -4528,7 +4582,7 @@ const libraryData = [
     section: { fr: "Recherche & Références Académiques", en: "Research & Academic References" },
     icon: BookOpen,
     items: [
-      { title: "Ben Mokhtar, Y. — Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national", year: 2026, essential: true, type: { fr: "Thèse doctorale", en: "Doctoral Thesis" }, desc: { fr: "Thèse doctorale (UIR, septembre 2026) sur le régime africain de gouvernance migratoire, à l'origine de ce DataHub.", en: "Doctoral thesis (UIR, September 2026) on the African migration governance regime, the origin of this DataHub." }, url: null },
+      { title: "Ben Mokhtar, Y. — Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national", year: 2026, essential: true, type: { fr: "Thèse doctorale", en: "Doctoral Thesis" }, desc: { fr: "Thèse doctorale (UIR, septembre 2026) sur le régime africain de gouvernance migratoire, à l'origine de cette plateforme.", en: "Doctoral thesis (UIR, September 2026) on the African migration governance regime, the origin of this platform." }, url: null },
       { title: "de Haas, H. (2021) — A Theory of Migration: The Aspirations–Capabilities Framework", year: 2021, essential: true, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Cadre analytique des capabilités de mouvement (Comparative Migration Studies).", en: "Analytical framework of movement capabilities (Comparative Migration Studies)." }, url: "https://doi.org/10.1186/s40878-020-00210-4" },
       { title: "de Haas, H. (2023) — How Migration Really Works", year: 2023, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Guide factuel contre les principaux mythes du débat migratoire contemporain.", en: "A factful guide against the major myths of the contemporary migration debate." }, url: null },
       { title: "Adamson, F. & Tsourapas, G. (2019) — Migration Diplomacy in World Politics", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Concept de diplomatie migratoire (International Studies Perspectives).", en: "The concept of migration diplomacy (International Studies Perspectives)." }, url: "https://doi.org/10.1093/isp/eky015" },
@@ -4666,8 +4720,8 @@ const TabLibrary = ({ text, lang }) => {
 
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs text-amber-800 leading-relaxed">
           {lang === 'fr'
-            ? `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l'origine de ce DataHub. Chaque référence pointe vers son texte ou portail officiel lorsqu'un lien stable existe.`
-            : `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this DataHub. Each reference links to its official text or portal where a stable link exists.`}
+            ? `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l'origine de cette plateforme. Chaque référence pointe vers son texte ou portail officiel lorsqu'un lien stable existe.`
+            : `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this platform. Each reference links to its official text or portal where a stable link exists.`}
         </div>
       </div>
     </div>
@@ -4699,8 +4753,8 @@ const TabGlossary = ({ lang }) => {
         </h2>
         <p className="text-sm text-slate-500 leading-relaxed mb-5">
           {lang === 'fr'
-            ? `${totalTerms} termes techniques et notions théoriques mobilisés à travers ce DataHub, expliqués et référencés.`
-            : `${totalTerms} technical terms and theoretical concepts used throughout this DataHub, explained and referenced.`}
+            ? `${totalTerms} termes techniques et notions théoriques mobilisés à travers cette plateforme, expliqués et référencés.`
+            : `${totalTerms} technical terms and theoretical concepts used throughout this platform, explained and referenced.`}
         </p>
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
@@ -4742,6 +4796,111 @@ const TabGlossary = ({ lang }) => {
   );
 };
 
+// ----------------------------------------------------------------------------
+// Méthodologie : conventions, chaîne de traitement et limites déclarées.
+// Décrit ce que la plateforme fait réellement — pas de pipeline automatisé fictif.
+// ----------------------------------------------------------------------------
+const methodPipeline = [
+  {
+    icon: Search,
+    title: { fr: "1. Identification de la source", en: "1. Source identification" },
+    body: {
+      fr: "Chaque indicateur est rattaché à une institution productrice identifiée (UN DESA, HCR, IDMC, OIT, Banque mondiale, BAD, CUA, OIM). Aucune donnée n'est retenue sans producteur nommé et série publiquement consultable.",
+      en: "Each indicator is tied to an identified producing institution (UN DESA, UNHCR, IDMC, ILO, World Bank, AfDB, AUC, IOM). No figure is retained without a named producer and a publicly consultable series."
+    }
+  },
+  {
+    icon: Database,
+    title: { fr: "2. Harmonisation", en: "2. Harmonisation" },
+    body: {
+      fr: "Les séries sont ramenées à un périmètre commun de 54 pays et au découpage régional de l'Union africaine. Les millésimes hétérogènes sont conservés tels quels et datés champ par champ, plutôt que ré-estimés pour produire une fausse homogénéité.",
+      en: "Series are brought onto a common 54-country perimeter and the African Union's regional breakdown. Heterogeneous vintages are kept as-is and dated field by field, rather than re-estimated to manufacture false homogeneity."
+    }
+  },
+  {
+    icon: Scale,
+    title: { fr: "3. Arbitrage définitionnel", en: "3. Definitional arbitration" },
+    body: {
+      fr: "Lorsqu'une notion possède à la fois une définition onusienne et une définition africaine, c'est la définition de l'Union africaine qui est retenue comme référence, la définition onusienne n'étant citée que comme point de comparaison.",
+      en: "Where a concept has both a UN and an African definition, the African Union definition is retained as the reference, with the UN definition cited only as a comparison point."
+    }
+  },
+  {
+    icon: CheckCircle2,
+    title: { fr: "4. Vérification et datation", en: "4. Verification and dating" },
+    body: {
+      fr: "Les chiffres de ratification, d'adhésion ou de composition sont vérifiés sur les portails officiels avant publication. Lorsqu'un chiffre exact n'est pas vérifiable, la plateforme affiche une valeur datée assortie d'une réserve explicite plutôt qu'une estimation lissée.",
+      en: "Ratification, accession, and membership figures are checked against official portals before publication. Where an exact figure cannot be verified, the platform shows a dated value with an explicit caveat rather than a smoothed estimate."
+    }
+  },
+  {
+    icon: Download,
+    title: { fr: "5. Restitution traçable", en: "5. Traceable output" },
+    body: {
+      fr: "Chaque jeu de données affiché est exportable (CSV) et chaque export PDF embarque la source, l'adresse de la plateforme et la référence de citation, afin qu'un document sorti de son contexte reste attribuable.",
+      en: "Every displayed dataset is exportable (CSV) and every PDF export embeds the source, the platform address, and the citation reference, so a document taken out of context remains attributable."
+    }
+  },
+];
+
+const methodConventions = [
+  {
+    label: { fr: "Périmètre géographique", en: "Geographic perimeter" },
+    value: { fr: "54 pays", en: "54 countries" },
+    detail: {
+      fr: "Le Sahara occidental n'est pas traité comme une entité distincte : il est intégré au Maroc, y compris dans les cartes. Ce choix est constant sur l'ensemble de la plateforme.",
+      en: "Western Sahara is not treated as a separate entity: it is integrated into Morocco, including on maps. This choice is applied consistently across the platform."
+    }
+  },
+  {
+    label: { fr: "Découpage régional", en: "Regional breakdown" },
+    value: { fr: "5 régions de l'UA", en: "5 AU regions" },
+    detail: {
+      fr: "La plateforme suit le découpage officiel de l'Union africaine, et non la nomenclature M49 des Nations unies : la Mauritanie est rattachée au Nord, le Burundi et le Rwanda au Centre, le Malawi, le Mozambique, la Zambie et le Zimbabwe au Sud.",
+      en: "The platform follows the African Union's official breakdown rather than the UN M49 nomenclature: Mauritania is attached to the North, Burundi and Rwanda to Central, and Malawi, Mozambique, Zambia, and Zimbabwe to the South."
+    }
+  },
+  {
+    label: { fr: "Appartenance aux CER", en: "REC membership" },
+    value: { fr: "Multiple assumée", en: "Multiple by design" },
+    detail: {
+      fr: "L'appartenance simultanée à plusieurs CER est la règle et non l'exception : elle est représentée telle quelle. Les retraits récents ou en cours sont signalés et datés plutôt que silencieusement appliqués.",
+      en: "Simultaneous membership in several RECs is the rule, not the exception: it is represented as such. Recent or ongoing withdrawals are flagged and dated rather than silently applied."
+    }
+  },
+  {
+    label: { fr: "Échelles de l'indice AVOI", en: "AVOI index scales" },
+    value: { fr: "0-100 / 0-1", en: "0-100 / 0-1" },
+    detail: {
+      fr: "Il s'agit du même indice d'ouverture des visas (BAD/CUA), stocké à l'échelle 0-100 au niveau des pays et 0-1 au niveau des CER. Les deux échelles ne sont jamais comparées directement dans un même graphique.",
+      en: "This is the same visa openness index (AfDB/AUC), stored on a 0-100 scale at country level and 0-1 at REC level. The two scales are never compared directly within a single chart."
+    }
+  },
+];
+
+const methodLimits = [
+  {
+    fr: "Sous-enregistrement structurel : une part importante des mobilités africaines est intra-régionale, terrestre et informelle. Elle échappe largement aux dispositifs statistiques nationaux, qui sont conçus autour des points de passage officiels.",
+    en: "Structural under-registration: a large share of African mobility is intra-regional, overland, and informal. It largely escapes national statistical systems, which are built around official crossing points."
+  },
+  {
+    fr: "Millésimes hétérogènes : les séries n'ont pas toutes la même année de référence. Chaque champ concerné porte son année d'observation ; aucune interpolation n'est pratiquée pour aligner artificiellement les dates.",
+    en: "Heterogeneous vintages: series do not all share the same reference year. Each affected field carries its own observation year; no interpolation is applied to artificially align dates."
+  },
+  {
+    fr: "Stocks et non flux : la plupart des indicateurs démographiques mesurent un stock de personnes présentes à une date donnée. Ils ne rendent donc pas compte des mobilités circulaires, saisonnières ou temporaires, pourtant centrales sur le continent.",
+    en: "Stocks, not flows: most demographic indicators measure a stock of persons present at a given date. They therefore fail to capture circular, seasonal, or temporary mobility, which is nonetheless central on the continent."
+  },
+  {
+    fr: "Droit formel et pratique administrative : la matrice juridique décrit des textes en vigueur, non leur application effective aux guichets. L'écart entre la norme écrite et la pratique n'est pas mesuré ici.",
+    en: "Formal law versus administrative practice: the legal matrix describes texts in force, not their effective application at the counter. The gap between written norm and practice is not measured here."
+  },
+  {
+    fr: "Matrice d'indicateurs prospective : les 12 indicateurs alternatifs ci-dessous sont une proposition méthodologique, non un jeu de données déjà collecté à l'échelle continentale.",
+    en: "Forward-looking indicator matrix: the 12 alternative indicators below are a methodological proposal, not a dataset already collected at continental scale."
+  },
+];
+
 const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
@@ -4772,6 +4931,78 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       </div>
     </div>
 
+    {/* Chaîne de traitement */}
+    <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+      <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
+        {lang === 'fr' ? "De la source à la page" : "From source to page"}
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8">
+        {lang === 'fr'
+          ? "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur."
+          : "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator."}
+      </p>
+      <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        {methodPipeline.map((step, i) => {
+          const Icon = step.icon;
+          return (
+            <li key={i} className="relative bg-slate-50 border border-slate-200 rounded-lg p-5 hover:border-teal-300 hover:bg-white transition-colors group">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-slate-200 text-teal-700 mb-3 group-hover:border-teal-300 transition-colors">
+                <Icon className="w-4 h-4" />
+              </span>
+              <h3 className="text-xs font-bold text-slate-900 mb-1.5 leading-snug">{step.title[lang]}</h3>
+              <p className="text-[11px] text-slate-600 leading-relaxed">{step.body[lang]}</p>
+            </li>
+          );
+        })}
+      </ol>
+    </Reveal>
+
+    {/* Conventions déclarées */}
+    <Reveal delay={40} className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+      <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
+        {lang === 'fr' ? "Conventions déclarées" : "Declared conventions"}
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8">
+        {lang === 'fr'
+          ? "Quatre choix structurants conditionnent la lecture de tous les chiffres présentés. Ils sont explicités ici pour être discutables — et reproductibles."
+          : "Four structuring choices condition how every figure here should be read. They are spelled out so they can be contested — and reproduced."}
+      </p>
+      <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        {methodConventions.map((c, i) => (
+          <div key={i} className="border-l-2 border-teal-200 pl-4">
+            <dt className="flex flex-wrap items-baseline gap-2 mb-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{c.label[lang]}</span>
+              <span className="text-sm font-serif font-bold text-teal-800">{c.value[lang]}</span>
+            </dt>
+            <dd className="text-xs text-slate-600 leading-relaxed text-justify">{c.detail[lang]}</dd>
+          </div>
+        ))}
+      </dl>
+    </Reveal>
+
+    {/* Limites */}
+    <Reveal delay={40} className="bg-slate-900 rounded-xl p-8 md:p-10 border border-slate-800 shadow-sm text-white">
+      <div className="flex items-center gap-3 mb-2">
+        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
+        <h2 className="text-xl md:text-2xl font-serif font-bold">
+          {lang === 'fr' ? "Ce que ces données ne disent pas" : "What this data does not say"}
+        </h2>
+      </div>
+      <p className="text-sm text-slate-300 leading-relaxed max-w-3xl mb-8">
+        {lang === 'fr'
+          ? "Énoncer les limites d'un jeu de données fait partie du jeu de données. Les cinq réserves suivantes s'appliquent à l'ensemble de la plateforme."
+          : "Stating a dataset's limits is part of the dataset. The following five caveats apply across the whole platform."}
+      </p>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+        {methodLimits.map((l, i) => (
+          <li key={i} className="flex items-start gap-3">
+            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+            <p className="text-xs text-slate-300 leading-relaxed text-justify">{l[lang]}</p>
+          </li>
+        ))}
+      </ul>
+    </Reveal>
+
     <section id="data">
       <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
@@ -4791,8 +5022,8 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
           <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs text-amber-900 leading-relaxed text-justify">
             {lang === 'fr'
-              ? "À la différence des autres sections de ce DataHub — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle ne décrit pas une réalité déjà mesurée à l'échelle continentale : elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants (stocks migratoires, index sécuritaires, cibles ODD), pour objectiver des dimensions structurellement sous-documentées des mobilités africaines — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
-              : "Unlike the other sections of this DataHub — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It does not describe a reality already measured at continental scale: it proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks (migrant stocks, security indices, SDG targets), to objectify structurally under-documented dimensions of African mobility — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
+              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle ne décrit pas une réalité déjà mesurée à l'échelle continentale : elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants (stocks migratoires, index sécuritaires, cibles ODD), pour objectiver des dimensions structurellement sous-documentées des mobilités africaines — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
+              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It does not describe a reality already measured at continental scale: it proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks (migrant stocks, security indices, SDG targets), to objectify structurally under-documented dimensions of African mobility — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
           </p>
         </div>
 
@@ -4949,30 +5180,79 @@ const authorPublications = [
 
 const authorMedia = [
   {
-    outlet: "Medi1TV Afrique",
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2026,
+    title: { fr: "L'Espagne à contre-courant de la politique migratoire de l'UE", en: "Spain against the grain of EU migration policy" },
+    date: { fr: "31 janv. 2026", en: "31 Jan. 2026" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
+    title: { fr: "Migration dans le monde en 2025 et politique du Maroc", en: "Global migration in 2025 and Morocco's policy" },
+    date: { fr: "30 déc. 2025", en: "30 Dec. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
+    title: { fr: "Vers une migration sélective en Europe ?", en: "Towards selective migration in Europe?" },
+    date: { fr: "22 nov. 2025", en: "22 Nov. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
+    title: { fr: "Le Maroc, premier contributeur au Fonds de résilience pour la migration de l'ONU", en: "Morocco, lead contributor to the UN migration resilience fund" },
+    date: { fr: "2 août 2025", en: "2 Aug. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
+    title: { fr: "La gouvernance humanisée des frontières", en: "Humanised border governance" },
+    date: { fr: "31 janv. 2025", en: "31 Jan. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1 Podcast — Destination Afrique", kind: 'podcast', year: 2025,
+    title: { fr: "Retour de Donald Trump : quel impact pour le Maroc et l'Afrique ?", en: "Trump's return: what impact for Morocco and Africa?" },
+    date: { fr: "24 janv. 2025", en: "24 Jan. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
+    title: { fr: "USA : le bilan des politiques migratoires de Trump", en: "USA: assessing Trump's migration policies" },
+    date: { fr: "20 janv. 2025", en: "20 Jan. 2025" },
+    role: { fr: "Expert invité", en: "Guest expert" }
+  },
+  {
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2024,
     title: { fr: "Journée internationale des migrants : état des lieux", en: "International Migrants Day: state of play" },
     date: { fr: "18 déc. 2024", en: "18 Dec. 2024" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
-    outlet: "Medi1TV Afrique",
-    title: { fr: "Lutte contre les migrations clandestines : le point sur la visite de Sánchez en Afrique", en: "Countering irregular migration: assessing Sánchez's Africa visit" },
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2024,
+    title: { fr: "Lutte contre les migrations clandestines : la visite de Sánchez en Afrique", en: "Countering irregular migration: Sánchez's Africa visit" },
     date: { fr: "27 août 2024", en: "27 Aug. 2024" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
-    outlet: "TelQuel",
+    outlet: "TelQuel", kind: 'press', year: 2023,
     title: { fr: "« Il ne s'agit pas d'un retour des MRE à proprement parler, plutôt d'un véritable départ vers l'étranger »", en: "\"This is not really a return of Moroccans abroad, but rather a genuine departure overseas\"" },
     date: { fr: "22 déc. 2023", en: "22 Dec. 2023" },
-    role: { fr: "Entretien de presse", en: "Press interview" }
+    role: { fr: "Entretien de presse", en: "Press interview" },
+    url: "https://telquel.ma/2023/12/22/yassine-ben-mokhtar-il-ne-sagit-pas-dun-retour-des-mre-a-proprement-parler-plutot-dun-veritable-depart-vers-letranger_1847681"
   },
   {
-    outlet: "Medi1TV Afrique",
+    outlet: "Medi1TV Afrique", kind: 'tv', year: 2023,
     title: { fr: "Migrations en Afrique, défis et opportunités", en: "Migration in Africa: challenges and opportunities" },
     date: { fr: "21 déc. 2023", en: "21 Dec. 2023" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
 ];
+
+const mediaKindStyle = {
+  tv: { dot: 'bg-rose-500', chip: 'bg-rose-50 text-rose-700 border-rose-200' },
+  podcast: { dot: 'bg-violet-500', chip: 'bg-violet-50 text-violet-700 border-violet-200' },
+  press: { dot: 'bg-slate-500', chip: 'bg-slate-100 text-slate-700 border-slate-300' },
+};
 
 const TabAbout = ({ text, lang }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -5145,43 +5425,90 @@ const TabAbout = ({ text, lang }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
-            <div className="p-2 bg-slate-100 rounded-sm"><FileText className="w-5 h-5 text-slate-700" /></div>
-            <h2 className="text-xl font-serif font-bold text-slate-900">{lang === 'fr' ? "Publications de l'auteur" : "Author's Publications"}</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Publications */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-transparent">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-900 text-white shrink-0">
+              <FileText className="w-4 h-4" />
+            </span>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-serif font-bold text-slate-900">{lang === 'fr' ? "Publications" : "Publications"}</h2>
+              <a href="https://shs.cairn.info/publications-de-yassine-ben-mokhtar--773358?lang=fr" target="_blank" rel="noopener noreferrer"
+                 className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline mt-0.5">
+                {lang === 'fr' ? "Profil Cairn.info" : "Cairn.info profile"} <ExternalLink className="w-2.5 h-2.5" />
+              </a>
+            </div>
+            <span className="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1 tabular-nums shrink-0">
+              {authorPublications.length}
+            </span>
           </div>
-          <ul className="space-y-4">
-            {authorPublications.map((pub, idx) => (
-              <li key={idx} className="border-l-2 border-slate-200 pl-4 hover:border-blue-400 transition-colors">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-1">{pub.kind[lang]}</span>
-                <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
-                {pub.url && (
-                  <a href={pub.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline mt-1.5">
-                    {lang === 'fr' ? "Consulter (DOI)" : "View (DOI)"} <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
+          <ol className="divide-y divide-slate-100">
+            {[...authorPublications].sort((a, b) => b.year - a.year).map((pub, idx) => (
+              <li key={idx} className="group flex gap-4 px-7 py-4 hover:bg-slate-50/70 transition-colors">
+                <span className="shrink-0 w-10 pt-0.5 font-serif font-bold text-slate-300 text-sm tabular-nums group-hover:text-blue-500 transition-colors">
+                  {pub.year}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{pub.kind[lang]}</span>
+                    {pub.url && (
+                      <a href={pub.url} target="_blank" rel="noopener noreferrer"
+                         className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline">
+                        DOI <ExternalLink className="w-2.5 h-2.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
 
-        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
-            <div className="p-2 bg-rose-50 rounded-sm"><Mic className="w-5 h-5 text-rose-700" /></div>
-            <h2 className="text-xl font-serif font-bold text-slate-900">{lang === 'fr' ? "Interventions médiatiques" : "Media Appearances"}</h2>
+        {/* Interventions médiatiques */}
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100 bg-gradient-to-r from-rose-50/70 to-transparent">
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rose-600 text-white shrink-0">
+              <Mic className="w-4 h-4" />
+            </span>
+            <h2 className="text-lg font-serif font-bold text-slate-900 flex-1">{lang === 'fr' ? "Interventions médiatiques" : "Media Appearances"}</h2>
+            <span className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-full px-2.5 py-1 tabular-nums">
+              {authorMedia.length}
+            </span>
           </div>
-          <ul className="space-y-4">
-            {authorMedia.map((m, idx) => (
-              <li key={idx} className="border-l-2 border-slate-200 pl-4 hover:border-rose-400 transition-colors">
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-sm">{m.outlet}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{m.role[lang]} — {m.date[lang]}</span>
+          <div className="px-7 py-5">
+            {[...new Set(authorMedia.map(m => m.year))].map((yr) => (
+              <div key={yr} className="mb-5 last:mb-0">
+                <div className="flex items-center gap-3 mb-2.5">
+                  <span className="font-serif font-bold text-slate-800 text-sm tabular-nums">{yr}</span>
+                  <span className="h-px flex-1 bg-slate-100"></span>
                 </div>
-                <p className="text-xs text-slate-700 leading-relaxed italic">{m.title[lang]}</p>
-              </li>
+                <ul className="relative pl-4 border-l border-slate-200 space-y-3">
+                  {authorMedia.filter(m => m.year === yr).map((m, idx) => {
+                    const st = mediaKindStyle[m.kind] || mediaKindStyle.press;
+                    return (
+                      <li key={idx} className="relative group">
+                        <span className={`absolute -left-[1.3rem] top-1.5 w-2 h-2 rounded-full ring-2 ring-white transition-transform group-hover:scale-150 ${st.dot}`}></span>
+                        <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                          <span className={`text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-sm ${st.chip}`}>{m.outlet}</span>
+                          <span className="text-[10px] font-bold text-slate-400 tabular-nums">{m.date[lang]}</span>
+                        </div>
+                        {m.url ? (
+                          <a href={m.url} target="_blank" rel="noopener noreferrer"
+                             className="text-xs text-slate-700 leading-relaxed italic hover:text-rose-800 hover:underline inline-flex items-start gap-1">
+                            {m.title[lang]} <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />
+                          </a>
+                        ) : (
+                          <p className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors">{m.title[lang]}</p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
 
