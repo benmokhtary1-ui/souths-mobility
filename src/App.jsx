@@ -532,6 +532,8 @@ const institutionLogos = [
   { key: 'iata', name: "IATA", src: "/logos/iata.png" },
   { key: 'eurostat', name: "Eurostat", src: "/logos/eurostat.png" },
   { key: 'frontex', name: "Frontex", src: "/logos/frontex.svg" },
+  { key: 'moibrahim', name: "Mo Ibrahim Foundation", full: "Mo Ibrahim Foundation — IIAG", src: "/logos/moibrahim.svg" },
+  { key: 'ecjrc', name: "EC JRC", full: "Commission européenne — Centre commun de recherche (JRC/KCMD)", src: "/logos/ec-jrc.svg" },
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
@@ -1682,6 +1684,116 @@ const visaOpenTiers = {
 };
 
 // Carte d'appartenance : identifiant numérique (M49) -> { iso2, nom } pour les 54 pays.
+// ----------------------------------------------------------------------------
+// Carte choroplèthe de l'Explorateur : la carte devient la porte d'entrée, l'utilisateur
+// choisit l'indicateur affiché. Rampe séquentielle mono-teinte (magnitude), gris = sans donnée.
+// ----------------------------------------------------------------------------
+const countryById = {};
+Object.values(countryData).flat().forEach(c => { countryById[c.id] = c; });
+
+const CHORO_RAMP = ['#dbeafe', '#93c5fd', '#3b82f6', '#1d4ed8', '#172554'];
+const CHORO_NODATA = '#e2e8f0';
+
+const mapIndicators = [
+  {
+    key: 'evolution', label: { fr: "Part de la population", en: "Share of population" },
+    unit: '%', get: c => parseFloat(c.evolution),
+    hint: { fr: "Migrants internationaux en % de la population nationale (UN DESA, 2024).", en: "International migrants as % of national population (UN DESA, 2024)." }
+  },
+  {
+    key: 'female', label: { fr: "Part des femmes", en: "Female share" },
+    unit: '%', get: c => parseFloat(c.female),
+    hint: { fr: "Part des femmes parmi les migrants internationaux présents (UN DESA, 2024).", en: "Share of women among resident international migrants (UN DESA, 2024)." }
+  },
+  {
+    key: 'retention', label: { fr: "Rétention Sud-Sud", en: "South-South retention" },
+    unit: '%', get: c => Number(c.retention),
+    hint: { fr: "Part des mobilités qui restent dans un pays du Sud plutôt que de rejoindre le Nord.", en: "Share of mobility remaining within the Global South rather than moving North." }
+  },
+  {
+    key: 'avoi', label: { fr: "Ouverture des visas (AVOI)", en: "Visa openness (AVOI)" },
+    unit: '/100', get: c => Number(c.avoi),
+    hint: { fr: "Indice d'ouverture des visas aux ressortissants africains (BAD/CUA, 2024).", en: "Visa openness index toward African nationals (AfDB/AUC, 2024)." }
+  },
+  {
+    key: 'remittances', label: { fr: "Transferts de fonds (% PIB)", en: "Remittances (% GDP)" },
+    unit: '%', get: c => (c.remittances === null || c.remittances === undefined ? NaN : Number(c.remittances)),
+    hint: { fr: "Transferts des diasporas rapportés au PIB (Banque mondiale).", en: "Diaspora remittances as a share of GDP (World Bank)." }
+  },
+  {
+    key: 'idp_conflict', label: { fr: "Déplacés internes (conflit)", en: "IDPs (conflict)" },
+    unit: '', get: c => Number(c.idp_conflict),
+    hint: { fr: "Personnes déplacées à l'intérieur du pays par les conflits (IDMC).", en: "People displaced within the country by conflict (IDMC)." }
+  },
+];
+
+const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
+  const { buckets, valueOf } = useMemo(() => {
+    const vals = Object.values(countryById).map(indicator.get).filter(v => Number.isFinite(v)).sort((a, b) => a - b);
+    const q = (p) => vals.length ? vals[Math.min(vals.length - 1, Math.floor(p * vals.length))] : 0;
+    // quantiles : robuste aux distributions très asymétriques (déplacés internes notamment)
+    const cuts = [q(0.2), q(0.4), q(0.6), q(0.8)];
+    return {
+      buckets: cuts,
+      valueOf: (id) => { const c = countryById[id]; return c ? indicator.get(c) : NaN; },
+    };
+  }, [indicator]);
+
+  const colorFor = (v) => {
+    if (!Number.isFinite(v)) return CHORO_NODATA;
+    let i = 0;
+    while (i < buckets.length && v > buckets[i]) i++;
+    return CHORO_RAMP[i];
+  };
+
+  const fmt = (v) => {
+    if (!Number.isFinite(v)) return lang === 'fr' ? 'donnée indisponible' : 'no data';
+    return indicator.unit === '' ? formatNumber(v) : `${v}${indicator.unit}`;
+  };
+
+  return (
+    <div>
+      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[34rem] block" role="img"
+           aria-label={lang === 'fr' ? `Carte de l'Afrique — ${indicator.label.fr}` : `Map of Africa — ${indicator.label.en}`}>
+        {Object.entries(africaCountryPaths).map(([id, d]) => {
+          const v = valueOf(id);
+          const isSel = selectedId === id;
+          return (
+            <path
+              key={id}
+              d={d}
+              fill={colorFor(v)}
+              stroke={isSel ? '#0f172a' : '#ffffff'}
+              strokeWidth={isSel ? 2.6 : 0.7}
+              className="cursor-pointer"
+              onClick={() => onSelect && onSelect(id)}
+            >
+              <title>{`${countryById[id]?.name?.[lang] || ''} — ${fmt(v)}`}</title>
+            </path>
+          );
+        })}
+      </svg>
+
+      {/* Légende */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 pt-2 border-t border-slate-100">
+        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{indicator.label[lang]}</span>
+        <div className="flex items-center gap-0.5">
+          {CHORO_RAMP.map((c, i) => (
+            <span key={i} className="w-6 h-2.5 rounded-[1px]" style={{ background: c }} />
+          ))}
+        </div>
+        <span className="text-[9px] font-bold text-slate-500">
+          {lang === 'fr' ? 'faible → élevé' : 'low → high'}
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-3 h-2.5 rounded-[1px]" style={{ background: CHORO_NODATA }} />
+          <span className="text-[9px] text-slate-400">{lang === 'fr' ? 'sans donnée' : 'no data'}</span>
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const countryIdIndex = {};
 Object.values(countryData).flat().forEach(c => {
   countryIdIndex[c.id] = { iso2: c.iso2, name: c.name };
@@ -3922,36 +4034,36 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       : "Number of countries per threshold band, computed live from the matrix below."}
                   </p>
                   <div className="space-y-3">
-                    {counts.map((b) => (
-                      <div key={b.key}>
-                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
-                          <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
-                              style={{ width: `${Math.max(3, (b.count / maxCount) * 100)}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-xs font-bold text-slate-700 w-16 text-right shrink-0 tabular-nums">
+                    {counts.filter((b) => b.count > 0).map((b) => (
+                      <div key={b.key} className="flex items-center gap-3">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
+                        <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
+                            style={{ width: `${Math.max(3, (b.count / maxCount) * 100)}%` }}
+                          ></div>
+                        </div>
+                        {/* Les pays s'affichent au survol du compte, pour garder le graphique lisible. */}
+                        <span className="group relative w-20 text-right shrink-0">
+                          <span className="text-xs font-bold text-slate-700 tabular-nums border-b border-dotted border-slate-300 cursor-help">
                             {b.count} {lang === 'fr' ? 'pays' : 'countries'}
                           </span>
-                        </div>
-                        {b.key !== '90' && b.count > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-1.5 ml-[7.75rem] mr-[4rem]">
-                            {b.members.map((m, mi) => (
-                              <span key={mi} className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm">
-                                {m.name[lang]}
-                              </span>
-                            ))}
-                          </div>
-                        )}
+                          <span className="pointer-events-none absolute right-0 bottom-full mb-2 z-20 hidden group-hover:block w-64 text-left bg-slate-900 text-white rounded-md shadow-lg p-3">
+                            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+                              {lang === 'fr' ? b.labelFr : b.labelEn}
+                            </span>
+                            <span className="block text-[11px] leading-relaxed">
+                              {b.members.map((m) => m.name[lang]).join(' · ')}
+                            </span>
+                          </span>
+                        </span>
                       </div>
                     ))}
                   </div>
                   <p className="text-[10px] text-slate-400 italic mt-4 pt-3 border-t border-slate-100">
                     {lang === 'fr'
-                      ? "Les pays sont nommés pour chaque palier s'écartant de la norme continentale des 90 jours."
-                      : "Countries are named for every band departing from the 90-day continental norm."}
+                      ? "Survolez un effectif pour afficher les pays concernés. Les paliers sans aucun pays ne sont pas représentés."
+                      : "Hover a count to reveal the countries concerned. Bands with no country are not shown."}
                   </p>
                 </div>
               );
@@ -4017,6 +4129,33 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Légende des étoiles : indispensable, la même symbolique est utilisée dans l'Explorateur */}
+                <div className="px-5 py-4 border-t border-slate-200 bg-slate-50">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block mb-2">
+                    {lang === 'fr' ? "Légende — ouverture aux ressortissants africains" : "Legend — openness to African nationals"}
+                  </span>
+                  <div className="flex flex-wrap gap-x-6 gap-y-2">
+                    {Object.entries(visaOpenTiers).map(([key, tier]) => (
+                      <span key={key} className="flex items-start gap-1.5">
+                        <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.dot}`} />
+                        <span>
+                          <span className="text-[11px] font-bold text-slate-700 block">{tier.label[lang]}</span>
+                          <span className="text-[10px] text-slate-500">
+                            {key === 'full' && (lang === 'fr' ? "Aucun visa requis, pour tous les Africains" : "No visa required, for all Africans")}
+                            {key === 'partial' && (lang === 'fr' ? "Ouvert, à l'exception de certains États" : "Open, with named exceptions")}
+                            {key === 'announced' && (lang === 'fr' ? "Mesure annoncée, pas encore effective" : "Announced, not yet in force")}
+                          </span>
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-slate-400 italic mt-3">
+                    {lang === 'fr'
+                      ? "Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA, 2024). Même symbolique que dans l'Explorateur."
+                      : "Sources: official national announcements and the Africa Visa Openness Index (AfDB/AUC, 2024). Same symbols as in the Explorer."}
+                  </p>
                 </div>
               </div>
             )}
@@ -4107,7 +4246,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   );
 };
 
-const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal, exportCountriesCSV }) => (
+const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal, exportCountriesCSV, explorerView, setExplorerView, mapIndicatorKey, setMapIndicatorKey }) => {
+  const mapIndicator = mapIndicators.find(i => i.key === mapIndicatorKey) || mapIndicators[0];
+  return (
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
@@ -4280,9 +4421,61 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         {/* CONTENU (Liste des Pays) */}
         {activeSubTab !== 'perspective' && (
           <div className="space-y-4">
-            
+
+            {/* Carte interactive : porte d'entrée principale */}
+            <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm">
+              <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold text-slate-800">
+                    {lang === 'fr' ? "Lecture cartographique" : "Map view"}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5 max-w-xl leading-relaxed">{mapIndicator.hint[lang]}</p>
+                </div>
+                <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 shrink-0">
+                  <button
+                    onClick={() => setExplorerView('map')}
+                    className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'map' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  >
+                    {lang === 'fr' ? 'Carte' : 'Map'}
+                  </button>
+                  <button
+                    onClick={() => setExplorerView('list')}
+                    className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'list' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  >
+                    {lang === 'fr' ? 'Liste' : 'List'}
+                  </button>
+                </div>
+              </div>
+
+              {explorerView === 'map' && (
+                <>
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {mapIndicators.map(ind => (
+                      <button
+                        key={ind.key}
+                        onClick={() => setMapIndicatorKey(ind.key)}
+                        className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
+                          ind.key === mapIndicator.key
+                            ? 'bg-slate-900 text-white border-slate-900'
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                        }`}
+                      >
+                        {ind.label[lang]}
+                      </button>
+                    ))}
+                  </div>
+                  <AfricaChoropleth
+                    indicator={mapIndicator}
+                    lang={lang}
+                    selectedId={activeSubTab}
+                    onSelect={(id) => setActiveSubTab(id)}
+                  />
+                </>
+              )}
+            </div>
+
             {/* Grille des drapeaux pour navigation rapide */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm ${explorerView === 'map' ? 'hidden' : ''}`}>
               {filteredCountries.length === 0 && (
                 <div className="w-full p-4 text-center text-slate-400 text-sm">
                   {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
@@ -4449,7 +4642,8 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const glossaryData = [
   {
@@ -4815,6 +5009,28 @@ const libraryData = [
       { title: "Frontex — Risk Analysis", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Détections de franchissements irréguliers aux frontières extérieures de l'UE. Citée comme donnée européenne de comparaison, avec ses limites méthodologiques connues (comptage d'événements et non de personnes).", en: "Detections of irregular crossings at the EU's external borders. Cited as European comparison data, with its known methodological limits (it counts events, not persons)." }, url: "https://www.frontex.europa.eu/publications/" },
       { title: "ICMPD — Migration Policy Frameworks", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Analyses des cadres de politique migratoire, notamment sur les dialogues Afrique-Europe (Processus de Rabat et de Khartoum).", en: "Analyses of migration policy frameworks, notably on the Africa-Europe dialogues (Rabat and Khartoum Processes)." }, url: "https://www.icmpd.org/" },
       { title: "UN DESA — Drivers of Migration and Urbanization in Africa", year: 2017, type: { fr: "Document de travail", en: "Working Paper" }, desc: { fr: "Décompose les moteurs de l'urbanisation africaine et la part respective de la migration rurale-urbaine, de l'accroissement naturel et de la reclassification administrative.", en: "Breaks down the drivers of African urbanization and the respective shares of rural-urban migration, natural increase, and administrative reclassification." }, url: "https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/unpd_egm_201709_s3_paper-awunbila-final.pdf" },
+      { title: "Mo Ibrahim Foundation — Ibrahim Index of African Governance (IIAG)", year: 2024, essential: true, type: { fr: "Indice & base de données", en: "Index & Database" }, desc: { fr: "Évaluation biennale de la qualité de la gouvernance dans les 54 pays africains : 81 indicateurs issus de 47 sources africaines et internationales. Fournit le contexte institutionnel dans lequel s'inscrivent les politiques migratoires.", en: "Biennial assessment of governance quality across all 54 African countries: 81 indicators drawn from 47 African and international sources. Provides the institutional context in which migration policy operates." }, url: "https://mo.ibrahim.foundation/our-research/iiag" },
+      { title: "Mo Ibrahim Foundation — IIAG Data Portal", year: 2024, type: { fr: "Portail de données", en: "Data Portal" }, desc: { fr: "Portail interactif permettant d'explorer et de télécharger les séries de l'IIAG pays par pays.", en: "Interactive portal to explore and download IIAG series country by country." }, url: "https://iiag.online/" },
+      { title: "Commission européenne (JRC/KCMD) — Atlas of Migration", year: 2025, essential: true, type: { fr: "Atlas & base de données", en: "Atlas & Database" }, desc: { fr: "Atlas annuel du Centre commun de recherche : données migratoires harmonisées et validées pour 171 pays et territoires, avec profils nationaux. Source de comparaison européenne, à lire en tenant compte de son point de vue institutionnel.", en: "Annual atlas from the Joint Research Centre: harmonised and validated migration data for 171 countries and territories, with country profiles. A European comparison source, to be read with its institutional standpoint in mind." }, url: "https://knowledge4policy.ec.europa.eu/atlas-migration_en" },
+      { title: "Commission européenne — Knowledge Centre on Migration and Demography (KCMD)", year: 2025, type: { fr: "Centre de connaissances", en: "Knowledge Centre" }, desc: { fr: "Portail du centre de connaissances de la Commission sur la migration et la démographie, dont dépend l'Atlas of Migration.", en: "Portal of the Commission's knowledge centre on migration and demography, which produces the Atlas of Migration." }, url: "https://knowledge4policy.ec.europa.eu/migration-demography_en" },
+    ]
+  },
+  {
+    section: { fr: "Union africaine, agences & Communautés économiques régionales", en: "African Union, Agencies & Regional Economic Communities" },
+    icon: Landmark,
+    items: [
+      { title: "Observatoire africain des migrations (OAM / AMO)", year: 2025, essential: true, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Organe de l'Union africaine chargé de la collecte, de l'analyse et de l'harmonisation des données migratoires continentales. Siège à Rabat ; publie rapports d'activités et notes analytiques.", en: "African Union body responsible for collecting, analysing, and harmonising continental migration data. Based in Rabat; publishes activity reports and analytical notes." }, url: "https://amo.au.int/en" },
+      { title: "Centre africain d'études et de recherche sur les migrations (ACSRM / CERSM)", year: 2025, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Bureau technique spécialisé de la CUA (lancé en 2021) : recherche appliquée et « African Migration Policy Briefs » à destination des États et des CER.", en: "AUC specialised technical office (launched 2021): applied research and \"African Migration Policy Briefs\" for member states and RECs." }, url: "https://acsrm-au.org/" },
+      { title: "Union africaine — Documents, rapports et décisions", year: 2025, type: { fr: "Portail documentaire", en: "Document Portal" }, desc: { fr: "Portail officiel des documents de l'UA : décisions des sommets, rapports des CTS, cadres politiques et communiqués — source primaire pour tout élément de gouvernance cité sur cette plateforme.", en: "Official AU document portal: summit decisions, STC reports, policy frameworks, and communiqués — the primary source for governance material cited across this platform." }, url: "https://au.int/en/documents" },
+      { title: "AUDA-NEPAD — Agence de développement de l'Union africaine", year: 2025, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Agence de mise en œuvre de l'Agenda 2063, notamment sur la libre circulation des personnes et le passeport africain.", en: "Implementing agency for Agenda 2063, notably on free movement of persons and the African passport." }, url: "https://www.nepad.org/" },
+      { title: "CEDEAO / ECOWAS — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole de 1979 sur la libre circulation, actes additionnels et processus consultatif MIDWA. Bloc le plus ouvert du continent (AVOI 0,629).", en: "1979 free movement Protocol, additional acts, and the MIDWA consultative process. The continent's most open bloc (AVOI 0.629)." }, url: "https://www.ecowas.int/" },
+      { title: "CAE / EAC — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole du Marché commun (2010), politique de migration de travail et postes-frontières à arrêt unique (OSBP).", en: "Common Market Protocol (2010), labour migration policy, and One-Stop Border Posts (OSBP)." }, url: "https://www.eac.int/" },
+      { title: "SADC — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole de 2005 sur la facilitation des mouvements de personnes, plan sur la migration de travail et processus consultatif MIDSA.", en: "2005 Protocol on the Facilitation of Movement of Persons, labour migration plan, and the MIDSA consultative process." }, url: "https://www.sadc.int/" },
+      { title: "COMESA — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocoles de 1984 et 1998, facilitation des visas d'affaires et processus consultatif MIDCOM sur un espace de 21 États.", en: "1984 and 1998 Protocols, business visa facilitation, and the MIDCOM consultative process across 21 states." }, url: "https://www.comesa.int/" },
+      { title: "IGAD — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Deux protocoles pionniers adoptés en 2020 : libre circulation des personnes et transhumance pastorale transfrontalière.", en: "Two pioneering protocols adopted in 2020: free movement of persons and cross-border pastoral transhumance." }, url: "https://igad.int/" },
+      { title: "CEEAC / ECCAS — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité révisé de 2019 ; intégration à deux étages avec la CEMAC (suppression des visas 90 jours, passeport biométrique communautaire).", en: "Revised 2019 Treaty; two-tier integration alongside CEMAC (90-day visa abolition, community biometric passport)." }, url: "https://www.ceeac-eccas.org/" },
+      { title: "UMA / AMU — Fiche officielle de l'Union africaine", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité de Marrakech (1989), secrétariat à Rabat. Le site propre de l'organisation étant indisponible, la fiche de l'UA fait référence.", en: "Marrakech Treaty (1989), secretariat in Rabat. As the organisation's own site is unavailable, the AU factsheet serves as reference." }, url: "https://au.int/en/recs/uma" },
+      { title: "CEN-SAD — Portail officiel", year: 2026, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité de 1998 (révisé en 2013), 24 États membres. Siège rouvert à Tripoli en avril 2026 après relocalisation post-2011.", en: "1998 Treaty (revised 2013), 24 member states. Headquarters reopened in Tripoli in April 2026 after post-2011 relocation." }, url: "https://censad.int/en/" },
     ]
   },
   {
@@ -5876,6 +6092,8 @@ export default function App() {
   
   const [activeSubRegion, setActiveSubRegion] = useState('all');
   const [activeSubTab, setActiveSubTab] = useState('perspective');
+  const [explorerView, setExplorerView] = useState('map');          // 'map' | 'list'
+  const [mapIndicatorKey, setMapIndicatorKey] = useState('evolution');
   const [searchTerm, setSearchTerm] = useState('');
   
   const [showModal, setShowModal] = useState(false);
@@ -6169,6 +6387,7 @@ export default function App() {
             activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab}
             searchTerm={searchTerm} setSearchTerm={setSearchTerm}
             filteredCountries={filteredCountries} display={display} setShowModal={setShowModal} exportCountriesCSV={exportCountriesCSV}
+            explorerView={explorerView} setExplorerView={setExplorerView} mapIndicatorKey={mapIndicatorKey} setMapIndicatorKey={setMapIndicatorKey}
           />
         )}
         {activeTab === 'governance' && (
