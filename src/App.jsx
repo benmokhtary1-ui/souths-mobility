@@ -15,6 +15,27 @@ import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
 // ============================================================================
 
+// Construit un CSV RFC-4180 à partir d'un tableau d'objets (échappe guillemets et séparateurs).
+const toCSV = (rows) => {
+  if (!rows.length) return '';
+  const cols = Object.keys(rows[0]);
+  const cell = (v) => {
+    const s = v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim();
+    return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  return [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n') + '\n';
+};
+
+// Bouton d'export réutilisable : garantit que tout jeu de données affiché est téléchargeable.
+const CsvButton = ({ onClick, label, className = '' }) => (
+  <button
+    onClick={onClick}
+    className={`inline-flex items-center gap-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-4 py-2 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0 print:hidden ${className}`}
+  >
+    <Download className="w-3.5 h-3.5" /> <span>{label}</span>
+  </button>
+);
+
 const downloadCSV = (filename, csvBody) => {
   const blob = new Blob([String.fromCharCode(0xFEFF) + csvBody], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
@@ -294,6 +315,177 @@ const PRINT_CITATION = {
   en: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire: Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Doctoral thesis). International University of Rabat (UIR)."
 };
 
+// ----------------------------------------------------------------------------
+// Dossier PDF « profil pays » : document conçu pour l'impression, indépendant de
+// la mise en page écran. Dense, sur une page si possible, avec identité et référence.
+// ----------------------------------------------------------------------------
+const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
+  if (!display) return null;
+  const iso = display.iso2;
+  const openness = iso ? visaOpenToAllAfrica[iso] : null;
+  const recs = iso ? (countryRecAffiliations[iso] || []) : [];
+  const date = new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
+
+  const kpis = [
+    { lbl: L('Stock migrant (2024)', 'Migrant stock (2024)'), val: formatNumber(display.stock) },
+    { lbl: L('% pop. nationale', '% national pop.'), val: nn(display.evolution, '%') },
+    { lbl: L('Part des femmes', 'Female share'), val: nn(display.female, '%') },
+    { lbl: L('Rétention Sud-Sud', 'South-South retention'), val: nn(display.retention, '%') },
+    { lbl: L('Transferts (% PIB)', 'Remittances (% GDP)'), val: nn(display.remittances, '%') },
+    { lbl: L('Ouverture visa (AVOI)', 'Visa openness (AVOI)'), val: display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100` },
+  ];
+
+  return (
+    <div className="hidden pdf-doc">
+      {/* En-tête : identité de la plateforme + sujet */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1pt solid #0f172a', paddingBottom: '2mm', marginBottom: '3mm' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5mm' }}>
+          <Globe style={{ width: '7mm', height: '7mm', color: '#1d4ed8' }} />
+          <div>
+            <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '10pt', letterSpacing: '.04em' }}>SOUTH(S) MOBILITY</div>
+            <div style={{ fontSize: '6.4pt', letterSpacing: '.14em', textTransform: 'uppercase', color: '#64748b' }}>
+              {L('Savoirs & Données sur les mobilités', 'Knowledge & Data on mobility')}
+            </div>
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '13pt', lineHeight: 1.1 }}>{display.name}</div>
+          <div style={{ fontSize: '6.4pt', letterSpacing: '.1em', textTransform: 'uppercase', color: '#64748b' }}>
+            {display.isRegion ? L('Profil régional', 'Regional profile') : L('Profil pays', 'Country profile')} · {date}
+          </div>
+        </div>
+      </div>
+
+      {/* Bandeau d'indicateurs */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1.8mm', marginBottom: '3.5mm' }}>
+        {kpis.map((k, i) => (
+          <div key={i} className="kpi">
+            <span className="lbl">{k.lbl}</span>
+            <span className="val">{k.val}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="pdf-cols">
+        <div className="pdf-block">
+          <h2>{L('Démographie & structure', 'Demography & structure')}</h2>
+          <table><tbody>
+            <tr><td className="k">{L('Stock de migrants (2024)', 'Migrant stock (2024)')}</td><td className="v">{formatNumber(display.stock)}</td></tr>
+            <tr><td className="k">{L('Part de la population', 'Share of population')}</td><td className="v">{nn(display.evolution, '%')}</td></tr>
+            <tr><td className="k">{L('Part des femmes', 'Female share')}</td><td className="v">{nn(display.female, '%')}</td></tr>
+            <tr><td className="k">{L('Activité des migrants (OIT)', 'Migrant labour activity (ILO)')}</td><td className="v">{nn(display.labour_participation, '%')}{display.labour_participation_year ? ` (${display.labour_participation_year})` : ''}</td></tr>
+          </tbody></table>
+        </div>
+
+        <div className="pdf-block">
+          <h2>{L('Déplacement & protection', 'Displacement & protection')}</h2>
+          <table><tbody>
+            <tr><td className="k">{L('Réfugiés accueillis', 'Refugees hosted')}</td><td className="v">{formatNumber(display.refugees_hosted)}</td></tr>
+            <tr><td className="k">{L('Déplacés internes (conflit)', 'IDPs (conflict)')}</td><td className="v">{formatNumber(display.idp_conflict)}</td></tr>
+            <tr><td className="k">{L('Déplacés internes (catastrophes)', 'IDPs (disasters)')}</td><td className="v">{formatNumber(display.idp_disaster)}</td></tr>
+            <tr><td className="k">{L('Rétention Sud-Sud', 'South-South retention')}</td><td className="v">{nn(display.retention, '%')}</td></tr>
+          </tbody></table>
+        </div>
+
+        <div className="pdf-block">
+          <h2>{L('Économie de la mobilité', 'Mobility economy')}</h2>
+          <table><tbody>
+            <tr><td className="k">{L('Transferts de fonds (% PIB)', 'Remittances (% GDP)')}</td><td className="v">{nn(display.remittances, '%')}{display.remittances_year ? ` (${display.remittances_year})` : ''}</td></tr>
+            <tr><td className="k">{L('Aide publique au dév. (% PIB)', 'ODA (% GDP)')}</td><td className="v">{nn(display.aid, '%')}</td></tr>
+          </tbody></table>
+        </div>
+
+        <div className="pdf-block">
+          <h2>{L('Ouverture des frontières', 'Border openness')}</h2>
+          <table><tbody>
+            <tr><td className="k">{L('Indice AVOI', 'AVOI index')}</td><td className="v">{display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100`}</td></tr>
+            {continentalAvoiAvg !== null && continentalAvoiAvg !== undefined && (
+              <tr><td className="k">{L('Moyenne continentale', 'Continental average')}</td><td className="v">{continentalAvoiAvg}/100</td></tr>
+            )}
+          </tbody></table>
+          {openness && (
+            <p style={{ margin: '1.2mm 0 0', fontSize: '7pt', color: '#334155' }}>
+              <strong>{visaOpenTiers[openness.tier].label[lang]} — </strong>{openness.note[lang]}
+            </p>
+          )}
+        </div>
+
+        {recs.length > 0 && (
+          <div className="pdf-block">
+            <h2>{L('Appartenance aux CER', 'REC membership')}</h2>
+            <div>{recs.map(r => <span key={r} className="chip">{recNames[r][lang]}</span>)}</div>
+            {countryRecNotes[iso] && (
+              <p style={{ margin: '.8mm 0 0', fontSize: '6.8pt', color: '#92400e' }}>{countryRecNotes[iso][lang]}</p>
+            )}
+          </div>
+        )}
+
+        {display.au_treaties && (
+          <div className="pdf-block">
+            <h2>{L('Instruments de l\'UA', 'AU instruments')}</h2>
+            <table><tbody>
+              {[
+                { key: 'constitutive', fr: "Acte constitutif de l'UA", en: 'AU Constitutive Act' },
+                { key: 'abuja', fr: "Traité d'Abuja (CEA)", en: 'Abuja Treaty (AEC)' },
+                { key: 'refugees_1969', fr: 'Convention réfugiés (1969)', en: 'Refugee Convention (1969)' },
+                { key: 'kampala', fr: 'Convention de Kampala (PDI)', en: 'Kampala Convention (IDPs)' },
+                { key: 'free_movement', fr: 'Protocole libre circulation', en: 'Free Movement Protocol' },
+                { key: 'zlecaf', fr: 'Accord ZLECAf', en: 'AfCFTA Agreement' },
+              ].map(t => (
+                <tr key={t.key}>
+                  <td className="k">{lang === 'fr' ? t.fr : t.en}</td>
+                  <td className="v">{display.au_treaties[t.key] ? L('Ratifié', 'Ratified') : L('Non ratifié', 'Not ratified')}</td>
+                </tr>
+              ))}
+            </tbody></table>
+          </div>
+        )}
+
+        {display.normlex && (
+          <div className="pdf-block">
+            <h2>{L('Conventions OIT (NORMLEX)', 'ILO conventions (NORMLEX)')}</h2>
+            <table><tbody>
+              <tr><td className="k">{L('Fondamentales', 'Fundamental')}</td><td className="v">{display.normlex.fundamental} / 11</td></tr>
+              <tr><td className="k">{L('Gouvernance', 'Governance')}</td><td className="v">{display.normlex.governance} / 4</td></tr>
+              <tr><td className="k">{L('Techniques', 'Technical')}</td><td className="v">{display.normlex.technical}</td></tr>
+              <tr><td className="k">{L('Total ratifiées', 'Total ratified')}</td><td className="v">{display.normlex.total}</td></tr>
+            </tbody></table>
+          </div>
+        )}
+
+        {display.origDest && (
+          <div className="pdf-block">
+            <h2>{L('Origines & destinations', 'Origins & destinations')}</h2>
+            <p style={{ margin: 0, textAlign: 'justify' }}>{display.origDest}</p>
+          </div>
+        )}
+
+        {(display.trigger || display.response || display.impact) && (
+          <div className="pdf-block">
+            <h2>{L('Chaîne causale', 'Causal chain')}</h2>
+            {display.trigger && <p style={{ margin: '0 0 1mm', textAlign: 'justify' }}><strong>{text.modal.trigger} · </strong>{display.trigger}</p>}
+            {display.response && <p style={{ margin: '0 0 1mm', textAlign: 'justify' }}><strong>{text.modal.response} · </strong>{display.response}</p>}
+            {display.impact && <p style={{ margin: 0, textAlign: 'justify' }}><strong>{text.modal.impact} · </strong>{display.impact}</p>}
+          </div>
+        )}
+      </div>
+
+      {/* Pied de page : provenance et citation */}
+      <div style={{ borderTop: '1pt solid #0f172a', marginTop: '3mm', paddingTop: '1.8mm', fontSize: '6.4pt', color: '#475569' }}>
+        <div style={{ marginBottom: '.8mm' }}><strong>{L('Sources', 'Sources')} · </strong>{text.modal.data_source}</div>
+        <div style={{ marginBottom: '.8mm' }}><strong>{L('Citation', 'Citation')} · </strong><em>{PRINT_CITATION[lang]}</em></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <span>South(s) Mobility DataHub — {siteUrl}</span>
+          <span>© 2026 Yassine Ben Mokhtar · {L('Généré le', 'Generated')} {date}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PrintCitationFooter = ({ lang, sectionLabel }) => {
   const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'South(s) Mobility DataHub';
   const printDate = new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -316,23 +508,37 @@ const PrintCitationFooter = ({ lang, sectionLabel }) => {
   );
 };
 
+// Toute institution dont une donnée ou une série est effectivement citée sur la plateforme
+// doit figurer ici. `src: null` => repli automatique sur les initiales (pas d'emblème
+// librement licencié disponible). Vérifié contre les champs `sources` de tout le site.
 const institutionLogos = [
   { key: 'un', name: "United Nations", src: "/logos/un.svg" },
   { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
   { key: 'au', name: "African Union", src: "/logos/au.png" },
   { key: 'unhcr', name: "UNHCR", src: "/logos/unhcr.svg" },
   { key: 'ilo', name: "ILO", src: "/logos/ilo.svg" },
-  { key: 'iom', name: "IOM", src: null },
+  { key: 'iom', name: "IOM", src: "/logos/iom.png" },
   { key: 'afdb', name: "AfDB", src: "/logos/afdb.svg" },
   { key: 'oecd', name: "OECD", src: "/logos/oecd.svg" },
-  { key: 'idmc', name: "IDMC", src: null },
+  { key: 'idmc', name: "IDMC", src: "/logos/idmc.svg" },
   { key: 'uneca', name: "UNECA", src: "/logos/uneca.svg" },
+  { key: 'undp', name: "UNDP", src: "/logos/undp.png" },
+  { key: 'who', name: "WHO", src: "/logos/who.svg" },
+  { key: 'knomad', name: "KNOMAD", src: null }, // programme hébergé par la Banque mondiale : pas d'emblème distinct accessible
+  { key: 'mmc', name: "Mixed Migration Centre", src: "/logos/mmc.png" },
+  { key: 'afrobarometer', name: "Afrobarometer", src: "/logos/afrobarometer.png" },
+  { key: 'iss', name: "ISS", full: "ISS African Futures", src: "/logos/iss.svg" },
+  { key: 'icmpd', name: "ICMPD", src: "/logos/icmpd.jpg" },
+  { key: 'iata', name: "IATA", src: "/logos/iata.png" },
+  { key: 'eurostat', name: "Eurostat", src: "/logos/eurostat.png" },
+  { key: 'frontex', name: "Frontex", src: "/logos/frontex.svg" },
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
 
-// Emblèmes officiels des CER (fichiers librement licenciés, Wikimedia Commons).
-// COMESA et CEEAC n'ont pas d'emblème librement licencié disponible : repli sur le sigle.
+// Emblèmes officiels des huit CER — Wikimedia Commons pour la plupart, sites officiels
+// des organisations pour COMESA (comesa.int) et CEEAC (ceeac-eccas.org).
+// Usage identificatoire des marques institutionnelles citées comme sources.
 const recLogos = {
   cedeao: "/logos/rec-cedeao.png",
   cae: "/logos/rec-cae.svg",
@@ -340,8 +546,8 @@ const recLogos = {
   igad: "/logos/rec-igad.svg",
   uma: "/logos/rec-uma.svg",
   censad: "/logos/rec-censad.jpg",
-  comesa: null,
-  ceeac: null,
+  comesa: "/logos/rec-comesa.png",
+  ceeac: "/logos/rec-ceeac.png",
 };
 
 const aboutLogoMap = [
@@ -1800,21 +2006,6 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </div>
       </Reveal>
 
-      <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
-        <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
-          <Sparkles className="w-4 h-4 mr-2 text-amber-500" /> {lang === 'fr' ? "Récemment enrichi" : "Recently Enriched"}
-        </h3>
-        <div className="border border-dashed border-slate-300 rounded-lg py-10 px-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
-          <Clock className="w-5 h-5 text-slate-300 mb-3" />
-          <p className="text-sm font-serif font-bold text-slate-500">{lang === 'fr' ? "À venir" : "Coming soon"}</p>
-          <p className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed">
-            {lang === 'fr'
-              ? "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication."
-              : "This space will flag the platform's recent additions as they are published."}
-          </p>
-        </div>
-      </Reveal>
-
       <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest">
@@ -1863,7 +2054,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </h4>
         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
           {institutionLogos.map((inst) => (
-            <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.name}>
+            <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.full || inst.name}>
               <InstitutionLogo name={inst.name} src={inst.src} />
             </div>
           ))}
@@ -1878,7 +2069,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   );
 };
 
-const TabEvidenceCheck = ({ text, lang }) => {
+const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [expandedFiche, setExpandedFiche] = useState(null);
 
@@ -1937,6 +2128,10 @@ const TabEvidenceCheck = ({ text, lang }) => {
             ? "Les affirmations examinées ci-dessous sont formulées par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Il ne s'agit pas de citations directes issues de médias ou d'institutions identifiées : seules les sections « Ce que montrent les données » sont sourcées auprès d'institutions vérifiables (voir Sources)."
             : "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."}
         </p>
+      </div>
+
+      <div className="flex justify-end print:hidden">
+        <CsvButton onClick={exportEvidenceCSV} label={lang === 'fr' ? "Affirmations évaluées (CSV)" : "Assessed claims (CSV)"} />
       </div>
 
       {/* Boutons de filtrage en haut */}
@@ -3001,6 +3196,32 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     }
   ];
 
+  const exportRecsCSV = () => {
+    const rows = recsList.map(r => ({
+      rec_id: r.id, name_fr: r.name.fr, name_en: r.name.en,
+      founded: r.founded, headquarters: r.hq?.fr,
+      avoi_0_1: r.avoi,
+      member_states: Object.values(countryRecAffiliations).filter(a => a.includes(r.id)).length,
+      members_iso2: Object.entries(countryRecAffiliations).filter(([, a]) => a.includes(r.id)).map(([iso]) => iso).join(' | '),
+      key_instruments_fr: r.instruments?.fr,
+      dynamics_fr: r.dynamics?.fr,
+      sources: (r.sources || []).map(s => s.url).join(' | '),
+    }));
+    downloadCSV('souths_recs.csv', toCSV(rows));
+  };
+
+  const exportLegalMatrixCSV = () => {
+    const rows = legalMatrixData.flatMap(reg => reg.countries.map(c => ({
+      region_fr: reg.region.fr, region_en: reg.region.en,
+      country_fr: c.name.fr, country_en: c.name.en,
+      visitor_threshold_fr: c.threshold.fr, visitor_threshold_en: c.threshold.en,
+      legal_instrument_fr: c.instrument?.fr,
+      table_notes_fr: c.tableNotes?.fr,
+      visa_open_to_all_africa: opennessByName(c.name.fr)?.tier || '',
+    })));
+    downloadCSV('souths_legal_matrix.csv', toCSV(rows));
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader
@@ -3012,7 +3233,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         accent="indigo"
       />
 
-      <div className="flex justify-end print:hidden">
+      <div className="flex flex-wrap justify-end gap-2 print:hidden">
+        <CsvButton onClick={exportRecsCSV} label={lang === 'fr' ? "CER (CSV)" : "RECs (CSV)"} />
+        <CsvButton onClick={exportLegalMatrixCSV} label={lang === 'fr' ? "Matrice juridique (CSV)" : "Legal matrix (CSV)"} />
         <button onClick={() => window.print()} className="flex items-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
           <Printer className="w-3.5 h-3.5" /> <span>{lang === 'fr' ? "Exporter cette section (PDF)" : "Export this section (PDF)"}</span>
         </button>
@@ -3138,9 +3361,19 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <Landmark className="w-48 h-48" />
               </div>
               <div className="relative z-10">
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2">
-                  {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
-                </span>
+                <div className="flex items-start gap-4 mb-2">
+                  <span className="shrink-0 w-14 h-14 rounded-lg bg-white/95 border border-emerald-700 flex items-center justify-center p-1.5 shadow-sm">
+                    <img src="/logos/au.png" alt="" className="max-h-full max-w-full object-contain" />
+                  </span>
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">
+                      {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
+                    </span>
+                    <span className="text-xs text-emerald-200/80">
+                      {lang === 'fr' ? "Union africaine — Addis-Abeba" : "African Union — Addis Ababa"}
+                    </span>
+                  </div>
+                </div>
                 <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                   {lang === 'fr' ? "L'Union Africaine et le Régime Panafricain des Mobilités" : "The African Union and the Pan-African Mobility Regime"}
                 </h3>
@@ -3874,7 +4107,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   );
 };
 
-const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal }) => (
+const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal, exportCountriesCSV }) => (
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
@@ -4115,6 +4348,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               )}
 
               <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-x-5 gap-y-2">
+                <CsvButton onClick={exportCountriesCSV} label={lang === 'fr' ? "54 pays — tous indicateurs (CSV)" : "54 countries — all indicators (CSV)"} className="basis-full sm:basis-auto justify-center" />
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
                   {lang === 'fr' ? "Ouverture aux ressortissants africains" : "Openness to African nationals"}
                 </span>
@@ -4124,6 +4358,12 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     <span className="text-[10px] font-bold text-slate-500">{tier.label[lang]}</span>
                   </span>
                 ))}
+                <span className="text-[10px] text-slate-400 italic basis-full">
+                  {lang === 'fr' ? "Sources : annonces officielles nationales et " : "Sources: official national announcements and "}
+                  <a href="https://www.visaopenness.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">
+                    {lang === 'fr' ? "Africa Visa Openness Index (BAD/CUA, 2024)" : "Africa Visa Openness Index (AfDB/AUC, 2024)"}
+                  </a>.
+                </span>
               </div>
             </div>
 
@@ -4568,6 +4808,13 @@ const libraryData = [
       { title: "Mixed Migration Centre — 4Mi Data Explorer", year: 2026, essential: true, type: { fr: "Données de terrain", en: "Field Data" }, desc: { fr: "Plus de 100 000 entretiens directs avec des migrants et réfugiés sur leur parcours, leurs motivations et les risques rencontrés — une contrepartie empirique de terrain aux statistiques agrégées des organisations internationales.", en: "Over 100,000 direct interviews with migrants and refugees on their journeys, motivations, and risks faced — a field-level empirical counterpart to international organizations' aggregate statistics." }, url: "https://mixedmigration.org/4mi-data-explorer/en" },
       { title: "Afrobarometer — Attitudes on Migration & Cross-Border Mobility", year: 2026, type: { fr: "Enquête d'opinion", en: "Opinion Survey" }, desc: { fr: "Sondages d'opinion publique menés dans plus de 30 pays africains sur les perceptions de l'immigration, de l'émigration et de la libre circulation — rare source de données sur ce que pensent les citoyens africains eux-mêmes, plutôt que sur les seules statistiques de flux.", en: "Public opinion surveys conducted in 30+ African countries on perceptions of immigration, emigration, and free movement — a rare source of data on what African citizens themselves think, rather than flow statistics alone." }, url: "https://www.afrobarometer.org/" },
       { title: "ISS African Futures — Migration & Demographic Projections", year: 2026, type: { fr: "Recherche & prospective", en: "Research & Foresight" }, desc: { fr: "Modélisation prospective des dynamiques migratoires et démographiques africaines par l'Institute for Security Studies (Pretoria).", en: "Forward-looking modelling of African migration and demographic dynamics by the Institute for Security Studies (Pretoria)." }, url: "https://futures.issafrica.org/" },
+      { title: "World Bank — Groundswell: Acting on Internal Climate Migration", year: 2021, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Projections de migration climatique interne à l'horizon 2050 : jusqu'à 216 millions de personnes dans le monde, dont environ 86 millions pour la seule Afrique subsaharienne.", en: "Projections of internal climate migration to 2050: up to 216 million people worldwide, including roughly 86 million in Sub-Saharan Africa alone." }, url: "https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change" },
+      { title: "WHO — Health Workforce Support and Safeguards List", year: 2023, type: { fr: "Liste officielle", en: "Official List" }, desc: { fr: "Recense les pays confrontés aux pénuries les plus critiques de personnel de santé — largement concentrés en Afrique subsaharienne. Référence du débat sur la « fuite des cerveaux » médicale.", en: "Identifies countries facing the most critical health-personnel shortages — heavily concentrated in Sub-Saharan Africa. The reference point for the medical brain-drain debate." }, url: "https://www.who.int/publications/i/item/9789240069787" },
+      { title: "IATA — Travel Information Manual (TIM)", year: 2024, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Source primaire des exigences de visa par nationalité ; alimente notamment l'Africa Visa Openness Index de la BAD et de la CUA.", en: "Primary source on visa requirements by nationality; notably feeds the AfDB/AUC Africa Visa Openness Index." }, url: "https://www.iata.org/en/publications/timatic/" },
+      { title: "Eurostat — Migration and Asylum Statistics", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Statistiques européennes de migration et d'asile, mobilisées ici comme contrepoint pour situer les flux Afrique-Europe.", en: "European migration and asylum statistics, used here as a counterpoint to situate Africa-Europe flows." }, url: "https://ec.europa.eu/eurostat/web/migration-asylum/overview" },
+      { title: "Frontex — Risk Analysis", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Détections de franchissements irréguliers aux frontières extérieures de l'UE. Citée comme donnée européenne de comparaison, avec ses limites méthodologiques connues (comptage d'événements et non de personnes).", en: "Detections of irregular crossings at the EU's external borders. Cited as European comparison data, with its known methodological limits (it counts events, not persons)." }, url: "https://www.frontex.europa.eu/publications/" },
+      { title: "ICMPD — Migration Policy Frameworks", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Analyses des cadres de politique migratoire, notamment sur les dialogues Afrique-Europe (Processus de Rabat et de Khartoum).", en: "Analyses of migration policy frameworks, notably on the Africa-Europe dialogues (Rabat and Khartoum Processes)." }, url: "https://www.icmpd.org/" },
+      { title: "UN DESA — Drivers of Migration and Urbanization in Africa", year: 2017, type: { fr: "Document de travail", en: "Working Paper" }, desc: { fr: "Décompose les moteurs de l'urbanisation africaine et la part respective de la migration rurale-urbaine, de l'accroissement naturel et de la reclassification administrative.", en: "Breaks down the drivers of African urbanization and the respective shares of rural-urban migration, natural increase, and administrative reclassification." }, url: "https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/unpd_egm_201709_s3_paper-awunbila-final.pdf" },
     ]
   },
   {
@@ -4634,7 +4881,7 @@ const LibraryCard = ({ item, lang, essential = false }) => {
   );
 };
 
-const TabLibrary = ({ text, lang }) => {
+const TabLibrary = ({ text, lang, exportLibraryCSV }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
 
@@ -4668,6 +4915,7 @@ const TabLibrary = ({ text, lang }) => {
         <h3 className="flex items-center text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">
           <Star className="w-4 h-4 mr-2 text-amber-500 fill-amber-400" />
           {lang === 'fr' ? "Essentiels — Pour Commencer" : "Essentials — Start Here"}
+          <CsvButton onClick={exportLibraryCSV} label={lang === 'fr' ? "Bibliographie (CSV)" : "Bibliography (CSV)"} className="ml-auto normal-case tracking-normal" />
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {essentials.map((item, idx) => <LibraryCard key={idx} item={item} lang={lang} essential />)}
@@ -4735,7 +4983,7 @@ const TabLibrary = ({ text, lang }) => {
   );
 };
 
-const TabGlossary = ({ lang }) => {
+const TabGlossary = ({ lang, exportGlossaryCSV }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const query = searchTerm.trim().toLowerCase();
 
@@ -4754,10 +5002,13 @@ const TabGlossary = ({ lang }) => {
   return (
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h2 className="text-xl font-serif font-bold text-slate-900 flex items-center mb-2">
-          <Brain className="w-5 h-5 mr-2.5 text-teal-700" />
-          {lang === 'fr' ? 'Glossaire & Concepts Clés' : 'Glossary & Key Concepts'}
-        </h2>
+        <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+          <h2 className="text-xl font-serif font-bold text-slate-900 flex items-center">
+            <Brain className="w-5 h-5 mr-2.5 text-teal-700" />
+            {lang === 'fr' ? 'Glossaire & Concepts Clés' : 'Glossary & Key Concepts'}
+          </h2>
+          <CsvButton onClick={exportGlossaryCSV} label={lang === 'fr' ? "Glossaire (CSV)" : "Glossary (CSV)"} />
+        </div>
         <p className="text-sm text-slate-500 leading-relaxed mb-5">
           {lang === 'fr'
             ? `${totalTerms} termes techniques et notions théoriques mobilisés à travers cette plateforme, expliqués et référencés.`
@@ -4883,6 +5134,62 @@ const methodConventions = [
       en: "This is the same visa openness index (AfDB/AUC), stored on a 0-100 scale at country level and 0-1 at REC level. The two scales are never compared directly within a single chart."
     }
   },
+  {
+    label: { fr: "Priorité définitionnelle", en: "Definitional priority" },
+    value: { fr: "Instrument africain", en: "African instrument" },
+    detail: {
+      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence : réfugié selon la Convention de l'OUA (1969), personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
+      en: "For any legal concept holding both a UN and an African definition, the latter is the reference: refugee under the OAU Convention (1969), internally displaced person under the Kampala Convention (2009). The UN definition is cited only for comparison. Purely statistical aggregates, by contrast, follow UN DESA — a precondition for international comparability."
+    }
+  },
+  {
+    label: { fr: "Millésimes", en: "Vintages" },
+    value: { fr: "Datés, non alignés", en: "Dated, not aligned" },
+    detail: {
+      fr: "Les séries ne partagent pas toutes la même année de référence. Chaque champ concerné porte son année d'observation (transferts de fonds, activité des migrants, ratifications). Aucune interpolation n'est pratiquée pour produire une homogénéité de façade.",
+      en: "Series do not all share a reference year. Each affected field carries its own observation year (remittances, migrant activity, ratifications). No interpolation is applied to manufacture surface-level homogeneity."
+    }
+  },
+  {
+    label: { fr: "Chiffres non vérifiables", en: "Unverifiable figures" },
+    value: { fr: "Datés et réservés", en: "Dated and caveated" },
+    detail: {
+      fr: "Lorsqu'un décompte exact ne peut être confirmé sur une source officielle, la plateforme affiche la dernière valeur vérifiée avec sa date et une réserve explicite — plutôt qu'une estimation lissée ou un chiffre arrondi sans provenance.",
+      en: "When an exact count cannot be confirmed against an official source, the platform shows the last verified value with its date and an explicit caveat — rather than a smoothed estimate or a rounded figure without provenance."
+    }
+  },
+  {
+    label: { fr: "Seuil d'entrée en vigueur", en: "Entry-into-force threshold" },
+    value: { fr: "15 ratifications", en: "15 ratifications" },
+    detail: {
+      fr: "Les instruments de l'UA soumis à ratification sont affichés en rouge tant qu'ils n'atteignent pas 15 États parties — seuil standard d'entrée en vigueur pour cette catégorie de protocoles — et en vert au-delà. Le seuil est stocké par instrument, non codé en dur.",
+      en: "AU instruments subject to ratification display in red below 15 states parties — the standard entry-into-force threshold for this class of protocol — and green above it. The threshold is stored per instrument, not hard-coded."
+    }
+  },
+  {
+    label: { fr: "Dénomination des pays", en: "Country naming" },
+    value: { fr: "Variantes réconciliées", en: "Reconciled variants" },
+    detail: {
+      fr: "Un même État peut porter des libellés différents selon le jeu de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde »). Les deux formes restent affichées telles quelles ; la correspondance est assurée par une table d'alias, sans renommage des sources.",
+      en: "A single state may carry different labels depending on the dataset (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\"). Both forms remain displayed as-is; matching is handled by an alias table, without renaming the sources."
+    }
+  },
+  {
+    label: { fr: "Affirmations évaluées", en: "Assessed claims" },
+    value: { fr: "Formulées par l'auteur", en: "Authored in-house" },
+    detail: {
+      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes ; ce ne sont pas des citations de médias ou d'institutions identifiés. Seules les sections « ce que montrent les données » sont sourcées institutionnellement.",
+      en: "The claims examined in Evidence Check are written by the author to illustrate common perceptions; they are not quotations from identified media or institutions. Only the \"what the data shows\" sections carry institutional sourcing."
+    }
+  },
+  {
+    label: { fr: "Matrice d'indicateurs", en: "Indicator matrix" },
+    value: { fr: "Proposition, non collecte", en: "Proposal, not collection" },
+    detail: {
+      fr: "Les 12 indicateurs alternatifs présentés plus bas sont une proposition méthodologique issue de la recherche doctorale, adressée aux instituts nationaux de statistique. Ils ne décrivent pas une réalité déjà mesurée à l'échelle continentale.",
+      en: "The 12 alternative indicators presented below are a methodological proposal stemming from doctoral research, addressed to national statistical institutes. They do not describe a reality already measured at continental scale."
+    }
+  },
 ];
 
 const methodLimits = [
@@ -4971,8 +5278,8 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       </h2>
       <p className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8">
         {lang === 'fr'
-          ? "Quatre choix structurants conditionnent la lecture de tous les chiffres présentés. Ils sont explicités ici pour être discutables — et reproductibles."
-          : "Four structuring choices condition how every figure here should be read. They are spelled out so they can be contested — and reproduced."}
+          ? `Les ${methodConventions.length} choix structurants ci-dessous conditionnent la lecture de l'ensemble des chiffres présentés sur la plateforme. Ils sont explicités pour être discutables — et reproductibles.`
+          : `The ${methodConventions.length} structuring choices below condition how every figure on the platform should be read. They are spelled out so they can be contested — and reproduced.`}
       </p>
       <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         {methodConventions.map((c, i) => (
@@ -5432,6 +5739,21 @@ const TabAbout = ({ text, lang }) => {
         </div>
       </div>
 
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
+        <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
+          <Sparkles className="w-4 h-4 mr-2 text-amber-500" /> {lang === 'fr' ? "Récemment enrichi" : "Recently Enriched"}
+        </h3>
+        <div className="border border-dashed border-slate-300 rounded-lg py-10 px-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
+          <Clock className="w-5 h-5 text-slate-300 mb-3" />
+          <p className="text-sm font-serif font-bold text-slate-500">{lang === 'fr' ? "À venir" : "Coming soon"}</p>
+          <p className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed">
+            {lang === 'fr'
+              ? "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication."
+              : "This space will flag the platform's recent additions as they are published."}
+          </p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Publications */}
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -5661,6 +5983,55 @@ export default function App() {
     downloadCSV(`Profile_${display.name}.csv`, csvContent);
   };
 
+  // --- Exports CSV de tous les jeux de données affichés ---------------------
+  const exportCountriesCSV = () => {
+    const rows = Object.entries(countryData).flatMap(([region, list]) => list.map(c => ({
+      id: c.id, iso2: c.iso2, country_fr: c.name?.fr, country_en: c.name?.en, au_region: region,
+      migrant_stock_2024: c.stock, share_national_pop_pct: c.evolution, female_share_pct: c.female,
+      south_south_retention_pct: c.retention, remittances_pct_gdp: c.remittances, remittances_year: c.remittances_year,
+      oda_pct_gdp: c.aid, migrant_labour_participation_pct: c.labour_participation, labour_year: c.labour_participation_year,
+      idp_conflict: c.idp_conflict, idp_disaster: c.idp_disaster, refugees_hosted: c.refugees_hosted,
+      avoi_0_100: c.avoi,
+      recs: (countryRecAffiliations[c.iso2] || []).join(' | '),
+      visa_open_to_all_africa: visaOpenToAllAfrica[c.iso2]?.tier || '',
+      ilo_conventions_total: c.normlex?.total,
+      au_treaties_ratified: c.au_treaties ? Object.entries(c.au_treaties).filter(([, v]) => v).map(([k]) => k).join(' | ') : '',
+    })));
+    downloadCSV('souths_country_indicators.csv', toCSV(rows));
+  };
+
+  const exportEvidenceCSV = () => {
+    const rows = evidenceCheckData.map(e => ({
+      id: e.id, category_fr: e.category?.fr, category_en: e.category?.en,
+      confidence: e.confidence_level, verdict_fr: e.verdict?.fr, verdict_en: e.verdict?.en,
+      claim_fr: e.narrative?.fr, claim_en: e.narrative?.en,
+      reality_fr: e.reality?.fr, reality_en: e.reality?.en,
+      sources: (e.sources?.fr || []).join(' | '),
+      limits_fr: e.limits?.fr,
+    }));
+    downloadCSV('souths_evidence_check.csv', toCSV(rows));
+  };
+
+  const exportGlossaryCSV = () => {
+    const rows = glossaryData.flatMap(cat => cat.terms.map(t => ({
+      category_fr: cat.category?.fr, category_en: cat.category?.en,
+      term_fr: t.term, term_en: t.en_term,
+      definition_fr: t.fr, definition_en: t.en,
+    })));
+    downloadCSV('souths_glossary.csv', toCSV(rows));
+  };
+
+  const exportLibraryCSV = () => {
+    const rows = libraryData.flatMap(sec => sec.items.map(i => ({
+      section_fr: sec.section?.fr, section_en: sec.section?.en,
+      title: i.title, year: i.year,
+      type_fr: i.type?.fr, type_en: i.type?.en,
+      description_fr: i.desc?.fr, url: i.url || '',
+      essential: i.essential ? 'yes' : 'no',
+    })));
+    downloadCSV('souths_library.csv', toCSV(rows));
+  };
+
   const navigation = [
     { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
@@ -5686,12 +6057,26 @@ export default function App() {
       </style>
       <style type="text/css" media="print">
         {`
-          @page { size: A4; margin: 12mm; }
+          @page { size: A4; margin: 11mm 12mm 13mm 12mm; }
           body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; }
           .print\\:hidden { display: none !important; }
           .break-inside-avoid, .print\\:break-inside-avoid { break-inside: avoid; page-break-inside: avoid; }
           a { text-decoration: none; }
           h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+
+          /* --- Dossier PDF dédié : mise en page propre, indépendante de l'écran --- */
+          .pdf-doc { display: block !important; font-size: 8.2pt; line-height: 1.34; color: #0f172a; }
+          .pdf-doc .pdf-cols { column-count: 2; column-gap: 6.5mm; }
+          .pdf-doc .pdf-block { break-inside: avoid; page-break-inside: avoid; margin-bottom: 3.2mm; }
+          .pdf-doc h2 { font-size: 8.6pt; letter-spacing: .07em; text-transform: uppercase; margin: 0 0 1.4mm; padding-bottom: .8mm; border-bottom: .4pt solid #cbd5e1; color: #334155; }
+          .pdf-doc table { width: 100%; border-collapse: collapse; }
+          .pdf-doc td { padding: .7mm 0; vertical-align: top; border-bottom: .3pt dotted #e2e8f0; }
+          .pdf-doc td.k { color: #64748b; padding-right: 2mm; }
+          .pdf-doc td.v { text-align: right; font-weight: 700; white-space: nowrap; }
+          .pdf-doc .kpi { border: .4pt solid #cbd5e1; border-radius: 1.2mm; padding: 1.6mm 1.8mm; }
+          .pdf-doc .kpi .lbl { font-size: 5.9pt; letter-spacing: .09em; text-transform: uppercase; color: #64748b; display: block; }
+          .pdf-doc .kpi .val { font-size: 12pt; font-weight: 700; font-family: Merriweather, serif; line-height: 1.1; }
+          .pdf-doc .chip { display: inline-block; border: .4pt solid #cbd5e1; border-radius: 6pt; padding: .35mm 1.4mm; margin: 0 1mm .8mm 0; font-size: 6.4pt; font-weight: 700; }
         `}
       </style>
       <style>{`
@@ -5775,7 +6160,7 @@ export default function App() {
           <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
         )}
         {activeTab === 'evidence' && (
-          <TabEvidenceCheck text={text} lang={lang} />
+          <TabEvidenceCheck text={text} lang={lang} exportEvidenceCSV={exportEvidenceCSV} />
         )}
         {activeTab === 'explorer' && (
           <TabExplorer 
@@ -5783,14 +6168,14 @@ export default function App() {
             activeSubRegion={activeSubRegion} setActiveSubRegion={setActiveSubRegion}
             activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab}
             searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-            filteredCountries={filteredCountries} display={display} setShowModal={setShowModal}
+            filteredCountries={filteredCountries} display={display} setShowModal={setShowModal} exportCountriesCSV={exportCountriesCSV}
           />
         )}
         {activeTab === 'governance' && (
           <TabGovernance text={text} lang={lang} activeSdgzTab={activeSdgzTab} setActiveSdgzTab={setActiveSdgzTab} />
         )}
         {activeTab === 'library' && (
-          <TabLibrary text={text} lang={lang} />
+          <TabLibrary text={text} lang={lang} exportLibraryCSV={exportLibraryCSV} />
         )}
         {activeTab === 'about' && (
           <div className="space-y-8">
@@ -5822,16 +6207,19 @@ export default function App() {
                 exportIndicatorsCSV={exportIndicatorsCSV}
               />
             )}
-            {activeAboutTab === 'glossary' && <TabGlossary lang={lang} />}
+            {activeAboutTab === 'glossary' && <TabGlossary lang={lang} exportGlossaryCSV={exportGlossaryCSV} />}
           </div>
         )}
         <PrintCitationFooter lang={lang} sectionLabel={navigation.find(i => i.id === activeTab)?.label?.[lang]} />
       </main>
 
+      {/* Dossier PDF dédié : seul élément imprimé quand la fiche pays est ouverte. */}
+      {showModal && <PdfCountryDossier display={display} lang={lang} text={text} continentalAvoiAvg={continentalAvoiAvg} />}
+
       {showModal && (
-        <div 
+        <div
           onClick={() => setShowModal(false)}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-5 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300 print:bg-white print:p-0 print:absolute print:inset-0 print:block"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-5 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300 print:hidden"
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
