@@ -315,12 +315,31 @@ button, a { transition: color .18s ease, background-color .18s ease, border-colo
 .hub-card:hover { border-color: var(--rule-strong) !important; }
 .hub-card:hover .hub-card-cta { color: var(--terra) !important; }
 
-.gov-subnav { border-radius: 2px; transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
-.gov-subnav:not([style*="rgb(255, 253, 249)"]):hover {
-  background-color: var(--paper-sunk) !important;
-  border-color: var(--rule-strong) !important;
-  color: var(--ink) !important;
+/* Sous-navigation de Gouvernance. L'etat est porte par aria-current, jamais par
+   un style en ligne : rendu et accessibilite ne peuvent pas se desynchroniser. */
+
+.gov-subnav {
+  border-radius: 2px;
+  background-color: transparent;
+  border-color: var(--rule);
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease;
 }
+.gov-subnav .gov-subnav-label { color: var(--ink-soft); }   /* 12,08:1 sur le papier */
+.gov-subnav .gov-subnav-hint  { color: var(--ink-mute); }   /*  5,81:1 sur le papier */
+
+.gov-subnav[aria-current="true"] {
+  background-color: var(--ink);
+  border-color: var(--ink);
+  box-shadow: inset 2px 0 0 var(--terra);
+}
+.gov-subnav[aria-current="true"] .gov-subnav-label { color: #FFFDF9; }   /* 18,51:1 sur l'encre */
+.gov-subnav[aria-current="true"] .gov-subnav-hint  { color: #A79E92; }   /*  7,12:1 sur l'encre */
+
+.gov-subnav:not([aria-current="true"]):hover {
+  background-color: var(--paper-sunk);
+  border-color: var(--rule-strong);
+}
+.gov-subnav:not([aria-current="true"]):hover .gov-subnav-label { color: var(--ink); }
 
 /* ---------- Lettrine : le corps du texte s'ouvre sur une capitale --------- */
 

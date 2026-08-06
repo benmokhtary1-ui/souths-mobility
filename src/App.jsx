@@ -2418,6 +2418,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeTier, setActiveTier] = useState('All');
+  const [sortMode, setSortMode] = useState('robustness');   // 'robustness' | 'theme'
   const [selectedId, setSelectedId] = useState(null);
   // Etat initial paresseux : sans cela, le premier rendu croit etre en grand
   // ecran et preselectionne une fiche — le visiteur mobile atterrirait dans un
@@ -2452,8 +2453,14 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         || f.narrative[lang].toLowerCase().includes(q)
         || f.reality[lang].toLowerCase().includes(q)
         || f.category[lang].toLowerCase().includes(q))
-      .sort((a, b) => tierOf(a.confidence_level).rank - tierOf(b.confidence_level).rank);
-  }, [query, activeCategory, activeTier, lang]);
+      .sort((a, b) => {
+        if (sortMode === 'theme') {
+          const c = a.category[lang].localeCompare(b.category[lang]);
+          if (c !== 0) return c;
+        }
+        return tierOf(a.confidence_level).rank - tierOf(b.confidence_level).rank;
+      });
+  }, [query, activeCategory, activeTier, lang, sortMode]);
 
   // Sur grand ecran le panneau n'est jamais vide : la premiere entree du
   // registre filtre est ouverte d'office.
@@ -2532,10 +2539,23 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             ))}
           </div>
 
+          {/* Deux entrees dans le meme corpus : par robustesse ou par theme */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1">
+              {L("Classer par", "Sort by")}
+            </span>
+            <FilterChip active={sortMode === 'robustness'} onClick={() => setSortMode('robustness')}>
+              {L("Robustesse", "Robustness")}
+            </FilterChip>
+            <FilterChip active={sortMode === 'theme'} onClick={() => setSortMode('theme')}>
+              {L("Th\u00e8me", "Theme")}
+            </FilterChip>
+          </div>
+
           {/* Theme : filtre secondaire */}
           <div className="flex items-center gap-1.5">
             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
-              {L("Th\u00e8me", "Theme")}
+              {L("Filtrer", "Filter")}
             </span>
             <select
               value={activeCategory}
@@ -2568,16 +2588,33 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                   {L("Registre des affirmations", "Register of claims")}
                 </span>
                 <span className="text-[9px] uppercase tracking-widest text-slate-400 text-right">
-                  {L("class\u00e9 du moins au plus \u00e9tay\u00e9", "least to most substantiated")}
+                  {sortMode === 'theme'
+                    ? L("group\u00e9 par th\u00e8me", "grouped by theme")
+                    : L("class\u00e9 du moins au plus \u00e9tay\u00e9", "least to most substantiated")}
                 </span>
               </div>
               <ul className="divide-y divide-slate-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                {results.map((f) => {
+                {results.map((f, idx) => {
                   const t = tierOf(f.confidence_level);
                   const isSel = selected && selected.id === f.id;
                   const CatIcon = evidenceCategoryIcons[f.category.fr] || Globe;
+                  // Ouverture d'un groupe thematique : on annonce le theme et son effectif.
+                  const startsGroup = sortMode === 'theme'
+                    && (idx === 0 || results[idx - 1].category.fr !== f.category.fr);
+                  const groupSize = startsGroup
+                    ? results.filter(r => r.category.fr === f.category.fr).length
+                    : 0;
                   return (
                     <li key={f.id}>
+                      {startsGroup && (
+                        <div className="sticky top-0 z-10 flex items-baseline justify-between gap-3 px-4 py-2"
+                             style={{ backgroundColor: 'var(--paper-sunk)', borderBottom: '1px solid var(--rule)' }}>
+                          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--terra)' }}>
+                            <CatIcon className="w-3 h-3" /> {f.category[lang]}
+                          </span>
+                          <span className="text-[10px] font-bold tabular-nums text-slate-500">{groupSize}</span>
+                        </div>
+                      )}
                       <button
                         onClick={() => setSelectedId(f.id)}
                         aria-current={isSel ? 'true' : undefined}
@@ -2654,15 +2691,43 @@ const pafomSessions = [
 // africain equivalent, ses dates, et les sources qui l'attestent.
 // Bouton de sous-navigation : meme idiome que les onglets principaux — encre
 // pleine et filet terracotta lorsqu'il est retenu, filet seul sinon.
-const govSubNavStyle = (isActive) => isActive
-  ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)',
-      boxShadow: 'inset 2px 0 0 var(--terra)' }
-  : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)' };
+// Fiche d'organe specialise : sigle, intitule complet, siege et acte fondateur,
+// mandat, puis la source qui l'atteste.
+const AuAgencyCard = ({ acronym, fullName, seat, founded, children, source, lang }) => (
+  <article className="bg-white border border-slate-200 p-5 flex flex-col h-full">
+    <div className="flex items-baseline justify-between gap-3 mb-1">
+      <h5 className="font-serif font-bold text-slate-900 text-base">{acronym}</h5>
+      <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: 'var(--terra)' }}>{founded}</span>
+    </div>
+    <span className="block text-[11px] text-slate-600 leading-snug mb-1">{fullName}</span>
+    <span className="block text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-3">{seat}</span>
+    <p className="text-xs text-slate-700 leading-relaxed flex-grow">{children}</p>
+    {source && (
+      <a href={source.url} target="_blank" rel="noopener noreferrer"
+         className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest mt-4 pt-3 hover:underline"
+         style={{ color: 'var(--inkblue)', borderTop: '1px solid var(--rule)' }}>
+        {source.label} <ExternalLink className="w-3 h-3" />
+      </a>
+    )}
+  </article>
+);
 
-const AfricanCounterpoint = ({ kicker, title, lang, sources = [], children }) => (
-  <section className="bg-white border border-slate-200" style={{ borderTop: '2px solid var(--terra)' }}>
+// Le filet d'accent est pose entierement en ligne : la classe Tailwind
+// border-slate-200 est reteintee avec !important dans theme.css, elle
+// ecraserait sinon la couleur de l'accent.
+const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(--terra)', children }) => (
+  <section
+    className="bg-white"
+    style={{
+      borderStyle: 'solid',
+      borderColor: 'var(--rule)',
+      borderWidth: '1px',
+      borderTopWidth: '2px',
+      borderTopColor: accent,
+    }}
+  >
     <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
-      <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--terra)' }}>
+      <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: accent }}>
         {kicker}
       </span>
       <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h4>
@@ -3639,46 +3704,72 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
-        {/* NOUVEAU MENU EN 3 COLONNES */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-          {/* Bloc 1 : Global */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <Globe className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "1. Cadres Mondiaux" : "1. Global Frameworks"}
-            </div>
-            <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('sdgs')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'sdgs')}>{lang === 'fr' ? "ODD / SDGs (Agenda 2030)" : "SDGs (2030 Agenda)"}</button>
-              <button onClick={() => setActiveSdgzTab('gcm')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'gcm')}>{lang === 'fr' ? "Pacte GCM (Migrations)" : "GCM Compact (Migration)"}</button>
-              <button onClick={() => setActiveSdgzTab('gcr')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'gcr')}>{lang === 'fr' ? "Pacte GCR (Réfugiés)" : "GCR Compact (Refugees)"}</button>
-            </div>
+        {/* Sommaire : trois familles, six entrees, chacune annoncant son contenu. */}
+        <nav className="bg-white border border-slate-200 mb-8" aria-label={lang === 'fr' ? "Sommaire de la section" : "Section contents"}>
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+            {[
+              {
+                icon: Globe,
+                family: lang === 'fr' ? "Cadres mondiaux" : "Global frameworks",
+                items: [
+                  { id: 'sdgs', label: lang === 'fr' ? "ODD — Agenda 2030" : "SDGs — 2030 Agenda",
+                    hint: lang === 'fr' ? "6 cibles liées aux mobilités, et l'Agenda 2063 en regard" : "6 mobility-linked targets, with Agenda 2063 alongside" },
+                  { id: 'gcm', label: lang === 'fr' ? "Pacte mondial — Migrations" : "Global Compact — Migration",
+                    hint: lang === 'fr' ? "23 objectifs, et la Position africaine commune" : "23 objectives, and the Common African Position" },
+                  { id: 'gcr', label: lang === 'fr' ? "Pacte mondial — Réfugiés" : "Global Compact — Refugees",
+                    hint: lang === 'fr' ? "Partage des charges, lu depuis la Convention de 1969" : "Responsibility-sharing, read from the 1969 Convention" },
+                ],
+              },
+              {
+                icon: MapIcon,
+                family: lang === 'fr' ? "Cadres africains" : "African frameworks",
+                items: [
+                  { id: 'au', label: lang === 'fr' ? "Union africaine" : "African Union",
+                    hint: lang === 'fr' ? "Traités, organes politiques et 5 agences spécialisées" : "Treaties, political organs and 5 specialized agencies" },
+                  { id: 'recs', label: lang === 'fr' ? "Communautés économiques régionales" : "Regional Economic Communities",
+                    hint: lang === 'fr' ? "8 CER, ouverture comparée et instruments propres" : "8 RECs, compared openness and their own instruments" },
+                ],
+              },
+              {
+                icon: Scale,
+                family: lang === 'fr' ? "États juridiques" : "Legal frameworks",
+                items: [
+                  { id: 'matrix', label: lang === 'fr' ? "Entrées & séjours" : "Entry & residence",
+                    hint: lang === 'fr' ? "Les 54 pays : seuils légaux, instruments, ouverture" : "All 54 countries: legal thresholds, instruments, openness" },
+                ],
+              },
+            ].map((group, gi) => {
+              const FamilyIcon = group.icon;
+              return (
+                <div key={gi} className="p-4">
+                  <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+                    <FamilyIcon className="w-3 h-3" />
+                    <span>{group.family}</span>
+                  </div>
+                  <ul className="space-y-1">
+                    {group.items.map(item => {
+                      const isActive = activeSdgzTab === item.id;
+                      return (
+                        <li key={item.id}>
+                          <button
+                            onClick={() => setActiveSdgzTab(item.id)}
+                            aria-current={isActive ? 'true' : undefined}
+                            className="gov-subnav w-full text-left px-3 py-2.5 border"
+                          >
+                            <span className="gov-subnav-label block text-xs font-semibold leading-snug">{item.label}</span>
+                            <span className="gov-subnav-hint block text-[10px] leading-snug mt-0.5">
+                              {item.hint}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
-
-          {/* Bloc 2 : Africain */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <MapIcon className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "2. Cadres Africains" : "2. African Frameworks"}
-            </div>
-            <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('au')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'au')}>{lang === 'fr' ? "Union Africaine (Traités & Agences)" : "African Union (Treaties & Agencies)"}</button>
-              <button onClick={() => setActiveSdgzTab('recs')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'recs')}>{lang === 'fr' ? "CER (Régions & Processus)" : "RECs (Regions & Processes)"}</button>
-            </div>
-          </div>
-
-          {/* Bloc 3 : États Juridiques (54 pays) */}
-          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-            <div className="flex items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 border-b border-slate-100 pb-2">
-              <Scale className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "3. États Juridiques" : "3. Legal Frameworks"}
-            </div>
-            <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('matrix')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold flex justify-between items-center" style={govSubNavStyle(activeSdgzTab === 'matrix')}>
-                <span>{lang === 'fr' ? "Entrées & Séjours (54 pays)" : "Entry & Residence (54 countries)"}</span>
-                <ChevronRight className="w-3 h-3 opacity-50" />
-              </button>
-            </div>
-          </div>
-
-        </div>
+        </nav>
 
         {/* ============================================================== */}
         {/* Rendu des Onglets Globaux (ODD, GCM, GCR) */}
@@ -3776,6 +3867,114 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+            <AfricanCounterpoint
+              lang={lang}
+              accent="var(--inkblue)"
+              kicker={lang === 'fr' ? "Clef de lecture" : "How to read it"}
+              title={lang === 'fr'
+                ? "Ce que le Pacte est, et ce qu'il n'est pas"
+                : "What the Compact is, and what it is not"}
+              sources={[
+                { label: lang === 'fr'
+                    ? "Pacte mondial pour des migrations sûres, ordonnées et régulières — document final (par. 15 et 49)"
+                    : "Global Compact for Safe, Orderly and Regular Migration — final outcome document (paras. 15 and 49)",
+                  url: "https://refugeesmigrants.un.org/sites/default/files/180713_agreed_outcome_global_compact_for_migration.pdf" },
+                { label: lang === 'fr'
+                    ? "Assemblée générale des Nations unies, résolution 73/195 (19 décembre 2018)"
+                    : "United Nations General Assembly, resolution 73/195 (19 December 2018)",
+                  url: "https://www.iom.int/resources/global-compact-safe-orderly-and-regular-migration-res-73-195" },
+                { label: lang === 'fr'
+                    ? "Réseau des Nations unies sur les migrations — Forum d'examen des migrations internationales 2026"
+                    : "UN Network on Migration — International Migration Review Forum 2026",
+                  url: "https://migrationnetwork.un.org/international-migration-review-forum-2026" },
+              ]}
+            >
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Le Pacte a été adopté lors de la conférence intergouvernementale de Marrakech le 10 décembre 2018, puis entériné par l'Assemblée générale des Nations unies le 19 décembre 2018 (résolution 73/195), au terme d'un vote enregistré de 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable, et le texte lui-même précise que « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen »."
+                  : "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018, then endorsed by the UN General Assembly on 19 December 2018 (resolution 73/195), by a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"."}
+              </p>
+
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--inkblue)' }}>
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                  {lang === 'fr' ? "Principe de souveraineté nationale (par. 15)" : "National sovereignty principle (para. 15)"}
+                </span>
+                <p className="text-[13px] text-slate-600 italic leading-relaxed">
+                  {lang === 'fr'
+                    ? "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »"
+                    : "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\""}
+                </p>
+                <p className="text-xs text-slate-500 mt-3 leading-relaxed">
+                  {lang === 'fr'
+                    ? "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées."
+                    : "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike."}
+                </p>
+              </div>
+
+              <div>
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                  {lang === 'fr'
+                    ? "Les dix principes directeurs, transversaux et interdépendants (par. 15)"
+                    : "The ten cross-cutting and interdependent guiding principles (para. 15)"}
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+                  {(lang === 'fr' ? [
+                    ["Centré sur les personnes", "place les individus au cœur du dispositif"],
+                    ["Coopération internationale", "aucun État ne peut traiter seul un phénomène transnational"],
+                    ["Souveraineté nationale", "le droit de définir sa politique migratoire est réaffirmé"],
+                    ["État de droit et régularité de la procédure", "accès à la justice à tous les stades"],
+                    ["Développement durable", "adossé à l'Agenda 2030"],
+                    ["Droits humains", "non-régression et non-discrimination, quel que soit le statut"],
+                    ["Prise en compte du genre", "sortir du prisme de la seule victimité pour les femmes migrantes"],
+                    ["Prise en compte de l'enfance", "intérêt supérieur de l'enfant comme considération primordiale"],
+                    ["Approche pangouvernementale", "cohérence horizontale et verticale entre secteurs et niveaux"],
+                    ["Approche pansociétale", "migrants, diasporas, société civile, université, secteur privé, syndicats"],
+                  ] : [
+                    ["People-centred", "places individuals at its core"],
+                    ["International cooperation", "no state can address a transnational phenomenon alone"],
+                    ["National sovereignty", "the right to determine migration policy is reaffirmed"],
+                    ["Rule of law and due process", "access to justice at every stage"],
+                    ["Sustainable development", "rooted in the 2030 Agenda"],
+                    ["Human rights", "non-regression and non-discrimination, whatever the status"],
+                    ["Gender-responsive", "moving away from a victimhood-only lens on migrant women"],
+                    ["Child-sensitive", "the best interests of the child as a primary consideration"],
+                    ["Whole-of-government", "horizontal and vertical coherence across sectors and levels"],
+                    ["Whole-of-society", "migrants, diasporas, civil society, academia, private sector, unions"],
+                  ]).map(([name, gloss], i) => (
+                    <div key={i} className="flex gap-2.5 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>
+                      <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--inkblue)' }}>
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-[13px] leading-snug">
+                        <span className="font-semibold text-slate-800">{name}</span>
+                        <span className="text-slate-500"> — {gloss}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-500 mt-3 leading-relaxed text-justify">
+                  {lang === 'fr'
+                    ? "Ces dix principes ne sont pas un préambule décoratif : ils sont la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux — et c'est là que se joue l'écart entre deux mises en œuvre du même texte."
+                    : "These ten principles are not decorative preamble: they are the interpretive grid for the 23 objectives that follow. An objective is always read through them — and that is where two implementations of the same text diverge."}
+                </p>
+              </div>
+
+              <CounterpointFacts items={[
+                { when: lang === 'fr' ? "10 déc. 2018" : "10 Dec. 2018", what: lang === 'fr'
+                    ? "Adoption à la conférence intergouvernementale de Marrakech."
+                    : "Adoption at the intergovernmental conference in Marrakech." },
+                { when: lang === 'fr' ? "19 déc. 2018" : "19 Dec. 2018", what: lang === 'fr'
+                    ? "Entérinement par l'Assemblée générale (résolution 73/195) : 152 pour, 5 contre, 12 abstentions."
+                    : "Endorsement by the General Assembly (resolution 73/195): 152 in favour, 5 against, 12 abstentions." },
+                { when: lang === 'fr' ? "16-20 mai 2022" : "16-20 May 2022", what: lang === 'fr'
+                    ? "Premier Forum d'examen des migrations internationales (FEMI), à New York. Prévu au paragraphe 49 du Pacte, il en est la principale plateforme intergouvernementale de suivi, réunie tous les quatre ans."
+                    : "First International Migration Review Forum (IMRF), New York. Provided for in paragraph 49 of the Compact, it is its primary intergovernmental follow-up platform, convened every four years." },
+                { when: lang === 'fr' ? "5-8 mai 2026" : "5-8 May 2026", what: lang === 'fr'
+                    ? "Deuxième FEMI, à New York. Les examens régionaux l'alimentent — celui de l'Afrique a été conduit par l'UA en 2021."
+                    : "Second IMRF, New York. Regional reviews feed into it — Africa's was conducted by the AU in 2021." },
+              ]} />
+            </AfricanCounterpoint>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
               {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
@@ -4166,40 +4365,78 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <Database className="w-5 h-5 mr-2 text-indigo-700" />
                   {lang === 'fr' ? "Agences Spécialisées & Souveraineté Épistémique" : "Specialized Agencies & Epistemic Sovereignty"}
                 </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
-                    <h5 className="font-bold text-indigo-900 text-sm mb-1">OAM / AMO</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Rabat, Maroc (2020)" : "Rabat, Morocco (2020)"}</span>
-                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Observatoire Africain des Migrations, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (2018, données factuelles). Bras technique centralisant la donnée pour déconstruire les récits exogènes, mais dont le financement reste largement extrabudgétaire." : "African Migration Observatory, established following the 2016 New York Declaration and Objective 1 of the Global Compact (2018, factual data). Technical arm centralizing data to deconstruct exogenous narratives, though largely funded off the AU's regular budget."}
-                    </p>
-                  </div>
-                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
-                    <h5 className="font-bold text-indigo-900 text-sm mb-1">ACSRM / CERSM</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Bamako, Mali (2021)" : "Bamako, Mali (2021)"}</span>
-                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr'
-                        ? "Bureau Technique Spécialisé de la CUA établi par décision de la 33e Assemblée de l'UA (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire des connaissances sur les migrations africaines (« African Migration Policy Briefs »), suivre les cadres de politique migratoire et renforcer les capacités des États et des CER."
-                        : "Specialized Technical Office of the AUC established by the 33rd AU Assembly decision (February 2020) and officially launched on 19 March 2021. Continent-wide mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring migration policy frameworks, and building the capacity of States and RECs."}
-                    </p>
-                  </div>
-                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
-                    <h5 className="font-bold text-indigo-900 text-sm mb-1">COC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Khartoum, Soudan" : "Khartoum, Sudan"}</span>
-                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr'
-                        ? "Bureau Technique Spécialisé doté d'un statut propre (Conseil de gestion, Secrétariat) dédié à la lutte contre la migration irrégulière, la traite des personnes et le trafic de migrants. Plateforme de coopération policière continentale, actuellement fragilisée par le conflit au Soudan."
-                        : "Specialized Technical Office with its own statute (Management Board, Secretariat) dedicated to fighting irregular migration, human trafficking, and migrant smuggling. A continental law-enforcement cooperation platform, currently weakened by the conflict in Sudan."}
-                    </p>
-                  </div>
-                  <div className="bg-indigo-50/50 p-5 rounded-lg border border-indigo-100 shadow-sm flex flex-col h-full">
-                    <h5 className="font-bold text-indigo-900 text-sm mb-1">AIR & STATAFRIC</h5>
-                    <span className="text-[9px] uppercase tracking-widest text-indigo-500 font-bold mb-3 block">{lang === 'fr' ? "Kenya / Tunisie" : "Kenya / Tunisia"}</span>
-                    <p className="text-xs text-slate-700 leading-relaxed flex-grow">
-                      {lang === 'fr' ? "Institut africain pour les transferts de fonds (AIR) capte l'économie de la diaspora. STATAFRIC coordonne l'architecture statistique." : "African Institute for Remittances (AIR) leverages diaspora economy. STATAFRIC coordinates statistics."}
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <AuAgencyCard
+                    lang={lang}
+                    acronym={lang === 'fr' ? "OAM" : "AMO"}
+                    fullName={lang === 'fr' ? "Observatoire africain des migrations" : "African Migration Observatory"}
+                    seat={lang === 'fr' ? "Rabat, Maroc" : "Rabat, Morocco"}
+                    founded={lang === 'fr' ? "créé 2018 — lancé 2020" : "created 2018 — launched 2020"}
+                    source={{ url: "https://amo.au.int/en", label: lang === 'fr' ? "Site de l'OAM" : "AMO website" }}
+                  >
+                    {lang === 'fr'
+                      ? "Bureau technique spécialisé de l'UA, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (données factuelles), lancé le 18 décembre 2020. Il doit doter le continent de données migratoires centralisées, harmonisées et opportunes — le bras qui permet de produire ses propres diagnostics plutôt que de les recevoir. Son financement reste largement extrabudgétaire."
+                      : "AU specialized technical office, established in the wake of the 2016 New York Declaration and Objective 1 of the Global Compact (evidence-based data), launched on 18 December 2020. Its purpose is to give the continent centralised, harmonised and timely migration data — the arm that allows Africa to produce its own diagnoses rather than receive them. Its funding remains largely off the regular budget."}
+                  </AuAgencyCard>
+
+                  <AuAgencyCard
+                    lang={lang}
+                    acronym={lang === 'fr' ? "CERSM / ACSRM" : "ACSRM"}
+                    fullName={lang === 'fr' ? "Centre d'études et de recherche sur les migrations" : "African Centre for the Study and Research on Migration"}
+                    seat={lang === 'fr' ? "Bamako, Mali" : "Bamako, Mali"}
+                    founded={lang === 'fr' ? "décidé 2020 — lancé 2021" : "decided 2020 — launched 2021"}
+                    source={{ url: "https://au.int/", label: lang === 'fr' ? "Union africaine" : "African Union" }}
+                  >
+                    {lang === 'fr'
+                      ? "Bureau technique spécialisé de la Commission de l'UA, établi par décision de la 33e Conférence (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire de la connaissance sur les migrations africaines (« African Migration Policy Briefs »), suivre la mise en œuvre des cadres de politique migratoire et renforcer les capacités des États et des CER."
+                      : "Specialized technical office of the AU Commission, established by decision of the 33rd Assembly (February 2020) and officially launched on 19 March 2021. Continental mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring implementation of migration policy frameworks, and building the capacity of States and RECs."}
+                  </AuAgencyCard>
+
+                  <AuAgencyCard
+                    lang={lang}
+                    acronym="COC"
+                    fullName={lang === 'fr' ? "Centre opérationnel continental de Khartoum" : "Continental Operational Centre in Khartoum"}
+                    seat={lang === 'fr' ? "Khartoum, Soudan" : "Khartoum, Sudan"}
+                    founded={lang === 'fr' ? "statut propre" : "own statute"}
+                    source={{ url: "https://au.int/", label: lang === 'fr' ? "Union africaine" : "African Union" }}
+                  >
+                    {lang === 'fr'
+                      ? "Bureau technique spécialisé doté de son propre statut (Conseil de gestion, Secrétariat), dédié à la lutte contre la migration irrégulière, la traite des personnes et le trafic de migrants. Plateforme de coopération policière continentale, aujourd'hui fragilisée par le conflit au Soudan."
+                      : "Specialized technical office with its own statute (Management Board, Secretariat), dedicated to countering irregular migration, trafficking in persons and migrant smuggling. A continental law-enforcement cooperation platform, today weakened by the conflict in Sudan."}
+                  </AuAgencyCard>
+
+                  <AuAgencyCard
+                    lang={lang}
+                    acronym="AIR"
+                    fullName={lang === 'fr' ? "Institut africain pour les transferts de fonds" : "African Institute for Remittances"}
+                    seat={lang === 'fr' ? "Nairobi, Kenya" : "Nairobi, Kenya"}
+                    founded="2014"
+                    source={{ url: "https://au.int/en/sa/air", label: lang === 'fr' ? "Fiche AIR (UA)" : "AIR page (AU)" }}
+                  >
+                    {lang === 'fr'
+                      ? "Le Conseil exécutif ayant accepté l'offre d'accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l'accord de siège est signé et l'Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs : abaisser le coût d'envoi d'argent vers l'Afrique et à l'intérieur du continent, améliorer la mesure et la déclaration des données sur les transferts dans les États membres, et convertir ces flux en effet économique et social. L'AIR touche donc à la fois au droit bancaire et à la statistique migratoire."
+                      : "After the Executive Council accepted Kenya's offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics."}
+                  </AuAgencyCard>
+
+                  <AuAgencyCard
+                    lang={lang}
+                    acronym="STATAFRIC"
+                    fullName={lang === 'fr' ? "Institut panafricain de statistique de l'Union africaine" : "African Union Institute for Statistics"}
+                    seat={lang === 'fr' ? "Tunis, Tunisie" : "Tunis, Tunisia"}
+                    founded={lang === 'fr' ? "créé 2013 — activités 2019" : "created 2013 — activities 2019"}
+                    source={{ url: "https://statafric.au.int/en/mandate", label: lang === 'fr' ? "Mandat de STATAFRIC" : "STATAFRIC mandate" }}
+                  >
+                    {lang === 'fr'
+                      ? "Créé en janvier 2013 par la Conférence de l'UA à Addis-Abeba, installé à Tunis, ses activités ont été lancées en novembre 2019 en marge de la 13e session des directeurs généraux des instituts nationaux de statistique. Son mandat : conduire la production et la promotion d'une information statistique harmonisée et de qualité à l'appui de l'agenda africain d'intégration, en collectant et en agrégeant ce que publient les instituts nationaux. C'est l'infrastructure sur laquelle repose toute comparabilité continentale — y compris migratoire."
+                      : "Created in January 2013 by the AU Assembly in Addis Ababa and seated in Tunis, its activities were launched in November 2019 alongside the 13th session of the Committee of Directors General of national statistics offices. Its mandate: to lead the provision and promotion of harmonised, quality statistical information in support of the African integration agenda, by collecting and aggregating what national statistics institutes publish. It is the infrastructure on which all continental comparability rests — migration included."}
+                  </AuAgencyCard>
                 </div>
+
+                <p className="text-xs text-slate-500 leading-relaxed mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
+                  {lang === 'fr'
+                    ? "AIR et STATAFRIC sont souvent cités ensemble, à tort : le premier est un institut sectoriel adossé à la régulation bancaire kényane, le second l'appareil statistique de l'Union tout entière. Les confondre revient à confondre une source de données avec le système qui les rend comparables (Ben Mokhtar, 2026)."
+                    : "AIR and STATAFRIC are often cited together, wrongly: the first is a sectoral institute anchored in Kenyan banking regulation, the second the statistical apparatus of the Union as a whole. Conflating them means conflating a data source with the system that makes data comparable (Ben Mokhtar, 2026)."}
+                </p>
               </div>
 
               {/* Chronologie OAM : institutionnalisation par couches successives */}
@@ -4213,9 +4450,19 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ? "Chronologie construite à partir des documents publics de l'UA — notamment le Rapport d'activités de l'Observatoire Africain des Migrations (2021-2024) — et des communiqués officiels de l'UA."
                     : "Chronology built from public AU documents — notably the African Migration Observatory's Activity Report (2021-2024) — and official AU press releases."}
                 </p>
-                <a href="https://amo.au.int/en" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-700 hover:underline mb-6 pb-4 border-b border-slate-100 w-full">
-                  {lang === 'fr' ? "→ Consulter le site officiel de l'OAM" : "→ Visit the AMO's official site"} <ExternalLink className="w-3 h-3" />
-                </a>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-2 mb-6 pb-4 border-b border-slate-100">
+                  <a href="https://amo.au.int/sites/default/files/files/2025-04/amoactivityreport-2021-2024.pdf"
+                     target="_blank" rel="noopener noreferrer"
+                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--terra)' }}>
+                    {lang === 'fr'
+                      ? "→ Rapport d'activités de l'OAM, nov. 2021 – juin 2024 (PDF)"
+                      : "→ AMO Report on Activities, Nov. 2021 – June 2024 (PDF)"} <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a href="https://amo.au.int/en/resources" target="_blank" rel="noopener noreferrer"
+                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--inkblue)' }}>
+                    {lang === 'fr' ? "→ Ressources et documents de l'OAM" : "→ AMO resources and documents"} <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
                 <div className="space-y-5">
                   {[
                     {
@@ -5118,19 +5365,22 @@ const glossaryData = [
         term: "Migration",
         en_term: "Migration",
         fr: "Le mouvement d'une personne ou d'un groupe de personnes d'une unité géographique à une autre à travers une frontière administrative ou politique, avec l'intention de s'installer indéfiniment ou temporairement dans un lieu autre que son lieu d'origine (Statut de l'OAM).",
-        en: "The movement of a person or group of persons from one geographical unit to another across an administrative or political border, with the intention of settling indefinitely or temporarily in a place other than their place of origin (AMO Statute)."
+        en: "The movement of a person or group of persons from one geographical unit to another across an administrative or political border, with the intention of settling indefinitely or temporarily in a place other than their place of origin (AMO Statute).",
+        source: { fr: "Statut de l'Observatoire africain des migrations (UA)", en: "Statute of the African Migration Observatory (AU)", url: "https://amo.au.int/en" }
       },
       {
         term: "Migration internationale",
         en_term: "International Migration",
         fr: "Mouvement d'individus à travers des frontières étatiques internationalement reconnues avec l'intention d'établir une résidence. À des fins statistiques, l'ONU (UNDESA) et l'OIM définissent un migrant international comme une personne qui change de pays de résidence habituelle pour une période d'au moins 12 mois.",
-        en: "Movement of individuals across internationally recognized state borders with the intention of establishing residence. For statistical purposes, the UN (UNDESA) and IOM define an international migrant as a person who moves to a country other than their usual residence for at least 12 months."
+        en: "Movement of individuals across internationally recognized state borders with the intention of establishing residence. For statistical purposes, the UN (UNDESA) and IOM define an international migrant as a person who moves to a country other than their usual residence for at least 12 months.",
+        source: { fr: "UN DESA — définition opératoire (résidence habituelle, 12 mois)", en: "UN DESA — operational definition (usual residence, 12 months)" }
       },
       {
         term: "Migration interne",
         en_term: "Internal Migration",
         fr: "Mouvement de personnes à l'intérieur d'un État impliquant l'établissement d'une nouvelle résidence temporaire ou permanente (ex: rural vers urbain). C'est la forme de migration la plus courante (OIM).",
-        en: "Movement of people within a State involving the establishment of a new temporary or permanent residence (e.g., rural-to-urban). It is the most common form of migration (IOM)."
+        en: "Movement of people within a State involving the establishment of a new temporary or permanent residence (e.g., rural-to-urban). It is the most common form of migration (IOM).",
+        source: { fr: "OIM — Glossaire de la migration", en: "IOM — Glossary on Migration" }
       },
       {
         term: "Migration de travail",
@@ -5142,25 +5392,29 @@ const glossaryData = [
         term: "Migration circulaire",
         en_term: "Circular Migration",
         fr: "Mouvement temporaire et répété d'individus entre leur pays d'origine et un ou plusieurs pays d'accueil, souvent à des fins économiques, permettant le maintien de liens forts avec les communautés d'origine (OIM).",
-        en: "Temporary and repeated movement of individuals between their country of origin and one or more host countries, typically for economic purposes, allowing the maintenance of strong links with home communities (IOM)."
+        en: "Temporary and repeated movement of individuals between their country of origin and one or more host countries, typically for economic purposes, allowing the maintenance of strong links with home communities (IOM).",
+        source: { fr: "OIM — Glossaire de la migration", en: "IOM — Glossary on Migration" }
       },
       {
         term: "Migration saisonnière",
         en_term: "Seasonal Migration (Labor)",
         fr: "Déplacement temporaire lié aux fluctuations saisonnières de secteurs spécifiques (agriculture, tourisme). En Afrique, c'est une stratégie de subsistance traditionnelle facilitée par des protocoles régionaux comme celui de la CEDEAO.",
-        en: "Temporary movement linked to seasonal fluctuations in specific industries (agriculture, tourism). In Africa, it is a traditional livelihood strategy facilitated by regional protocols like ECOWAS."
+        en: "Temporary movement linked to seasonal fluctuations in specific industries (agriculture, tourism). In Africa, it is a traditional livelihood strategy facilitated by regional protocols like ECOWAS.",
+        source: { fr: "Protocole de la CEDEAO sur la libre circulation", en: "ECOWAS Protocol on Free Movement" }
       },
       {
         term: "Mobilité induite par le climat",
         en_term: "Climate-Induced Mobility",
         fr: "Mouvement (interne ou transfrontalier, volontaire ou forcé) déclenché par des changements climatiques soudains (inondations) ou progressifs (sécheresse). Bien que le terme « réfugié climatique » n'ait pas d'existence légale sous la Convention de 1951, ces populations nécessitent une protection (HCR, Déclaration de Kampala 2022).",
-        en: "Movement (internal or cross-border, voluntary or forced) driven by sudden (floods) or progressive (drought) climate changes. While the term 'climate refugee' has no legal standing under the 1951 Convention, these populations require protection (UNHCR, Kampala Declaration 2022)."
+        en: "Movement (internal or cross-border, voluntary or forced) driven by sudden (floods) or progressive (drought) climate changes. While the term 'climate refugee' has no legal standing under the 1951 Convention, these populations require protection (UNHCR, Kampala Declaration 2022).",
+        source: { fr: "HCR ; Déclaration ministérielle de Kampala sur migrations, environnement et changement climatique (2022)", en: "UNHCR; Kampala Ministerial Declaration on Migration, Environment and Climate Change (2022)", url: "https://au.int/" }
       },
       {
         term: "Migration régulière",
         en_term: "Regular Migration",
         fr: "Mouvement s'effectuant en conformité avec les lois et règlements des pays d'origine, de transit et de destination (OIM). Le Pacte Mondial (GCM) encourage l'expansion des voies régulières pour réduire les vulnérabilités.",
-        en: "Movement that occurs in compliance with the laws and regulations of sending, transit, and receiving states (IOM). The Global Compact (GCM) encourages expanding regular pathways to reduce vulnerabilities."
+        en: "Movement that occurs in compliance with the laws and regulations of sending, transit, and receiving states (IOM). The Global Compact (GCM) encourages expanding regular pathways to reduce vulnerabilities.",
+        source: { fr: "Pacte mondial pour les migrations (GCM, 2018)", en: "Global Compact for Migration (GCM, 2018)" }
       },
       {
         term: "Migration irrégulière",
@@ -5190,43 +5444,50 @@ const glossaryData = [
         term: "Migrant international",
         en_term: "International Migrant",
         fr: "Toute personne résidant dans un pays autre que son pays de naissance ou de nationalité, indépendamment de son statut légal ou du motif de son déplacement (UN DESA).",
-        en: "Any person residing in a country other than their country of birth or nationality, regardless of their legal status or the reason for their movement (UN DESA)."
+        en: "Any person residing in a country other than their country of birth or nationality, regardless of their legal status or the reason for their movement (UN DESA).",
+        source: { fr: "UN DESA", en: "UN DESA" }
       },
       {
         term: "Réfugié",
         en_term: "Refugee",
         fr: "La Convention de l'OUA (1969) définit le réfugié de manière plus large que la Convention de Genève (1951) : elle inclut toute personne contrainte de fuir non seulement par crainte de persécution individuelle, mais aussi du fait d'une agression extérieure, d'une occupation ou d'événements troublant gravement l'ordre public.",
-        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order."
+        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order.",
+        source: { fr: "Convention de l'OUA (1969), art. I(2) — définition de référence de la plateforme", en: "OAU Convention (1969), Art. I(2) — the platform's reference definition", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Demandeur d'asile",
         en_term: "Asylum Seeker",
         fr: "Individu ayant quitté son pays d'origine et formellement demandé une protection internationale, mais dont la demande de statut de réfugié n'a pas encore été statuée (HCR). Contrairement au réfugié, son statut juridique est en cours d'évaluation.",
-        en: "An individual who has left their country of origin and formally applied for international protection, but whose claim for refugee status has not yet been determined (UNHCR). Unlike a refugee, their legal status is pending assessment."
+        en: "An individual who has left their country of origin and formally applied for international protection, but whose claim for refugee status has not yet been determined (UNHCR). Unlike a refugee, their legal status is pending assessment.",
+        source: { fr: "HCR", en: "UNHCR" }
       },
       {
         term: "Personne déplacée interne (PDI)",
         en_term: "Internally Displaced Person (IDP)",
         fr: "Selon la Convention de Kampala (2009, Art. 1) : personne ou groupe forcé de fuir son foyer (conflit, violences, catastrophes) sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale.",
-        en: "Under the Kampala Convention (2009, Art. 1): persons or groups forced to flee their homes (conflict, violence, disasters) without crossing an internationally recognized State border. They are not counted in international migration statistics."
+        en: "Under the Kampala Convention (2009, Art. 1): persons or groups forced to flee their homes (conflict, violence, disasters) without crossing an internationally recognized State border. They are not counted in international migration statistics.",
+        source: { fr: "Convention de Kampala (2009), art. 1", en: "Kampala Convention (2009), Art. 1", url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" }
       },
       {
         term: "Apatride",
         en_term: "Stateless Person",
         fr: "Personne qu'aucun État ne considère comme son ressortissant par l'application de sa législation (Convention de 1954). Cette situation prive l'individu de l'accès aux droits fondamentaux, à l'identité légale et aux services de base.",
-        en: "A person who is not considered as a national by any State under the operation of its law (1954 Convention). This condition deprives individuals of access to fundamental rights, legal identity, and basic services."
+        en: "A person who is not considered as a national by any State under the operation of its law (1954 Convention). This condition deprives individuals of access to fundamental rights, legal identity, and basic services.",
+        source: { fr: "Convention de 1954 relative au statut des apatrides", en: "1954 Convention relating to the Status of Stateless Persons" }
       },
       {
         term: "Mineur non accompagné",
         en_term: "Unaccompanied Migrant Minor",
         fr: "Enfant (moins de 18 ans) séparé de ses parents ou de son tuteur légal lors d'un mouvement migratoire. L'approche juridique (Charte africaine des droits et du bien-être de l'enfant) exige que « l'intérêt supérieur de l'enfant » prime sur toute décision migratoire.",
-        en: "A child (under 18) separated from both parents and legally responsible caregivers during a migratory movement. The legal approach (African Charter on the Rights and Welfare of the Child) requires that the 'best interests of the child' be the primary consideration."
+        en: "A child (under 18) separated from both parents and legally responsible caregivers during a migratory movement. The legal approach (African Charter on the Rights and Welfare of the Child) requires that the 'best interests of the child' be the primary consideration.",
+        source: { fr: "Charte africaine des droits et du bien-être de l'enfant ; Convention relative aux droits de l'enfant", en: "African Charter on the Rights and Welfare of the Child; Convention on the Rights of the Child", url: "https://au.int/" }
       },
       {
         term: "Travailleur transfrontalier",
         en_term: "Cross-Border Worker",
         fr: "Individu maintenant sa résidence principale dans un pays tout en se rendant régulièrement dans un autre pour y travailler. Une pratique courante en Afrique, facilitée par les zones de libre circulation des CER (CEDEAO, CAE).",
-        en: "An individual maintaining their primary residence in one country while regularly traveling to another for employment. A common practice in Africa, facilitated by REC free movement zones (ECOWAS, EAC)."
+        en: "An individual maintaining their primary residence in one country while regularly traveling to another for employment. A common practice in Africa, facilitated by REC free movement zones (ECOWAS, EAC).",
+        source: { fr: "Protocoles de libre circulation des CER (CEDEAO, CAE)", en: "REC free movement protocols (ECOWAS, EAC)" }
       },
       {
         term: "Survivant de la traite",
@@ -5241,28 +5502,86 @@ const glossaryData = [
     icon: ShieldAlert,
     terms: [
       {
+        term: "Asile (droit d')",
+        en_term: "Asylum (right to)",
+        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin que la seule reconnaissance d'un droit de chercher : son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation, et pose l'octroi de l'asile comme un acte pacifique et humanitaire qui ne peut être considéré comme inamical envers un autre État.",
+        en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek: its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement, and establishes that granting asylum is a peaceful and humanitarian act that cannot be regarded as unfriendly by any other state.",
+        source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
+        stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
+      },
+      {
+        term: "Reconnaissance prima facie",
+        en_term: "Prima facie recognition",
+        fr: "Reconnaissance du statut de réfugié fondée sur des circonstances objectives et manifestes dans le pays d'origine, sans examen individuel du dossier. Elle s'applique typiquement aux arrivées massives, où la détermination individuelle serait impraticable. Bien que peu codifiée, c'est la voie par laquelle la majorité des réfugiés du monde sont reconnus — et la pratique dominante en Afrique, où la définition élargie de la Convention de l'OUA s'y prête directement.",
+        en: "Recognition of refugee status based on readily apparent, objective circumstances in the country of origin, without individual examination. It typically applies to large-scale arrivals where individual determination would be impracticable. Though thinly codified, it is the route by which most of the world's refugees are recognised — and the dominant practice in Africa, where the OAU Convention's broadened definition lends itself directly to it.",
+        source: { fr: "HCR, Principes directeurs sur la protection internationale n° 11 (2015)", en: "UNHCR, Guidelines on International Protection No. 11 (2015)", url: "https://www.unhcr.org/media/guidelines-international-protection-no-11-prima-facie-recognition-refugee-status-5-june-2015" },
+        stakes: { fr: "Une reconnaissance de groupe donne un statut immédiat sans file d'attente administrative. La basculer en examen individuel — comme certains États le font sous pression budgétaire ou politique — laisse des dizaines de milliers de personnes sans statut pendant des années, sans qu'aucun texte n'ait changé.", en: "Group recognition confers immediate status with no administrative queue. Switching to individual examination — as some states do under budgetary or political pressure — leaves tens of thousands without status for years, with no text having changed." }
+      },
+      {
+        term: "Détermination du statut de réfugié (DSR)",
+        en_term: "Refugee Status Determination (RSD)",
+        fr: "Procédure, administrative ou judiciaire, par laquelle un État ou le HCR établit si une personne relève de la définition du réfugié. En Afrique, elle est conduite tantôt par une commission nationale d'éligibilité, tantôt par le HCR agissant sous mandat lorsque l'État n'a pas encore d'appareil dédié — configuration qui déplace vers une organisation internationale une décision de souveraineté.",
+        en: "The administrative or judicial procedure by which a state or UNHCR establishes whether a person falls within the refugee definition. In Africa it is conducted sometimes by a national eligibility commission, sometimes by UNHCR acting under its mandate where the state has no dedicated apparatus — a configuration that shifts a sovereign decision to an international organisation.",
+        source: { fr: "HCR ; Convention de l'OUA (1969)", en: "UNHCR; OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+      },
+      {
+        term: "Déplacement prolongé",
+        en_term: "Protracted displacement",
+        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit non pas une crise mais un régime d'attente institutionnalisé.",
+        en: "A situation in which displaced people remain durably without a solution — no return, no local integration, no resettlement — often for years or decades. The notion shifts attention from emergency to duration: it describes not a crisis but an institutionalised regime of waiting.",
+        source: { fr: "HCR, Global Trends", en: "UNHCR, Global Trends", url: "https://www.unhcr.org/global-trends" },
+        stakes: { fr: "Tant qu'une situation est nommée « urgence », elle appelle des financements humanitaires courts et renouvelables. La nommer « prolongée » ouvre au contraire les instruments de développement — mais suppose de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire.", en: "As long as a situation is named an \"emergency\", it draws short, renewable humanitarian funding. Naming it \"protracted\" opens development instruments instead — but requires acknowledging a lasting presence, which host states are often reluctant to do." }
+      },
+      {
+        term: "Externalisation des frontières",
+        en_term: "Border externalisation",
+        fr: "Ensemble des dispositifs par lesquels un État reporte le contrôle de ses frontières au-delà de son territoire : financement et équipement de forces de sécurité tierces, agents de liaison, campagnes de dissuasion, conditionnement de l'aide à la coopération migratoire. Le contrôle s'exerce ainsi loin du lieu où le droit d'asile pourrait être invoqué.",
+        en: "The set of arrangements by which a state pushes control of its borders beyond its own territory: funding and equipping third-country security forces, liaison officers, deterrence campaigns, tying aid to migration cooperation. Control is thereby exercised far from where a right to asylum could be invoked.",
+        source: { fr: "Notion analytique consolidée dans la littérature sur les régimes de mobilité ; voir Achiume (2019) et Bakewell (2008) en Bibliothèque", en: "Analytical notion consolidated in the mobility-regimes literature; see Achiume (2019) and Bakewell (2008) in the Library" },
+        stakes: { fr: "Le déplacement du contrôle déplace aussi la responsabilité juridique : une personne interceptée avant d'atteindre un territoire ne peut y demander l'asile, et l'État qui a financé l'interception n'est pas celui qui la refuse. La responsabilité se dilue exactement là où elle serait exigible (Ben Mokhtar, 2026).", en: "Displacing control also displaces legal responsibility: a person intercepted before reaching a territory cannot claim asylum there, and the state that funded the interception is not the one refusing it. Accountability dissolves precisely where it would be enforceable (Ben Mokhtar, 2026)." }
+      },
+      {
+        term: "Accord de réadmission",
+        en_term: "Readmission agreement",
+        fr: "Instrument bilatéral ou régional par lequel un État s'engage à reprendre ses ressortissants — et parfois des ressortissants de pays tiers ayant transité par son territoire — éloignés depuis un autre État. Souvent négocié en contrepartie de facilités de visa, d'aide au développement ou de coopération commerciale.",
+        en: "A bilateral or regional instrument by which a state undertakes to take back its nationals — and sometimes third-country nationals who transited its territory — removed from another state. Often negotiated in exchange for visa facilitation, development aid or trade cooperation.",
+        source: { fr: "Pratique conventionnelle bilatérale ; voir Adamson & Tsourapas (2019) sur la diplomatie migratoire, en Bibliothèque", en: "Bilateral treaty practice; see Adamson & Tsourapas (2019) on migration diplomacy, in the Library" },
+        stakes: { fr: "La clause « ressortissants de pays tiers » transforme un État de transit en dépositaire de personnes qui n'en sont pas originaires. C'est le point où un accord technique produit des effets de séjour durables, sans qu'aucun droit de séjour n'ait été accordé.", en: "The \"third-country nationals\" clause turns a transit state into the custodian of people who are not from it. That is where a technical agreement produces lasting residence effects without any residence right having been granted." }
+      },
+      {
+        term: "Visa (régime de)",
+        en_term: "Visa (regime)",
+        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction n'est pas de degré mais de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
+        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is not one of degree but of kind: a prior visa moves the decision to the consulate in the country of departure — that is, beyond the reach of any appeal in the destination country.",
+        source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
+      },
+      {
         term: "Gestion intégrée des frontières",
         en_term: "Integrated Border Management",
         fr: "Administration globale et coordonnée visant à réguler les flux transfrontaliers, harmonisant les contrôles d'immigration, les douanes et la sécurité, tout en identifiant les personnes vulnérables nécessitant une protection (OIM, 2019).",
-        en: "Comprehensive and coordinated administration to regulate cross-border flows, harmonizing immigration, customs, and security controls, while identifying vulnerable persons requiring protection (IOM, 2019)."
+        en: "Comprehensive and coordinated administration to regulate cross-border flows, harmonizing immigration, customs, and security controls, while identifying vulnerable persons requiring protection (IOM, 2019).",
+        source: { fr: "OIM (2019)", en: "IOM (2019)" }
       },
       {
         term: "Principe de non-refoulement",
         en_term: "Non-Refoulement Principle",
         fr: "Norme impérative (jus cogens) du droit international interdisant à un État d'expulser ou de renvoyer un individu vers un territoire où sa vie ou sa liberté seraient menacées (Art. 33 de la Convention de Genève 1951 ; Art. II(3) de la Convention de l'OUA 1969).",
-        en: "Peremptory norm (jus cogens) of international law prohibiting a state from expelling or returning an individual to a territory where their life or freedom would be threatened (Art. 33 of the 1951 Geneva Convention; Art. II(3) of the 1969 OAU Convention)."
+        en: "Peremptory norm (jus cogens) of international law prohibiting a state from expelling or returning an individual to a territory where their life or freedom would be threatened (Art. 33 of the 1951 Geneva Convention; Art. II(3) of the 1969 OAU Convention).",
+        source: { fr: "Convention de Genève (1951), art. 33 ; Convention de l'OUA (1969), art. II(3)", en: "Geneva Convention (1951), Art. 33; OAU Convention (1969), Art. II(3)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Trafic illicite de migrants",
         en_term: "Smuggling of Migrants",
         fr: "Fait d'assurer, afin d'en tirer un avantage financier, l'entrée illégale d'une personne dans un État (Protocole de Palerme, 2000). Contrairement à la traite, le trafic implique le consentement initial du migrant et prend fin une fois la frontière franchie, bien que les risques d'abus soient immenses.",
-        en: "The procurement, for financial benefit, of the illegal entry of a person into a State (Palermo Protocol, 2000). Unlike trafficking, smuggling involves the initial consent of the migrant and ends once the border is crossed, though the risks of abuse are immense."
+        en: "The procurement, for financial benefit, of the illegal entry of a person into a State (Palermo Protocol, 2000). Unlike trafficking, smuggling involves the initial consent of the migrant and ends once the border is crossed, though the risks of abuse are immense.",
+        source: { fr: "Protocole de Palerme (2000)", en: "Palermo Protocol (2000)" }
       },
       {
         term: "Traite des êtres humains",
         en_term: "Human Trafficking",
         fr: "Recrutement, transport, transfert ou hébergement de personnes par la force, la contrainte ou la tromperie à des fins d'exploitation (travail forcé, servitude, exploitation sexuelle). Elle n'implique pas nécessairement le franchissement d'une frontière internationale (Protocole de Palerme).",
-        en: "Recruitment, transportation, transfer, or harboring of persons by force, coercion, or deception for the purpose of exploitation (forced labor, servitude, sexual exploitation). It does not necessarily involve crossing an international border (Palermo Protocol)."
+        en: "Recruitment, transportation, transfer, or harboring of persons by force, coercion, or deception for the purpose of exploitation (forced labor, servitude, sexual exploitation). It does not necessarily involve crossing an international border (Palermo Protocol).",
+        source: { fr: "Protocole de Palerme (2000)", en: "Palermo Protocol (2000)" }
       },
       {
         term: "Vulnérabilités des migrants",
@@ -5274,7 +5593,8 @@ const glossaryData = [
         term: "Identité légale",
         en_term: "Legal Identity",
         fr: "Reconnaissance de l'identité d'un individu par l'État (enregistrement des naissances, documents de voyage). Sans identité légale, les migrants sont exposés à l'exclusion systémique, à la détention arbitraire et au risque d'apatridie (Cible ODD 16.9).",
-        en: "State recognition of an individual's identity (birth registration, travel documents). Without legal identity, migrants face systemic exclusion, arbitrary detention, and the risk of statelessness (SDG Target 16.9)."
+        en: "State recognition of an individual's identity (birth registration, travel documents). Without legal identity, migrants face systemic exclusion, arbitrary detention, and the risk of statelessness (SDG Target 16.9).",
+        source: { fr: "Cible 16.9 des Objectifs de développement durable", en: "Sustainable Development Goal target 16.9", url: "https://www.un.org/sustainabledevelopment/" }
       }
     ]
   },
@@ -5283,34 +5603,67 @@ const glossaryData = [
     icon: MapPin,
     terms: [
       {
+        term: "Solutions durables",
+        en_term: "Durable solutions",
+        fr: "Les trois issues reconnues à une situation de déplacement : le rapatriement volontaire dans le pays d'origine, l'intégration locale dans le pays d'accueil, et la réinstallation dans un pays tiers. Une solution n'est dite durable que lorsqu'elle met fin au besoin de protection internationale — critère rarement rempli à l'échelle des effectifs déplacés.",
+        en: "The three recognised outcomes of a displacement situation: voluntary repatriation to the country of origin, local integration in the host country, and resettlement in a third country. A solution counts as durable only when it ends the need for international protection — a threshold rarely met at the scale of displaced populations.",
+        source: { fr: "HCR ; Pacte mondial sur les réfugiés (2018)", en: "UNHCR; Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
+      },
+      {
+        term: "Réinstallation",
+        en_term: "Resettlement",
+        fr: "Transfert d'un réfugié depuis son pays d'asile vers un pays tiers qui accepte de l'admettre et de lui accorder une résidence durable. Les places de réinstallation offertes chaque année restent très inférieures aux besoins identifiés, ce qui en fait moins une solution générale qu'un dispositif de protection ciblée.",
+        en: "The transfer of a refugee from their country of asylum to a third state that agrees to admit them and grant durable residence. The resettlement places offered each year remain far below identified needs, making it less a general solution than a targeted protection mechanism.",
+        source: { fr: "HCR, Projected Global Resettlement Needs", en: "UNHCR, Projected Global Resettlement Needs", url: "https://www.unhcr.org/global-trends" }
+      },
+      {
+        term: "Voies complémentaires",
+        en_term: "Complementary pathways",
+        fr: "Canaux d'admission légale distincts de la réinstallation — visas humanitaires, regroupement familial élargi, bourses d'études, mobilité professionnelle — mobilisés pour ouvrir des accès sûrs sans passer par le contingent de réinstallation. Complémentaires signifie qu'elles s'ajoutent à la protection, sans s'y substituer.",
+        en: "Legal admission channels distinct from resettlement — humanitarian visas, extended family reunification, scholarships, labour mobility — used to open safe access outside the resettlement quota. \"Complementary\" means they add to protection rather than replace it.",
+        source: { fr: "Pacte mondial sur les réfugiés (2018)", en: "Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
+      },
+      {
+        term: "Intégration locale",
+        en_term: "Local integration",
+        fr: "Processus par lequel un réfugié s'installe durablement dans son pays d'asile, avec une dimension juridique (accès à un statut stable, voire à la naturalisation), économique (droit au travail et aux moyens de subsistance) et sociale. C'est la solution durable la plus fréquente en Afrique de fait, et la moins reconnue en droit.",
+        en: "The process by which a refugee settles durably in the country of asylum, with a legal dimension (access to a stable status, possibly naturalisation), an economic one (right to work and to livelihoods), and a social one. It is the most common durable solution in Africa in practice, and the least recognised in law.",
+        source: { fr: "HCR ; Convention de l'OUA (1969), art. II", en: "UNHCR; OAU Convention (1969), Art. II", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+      },
+      {
         term: "Retour (Volontaire vs Forcé)",
         en_term: "Return (Voluntary vs Forced)",
         fr: "Processus par lequel un migrant regagne son pays d'origine. Le retour est « volontaire » lorsqu'il repose sur un consentement libre et éclairé. Il est « forcé » (expulsion, déportation) lorsqu'imposé par l'État hôte, devant toutefois respecter les droits humains et le non-refoulement (MPFA 2018-2030).",
-        en: "Process by which a migrant goes back to their country of origin. Return is 'voluntary' when based on free and informed consent. It is 'forced' (expulsion, deportation) when imposed by the host state, though it must respect human rights and non-refoulement (MPFA 2018-2030)."
+        en: "Process by which a migrant goes back to their country of origin. Return is 'voluntary' when based on free and informed consent. It is 'forced' (expulsion, deportation) when imposed by the host state, though it must respect human rights and non-refoulement (MPFA 2018-2030).",
+        source: { fr: "Cadre de politique migratoire pour l'Afrique (MPFA 2018-2030)", en: "Migration Policy Framework for Africa (MPFA 2018-2030)", url: "https://au.int/" }
       },
       {
         term: "Rapatriement",
         en_term: "Repatriation",
         fr: "Droit d'un réfugié ou d'une personne déplacée à retourner dans son pays d'origine dans des conditions de sécurité et de dignité, telles que définies par le droit international (Convention de Genève, Convention de l'OUA 1969).",
-        en: "The right of a refugee or displaced person to return to their country of origin in safety and dignity, as defined by international law (Geneva Convention, 1969 OAU Convention)."
+        en: "The right of a refugee or displaced person to return to their country of origin in safety and dignity, as defined by international law (Geneva Convention, 1969 OAU Convention).",
+        source: { fr: "Convention de Genève (1951) ; Convention de l'OUA (1969)", en: "Geneva Convention (1951); OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Réintégration",
         en_term: "Reintegration",
         fr: "Processus permettant aux migrants de retour de se réinsérer économiquement, socialement et psychologiquement dans leur communauté d'origine. Une réintégration durable prévient la réémigration irrégulière (MPFA 2018-2030).",
-        en: "Process through which returning migrants re-establish themselves economically, socially, and psychologically in their community of origin. Sustainable reintegration prevents irregular re-migration (MPFA 2018-2030)."
+        en: "Process through which returning migrants re-establish themselves economically, socially, and psychologically in their community of origin. Sustainable reintegration prevents irregular re-migration (MPFA 2018-2030).",
+        source: { fr: "Cadre de politique migratoire pour l'Afrique (MPFA 2018-2030)", en: "Migration Policy Framework for Africa (MPFA 2018-2030)", url: "https://au.int/" }
       },
       {
         term: "Résidence (Droit de)",
         en_term: "Residence",
         fr: "Statut légal accordé à un non-ressortissant pour séjourner légalement sur le territoire. Le Protocole de Kigali de l'UA (2018) promeut le droit de résidence pour l'emploi ou l'établissement commercial pour tous les citoyens africains.",
-        en: "Legal status granted to a non-citizen to lawfully stay in the territory. The AU Kigali Protocol (2018) promotes the right of residence for employment or business establishment for all African citizens."
+        en: "Legal status granted to a non-citizen to lawfully stay in the territory. The AU Kigali Protocol (2018) promotes the right of residence for employment or business establishment for all African citizens.",
+        source: { fr: "Protocole de l'UA sur la libre circulation (2018)", en: "AU Free Movement Protocol (2018)", url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" }
       },
       {
         term: "Naturalisation",
         en_term: "Naturalization",
         fr: "Processus légal (souvent discrétionnaire) par lequel un non-national acquiert la citoyenneté d'un pays d'accueil. Reconnue comme un levier d'intégration sociale et de réduction de l'apatridie (Déclaration d'Abidjan, 2015).",
-        en: "Legal process (often discretionary) by which a non-national acquires the citizenship of a host country. Recognized as a tool for social integration and reducing statelessness (Abidjan Declaration, 2015)."
+        en: "Legal process (often discretionary) by which a non-national acquires the citizenship of a host country. Recognized as a tool for social integration and reducing statelessness (Abidjan Declaration, 2015).",
+        source: { fr: "Déclaration d'Abidjan sur l'éradication de l'apatridie (2015)", en: "Abidjan Declaration on the Eradication of Statelessness (2015)" }
       },
       {
         term: "Résilience des migrants",
@@ -5328,7 +5681,8 @@ const glossaryData = [
         term: "Transferts de fonds (Remittances)",
         en_term: "Remittances",
         fr: "Fonds ou biens transférés par les migrants vers leur pays d'origine. Les remises migratoires constituent souvent la première source de financement externe en Afrique, dépassant l'Aide publique au développement (OIM, 2019).",
-        en: "Money or goods transferred by migrants to their country of origin. Remittances are often the leading source of external financing in Africa, exceeding Official Development Assistance (IOM, 2019)."
+        en: "Money or goods transferred by migrants to their country of origin. Remittances are often the leading source of external financing in Africa, exceeding Official Development Assistance (IOM, 2019).",
+        source: { fr: "OIM (2019) ; Banque mondiale — données sur les transferts", en: "IOM (2019); World Bank — remittances data" }
       },
       {
         term: "Fuite des cerveaux (Brain Drain)",
@@ -5370,7 +5724,8 @@ const glossaryData = [
         term: "Partenariat de compétences (Global Skills Partnership)",
         en_term: "Global Skills Partnership",
         fr: "Accord bilatéral entre un pays d'origine et un pays de destination finançant conjointement la formation de travailleurs, avant leur départ, dans des compétences utiles aux deux économies — conçu pour convertir la mobilité de main-d'œuvre en investissement partagé plutôt qu'en simple prélèvement de capital humain déjà formé.",
-        en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital."
+        en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital.",
+        source: { fr: "Objectif 18 du Pacte mondial pour les migrations", en: "Objective 18 of the Global Compact for Migration" }
       }
     ]
   },
@@ -5385,22 +5740,74 @@ const glossaryData = [
         en: "An origin-destination country pair linked by a significant migrant flow or stock, the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank) — lets the real geography of movement be seen beyond national aggregates."
       },
       {
+        term: "Régime (de gouvernance migratoire)",
+        en_term: "Regime (of migration governance)",
+        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent et les pratiques effectives des postes-frontières (Ben Mokhtar, 2026).",
+        en: "A set of principles, norms, rules and decision-making procedures around which actors' expectations converge in a given area. Applied to the African case, the notion holds together what a treaty-only reading separates: the texts adopted, the bureaucracies that carry them, and the actual practices of border posts (Ben Mokhtar, 2026).",
+        source: { fr: "Cadre de la théorie des régimes internationaux, appliqué au cas africain par Ben Mokhtar (2026)", en: "International regime theory framework, applied to the African case by Ben Mokhtar (2026)" }
+      },
+      {
+        term: "Extraversion",
+        en_term: "Extraversion",
+        fr: "Stratégie par laquelle des acteurs africains convertissent leur position de dépendance en ressource, en mobilisant la relation extérieure — financements, coopération, reconnaissance — comme instrument de pouvoir interne. Appliquée aux migrations, elle éclaire pourquoi certains États négocient activement une coopération qui semble d'abord servir l'agenda de leurs partenaires.",
+        en: "A strategy by which African actors convert a position of dependence into a resource, mobilising the external relationship — funding, cooperation, recognition — as an instrument of domestic power. Applied to migration, it explains why some states actively negotiate cooperation that appears to serve their partners' agenda first.",
+        source: { fr: "Bayart (2000), « Africa in the World: A History of Extraversion » — voir Bibliothèque", en: "Bayart (2000), \"Africa in the World: A History of Extraversion\" — see Library" }
+      },
+      {
+        term: "Gouvernementalité",
+        en_term: "Governmentality",
+        fr: "Manière dont un pouvoir gouverne des populations non par la contrainte directe mais par des dispositifs de savoir : catégories, recensements, indicateurs, procédures. Dans le champ migratoire, la notion invite à examiner les instruments de mesure eux-mêmes — compter, classer, nommer — comme des actes de gouvernement plutôt que comme des descriptions neutres.",
+        en: "The way a power governs populations not through direct coercion but through knowledge devices: categories, censuses, indicators, procedures. In the migration field, the notion invites examining measurement instruments themselves — counting, classifying, naming — as acts of government rather than neutral descriptions.",
+        source: { fr: "Cadre foucaldien, mobilisé dans l'analyse du régime africain (Ben Mokhtar, 2026)", en: "Foucauldian framework, mobilised in the analysis of the African regime (Ben Mokhtar, 2026)" }
+      },
+      {
+        term: "Lecture décoloniale",
+        en_term: "Decolonial reading",
+        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : ce ne sont pas les mêmes personnes qui peuvent circuler, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
+        en: "An approach that relates contemporary asymmetries of mobility to the colonial order that instituted them: not everyone can move, and that inequality has a history. Applied to international migration law, it contests the claim that global mobility regimes are neutral as to origin.",
+        source: { fr: "Achiume (2019), « Migration as Decolonization » — voir Bibliothèque", en: "Achiume (2019), \"Migration as Decolonization\" — see Library", url: "https://ssrn.com/abstract=3330353" }
+      },
+      {
+        term: "Communs migratoires vernaculaires",
+        en_term: "Vernacular migration commons",
+        fr: "Arrangements collectifs non étatiques qui organisent concrètement la circulation — réseaux d'hébergement, caisses d'entraide, savoirs de route, régulations de corridor — et qui préexistent souvent aux dispositifs publics ou en comblent les vides. Les penser comme des communs, plutôt que comme du désordre, change la question : non pas comment les supprimer, mais comment les reconnaître (Ben Mokhtar, 2026).",
+        en: "Non-state collective arrangements that concretely organise movement — accommodation networks, mutual-aid funds, route knowledge, corridor regulation — which often predate public schemes or fill their gaps. Thinking of them as commons rather than as disorder changes the question: not how to suppress them, but how to recognise them (Ben Mokhtar, 2026).",
+        source: { fr: "Cadre des communs (Ostrom), appliqué aux corridors africains (Ben Mokhtar, 2026)", en: "Commons framework (Ostrom), applied to African corridors (Ben Mokhtar, 2026)" }
+      },
+      {
+        term: "Souveraineté épistémique",
+        en_term: "Epistemic sovereignty",
+        fr: "Capacité d'un ensemble politique à produire lui-même les catégories, les données et les diagnostics qui le décrivent, plutôt que de les recevoir. C'est la justification explicite des organes africains de données migratoires : sans appareil propre, le continent se lit dans les instruments de ceux qui l'observent.",
+        en: "The capacity of a political entity to produce for itself the categories, data and diagnoses that describe it, rather than receiving them. It is the explicit rationale of Africa's migration-data bodies: without its own apparatus, the continent reads itself through the instruments of those who observe it.",
+        source: { fr: "Justification institutionnelle des organes de données de l'UA (OAM, STATAFRIC) ; lecture développée dans Ben Mokhtar (2026)", en: "Institutional rationale of the AU's data bodies (AMO, STATAFRIC); reading developed in Ben Mokhtar (2026)" }
+      },
+      {
+        term: "Conditionnalité migratoire",
+        en_term: "Migration conditionality",
+        fr: "Subordination d'un avantage — aide, préférence commerciale, facilitation de visa — à la coopération d'un État en matière de contrôle migratoire ou de réadmission. Elle installe la migration comme monnaie d'échange dans des négociations qui portent formellement sur autre chose.",
+        en: "Making a benefit — aid, trade preference, visa facilitation — conditional on a state's cooperation in migration control or readmission. It installs migration as a bargaining chip in negotiations formally about something else.",
+        source: { fr: "Voir Adamson & Tsourapas (2019) sur la diplomatie migratoire — Bibliothèque", en: "See Adamson & Tsourapas (2019) on migration diplomacy — Library", url: "https://doi.org/10.1093/isp/eky015" }
+      },
+      {
         term: "Entre-deux national",
         en_term: "National In-Between",
         fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les bureaucraties nationales. Concept central de la thèse à l'origine de cette plateforme (Ben Mokhtar, 2026).",
-        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this platform (Ben Mokhtar, 2026)."
+        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this platform (Ben Mokhtar, 2026).",
+        source: { fr: "Ben Mokhtar (2026) — concept central de la thèse à l'origine de la plateforme", en: "Ben Mokhtar (2026) — core concept of the doctoral thesis behind this platform" }
       },
       {
         term: "Capabilités de mouvement",
         en_term: "Capabilities of Movement",
         fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, dépassant la dichotomie simpliste volontaire/forcé.",
-        en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, moving beyond the simplistic voluntary/forced dichotomy."
+        en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, moving beyond the simplistic voluntary/forced dichotomy.",
+        source: { fr: "de Haas (2021), « A theory of migration: the aspirations–capabilities framework »", en: "de Haas (2021), 'A theory of migration: the aspirations-capabilities framework'", url: "https://doi.org/10.1186/s40878-020-00210-4" }
       },
       {
         term: "Gouvernance des migrations",
         en_term: "Migration Governance",
         fr: "Ensemble des normes juridiques, politiques, institutions et processus (du niveau local au niveau mondial) façonnant la gestion des mobilités, les droits des migrants et la coopération entre États (OIM, 2015 ; MPFA, 2018).",
-        en: "The combined frameworks of legal norms, policies, institutions, and processes (from local to global levels) shaping the management of mobility, migrant rights, and inter-state cooperation (IOM, 2015; MPFA, 2018)."
+        en: "The combined frameworks of legal norms, policies, institutions, and processes (from local to global levels) shaping the management of mobility, migrant rights, and inter-state cooperation (IOM, 2015; MPFA, 2018).",
+        source: { fr: "OIM (2015) ; Cadre de politique migratoire pour l'Afrique (MPFA, 2018)", en: "IOM (2015); Migration Policy Framework for Africa (MPFA, 2018)", url: "https://au.int/" }
       },
       {
         term: "Sécurisation (Securitization)",
@@ -5412,7 +5819,8 @@ const glossaryData = [
         term: "Désagrégation des données",
         en_term: "Data Disaggregation",
         fr: "Processus technique consistant à ventiler des données statistiques agrégées en sous-catégories (par âge, sexe, statut migratoire) pour identifier les disparités et orienter l'élaboration de politiques basées sur des preuves (Cible ODD 17.18).",
-        en: "The technical process of breaking down aggregated statistical data into subcategories (by age, gender, migration status) to identify disparities and guide evidence-based policymaking (SDG Target 17.18)."
+        en: "The technical process of breaking down aggregated statistical data into subcategories (by age, gender, migration status) to identify disparities and guide evidence-based policymaking (SDG Target 17.18).",
+        source: { fr: "Cible 17.18 des Objectifs de développement durable", en: "Sustainable Development Goal target 17.18", url: "https://www.un.org/sustainabledevelopment/" }
       },
       {
         term: "Facteurs Push & Pull (Causes profondes)",
@@ -5424,7 +5832,8 @@ const glossaryData = [
         term: "Diplomatie migratoire",
         en_term: "Migration Diplomacy",
         fr: "Utilisation stratégique de la coopération migratoire par les États dans l'arène internationale, s'en servant comme levier de négociation pour obtenir des financements, une reconnaissance politique ou des accords commerciaux (Adamson & Tsourapas, 2019).",
-        en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019)."
+        en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019).",
+        source: { fr: "Adamson & Tsourapas (2019), « Migration Diplomacy in World Politics »", en: "Adamson & Tsourapas (2019), 'Migration Diplomacy in World Politics'", url: "https://doi.org/10.1093/isp/eky015" }
       },
       { 
         term: "Nord Global & Sud Global", 
@@ -5444,6 +5853,91 @@ const glossaryData = [
         fr: "Plateformes étatiques, informelles et non contraignantes de dialogue sur les migrations (ex: MIDWA en Afrique de l'Ouest, MIDSA en Afrique Australe). Les Processus de Rabat et de Khartoum illustrent cette dynamique en structurant la coopération entre l'Afrique et l'Europe.", 
         en: "State-led, informal, and non-binding platforms for migration dialogue (e.g., MIDWA in West Africa, MIDSA in Southern Africa). The Rabat and Khartoum Processes illustrate this dynamic by structuring cooperation between Africa and Europe." 
       },
+    ]
+  },
+  {
+    category: { fr: "Instruments & Institutions du Régime Africain", en: "Instruments & Institutions of the African Regime" },
+    icon: Landmark,
+    terms: [
+      {
+        term: "Convention de l'OUA (1969)",
+        en_term: "OAU Convention (1969)",
+        fr: "Convention régissant les aspects propres aux problèmes des réfugiés en Afrique, adoptée à Addis-Abeba le 10 septembre 1969, en vigueur depuis le 20 juin 1974. Son article I(2) élargit la définition du réfugié à quiconque fuit une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public — sans exiger de crainte de persécution individualisée. C'est la définition de référence de cette plateforme.",
+        en: "Convention Governing the Specific Aspects of Refugee Problems in Africa, adopted in Addis Ababa on 10 September 1969, in force since 20 June 1974. Its Article I(2) broadens the refugee definition to anyone fleeing external aggression, occupation, foreign domination or events seriously disturbing public order — with no individualised fear of persecution required. It is this platform's reference definition.",
+        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
+        stakes: { fr: "Sous la définition de Genève, une personne fuyant une guerre généralisée sans être personnellement visée peut être écartée. Sous l'article I(2), elle est réfugiée. Le même trajet, deux textes, deux issues.", en: "Under the Geneva definition, someone fleeing generalised war without being personally targeted can be excluded. Under Article I(2), they are a refugee. Same journey, two texts, two outcomes." }
+      },
+      {
+        term: "Convention de Kampala (2009)",
+        en_term: "Kampala Convention (2009)",
+        fr: "Convention de l'Union africaine sur la protection et l'assistance aux personnes déplacées en Afrique. Premier — et toujours seul — traité régional contraignant au monde consacré aux personnes déplacées internes. Son article 1 donne la définition de référence de la PDI retenue sur cette plateforme.",
+        en: "African Union Convention for the Protection and Assistance of Internally Displaced Persons in Africa. The first — and still the only — binding regional treaty in the world devoted to internally displaced persons. Its Article 1 provides the reference IDP definition used on this platform.",
+        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" }
+      },
+      {
+        term: "Protocole sur la libre circulation (2018)",
+        en_term: "Free Movement Protocol (2018)",
+        fr: "Protocole au Traité d'Abuja relatif à la libre circulation des personnes, au droit de résidence et au droit d'établissement, adopté à Kigali en 2018. Il organise l'ouverture en trois phases successives — entrée, résidence, établissement — chacune conditionnant la suivante. Son entrée en vigueur requiert 15 ratifications ; il en compte 4 sur 54.",
+        en: "Protocol to the Abuja Treaty on Free Movement of Persons, Right of Residence and Right of Establishment, adopted in Kigali in 2018. It organises opening in three successive phases — entry, residence, establishment — each conditioning the next. Entry into force requires 15 ratifications; it stands at 4 of 54.",
+        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
+        stakes: { fr: "Le découpage en phases est ce qui rend le texte signable : un État peut adhérer au principe d'entrée sans s'engager sur le droit d'établissement. C'est aussi ce qui permet de s'arrêter à la première phase indéfiniment.", en: "The phased design is what makes the text signable: a state can endorse entry without committing to establishment rights. It is also what allows stopping at phase one indefinitely." }
+      },
+      {
+        term: "MPFA (2018-2030)",
+        en_term: "MPFA (2018-2030)",
+        fr: "Cadre de politique migratoire pour l'Afrique et son plan d'action décennal, révisé et adopté en 2018. Document d'orientation non contraignant qui décline les priorités continentales — gouvernance du travail migrant, données, protection, diaspora — et sert de référence aux politiques migratoires nationales et régionales.",
+        en: "Migration Policy Framework for Africa and its ten-year action plan, revised and adopted in 2018. A non-binding guidance document setting out continental priorities — labour migration governance, data, protection, diaspora — and serving as the reference for national and regional migration policies.",
+        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
+      },
+      {
+        term: "AVOI",
+        en_term: "AVOI",
+        fr: "Indice d'ouverture des visas en Afrique (Africa Visa Openness Index), publié conjointement par la Banque africaine de développement et la Commission de l'Union africaine. Il mesure, pour chaque pays, la facilité d'entrée offerte aux ressortissants des autres États africains selon la part de pays admis sans visa, avec visa à l'arrivée ou avec visa préalable.",
+        en: "Africa Visa Openness Index, published jointly by the African Development Bank and the African Union Commission. For each country it measures the ease of entry offered to nationals of other African states, based on the share of countries admitted visa-free, with visa on arrival, or requiring a prior visa.",
+        source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
+      },
+      {
+        term: "CER",
+        en_term: "REC",
+        fr: "Communauté économique régionale. Huit CER sont reconnues par l'Union africaine comme les blocs constitutifs de l'intégration continentale. Elles sont, en matière de mobilité, l'échelon où la libre circulation s'exerce réellement : plusieurs ont ouvert leurs frontières intérieures bien avant que le protocole continental n'existe.",
+        en: "Regional Economic Community. Eight RECs are recognised by the African Union as the building blocs of continental integration. On mobility they are the level at which free movement actually operates: several opened their internal borders long before the continental protocol existed.",
+        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
+      },
+      {
+        term: "ZLECAf",
+        en_term: "AfCFTA",
+        fr: "Zone de libre-échange continentale africaine. Accord commercial continental dont la mise en œuvre suppose une mobilité des personnes que le protocole sur la libre circulation n'a pas encore rendue effective — ce qui fait de la circulation des marchandises et de celle des personnes deux chantiers volontairement dissociés.",
+        en: "African Continental Free Trade Area. A continental trade agreement whose implementation presupposes a mobility of persons that the free movement protocol has not yet made effective — making the movement of goods and of people two deliberately decoupled projects.",
+        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/en/agenda2063/flagship-projects" }
+      },
+      {
+        term: "GCR",
+        en_term: "GCR",
+        fr: "Pacte mondial sur les réfugiés, affirmé par l'Assemblée générale des Nations unies en 2018. Instrument non contraignant organisé autour du partage équitable des charges et des responsabilités. Il est postérieur d'un demi-siècle à la Convention de l'OUA, qui portait déjà l'essentiel de ses principes en droit contraignant.",
+        en: "Global Compact on Refugees, affirmed by the UN General Assembly in 2018. A non-binding instrument organised around equitable sharing of burdens and responsibilities. It postdates by half a century the OAU Convention, which already carried most of its principles in binding law.",
+        source: { fr: "Nations unies / HCR", en: "United Nations / UNHCR", url: "https://globalcompactrefugees.org/" }
+      },
+      {
+        term: "CTS-MRIDP",
+        en_term: "STC-MRIDPs",
+        fr: "Comité technique spécialisé sur la migration, les réfugiés et les personnes déplacées. Organe ministériel de l'Union africaine institué sur la base de l'article 5 de l'Acte constitutif ; il se réunit tous les deux ans et supervise la redevabilité des organes techniques du régime, dont l'OAM.",
+        en: "Specialized Technical Committee on Migration, Refugees and Displaced Persons. An African Union ministerial organ established under Article 5 of the Constitutive Act; it meets every two years and oversees the accountability of the regime's technical bodies, including the AMO.",
+        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
+      },
+      {
+        term: "PAFoM",
+        en_term: "PAFoM",
+        fr: "Forum panafricain sur la migration. Processus consultatif continental créé par décision du Conseil exécutif en 2006, dont la première session s'est tenue à Accra en 2015. Il réunit États membres, CER, processus régionaux et agences onusiennes, sans pouvoir décisionnel propre.",
+        en: "Pan-African Forum on Migration. A continental consultative process created by Executive Council decision in 2006, whose first session was held in Accra in 2015. It brings together member states, RECs, regional processes and UN agencies, with no decision-making power of its own.",
+        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
+      },
+      {
+        term: "JLMP",
+        en_term: "JLMP",
+        fr: "Programme conjoint sur la migration de travail (Joint Labour Migration Programme), porté par la Commission de l'UA avec l'OIT, l'OIM et la CEA. Il met en œuvre le cinquième domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015) autour de quatre axes : portabilité des compétences, portabilité de la protection sociale, recrutement équitable et protection des travailleurs.",
+        en: "Joint Labour Migration Programme, led by the AU Commission with the ILO, IOM and ECA. It implements the fifth priority area of the 2015 Addis Ababa Declaration on Employment around four axes: skills portability, social-security portability, fair recruitment and worker protection.",
+        source: { fr: "Union africaine / OIT / OIM / CEA", en: "African Union / ILO / IOM / ECA", url: "https://au.int/" }
+      }
     ]
   }
 ];
@@ -6035,9 +6529,36 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV }) => {
             </h3>
             <div className="space-y-4">
               {cat.terms.map((t, tIdx) => (
-                <div key={tIdx} className="p-4 rounded-lg border border-slate-200 bg-slate-50">
-                  <h4 className="font-bold text-slate-900 text-sm mb-1.5">{lang === 'fr' ? t.term : t.en_term}</h4>
+                <div key={tIdx} className="p-4 border border-slate-200 bg-slate-50">
+                  <h4 className="font-serif font-bold text-slate-900 text-[15px] mb-2">{lang === 'fr' ? t.term : t.en_term}</h4>
                   <p className="text-xs text-slate-600 leading-relaxed text-justify">{lang === 'fr' ? t.fr : t.en}</p>
+
+                  {/* Ce que le choix du mot produit : la definition n'est pas descriptive,
+                      elle ouvre ou ferme des droits. */}
+                  {t.stakes && (
+                    <div className="mt-3 pl-3 py-1" style={{ borderLeft: '2px solid var(--terra)' }}>
+                      <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--terra)' }}>
+                        {lang === 'fr' ? "Ce que la définition change" : "What the definition changes"}
+                      </span>
+                      <p className="text-xs text-slate-600 leading-relaxed">{t.stakes[lang]}</p>
+                    </div>
+                  )}
+
+                  {t.source && (
+                    <div className="mt-3 pt-2.5" style={{ borderTop: '1px solid var(--rule)' }}>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1.5">
+                        {lang === 'fr' ? "Source" : "Source"}
+                      </span>
+                      {t.source.url ? (
+                        <a href={t.source.url} target="_blank" rel="noopener noreferrer"
+                           className="text-[11px] hover:underline inline-flex items-center gap-1" style={{ color: 'var(--inkblue)' }}>
+                          {t.source[lang]} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                        </a>
+                      ) : (
+                        <span className="text-[11px] text-slate-500">{t.source[lang]}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -6981,6 +7502,8 @@ export default function App() {
       category_fr: cat.category?.fr, category_en: cat.category?.en,
       term_fr: t.term, term_en: t.en_term,
       definition_fr: t.fr, definition_en: t.en,
+      source_fr: t.source?.fr || '', source_en: t.source?.en || '', source_url: t.source?.url || '',
+      stakes_fr: t.stakes?.fr || '', stakes_en: t.stakes?.en || '',
     })));
     downloadCSV('souths_glossary.csv', toCSV(rows));
   };
