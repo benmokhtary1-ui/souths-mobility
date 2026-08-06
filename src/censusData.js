@@ -14,10 +14,10 @@ export const censusRoundMeta = [
 ];
 
 export const census2020Status = {
-  conducted: { fr: "Effectue", en: "Conducted", count: 33, cls: "text-emerald-700 bg-emerald-50 border-emerald-200" },
+  conducted: { fr: "Effectué", en: "Conducted", count: 33, cls: "text-emerald-700 bg-emerald-50 border-emerald-200" },
   started:   { fr: "En cours", en: "Under way", count: 2,  cls: "text-amber-700 bg-amber-50 border-amber-200" },
-  planned:   { fr: "Prevu",    en: "Planned",   count: 7, cls: "text-rose-700 bg-rose-50 border-rose-200" },
-  none:      { fr: "Non prevu", en: "Not planned", count: 12, cls: "text-slate-500 bg-slate-100 border-slate-200" },
+  planned:   { fr: "Prévu",    en: "Planned",   count: 7, cls: "text-rose-700 bg-rose-50 border-rose-200" },
+  none:      { fr: "Non prévu", en: "Not planned", count: 12, cls: "text-slate-500 bg-slate-100 border-slate-200" },
 };
 
 export const censusByCountry = {
@@ -40,7 +40,7 @@ export const censusByCountry = {
   "r2010": "16/05/2014",
   "r2020": "19/09/2024",
   "status2020": "conducted",
-  "updated2026": "Censo 2024, date de reference 19/09/2024 (INE Angola, resultats definitifs)"
+  "updated2026": "Censo 2024, date de référence 19/09/2024 (INE Angola, résultats définitifs)"
  },
  "bj": {
   "name": "Benin",
@@ -361,7 +361,7 @@ export const censusByCountry = {
   "r2010": "09/2014",
   "r2020": "01/09/2024",
   "status2020": "conducted",
-  "updated2026": "RGPH 2024, date de reference 01/09/2024 (HCP Maroc)"
+  "updated2026": "RGPH 2024, date de référence 01/09/2024 (HCP Maroc)"
  },
  "mz": {
   "name": "Mozambique",
@@ -532,7 +532,7 @@ export const censusByCountry = {
   "r2010": "23/04/2014",
   "r2020": "06/11/2024",
   "status2020": "conducted",
-  "updated2026": "RGPH 2024, date de reference 06/11/2024 (INS Tunisie)"
+  "updated2026": "RGPH 2024, date de référence 06/11/2024 (INS Tunisie)"
  },
  "ug": {
   "name": "Uganda",
@@ -543,7 +543,7 @@ export const censusByCountry = {
   "r2010": "08/2014",
   "r2020": "05/2024",
   "status2020": "conducted",
-  "updated2026": "NPHC 2024, rapport final publie le 31/12/2024 (UBOS)"
+  "updated2026": "NPHC 2024, rapport final publié le 31/12/2024 (UBOS)"
  },
  "zm": {
   "name": "Zambia",

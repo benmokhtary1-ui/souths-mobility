@@ -168,10 +168,10 @@ const ScrollProgress = () => {
     };
   }, []);
   return (
-    <div className="h-0.5 w-full bg-slate-800/60 print:hidden" aria-hidden="true">
+    <div className="h-0.5 w-full print:hidden" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
       <div
-        className="h-full bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-400 transition-[width] duration-150 ease-out"
-        style={{ width: `${pct}%` }}
+        className="h-full transition-[width] duration-150 ease-out"
+        style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--terra-deep), var(--terra) 60%, #E08A5F)' }}
       />
     </div>
   );
@@ -273,45 +273,76 @@ const headerAccents = {
   teal: { badge: "bg-teal-900/50 border-teal-800 text-teal-200", highlight: "text-teal-300", border: "border-teal-900/50", bar: "from-teal-500 via-teal-400 to-transparent" },
 };
 
-const navAccentMap = {
-  home: { bg: 'bg-blue-800', border: 'border-t-blue-400', icon: 'text-blue-200' },
-  evidence: { bg: 'bg-blue-800', border: 'border-t-blue-400', icon: 'text-blue-200' },
-  explorer: { bg: 'bg-emerald-800', border: 'border-t-emerald-400', icon: 'text-emerald-200' },
-  governance: { bg: 'bg-indigo-800', border: 'border-t-indigo-400', icon: 'text-indigo-200' },
-  library: { bg: 'bg-amber-800', border: 'border-t-amber-400', icon: 'text-amber-200' },
-  about: { bg: 'bg-teal-800', border: 'border-t-teal-400', icon: 'text-teal-200' },
-  data: { bg: 'bg-cyan-800', border: 'border-t-cyan-400', icon: 'text-cyan-200' },
-  glossary: { bg: 'bg-violet-800', border: 'border-t-violet-400', icon: 'text-violet-200' },
-};
+// Onglet actif : un intercalaire de repertoire. Filet terracotta en tete, encre
+// legerement relevee, libelle au papier. Un seul accent pour les huit rubriques :
+// la couleur signale la position, elle ne code plus la rubrique.
+const navTabStyle = (isActive) => isActive
+  ? { backgroundColor: '#241E1A', color: '#FFFDF9', borderTopColor: 'var(--terra)',
+      boxShadow: 'inset 0 -1px 0 rgba(255,253,249,.06)' }
+  : { backgroundColor: 'transparent', color: '#A79E92', borderTopColor: 'transparent' };
 
-const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent = 'blue' }) => {
-  const a = headerAccents[accent] || headerAccents.blue;
+// Marque : un disque d'encre traverse par un arc de trajectoire. Lisible a 20 px
+// comme a 200 px, fonctionne sur papier comme en reserve sur fond sombre.
+const BrandMark = ({ className = "w-8 h-8", tone = "paper", style }) => {
+  const ring = tone === "paper" ? "var(--ink)" : "#FFFDF9";
   return (
-    <header
-      className={`bg-[#0f172a] text-white py-14 px-6 lg:px-10 relative overflow-hidden rounded-xl border ${a.border} shadow-lg mb-8`}
-      style={{ backgroundImage: 'radial-gradient(circle at 12% 20%, rgba(255,255,255,0.05), transparent 42%), radial-gradient(circle at 92% 88%, rgba(255,255,255,0.035), transparent 45%)' }}
-    >
-      <div className={`absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r ${a.bar} opacity-60`}></div>
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 opacity-[0.03] pointer-events-none">
-        <Icon className="w-[400px] h-[400px]" />
-      </div>
-      <div className="relative z-10 max-w-4xl">
-        <div className={`inline-block px-3 py-1 rounded-sm border text-[10px] font-bold mb-4 uppercase tracking-widest shadow-sm ${a.badge}`}>
-          {badge}
-        </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-[1.2] tracking-tight">
-          {title} <br/>
-          <span className={`italic font-normal ${a.highlight}`}>
-            {highlight}
-          </span>
-        </h1>
-        <p className="text-slate-300 text-base leading-relaxed font-medium">
-          {desc}
-        </p>
-      </div>
-    </header>
+    <svg viewBox="0 0 40 40" className={className} style={style} role="img" aria-label="South(s) Mobility">
+      <circle cx="20" cy="20" r="15.5" fill="none" stroke={ring} strokeWidth="2" opacity=".92" />
+      {/* trajectoire : sort du disque, signe la mobilite plutot que la frontiere */}
+      <path d="M4 27 C 13 27, 17 8, 27 8 C 33 8, 36 12, 36 12"
+            fill="none" stroke="var(--terra)" strokeWidth="3.4" strokeLinecap="round" />
+      <circle cx="27" cy="8" r="3.4" fill="var(--terra)" />
+    </svg>
   );
 };
+
+// Bandeau de section : structure d'origine (fond sombre, grande icone en filigrane,
+// filet d'accent) reprise avec la nouvelle palette encre/terracotta et Fraunces.
+const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe }) => (
+  <header
+    className="relative overflow-hidden rounded-xl mb-8 px-6 lg:px-12 py-14 md:py-16"
+    style={{
+      backgroundColor: 'var(--ink)',
+      backgroundImage:
+        'radial-gradient(circle at 10% 15%, rgba(180,73,31,.22), transparent 45%),' +
+        'radial-gradient(circle at 88% 90%, rgba(31,78,95,.28), transparent 50%)',
+    }}
+  >
+    <div
+      className="absolute inset-x-0 bottom-0 h-px"
+      style={{ background: 'linear-gradient(90deg, var(--terra), rgba(180,73,31,.35) 45%, transparent)' }}
+    />
+    <div className="absolute top-0 right-0 -mr-16 -mt-16 pointer-events-none opacity-[0.055]">
+      <Icon className="w-[380px] h-[380px]" style={{ color: '#FFFDF9' }} strokeWidth={0.75} />
+    </div>
+
+    <div className="relative z-10 max-w-4xl">
+      <span
+        className="inline-flex items-center gap-2 px-3 py-1 rounded-sm mb-6 text-[10px] font-semibold uppercase"
+        style={{
+          letterSpacing: '.18em',
+          color: '#F0C5B2',
+          backgroundColor: 'rgba(180,73,31,.16)',
+          border: '1px solid rgba(180,73,31,.42)',
+        }}
+      >
+        {badge}
+      </span>
+
+      <h1
+        className="font-serif font-black text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.025em]"
+        style={{ color: '#FFFDF9' }}
+      >
+        {title}{' '}
+        <span className="italic font-normal" style={{ color: '#E08A5F' }}>{highlight}</span>
+      </h1>
+
+      <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#CFC6BA' }}>
+        {desc}
+      </p>
+    </div>
+  </header>
+);
 
 const PRINT_CITATION = {
   fr: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Thèse doctorale). Université Internationale de Rabat (UIR).",
@@ -346,7 +377,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
       {/* En-tête : identité de la plateforme + sujet */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1pt solid #0f172a', paddingBottom: '2mm', marginBottom: '3mm' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5mm' }}>
-          <Globe style={{ width: '7mm', height: '7mm', color: '#1d4ed8' }} />
+          <BrandMark className="" tone="paper" style={{ width: '8mm', height: '8mm' }} />
           <div>
             <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '10pt', letterSpacing: '.04em' }}>SOUTH(S) MOBILITY</div>
             <div style={{ fontSize: '6.4pt', letterSpacing: '.14em', textTransform: 'uppercase', color: '#64748b' }}>
@@ -653,6 +684,18 @@ const t = {
           highlight: "et ressources analytiques.",
           desc: "Un accès centralisé aux rapports de référence, notes de politique (policy briefs), thèses et publications sur la géopolitique des mobilités dans les Suds."
         },
+        glossary: {
+          badge: "Lexique & Définitions",
+          title: "Les mots du régime",
+          highlight: "et leur définition africaine.",
+          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence — Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009) — puis, pour les seuls agrégats statistiques, par la définition opératoire d'UN DESA. Le choix du mot n'est jamais neutre : il détermine ce qui est compté."
+        },
+        about: {
+          badge: "À propos de la plateforme",
+          title: "Une initiative citoyenne",
+          highlight: "adossée à une recherche doctorale.",
+          desc: "L'origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être."
+        },
         methodology: {
           badge: "Rigueur & Transparence",
           title: "Ingénierie méthodologique",
@@ -921,6 +964,18 @@ const t = {
           title: "Library",
           highlight: "and analytical resources.",
           desc: "Centralized access to reference reports, policy briefs, theses, and publications on mobility geopolitics in the Global South."
+        },
+        glossary: {
+          badge: "Lexicon & Definitions",
+          title: "The words of the regime",
+          highlight: "and their African definition.",
+          desc: "Each term is defined first by the African instrument that governs it — the OAU Refugee Convention (1969), the Kampala Convention on internally displaced persons (2009) — then, for statistical aggregates only, by UN DESA's operational definition. The choice of word is never neutral: it determines what gets counted."
+        },
+        about: {
+          badge: "About the platform",
+          title: "A civic initiative",
+          highlight: "grounded in doctoral research.",
+          desc: "The origin, scope and stated limits of South(s) Mobility DataHub: who produces it, from which data, and what the platform does not claim to be."
         },
         methodology: {
           badge: "Rigor & Transparency",
@@ -1717,8 +1772,8 @@ const visaOpenTiers = {
 const countryById = {};
 Object.values(countryData).flat().forEach(c => { countryById[c.id] = c; });
 
-const CHORO_RAMP = ['#dbeafe', '#93c5fd', '#3b82f6', '#1d4ed8', '#172554'];
-const CHORO_NODATA = '#e2e8f0';
+const CHORO_RAMP = ['#F6E7DF', '#E8BFA8', '#D18B62', '#B4491F', '#7A2E12'];
+const CHORO_NODATA = '#E4DCD0';
 
 const mapIndicators = [
   {
@@ -1789,7 +1844,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
               key={id}
               d={d}
               fill={colorFor(v)}
-              stroke={isSel ? '#0f172a' : '#ffffff'}
+              stroke={isSel ? '#14110F' : '#FAF7F2'}
               strokeWidth={isSel ? 2.6 : 0.7}
               className="cursor-pointer"
               onClick={() => onSelect && onSelect(id)}
@@ -1850,7 +1905,7 @@ const opennessByName = (name) => {
 };
 
 // Carte de l'Afrique mettant en évidence les membres d'une CER, avec survol interactif.
-const AfricaRecMap = ({ recId, lang, accent = '#047857' }) => {
+const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
   const [hovered, setHovered] = useState(null);
 
   const memberIds = useMemo(() => {
@@ -1875,8 +1930,8 @@ const AfricaRecMap = ({ recId, lang, accent = '#047857' }) => {
             <path
               key={id}
               d={d}
-              fill={isMember ? accent : '#e2e8f0'}
-              stroke="#ffffff"
+              fill={isMember ? accent : '#E4DCD0'}
+              stroke="#FAF7F2"
               strokeWidth={isHovered ? 2.2 : 0.8}
               className="transition-all duration-200 cursor-default"
               style={{ opacity: isHovered ? 1 : isMember ? 0.92 : 0.75, filter: isHovered ? 'brightness(1.12)' : 'none' }}
@@ -2059,19 +2114,6 @@ const homeCards = [
   { id: 'library', icon: BookOpen, accent: 'amber', label: { fr: 'Bibliothèque', en: 'Library' }, desc: { fr: "{count} sources institutionnelles, juridiques et académiques vérifiées.", en: "{count} verified institutional, legal, and academic sources." } },
 ];
 
-const homeCardAccents = {
-  blue: "hover:border-blue-300 group-hover:text-blue-700",
-  emerald: "hover:border-emerald-300 group-hover:text-emerald-700",
-  indigo: "hover:border-indigo-300 group-hover:text-indigo-700",
-  amber: "hover:border-amber-300 group-hover:text-amber-700",
-};
-
-const homeCardIconBg = {
-  blue: "bg-blue-50 text-blue-600",
-  emerald: "bg-emerald-50 text-emerald-600",
-  indigo: "bg-indigo-50 text-indigo-600",
-  amber: "bg-amber-50 text-amber-600",
-};
 
 const TabHome = ({ text, lang, setActiveTab }) => {
   const totalCountries = Object.values(countryData).flat().length;
@@ -2098,22 +2140,28 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         highlight={text.headers.home.highlight}
         desc={text.headers.home.desc}
         icon={Globe}
-        accent="blue"
       />
 
+      {/* Releve de chiffres : une seule feuille divisee par des filets, plutot que
+          quatre vignettes posees cote a cote. */}
       <Reveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200 stat-ledger">
           {statTiles.map((stat, idx) => (
             <button
               key={idx}
               onClick={() => setActiveTab(stat.tab)}
-              className="relative overflow-hidden bg-white p-5 rounded-lg border border-slate-200 text-center shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 hover:border-blue-300 group"
+              className="relative overflow-hidden px-5 py-6 text-left group"
             >
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums">
+              <span
+                className="absolute left-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
+                style={{ backgroundColor: 'var(--terra)' }}
+              />
+              <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
                 <CountUp value={stat.value} />
               </div>
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block group-hover:text-blue-700">{stat.label[lang]}</span>
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block transition-colors">
+                {stat.label[lang]}
+              </span>
             </button>
           ))}
         </div>
@@ -2121,21 +2169,26 @@ const TabHome = ({ text, lang, setActiveTab }) => {
 
       <Reveal delay={60}>
         <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le Knowledge Hub" : "Explore the Knowledge Hub"}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {homeCards.map((card) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {homeCards.map((card, i) => {
             const Icon = card.icon;
             return (
               <button
                 key={card.id}
                 onClick={() => setActiveTab(card.id)}
-                className={`text-left p-6 bg-white rounded-xl border border-slate-200 shadow-sm transition-all duration-300 group flex flex-col h-full ${homeCardAccents[card.accent]} hover:shadow-md hover:-translate-y-0.5`}
+                className="hub-card text-left p-6 bg-white border border-slate-200 group flex flex-col h-full relative"
               >
-                <span className={`inline-flex items-center justify-center w-11 h-11 rounded-lg mb-4 transition-transform group-hover:scale-110 ${homeCardIconBg[card.accent]}`}>
-                  <Icon className="w-5 h-5" />
-                </span>
-                <h3 className={`font-serif font-bold text-slate-900 mb-2 ${homeCardAccents[card.accent].split(' ')[1]}`}>{card.label[lang]}</h3>
+                {/* Numerotation d'entree : la rubrique se lit comme une section d'ouvrage. */}
+                <div className="flex items-baseline justify-between mb-5">
+                  <span className="font-serif font-bold text-2xl leading-none tabular-nums" style={{ color: 'var(--terra)' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <Icon className="w-[18px] h-[18px] shrink-0" style={{ color: 'var(--rule-strong)' }} />
+                </div>
+                <span className="block h-px w-full mb-4" style={{ backgroundColor: 'var(--rule)' }} />
+                <h3 className="font-serif font-bold text-lg text-slate-900 mb-2 leading-snug">{card.label[lang]}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang].replace('{count}', totalLibrary)}</p>
-                <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4 group-hover:text-slate-700">
+                <span className="hub-card-cta flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-5">
                   {lang === 'fr' ? "Découvrir" : "Discover"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
                 </span>
               </button>
@@ -2155,7 +2208,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </div>
         <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p>{text.home_editorial.p1}</p>
+          <p className="lede">{text.home_editorial.p1}</p>
           <p>{text.home_editorial.p1b}</p>
         </div>
         <div className="max-w-4xl bg-slate-50 border border-slate-200 rounded-lg p-5 my-5 flex items-start gap-3">
@@ -2256,7 +2309,6 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
           ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
           : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
         icon={Search}
-        accent="blue"
       />
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
@@ -3368,7 +3420,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         highlight={text.headers.governance.highlight}
         desc={text.headers.governance.desc}
         icon={Landmark}
-        accent="indigo"
       />
 
       <div className="flex flex-wrap justify-end gap-2 print:hidden">
@@ -4282,7 +4333,6 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
       highlight={text.headers.explorer.highlight}
       desc={text.headers.explorer.desc}
       icon={MapIcon}
-      accent="emerald"
     />
 
     <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -5102,7 +5152,7 @@ const LibraryCard = ({ item, lang, essential = false }) => {
     <CardTag
       {...cardProps}
       className={essential
-        ? `p-5 rounded-xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-white shadow-sm flex flex-col gap-2 transition-all duration-300 ${item.url ? 'hover:shadow-md hover:border-amber-400 hover:-translate-y-0.5 group cursor-pointer' : ''}`
+        ? `p-5 rounded-lg border border-amber-200 bg-amber-50 flex flex-col gap-2 transition-colors duration-200 ${item.url ? 'hover:border-amber-500 group cursor-pointer' : ''}`
         : `p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5 transition-colors ${item.url ? 'hover:border-amber-300 hover:bg-amber-50/50 group cursor-pointer' : ''}`}
     >
       <div className="flex items-center justify-between gap-2">
@@ -5150,7 +5200,6 @@ const TabLibrary = ({ text, lang, exportLibraryCSV }) => {
         highlight={text.headers.library.highlight}
         desc={text.headers.library.desc}
         icon={BookOpen}
-        accent="amber"
       />
 
       <div>
@@ -5395,15 +5444,14 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           "The narrative of an Africa \"without data\" is among the most firmly established — and the least verified. This section tests it against the continent's actual statistical output."
         )}
         icon={Database}
-        accent="teal"
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
         {headline.map((h, i) => (
-          <div key={i} className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
-            <div className="text-2xl font-serif font-bold text-slate-900 tabular-nums">{h.val}</div>
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 block leading-snug">{h.lbl}</span>
-            <span className="text-[10px] text-slate-400 mt-1 block">{h.sub}</span>
+          <div key={i} className="px-5 py-6">
+            <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{h.val}</div>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block leading-snug">{h.lbl}</span>
+            <span className="text-[10px] text-slate-400 mt-1.5 block">{h.sub}</span>
           </div>
         ))}
       </div>
@@ -5532,7 +5580,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
   );
 };
 
-const TabGlossary = ({ lang, exportGlossaryCSV }) => {
+const TabGlossary = ({ lang, text, exportGlossaryCSV }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const query = searchTerm.trim().toLowerCase();
 
@@ -5550,6 +5598,13 @@ const TabGlossary = ({ lang, exportGlossaryCSV }) => {
 
   return (
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+      <PageHeader
+        badge={text.headers.glossary.badge}
+        title={text.headers.glossary.title}
+        highlight={text.headers.glossary.highlight}
+        desc={text.headers.glossary.desc}
+        icon={BookOpen}
+      />
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
           <h2 className="text-xl font-serif font-bold text-slate-900 flex items-center">
@@ -5764,7 +5819,7 @@ const methodLimits = [
   },
 ];
 
-const TabMethodology = ({ text, lang }) => (
+const TabMethodology = ({ text, lang, children }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
@@ -5772,26 +5827,21 @@ const TabMethodology = ({ text, lang }) => (
       highlight={text.headers.methodology.highlight}
       desc={text.headers.methodology.desc}
       icon={Database}
-      accent="teal"
     />
+    {children}
 
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div className="bg-teal-50 p-4 rounded-lg border border-teal-100 text-center">
-        <div className="text-2xl font-serif font-bold text-teal-800">{indicatorThemes.length}</div>
-        <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Axes Thématiques" : "Thematic Axes"}</span>
-      </div>
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 text-center">
-        <div className="text-2xl font-serif font-bold text-blue-800">{indicatorThemes.reduce((sum, th) => sum + th.items.length, 0)}</div>
-        <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Indicateurs Originaux" : "Original Indicators"}</span>
-      </div>
-      <div className="bg-slate-100 p-4 rounded-lg border border-slate-200 text-center">
-        <div className="text-2xl font-serif font-bold text-slate-800">{Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length}</div>
-        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Sources Primaires" : "Primary Sources"}</span>
-      </div>
-      <div className="bg-amber-50 p-4 rounded-lg border border-amber-100 text-center">
-        <div className="text-2xl font-serif font-bold text-amber-800">{Object.values(countryData).flat().length}</div>
-        <span className="text-[9px] font-bold text-amber-600 uppercase tracking-widest mt-1 block">{lang === 'fr' ? "Pays Couverts (UA)" : "Countries Covered (AU)"}</span>
-      </div>
+    <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
+      {[
+        { v: indicatorThemes.length, l: lang === 'fr' ? "Axes thématiques" : "Thematic axes" },
+        { v: indicatorThemes.reduce((sum, th) => sum + th.items.length, 0), l: lang === 'fr' ? "Indicateurs originaux" : "Original indicators" },
+        { v: Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length, l: lang === 'fr' ? "Sources primaires" : "Primary sources" },
+        { v: Object.values(countryData).flat().length, l: lang === 'fr' ? "Pays couverts (UA)" : "Countries covered (AU)" },
+      ].map((k, i) => (
+        <div key={i} className="px-5 py-6">
+          <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{k.v}</div>
+          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block">{k.l}</span>
+        </div>
+      ))}
     </div>
 
     {/* Chaîne de traitement */}
@@ -6056,7 +6106,7 @@ const mediaKindStyle = {
   press: { dot: 'bg-slate-500', chip: 'bg-slate-100 text-slate-700 border-slate-300' },
 };
 
-const TabAbout = ({ text, lang }) => {
+const TabAbout = ({ text, lang, children }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopyCitation = async () => {
@@ -6071,21 +6121,29 @@ const TabAbout = ({ text, lang }) => {
 
   return (
     <section className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+      <PageHeader
+        badge={text.headers.about.badge}
+        title={text.headers.about.title}
+        highlight={text.headers.about.highlight}
+        desc={text.headers.about.desc}
+        icon={Info}
+      />
+      {children}
       
-      <div className="bg-[#0f172a] rounded-xl p-8 md:p-12 text-white shadow-lg relative overflow-hidden border border-slate-800">
-        <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-5"><Info className="w-64 h-64" /></div>
-        <div className="relative z-10">
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-white mb-3">
-            {text.about.intro_title}
-          </h1>
-          <p className="text-blue-300 font-bold text-sm md:text-base uppercase tracking-widest mb-8">
-            {text.about.intro_subtitle}
-          </p>
-          <div className="space-y-4 text-slate-300 leading-relaxed max-w-3xl text-justify">
-            <p>{text.about.intro_p1}</p>
-            <p>{text.about.intro_p2}</p>
-            <p>{text.about.intro_p3}</p>
-          </div>
+      {/* Ouverture editoriale : le bandeau sombre est desormais porte par le masthead,
+          ce bloc revient donc au papier et s'ouvre sur une lettrine. */}
+      <div className="bg-white border border-slate-200 p-8 md:p-12">
+        <span className="block text-[10px] font-semibold uppercase mb-3" style={{ letterSpacing: '.18em', color: 'var(--terra)' }}>
+          {text.about.intro_subtitle}
+        </span>
+        <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-6 max-w-3xl">
+          {text.about.intro_title}
+        </h2>
+        <span className="block h-px w-24 mb-7" style={{ backgroundColor: 'var(--terra)' }} />
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-3xl text-justify">
+          <p className="lede">{text.about.intro_p1}</p>
+          <p>{text.about.intro_p2}</p>
+          <p>{text.about.intro_p3}</p>
         </div>
       </div>
 
@@ -6261,7 +6319,7 @@ const TabAbout = ({ text, lang }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         {/* Publications */}
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-transparent">
+          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100">
             <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-900 text-white shrink-0">
               <FileText className="w-4 h-4" />
             </span>
@@ -6301,7 +6359,7 @@ const TabAbout = ({ text, lang }) => {
 
         {/* Interventions médiatiques */}
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100 bg-gradient-to-r from-rose-50/70 to-transparent">
+          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100">
             <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rose-600 text-white shrink-0">
               <Mic className="w-4 h-4" />
             </span>
@@ -6568,9 +6626,7 @@ export default function App() {
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
       <style type="text/css">
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap');
-          body { font-family: 'Source Sans 3', sans-serif; }
-          h1, h2, h3, h4, h5, h6, .font-serif { font-family: 'Merriweather', serif; }
+          /* Les polices et la palette sont definies dans theme.css (DA « atlas editorial »). */
         `}
       </style>
       <style type="text/css" media="print">
@@ -6636,9 +6692,10 @@ export default function App() {
         <div className="border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
             <div className="flex items-center space-x-3">
-              <div className="bg-blue-800 p-1.5 rounded-sm shadow-sm"><Globe className="h-4 w-4 text-blue-100" /></div>
-              <span className="text-base font-serif font-bold tracking-tight uppercase">
-                {text.title} <span className="text-blue-300 font-sans font-medium lowercase italic">{text.subtitle}</span>
+              <BrandMark className="h-8 w-8 shrink-0" tone="dark" />
+              <span className="text-base font-serif font-bold tracking-tight leading-none">
+                <span style={{ color: '#FFFDF9' }}>{text.title}</span>{' '}
+                <span className="font-sans font-normal italic text-[13px]" style={{ color: '#C98A66' }}>{text.subtitle}</span>
               </span>
             </div>
             <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
@@ -6652,18 +6709,15 @@ export default function App() {
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
-              const navAccent = navAccentMap[item.id] || navAccentMap.home;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center px-4 py-2.5 rounded-sm text-xs font-bold transition-all whitespace-nowrap border-t-2 ${
-                    isActive
-                      ? `${navAccent.bg} text-white shadow-inner ${navAccent.border}`
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border-t-transparent'
-                  }`}
+                  aria-current={isActive ? 'page' : undefined}
+                  className="nav-tab flex items-center px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-t-2"
+                  style={navTabStyle(isActive)}
                 >
-                  <Icon className={`w-4 h-4 mr-2 ${isActive ? navAccent.icon : 'text-slate-500'}`} />
+                  <Icon className="w-4 h-4 mr-2" style={{ color: isActive ? '#E08A5F' : '#7A7167' }} />
                   {item.label[lang]}
                 </button>
               );
@@ -6703,27 +6757,30 @@ export default function App() {
             exportIndicatorsCSV={exportIndicatorsCSV}
           />
         )}
-        {activeTab === 'glossary' && <TabGlossary lang={lang} exportGlossaryCSV={exportGlossaryCSV} />}
+        {activeTab === 'glossary' && <TabGlossary lang={lang} text={text} exportGlossaryCSV={exportGlossaryCSV} />}
         {activeTab === 'about' && (
           <div className="space-y-8">
-            <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg mx-auto">
-              <button
-                onClick={() => setActiveAboutTab('about')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'about' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                <Info className="w-3.5 h-3.5" /> {lang === 'fr' ? 'À Propos' : 'About'}
-              </button>
-              <button
-                onClick={() => setActiveAboutTab('methodology')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                <Database className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Méthodologie' : 'Methodology'}
-              </button>
-            </div>
-            {activeAboutTab === 'about' && <TabAbout text={text} lang={lang} />}
-            {activeAboutTab === 'methodology' && (
-              <TabMethodology text={text} lang={lang} />
-            )}
+            {(() => {
+              const aboutSwitch = (
+                <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg">
+                  <button
+                    onClick={() => setActiveAboutTab('about')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'about' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  >
+                    <Info className="w-3.5 h-3.5" /> {lang === 'fr' ? 'À Propos' : 'About'}
+                  </button>
+                  <button
+                    onClick={() => setActiveAboutTab('methodology')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  >
+                    <Database className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Méthodologie' : 'Methodology'}
+                  </button>
+                </div>
+              );
+              return activeAboutTab === 'about'
+                ? <TabAbout text={text} lang={lang}>{aboutSwitch}</TabAbout>
+                : <TabMethodology text={text} lang={lang}>{aboutSwitch}</TabMethodology>;
+            })()}
           </div>
         )}
         <PrintCitationFooter lang={lang} sectionLabel={navigation.find(i => i.id === activeTab)?.label?.[lang]} />
@@ -7053,18 +7110,71 @@ export default function App() {
         </div>
       )}
 
-      <footer className="bg-[#0f172a] text-slate-400 py-12 border-t border-slate-800 mt-12 print:hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-          <div>
-            <div className="flex items-center space-x-2 mb-2 justify-center md:justify-start">
-              <Globe className="h-5 w-5 text-blue-500" />
-              <span className="text-white font-serif font-bold text-lg tracking-widest uppercase">South(s) Mobility</span>
+      <footer className="mt-20 print:hidden" style={{ backgroundColor: 'var(--ink)' }}>
+        {/* filet de signature en tete de pied de page */}
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--terra), rgba(180,73,31,.35) 40%, transparent)' }} />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
+
+            {/* Marque */}
+            <div className="md:col-span-5">
+              <div className="flex items-center gap-3 mb-4">
+                <BrandMark className="h-9 w-9 shrink-0" tone="dark" />
+                <span className="font-serif font-bold text-xl leading-none" style={{ color: '#FFFDF9' }}>
+                  South(s) Mobility
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed max-w-sm" style={{ color: '#A79E92' }}>
+                {text.footer.tag}
+              </p>
             </div>
-            <p className="text-xs">{text.footer.tag}</p>
+
+            {/* Navigation secondaire */}
+            <div className="md:col-span-3">
+              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--terra-light)' }}>
+                {lang === 'fr' ? 'Explorer' : 'Explore'}
+              </span>
+              <ul className="space-y-2">
+                {navigation.filter(n => n.id !== 'home').map(item => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setActiveTab(item.id)}
+                      className="text-sm transition-colors hover:text-[#E08A5F]"
+                      style={{ color: '#CFC6BA' }}
+                    >
+                      {item.label[lang]}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Provenance & contact */}
+            <div className="md:col-span-4">
+              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--terra-light)' }}>
+                {lang === 'fr' ? 'Sources & contact' : 'Sources & contact'}
+              </span>
+              <p className="text-xs leading-relaxed mb-4" style={{ color: '#A79E92' }}>
+                {text.footer.sources}
+              </p>
+              <a
+                href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20-%20Contact"
+                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[#E08A5F]"
+                style={{ color: '#CFC6BA' }}
+              >
+                <Mail className="w-3.5 h-3.5" /> benmokhtary1@gmail.com
+              </a>
+            </div>
           </div>
-          <div className="text-[9px] uppercase font-bold tracking-widest text-slate-500">
-            <p>{text.footer.sources}</p>
-            <p className="mt-3 text-blue-500">© 2026 • Yassine Ben Mokhtar • Initiative Citoyenne & Recherche Indépendante</p>
+
+          <div className="mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-3" style={{ borderTop: '1px solid rgba(255,253,249,.10)' }}>
+            <p className="text-[11px]" style={{ color: '#8A8175' }}>
+              © 2026 Yassine Ben Mokhtar — {lang === 'fr' ? 'Initiative citoyenne & recherche indépendante' : 'Independent research & civic initiative'}
+            </p>
+            <p className="text-[11px] italic" style={{ color: '#8A8175' }}>
+              {lang === 'fr' ? 'Données publiques consolidées, sources citées.' : 'Consolidated public data, sources cited.'}
+            </p>
           </div>
         </div>
       </footer>
