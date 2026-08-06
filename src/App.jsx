@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
+import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -279,6 +280,8 @@ const navAccentMap = {
   governance: { bg: 'bg-indigo-800', border: 'border-t-indigo-400', icon: 'text-indigo-200' },
   library: { bg: 'bg-amber-800', border: 'border-t-amber-400', icon: 'text-amber-200' },
   about: { bg: 'bg-teal-800', border: 'border-t-teal-400', icon: 'text-teal-200' },
+  data: { bg: 'bg-cyan-800', border: 'border-t-cyan-400', icon: 'text-cyan-200' },
+  glossary: { bg: 'bg-violet-800', border: 'border-t-violet-400', icon: 'text-violet-200' },
 };
 
 const PageHeader = ({ badge, title, highlight, desc, icon: Icon = Globe, accent = 'blue' }) => {
@@ -552,17 +555,6 @@ const recLogos = {
   ceeac: "/logos/rec-ceeac.png",
 };
 
-const aboutLogoMap = [
-  institutionLogos.find(i => i.key === 'au'),
-  institutionLogos.find(i => i.key === 'un'),
-  institutionLogos.find(i => i.key === 'worldbank'),
-  institutionLogos.find(i => i.key === 'afdb'),
-  institutionLogos.find(i => i.key === 'oecd'),
-  institutionLogos.find(i => i.key === 'idmc'),
-  null,
-  null,
-];
-
 const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
   const [status, setStatus] = useState(src ? 'loading' : 'failed');
 
@@ -679,7 +671,7 @@ const t = {
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. Ce n'est donc pas la production normative qui fait défaut, mais son ancrage dans les administrations nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
         p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance (Ben Mokhtar, 2026). Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
-        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde.",
+        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être : elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public — en assumant que le choix de ce qui est mis en avant, et de l'échelle à laquelle on le rapporte, constitue déjà un geste analytique et non le simple reflet des données.",
         refs_title: "Pour aller plus loin",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -775,14 +767,23 @@ const t = {
         data_title: "Une approche fondée sur les données",
         data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
         data_list: [
-          { name: "Commission de l'Union africaine (AUC)", url: "https://au.int/fr" },
-          { name: "Nations Unies (UN DESA, UNHCR, OIM, OIT…)", url: "https://www.un.org/fr" },
-          { name: "Banque mondiale", url: "https://data.worldbank.org/" },
-          { name: "Banque africaine de développement", url: "https://www.afdb.org/fr" },
-          { name: "OCDE", url: "https://data.oecd.org/" },
-          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/" },
-          { name: "Communautés économiques régionales africaines", url: "https://au.int/fr/organs/recs" },
-          { name: "Instituts nationaux de statistique", url: null }
+          { name: "Commission de l'Union africaine (CUA)", url: "https://au.int/fr", logo: "au" },
+          { name: "Nations Unies — UN DESA", url: "https://www.un.org/development/desa/pd/data/international-migrant-stock", logo: "un" },
+          { name: "HCR — Statistiques sur les réfugiés", url: "https://www.unhcr.org/refugee-statistics/", logo: "unhcr" },
+          { name: "Organisation internationale pour les migrations (OIM)", url: "https://www.iom.int/", logo: "iom" },
+          { name: "Organisation internationale du travail — NORMLEX", url: "https://normlex.ilo.org/", logo: "ilo" },
+          { name: "Banque mondiale", url: "https://data.worldbank.org/", logo: "worldbank" },
+          { name: "KNOMAD — Transferts de fonds & développement", url: "https://www.knomad.org/", logo: "knomad" },
+          { name: "Banque africaine de développement (BAD)", url: "https://www.afdb.org/fr", logo: "afdb" },
+          { name: "Commission économique pour l'Afrique (CEA)", url: "https://www.uneca.org/", logo: "uneca" },
+          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/", logo: "idmc" },
+          { name: "Fondation Mo Ibrahim — IIAG", url: "https://mo.ibrahim.foundation/our-research/iiag", logo: "moibrahim" },
+          { name: "Mixed Migration Centre — 4Mi", url: "https://mixedmigration.org/", logo: "mmc" },
+          { name: "Afrobarometer", url: "https://www.afrobarometer.org/", logo: "afrobarometer" },
+          { name: "OCDE", url: "https://data.oecd.org/", logo: "oecd" },
+          { name: "Commission européenne — JRC / KCMD", url: "https://knowledge4policy.ec.europa.eu/migration-demography_en", logo: "ecjrc" },
+          { name: "Communautés économiques régionales africaines", url: "https://au.int/fr/organs/recs", logo: null },
+          { name: "Instituts nationaux de statistique", url: null, logo: null }
         ],
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
         data_p3: "South(s) Mobility ne produit pas de statistiques officielles. La plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
@@ -803,16 +804,22 @@ const t = {
         south_p2: "À plus long terme, cette approche a vocation à être progressivement étendue à d'autres régions du monde, notamment l'Amérique latine, les Caraïbes et l'Asie.",
 
         evolution_title: "Une plateforme en évolution permanente",
-        evolution_p1: "South(s) Mobility est un projet évolutif. De nouvelles bases de données, cartes interactives, tableaux de bord, visualisations, fiches méthodologiques, analyses, référentiels documentaires et outils de recherche sont ajoutés régulièrement. Les développements en cours comprennent notamment :",
-        evolution_list: [
-          "Un Observatoire des narratifs sur les migrations",
-          "Des profils pays",
-          "Des profils des communautés économiques régionales",
-          "Un référentiel des instruments juridiques africains",
-          "Une bibliothèque documentaire",
-          "Des séries chronologiques harmonisées",
-          "Des tableaux de bord interactifs",
-          "De nouveaux indicateurs comparatifs"
+        evolution_p1: "South(s) Mobility est un projet évolutif, enrichi au fil de la recherche. Plutôt que d'annoncer une feuille de route indistincte, la plateforme distingue ici ce qui est effectivement disponible de ce qui reste à construire.",
+        evolution_done: [
+          "Un observatoire des narratifs, confrontant les affirmations courantes aux données",
+          "Des profils détaillés pour les 54 pays et les 5 sous-régions de l'UA",
+          "Des fiches pour les 8 communautés économiques régionales, cartes à l'appui",
+          "Un référentiel des instruments juridiques africains et de leurs ratifications",
+          "Une matrice comparée des régimes d'entrée et de séjour des 54 pays",
+          "Une bibliothèque documentaire et un glossaire bilingue référencés",
+          "Des exports CSV pour chaque jeu de données affiché",
+          "Des dossiers PDF citables, source et référence intégrées"
+        ],
+        evolution_next: [
+          "Des séries chronologiques harmonisées au-delà des points de comparaison 1990 et 2024",
+          "Des tableaux de bord thématiques (travail, climat, protection)",
+          "La collecte pilote des indicateurs alternatifs proposés dans la Méthodologie",
+          "Une extension progressive à d'autres régions des Suds"
         ],
         evolution_p2: "L'objectif est de construire progressivement une infrastructure de référence pour l'étude des mobilités humaines dans les Suds.",
 
@@ -933,7 +940,7 @@ const t = {
         p3b: "This architecture produces a paradox the platform documents with figures. Africa is not lagging behind the norm: it has at times moved ahead of it, adopting with the Kampala Convention (2009) the world's first — and still only — binding regional treaty on internally displaced persons. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What is lacking, then, is not normative production but its anchoring in national administrations.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
         p5: "This framing owes, finally, to fieldwork: participant observation conducted between 2023 and 2025 within the African Migration Observatory (Rabat), documented in the Governance section (Ben Mokhtar, 2026). It gives access to the regime's ordinary bureaucratic fabric — workshops, budgetary trade-offs, validation circuits — where normative frameworks, examined alone, show only their façade.",
-        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it.",
+        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material — while accepting that the choice of what is foregrounded, and of the scale against which it is measured, is already an analytical act rather than a neutral reflection of the data.",
         refs_title: "Further Reading",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -1029,14 +1036,23 @@ const t = {
         data_title: "A data-driven approach",
         data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
         data_list: [
-          { name: "African Union Commission (AUC)", url: "https://au.int/en" },
-          { name: "United Nations (UN DESA, UNHCR, IOM, ILO…)", url: "https://www.un.org/en" },
-          { name: "World Bank", url: "https://data.worldbank.org/" },
-          { name: "African Development Bank", url: "https://www.afdb.org/en" },
-          { name: "OECD", url: "https://data.oecd.org/" },
-          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/" },
-          { name: "African Regional Economic Communities", url: "https://au.int/en/organs/recs" },
-          { name: "National Statistical Institutes", url: null }
+          { name: "African Union Commission (AUC)", url: "https://au.int/en", logo: "au" },
+          { name: "United Nations — UN DESA", url: "https://www.un.org/development/desa/pd/data/international-migrant-stock", logo: "un" },
+          { name: "UNHCR — Refugee Statistics", url: "https://www.unhcr.org/refugee-statistics/", logo: "unhcr" },
+          { name: "International Organization for Migration (IOM)", url: "https://www.iom.int/", logo: "iom" },
+          { name: "International Labour Organization — NORMLEX", url: "https://normlex.ilo.org/", logo: "ilo" },
+          { name: "World Bank", url: "https://data.worldbank.org/", logo: "worldbank" },
+          { name: "KNOMAD — Remittances & Development", url: "https://www.knomad.org/", logo: "knomad" },
+          { name: "African Development Bank (AfDB)", url: "https://www.afdb.org/en", logo: "afdb" },
+          { name: "Economic Commission for Africa (UNECA)", url: "https://www.uneca.org/", logo: "uneca" },
+          { name: "Internal Displacement Monitoring Centre (IDMC)", url: "https://www.internal-displacement.org/", logo: "idmc" },
+          { name: "Mo Ibrahim Foundation — IIAG", url: "https://mo.ibrahim.foundation/our-research/iiag", logo: "moibrahim" },
+          { name: "Mixed Migration Centre — 4Mi", url: "https://mixedmigration.org/", logo: "mmc" },
+          { name: "Afrobarometer", url: "https://www.afrobarometer.org/", logo: "afrobarometer" },
+          { name: "OECD", url: "https://data.oecd.org/", logo: "oecd" },
+          { name: "European Commission — JRC / KCMD", url: "https://knowledge4policy.ec.europa.eu/migration-demography_en", logo: "ecjrc" },
+          { name: "African Regional Economic Communities", url: "https://au.int/en/organs/recs", logo: null },
+          { name: "National Statistical Institutes", url: null, logo: null }
         ],
         data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
         data_p3: "South(s) Mobility does not produce official statistics. The platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
@@ -1057,16 +1073,22 @@ const t = {
         south_p2: "In the longer term, this approach is intended to be progressively extended to other regions of the world, notably Latin America, the Caribbean, and Asia.",
 
         evolution_title: "A constantly evolving platform",
-        evolution_p1: "South(s) Mobility is an evolving project. New databases, interactive maps, dashboards, visualizations, methodological sheets, analyses, documentary repositories, and research tools are added regularly. Ongoing developments include:",
-        evolution_list: [
-          "A Migration Narratives Observatory",
-          "Country profiles",
-          "Regional economic community profiles",
-          "A repository of African legal instruments",
-          "A documentary library",
-          "Harmonized time series",
-          "Interactive dashboards",
-          "New comparative indicators"
+        evolution_p1: "South(s) Mobility is an evolving project, enriched as the research advances. Rather than announcing an undifferentiated roadmap, the platform distinguishes here between what is actually available and what remains to be built.",
+        evolution_done: [
+          "A narratives observatory testing common claims against the data",
+          "Detailed profiles for all 54 countries and the AU's 5 sub-regions",
+          "Factsheets for the 8 Regional Economic Communities, with maps",
+          "A repository of African legal instruments and their ratification status",
+          "A comparative matrix of entry and residence regimes across 54 countries",
+          "A referenced documentary library and a bilingual glossary",
+          "CSV exports for every displayed dataset",
+          "Citable PDF dossiers with embedded source and reference"
+        ],
+        evolution_next: [
+          "Harmonised time series beyond the 1990 and 2024 comparison points",
+          "Thematic dashboards (labour, climate, protection)",
+          "Pilot collection of the alternative indicators proposed in the Methodology",
+          "Progressive extension to other regions of the Global South"
         ],
         evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of human mobility in the Global South.",
 
@@ -5203,6 +5225,313 @@ const TabLibrary = ({ text, lang, exportLibraryCSV }) => {
   );
 };
 
+// ----------------------------------------------------------------------------
+// Données & statistiques : la production statistique africaine, ses volumes réels
+// et l'endroit exact où se situe le déficit. Compilation de l'auteur d'après l'UNSD.
+// ----------------------------------------------------------------------------
+const censusQuestionDepth = [
+  { key: 'intl', label: { fr: "Migration internationale (au moins une question)", en: "International migration (at least one question)" }, states: 46, pctRound: 98, pct54: 85 },
+  { key: 'citizenship', label: { fr: "Citoyenneté", en: "Citizenship" }, states: 42, pctRound: 91.5, pct54: 78 },
+  { key: 'birth', label: { fr: "Pays de naissance", en: "Country of birth" }, states: 40, pctRound: 87, pct54: 74 },
+  { key: 'emigration', label: { fr: "Émigration d'un membre du ménage", en: "Emigration of a household member" }, states: 23, pctRound: 55, pct54: 42.5 },
+  { key: 'arrival', label: { fr: "Année ou période d'arrivée", en: "Year or period of arrival" }, states: 7, pctRound: 15, pct54: 13 },
+  { key: 'reason', label: { fr: "Motif de la migration", en: "Reason for migration" }, states: 6, pctRound: 13.6, pct54: 11.1 },
+];
+
+const censusNoRound2010 = ["Comores", "Centrafrique", "RDC", "Érythrée", "Madagascar", "Somalie", "Soudan du Sud"];
+const censusNoRound2010En = ["Comoros", "Central African Republic", "DR Congo", "Eritrea", "Madagascar", "Somalia", "South Sudan"];
+
+const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
+    <section id="data">
+      <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
+          <div className="flex items-center space-x-4">
+            <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
+            <div>
+              <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
+              <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl">{text.indicator_desc}</p>
+            </div>
+          </div>
+          <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
+            <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
+          </button>
+        </div>
+
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
+          <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-900 leading-relaxed text-justify">
+            {lang === 'fr'
+              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle ne décrit pas une réalité déjà mesurée à l'échelle continentale : elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants (stocks migratoires, index sécuritaires, cibles ODD), pour objectiver des dimensions structurellement sous-documentées des mobilités africaines — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
+              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It does not describe a reality already measured at continental scale: it proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks (migrant stocks, security indices, SDG targets), to objectify structurally under-documented dimensions of African mobility — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+          {indicatorThemes.map((theme, i) => (
+            <div key={i}>
+              <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
+                {React.cloneElement(theme.icon, { className: "w-5 h-5 mr-2" })} 
+                {lang === 'fr' ? theme.theme_fr : theme.theme_en}
+              </h3>
+              <div className="space-y-3">
+                {theme.items.map((ind, j) => (
+                  <div 
+                    key={j} 
+                    onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
+                    className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
+                  >
+                    <div className="flex items-center justify-between w-full mb-2 relative z-10">
+                      <span className="text-[9px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm tracking-widest shrink-0 uppercase">
+                        Ind. {ind.id}
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
+                    </div>
+                    <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10">
+                      {lang === 'fr' ? ind.fr : ind.en}
+                    </p>
+                    {(lang === 'fr' ? ind.desc_fr : ind.desc_en) && (
+                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed relative z-10">
+                        {lang === 'fr' ? ind.desc_fr : ind.desc_en}
+                      </p>
+                    )}
+                      
+                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                      <div className="space-y-4">
+                        <div>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{lang === 'fr' ? "Méthodologie & Collecte" : "Methodology & Data Collection"}</span>
+                          <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? ind.method_fr : ind.method_en}</p>
+                        </div>
+                        <div className="bg-white p-3 rounded-sm border border-slate-200">
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 flex items-center gap-1"><Lightbulb className="w-3 h-3" />{lang === 'fr' ? "Le Changement de Paradigme" : "The Paradigm Shift"}</span>
+                          <p className="text-xs text-slate-800 italic leading-relaxed">{lang === 'fr' ? ind.contrast_fr : ind.contrast_en}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+);
+
+// Frise des cycles de recensement d'un pays (base : compilation de l'auteur d'apres l'UNSD).
+const CensusTimeline = ({ iso2, lang, compact = false }) => {
+  const rec = iso2 ? censusByCountry[iso2] : null;
+  if (!rec) return null;
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const st = census2020Status[rec.status2020] || census2020Status.none;
+
+  return (
+    <div className={compact ? '' : 'bg-white p-7 rounded-lg border border-slate-200 shadow-sm'}>
+      {!compact && (
+        <>
+          <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg">
+            <Calendar className="w-5 h-5 mr-2.5 text-slate-400" /> {L("Recensements de la population", "Population censuses")}
+          </h3>
+          <p className="text-sm text-slate-600 mb-5">
+            {L("Dates des recensements nationaux par cycle décennal. Le recensement reste la source la plus complète sur les migrants présents sur un territoire.",
+               "National census dates by decennial round. The census remains the most comprehensive source on migrants present in a territory.")}
+          </p>
+        </>
+      )}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        {censusRoundMeta.map((r) => {
+          const v = rec[r.key];
+          const is2020 = r.key === 'r2020';
+          const done = !!(v && String(v).trim());
+          return (
+            <div key={r.key} className={`rounded-md border px-2 py-2 text-center ${is2020 ? st.cls : done ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-slate-50 border-slate-200 text-slate-300'}`}>
+              <span className="block text-[9px] font-bold uppercase tracking-widest opacity-70">{r.label[lang]}</span>
+              <span className="block text-[11px] font-bold tabular-nums mt-0.5 leading-tight">
+                {done ? String(v).replace('*', '') : '—'}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
+        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm border ${st.cls}`}>
+          {L("Cycle 2020 : ", "2020 round: ")}{st[lang]}
+        </span>
+        {rec.updated2026 && (
+          <span className="text-[10px] text-emerald-700 font-medium">
+            {L("Actualisé (2026) — ", "Updated (2026) — ")}{rec.updated2026}
+          </span>
+        )}
+        {String(rec.r1970).includes('*') && (
+          <span className="text-[10px] text-slate-400 italic">{L("* territoire non indépendant à cette date", "* territory not independent at that date")}</span>
+        )}
+      </div>
+      {!compact && (
+        <p className="text-[10px] text-slate-400 italic mt-3 pt-3 border-t border-slate-100">
+          {L("Source : compilation de l'auteur (Ben Mokhtar, 2024) d'après la Division de statistique des Nations unies (UNSD) et UN DESA.",
+             "Source: author's own compilation (Ben Mokhtar, 2024) from the United Nations Statistics Division (UNSD) and UN DESA.")}
+        </p>
+      )}
+    </div>
+  );
+};
+
+const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const headline = [
+    { val: "47/54", lbl: L("États ayant recensé (cycle 2010)", "States that censused (2010 round)"), sub: L("soit 87 % du continent", "i.e. 87% of the continent") },
+    { val: "11,1", lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
+    { val: "1-5 €", lbl: L("Coût par habitant recensé", "Cost per inhabitant enumerated"), sub: L("charge logistique majeure", "a major logistical burden") },
+    { val: "13,6 %", lbl: L("Recensements interrogeant le motif", "Censuses asking the reason"), sub: L("le déficit est là, pas dans la collecte", "the deficit sits here, not in collection") },
+  ];
+
+  return (
+    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+      <PageHeader
+        badge={L("Production statistique africaine", "African statistical production")}
+        title={L("Données & statistiques", "Data & Statistics")}
+        highlight={L("où se situe réellement le déficit.", "where the deficit actually lies.")}
+        desc={L(
+          "Le récit d'une Afrique « sans données » est l'un des plus solidement installés — et l'un des moins vérifiés. Cette section confronte ce récit au volume réel de la production statistique du continent.",
+          "The narrative of an Africa \"without data\" is among the most firmly established — and the least verified. This section tests it against the continent's actual statistical output."
+        )}
+        icon={Database}
+        accent="teal"
+      />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {headline.map((h, i) => (
+          <div key={i} className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
+            <div className="text-2xl font-serif font-bold text-slate-900 tabular-nums">{h.val}</div>
+            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 block leading-snug">{h.lbl}</span>
+            <span className="text-[10px] text-slate-400 mt-1 block">{h.sub}</span>
+          </div>
+        ))}
+      </div>
+
+      <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-3">
+          {L("La collecte n'est pas le maillon faible", "Collection is not the weak link")}
+        </h2>
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+          <p>{L(
+            "Lors du cycle de recensements de 2010 — qui court en pratique de 2006 à 2014 — 47 États africains sur 54 ont conduit un recensement national, soit 87 % du continent. À l'échelle mondiale, 178 des 193 États membres de l'ONU en ont fait autant : la participation africaine se situe donc dans la norme internationale, et non en marge d'elle.",
+            "During the 2010 census round — which in practice runs from 2006 to 2014 — 47 of 54 African states conducted a national census, that is 87% of the continent. Globally, 178 of the UN's 193 member states did the same: African participation therefore sits within the international norm, not at its margins."
+          )}</p>
+          <p>{L(
+            "L'intervalle moyen entre deux recensements y est de 11,1 ans, à peine au-delà des dix ans recommandés par les Nations unies, pour un coût compris entre 1 et 5 € par habitant dénombré (Gendreau & Dackam-Ngatchou, 2023). Rapportée à la contrainte budgétaire et logistique que représente un recensement exhaustif, cette régularité traduit une priorité politique assumée, non une défaillance.",
+            "The average interval between two censuses there is 11.1 years, barely beyond the ten years recommended by the United Nations, at a cost of between €1 and €5 per inhabitant enumerated (Gendreau & Dackam-Ngatchou, 2023). Set against the budgetary and logistical constraint an exhaustive census represents, this regularity reflects a deliberate political priority, not a failure."
+          )}</p>
+        </div>
+
+        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-5 flex items-start gap-3 max-w-4xl">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-xs text-amber-900 leading-relaxed text-justify">
+            {L(
+              "Un taux de couverture ne dit rien de la qualité des dénombrements. Sept États n'ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join(", ") + " — et la République démocratique du Congo n'a conduit qu'un seul recensement dans son histoire, en 1984. L'Éthiopie a recensé, mais sans question sur la migration internationale.",
+              "A coverage rate says nothing about enumeration quality. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + " — and the Democratic Republic of the Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
+            )}
+          </p>
+        </div>
+      </Reveal>
+
+      <Reveal delay={40} className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+          <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900">
+            {L("Le déficit est dans la profondeur des questions", "The deficit is in the depth of the questions")}
+          </h2>
+          <CsvButton onClick={exportCensusCSV} label={L("Profondeur des questions (CSV)", "Question depth (CSV)")} />
+        </div>
+        <p className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-6">
+          {L(
+            "Part des 47 recensements africains du cycle 2010 comportant chaque question migratoire. La citoyenneté et le pays de naissance sont presque systématiques ; le motif du départ et la date d'arrivée disparaissent presque entièrement.",
+            "Share of the 47 African censuses in the 2010 round including each migration question. Citizenship and country of birth are near-systematic; reason for leaving and date of arrival almost entirely vanish."
+          )}
+        </p>
+
+        <div className="mb-8">
+          <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+            {L("Couverture par cycle de recensement", "Coverage by census round")}
+          </h3>
+          <div className="space-y-2.5">
+            {censusRoundMeta.map((r) => {
+              const pct = r.pct; // pourcentages tels que publies par l'auteur (troncature, non arrondi)
+              return (
+                <div key={r.key} className="flex items-center gap-3">
+                  <span className="text-[11px] font-bold text-slate-600 w-32 shrink-0">
+                    {r.label[lang]} <span className="text-slate-400 font-normal">({r.span})</span>
+                  </span>
+                  <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full bg-teal-600 transition-all duration-700" style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
+                    {r.conducted}/{r.base} · {pct} %
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-slate-400 italic mt-3">
+            {L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, actualisée en 2026 pour les recensements aboutis depuis (Angola, Maroc, Tunisie, Ouganda) : le cycle 2020 passe ainsi de 29 à 33 États.",
+               "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, updated in 2026 for censuses completed since (Angola, Morocco, Tunisia, Uganda): the 2020 round thus moves from 29 to 33 states.")}
+          </p>
+        </div>
+
+        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+          {L("Profondeur des questions migratoires (cycle 2010)", "Depth of migration questions (2010 round)")}
+        </h3>
+        <div className="space-y-3">
+          {censusQuestionDepth.map((q) => (
+            <div key={q.key} className="flex items-center gap-3">
+              <span className="text-[11px] font-medium text-slate-600 w-56 shrink-0 leading-snug">{q.label[lang]}</span>
+              <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${q.pctRound >= 80 ? 'bg-teal-600' : q.pctRound >= 50 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                  style={{ width: `${q.pctRound}%` }}
+                />
+              </div>
+              <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
+                {q.states}/47 · {String(q.pctRound).replace('.', ',')} %
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[10px] text-slate-400 italic mt-4 pt-3 border-t border-slate-100">
+          {L(
+            "Source : Division de statistique des Nations unies (UNSD) — compilation de l'auteur (Ben Mokhtar, 2024). Pourcentages rapportés aux 47 États ayant recensé.",
+            "Source: United Nations Statistics Division (UNSD) — author's own compilation (Ben Mokhtar, 2024). Percentages relative to the 47 states that censused."
+          )}
+        </p>
+      </Reveal>
+
+      <Reveal delay={40} className="bg-slate-900 rounded-xl p-8 md:p-10 border border-slate-800 shadow-sm text-white">
+        <h2 className="text-xl md:text-2xl font-serif font-bold mb-3">
+          {L("Produire n'est pas analyser", "Producing is not analysing")}
+        </h2>
+        <div className="space-y-4 text-sm text-slate-300 leading-relaxed max-w-4xl text-justify">
+          <p>{L(
+            "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : ce n'est pas la donnée brute qui manque, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
+            "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: what is missing is not the raw data but control over its shaping, its interpretation, and the categories it mobilises."
+          )}</p>
+          <p>{L(
+            "Or la catégorie n'est jamais neutre. Décider si l'on dénombre les résidents habituels (population de jure) ou toutes les personnes présentes (de facto), retenir la citoyenneté plutôt que le pays de naissance, poser ou non la question du motif : chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
+            "Yet the category is never neutral. Deciding whether to enumerate usual residents (de jure population) or all persons present (de facto), retaining citizenship rather than country of birth, asking or not asking the reason: each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
+          )}</p>
+          <p className="text-white font-medium">{L(
+            "C'est le sens de l'investissement continental dans ses propres instruments — l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique (SHaSA) : non pas collecter davantage, mais reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
+            "This is the point of the continental investment in its own instruments — the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa (SHaSA): not to collect more, but to regain control over the framing and analysis of what is already collected."
+          )}</p>
+        </div>
+      </Reveal>
+
+      <IndicatorsMatrix
+        text={text} lang={lang}
+        expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
+        exportIndicatorsCSV={exportIndicatorsCSV}
+      />
+    </div>
+  );
+};
+
 const TabGlossary = ({ lang, exportGlossaryCSV }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const query = searchTerm.trim().toLowerCase();
@@ -5435,7 +5764,7 @@ const methodLimits = [
   },
 ];
 
-const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => (
+const TabMethodology = ({ text, lang }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
@@ -5537,79 +5866,6 @@ const TabMethodology = ({ text, lang, expandedIndicator, setExpandedIndicator, e
       </ul>
     </Reveal>
 
-    <section id="data">
-      <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
-          <div className="flex items-center space-x-4">
-            <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
-            <div>
-              <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
-              <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl">{text.indicator_desc}</p>
-            </div>
-          </div>
-          <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
-            <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
-          </button>
-        </div>
-
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
-          <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-900 leading-relaxed text-justify">
-            {lang === 'fr'
-              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle ne décrit pas une réalité déjà mesurée à l'échelle continentale : elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants (stocks migratoires, index sécuritaires, cibles ODD), pour objectiver des dimensions structurellement sous-documentées des mobilités africaines — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
-              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It does not describe a reality already measured at continental scale: it proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks (migrant stocks, security indices, SDG targets), to objectify structurally under-documented dimensions of African mobility — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
-          {indicatorThemes.map((theme, i) => (
-            <div key={i}>
-              <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
-                {React.cloneElement(theme.icon, { className: "w-5 h-5 mr-2" })} 
-                {lang === 'fr' ? theme.theme_fr : theme.theme_en}
-              </h3>
-              <div className="space-y-3">
-                {theme.items.map((ind, j) => (
-                  <div 
-                    key={j} 
-                    onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
-                    className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
-                  >
-                    <div className="flex items-center justify-between w-full mb-2 relative z-10">
-                      <span className="text-[9px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm tracking-widest shrink-0 uppercase">
-                        Ind. {ind.id}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
-                    </div>
-                    <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10">
-                      {lang === 'fr' ? ind.fr : ind.en}
-                    </p>
-                    {(lang === 'fr' ? ind.desc_fr : ind.desc_en) && (
-                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed relative z-10">
-                        {lang === 'fr' ? ind.desc_fr : ind.desc_en}
-                      </p>
-                    )}
-                      
-                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
-                      <div className="space-y-4">
-                        <div>
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{lang === 'fr' ? "Méthodologie & Collecte" : "Methodology & Data Collection"}</span>
-                          <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? ind.method_fr : ind.method_en}</p>
-                        </div>
-                        <div className="bg-white p-3 rounded-sm border border-slate-200">
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 flex items-center gap-1"><Lightbulb className="w-3 h-3" />{lang === 'fr' ? "Le Changement de Paradigme" : "The Paradigm Shift"}</span>
-                          <p className="text-xs text-slate-800 italic leading-relaxed">{lang === 'fr' ? ind.contrast_fr : ind.contrast_en}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
 
     <section className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
       <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
@@ -5858,8 +6114,10 @@ const TabAbout = ({ text, lang }) => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
               {text.about.data_list.map((item, idx) => {
-                const logo = aboutLogoMap[idx];
-                const logoBox = logo && (
+                // Sans emblème disponible, on retombe sur l'icône générique : le repli
+                // textuel de InstitutionLogo doublonnerait le nom affiché juste à côté.
+                const logo = item.logo ? institutionLogos.find(i => i.key === item.logo) : null;
+                const logoBox = logo && logo.src && (
                   <span className="w-8 h-8 rounded-sm bg-white border border-slate-200 flex items-center justify-center p-1 mr-2.5 shrink-0">
                     <InstitutionLogo name={logo.name} src={logo.src} className="max-h-5 max-w-full" />
                   </span>
@@ -5920,11 +6178,25 @@ const TabAbout = ({ text, lang }) => {
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
             <p>{text.about.evolution_p1}</p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-4">
-              {text.about.evolution_list.map((item, idx) => (
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mt-5 mb-2">
+              {lang === 'fr' ? "Déjà disponible" : "Already available"}
+            </h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+              {text.about.evolution_done.map((item, idx) => (
+                <li key={idx} className="flex items-start">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-2 shrink-0 mt-1" />
+                  <span className="text-xs">{item}</span>
+                </li>
+              ))}
+            </ul>
+            <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-2">
+              {lang === 'fr' ? "Prochaines étapes" : "Next steps"}
+            </h3>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+              {text.about.evolution_next.map((item, idx) => (
                 <li key={idx} className="flex items-start">
                   <ArrowRight className="w-3.5 h-3.5 text-purple-400 mr-2 shrink-0 mt-1" />
-                  <span className="text-xs">{item}</span>
+                  <span className="text-xs text-slate-500">{item}</span>
                 </li>
               ))}
             </ul>
@@ -6246,6 +6518,16 @@ export default function App() {
     downloadCSV('souths_evidence_check.csv', toCSV(rows));
   };
 
+  const exportCensusCSV = () => {
+    const rows = censusQuestionDepth.map(q => ({
+      question_fr: q.label.fr, question_en: q.label.en,
+      states_of_47: q.states,
+      pct_of_censusing_states: q.pctRound,
+      pct_of_54_african_states: q.pct54,
+    }));
+    downloadCSV('souths_census_question_depth_2010round.csv', toCSV(rows));
+  };
+
   const exportGlossaryCSV = () => {
     const rows = glossaryData.flatMap(cat => cat.terms.map(t => ({
       category_fr: cat.category?.fr, category_en: cat.category?.en,
@@ -6271,14 +6553,16 @@ export default function App() {
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
+    { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' } },
     { id: 'library', icon: BookOpen, label: { fr: 'Bibliothèque', en: 'Library' } },
+    { id: 'glossary', icon: Brain, label: { fr: 'Glossaire', en: 'Glossary' } },
     { id: 'about', icon: Info, label: { fr: 'À Propos & Méthodologie', en: 'About & Methodology' } },
   ];
 
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
   // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
   // denses en grilles/tableaux, conservent la pleine largeur.
-  const mainMaxWidth = ['home', 'about'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
+  const mainMaxWidth = ['home', 'about', 'glossary'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
 
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
@@ -6412,6 +6696,14 @@ export default function App() {
         {activeTab === 'library' && (
           <TabLibrary text={text} lang={lang} exportLibraryCSV={exportLibraryCSV} />
         )}
+        {activeTab === 'data' && (
+          <TabDataStats
+            text={text} lang={lang} exportCensusCSV={exportCensusCSV}
+            expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
+            exportIndicatorsCSV={exportIndicatorsCSV}
+          />
+        )}
+        {activeTab === 'glossary' && <TabGlossary lang={lang} exportGlossaryCSV={exportGlossaryCSV} />}
         {activeTab === 'about' && (
           <div className="space-y-8">
             <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg mx-auto">
@@ -6427,22 +6719,11 @@ export default function App() {
               >
                 <Database className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Méthodologie' : 'Methodology'}
               </button>
-              <button
-                onClick={() => setActiveAboutTab('glossary')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                <Brain className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Glossaire' : 'Glossary'}
-              </button>
             </div>
             {activeAboutTab === 'about' && <TabAbout text={text} lang={lang} />}
             {activeAboutTab === 'methodology' && (
-              <TabMethodology
-                text={text} lang={lang}
-                expandedIndicator={expandedIndicator} setExpandedIndicator={setExpandedIndicator}
-                exportIndicatorsCSV={exportIndicatorsCSV}
-              />
+              <TabMethodology text={text} lang={lang} />
             )}
-            {activeAboutTab === 'glossary' && <TabGlossary lang={lang} exportGlossaryCSV={exportGlossaryCSV} />}
           </div>
         )}
         <PrintCitationFooter lang={lang} sectionLabel={navigation.find(i => i.id === activeTab)?.label?.[lang]} />
@@ -6665,6 +6946,12 @@ export default function App() {
                         );
                       })}
                     </div>
+                  </div>
+                )}
+
+                {display.iso2 && censusByCountry[display.iso2] && (
+                  <div className="print:break-inside-avoid">
+                    <CensusTimeline iso2={display.iso2} lang={lang} />
                   </div>
                 )}
 
