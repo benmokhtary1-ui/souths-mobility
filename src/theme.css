@@ -35,6 +35,13 @@
   --warn-soft:    #F6ECD9;
   --bad:          #7A2E2E;
   --bad-soft:     #F3E2E0;
+
+  /* Echelle de robustesse (Evidence Check) : ordinale, quatre crans.
+     Verifiees >= 4,9:1 sur papier releve, creuse et courant. */
+  --tier-4:       #3F6B4A;   /* etaye */
+  --tier-3:       #7A6212;   /* a nuancer */
+  --tier-2:       #8C4A16;   /* faiblement etaye */
+  --tier-1:       #7A2E2E;   /* non etaye */
 }
 
 /* ---------- Fondations ---------------------------------------------------- */
@@ -133,6 +140,12 @@ main .bg-white { border: 1px solid var(--rule); }
 .bg-teal-50, .bg-indigo-50, .bg-purple-50 { background-color: var(--terra-soft) !important; }
 .border-teal-100, .border-teal-200, .border-indigo-100, .border-indigo-200 { border-color: #E8D3C8 !important; }
 .bg-teal-600, .bg-teal-700 { background-color: var(--terra) !important; }
+
+/* Terracotta sur aplat terracotta : la version pleine tombe a 4,45:1, on passe
+   a la profonde (6,43:1). Les aplats concernes sont ceux retointes plus haut. */
+.bg-teal-50 :is(.text-indigo-500,.text-indigo-600,.text-indigo-700,.text-indigo-800,.text-teal-600,.text-teal-700,.text-teal-800,.text-violet-500,.text-violet-600,.text-cyan-600,.text-cyan-700),
+.bg-indigo-50 :is(.text-indigo-500,.text-indigo-600,.text-indigo-700,.text-indigo-800,.text-teal-600,.text-teal-700,.text-teal-800,.text-violet-500,.text-violet-600,.text-cyan-600,.text-cyan-700),
+.bg-purple-50 :is(.text-indigo-500,.text-indigo-600,.text-indigo-700,.text-indigo-800,.text-teal-600,.text-teal-700,.text-teal-800,.text-violet-500,.text-violet-600,.text-cyan-600,.text-cyan-700) { color: var(--terra-deep) !important; }
 
 /* ---------- Statuts : conservés lisibles et distincts -------------------- */
 
@@ -302,6 +315,13 @@ button, a { transition: color .18s ease, background-color .18s ease, border-colo
 .hub-card:hover { border-color: var(--rule-strong) !important; }
 .hub-card:hover .hub-card-cta { color: var(--terra) !important; }
 
+.gov-subnav { border-radius: 2px; transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
+.gov-subnav:not([style*="rgb(255, 253, 249)"]):hover {
+  background-color: var(--paper-sunk) !important;
+  border-color: var(--rule-strong) !important;
+  color: var(--ink) !important;
+}
+
 /* ---------- Lettrine : le corps du texte s'ouvre sur une capitale --------- */
 
 p.lede::first-letter {
@@ -333,10 +353,23 @@ main h2.font-serif { position: relative; }
 /* Les encadres de citation portent un guillemet en filigrane plutot qu'une barre. */
 main blockquote { position: relative; }
 
+/* ---------- Registre Evidence Check ------------------------------------- */
+/* Une ligne d'index se comporte comme une entree de repertoire : elle
+   s'eclaire au survol, elle ne se souleve pas.                              */
+
+.evidence-row { transition: background-color .14s ease; }
+.evidence-row:hover { background-color: var(--paper-sunk) !important; }
+.evidence-row[aria-current="true"] { box-shadow: inset 3px 0 0 var(--terra); }
+.evidence-row[aria-current="true"] span { color: var(--ink); }
+
+/* Le champ de recherche et le selecteur suivent le meme filet que le reste. */
+input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !important; }
+
 /* ---------- Impression : on rend le papier au blanc ---------------------- */
 
 @media print {
   html, body { background: #fff !important; background-image: none !important; }
   main .bg-white { border-color: #ddd; }
+  article.break-inside-avoid { page-break-inside: avoid; border: 1px solid #ccc; }
   p.lede::first-letter { float: none; font-size: inherit; color: inherit; padding: 0; }
 }

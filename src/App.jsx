@@ -2260,218 +2260,371 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   );
 };
 
-const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [expandedFiche, setExpandedFiche] = useState(null);
+// ---------------------------------------------------------------------------
+// Evidence Check — registre + panneau de lecture.
+// La grille de 70 vignettes est remplacee par un index dense (une ligne par
+// affirmation) et un dossier de lecture a cote. Le verdict n'est plus un badge
+// d'angle : il devient l'axe de tri, encode par une jauge de robustesse a
+// quatre crans, lisible sans la couleur.
+// ---------------------------------------------------------------------------
 
-  // Extraire les catégories uniques depuis les données (clé stable = fr, affichage = lang)
-  const categoriesList = [...new Set(evidenceCheckData.map(item => item.category.fr))];
-  const allFilters = ["All", ...categoriesList];
-  const categoryLabel = (categoryKey) => {
-    const found = evidenceCheckData.find((item) => item.category.fr === categoryKey);
-    return found ? found.category[lang] : categoryKey;
-  };
+const EVIDENCE_TIERS = {
+  "🟢": { rank: 4, fill: 4, color: 'var(--tier-4)', Icon: CheckCircle2 },
+  "🟡": { rank: 3, fill: 3, color: 'var(--tier-3)', Icon: HelpCircle },
+  "🟠": { rank: 2, fill: 2, color: 'var(--tier-2)', Icon: AlertTriangle },
+  "🔴": { rank: 1, fill: 1, color: 'var(--tier-1)', Icon: XCircle },
+};
+const tierOf = (level) => EVIDENCE_TIERS[level] || { rank: 0, fill: 0, color: 'var(--ink-mute)', Icon: MinusCircle };
 
-  // Déterminer quelles catégories afficher selon le filtre actif
-  const displayCategories = activeCategory === "All"
-    ? categoriesList
-    : [activeCategory];
+// Jauge de robustesse : quatre crans. Le nombre de crans pleins porte
+// l'information, la teinte ne fait que la renforcer.
+const RobustnessMeter = ({ level, className = "" }) => {
+  const { fill, color } = tierOf(level);
+  return (
+    <span className={`inline-flex items-center gap-[2px] ${className}`} aria-hidden="true">
+      {[0, 1, 2, 3].map(i => (
+        <span key={i} className="block w-[7px] h-[3px]"
+              style={{ backgroundColor: i < fill ? color : 'var(--rule-strong)' }} />
+      ))}
+    </span>
+  );
+};
 
-  const verdictMeta = {
-    "🟢": { Icon: CheckCircle2, style: "bg-emerald-100 text-emerald-800 border-emerald-300" },
-    "🟢🟡": { Icon: CheckCircle2, style: "bg-lime-100 text-lime-800 border-lime-300" },
-    "🟡": { Icon: HelpCircle, style: "bg-amber-100 text-amber-800 border-amber-300" },
-    "🟠": { Icon: AlertTriangle, style: "bg-orange-100 text-orange-800 border-orange-300" },
-    "🔴": { Icon: XCircle, style: "bg-rose-100 text-rose-800 border-rose-300" },
-    "⚪": { Icon: MinusCircle, style: "bg-slate-100 text-slate-800 border-slate-300" },
-  };
-  const getVerdictMeta = (level) => verdictMeta[level] || { Icon: MinusCircle, style: "bg-slate-100 text-slate-800 border-slate-300" };
+const evidenceCategoryIcons = {
+  "G\u00e9ographie & Flux": Globe,
+  "D\u00e9mographie": Users,
+  "R\u00e9fugi\u00e9s & S\u00e9curit\u00e9": ShieldAlert,
+  "Politiques & Gouvernance": Scale,
+  "\u00c9conomie & Diasporas": Briefcase,
+  "Climat & Environnement": Leaf,
+  "Concepts & Aspirations": Brain,
+  "M\u00e9thodologie & Donn\u00e9es": Database,
+};
 
-  const categoryIconMap = {
-    "Géographie & Flux": Globe,
-    "Démographie": Users,
-    "Réfugiés & Sécurité": ShieldAlert,
-    "Politiques & Gouvernance": Scale,
-    "Économie & Diasporas": Briefcase,
-    "Climat & Environnement": Leaf,
-    "Concepts & Aspirations": Brain,
-    "Méthodologie & Données": Database,
-  };
-  const getCategoryIcon = (categoryName) => categoryIconMap[categoryName] || Globe;
+// Pastille de filtre : filet fin sur papier, encre pleine lorsqu'elle est retenue.
+const FilterChip = ({ active, onClick, children }) => (
+  <button
+    onClick={onClick}
+    className="inline-flex items-center px-2.5 py-1.5 text-[11px] font-semibold border transition-colors"
+    style={active
+      ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)', borderRadius: 2 }
+      : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)', borderRadius: 2 }}
+  >
+    {children}
+  </button>
+);
+
+// Dossier d'une affirmation : citation, verdict, donnees, puis l'appareil critique.
+const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
+  const t = tierOf(fiche.confidence_level);
+  const VerdictIcon = t.Icon;
+  const CatIcon = evidenceCategoryIcons[fiche.category.fr] || Globe;
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const isSubstantiated = fiche.confidence_level === "🟢";
 
   return (
-    <div className="space-y-12 animate-in fade-in zoom-in-95 duration-500">
-      <PageHeader 
-        badge={lang === 'fr' ? 'Observatoire des Narratifs' : 'Narratives Observatory'}
-        title={lang === 'fr' ? 'Évaluation des affirmations' : 'Evidence Check'}
-        highlight={lang === 'fr' ? 'à la lumière des données.' : 'powered by open data.'}
-        desc={lang === 'fr'
-          ? "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles."
-          : "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."}
+    <article className="bg-white border border-slate-200 break-inside-avoid">
+      {showBack && onBack && (
+        <button
+          onClick={onBack}
+          className="lg:hidden flex items-center gap-1.5 px-6 pt-5 text-[10px] font-bold uppercase tracking-widest text-slate-500"
+        >
+          <ChevronRight className="w-3 h-3 rotate-180" /> {L("Retour au registre", "Back to register")}
+        </button>
+      )}
+
+      <header className="px-6 md:px-8 pt-6 pb-5">
+        <div className="flex items-center gap-2 mb-4">
+          <CatIcon className="w-3.5 h-3.5" style={{ color: 'var(--terra)' }} />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{fiche.category[lang]}</span>
+        </div>
+
+        <blockquote
+          className="font-serif font-bold text-xl md:text-2xl leading-snug text-slate-900 pl-4"
+          style={{ borderLeft: '2px solid var(--rule-strong)' }}
+        >
+          {fiche.narrative[lang]}
+        </blockquote>
+
+        <div className="flex items-center gap-3 mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
+          <RobustnessMeter level={fiche.confidence_level} />
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest" style={{ color: t.color }}>
+            <VerdictIcon className="w-3.5 h-3.5" /> {fiche.verdict[lang]}
+          </span>
+        </div>
+      </header>
+
+      <div className="px-6 md:px-8 py-6" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+        <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--terra)' }}>
+          {L("Ce que montrent les donn\u00e9es", "What data shows")}
+        </span>
+        <p className="text-[15px] leading-relaxed text-slate-800">{fiche.reality[lang]}</p>
+      </div>
+
+      <div className="px-6 md:px-8 py-6 space-y-6">
+        {fiche.why_persists && fiche.why_persists[lang].length > 0 && (
+          <section>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+              {isSubstantiated
+                ? L("Pourquoi cette r\u00e9alit\u00e9 reste peu visible", "Why this reality is under-recognized")
+                : L("Pourquoi ce narratif persiste", "Why this narrative persists")}
+            </h4>
+            <ul className="space-y-1.5">
+              {fiche.why_persists[lang].map((reason, i) => (
+                <li key={i} className="flex gap-2.5 text-[13px] text-slate-600 leading-relaxed">
+                  <span className="shrink-0 mt-[7px] w-1 h-1" style={{ backgroundColor: 'var(--terra)' }} />
+                  {reason}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <section>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
+              <BarChart3 className="w-3 h-3" /> {L("Indicateurs crois\u00e9s", "Crossed indicators")}
+            </h4>
+            <ul className="space-y-1">
+              {fiche.indicators[lang].map((ind, i) => (
+                <li key={i} className="text-xs text-slate-700 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>{ind}</li>
+              ))}
+            </ul>
+          </section>
+          <section>
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
+              <Landmark className="w-3 h-3" /> {L("Sources", "Sources")}
+            </h4>
+            <ul className="space-y-1">
+              {fiche.sources[lang].map((src, i) => (
+                <li key={i} className="text-xs font-medium py-1.5" style={{ color: 'var(--inkblue)', borderBottom: '1px solid var(--rule)' }}>{src}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
+
+        <section className="pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
+          <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
+            <ShieldAlert className="w-3 h-3" /> {L("Limites m\u00e9thodologiques", "Methodological limits")}
+          </h4>
+          <p className="text-xs text-slate-500 italic leading-relaxed">{fiche.limits[lang]}</p>
+        </section>
+      </div>
+    </article>
+  );
+};
+
+const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
+  const [query, setQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeTier, setActiveTier] = useState('All');
+  const [selectedId, setSelectedId] = useState(null);
+  // Etat initial paresseux : sans cela, le premier rendu croit etre en grand
+  // ecran et preselectionne une fiche — le visiteur mobile atterrirait dans un
+  // dossier au lieu du registre.
+  const [isWide, setIsWide] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
+  );
+
+  // Le registre et le dossier cohabitent au-dela de 1024 px ; en deca, le
+  // dossier remplace l'index (navigation maitre-detail).
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const apply = () => setIsWide(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    window.addEventListener('resize', apply);
+    return () => { mq.removeEventListener('change', apply); window.removeEventListener('resize', apply); };
+  }, []);
+
+  const categories = useMemo(() => [...new Set(evidenceCheckData.map(i => i.category.fr))], []);
+  const categoryLabel = (key) => {
+    const found = evidenceCheckData.find(i => i.category.fr === key);
+    return found ? found.category[lang] : key;
+  };
+
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return evidenceCheckData
+      .filter(f => activeCategory === 'All' || f.category.fr === activeCategory)
+      .filter(f => activeTier === 'All' || f.confidence_level === activeTier)
+      .filter(f => !q
+        || f.narrative[lang].toLowerCase().includes(q)
+        || f.reality[lang].toLowerCase().includes(q)
+        || f.category[lang].toLowerCase().includes(q))
+      .sort((a, b) => tierOf(a.confidence_level).rank - tierOf(b.confidence_level).rank);
+  }, [query, activeCategory, activeTier, lang]);
+
+  // Sur grand ecran le panneau n'est jamais vide : la premiere entree du
+  // registre filtre est ouverte d'office.
+  useEffect(() => {
+    if (!isWide) return;
+    if (!results.some(r => r.id === selectedId)) setSelectedId(results[0]?.id ?? null);
+  }, [isWide, results, selectedId]);
+
+  const selected = results.find(r => r.id === selectedId) || null;
+  const tierFilters = ["🟢", "🟡", "🟠", "🔴"];
+  const tierName = (level) => {
+    const sample = evidenceCheckData.find(f => f.confidence_level === level);
+    return sample ? sample.verdict[lang] : level;
+  };
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <PageHeader
+        badge={L('Observatoire des Narratifs', 'Narratives Observatory')}
+        title={L('\u00c9valuation des affirmations', 'Evidence Check')}
+        highlight={L('\u00e0 la lumi\u00e8re des donn\u00e9es.', 'powered by open data.')}
+        desc={L(
+          "Cette section \u00e9value le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas \u00e0 juger, mais \u00e0 objectiver le d\u00e9bat en croisant les meilleures sources institutionnelles disponibles.",
+          "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."
+        )}
         icon={Search}
       />
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-        <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+      {/* Note de provenance : les affirmations sont de l'auteur, les donnees ne le sont pas. */}
+      <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
+        <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <p className="text-xs text-amber-800 leading-relaxed">
-          {lang === 'fr'
-            ? "Les affirmations examinées ci-dessous sont formulées par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Il ne s'agit pas de citations directes issues de médias ou d'institutions identifiées : seules les sections « Ce que montrent les données » sont sourcées auprès d'institutions vérifiables (voir Sources)."
-            : "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."}
+          {L(
+            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Il ne s'agit pas de citations directes issues de m\u00e9dias ou d'institutions identifi\u00e9es : seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d'institutions v\u00e9rifiables (voir Sources).",
+            "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."
+          )}
         </p>
       </div>
 
-      <div className="flex justify-end print:hidden">
-        <CsvButton onClick={exportEvidenceCSV} label={lang === 'fr' ? "Affirmations évaluées (CSV)" : "Assessed claims (CSV)"} />
+      {/* Barre de recherche et de tri du registre */}
+      <div className="bg-white border border-slate-200 print:hidden">
+        <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 border-b border-slate-100">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={L("Rechercher une affirmation, une donn\u00e9e, un th\u00e8me\u2026", "Search a claim, a figure, a theme\u2026")}
+              className="w-full pl-9 pr-3 py-2.5 text-sm bg-transparent border border-slate-200 focus:outline-none"
+              style={{ borderRadius: 2 }}
+            />
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 whitespace-nowrap">
+              {results.length}/{evidenceCheckData.length}
+            </span>
+            <CsvButton onClick={exportEvidenceCSV} label="CSV" />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 p-3">
+          {/* Robustesse : l'axe principal du registre */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1">
+              {L("Robustesse", "Robustness")}
+            </span>
+            <FilterChip active={activeTier === 'All'} onClick={() => setActiveTier('All')}>
+              {L("Toutes", "All")}
+            </FilterChip>
+            {tierFilters.map(lv => (
+              <FilterChip key={lv} active={activeTier === lv} onClick={() => setActiveTier(lv)}>
+                <RobustnessMeter level={lv} className="mr-1.5" /> {tierName(lv)}
+              </FilterChip>
+            ))}
+          </div>
+
+          {/* Theme : filtre secondaire */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
+              {L("Th\u00e8me", "Theme")}
+            </span>
+            <select
+              value={activeCategory}
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="text-xs font-semibold bg-transparent border border-slate-200 px-2.5 py-1.5"
+              style={{ borderRadius: 2 }}
+            >
+              <option value="All">{L("Tous les th\u00e8mes", "All themes")}</option>
+              {categories.map(c => <option key={c} value={c}>{categoryLabel(c)}</option>)}
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* Boutons de filtrage en haut */}
-      <section className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 items-center justify-center">
-        {allFilters.map((cat, idx) => (
-          <button
-            key={idx}
-            onClick={() => { setActiveCategory(cat); setExpandedFiche(null); }}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all shadow-sm border ${
-              activeCategory === cat 
-                ? 'bg-slate-900 text-white border-slate-900 scale-105' 
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900'
-            }`}
-          >
-            {cat === "All" ? (lang === 'fr' ? "Tout voir" : "View All") : categoryLabel(cat)}
-          </button>
-        ))}
-      </section>
+      {results.length === 0 ? (
+        <div className="bg-white border border-slate-200 p-12 text-center">
+          <Search className="w-6 h-6 mx-auto mb-3 text-slate-300" />
+          <p className="text-sm text-slate-500">
+            {L("Aucune affirmation ne correspond \u00e0 cette recherche.", "No claim matches this search.")}
+          </p>
+        </div>
+      ) : (
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start print:hidden">
 
-      {/* Rendu dynamique groupé par catégories */}
-      <div className="space-y-16">
-        {displayCategories.map((categoryKey) => {
-          // Filtrer les fiches appartenant à cette catégorie (clé stable = fr)
-          const catFiches = evidenceCheckData.filter(fiche => fiche.category.fr === categoryKey);
-          // Icône de la catégorie (système Lucide unifié, plus d'emoji)
-          const CatIcon = getCategoryIcon(categoryKey);
-          const categoryName = categoryLabel(categoryKey);
-
-          return (
-            <section key={categoryKey} className="space-y-6 animate-in fade-in duration-500">
-
-              {/* Titre de la section (Catégorie) */}
-              <div className="flex items-center space-x-3 border-b border-slate-200 pb-3">
-                <span className="bg-white border border-slate-200 shadow-sm p-2.5 rounded-lg flex items-center justify-center">
-                  <CatIcon className="w-6 h-6 text-blue-800" />
+          {/* ------- Registre ------- */}
+          <div className={`lg:col-span-5 ${selected ? 'hidden lg:block' : 'block'}`}>
+            <div className="bg-white border border-slate-200">
+              <div className="px-4 py-2.5 border-b border-slate-200 flex items-baseline justify-between gap-3">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
+                  {L("Registre des affirmations", "Register of claims")}
                 </span>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 tracking-tight">
-                  {categoryName}
-                </h2>
+                <span className="text-[9px] uppercase tracking-widest text-slate-400 text-right">
+                  {L("class\u00e9 du moins au plus \u00e9tay\u00e9", "least to most substantiated")}
+                </span>
               </div>
-
-              {/* Grille des fiches pour cette catégorie */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                {catFiches.map((fiche) => {
-                  const isExpanded = expandedFiche === fiche.id;
-                  const FicheIcon = getCategoryIcon(fiche.category.fr);
-                  const { Icon: VerdictIcon, style: verdictStyle } = getVerdictMeta(fiche.confidence_level);
+              <ul className="divide-y divide-slate-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                {results.map((f) => {
+                  const t = tierOf(f.confidence_level);
+                  const isSel = selected && selected.id === f.id;
+                  const CatIcon = evidenceCategoryIcons[f.category.fr] || Globe;
                   return (
-                    <div
-                      key={fiche.id}
-                      className={`bg-white rounded-xl border transition-all duration-300 flex flex-col shadow-sm ${
-                        isExpanded ? 'border-slate-800 shadow-xl ring-1 ring-slate-800 z-10' : 'border-slate-200 hover:shadow-md hover:border-slate-300'
-                      }`}
-                    >
-                      <div
-                        className="p-6 cursor-pointer group flex flex-col h-full"
-                        onClick={() => setExpandedFiche(isExpanded ? null : fiche.id)}
+                    <li key={f.id}>
+                      <button
+                        onClick={() => setSelectedId(f.id)}
+                        aria-current={isSel ? 'true' : undefined}
+                        className="evidence-row w-full text-left flex gap-3 px-4 py-3.5"
+                        style={isSel ? { backgroundColor: 'var(--paper-sunk)' } : undefined}
                       >
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex items-center space-x-2">
-                            <FicheIcon className="w-4 h-4 text-slate-400" />
-                            <span className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">{fiche.category[lang]}</span>
-                          </div>
-                          <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm flex items-center space-x-1.5 ${verdictStyle}`}>
-                            <VerdictIcon className="w-3.5 h-3.5" />
-                            <span>{fiche.verdict[lang]}</span>
-                          </div>
-                        </div>
-
-                        <h3 className="text-slate-900 font-serif font-bold text-lg leading-tight mb-4 group-hover:text-blue-800 transition-colors">
-                          « {fiche.narrative[lang]} »
-                        </h3>
-
-                        <div className="pt-4 border-t border-slate-100 mt-auto">
-                          <span className="text-[9px] font-bold uppercase text-slate-400 tracking-widest block mb-2">
-                            {lang === 'fr' ? 'Ce que montrent les données :' : 'What data shows:'}
+                        <span className="block w-[3px] shrink-0 self-stretch" style={{ backgroundColor: t.color }} />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center gap-2 mb-1.5">
+                            <RobustnessMeter level={f.confidence_level} />
+                            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 truncate">
+                              {f.category[lang]}
+                            </span>
                           </span>
-                          <p className="text-slate-700 text-sm leading-relaxed font-medium">
-                            {fiche.reality[lang]}
-                          </p>
-                        </div>
-                        
-                        <div className="flex justify-center mt-5">
-                          <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-slate-800' : 'group-hover:text-blue-600'}`} />
-                        </div>
-                      </div>
-
-                      <div className={`overflow-hidden transition-all duration-700 bg-slate-50 rounded-b-xl ${isExpanded ? 'max-h-[2000px] opacity-100 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
-                        <div className="p-6 space-y-6">
-                          {fiche.why_persists && fiche.why_persists[lang].length > 0 && (
-                            <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-                              <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-800 mb-3 flex items-center">
-                                <Info className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
-                                {(fiche.confidence_level === '🟢' || fiche.confidence_level === '🟢🟡')
-                                  ? (lang === 'fr' ? "Pourquoi cette réalité reste peu visible ?" : "Why is this reality under-recognized?")
-                                  : (lang === 'fr' ? "Pourquoi ce narratif persiste ?" : "Why does this narrative persist?")}
-                              </h4>
-                              <ul className="space-y-2">
-                                {fiche.why_persists[lang].map((reason, i) => (
-                                  <li key={i} className="flex items-start text-xs text-slate-600 leading-relaxed">
-                                    <span className="text-blue-400 mr-2 mt-0.5">•</span> {reason}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2 flex items-center gap-1">
-                                <BarChart3 className="w-3 h-3" />
-                                {lang === 'fr' ? "Indicateurs Croisés" : "Crossed Indicators"}
-                              </h4>
-                              <ul className="space-y-1.5">
-                                {fiche.indicators[lang].map((ind, i) => (
-                                  <li key={i} className="text-xs text-slate-700 bg-slate-100/50 p-1.5 rounded-sm border border-slate-100">{ind}</li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2 flex items-center gap-1">
-                                <Landmark className="w-3 h-3" />
-                                {lang === 'fr' ? "Sources" : "Sources"}
-                              </h4>
-                              <ul className="space-y-1.5">
-                                {fiche.sources[lang].map((src, i) => (
-                                  <li key={i} className="text-xs font-medium text-blue-800 bg-blue-50/50 p-1.5 rounded-sm border border-blue-100">{src}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center">
-                              <ShieldAlert className="w-3 h-3 mr-1.5" />
-                              {lang === 'fr' ? "Limites méthodologiques :" : "Methodological limits:"}
-                            </h4>
-                            <p className="text-xs text-slate-500 italic">
-                              {fiche.limits[lang]}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                          <span className="block text-[13px] leading-snug text-slate-800 font-medium">
+                            {f.narrative[lang]}
+                          </span>
+                        </span>
+                        <CatIcon className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'var(--rule-strong)' }} />
+                      </button>
+                    </li>
                   );
                 })}
+              </ul>
+            </div>
+          </div>
+
+          {/* ------- Dossier de lecture ------- */}
+          <div className={`lg:col-span-7 lg:sticky lg:top-28 ${selected ? 'block' : 'hidden lg:block'} mt-6 lg:mt-0`}>
+            {selected ? (
+              <EvidenceDossier fiche={selected} lang={lang} onBack={() => setSelectedId(null)} showBack />
+            ) : (
+              <div className="bg-white border border-slate-200 p-12 text-center">
+                <BookOpen className="w-6 h-6 mx-auto mb-3 text-slate-300" />
+                <p className="text-sm text-slate-500">
+                  {L("S\u00e9lectionnez une affirmation dans le registre.", "Select a claim from the register.")}
+                </p>
               </div>
-            </section>
-          );
-        })}
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Version imprimee : le registre filtre se deplie en dossiers successifs,
+          pour que l'export PDF reste exhaustif. */}
+      <div className="hidden print:block space-y-6">
+        {results.map(f => <EvidenceDossier key={f.id} fiche={f} lang={lang} onBack={null} showBack={false} />)}
       </div>
     </div>
   );
@@ -2496,6 +2649,60 @@ const pafomSessions = [
   { num: "PAFoM 8", date: { fr: "Gaborone, 31 oct. - 2 nov. 2023", en: "Gaborone, 31 Oct. - 2 Nov. 2023" }, focus: { fr: "Libre circulation, migration de travail et nexus commerce-ZLECAf", en: "Free movement, labour migration, and the AfCFTA-trade nexus" }, outcome: { fr: "Relie directement la libre circulation et la migration de travail à la mise en œuvre de la ZLECAf.", en: "Directly links free movement and labour migration to AfCFTA implementation." } },
   { num: "PAFoM 9", date: { fr: "Le Cap, 16-18 déc. 2025", en: "Cape Town, 16-18 Dec. 2025" }, focus: { fr: "Digitalisation et intégration des systèmes de gestion des frontières", en: "Digitalization and integration of border management systems" }, outcome: { fr: "Confirme la pérennité du forum avec un accent nouveau sur les frontières numériques et l'interopérabilité.", en: "Confirms the forum's continuity with a new emphasis on digital borders and interoperability." } },
 ];
+
+// Panneau de contrepoint : a cote de chaque cadre mondial, l'instrument
+// africain equivalent, ses dates, et les sources qui l'attestent.
+// Bouton de sous-navigation : meme idiome que les onglets principaux — encre
+// pleine et filet terracotta lorsqu'il est retenu, filet seul sinon.
+const govSubNavStyle = (isActive) => isActive
+  ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)',
+      boxShadow: 'inset 2px 0 0 var(--terra)' }
+  : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)' };
+
+const AfricanCounterpoint = ({ kicker, title, lang, sources = [], children }) => (
+  <section className="bg-white border border-slate-200" style={{ borderTop: '2px solid var(--terra)' }}>
+    <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+      <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--terra)' }}>
+        {kicker}
+      </span>
+      <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h4>
+    </div>
+    <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">{children}</div>
+    {sources.length > 0 && (
+      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+        <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          {lang === 'fr' ? 'Sources' : 'Sources'}
+        </span>
+        <ul className="space-y-1.5">
+          {sources.map((src, i) => (
+            <li key={i} className="text-xs leading-snug">
+              {src.url ? (
+                <a href={src.url} target="_blank" rel="noopener noreferrer"
+                   className="inline-flex items-start gap-1.5 hover:underline" style={{ color: 'var(--inkblue)' }}>
+                  <span>{src.label}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
+                </a>
+              ) : <span className="text-slate-600">{src.label}</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </section>
+);
+
+// Repere date/fait : une ligne de chronologie compacte dans un contrepoint.
+const CounterpointFacts = ({ items }) => (
+  <ul className="divide-y divide-slate-100 border-y border-slate-100">
+    {items.map((it, i) => (
+      <li key={i} className="flex gap-4 py-2.5">
+        <span className="w-28 shrink-0 text-[11px] font-bold uppercase tracking-wide tabular-nums" style={{ color: 'var(--terra)' }}>
+          {it.when}
+        </span>
+        <span className="text-[13px] text-slate-700 leading-snug">{it.what}</span>
+      </li>
+    ))}
+  </ul>
+);
 
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const [expandedRec, setExpandedRec] = useState(null);
@@ -3441,9 +3648,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <Globe className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "1. Cadres Mondiaux" : "1. Global Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('sdgs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'sdgs' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "ODD / SDGs (Agenda 2030)" : "SDGs (2030 Agenda)"}</button>
-              <button onClick={() => setActiveSdgzTab('gcm')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcm' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Pacte GCM (Migrations)" : "GCM Compact (Migration)"}</button>
-              <button onClick={() => setActiveSdgzTab('gcr')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'gcr' ? 'bg-blue-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Pacte GCR (Réfugiés)" : "GCR Compact (Refugees)"}</button>
+              <button onClick={() => setActiveSdgzTab('sdgs')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'sdgs')}>{lang === 'fr' ? "ODD / SDGs (Agenda 2030)" : "SDGs (2030 Agenda)"}</button>
+              <button onClick={() => setActiveSdgzTab('gcm')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'gcm')}>{lang === 'fr' ? "Pacte GCM (Migrations)" : "GCM Compact (Migration)"}</button>
+              <button onClick={() => setActiveSdgzTab('gcr')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'gcr')}>{lang === 'fr' ? "Pacte GCR (Réfugiés)" : "GCR Compact (Refugees)"}</button>
             </div>
           </div>
 
@@ -3453,8 +3660,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <MapIcon className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "2. Cadres Africains" : "2. African Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('au')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'au' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "Union Africaine (Traités & Agences)" : "African Union (Treaties & Agencies)"}</button>
-              <button onClick={() => setActiveSdgzTab('recs')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all ${activeSdgzTab === 'recs' ? 'bg-emerald-800 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>{lang === 'fr' ? "CER (Régions & Processus)" : "RECs (Regions & Processes)"}</button>
+              <button onClick={() => setActiveSdgzTab('au')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'au')}>{lang === 'fr' ? "Union Africaine (Traités & Agences)" : "African Union (Treaties & Agencies)"}</button>
+              <button onClick={() => setActiveSdgzTab('recs')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold" style={govSubNavStyle(activeSdgzTab === 'recs')}>{lang === 'fr' ? "CER (Régions & Processus)" : "RECs (Regions & Processes)"}</button>
             </div>
           </div>
 
@@ -3464,7 +3671,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <Scale className="w-3.5 h-3.5 mr-1.5" /> {lang === 'fr' ? "3. États Juridiques" : "3. Legal Frameworks"}
             </div>
             <div className="flex flex-col gap-2">
-              <button onClick={() => setActiveSdgzTab('matrix')} className={`w-full text-left py-2 px-3 rounded-md font-bold text-xs transition-all flex justify-between items-center ${activeSdgzTab === 'matrix' ? 'bg-slate-900 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>
+              <button onClick={() => setActiveSdgzTab('matrix')} className="gov-subnav w-full text-left py-2.5 px-3 border text-xs font-semibold flex justify-between items-center" style={govSubNavStyle(activeSdgzTab === 'matrix')}>
                 <span>{lang === 'fr' ? "Entrées & Séjours (54 pays)" : "Entry & Residence (54 countries)"}</span>
                 <ChevronRight className="w-3 h-3 opacity-50" />
               </button>
@@ -3498,6 +3705,66 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               ))}
             </div>
+
+            <AfricanCounterpoint
+              lang={lang}
+              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
+              title={lang === 'fr'
+                ? "L'Agenda 2063 : l'Afrique s'est dotée de son propre horizon, et il est plus ancien que 2030"
+                : "Agenda 2063: Africa set its own horizon, and it predates 2030"}
+              sources={[
+                { label: lang === 'fr'
+                    ? "Union africaine — Projets phares de l'Agenda 2063 (liste officielle des 15 projets)"
+                    : "African Union — Agenda 2063 Flagship Projects (official list of the 15 projects)",
+                  url: "https://au.int/en/agenda2063/flagship-projects" },
+                { label: lang === 'fr'
+                    ? "Union africaine — « African Union Passport Launched during Opening of 27th AU Summit in Kigali » (communiqué, 17 juillet 2016)"
+                    : "African Union — \"African Union Passport Launched during Opening of 27th AU Summit in Kigali\" (press release, 17 July 2016)",
+                  url: "https://au.int/en/pressreleases/20160717/african-union-passport-launched-during-opening-27th-au-summit-kigali" },
+                { label: lang === 'fr'
+                    ? "AUDA-NEPAD — agence de mise en œuvre de l'Agenda 2063"
+                    : "AUDA-NEPAD — implementing agency for Agenda 2063",
+                  url: "https://www.nepad.org/" },
+              ]}
+            >
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Adopté en 2015, l'Agenda 2063 n'est pas la déclinaison régionale de l'Agenda 2030 : il a son calendrier propre, cinquante ans, et sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares."
+                  : "Adopted in 2015, Agenda 2063 is not a regional translation of Agenda 2030: it has its own fifty-year horizon, and its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects."}
+              </p>
+
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--terra)' }}>
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                  {lang === 'fr' ? "Projet phare n° 4 sur 15" : "Flagship project no. 4 of 15"}
+                </span>
+                <h5 className="font-serif font-bold text-slate-900 mb-2">
+                  {lang === 'fr' ? "Le passeport africain et la libre circulation des personnes" : "The African Passport and Free Movement of People"}
+                </h5>
+                <p className="text-[13px] text-slate-600 italic leading-relaxed">
+                  {lang === 'fr'
+                    ? "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)"
+                    : "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)"}
+                </p>
+              </div>
+
+              <CounterpointFacts items={[
+                { when: "2014", what: lang === 'fr'
+                    ? "Le projet de passeport continental est arrêté comme projet phare de l'Agenda 2063."
+                    : "The continental passport is agreed as an Agenda 2063 flagship project." },
+                { when: lang === 'fr' ? "17 juil. 2016" : "17 July 2016", what: lang === 'fr'
+                    ? "Lancement du passeport de l'UA à l'ouverture du 27e Sommet, à Kigali : les premiers exemplaires sont remis au président en exercice Idriss Déby Itno et au président Paul Kagame par la présidente de la Commission Nkosazana Dlamini-Zuma."
+                    : "The AU passport is launched at the opening of the 27th Summit in Kigali: the first copies are handed to AU Chairperson Idriss Déby Itno and President Paul Kagame by AUC Chairperson Nkosazana Dlamini-Zuma." },
+                { when: "2018", what: lang === 'fr'
+                    ? "Le Protocole sur la libre circulation des personnes est adopté à Kigali — c'est lui qui doit donner au passeport sa portée juridique."
+                    : "The Protocol on Free Movement of Persons is adopted in Kigali — it is what would give the passport its legal reach." },
+              ]} />
+
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "C'est ici que le geste symbolique et l'ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L'Agenda 2063 n'échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026)."
+                  : "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)."}
+              </p>
+            </AfricanCounterpoint>
           </div>
         )}
 
@@ -3518,6 +3785,78 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               ))}
             </div>
+
+            <AfricanCounterpoint
+              lang={lang}
+              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
+              title={lang === 'fr'
+                ? "La Position africaine commune : l'Afrique est arrivée à Marrakech avec un texte à elle"
+                : "The Common African Position: Africa came to Marrakech with a text of its own"}
+              sources={[
+                { label: lang === 'fr'
+                    ? "Union africaine — « Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration », octobre 2017 (document de travail, Addis-Abeba)"
+                    : "African Union — \"Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration\", October 2017 (working document, Addis Ababa)",
+                  url: "https://au.int/sites/default/files/newsevents/workingdocuments/33023-wd-english_common_african_position_on_gcom.pdf" },
+                { label: lang === 'fr'
+                    ? "Union africaine — Revue régionale africaine de la mise en œuvre du Pacte mondial sur les migrations (2021)"
+                    : "African Union — Africa Regional Review of the Implementation of the Global Compact on Migration (2021)",
+                  url: "https://au.int/en/newsevents/20210826/africa-regional-review-implementation-global-compact-migration" },
+                { label: lang === 'fr'
+                    ? "Union africaine — Validation du plan d'action pour la mise en œuvre du GCM en Afrique (communiqué, 28 août 2024)"
+                    : "African Union — Senior officers validate the action plan for GCM implementation in Africa (press release, 28 August 2024)",
+                  url: "https://au.int/en/pressreleases/20240828/senior-officers-validate-action-plan-gcm-implementation-africa" },
+              ]}
+            >
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune (PAC), élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message » et portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État."
+                  : "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP), drafted in October 2017 under the motto \"One Africa, One Voice, One Message\" and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state."}
+              </p>
+
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--terra)' }}>
+                <p className="text-[13px] text-slate-600 italic leading-relaxed">
+                  {lang === 'fr'
+                    ? "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)"
+                    : "\"The adoption of a Common African Position on the Global Compact on Migration will be guided by the fact that human mobility and free movement of all persons within the continent constitute one of the pillars of an integrated Africa.\" (CAP, § 1.6)"}
+                </p>
+              </div>
+
+              <div>
+                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                  {lang === 'fr' ? "Les six domaines thématiques de la Position" : "The six thematic areas of the Position"}
+                </span>
+                <ol className="space-y-2">
+                  {(lang === 'fr' ? [
+                    "Agir sur les moteurs de la migration — effets du changement climatique, catastrophes naturelles, crises d'origine humaine, inégalités de genre et autres.",
+                    "Droits humains de tous les migrants — inclusion sociale, cohésion, lutte contre le racisme, la xénophobie et les discriminations.",
+                    "Trafic de migrants, traite des personnes et formes contemporaines d'esclavage.",
+                    "Coopération internationale et gouvernance des migrations — synergies entre États membres, harmonisation de la gestion des frontières et des données.",
+                    "Migration irrégulière et voies régulières — créer les canaux dont l'absence pousse vers les routes dangereuses.",
+                    "Contributions des migrants et des diasporas — y compris des femmes et des jeunes — aux pays d'origine, de transit et d'accueil.",
+                  ] : [
+                    "Addressing the drivers of migration — adverse effects of climate change, natural disasters, human-made crises, gender and other inequalities.",
+                    "Human rights of all migrants — social inclusion, cohesion, and countering racism, xenophobia and discrimination.",
+                    "Smuggling of migrants, trafficking in persons and contemporary forms of slavery.",
+                    "International cooperation and governance of migration — synergies among member states, harmonised border management and data.",
+                    "Irregular migration and regular pathways — creating the channels whose absence pushes people onto dangerous routes.",
+                    "Contributions of migrants and diasporas — including women and youth — to countries of origin, transit and destination.",
+                  ]).map((t, i) => (
+                    <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
+                      <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--terra)' }}>
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-slate-700">{t}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique ne construit pas un cadre parallèle, elle occupe celui qui se négocie, en y inscrivant ses propres priorités. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations : revue régionale africaine de la mise en œuvre du GCM en 2021, plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
+                  : "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa is not building a parallel framework, it is occupying the one being negotiated and writing its priorities into it. What follows is legible in bureaucratic machinery rather than declarations: the Africa regional review of GCM implementation in 2021, a continental action plan validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025."}
+              </p>
+            </AfricanCounterpoint>
           </div>
         )}
 
@@ -3537,6 +3876,55 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               ))}
             </div>
+
+            <AfricanCounterpoint
+              lang={lang}
+              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
+              title={lang === 'fr'
+                ? "L'Afrique avait déjà son instrument — et il est plus large que celui de Genève"
+                : "Africa already had its instrument — and it is broader than Geneva's"}
+              sources={[
+                { label: lang === 'fr'
+                    ? "OUA — Convention régissant les aspects propres aux problèmes des réfugiés en Afrique (Addis-Abeba, 10 septembre 1969 ; entrée en vigueur le 20 juin 1974)"
+                    : "OAU — Convention Governing the Specific Aspects of Refugee Problems in Africa (Addis Ababa, 10 September 1969; entered into force 20 June 1974)",
+                  url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
+                { label: lang === 'fr'
+                    ? "UA — Convention de Kampala sur la protection et l'assistance aux personnes déplacées internes (2009)"
+                    : "AU — Kampala Convention on the Protection and Assistance of Internally Displaced Persons (2009)",
+                  url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
+                { label: lang === 'fr'
+                    ? "HCR — Global Trends : Forced Displacement (édition 2025)"
+                    : "UNHCR — Global Trends: Forced Displacement (2025 edition)",
+                  url: "https://www.unhcr.org/global-trends" },
+              ]}
+            >
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Le Pacte mondial sur les réfugiés date de 2018. La Convention de l'OUA sur les réfugiés date de 1969 : un demi-siècle plus tôt, et avec une définition plus large que celle de Genève. Là où la Convention de 1951 exige une crainte de persécution individualisée, l'article I(2) du texte africain protège aussi quiconque fuit « une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public ». C'est la définition que cette plateforme retient comme référence."
+                  : "The Global Compact on Refugees dates from 2018. The OAU Refugee Convention dates from 1969: half a century earlier, and with a broader definition than Geneva's. Where the 1951 Convention requires an individualised fear of persecution, Article I(2) of the African text also protects anyone fleeing \"external aggression, occupation, foreign domination or events seriously disturbing public order\". That is the definition this platform treats as its reference."}
+              </p>
+
+              <CounterpointFacts items={[
+                { when: "1969", what: lang === 'fr'
+                    ? "Convention de l'OUA, adoptée à Addis-Abeba le 10 septembre — définition élargie du réfugié, en vigueur depuis le 20 juin 1974."
+                    : "OAU Convention, adopted in Addis Ababa on 10 September — broadened refugee definition, in force since 20 June 1974." },
+                { when: "2009", what: lang === 'fr'
+                    ? "Convention de Kampala : premier — et toujours seul — traité régional contraignant au monde sur les personnes déplacées internes."
+                    : "Kampala Convention: the first — and still the only — binding regional treaty in the world on internally displaced persons." },
+                { when: "2017", what: lang === 'fr'
+                    ? "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017)."
+                    : "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." },
+                { when: "2018", what: lang === 'fr'
+                    ? "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà."
+                    : "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." },
+              ]} />
+
+              <p className="text-justify">
+                {lang === 'fr'
+                  ? "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir : d'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde, et deux d'entre eux — l'Ouganda et le Tchad — sont africains. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026)."
+                  : "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims does not describe a burden to come: according to UNHCR, six countries alone host more than a third of the world's refugees, and two of them — Uganda and Chad — are African. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)."}
+              </p>
+            </AfricanCounterpoint>
           </div>
         )}
 
@@ -5116,6 +5504,8 @@ const libraryData = [
       { title: "African Union — Treaties, Conventions & Protocols Database", year: 2025, essential: true, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Textes et statuts de ratification des instruments de l'UA.", en: "Texts and ratification status of AU instruments." }, url: "https://au.int/en/treaties" },
       { title: "ILO NORMLEX — International Labour Standards Database", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Ratifications des conventions de l'OIT, pays par pays.", en: "ILO convention ratifications, country by country." }, url: "https://normlex.ilo.org/" },
       { title: "AU Protocol on Free Movement of Persons, Right of Residence and Right of Establishment", year: 2018, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Protocole continental sur la libre circulation, la résidence et l'établissement.", en: "Continental protocol on free movement, residence, and establishment." }, url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
+      { title: "Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration", year: 2017, type: { fr: "Position commune (UA)", en: "Common Position (AU)" }, desc: { fr: "Doctrine africaine négociée en amont du Pacte de Marrakech, structurée en six domaines thématiques et adossée à la libre circulation continentale. Document de travail de l'UA, Addis-Abeba, octobre 2017.", en: "African doctrine negotiated ahead of the Marrakech Compact, structured around six thematic areas and anchored in continental free movement. AU working document, Addis Ababa, October 2017." }, url: "https://au.int/sites/default/files/newsevents/workingdocuments/33023-wd-english_common_african_position_on_gcom.pdf" },
+      { title: "Agenda 2063 — Flagship Projects (African Passport and Free Movement of People)", year: 2015, type: { fr: "Cadre stratégique (UA)", en: "Strategic Framework (AU)" }, desc: { fr: "Liste officielle des quinze projets phares de l'Agenda 2063 ; le quatrième porte le passeport africain et la libre circulation des personnes.", en: "Official list of Agenda 2063's fifteen flagship projects; the fourth carries the African Passport and free movement of persons." }, url: "https://au.int/en/agenda2063/flagship-projects" },
       { title: "AU Convention for the Protection and Assistance of IDPs (Kampala Convention)", year: 2009, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Premier traité contraignant au monde sur les personnes déplacées internes.", en: "World's first binding treaty on internally displaced persons." }, url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
       { title: "Treaty Establishing the African Economic Community (Abuja Treaty)", year: 1991, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Traité fondateur du projet d'intégration économique continentale.", en: "Founding treaty of the continental economic integration project." }, url: "https://au.int/en/treaties/treaty-establishing-african-economic-community" },
       { title: "Migration Policy Framework for Africa and Plan of Action (2018–2030)", year: 2018, essential: true, type: { fr: "Cadre politique", en: "Policy Framework" }, desc: { fr: "Cadre stratégique continental de référence en matière de gouvernance des migrations.", en: "The continent's reference strategic framework for migration governance." }, url: "https://au.int/sites/default/files/documents/35956-doc-2018_mpfa_english_version.pdf" },
