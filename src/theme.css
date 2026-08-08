@@ -17,6 +17,7 @@
   --ink-soft:     #3A342E;
   --ink-mute:     #6B635A;
   --muted:        #6E665B;   /* tient le 4,5:1 sur le papier comme sur le papier creuse */
+  --label:        #57504A;   /* micro-libelles : plus dense que --muted, reste recessif */
   --rule:         #E4DCD0;
   --rule-strong:  #CFC4B4;
 
@@ -340,6 +341,48 @@ button, a { transition: color .18s ease, background-color .18s ease, border-colo
   border-color: var(--rule-strong);
 }
 .gov-subnav:not([aria-current="true"]):hover .gov-subnav-label { color: var(--ink); }
+
+/* ---------- Planche d'atlas : le filigrane des bandeaux de section --------- */
+/* Au large, le continent deborde a droite et se lit comme une gravure en
+   marge. Sous 768 px il n'y a plus de marge : il recule en motif d'angle
+   pour ne pas passer derriere le titre. */
+
+.atlas-plate {
+  right: -6%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 215%;
+  width: auto;
+}
+@media (max-width: 767px) {
+  .atlas-plate { height: 145%; right: -26%; opacity: .085 !important; }
+}
+@media print { .atlas-plate { display: none; } }
+
+/* ---------- Justification : les paragraphes, et rien d'autre -------------- */
+/* Un conteneur de prose justifie transmettait son alignement a tout ce qu'il
+   contenait — libelles, puces, cellules, titres. Sur une ou deux lignes, la
+   justification creuse des blancs et fait faux. On la rend a sa place.        */
+
+main :is(h1, h2, h3, h4, h5, h6, span, li, dt, button, a, label,
+         figcaption, th, td, blockquote, summary) {
+  text-align: left;
+}
+/* La cesure resserre les blancs des paragraphes qui restent justifies. */
+main p.text-justify, main .text-justify > p {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* ---------- Plancher de lisibilite --------------------------------------- */
+/* Rien sous 10 px, et les micro-libelles gagnent en densite d'encre. */
+
+main .text-\[9px\]  { font-size: 10px; }
+main .text-\[10px\] { font-size: 11px; }
+
+main :is(.text-\[9px\], .text-\[10px\], .text-\[11px\]):is(.text-slate-400, .text-slate-500) {
+  color: var(--label) !important;
+}
 
 /* ---------- Lettrine : le corps du texte s'ouvre sur une capitale --------- */
 
