@@ -17,7 +17,7 @@
   --ink-soft:     #3A342E;
   --ink-mute:     #6B635A;
   --muted:        #6E665B;   /* tient le 4,5:1 sur le papier comme sur le papier creuse */
-  --label:        #57504A;   /* micro-libelles : plus dense que --muted, reste recessif */
+  --label:        #4E4842;   /* micro-libelles : ~8,6:1 sur le papier, reste recessif */
   --rule:         #E4DCD0;
   --rule-strong:  #CFC4B4;
 
@@ -263,6 +263,59 @@ main thead th {
   border-bottom: 1px solid var(--rule-strong) !important;
 }
 
+/* ---------- Couche vivante : couleur utile et mouvement ------------------ */
+/* La couleur sert a lire vite : une famille, un statut, un niveau. Le
+   mouvement sert a comprendre l'ordre d'apparition et l'echelle des grandeurs. */
+
+/* --- Barres : elles poussent depuis zero au lieu d'apparaitre pleines --- */
+@keyframes barGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.bar-fill {
+  transform-origin: left center;
+  animation: barGrow .85s cubic-bezier(.2,.75,.3,1) both;
+}
+.bar-fill--d1 { animation-delay: .05s; }
+.bar-fill--d2 { animation-delay: .10s; }
+.bar-fill--d3 { animation-delay: .15s; }
+.bar-fill--d4 { animation-delay: .20s; }
+.bar-fill--d5 { animation-delay: .25s; }
+
+/* --- Entrees decalees : les elements d'une grille arrivent l'un apres l'autre --- */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.stagger > * { animation: riseIn .5s cubic-bezier(.2,.75,.3,1) both; }
+.stagger > *:nth-child(1) { animation-delay: .02s; }
+.stagger > *:nth-child(2) { animation-delay: .07s; }
+.stagger > *:nth-child(3) { animation-delay: .12s; }
+.stagger > *:nth-child(4) { animation-delay: .17s; }
+.stagger > *:nth-child(5) { animation-delay: .22s; }
+.stagger > *:nth-child(6) { animation-delay: .27s; }
+.stagger > *:nth-child(n+7) { animation-delay: .32s; }
+
+/* --- Survol : la feuille repond, sans retomber dans l'ombre portee --- */
+.lift { transition: transform .2s cubic-bezier(.2,.75,.3,1), border-color .2s ease, background-color .2s ease; }
+.lift:hover { transform: translateY(-2px); border-color: var(--rule-strong) !important; }
+
+/* --- Bandeaux de groupe : un lavis de la teinte de la famille --- */
+.wash-terra   { background-image: linear-gradient(90deg, var(--terra-soft), transparent 70%); }
+.wash-inkblue { background-image: linear-gradient(90deg, var(--inkblue-soft), transparent 70%); }
+.wash-ok      { background-image: linear-gradient(90deg, var(--ok-soft), transparent 70%); }
+.wash-warn    { background-image: linear-gradient(90deg, var(--warn-soft), transparent 70%); }
+
+/* --- Chiffres : la teinte de la famille les rend reperables d'un coup d'oeil --- */
+.figure-terra   { color: var(--terra-deep); }
+.figure-inkblue { color: var(--inkblue); }
+.figure-ok      { color: var(--ok); }
+.figure-warn    { color: var(--warn-ink); }
+
+/* --- Pastilles de statut : rondes, pleines, lisibles de loin --- */
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 99px; flex: none; }
+
+/* --- Le releve reagit au survol ligne par ligne --- */
+.stat-ledger > *, .figure-row { transition: background-color .16s ease; }
+.figure-row:hover { background-color: var(--paper-sunk); }
+
 /* ---------- Mouvement : sobre, et desactivable -------------------------- */
 
 html { scroll-behavior: smooth; }
@@ -274,6 +327,8 @@ button, a { transition: color .18s ease, background-color .18s ease, border-colo
     animation-duration: .001ms !important; animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
+  .bar-fill { transform: none !important; }
+  .stagger > * { opacity: 1 !important; transform: none !important; }
 }
 
 /* ---------- Segments : un bouton actif a l'encre, pas une pastille ------- */
@@ -377,12 +432,21 @@ main p.text-justify, main .text-justify > p {
 /* ---------- Plancher de lisibilite --------------------------------------- */
 /* Rien sous 10 px, et les micro-libelles gagnent en densite d'encre. */
 
-main .text-\[9px\]  { font-size: 10px; }
+main .text-\[9px\]  { font-size: 11px; }
 main .text-\[10px\] { font-size: 11px; }
+main .text-\[11px\] { font-size: 11.5px; }
+main .text-\[12px\] { font-size: 12.5px; }
 
-main :is(.text-\[9px\], .text-\[10px\], .text-\[11px\]):is(.text-slate-400, .text-slate-500) {
+/* Sous 13 px, le gris sourd n'est plus assez dense : on passe a --label
+   (7,5:1 environ) plutot que de laisser --muted a 5,5:1. */
+main :is(.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .text-xs)
+     :is(.text-slate-400, .text-slate-500),
+main :is(.text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\]):is(.text-slate-400, .text-slate-500) {
   color: var(--label) !important;
 }
+
+/* Les libelles de source et de reserve, souvent les plus petits de la page. */
+main .italic:is(.text-\[10px\], .text-\[11px\]) { color: var(--label) !important; }
 
 /* ---------- Lettrine : le corps du texte s'ouvre sur une capitale --------- */
 
