@@ -14,6 +14,7 @@ import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
 import { unhcrByCountry, unhcrTotals, UNHCR_SOURCE } from './unhcrData';
 import { findexByCountry, FINDEX_SOURCE } from './findexData';
+import { iiagRank, IIAG_SOURCE } from './iiagData';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -58,13 +59,49 @@ const fmtNum = (val, lang) => {
   return lang === 'fr' ? str.replace('.', ',') : str;
 };
 
-const formatNumber = (val) => {
-  if (val === undefined || val === null) return "0";
+// --- Nombres -----------------------------------------------------------------
+// Un grand nombre ne se lit pas chiffre a chiffre : il se lit par tranches de
+// trois. Le separateur de groupe est donc traite ici comme une respiration
+// typographique et non comme un caractere parmi d'autres — il garde sa valeur
+// textuelle (copier-coller, lecteurs d'ecran) mais recoit une marge propre.
+// Cette marge est logique (margin-inline), donc elle suivra le sens de lecture
+// le jour ou l'arabe rejoindra les langues de la plateforme.
+const LOCALES = { fr: 'fr-FR', en: 'en-US' };
+const localeOf = (lang) => LOCALES[lang] || LOCALES.en;
+
+const toNumber = (val) => {
+  if (typeof val === 'number') return Number.isFinite(val) ? val : null;
+  if (val === undefined || val === null || val === '') return null;
+  const s = String(val).replace(/[\s  ]/g, '').replace(',', '.');
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+};
+
+const formatNumber = (val, lang = 'fr') => {
+  if (val === undefined || val === null) return '0';
   const strVal = String(val);
-  if (strVal.includes('M') || strVal.includes('k')) return strVal;
-  const num = parseInt(strVal.replace(/\s/g, ''), 10);
-  if (isNaN(num)) return val;
-  return num.toLocaleString('fr-FR'); 
+  if (strVal.includes('M') || strVal.includes('k')) return strVal;   // deja abrege
+  const n = toNumber(strVal);
+  if (n === null) return val;
+  return new Intl.NumberFormat(localeOf(lang)).format(n);
+};
+
+// Version JSX : identique, mais chaque separateur de groupe devient un element
+// qu'on peut espacer. C'est ce qui rend la coupure million / millier evidente.
+const Num = ({ value, lang = 'fr', unit = null, className = '', ...rest }) => {
+  const n = toNumber(value);
+  if (n === null) return <span className={className} {...rest}>{value}</span>;
+  const parts = new Intl.NumberFormat(localeOf(lang)).formatToParts(n);
+  return (
+    <span className={`num ${className}`.trim()} {...rest}>
+      {parts.map((p, i) =>
+        p.type === 'group'
+          ? <span key={i} className="num-sep">{p.value}</span>
+          : <span key={i}>{p.value}</span>
+      )}
+      {unit ? <span className="num-unit">{unit}</span> : null}
+    </span>
+  );
 };
 
 // Respecte le réglage système « réduire les animations ».
@@ -182,7 +219,7 @@ const ScrollProgress = () => {
     <div className="h-0.5 w-full print:hidden" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
       <div
         className="h-full transition-[width] duration-150 ease-out"
-        style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--terra-deep), var(--terra) 60%, #E08A5F)' }}
+        style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, #8FA0CE)' }}
       />
     </div>
   );
@@ -288,7 +325,7 @@ const headerAccents = {
 // legerement relevee, libelle au papier. Un seul accent pour les huit rubriques :
 // la couleur signale la position, elle ne code plus la rubrique.
 const navTabStyle = (isActive) => isActive
-  ? { backgroundColor: '#241E1A', color: '#FFFDF9', borderTopColor: 'var(--terra)',
+  ? { backgroundColor: '#241E1A', color: '#FFFDF9', borderTopColor: 'var(--accent)',
       boxShadow: 'inset 0 -1px 0 rgba(255,253,249,.06)' }
   : { backgroundColor: 'transparent', color: '#A79E92', borderTopColor: 'transparent' };
 
@@ -301,8 +338,8 @@ const BrandMark = ({ className = "w-8 h-8", tone = "paper", style }) => {
       <circle cx="20" cy="20" r="15.5" fill="none" stroke={ring} strokeWidth="2" opacity=".92" />
       {/* trajectoire : sort du disque, signe la mobilite plutot que la frontiere */}
       <path d="M4 27 C 13 27, 17 8, 27 8 C 33 8, 36 12, 36 12"
-            fill="none" stroke="var(--terra)" strokeWidth="3.4" strokeLinecap="round" />
-      <circle cx="27" cy="8" r="3.4" fill="var(--terra)" />
+            fill="none" stroke="var(--accent)" strokeWidth="3.4" strokeLinecap="round" />
+      <circle cx="27" cy="8" r="3.4" fill="var(--accent)" />
     </svg>
   );
 };
@@ -362,9 +399,9 @@ const AspirationGap = ({ lang }) => {
   );
 
   return (
-    <section className="bg-white my-7" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--inkblue)' }}>
+    <section className="bg-white my-7" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent-2)' }}>
       <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
-        <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--inkblue)' }}>
+        <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-2)' }}>
           {L("Ce que la plateforme ne mesurait pas : l'aspiration", 'What the platform was not measuring: aspiration')}
         </span>
         <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
@@ -399,14 +436,14 @@ const AspirationGap = ({ lang }) => {
           <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Où ceux qui envisagent de partir voudraient aller', 'Where those considering leaving would go')}
           </span>
-          {dest.map((d, i) => <Row key={d.l} {...d} color="var(--inkblue)" i={i} />)}
+          {dest.map((d, i) => <Row key={d.l} {...d} color="var(--accent-2)" i={i} />)}
         </div>
 
         <div>
           <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Pourquoi', 'Why')}
           </span>
-          {why.map((d, i) => <Row key={d.l} {...d} color="var(--terra)" i={i} />)}
+          {why.map((d, i) => <Row key={d.l} {...d} color="var(--accent)" i={i} />)}
         </div>
 
         <div>
@@ -416,7 +453,7 @@ const AspirationGap = ({ lang }) => {
           {pays.map((d, i) => <Row key={d.l} {...d} color="var(--ok)" i={i} />)}
         </div>
 
-        <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--inkblue)' }}>
+        <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
           <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que l'écart démontre", 'What the gap demonstrates')}
           </span>
@@ -433,7 +470,7 @@ const AspirationGap = ({ lang }) => {
         <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
         <a href="https://www.afrobarometer.org/articles/international-migrants-day-almost-half-of-africans-have-considered-emigrating-afrobarometer-survey-shows/"
            target="_blank" rel="noopener noreferrer"
-           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--inkblue)' }}>
+           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
           <span>{L(
             "Afrobarometer — enquête 2024 auprès de 24 pays africains ; comparaison à 2016-2018 sur 22 pays. Les parts de destination et de motif portent sur les seuls répondants ayant envisagé de partir.",
             'Afrobarometer — 2024 survey across 24 African countries; comparison to 2016-2018 across 22 countries. Destination and reason shares cover only respondents who had considered leaving.'
@@ -466,7 +503,7 @@ const ProportionGap = ({ lang }) => {
   return (
     <figure className="my-7 border border-slate-200 bg-white">
       <figcaption className="px-5 py-3 border-b border-slate-200" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--terra-deep)' }}>
+        <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
           {L('Lecture proportionnelle', 'Reading it proportionally')}
         </span>
         <span className="block text-[13px] font-semibold text-slate-800 leading-snug">
@@ -486,13 +523,13 @@ const ProportionGap = ({ lang }) => {
                 <div key={ri}>
                   <div className="flex items-baseline justify-between gap-3 mb-1">
                     <span className="text-xs text-slate-700 leading-snug">{r.label}</span>
-                    <span className="text-[13px] font-serif font-bold tabular-nums shrink-0" style={{ color: 'var(--terra-deep)' }}>
+                    <span className="text-[13px] font-serif font-bold tabular-nums shrink-0" style={{ color: 'var(--accent-deep)' }}>
                       {r.note}
                     </span>
                   </div>
                   {/* Echelle commune 0-20 % : les quatre barres restent comparables entre elles. */}
                   <div className="h-[6px] w-full" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                    <div className={`h-full bar-fill bar-fill--d${ri + 1}`} style={{ width: `${(r.value / 20) * 100}%`, backgroundColor: 'var(--terra)' }} />
+                    <div className={`h-full bar-fill bar-fill--d${ri + 1}`} style={{ width: `${(r.value / 20) * 100}%`, backgroundColor: 'var(--accent)' }} />
                   </div>
                 </div>
               ))}
@@ -515,6 +552,316 @@ const ProportionGap = ({ lang }) => {
 // temps, pas une succession de blocs. Le numero et la these le disent.
 // Findex : par quel canal l'argent arrive. Calcule en direct sur les pays
 // pour lesquels la Banque mondiale publie les deux series.
+// Marquage des operations de la compilation.
+//   *   territoire non encore independant a la date du recensement
+//   **  recensement conduit par un Etat tiers (Erythree 1984, par l'Ethiopie)
+//   *** operation de la periode d'apartheid (Afrique du Sud), non datee dans la base
+// Regle retenue : une operation conduite avant l'independance, ou par un Etat tiers,
+// est INDIQUEE mais n'est pas COMPTABILISEE — ni comme recensement national, ni comme
+// borne d'intervalle. Mesurer la regularite d'un Etat depuis un denombrement colonial
+// reviendrait a lui imputer le rythme de la puissance qui l'administrait.
+const censusMark = (v) => {
+  const s = String(v || '').trim();
+  if (!s) return { raw: '', mark: '', year: null, counted: false, empty: true };
+  const mark = (s.match(/\*+/) || [''])[0];
+  const y = s.match(/(?:19|20)\d{2}/);
+  // *** ne porte pas sur l'independance : l'Etat existait, l'operation n'est pas datee ici.
+  const preIndep = mark === '*' || mark === '**';
+  return {
+    raw: s, mark, year: y ? Number(y[0]) : null,
+    counted: !!y && !preIndep,
+    preIndep, empty: false,
+  };
+};
+
+// La compilation porte des libelles anglais ("Gambia, The", "Sao Tome and Principe").
+// On les rend au nom bilingue de la plateforme des qu'un code ISO le permet.
+let _nameByIso = null;
+const censusName = (iso2, fallback, lang) => {
+  if (!_nameByIso) {
+    _nameByIso = {};
+    Object.values(countryData).flat().forEach(c => {
+      if (c.iso2) _nameByIso[String(c.iso2).toLowerCase()] = c.name;
+    });
+  }
+  const n = _nameByIso[String(iso2 || '').toLowerCase()];
+  if (!n) return fallback;
+  return typeof n === 'string' ? n : (n[lang] || n.fr || fallback);
+};
+
+const markLegend = (mark, lang) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  if (mark === '*') return L("Territoire non encore indépendant à cette date : opération indiquée, non comptabilisée.",
+                             'Territory not yet independent at that date: shown, not counted.');
+  if (mark === '**') return L("Recensement conduit par un État tiers : opération indiquée, non comptabilisée.",
+                              'Census conducted by a third state: shown, not counted.');
+  if (mark === '***') return L("Opération de la période d'apartheid, non datée dans la compilation.",
+                               'Operation from the apartheid period, undated in the compilation.');
+  return undefined;
+};
+
+// Les intervalles entre recensements, calcules depuis la compilation de l'auteur.
+// Seules les operations comptabilisables (cf. censusMark) fournissent une borne.
+const CensusRhythm = ({ lang }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const ROUNDS = ['r1970', 'r1980', 'r1990', 'r2000', 'r2010', 'r2020', 'r2030'];
+
+  const data = useMemo(() => {
+    const perCountry = [];
+    Object.entries(censusByCountry).forEach(([iso2, rec]) => {
+      const years = [];
+      ROUNDS.forEach(r => {
+        const c = censusMark(rec[r]);
+        if (c.counted) years.push(c.year);
+      });
+      years.sort((a, b) => a - b);
+      const gaps = [];
+      for (let i = 1; i < years.length; i++) gaps.push(years[i] - years[i - 1]);
+      perCountry.push({
+        iso2, name: rec.name, years, gaps,
+        count: years.length,
+        maxGap: gaps.length ? Math.max(...gaps) : null,
+        span: years.length > 1 ? { from: years[0], to: years[years.length - 1] } : null,
+      });
+    });
+
+    const allGaps = perCountry.flatMap(c => c.gaps);
+    const sorted = [...allGaps].sort((a, b) => a - b);
+    const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
+    const mean = allGaps.length ? allGaps.reduce((a, b) => a + b, 0) / allGaps.length : 0;
+
+    // Repartition du nombre d'operations datees par pays
+    const byCount = {};
+    perCountry.forEach(c => { byCount[c.count] = (byCount[c.count] || 0) + 1; });
+
+    // Les trous les plus longs
+    const longest = perCountry
+      .filter(c => c.maxGap)
+      .map(c => {
+        let a = 0, b = 0;
+        for (let i = 1; i < c.years.length; i++) {
+          if (c.years[i] - c.years[i - 1] === c.maxGap) { a = c.years[i - 1]; b = c.years[i]; break; }
+        }
+        return { iso2: c.iso2, name: c.name, gap: c.maxGap, from: a, to: b };
+      })
+      .sort((x, y) => y.gap - x.gap)
+      .slice(0, 8);
+
+    // Les metronomes : six operations datees et aucun trou de plus de 12 ans
+    const metronomes = perCountry.filter(c => c.count === 6 && c.maxGap <= 12);
+    const jamais = perCountry.filter(c => c.count <= 1);
+    const conformes = allGaps.filter(g => g <= 10).length;
+
+    // Combien d'operations sont indiquees mais volontairement non comptabilisees.
+    let exclus = 0;
+    Object.values(censusByCountry).forEach(rec => ROUNDS.forEach(r => {
+      const c = censusMark(rec[r]);
+      if (c.preIndep && c.year) exclus += 1;
+    }));
+
+    return {
+      perCountry, allGaps, median, mean, byCount, longest, metronomes, jamais,
+      conformes, exclus, total: allGaps.length,
+    };
+  }, []);
+
+  const fmt = (v) => (lang === 'fr' ? String(v).replace('.', ',') : String(v));
+  const maxBucket = Math.max(...Object.values(data.byCount));
+
+  return (
+    <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent-2)' }}>
+      <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+        <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-2)' }}>
+          {L('Calculé depuis la compilation de l\'auteur', "Computed from the author's compilation")}
+        </span>
+        <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+          {L("Ce que la moyenne de 11,1 ans cache : deux régimes de recensement, pas un",
+             'What the 11.1-year average hides: two census regimes, not one')}
+        </h3>
+      </div>
+
+      <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <p className="text-justify">
+          {L(
+            `La compilation porte, pour chaque pays, la date de chaque recensement depuis le cycle 1970. On peut donc calculer ${data.total} intervalles réels au lieu de se contenter d'une moyenne. Et la distribution ne ressemble pas à la moyenne : elle superpose deux régimes que le chiffre unique fusionne.`,
+            `The compilation carries, for each country, the date of every census since the 1970 round. That makes ${data.total} actual intervals computable instead of relying on an average. And the distribution does not look like the average: it superimposes two regimes that a single figure merges.`
+          )}
+        </p>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 stagger">
+          {[
+            { v: `${data.total}`, l: L('intervalles calculables', 'computable intervals'), tone: 'figure-inkblue' },
+            { v: `${data.median} ${L('ans', 'yrs')}`, l: L('intervalle médian', 'median interval'), tone: 'figure-ok' },
+            { v: `${data.metronomes.length}`, l: L('pays au rythme de métronome', 'metronomic countries'), tone: 'figure-terra' },
+            { v: `${data.longest[0].gap} ${L('ans', 'yrs')}`, l: L('le trou le plus long', 'the longest gap'), tone: 'figure-warn' },
+          ].map((k, i) => (
+            <div key={i} className="border border-slate-200 p-4 lift">
+              <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
+              <span className="block text-[11px] font-bold uppercase tracking-widest mt-2 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            {L('Combien d\'opérations datées par pays, depuis 1970', 'How many dated operations per country, since 1970')}
+          </span>
+          <div className="space-y-2">
+            {Object.entries(data.byCount).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v], i) => (
+              <div key={k} className="flex items-center gap-3 figure-row px-1 py-1">
+                <span className="text-[11px] font-semibold w-32 shrink-0 text-slate-700">
+                  {k} {L(Number(k) > 1 ? 'recensements' : 'recensement', Number(k) > 1 ? 'censuses' : 'census')}
+                </span>
+                <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                  <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
+                       style={{ width: `${(v / maxBucket) * 100}%`,
+                                backgroundColor: Number(k) >= 5 ? 'var(--ok)' : Number(k) >= 3 ? 'var(--warn-ink)' : 'var(--bad)' }} />
+                </div>
+                <span className="text-xs font-bold w-20 text-right shrink-0 tabular-nums text-slate-800">
+                  {v} {L('pays', v > 1 ? 'countries' : 'country')}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            {L('Les plus longues interruptions', 'The longest interruptions')}
+          </span>
+          <div className="space-y-2">
+            {data.longest.map((r, i) => (
+              <div key={r.name} className="flex items-center gap-3 figure-row px-1 py-1">
+                <span className="text-[11px] font-medium w-36 shrink-0 truncate text-slate-700">{censusName(r.iso2, r.name, lang)}</span>
+                <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                  <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
+                       style={{ width: `${(r.gap / data.longest[0].gap) * 100}%`, backgroundColor: 'var(--bad)' }} />
+                </div>
+                <span className="text-xs font-bold w-14 text-right shrink-0 tabular-nums text-slate-800">{r.gap} {L('ans', 'yrs')}</span>
+                <span className="text-[11px] w-24 text-right shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+                  {r.from} → {r.to}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            {L('Pourquoi la moyenne trompe ici', 'Why the average misleads here')}
+          </span>
+          <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+            {L(
+              `L'intervalle médian est de ${data.median} ans, contre une moyenne de ${fmt(data.mean.toFixed(1))} : l'écart entre les deux mesure exactement la déformation produite par une poignée de très longues interruptions. ${data.metronomes.length} États ont conduit six recensements sans jamais dépasser douze ans d'écart — un rythme conforme à la recommandation onusienne, tenu sur un demi-siècle. À l'autre extrémité, ${data.jamais.length} n'ont aucune ou qu'une seule opération comptabilisable sur la période — dont la République démocratique du Congo, dont le seul recensement national date de 1984. Parler d'un « rythme africain » unique revient donc à moyenner un métronome et une horloge arrêtée : le résultat ne décrit ni l'un ni l'autre, et il masque là où l'appui statistique serait réellement utile (Ben Mokhtar, 2026).`,
+              `The median interval is ${data.median} years against a mean of ${fmt(data.mean.toFixed(1))}: the gap between the two measures exactly the distortion produced by a handful of very long interruptions. ${data.metronomes.length} states have conducted six censuses without ever exceeding twelve years between them — a rhythm consistent with the UN recommendation, sustained over half a century. At the other end, ${data.jamais.length} have no countable operation at all, or only one, over the period — among them the Democratic Republic of the Congo, whose only national census dates from 1984. Speaking of a single "African rhythm" therefore means averaging a metronome and a stopped clock: the result describes neither, and it hides where statistical support would actually be useful (Ben Mokhtar, 2026).`
+            )}
+          </p>
+          <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
+            <span className="font-bold uppercase tracking-widest">{L('Au rythme de métronome :', 'Metronomic:')}</span>{' '}
+            {data.metronomes.map(c => censusName(c.iso2, c.name, lang)).join(', ')}.
+          </p>
+        </div>
+      </div>
+
+      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+        <p className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }}>
+          {L(
+            `Calcul effectué sur la compilation de l'auteur (d'après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D'abord, une date annoncée n'est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s'ils avaient eu lieu, ont été retirés lors de l'audit d'août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n'est pas comptabilisée : mesurer la régularité d'un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l'administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l'Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l'auteur et n'est pas recalculée ici. Les dénominateurs varient donc d'un pays à l'autre — c'est précisément ce que ce calcul rend visible.`,
+            `Computed from the author's compilation (after UNSD / UN DESA), which records the date of every national operation from the 1970 to the 2030 round. Two rules remove an operation from the calculation. First, an announced date is not data: censuses scheduled and then postponed, long carried in the base as though they had happened, were removed in the August 2026 audit. Second, an operation conducted on a territory not yet independent, or by a third state, is flagged in that country's timeline but not counted: measuring a state's regularity from a colonial enumeration would credit it with the rhythm of the power that administered it. Those ${data.exclus} pre-independence operations are therefore visible and uncounted — the timelines for Angola, Namibia and Mozambique carry them plainly. The coverage-by-round row above remains the author's published figure and is not recomputed here. Denominators therefore vary between countries — which is precisely what this calculation makes visible.`
+          )}
+        </p>
+      </div>
+    </section>
+  );
+};
+
+// Ce que l'audit d'aout 2026 a fait apparaitre : les Etats donnes pour
+// « defaillants » au cycle 2020 avaient pour la plupart un recensement en cours.
+// Il a abouti — apres la cloture du cycle. Le retard n'est pas une absence.
+const LateRound = ({ lang }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+
+  const rows = useMemo(() => Object.entries(censusByCountry)
+    .filter(([, r]) => r.status2020 === 'late')
+    .map(([iso2, r]) => {
+      const yr = (s) => { const m = String(s || '').match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : null; };
+      const nouveau = yr(r.r2030);
+      const precedent = ['r2010', 'r2000', 'r1990', 'r1980', 'r1970'].map(k => yr(r[k])).find(Boolean) || null;
+      return { iso2, name: r.name, nouveau, precedent, gap: nouveau && precedent ? nouveau - precedent : null };
+    })
+    .sort((a, b) => (b.gap || 0) - (a.gap || 0)), []);
+
+  const nm = (r) => censusName(r.iso2, r.name, lang);
+  const maxGap = Math.max(...rows.map(r => r.gap || 0));
+
+  return (
+    <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent)' }}>
+      <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+        <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
+          {L('Vérifié en août 2026', 'Verified August 2026')}
+        </span>
+        <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+          {L("Le cycle 2020 n'a pas manqué en Afrique centrale : il a glissé",
+             'The 2020 round did not fail in Central Africa: it slipped')}
+        </h4>
+      </div>
+
+      <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <p className="text-justify">
+          {L(
+            `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, sur les instituts nationaux, donne un résultat que la lecture par cycle rendait invisible : six de ces opérations ont bien eu lieu — mais ${rows.length} d'entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n'apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
+            `Nine states still appeared on this platform as "census planned" or "under way", all for dates now past. Checking each against its national institute yields a result the round-by-round reading made invisible: six of those operations did take place — but ${rows.length} of them were completed after the 2020 round closed on 31 December 2024. None therefore counts toward the round's coverage rate, even though the census exists, households were enumerated and results are being published.`
+          )}
+        </p>
+
+        <div>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            {L('Recensements achevés après la clôture du cycle 2020', 'Censuses completed after the 2020 round closed')}
+          </span>
+          <div className="space-y-2">
+            {rows.map((r, i) => (
+              <div key={r.iso2} className="flex items-center gap-3 figure-row px-1 py-1">
+                <span className="text-[11px] font-semibold w-32 shrink-0 truncate text-slate-800">{nm(r)}</span>
+                <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                  <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
+                       style={{ width: `${(r.gap / maxGap) * 100}%`, backgroundColor: 'var(--accent)' }} />
+                </div>
+                <span className="text-xs font-bold w-16 text-right shrink-0 tabular-nums text-slate-800">
+                  {r.gap} {L('ans', 'yrs')}
+                </span>
+                <span className="text-[11px] w-28 text-right shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+                  {r.precedent} → {r.nouveau}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            {L('Ce que le décompte par cycle ne peut pas dire', 'What a round-by-round count cannot say')}
+          </span>
+          <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+            {L(
+              "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit ; lues comme ce qu'elles sont, elles ouvrent la série 2030 et sortent l'Afrique centrale d'une interruption qui durait, selon les cas, de treize à vingt-deux ans. Le découpage décennal est un instrument de comparaison internationale, pas une mesure de l'effort statistique national — et il pénalise mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
+              "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone they count for zero and feed the deficit narrative; read for what they are, they open the 2030 series and lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+        <p className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }}>
+          {L(
+            "Sources : ICASEES (Centrafrique, RGPH-4), BUCREP (Cameroun, RGPH-4), ministère de la Planification et de la Prospective (Gabon, RGPL), INSEED (Tchad, RGPH-3), GBoS (Gambie), INE São Tomé-et-Principe, INStaD (Bénin), Statistics Sierra Leone, SNBS et UNFPA (Somalie). Chaque date figure dans la fiche du pays concerné, dans l'Explorateur. Les deux opérations achevées dans la fenêtre du cycle — Gambie et São Tomé-et-Principe — ont été reversées au cycle 2020.",
+            "Sources: ICASEES (CAR, 4th census), BUCREP (Cameroon, 4th census), Ministry of Planning and Foresight (Gabon, RGPL), INSEED (Chad, 3rd census), GBoS (The Gambia), INE São Tomé and Príncipe, INStaD (Benin), Statistics Sierra Leone, SNBS and UNFPA (Somalia). Each date appears in the relevant country profile, in the Explorer. The two operations completed within the round's window — The Gambia and São Tomé and Príncipe — were moved into the 2020 round."
+          )}
+        </p>
+      </div>
+    </section>
+  );
+};
+
 const MobileMoneyRail = ({ lang }) => {
   const L = (fr, en) => (lang === 'fr' ? fr : en);
   const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
@@ -613,7 +960,7 @@ const MobileMoneyRail = ({ lang }) => {
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
         <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
         <a href={FINDEX_SOURCE.url} target="_blank" rel="noopener noreferrer"
-           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--inkblue)' }}>
+           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
           <span>{L(
             `${FINDEX_SOURCE.label.fr}. Millésime le plus récent disponible par pays (2021 à 2024 selon les séries). Findex est une enquête par sondage : tous les pays ne sont pas couverts à chaque vague.`,
             `${FINDEX_SOURCE.label.en}. Most recent available year per country (2021 to 2024 depending on the series). Findex is a sample survey: not every country is covered in every wave.`
@@ -625,7 +972,7 @@ const MobileMoneyRail = ({ lang }) => {
   );
 };
 
-const MovementOpener = ({ n, kicker, thesis, accent = 'var(--terra-deep)' }) => (
+const MovementOpener = ({ n, kicker, thesis, accent = 'var(--accent-deep)' }) => (
   <div className="pt-4">
     <div className="flex items-baseline gap-4 mb-3">
       <span className="font-serif font-black text-[2.6rem] leading-none tabular-nums" style={{ color: accent }}>
@@ -648,13 +995,13 @@ const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }
     style={{
       backgroundColor: 'var(--ink)',
       backgroundImage:
-        'radial-gradient(circle at 10% 15%, rgba(180,73,31,.22), transparent 45%),' +
+        'radial-gradient(circle at 10% 15%, rgba(43,58,103,.24), transparent 45%),' +
         'radial-gradient(circle at 88% 90%, rgba(31,78,95,.28), transparent 50%)',
     }}
   >
     <div
       className="absolute inset-x-0 bottom-0 h-px"
-      style={{ background: 'linear-gradient(90deg, var(--terra), rgba(180,73,31,.35) 45%, transparent)' }}
+      style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 45%, transparent)' }}
     />
     <AfricaPlate />
     {/* Voile d'encre cote texte : la planche emerge vers la droite au lieu de
@@ -668,7 +1015,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }
       {/* Tete de planche : on sait ou l'on est avant meme de lire le titre. */}
       {plate && (
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-[10px] font-semibold uppercase tabular-nums" style={{ letterSpacing: '.2em', color: '#E08A5F' }}>
+          <span className="text-[10px] font-semibold uppercase tabular-nums" style={{ letterSpacing: '.2em', color: '#8FA0CE' }}>
             {plate}
           </span>
           <span className="block h-px flex-1 max-w-[7rem]" style={{ backgroundColor: 'rgba(255,253,249,.22)' }} />
@@ -680,9 +1027,9 @@ const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }
         className="inline-flex items-center gap-2 px-3 py-1 rounded-sm mb-5 text-[10px] font-semibold uppercase"
         style={{
           letterSpacing: '.18em',
-          color: '#F0C5B2',
-          backgroundColor: 'rgba(180,73,31,.16)',
-          border: '1px solid rgba(180,73,31,.42)',
+          color: '#C9D2E8',
+          backgroundColor: 'rgba(43,58,103,.14)',
+          border: '1px solid rgba(43,58,103,.40)',
         }}
       >
         {badge}
@@ -693,7 +1040,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }
         style={{ color: '#FFFDF9' }}
       >
         {title}{' '}
-        <span className="italic font-normal" style={{ color: '#E08A5F' }}>{highlight}</span>
+        <span className="italic font-normal" style={{ color: '#8FA0CE' }}>{highlight}</span>
       </h1>
 
       <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#CFC6BA' }}>
@@ -723,7 +1070,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
   const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
 
   const kpis = [
-    { lbl: L('Stock migrant (2024)', 'Migrant stock (2024)'), val: formatNumber(display.stock) },
+    { lbl: L('Stock migrant (2024)', 'Migrant stock (2024)'), val: formatNumber(display.stock, lang) },
     { lbl: L('% pop. nationale', '% national pop.'), val: nn(display.evolution, '%') },
     { lbl: L('Part des femmes', 'Female share'), val: nn(display.female, '%') },
     { lbl: L('Rétention Sud-Sud', 'South-South retention'), val: nn(display.retention, '%') },
@@ -766,7 +1113,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div className="pdf-block">
           <h2>{L('Démographie & structure', 'Demography & structure')}</h2>
           <table><tbody>
-            <tr><td className="k">{L('Stock de migrants (2024)', 'Migrant stock (2024)')}</td><td className="v">{formatNumber(display.stock)}</td></tr>
+            <tr><td className="k">{L('Stock de migrants (2024)', 'Migrant stock (2024)')}</td><td className="v"><Num value={display.stock} lang={lang} /></td></tr>
             <tr><td className="k">{L('Part de la population', 'Share of population')}</td><td className="v">{nn(display.evolution, '%')}</td></tr>
             <tr><td className="k">{L('Part des femmes', 'Female share')}</td><td className="v">{nn(display.female, '%')}</td></tr>
             <tr><td className="k">{L('Activité des migrants (OIT)', 'Migrant labour activity (ILO)')}</td><td className="v">{nn(display.labour_participation, '%')}{display.labour_participation_year ? ` (${display.labour_participation_year})` : ''}</td></tr>
@@ -776,9 +1123,9 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div className="pdf-block">
           <h2>{L('Déplacement & protection', 'Displacement & protection')}</h2>
           <table><tbody>
-            <tr><td className="k">{L('Réfugiés accueillis', 'Refugees hosted')}</td><td className="v">{formatNumber(display.refugees_hosted)}</td></tr>
-            <tr><td className="k">{L('Déplacés internes (conflit)', 'IDPs (conflict)')}</td><td className="v">{formatNumber(display.idp_conflict)}</td></tr>
-            <tr><td className="k">{L('Déplacés internes (catastrophes)', 'IDPs (disasters)')}</td><td className="v">{formatNumber(display.idp_disaster)}</td></tr>
+            <tr><td className="k">{L('Réfugiés accueillis', 'Refugees hosted')}</td><td className="v"><Num value={display.refugees_hosted} lang={lang} /></td></tr>
+            <tr><td className="k">{L('Déplacés internes (conflit)', 'IDPs (conflict)')}</td><td className="v"><Num value={display.idp_conflict} lang={lang} /></td></tr>
+            <tr><td className="k">{L('Déplacés internes (catastrophes)', 'IDPs (disasters)')}</td><td className="v"><Num value={display.idp_disaster} lang={lang} /></td></tr>
             <tr><td className="k">{L('Rétention Sud-Sud', 'South-South retention')}</td><td className="v">{nn(display.retention, '%')}</td></tr>
           </tbody></table>
         </div>
@@ -1042,6 +1389,12 @@ const t = {
           title: "Bibliothèque",
           highlight: "et ressources analytiques.",
           desc: "Un accès centralisé aux rapports de référence, notes de politique (policy briefs), thèses et publications sur la géopolitique des mobilités dans les Suds."
+        },
+        labour: {
+          badge: "Travail & compétences",
+          title: "La mobilité africaine est d'abord",
+          highlight: "une mobilité de travail.",
+          desc: "Treize millions de travailleurs migrants, concentrés dans des secteurs à forte intensité de main-d'œuvre et largement informels. Ce volet croise les quatre éditions du rapport continental sur les statistiques de migration de travail avec l'état réel des ratifications de conventions de l'OIT — là où se jouent les droits effectivement opposables."
         },
         forced: {
           badge: "Déplacement forcé & protection",
@@ -1329,6 +1682,12 @@ const t = {
           title: "Library",
           highlight: "and analytical resources.",
           desc: "Centralized access to reference reports, policy briefs, theses, and publications on mobility geopolitics in the Global South."
+        },
+        labour: {
+          badge: "Labour & skills",
+          title: "African mobility is first and foremost",
+          highlight: "a mobility of labour.",
+          desc: "Thirteen million migrant workers, concentrated in labour-intensive and largely informal sectors. This section crosses the four editions of the continental report on labour migration statistics with the actual state of ILO convention ratifications — where enforceable rights are decided."
         },
         forced: {
           badge: "Forced displacement & protection",
@@ -1878,7 +2237,7 @@ const countryData = {
       "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 9.71, "labour_participation": "51.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
       "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": true, "zlecaf": true },
+      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": true, "zlecaf": true },
       ...genericDesc 
     },
     { 
@@ -2143,8 +2502,11 @@ const visaOpenTiers = {
 const countryById = {};
 Object.values(countryData).flat().forEach(c => { countryById[c.id] = c; });
 
-const CHORO_RAMP = ['#F6E7DF', '#E8BFA8', '#D18B62', '#B4491F', '#7A2E12'];
-const CHORO_NODATA = '#E4DCD0';
+// Rampe sequentielle mono-teinte : un seul indigo, du plus clair au plus dense.
+// Les paliers sont cales sur la clarte (91, 82, 68, 48, 28 %) pour que l'ordre
+// se lise sans legende. Le gris neutre dit l'absence de donnee, pas une valeur.
+const CHORO_RAMP = ['#E5E8F1', '#C3CBE1', '#94A2C6', '#5A6C9C', '#2B3A67'];
+const CHORO_NODATA = '#D9D8D2';
 
 const mapIndicators = [
   {
@@ -2200,7 +2562,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
 
   const fmt = (v) => {
     if (!Number.isFinite(v)) return lang === 'fr' ? 'donnée indisponible' : 'no data';
-    return indicator.unit === '' ? formatNumber(v) : `${v}${indicator.unit}`;
+    return indicator.unit === '' ? formatNumber(v, lang) : `${v}${indicator.unit}`;
   };
 
   return (
@@ -2215,7 +2577,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
               key={id}
               d={d}
               fill={colorFor(v)}
-              stroke={isSel ? '#14110F' : '#FAF7F2'}
+              stroke={isSel ? '#14161C' : '#F7F6F2'}
               strokeWidth={isSel ? 2.6 : 0.7}
               className="cursor-pointer"
               onClick={() => onSelect && onSelect(id)}
@@ -2301,8 +2663,8 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
             <path
               key={id}
               d={d}
-              fill={isMember ? accent : '#E4DCD0'}
-              stroke="#FAF7F2"
+              fill={isMember ? accent : '#D9D8D2'}
+              stroke="#F7F6F2"
               strokeWidth={isHovered ? 2.2 : 0.8}
               className="transition-all duration-200 cursor-default"
               style={{ opacity: isHovered ? 1 : isMember ? 0.92 : 0.75, filter: isHovered ? 'brightness(1.12)' : 'none' }}
@@ -2546,7 +2908,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             >
               <span
                 className="absolute left-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
-                style={{ backgroundColor: 'var(--terra)' }}
+                style={{ backgroundColor: 'var(--accent)' }}
               />
               <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
                 <CountUp value={stat.value} />
@@ -2572,7 +2934,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
               >
                 {/* Numerotation d'entree : la rubrique se lit comme une section d'ouvrage. */}
                 <div className="flex items-baseline justify-between mb-5">
-                  <span className="font-serif font-bold text-2xl leading-none tabular-nums" style={{ color: 'var(--terra-deep)' }}>
+                  <span className="font-serif font-bold text-2xl leading-none tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <Icon className="w-[18px] h-[18px] shrink-0" style={{ color: 'var(--rule-strong)' }} />
@@ -2735,7 +3097,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
 
       <header className="px-6 md:px-8 pt-6 pb-5">
         <div className="flex items-center gap-2 mb-4">
-          <CatIcon className="w-3.5 h-3.5" style={{ color: 'var(--terra-deep)' }} />
+          <CatIcon className="w-3.5 h-3.5" style={{ color: 'var(--accent-deep)' }} />
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{fiche.category[lang]}</span>
         </div>
 
@@ -2755,7 +3117,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
       </header>
 
       <div className="px-6 md:px-8 py-6" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--terra-deep)' }}>
+        <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
           {L("Ce que montrent les donn\u00e9es", "What data shows")}
         </span>
         <p className="text-[15px] leading-relaxed text-slate-800">{fiche.reality[lang]}</p>
@@ -2772,7 +3134,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
             <ul className="space-y-1.5">
               {fiche.why_persists[lang].map((reason, i) => (
                 <li key={i} className="flex gap-2.5 text-[13px] text-slate-600 leading-relaxed">
-                  <span className="shrink-0 mt-[7px] w-1 h-1" style={{ backgroundColor: 'var(--terra)' }} />
+                  <span className="shrink-0 mt-[7px] w-1 h-1" style={{ backgroundColor: 'var(--accent)' }} />
                   {reason}
                 </li>
               ))}
@@ -2797,7 +3159,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
             </h4>
             <ul className="space-y-1">
               {fiche.sources[lang].map((src, i) => (
-                <li key={i} className="text-xs font-medium py-1.5" style={{ color: 'var(--inkblue)', borderBottom: '1px solid var(--rule)' }}>{src}</li>
+                <li key={i} className="text-xs font-medium py-1.5" style={{ color: 'var(--accent-2)', borderBottom: '1px solid var(--rule)' }}>{src}</li>
               ))}
             </ul>
           </section>
@@ -3025,7 +3387,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                       {startsGroup && (
                         <div className="sticky top-0 z-10 flex items-baseline justify-between gap-3 px-4 py-2"
                              style={{ backgroundColor: 'var(--paper-sunk)', borderBottom: '1px solid var(--rule)' }}>
-                          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--terra-deep)' }}>
+                          <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--accent-deep)' }}>
                             <CatIcon className="w-3 h-3" /> {f.category[lang]}
                           </span>
                           <span className="text-[10px] font-bold tabular-nums text-slate-500">{groupSize}</span>
@@ -3115,7 +3477,7 @@ const AuAgencyCard = ({ acronym, fullName, seat, founded, children, source, lang
   <article className="bg-white border border-slate-200 p-5 flex flex-col h-full lift">
     <div className="flex items-baseline justify-between gap-3 mb-1">
       <h5 className="font-serif font-bold text-slate-900 text-base">{acronym}</h5>
-      <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: 'var(--terra-deep)' }}>{founded}</span>
+      <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: 'var(--accent-deep)' }}>{founded}</span>
     </div>
     <span className="block text-[11px] text-slate-600 leading-snug mb-1">{fullName}</span>
     <span className="block text-[9px] uppercase tracking-widest font-bold text-slate-400 mb-3">{seat}</span>
@@ -3123,7 +3485,7 @@ const AuAgencyCard = ({ acronym, fullName, seat, founded, children, source, lang
     {source && (
       <a href={source.url} target="_blank" rel="noopener noreferrer"
          className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest mt-4 pt-3 hover:underline"
-         style={{ color: 'var(--inkblue)', borderTop: '1px solid var(--rule)' }}>
+         style={{ color: 'var(--accent-2)', borderTop: '1px solid var(--rule)' }}>
         {source.label} <ExternalLink className="w-3 h-3" />
       </a>
     )}
@@ -3152,6 +3514,217 @@ const ANCHOR_INSTRUMENTS = [
   { key: 'free_movement', short: { fr: 'Libre circulation', en: 'Free movement' },
     full: { fr: 'Protocole sur la libre circulation des personnes (2018)', en: 'Protocol on Free Movement of Persons (2018)' } },
 ];
+
+// Croisement gouvernance x ouverture x ancrage. Les trois coefficients sont
+// recalcules en direct : si une ratification ou un score AVOI change dans la
+// base, le resultat suit.
+const GovernanceCross = ({ lang }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+  const [showTable, setShowTable] = useState(false);
+
+  const d = useMemo(() => {
+    const pts = Object.values(countryData).flat().map(c => {
+      const rank = iiagRank[(c.iso2 || '').toLowerCase()]?.iiag;
+      if (!rank || c.avoi == null || !c.au_treaties) return null;
+      const anchor = ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0);
+      return { n: nm(c), iso2: c.iso2, rank, gov: 55 - rank, avoi: Number(c.avoi), anchor };
+    }).filter(Boolean);
+
+    // Spearman avec traitement des ex aequo
+    const rankOf = (v) => {
+      const order = [...v.keys()].sort((a, b) => v[a] - v[b]);
+      const rk = new Array(v.length);
+      let i = 0;
+      while (i < order.length) {
+        let j = i;
+        while (j + 1 < order.length && v[order[j + 1]] === v[order[i]]) j++;
+        const avg = (i + j) / 2 + 1;
+        for (let k = i; k <= j; k++) rk[order[k]] = avg;
+        i = j + 1;
+      }
+      return rk;
+    };
+    const rho = (xs, ys) => {
+      const rx = rankOf(xs), ry = rankOf(ys), n = xs.length;
+      const mx = rx.reduce((a, b) => a + b, 0) / n, my = ry.reduce((a, b) => a + b, 0) / n;
+      let num = 0, dx = 0, dy = 0;
+      for (let i = 0; i < n; i++) { num += (rx[i] - mx) * (ry[i] - my); dx += (rx[i] - mx) ** 2; dy += (ry[i] - my) ** 2; }
+      return dx && dy ? num / Math.sqrt(dx * dy) : 0;
+    };
+    const gov = pts.map(p => p.gov), avoi = pts.map(p => p.avoi), anc = pts.map(p => p.anchor);
+    const med = (v) => [...v].sort((a, b) => a - b)[Math.floor(v.length / 2)];
+
+    return {
+      pts,
+      rhoGovAvoi: rho(gov, avoi),
+      rhoGovAnchor: rho(gov, anc),
+      rhoAvoiAnchor: rho(avoi, anc),
+      medGov: med(gov), medAvoi: med(avoi),
+      full: pts.filter(p => p.avoi >= 90 && p.anchor >= 6),
+    };
+  }, [lang]);
+
+  const fmt = (v) => {
+    const t = (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2);
+    return lang === 'fr' ? t.replace('.', ',') : t;
+  };
+  const W = 560, H = 360, PAD = 44;
+  const x = (g) => PAD + ((g - 1) / 53) * (W - PAD - 14);
+  const y = (a) => H - PAD - (a / 100) * (H - PAD - 16);
+  const tone = (a) => (a >= 6 ? 'var(--ok)' : a >= 5 ? 'var(--warn-ink)' : a >= 4 ? 'var(--accent)' : 'var(--bad)');
+
+  return (
+    <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent-2)' }}>
+      <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+        <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-2)' }}>
+          {L('Croisement calculé sur les 54 pays', 'Cross-analysis computed over all 54 countries')}
+        </span>
+        <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+          {L("Ratifier et ouvrir n'ont aucun rapport", 'Ratifying and opening bear no relation to each other')}
+        </h4>
+      </div>
+
+      <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <p className="text-justify">
+          {L(
+            "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l'Indice Ibrahim, l'ouverture effective des frontières mesurée par l'indice AVOI, et le nombre d'instruments continentaux ratifiés. On peut donc tester ce que l'on suppose souvent sans le vérifier : est-ce que mieux gouverner, c'est plus ouvrir ? Et est-ce que signer, c'est ouvrir ?",
+            'The platform holds three independent measures for each of the 54 states: governance quality as measured by the Ibrahim Index, effective border openness as measured by the AVOI, and the number of continental instruments ratified. That makes it possible to test what is often assumed without checking: does governing better mean opening more? And does signing mean opening?'
+          )}
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
+          {[
+            { v: fmt(d.rhoGovAvoi), l: L('Gouvernance × ouverture visa', 'Governance × visa openness'),
+              s: L('lien modéré, réel', 'moderate, real relationship'), tone: 'figure-ok' },
+            { v: fmt(d.rhoGovAnchor), l: L('Gouvernance × ancrage', 'Governance × anchoring'),
+              s: L('aucun lien', 'no relationship'), tone: 'figure-warn' },
+            { v: fmt(d.rhoAvoiAnchor), l: L('Ouverture visa × ancrage', 'Visa openness × anchoring'),
+              s: L('aucun lien', 'no relationship'), tone: 'figure-terra' },
+          ].map((k, i) => (
+            <div key={i} className="border border-slate-200 p-4 lift">
+              <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
+              <span className="block text-[11px] font-bold uppercase tracking-widest mt-2 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
+              <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
+            </div>
+          ))}
+        </div>
+        <p className="text-[11px]" style={{ color: 'var(--label)' }}>
+          {L(
+            "Corrélations de rang de Spearman, ex aequo traités par rang moyen. Un coefficient proche de zéro signifie que connaître l'une des deux mesures n'apprend rien sur l'autre.",
+            'Spearman rank correlations, ties handled by average rank. A coefficient close to zero means that knowing one measure tells you nothing about the other.'
+          )}
+        </p>
+
+        {/* Nuage de points : gouvernance en abscisse, ouverture en ordonnee,
+            ancrage porte par la teinte. */}
+        <div>
+          <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
+              {L('Chaque point est un État', 'Each dot is a state')}
+            </span>
+            <span className="inline-flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]" style={{ color: 'var(--label)' }}>
+              <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--ok)' }} />6/6</span>
+              <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--warn-ink)' }} />5/6</span>
+              <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--accent)' }} />4/6</span>
+              <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--bad)' }} />&lt; 4/6</span>
+            </span>
+          </div>
+          <div className="overflow-x-auto border border-slate-200 p-2" style={{ backgroundColor: 'var(--paper-raised)' }}>
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ minWidth: 460 }} role="img"
+                 aria-label={L('Nuage de points croisant gouvernance et ouverture visa', 'Scatter plot crossing governance and visa openness')}>
+              {/* medianes */}
+              <line x1={x(d.medGov)} y1={16} x2={x(d.medGov)} y2={H - PAD} stroke="var(--rule-strong)" strokeDasharray="3 3" />
+              <line x1={PAD} y1={y(d.medAvoi)} x2={W - 14} y2={y(d.medAvoi)} stroke="var(--rule-strong)" strokeDasharray="3 3" />
+              {/* axes */}
+              <line x1={PAD} y1={H - PAD} x2={W - 14} y2={H - PAD} stroke="var(--rule-strong)" />
+              <line x1={PAD} y1={16} x2={PAD} y2={H - PAD} stroke="var(--rule-strong)" />
+              {[0, 25, 50, 75, 100].map(v => (
+                <g key={v}>
+                  <text x={PAD - 6} y={y(v) + 3} textAnchor="end" fontSize="9" fill="var(--label)">{v}</text>
+                  <line x1={PAD - 3} y1={y(v)} x2={PAD} y2={y(v)} stroke="var(--rule-strong)" />
+                </g>
+              ))}
+              <text x={PAD} y={H - 12} fontSize="9" fill="var(--label)">
+                {L('gouvernance : rang 54 (moins bon)', 'governance: rank 54 (worst)')}
+              </text>
+              <text x={W - 14} y={H - 12} textAnchor="end" fontSize="9" fill="var(--label)">
+                {L('rang 1 (meilleur)', 'rank 1 (best)')}
+              </text>
+              <text x={10} y={26} fontSize="9" fill="var(--label)">{L('AVOI', 'AVOI')}</text>
+              {d.pts.map(p => (
+                <circle key={p.iso2 || p.n} cx={x(p.gov)} cy={y(p.avoi)} r="5"
+                        fill={tone(p.anchor)} fillOpacity=".75" stroke="var(--paper-raised)" strokeWidth="1.2">
+                  <title>{`${p.n} — ${L('gouvernance', 'governance')} ${p.rank}/54, AVOI ${p.avoi}, ${L('ancrage', 'anchoring')} ${p.anchor}/6`}</title>
+                </circle>
+              ))}
+            </svg>
+          </div>
+          <button onClick={() => setShowTable(v => !v)}
+                  className="mt-2 text-[11px] font-bold uppercase tracking-widest px-2.5 py-1.5 border"
+                  style={{ color: 'var(--ink-soft)', borderColor: 'var(--rule)' }}>
+            {showTable ? L('Masquer le tableau', 'Hide the table') : L('Voir les données en tableau', 'View the data as a table')}
+          </button>
+          {showTable && (
+            <div className="overflow-x-auto border border-slate-200 mt-2">
+              <table className="w-full text-[12px]">
+                <thead>
+                  <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                    <th className="text-left font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Gouvernance', 'Governance')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">AVOI</th>
+                    <th className="px-3 py-2 font-semibold text-slate-700 text-right">{L('Ancrage', 'Anchoring')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {[...d.pts].sort((a, b) => a.rank - b.rank).map(p => (
+                    <tr key={p.iso2 || p.n} className="figure-row">
+                      <td className="px-3 py-1.5 text-slate-800 whitespace-nowrap">{p.n}</td>
+                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{p.rank}/54</td>
+                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{p.avoi}</td>
+                      <td className="px-3 py-1.5 text-right tabular-nums font-bold" style={{ color: tone(p.anchor) }}>{p.anchor}/6</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
+          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            {L('Ce que les trois coefficients disent ensemble', 'What the three coefficients say together')}
+          </span>
+          <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+            {L(
+              `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Autrement dit : les États qui ouvrent ne sont pas ceux qui signent. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
+              `Governing better does go with opening more: the relationship exists, moderate but clear. Governance quality, however, says nothing about legal anchoring — and, the sharpest result, effective border openness says nothing about ratifications, nor the reverse. In other words: the states that open are not the states that sign. Rwanda alone does both fully. Seychelles opens completely while having ratified only four instruments out of six; Botswana and Lesotho are well governed and closed; Burundi and Mozambique open widely with poorly ranked governance. Openness is therefore neither a product of administrative capacity nor a consequence of legal commitment: it is a sovereign decision, taken instrument by instrument and border by border. That is precisely what the national in-between describes (Ben Mokhtar, 2026).`
+            )}
+          </p>
+          <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
+            {L(
+              "Une corrélation de rang ne dit rien d'une causalité, et l'IIAG comme l'AVOI sont des indices composites dont la construction porte ses propres choix. Le résultat qui compte ici est négatif — l'absence de lien — et c'est le type de résultat le plus robuste à ces réserves.",
+              'A rank correlation says nothing about causation, and both the IIAG and the AVOI are composite indices whose construction carries its own choices. The result that matters here is a negative one — the absence of a relationship — and that is the kind of result most robust to those caveats.'
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+        <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Sources', 'Sources')}</span>
+        <a href={IIAG_SOURCE.url} target="_blank" rel="noopener noreferrer"
+           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
+          <span>{IIAG_SOURCE.label[lang]}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
+        </a>
+        <a href="https://www.visaopenness.org/" target="_blank" rel="noopener noreferrer"
+           className="block mt-1 inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
+          <span>{L('BAD & CUA — Africa Visa Openness Index (AVOI)', 'AfDB & AUC — Africa Visa Openness Index (AVOI)')}</span>
+          <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
+        </a>
+      </div>
+    </section>
+  );
+};
 
 const AnchoringMatrix = ({ lang }) => {
   const L = (fr, en) => (lang === 'fr' ? fr : en);
@@ -3200,9 +3773,9 @@ const AnchoringMatrix = ({ lang }) => {
   };
 
   return (
-    <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--terra)' }}>
+    <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent)' }}>
       <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
-        <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--terra-deep)' }}>
+        <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
           {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
         </span>
         <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
@@ -3325,8 +3898,8 @@ const AnchoringMatrix = ({ lang }) => {
         </span>
         <p className="text-[11px] leading-relaxed text-slate-600 text-justify">
           {L(
-            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument, les six restants étant l'Érythrée (non signataire), le Bénin, la Libye, le Soudan et le Soudan du Sud (ratification non approuvée) et la Somalie (approuvée, non déposée). Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. Subsiste un écart d'une unité entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres ; et Kampala reste à 32 ici contre 33 cités — le Nigeria ayant donné son assentiment présidentiel en mars 2026, ce total est appelé à bouger. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
-            "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 49 signatories have deposited their instrument, the six outstanding being Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved) and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. A one-unit gap remains between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted; and Kampala stands at 32 here against 33 cited — with Nigeria s presidential assent in March 2026, that total is set to move. Divergent values are shown rather than forcibly reconciled."
+            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument, les six restants étant l'Érythrée (non signataire), le Bénin, la Libye, le Soudan et le Soudan du Sud (ratification non approuvée) et la Somalie (approuvée, non déposée). Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts : Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé, et la matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
+            "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 49 signatories have deposited their instrument, the six outstanding being Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved) and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits: Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
           )}
         </p>
       </div>
@@ -3334,7 +3907,7 @@ const AnchoringMatrix = ({ lang }) => {
   );
 };
 
-const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(--terra-deep)', children }) => (
+const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(--accent-deep)', children }) => (
   <section
     className="bg-white"
     style={{
@@ -3362,7 +3935,7 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
             <li key={i} className="text-xs leading-snug">
               {src.url ? (
                 <a href={src.url} target="_blank" rel="noopener noreferrer"
-                   className="inline-flex items-start gap-1.5 hover:underline" style={{ color: 'var(--inkblue)' }}>
+                   className="inline-flex items-start gap-1.5 hover:underline" style={{ color: 'var(--accent-2)' }}>
                   <span>{src.label}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
                 </a>
               ) : <span className="text-slate-600">{src.label}</span>}
@@ -3379,7 +3952,7 @@ const CounterpointFacts = ({ items }) => (
   <ul className="divide-y divide-slate-100 border-y border-slate-100">
     {items.map((it, i) => (
       <li key={i} className="flex gap-4 py-2.5">
-        <span className="w-28 shrink-0 text-[11px] font-bold uppercase tracking-wide tabular-nums" style={{ color: 'var(--terra-deep)' }}>
+        <span className="w-28 shrink-0 text-[11px] font-bold uppercase tracking-wide tabular-nums" style={{ color: 'var(--accent-deep)' }}>
           {it.when}
         </span>
         <span className="text-[13px] text-slate-700 leading-snug">{it.what}</span>
@@ -3570,10 +4143,10 @@ const TabForced = ({ text, lang }) => {
         </h3>
         <Ranking rows={data.conflict.slice(0, 10)} color="var(--warn-ink)" unitTotal={data.totalConflict} />
 
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--inkblue)' }}>
+        <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--accent-2)' }}>
           {L('Déplacés internes par une catastrophe', 'Internally displaced by disaster')}
         </h3>
-        <Ranking rows={data.disaster.slice(0, 8)} color="var(--inkblue)" unitTotal={data.totalDisaster} />
+        <Ranking rows={data.disaster.slice(0, 8)} color="var(--accent-2)" unitTotal={data.totalDisaster} />
 
         <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--ok)' }}>
           {L('Réfugiés accueillis (HCR, 2024)', 'Refugees hosted (UNHCR, 2024)')}
@@ -3696,6 +4269,305 @@ const TabForced = ({ text, lang }) => {
       </Reveal>
 
       <PrintCitationFooter lang={lang} sectionLabel={L('Mobilités contraintes', 'Forced mobility')} />
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Migration de travail. Le releve et la comparaison des ratifications OIT sont
+// calcules en direct depuis la base pays ; le panneau des quatre editions
+// reprend les chiffres publies par l'UA, l'OIT et l'OIM.
+// ---------------------------------------------------------------------------
+const TabLabour = ({ text, lang }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+
+  const ilo = useMemo(() => {
+    const all = Object.values(countryData).flat().filter(c => c.normlex);
+    const rows = all.map(c => ({
+      n: nm(c),
+      total: Number(c.normlex.total) || 0,
+      fund: Number(c.normlex.fundamental) || 0,
+      gov: Number(c.normlex.governance) || 0,
+      tech: Number(c.normlex.technical) || 0,
+      link: c.normlex.link || null,
+    })).sort((a, b) => b.total - a.total);
+    const complet = rows.filter(r => r.fund >= 11);
+    const buckets = {};
+    rows.forEach(r => { buckets[r.fund] = (buckets[r.fund] || 0) + 1; });
+    return {
+      rows, complet,
+      buckets: Object.entries(buckets).map(([k, v]) => ({ k: Number(k), v })).sort((a, b) => a.k - b.k),
+      moyenne: (rows.reduce((n, r) => n + r.total, 0) / rows.length).toFixed(1),
+      total: rows.length,
+    };
+  }, [lang]);
+
+  const exportCSV = () => {
+    downloadCSV('souths_conventions_oit.csv', toCSV(ilo.rows.map(r => ({
+      pays: r.n, conventions_total: r.total, fondamentales_sur_11: r.fund,
+      gouvernance: r.gov, techniques: r.tech,
+    }))));
+  };
+
+  const fmt = (v) => (lang === 'fr' ? String(v).replace('.', ',') : String(v));
+  const maxFund = Math.max(...ilo.buckets.map(b => b.v));
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <PageHeader
+        badge={text.headers.labour.badge}
+        plate={"Pl. V"}
+        title={text.headers.labour.title}
+        highlight={text.headers.labour.highlight}
+        desc={text.headers.labour.desc}
+        icon={Briefcase}
+      />
+
+      <div className="flex justify-end print:hidden">
+        <CsvButton onClick={exportCSV} label={L('Conventions OIT (CSV)', 'ILO conventions (CSV)')} />
+      </div>
+
+      <Reveal>
+        <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200 stagger">
+          {[
+            { v: '13,1 M', l: L('Travailleurs migrants', 'Migrant workers'), s: L('en 2022, contre 9,3 M en 2010', 'in 2022, against 9.3M in 2010'), tone: 'figure-terra' },
+            { v: '64 %', l: L('Des migrants en âge de travailler sont actifs', 'Of working-age migrants are in the labour force'), s: L('sur 20,4 M', 'of 20.4M'), tone: 'figure-inkblue' },
+            { v: `${ilo.complet.length}/${ilo.total}`, l: L('Ont ratifié les 11 conventions fondamentales', 'Have ratified all 11 fundamental conventions'), s: L("le socle des droits au travail", 'the floor of labour rights'), tone: 'figure-warn' },
+            { v: '19,1 %', l: L('De la population couverte par une protection sociale', 'Of the population covered by social protection'), s: L('contre 52,4 % dans le monde', 'against 52.4% worldwide'), tone: 'figure-ok' },
+          ].map((k, i) => (
+            <div key={i} className="px-5 py-6">
+              <div className={`text-2xl md:text-3xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
+              <span className="block text-[11px] font-bold uppercase tracking-widest mt-2.5 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
+              <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Migration de travail : exploitation directe des deux dernieres editions. */}
+      <Reveal delay={25}>
+        <AfricanCounterpoint
+          lang={lang}
+          kicker={L("Le volet travail", "The labour dimension")}
+          title={L(
+            "La mobilité africaine est d'abord une mobilité de travail — et la série se corrige d'une édition à l'autre",
+            "African mobility is first a labour mobility — and the series is revised from one edition to the next"
+          )}
+          sources={[
+            { label: L(
+                "Commission de l'UA, OIT, OIM & CEA — « Report on Labour Migration Statistics in Africa », 3e édition (données 2019), publiée le 18 novembre 2021",
+                "AU Commission, ILO, IOM & ECA — \"Report on Labour Migration Statistics in Africa\", 3rd edition (2019 data), published 18 November 2021"
+              ), url: "https://au.int/sites/default/files/documents/41182-doc-254_261-EN06.pdf" },
+            { label: L(
+                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), publiée le 13 juillet 2026",
+                "AU Commission, ILO & IOM (JLMP programme, technical support from Statistics Sweden) — \"Report on Labour Migration Statistics in Africa\", 4th edition (2022 data), published 13 July 2026"
+              ), url: "https://au.int/sites/default/files/4th_Edi_LMSRA_EN_WEB_20260626.pdf" },
+          ]}
+        >
+          <p className="text-justify">
+            {L(
+              "Le rapport continental sur les statistiques de migration de travail en est à sa quatrième édition. Lues ensemble, les deux dernières disent la même chose sur le fond — la mobilité intra-africaine est massivement une mobilité de travail — et deux choses différentes sur les chiffres. C'est cette double lecture qui est instructive.",
+              "The continental report on labour migration statistics is now in its fourth edition. Read together, the last two say the same thing in substance — intra-African mobility is overwhelmingly labour mobility — and two different things in figures. It is that double reading which is instructive."
+            )}
+          </p>
+
+          {/* Releve comparatif : uniquement les points effectivement publies. */}
+          <div className="bg-white border border-slate-200 overflow-x-auto">
+            <table className="w-full text-[13px]">
+              <thead>
+                <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                  <th className="text-left font-semibold px-4 py-2.5 text-slate-700">{L("Indicateur", "Indicator")}</th>
+                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("3e éd. — 2019", "3rd ed. — 2019")}</th>
+                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("4e éd. — 2022", "4th ed. — 2022")}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {(lang === 'fr' ? [
+                  ["Travailleurs migrants internationaux", "14,5 M (9,5 M en 2010)", "13,1 M (9,3 M en 2010)"],
+                  ["Migrants en âge de travailler", "20,2 M — 77 % des migrants", "20,4 M — au moins 78 %"],
+                  ["Part dans la population active", "72 %", "64 %"],
+                  ["Part des femmes parmi les travailleurs migrants", "38 % en moyenne", "37 % en moyenne"],
+                  ["Concentration régionale", "—", "Ouest, Est et Sud : 76 % des travailleurs migrants"],
+                  ["Envois de fonds — régions dominantes", "Nord 43 % + Ouest 39 % = 82 %", "Nord 45 % + Ouest 34 % = 79 %"],
+                ] : [
+                  ["International migrant workers", "14.5 M (9.5 M in 2010)", "13.1 M (9.3 M in 2010)"],
+                  ["Working-age migrants", "20.2 M — 77% of migrants", "20.4 M — at least 78%"],
+                  ["Share in the labour force", "72%", "64%"],
+                  ["Women among migrant workers", "38% on average", "37% on average"],
+                  ["Regional concentration", "—", "West, East and Southern: 76% of migrant workers"],
+                  ["Remittances — leading regions", "North 43% + West 39% = 82%", "North 45% + West 34% = 79%"],
+                ]).map(([k, a, b], i) => (
+                  <tr key={i}>
+                    <td className="px-4 py-2.5 text-slate-700">{k}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 whitespace-nowrap">{a}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums font-semibold text-slate-900 whitespace-nowrap">{b}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
+            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+              {L("Ce que la révision de la série nous apprend", "What the revision of the series tells us")}
+            </span>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+              {L(
+                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Ce n'est pas une erreur, c'est une révision — méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
+                "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is not an error but a revision — refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
+              )}
+            </p>
+          </div>
+
+          <div>
+            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+              {L("Là où la donnée manque vraiment", "Where the data really runs out")}
+            </span>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+              {L(
+                "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
+                "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit is therefore not in producing raw data but in the reporting and harmonisation chain (Ben Mokhtar, 2026)."
+              )}
+            </p>
+          </div>
+
+          <div>
+            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+              {L("Le lien avec la libre circulation et la ZLECAf", "The link with free movement and the AfCFTA")}
+            </span>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
+              {L(
+                "La 4e édition établit elle-même le lien : l'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
+                "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
+              )}
+            </p>
+            <p className="text-[13px] text-slate-600 leading-relaxed text-justify mt-3">
+              {L(
+                "C'est là que le paradoxe documenté ailleurs sur cette plateforme prend sa mesure économique : la ZLECAf compte 50 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, c'est au niveau régional qu'elle a été conquise — et c'est là que la mobilité de travail se mesure.",
+                "This is where the paradox documented elsewhere on this platform takes its economic measure: the AfCFTA has 50 ratifications out of 54, the Protocol on Free Movement of Persons 4 out of 54. Goods obtained their continental framework; the workers who produce them did not. Where free movement nonetheless exists, it was won at regional level — and that is where labour mobility can be measured."
+              )}
+            </p>
+          </div>
+
+          <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', border: '1px solid #E4CFA4' }}>
+            <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+              {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
+            </span>
+            <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }}>
+              {L(
+                "La 4e édition rappelle que 19,1 % seulement de la population africaine est couverte par au moins une prestation de protection sociale (indicateur ODD 1.3.1), contre 52,4 % dans le monde — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
+                "The 4th edition recalls that only 19.1% of Africa's population is covered by at least one social protection benefit (SDG indicator 1.3.1), against 52.4% worldwide — the first time half of humanity is covered. A migrant worker compounds this continental deficit with the non-portability of entitlements across borders."
+              )}
+            </p>
+          </div>
+        </AfricanCounterpoint>
+      </Reveal>
+
+      {/* Les conventions de l'OIT : le meme motif que l'ancrage continental */}
+      <Reveal delay={35}>
+        <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--warn-ink)' }}>
+          <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+            <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--warn-ink)' }}>
+              {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
+            </span>
+            <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+              {L("Les droits opposables : sept États sur cinquante-quatre ont le socle complet",
+                 'Enforceable rights: seven states out of fifty-four have the full floor')}
+            </h4>
+          </div>
+
+          <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+            <p className="text-justify">
+              {L(
+                "Un travailleur migrant ne tire pas ses droits du nombre de conventions que son pays d'accueil a signées en général, mais de celles qui posent le socle : les onze conventions fondamentales de l'OIT — liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Le compte, pays par pays, donne un résultat net.",
+                "A migrant worker draws rights not from how many conventions their host country has signed overall, but from those that set the floor: the ILO's eleven fundamental conventions — freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. Counted country by country, the result is stark."
+              )}
+            </p>
+
+            <div>
+              <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                {L('Combien des 11 conventions fondamentales, et combien de pays', 'How many of the 11 fundamental conventions, and how many countries')}
+              </span>
+              <div className="space-y-2">
+                {ilo.buckets.map((b, i) => (
+                  <div key={b.k} className="flex items-center gap-3 figure-row px-1 py-1">
+                    <span className="text-[11px] font-semibold w-28 shrink-0 tabular-nums text-slate-700">
+                      {b.k}/11
+                    </span>
+                    <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                      <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
+                           style={{ width: `${(b.v / maxFund) * 100}%`,
+                                    backgroundColor: b.k >= 11 ? 'var(--ok)' : b.k >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }} />
+                    </div>
+                    <span className="text-xs font-bold w-24 text-right shrink-0 tabular-nums text-slate-800">
+                      {b.v} {L(b.v > 1 ? 'pays' : 'pays', b.v > 1 ? 'countries' : 'country')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
+                <span className="font-bold uppercase tracking-widest">{L('Socle complet :', 'Full floor:')}</span>{' '}
+                {ilo.complet.map(r => r.n).join(', ')}.
+              </p>
+            </div>
+
+            <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', borderLeft: '2px solid var(--warn-ink)' }}>
+              <span className="block text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+                {L('Le volume ne dit pas la protection', 'Volume does not equal protection')}
+              </span>
+              <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }}>
+                {L(
+                  `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle fondamental complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
+                  `The total number of ratified conventions ranges from ${ilo.rows[ilo.rows.length - 1].total} to ${ilo.rows[0].total}, averaging ${fmt(ilo.moyenne)}. But a high total guarantees nothing: several states at the top of the overall ranking lack the complete fundamental floor, while Madagascar holds it in full with a far more modest total. It is the same pattern observed on continental instruments — broad accession precedes, and sometimes replaces, binding commitment (Ben Mokhtar, 2026).`
+                )}
+              </p>
+            </div>
+
+            <div className="overflow-x-auto border border-slate-200">
+              <table className="w-full text-[12px]">
+                <thead>
+                  <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                    <th className="text-left font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Fondamentales', 'Fundamental')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Gouvernance', 'Governance')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Techniques', 'Technical')}</th>
+                    <th className="px-3 py-2 font-semibold text-slate-700 text-right">{L('Total', 'Total')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {ilo.rows.map(r => (
+                    <tr key={r.n} className="figure-row">
+                      <td className="px-3 py-1.5 text-slate-800 whitespace-nowrap">{r.n}</td>
+                      <td className="px-2 py-1.5 text-right tabular-nums font-bold"
+                          style={{ color: r.fund >= 11 ? 'var(--ok)' : r.fund >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }}>
+                        {r.fund}/11
+                      </td>
+                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.gov}</td>
+                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.tech}</td>
+                      <td className="px-3 py-1.5 text-right tabular-nums font-bold text-slate-900">{r.total}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+            <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
+            <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer"
+               className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
+              <span>{L(
+                "OIT — base NORMLEX (ratifications par pays). Compilation integree a la base pays de la plateforme ; chaque fiche pays renvoie a la page NORMLEX de l'Etat concerne.",
+                'ILO — NORMLEX database (ratifications by country). Compiled into the platform country base; each country profile links to that state\'s NORMLEX page.'
+              )}</span>
+              <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
+            </a>
+          </div>
+        </section>
+      </Reveal>
+
+      <PrintCitationFooter lang={lang} sectionLabel={L('Migration de travail', 'Labour migration')} />
     </div>
   );
 };
@@ -4619,7 +5491,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
-        plate={"Pl. V"}
+        plate={"Pl. VI"}
         title={text.headers.governance.title}
         highlight={text.headers.governance.highlight}
         desc={text.headers.governance.desc}
@@ -4756,7 +5628,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   : "Adopted in 2015, Agenda 2063 is not a regional translation of Agenda 2030: it has its own fifty-year horizon, and its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects."}
               </p>
 
-              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--terra)' }}>
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
                 <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {lang === 'fr' ? "Projet phare n° 4 sur 15" : "Flagship project no. 4 of 15"}
                 </span>
@@ -4801,7 +5673,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             </div>
             <AfricanCounterpoint
               lang={lang}
-              accent="var(--inkblue)"
+              accent="var(--accent-2)"
               kicker={lang === 'fr' ? "Clef de lecture" : "How to read it"}
               title={lang === 'fr'
                 ? "Ce que le Pacte est, et ce qu'il n'est pas"
@@ -4827,7 +5699,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   : "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018, then endorsed by the UN General Assembly on 19 December 2018 (resolution 73/195), by a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"."}
               </p>
 
-              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--inkblue)' }}>
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
                 <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {lang === 'fr' ? "Principe de souveraineté nationale (par. 15)" : "National sovereignty principle (para. 15)"}
                 </span>
@@ -4874,7 +5746,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ["Whole-of-society", "migrants, diasporas, civil society, academia, private sector, unions"],
                   ]).map(([name, gloss], i) => (
                     <div key={i} className="flex gap-2.5 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>
-                      <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--inkblue)' }}>
+                      <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--accent-2)' }}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="text-[13px] leading-snug">
@@ -4944,7 +5816,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   : "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP), drafted in October 2017 under the motto \"One Africa, One Voice, One Message\" and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state."}
               </p>
 
-              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--terra)' }}>
+              <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
                 <p className="text-[13px] text-slate-600 italic leading-relaxed">
                   {lang === 'fr'
                     ? "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)"
@@ -4973,7 +5845,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     "Contributions of migrants and diasporas — including women and youth — to countries of origin, transit and destination.",
                   ]).map((t, i) => (
                     <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
-                      <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--terra-deep)' }}>
+                      <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span className="text-slate-700">{t}</span>
@@ -5163,6 +6035,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               <AnchoringMatrix lang={lang} />
+
+              <GovernanceCross lang={lang} />
 
               {/* Organe de pilotage politique & forum consultatif */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
@@ -5387,13 +6261,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-2 mb-6 pb-4 border-b border-slate-100">
                   <a href="https://amo.au.int/sites/default/files/files/2025-04/amoactivityreport-2021-2024.pdf"
                      target="_blank" rel="noopener noreferrer"
-                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--terra-deep)' }}>
+                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--accent-deep)' }}>
                     {lang === 'fr'
                       ? "→ Rapport d'activités de l'OAM, nov. 2021 – juin 2024 (PDF)"
                       : "→ AMO Report on Activities, Nov. 2021 – June 2024 (PDF)"} <ExternalLink className="w-3 h-3" />
                   </a>
                   <a href="https://amo.au.int/en/resources" target="_blank" rel="noopener noreferrer"
-                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--inkblue)' }}>
+                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--accent-2)' }}>
                     {lang === 'fr' ? "→ Ressources et documents de l'OAM" : "→ AMO resources and documents"} <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
@@ -6235,7 +7109,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                       );
                     })()}
                   </div>
-                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 px-5 py-2.5 font-bold text-xs transition shrink-0 self-start" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2, boxShadow: 'inset 2px 0 0 var(--terra)' }}>
+                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 px-5 py-2.5 font-bold text-xs transition shrink-0 self-start" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2, boxShadow: 'inset 2px 0 0 var(--accent)' }}>
                     <Target className="w-4 h-4" />
                     <span>{text.analysis_btn}</span>
                   </button>
@@ -6247,9 +7121,9 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     {
                       title: lang === 'fr' ? "Qui est là" : 'Who is there',
                       source: 'UN DESA (2024)',
-                      wash: 'wash-inkblue', tone: 'figure-inkblue', dot: 'var(--inkblue)',
+                      wash: 'wash-inkblue', tone: 'figure-inkblue', dot: 'var(--accent-2)',
                       cells: [
-                        { v: formatNumber(display.stock), l: lang === 'fr' ? 'Migrants internationaux' : 'International migrants' },
+                        { v: <Num value={display.stock} lang={lang} />, l: lang === 'fr' ? 'Migrants internationaux' : 'International migrants' },
                         { v: `${fmtNum(display.evolution, lang)} %`, l: lang === 'fr' ? 'De la population nationale' : 'Of the national population' },
                         { v: `${fmtNum(display.female, lang)} %`, l: lang === 'fr' ? 'De femmes parmi eux' : 'Women among them' },
                       ],
@@ -6257,7 +7131,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     {
                       title: lang === 'fr' ? "D'où l'on vient" : 'Where they come from',
                       source: 'UA / OIT / OIM / CEA (2021)',
-                      wash: 'wash-terra', tone: 'figure-terra', dot: 'var(--terra)',
+                      wash: 'wash-terra', tone: 'figure-terra', dot: 'var(--accent)',
                       cells: [
                         { v: `${fmtNum(display.retention, lang)} %`, l: lang === 'fr' ? 'Rétention Sud-Sud' : 'South-South retention' },
                       ],
@@ -7056,7 +7930,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
       <PageHeader
         badge={text.headers.library.badge}
-        plate={"Pl. VII"}
+        plate={"Pl. VIII"}
         title={text.headers.library.title}
         highlight={text.headers.library.highlight}
         desc={text.headers.library.desc}
@@ -7248,16 +8122,29 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
           </p>
         </>
       )}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
         {censusRoundMeta.map((r) => {
-          const v = rec[r.key];
-          const is2020 = r.key === 'r2020';
-          const done = !!(v && String(v).trim());
+          const c = censusMark(rec[r.key]);
+          // Le statut ne teinte que la case du cycle qu'il decrit : 2020, ou 2030
+          // pour les Etats qui ont recense apres la cloture du cycle precedent.
+          const carries = r.key === (rec.status2020 === 'late' ? 'r2030' : 'r2020');
+          const tone = carries ? st.cls
+            : c.counted ? 'bg-slate-50 border-slate-200 text-slate-800'
+            : c.empty ? 'bg-slate-50 border-slate-200 text-slate-300'
+            : 'border-dashed';  // indiquee, non comptabilisee
           return (
-            <div key={r.key} className={`rounded-md border px-2 py-2 text-center ${is2020 ? st.cls : done ? 'bg-slate-50 border-slate-200 text-slate-800' : 'bg-slate-50 border-slate-200 text-slate-300'}`}>
+            <div key={r.key} className={`rounded-md border px-2 py-2 text-center ${tone}`}
+                 style={!carries && !c.counted && !c.empty
+                   ? { backgroundColor: 'var(--paper-sunk)', borderColor: 'var(--rule-strong)', color: 'var(--label)' }
+                   : undefined}
+                 title={!c.counted && !c.empty ? markLegend(c.mark, lang) : undefined}>
               <span className="block text-[9px] font-bold uppercase tracking-widest opacity-70">{r.label[lang]}</span>
               <span className="block text-[11px] font-bold tabular-nums mt-0.5 leading-tight">
-                {done ? String(v).replace('*', '') : '—'}
+                {c.year ? (
+                  <>{c.raw.replace(/\*+/, '')}<sup className="font-normal">{c.mark}</sup></>
+                ) : c.mark ? (
+                  <>—<sup className="font-normal">{c.mark}</sup></>
+                ) : '—'}
               </span>
             </div>
           );
@@ -7265,17 +8152,36 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm border ${st.cls}`}>
-          {L("Cycle 2020 : ", "2020 round: ")}{st[lang]}
+          {rec.status2020 === 'late'
+            ? st[lang]
+            : `${L("Cycle 2020 : ", "2020 round: ")}${st[lang]}`}
         </span>
         {rec.updated2026 && (
-          <span className="text-[10px] text-emerald-700 font-medium">
-            {L("Actualisé (2026) — ", "Updated (2026) — ")}{rec.updated2026}
+          <span className="text-[10px] font-medium" style={{ color: 'var(--label)' }}>
+            <span className="font-bold" style={{ color: 'var(--accent-2)' }}>
+              {L("Vérifié en août 2026 — ", "Verified August 2026 — ")}
+            </span>
+            {typeof rec.updated2026 === 'string' ? rec.updated2026 : rec.updated2026[lang]}
           </span>
         )}
-        {String(rec.r1970).includes('*') && (
-          <span className="text-[10px] text-slate-400 italic">{L("* territoire non indépendant à cette date", "* territory not independent at that date")}</span>
-        )}
       </div>
+      {/* La legende ne liste que les marques reellement presentes chez ce pays —
+          elle ne portait que sur r1970, l'Erythree et la Namibie n'en voyaient aucune. */}
+      {(() => {
+        const marks = [...new Set(censusRoundMeta
+          .map(r => censusMark(rec[r.key]).mark)
+          .filter(Boolean))].sort((a, b) => a.length - b.length);
+        if (!marks.length) return null;
+        return (
+          <ul className="mt-2 space-y-0.5">
+            {marks.map(mk => (
+              <li key={mk} className="text-[10px] italic leading-snug" style={{ color: 'var(--label)' }}>
+                <sup className="not-italic font-bold">{mk}</sup> {markLegend(mk, lang)}
+              </li>
+            ))}
+          </ul>
+        );
+      })()}
       {!compact && (
         <p className="text-[10px] text-slate-400 italic mt-3 pt-3 border-t border-slate-100">
           {L("Source : compilation de l'auteur (Ben Mokhtar, 2024) d'après la Division de statistique des Nations unies (UNSD) et UN DESA.",
@@ -7299,7 +8205,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={L("Production statistique africaine", "African statistical production")}
-        plate={"Pl. VI"}
+        plate={"Pl. VII"}
         title={L("Données & statistiques", "Data & Statistics")}
         highlight={L("où se situe réellement le déficit.", "where the deficit actually lies.")}
         desc={L(
@@ -7321,7 +8227,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
 
       <MovementOpener
         n="01"
-        accent="var(--inkblue)"
+        accent="var(--accent-2)"
         kicker={L("Le constat", "The finding")}
         thesis={L(
           "Les États africains recensent, à une fréquence qui tient la norme internationale. La collecte n'est pas le maillon faible.",
@@ -7355,11 +8261,20 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </div>
       </Reveal>
 
+      <Reveal delay={15}>
+        <CensusRhythm lang={lang} />
+      </Reveal>
+
+      {/* Le retard n'est pas une absence : ce que l'audit des statuts a fait apparaitre. */}
+      <Reveal delay={17}>
+        <LateRound lang={lang} />
+      </Reveal>
+
       {/* La norme onusienne : l'etalon contre lequel se mesure la regularite africaine. */}
       <Reveal delay={20}>
         <AfricanCounterpoint
           lang={lang}
-          accent="var(--inkblue)"
+          accent="var(--accent-2)"
           kicker={L("La norme de référence", "The reference standard")}
           title={L(
             "Ce qu'un recensement doit être : la règle que les États africains appliquent déjà",
@@ -7394,7 +8309,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               ["Capacity to produce small-area statistics", "going below the national level"],
             ]).map(([name, gloss], i) => (
               <div key={i} className="flex gap-2.5 py-2" style={{ borderBottom: '1px solid var(--rule)' }}>
-                <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--inkblue)' }}>
+                <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--accent-2)' }}>
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <span className="text-[13px] leading-snug">
@@ -7405,7 +8320,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             ))}
           </div>
 
-          <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--inkblue)' }}>
+          <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
             <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L("Périodicité recommandée (§ 1.12 et 1.13)", "Recommended periodicity (§§ 1.12 and 1.13)")}
             </span>
@@ -7445,7 +8360,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 <li key={i} className="flex items-baseline justify-between gap-3 py-1.5 text-[13px]" style={{ borderBottom: '1px solid var(--rule)' }}>
                   <span className="text-slate-700">{name}</span>
                   <span className="shrink-0 text-[9px] font-bold uppercase tracking-widest"
-                        style={{ color: core ? 'var(--inkblue)' : 'var(--muted)' }}>
+                        style={{ color: core ? 'var(--accent-2)' : 'var(--muted)' }}>
                     {core ? L("Thème central", "Core topic") : L("Thème additionnel", "Additional topic")}
                   </span>
                 </li>
@@ -7471,124 +8386,6 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         )}
       />
 
-      {/* Migration de travail : exploitation directe des deux dernieres editions. */}
-      <Reveal delay={25}>
-        <AfricanCounterpoint
-          lang={lang}
-          kicker={L("Le volet travail", "The labour dimension")}
-          title={L(
-            "La mobilité africaine est d'abord une mobilité de travail — et la série se corrige d'une édition à l'autre",
-            "African mobility is first a labour mobility — and the series is revised from one edition to the next"
-          )}
-          sources={[
-            { label: L(
-                "Commission de l'UA, OIT, OIM & CEA — « Report on Labour Migration Statistics in Africa », 3e édition (données 2019), publiée le 18 novembre 2021",
-                "AU Commission, ILO, IOM & ECA — \"Report on Labour Migration Statistics in Africa\", 3rd edition (2019 data), published 18 November 2021"
-              ), url: "https://au.int/sites/default/files/documents/41182-doc-254_261-EN06.pdf" },
-            { label: L(
-                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), publiée le 13 juillet 2026",
-                "AU Commission, ILO & IOM (JLMP programme, technical support from Statistics Sweden) — \"Report on Labour Migration Statistics in Africa\", 4th edition (2022 data), published 13 July 2026"
-              ), url: "https://au.int/sites/default/files/4th_Edi_LMSRA_EN_WEB_20260626.pdf" },
-          ]}
-        >
-          <p className="text-justify">
-            {L(
-              "Le rapport continental sur les statistiques de migration de travail en est à sa quatrième édition. Lues ensemble, les deux dernières disent la même chose sur le fond — la mobilité intra-africaine est massivement une mobilité de travail — et deux choses différentes sur les chiffres. C'est cette double lecture qui est instructive.",
-              "The continental report on labour migration statistics is now in its fourth edition. Read together, the last two say the same thing in substance — intra-African mobility is overwhelmingly labour mobility — and two different things in figures. It is that double reading which is instructive."
-            )}
-          </p>
-
-          {/* Releve comparatif : uniquement les points effectivement publies. */}
-          <div className="bg-white border border-slate-200 overflow-x-auto">
-            <table className="w-full text-[13px]">
-              <thead>
-                <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                  <th className="text-left font-semibold px-4 py-2.5 text-slate-700">{L("Indicateur", "Indicator")}</th>
-                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("3e éd. — 2019", "3rd ed. — 2019")}</th>
-                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("4e éd. — 2022", "4th ed. — 2022")}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {(lang === 'fr' ? [
-                  ["Travailleurs migrants internationaux", "14,5 M (9,5 M en 2010)", "13,1 M (9,3 M en 2010)"],
-                  ["Migrants en âge de travailler", "20,2 M — 77 % des migrants", "20,4 M — au moins 78 %"],
-                  ["Part dans la population active", "72 %", "64 %"],
-                  ["Part des femmes parmi les travailleurs migrants", "38 % en moyenne", "37 % en moyenne"],
-                  ["Concentration régionale", "—", "Ouest, Est et Sud : 76 % des travailleurs migrants"],
-                  ["Envois de fonds — régions dominantes", "Nord 43 % + Ouest 39 % = 82 %", "Nord 45 % + Ouest 34 % = 79 %"],
-                ] : [
-                  ["International migrant workers", "14.5 M (9.5 M in 2010)", "13.1 M (9.3 M in 2010)"],
-                  ["Working-age migrants", "20.2 M — 77% of migrants", "20.4 M — at least 78%"],
-                  ["Share in the labour force", "72%", "64%"],
-                  ["Women among migrant workers", "38% on average", "37% on average"],
-                  ["Regional concentration", "—", "West, East and Southern: 76% of migrant workers"],
-                  ["Remittances — leading regions", "North 43% + West 39% = 82%", "North 45% + West 34% = 79%"],
-                ]).map(([k, a, b], i) => (
-                  <tr key={i}>
-                    <td className="px-4 py-2.5 text-slate-700">{k}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 whitespace-nowrap">{a}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums font-semibold text-slate-900 whitespace-nowrap">{b}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--terra)' }}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-              {L("Ce que la révision de la série nous apprend", "What the revision of the series tells us")}
-            </span>
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
-              {L(
-                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Ce n'est pas une erreur, c'est une révision — méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
-                "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is not an error but a revision — refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
-              )}
-            </p>
-          </div>
-
-          <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
-              {L("Là où la donnée manque vraiment", "Where the data really runs out")}
-            </span>
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
-              {L(
-                "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
-                "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit is therefore not in producing raw data but in the reporting and harmonisation chain (Ben Mokhtar, 2026)."
-              )}
-            </p>
-          </div>
-
-          <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
-              {L("Le lien avec la libre circulation et la ZLECAf", "The link with free movement and the AfCFTA")}
-            </span>
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
-              {L(
-                "La 4e édition établit elle-même le lien : l'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
-                "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
-              )}
-            </p>
-            <p className="text-[13px] text-slate-600 leading-relaxed text-justify mt-3">
-              {L(
-                "C'est là que le paradoxe documenté ailleurs sur cette plateforme prend sa mesure économique : la ZLECAf compte 50 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, c'est au niveau régional qu'elle a été conquise — et c'est là que la mobilité de travail se mesure.",
-                "This is where the paradox documented elsewhere on this platform takes its economic measure: the AfCFTA has 50 ratifications out of 54, the Protocol on Free Movement of Persons 4 out of 54. Goods obtained their continental framework; the workers who produce them did not. Where free movement nonetheless exists, it was won at regional level — and that is where labour mobility can be measured."
-              )}
-            </p>
-          </div>
-
-          <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', border: '1px solid #E4CFA4' }}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
-              {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
-            </span>
-            <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }}>
-              {L(
-                "La 4e édition rappelle que 19,1 % seulement de la population africaine est couverte par au moins une prestation de protection sociale (indicateur ODD 1.3.1), contre 52,4 % dans le monde — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
-                "The 4th edition recalls that only 19.1% of Africa's population is covered by at least one social protection benefit (SDG indicator 1.3.1), against 52.4% worldwide — the first time half of humanity is covered. A migrant worker compounds this continental deficit with the non-portability of entitlements across borders."
-              )}
-            </p>
-          </div>
-        </AfricanCounterpoint>
-      </Reveal>
 
 
       <Reveal delay={40} className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
@@ -7612,13 +8409,19 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           <div className="space-y-2.5">
             {censusRoundMeta.map((r) => {
               const pct = r.pct; // pourcentages tels que publies par l'auteur (troncature, non arrondi)
+              // Le cycle 2030 vient de s'ouvrir : sa barre mesure une avancee, pas un manque.
               return (
                 <div key={r.key} className="flex items-center gap-3">
-                  <span className="text-[11px] font-bold text-slate-600 w-32 shrink-0">
+                  <span className={`text-[11px] font-bold w-32 shrink-0 ${r.inProgress ? '' : 'text-slate-600'}`}
+                        style={r.inProgress ? { color: 'var(--accent-2)' } : undefined}>
                     {r.label[lang]} <span className="text-slate-400 font-normal">({r.span})</span>
                   </span>
-                  <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full bg-teal-600 bar-fill" style={{ width: `${pct}%` }} />
+                  <div className="flex-1 h-4 rounded-full overflow-hidden relative"
+                       style={r.inProgress
+                         ? { background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 5px, #FFF 5px 10px)' }
+                         : { backgroundColor: '#F1F5F9' }}>
+                    <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
+                         style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
                   </div>
                   <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
                     {r.conducted}/{r.base} · {pct} %
@@ -7627,9 +8430,15 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               );
             })}
           </div>
-          <p className="text-[10px] text-slate-400 italic mt-3">
-            {L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, actualisée en 2026 pour les recensements aboutis depuis (Angola, Maroc, Tunisie, Ouganda) : le cycle 2020 passe ainsi de 29 à 33 États.",
-               "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, updated in 2026 for censuses completed since (Angola, Morocco, Tunisia, Uganda): the 2020 round thus moves from 29 to 33 states.")}
+          <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
+            <span className="inline-block w-3 h-2 mr-1.5 align-middle rounded-sm"
+                  style={{ background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 3px, #FFF 3px 6px)', border: '1px solid var(--rule)' }} />
+            {L("Le cycle 2030 vient de s'ouvrir (fenêtre 2025-2034) : sa barre mesure une avance, pas un retard.",
+               "The 2030 round has only just opened (2025–2034 window): its bar measures progress, not shortfall.")}
+          </p>
+          <p className="text-[10px] text-slate-500 italic mt-1.5 leading-relaxed text-justify">
+            {L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, actualisée en 2026 pour les recensements aboutis depuis (Angola, Maroc, Tunisie, Ouganda), puis complétée en août 2026 par un audit des statuts encore ouverts : la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024) rejoignent le cycle 2020, qui passe de 29 à 35 États.",
+               "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, updated in 2026 for censuses completed since (Angola, Morocco, Tunisia, Uganda), then completed in August 2026 by an audit of the statuses still open: The Gambia (May 2024) and São Tomé and Príncipe (November 2024) join the 2020 round, which moves from 29 to 35 states.")}
           </p>
         </div>
 
@@ -7637,8 +8446,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
             {L("Profondeur des questions migratoires (cycle 2010)", "Depth of migration questions (2010 round)")}
           </h3>
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: 'var(--inkblue)' }}>
-            <span className="inline-block w-2 h-2" style={{ backgroundColor: 'var(--inkblue)' }} />
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: 'var(--accent-2)' }}>
+            <span className="inline-block w-2 h-2" style={{ backgroundColor: 'var(--accent-2)' }} />
             {L("Thème central de la norme UN DESA", "Core topic under the UN DESA standard")}
           </span>
         </div>
@@ -7646,14 +8455,14 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           {censusQuestionDepth.map((q) => (
             <div key={q.key} className="flex items-center gap-3">
               <span className="text-[11px] font-medium w-56 shrink-0 leading-snug flex items-start gap-1.5"
-                    style={{ color: q.core ? 'var(--inkblue)' : 'var(--ink-soft)' }}>
-                {q.core && <span className="inline-block w-2 h-2 mt-1 shrink-0" style={{ backgroundColor: 'var(--inkblue)' }} />}
+                    style={{ color: q.core ? 'var(--accent-2)' : 'var(--ink-soft)' }}>
+                {q.core && <span className="inline-block w-2 h-2 mt-1 shrink-0" style={{ backgroundColor: 'var(--accent-2)' }} />}
                 {q.label[lang]}
               </span>
               {/* Teinte unique : la grandeur est deja portee par la longueur. */}
               <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                 <div className="h-full bar-fill"
-                     style={{ width: `${q.pctRound}%`, backgroundColor: 'var(--terra)' }} />
+                     style={{ width: `${q.pctRound}%`, backgroundColor: 'var(--accent)' }} />
               </div>
               <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
                 {q.states}/47 · {String(q.pctRound).replace('.', ',')} %
@@ -7662,7 +8471,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           ))}
         </div>
 
-        <div className="mt-5 p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--inkblue)' }}>
+        <div className="mt-5 p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
           <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que le croisement avec la norme révèle", "What the overlay with the standard reveals")}
           </span>
@@ -7739,7 +8548,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 "To promote a culture of quality decision-making.",
               ]).map((t, i) => (
                 <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
-                  <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--terra-deep)' }}>
+                  <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="text-slate-700">{t}</span>
@@ -7806,7 +8615,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={text.headers.glossary.badge}
-        plate={"Pl. VIII"}
+        plate={"Pl. IX"}
         title={text.headers.glossary.title}
         highlight={text.headers.glossary.highlight}
         desc={text.headers.glossary.desc}
@@ -7860,8 +8669,8 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
                   {/* Ce que le choix du mot produit : la definition n'est pas descriptive,
                       elle ouvre ou ferme des droits. */}
                   {t.stakes && (
-                    <div className="mt-3 pl-3 py-1" style={{ borderLeft: '2px solid var(--terra)' }}>
-                      <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--terra-deep)' }}>
+                    <div className="mt-3 pl-3 py-1" style={{ borderLeft: '2px solid var(--accent)' }}>
+                      <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
                         {lang === 'fr' ? "Ce que la définition change" : "What the definition changes"}
                       </span>
                       <p className="text-xs text-slate-600 leading-relaxed">{t.stakes[lang]}</p>
@@ -7875,7 +8684,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
                       </span>
                       {t.source.url ? (
                         <a href={t.source.url} target="_blank" rel="noopener noreferrer"
-                           className="text-[11px] hover:underline inline-flex items-center gap-1" style={{ color: 'var(--inkblue)' }}>
+                           className="text-[11px] hover:underline inline-flex items-center gap-1" style={{ color: 'var(--accent-2)' }}>
                           {t.source[lang]} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
                         </a>
                       ) : (
@@ -8364,7 +9173,7 @@ const TabAbout = ({ text, lang, children }) => {
     <section className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={text.headers.about.badge}
-        plate={"Pl. IX"}
+        plate={"Pl. XI"}
         title={text.headers.about.title}
         highlight={text.headers.about.highlight}
         desc={text.headers.about.desc}
@@ -8375,13 +9184,13 @@ const TabAbout = ({ text, lang, children }) => {
       {/* Ouverture editoriale : le bandeau sombre est desormais porte par le masthead,
           ce bloc revient donc au papier et s'ouvre sur une lettrine. */}
       <div className="bg-white border border-slate-200 p-8 md:p-12">
-        <span className="block text-[10px] font-semibold uppercase mb-3" style={{ letterSpacing: '.18em', color: 'var(--terra-deep)' }}>
+        <span className="block text-[10px] font-semibold uppercase mb-3" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
           {text.about.intro_subtitle}
         </span>
         <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-6 max-w-3xl">
           {text.about.intro_title}
         </h2>
-        <span className="block h-px w-24 mb-7" style={{ backgroundColor: 'var(--terra)' }} />
+        <span className="block h-px w-24 mb-7" style={{ backgroundColor: 'var(--accent)' }} />
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-3xl text-justify">
           <p className="lede">{text.about.intro_p1}</p>
           <p>{text.about.intro_p2}</p>
@@ -8749,7 +9558,7 @@ export default function App() {
       iso2: null,
       flagIcon: fallback.flagIcon,
       flagColor: fallback.flagColor,
-      stock: formatNumber(Math.round(agg.stock)),
+      stock: formatNumber(Math.round(agg.stock), lang),
       female: agg.female ?? fallback.female,
       evolution: fallback.evolution,
       retention: agg.retention ?? (fallback.retention || 50),
@@ -8856,6 +9665,7 @@ export default function App() {
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
     { id: 'forced', icon: ShieldAlert, label: { fr: 'Mobilités contraintes', en: 'Forced mobility' } },
+    { id: 'labour', icon: Briefcase, label: { fr: 'Migration de travail', en: 'Labour migration' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' } },
     { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' } },
@@ -8940,7 +9750,7 @@ export default function App() {
               <BrandMark className="h-8 w-8 shrink-0" tone="dark" />
               <span className="text-base font-serif font-bold tracking-tight leading-none">
                 <span style={{ color: '#FFFDF9' }}>{text.title}</span>{' '}
-                <span className="font-sans font-normal italic text-[13px]" style={{ color: '#C98A66' }}>{text.subtitle}</span>
+                <span className="font-sans font-normal italic text-[13px]" style={{ color: '#93A3CF' }}>{text.subtitle}</span>
               </span>
             </div>
             <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
@@ -8962,7 +9772,7 @@ export default function App() {
                   className="nav-tab flex items-center px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-t-2"
                   style={navTabStyle(isActive)}
                 >
-                  <Icon className="w-4 h-4 mr-2" style={{ color: isActive ? '#E08A5F' : '#7A7167' }} />
+                  <Icon className="w-4 h-4 mr-2" style={{ color: isActive ? '#8FA0CE' : '#7A7167' }} />
                   {item.label[lang]}
                 </button>
               );
@@ -8990,6 +9800,7 @@ export default function App() {
           />
         )}
         {activeTab === 'forced' && <TabForced text={text} lang={lang} />}
+        {activeTab === 'labour' && <TabLabour text={text} lang={lang} />}
         {activeTab === 'governance' && (
           <TabGovernance text={text} lang={lang} activeSdgzTab={activeSdgzTab} setActiveSdgzTab={setActiveSdgzTab} />
         )}
@@ -9059,7 +9870,10 @@ export default function App() {
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-5 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300 print:hidden"
+          /* .reader : le rapport pays est monte hors de <main>. Sans cette classe,
+             il echappe a toute la couche de lisibilite de theme.css (plancher de
+             corps, promotion des gris faibles, justification limitee aux paragraphes). */
+          className="reader fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-5 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300 print:hidden"
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
@@ -9179,7 +9993,7 @@ export default function App() {
                               <div>
                                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
                                   <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
-                                  <span className="text-slate-900 print:!text-slate-900">{formatNumber(display.refugees_hosted)}</span>
+                                  <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
                               </div>
@@ -9188,7 +10002,7 @@ export default function App() {
                               <div>
                                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
                                   <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
-                                  <span className="text-rose-900 print:!text-rose-900">{formatNumber(display.idp_conflict)}</span>
+                                  <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
                               </div>
@@ -9197,7 +10011,7 @@ export default function App() {
                               <div>
                                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
                                   <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
-                                  <span className="text-blue-800 print:!text-blue-800">{formatNumber(display.idp_disaster)}</span>
+                                  <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
                               </div>
@@ -9379,7 +10193,7 @@ export default function App() {
 
       <footer className="mt-20 print:hidden" style={{ backgroundColor: 'var(--ink)' }}>
         {/* filet de signature en tete de pied de page */}
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--terra), rgba(180,73,31,.35) 40%, transparent)' }} />
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 40%, transparent)' }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
@@ -9399,7 +10213,7 @@ export default function App() {
 
             {/* Navigation secondaire */}
             <div className="md:col-span-3">
-              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--terra-light)' }}>
+              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--accent-light)' }}>
                 {lang === 'fr' ? 'Explorer' : 'Explore'}
               </span>
               <ul className="space-y-2">
@@ -9407,7 +10221,7 @@ export default function App() {
                   <li key={item.id}>
                     <button
                       onClick={() => setActiveTab(item.id)}
-                      className="text-sm transition-colors hover:text-[#E08A5F]"
+                      className="text-sm transition-colors hover:text-[#8FA0CE]"
                       style={{ color: '#CFC6BA' }}
                     >
                       {item.label[lang]}
@@ -9419,7 +10233,7 @@ export default function App() {
 
             {/* Provenance & contact */}
             <div className="md:col-span-4">
-              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--terra-light)' }}>
+              <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--accent-light)' }}>
                 {lang === 'fr' ? 'Sources & contact' : 'Sources & contact'}
               </span>
               <p className="text-xs leading-relaxed mb-4" style={{ color: '#A79E92' }}>
@@ -9427,7 +10241,7 @@ export default function App() {
               </p>
               <a
                 href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20-%20Contact"
-                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[#E08A5F]"
+                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[#8FA0CE]"
                 style={{ color: '#CFC6BA' }}
               >
                 <Mail className="w-3.5 h-3.5" /> benmokhtary1@gmail.com
