@@ -170,6 +170,11 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* ---------- Statuts : conservés lisibles et distincts -------------------- */
 
 .text-emerald-600, .text-emerald-700, .text-emerald-800, .text-emerald-900 { color: var(--ok) !important; }
+/* Les verts clairs ne servent qu'en reserve sur un aplat sombre. Le theme ne
+   couvrait que les variantes foncees : text-emerald-400 restait au vert de
+   Tailwind, soit 3,04:1 sur le bleu d'ardoise. On les ramene au papier.     */
+:is(.bg-emerald-900, .bg-[#0f172a], .bg-slate-900, .bg-slate-800)
+  :is(.text-emerald-300, .text-emerald-400, .text-emerald-500) { color: #FBFBF8 !important; }
 .bg-emerald-50, .bg-emerald-100 { background-color: var(--ok-soft) !important; }
 .border-emerald-100, .border-emerald-200, .border-emerald-300 { border-color: #C4D5C9 !important; }
 .bg-emerald-600, .bg-emerald-700 { background-color: var(--ok) !important; }
@@ -888,3 +893,40 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) { max-wid
 }
 .prefs-reset:hover { background: var(--accent-soft); }
 .prefs-reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---------- Provenance : une legende, pas un encadre ---------------------- */
+/* Huit bandes teintees de 80 a 145 px annoncaient les sources. La provenance
+   reste — un chiffre sans source ne vaut rien — mais elle se lit desormais
+   comme une legende de figure : un filet fin, une ligne, du gris.            */
+
+.provenance {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .6rem;
+  margin: 1rem 0 0; padding-top: .55rem;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px; line-height: 1.5; color: var(--label);
+  max-width: none !important;   /* la mesure de lecture ne s'applique pas ici */
+}
+
+.provenance-lbl {
+  flex: none; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
+  color: var(--accent-deep);
+}
+
+.provenance-item::after { content: '·'; margin-inline-start: .6rem; color: var(--rule-strong); }
+.provenance-item:last-of-type::after { content: none; }
+
+.provenance a {
+  display: inline; color: var(--accent-deep); text-decoration: underline;
+  text-decoration-color: var(--rule-strong); text-underline-offset: .16em;
+}
+.provenance a:hover { text-decoration-color: currentColor; }
+.provenance a svg { display: inline-block; vertical-align: -.12em; margin-inline-start: .2em; }
+
+.provenance-plus {
+  font: inherit; font-weight: 600; color: var(--accent-deep);
+  background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline dotted;
+}
+.provenance-plus:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.provenance-note { flex-basis: 100%; color: var(--label); }

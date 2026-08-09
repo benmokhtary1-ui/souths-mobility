@@ -775,17 +775,14 @@ const AspirationGap = ({ lang }) => {
         </div>
       </div>
 
-      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
-        <a href="https://www.afrobarometer.org/articles/international-migrants-day-almost-half-of-africans-have-considered-emigrating-afrobarometer-survey-shows/"
-           target="_blank" rel="noopener noreferrer"
-           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
-          <span>{L(
-            "Afrobarometer — enquête 2024 auprès de 24 pays africains ; comparaison à 2016-2018 sur 22 pays. Les parts de destination et de motif portent sur les seuls répondants ayant envisagé de partir.",
-            'Afrobarometer — 2024 survey across 24 African countries; comparison to 2016-2018 across 22 countries. Destination and reason shares cover only respondents who had considered leaving.'
-          )}</span>
-          <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-        </a>
+      <div className="px-6 md:px-8 pb-5">
+        <Sources lang={lang} items={[{
+          label: L('Afrobarometer — enquête 2024, 24 pays africains',
+                   'Afrobarometer — 2024 survey, 24 African countries'),
+          url: 'https://www.afrobarometer.org/articles/international-migrants-day-almost-half-of-africans-have-considered-emigrating-afrobarometer-survey-shows/',
+        }]}
+          note={L("Comparaison à 2016-2018 sur 22 pays. Les parts de destination et de motif portent sur les seuls répondants ayant envisagé de partir.",
+                  'Comparison to 2016-2018 across 22 countries. Destination and reason shares cover only respondents who had considered leaving.')} />
       </div>
     </section>
   );
@@ -1266,16 +1263,10 @@ const MobileMoneyRail = ({ lang }) => {
         </div>
       </div>
 
-      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
-        <a href={FINDEX_SOURCE.url} target="_blank" rel="noopener noreferrer"
-           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
-          <span>{L(
-            `${FINDEX_SOURCE.label.fr}. Millésime le plus récent disponible par pays (2021 à 2024 selon les séries). Findex est une enquête par sondage : tous les pays ne sont pas couverts à chaque vague.`,
-            `${FINDEX_SOURCE.label.en}. Most recent available year per country (2021 to 2024 depending on the series). Findex is a sample survey: not every country is covered in every wave.`
-          )}</span>
-          <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-        </a>
+      <div className="px-6 md:px-8 pb-5">
+        <Sources lang={lang} items={[{ label: FINDEX_SOURCE.label[lang], url: FINDEX_SOURCE.url }]}
+          note={L("Millésime le plus récent disponible par pays (2021 à 2024 selon les séries). Findex est une enquête par sondage : tous les pays ne sont pas couverts à chaque vague.",
+                  'Most recent available year per country (2021 to 2024 depending on the series). Findex is a sample survey: not every country is covered in every wave.')} />
       </div>
     </section>
   );
@@ -1690,8 +1681,8 @@ const t = {
       headers: {
         home: {
           badge: "Plateforme de Savoirs & de Données",
-          title: "Objectiver les mobilités",
-          highlight: "par la science des données.",
+          title: "Les mobilités africaines,",
+          highlight: "par les données africaines.",
           desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées.",
           plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
         },
@@ -1992,8 +1983,8 @@ const t = {
       headers: {
         home: {
           badge: "Knowledge & Data Platform",
-          title: "Objectifying mobilities",
-          highlight: "through data science.",
+          title: "African mobility,",
+          highlight: "through African data.",
           desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources.",
           plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
         },
@@ -2889,8 +2880,16 @@ const mapIndicators = [
   },
 ];
 
-const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
+// La carte sert desormais ailleurs que dans l'Explorateur. Plutot que d'en
+// ecrire trois, on lui ajoute un second mode : `indicator.categories` bascule
+// d'une rampe sequentielle a un jeu de categories nommees. Un statut de
+// recensement n'est pas une grandeur — le colorer par degrade mentirait sur
+// la nature de la donnee.
+const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = false }) => {
+  const categoriel = Array.isArray(indicator.categories);
+
   const { buckets, valueOf } = useMemo(() => {
+    if (categoriel) return { buckets: [], valueOf: (id) => (countryById[id] ? indicator.get(countryById[id]) : null) };
     const vals = Object.values(countryById).map(indicator.get).filter(v => Number.isFinite(v)).sort((a, b) => a - b);
     const q = (p) => vals.length ? vals[Math.min(vals.length - 1, Math.floor(p * vals.length))] : 0;
     // quantiles : robuste aux distributions très asymétriques (déplacés internes notamment)
@@ -2899,9 +2898,10 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
       buckets: cuts,
       valueOf: (id) => { const c = countryById[id]; return c ? indicator.get(c) : NaN; },
     };
-  }, [indicator]);
+  }, [indicator, categoriel]);
 
   const colorFor = (v) => {
+    if (categoriel) return indicator.categories.find(c => c.key === v)?.color || CHORO_NODATA;
     if (!Number.isFinite(v)) return CHORO_NODATA;
     let i = 0;
     while (i < buckets.length && v > buckets[i]) i++;
@@ -2909,6 +2909,10 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
   };
 
   const fmt = (v) => {
+    if (categoriel) {
+      const c = indicator.categories.find(x => x.key === v);
+      return c ? c.label[lang] : (lang === 'fr' ? 'donnée indisponible' : 'no data');
+    }
     if (!Number.isFinite(v)) return lang === 'fr' ? 'donnée indisponible' : 'no data';
     return indicator.unit === '' ? formatNumber(v, lang) : `${v}${indicator.unit}`;
   };
@@ -3002,25 +3006,91 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
         )}
       </aside>
 
-      {/* Légende */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 pt-2 border-t border-slate-100">
-        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{indicator.label[lang]}</span>
-        <div className="flex items-center gap-0.5">
-          {CHORO_RAMP.map((c, i) => (
-            <span key={i} className="w-6 h-2.5 rounded-[1px]" style={{ background: c }} />
-          ))}
-        </div>
-        <span className="text-[9px] font-bold text-slate-500">
-          {lang === 'fr' ? 'faible → élevé' : 'low → high'}
+      {/* Légende. Une rampe se lit « faible → élevé » ; des catégories se
+          nomment une par une — les confondre ferait passer un statut pour
+          une grandeur. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 pt-2 border-t border-slate-100 lg:col-span-2">
+        <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--label)' }}>
+          {indicator.label[lang]}
         </span>
-        <span className="flex items-center gap-1">
-          <span className="w-3 h-2.5 rounded-[1px]" style={{ background: CHORO_NODATA }} />
-          <span className="text-[9px] text-slate-400">{lang === 'fr' ? 'sans donnée' : 'no data'}</span>
+        {categoriel ? (
+          indicator.categories.map(c => (
+            <span key={c.key} className="flex items-center gap-1.5">
+              <span className="w-3.5 h-2.5 rounded-[1px] shrink-0" style={{ background: c.color }} />
+              <span className="text-[11px]" style={{ color: 'var(--ink-soft)' }}>{c.label[lang]}</span>
+            </span>
+          ))
+        ) : (
+          <>
+            <span className="flex items-center gap-0.5">
+              {CHORO_RAMP.map((c, i) => (
+                <span key={i} className="w-6 h-2.5 rounded-[1px]" style={{ background: c }} />
+              ))}
+            </span>
+            <span className="text-[11px] font-semibold" style={{ color: 'var(--label)' }}>
+              {L('faible → élevé', 'low → high')}
+            </span>
+          </>
+        )}
+        <span className="flex items-center gap-1.5">
+          <span className="w-3.5 h-2.5 rounded-[1px]" style={{ background: CHORO_NODATA }} />
+          <span className="text-[11px]" style={{ color: 'var(--label)' }}>{L('sans donnée', 'no data')}</span>
         </span>
       </div>
     </div>
   );
 };
+
+// Trois cartes hors Explorateur. Chacune porte l'argument de sa section : ce
+// n'est pas la meme carte repetee, c'est la meme grammaire appliquee a trois
+// questions differentes.
+const CARTE_DEPLACES = {
+  label: { fr: 'Déplacés internes par conflit', en: 'Conflict-displaced people' },
+  unit: '',
+  get: (c) => Number(c.idp_conflict) || NaN,
+};
+
+const CARTE_ANCRAGE = {
+  label: { fr: "Textes de l'Union africaine ratifiés (sur 6)", en: 'African Union instruments ratified (out of 6)' },
+  unit: '/6',
+  get: (c) => {
+    const t = c.au_treaties;
+    if (!t) return NaN;
+    return ['constitutive', 'abuja', 'refugees_1969', 'zlecaf', 'kampala', 'free_movement']
+      .reduce((n, k) => n + (t[k] ? 1 : 0), 0);
+  },
+};
+
+const CARTE_RECENSEMENT = {
+  label: { fr: 'Dernier cycle de recensement', en: 'Latest census round' },
+  unit: '',
+  categories: [
+    { key: 'conducted', color: '#2F5D46', label: { fr: 'Recensé (2015-2024)', en: 'Censused (2015-2024)' } },
+    { key: 'late',      color: '#5A6C9C', label: { fr: 'Recensé après le cycle', en: 'Censused after the round' } },
+    { key: 'started',   color: '#C8892B', label: { fr: 'En cours', en: 'Under way' } },
+    { key: 'planned',   color: '#8A5A16', label: { fr: 'Annoncé', en: 'Announced' } },
+    { key: 'none',      color: '#7A2E2E', label: { fr: 'Aucun recensement prévu', en: 'No census planned' } },
+  ],
+  get: (c) => censusByCountry[(c.iso2 || '').toLowerCase()]?.status2020 || null,
+};
+
+// Une carte posee dans une section : titre, phrase de lecture, carte, sources.
+// Le continent devient un argument, pas une illustration.
+const CarteSection = ({ lang, indicateur, kicker, titre, plain, sources = [] }) => (
+  <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent)' }}>
+    <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
+      <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
+        {kicker}
+      </span>
+      <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{titre}</h3>
+    </div>
+    <div className="px-6 md:px-8 py-6">
+      <EnClair lang={lang} fr={plain.fr} en={plain.en} />
+      <AfricaChoropleth indicator={indicateur} lang={lang} />
+      <Sources items={sources} lang={lang} />
+    </div>
+  </section>
+);
 
 const countryIdIndex = {};
 Object.values(countryData).flat().forEach(c => {
@@ -4157,17 +4227,12 @@ const GovernanceCross = ({ lang }) => {
         </div>
       </div>
 
-      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Sources', 'Sources')}</h4>
-        <a href={IIAG_SOURCE.url} target="_blank" rel="noopener noreferrer"
-           className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
-          <span>{IIAG_SOURCE.label[lang]}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-        </a>
-        <a href="https://www.visaopenness.org/" target="_blank" rel="noopener noreferrer"
-           className="block mt-1 inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
-          <span>{L('BAD & CUA — Africa Visa Openness Index (AVOI)', 'AfDB & AUC — Africa Visa Openness Index (AVOI)')}</span>
-          <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-        </a>
+      <div className="px-6 md:px-8 pb-5">
+        <Sources lang={lang} items={[
+          { label: IIAG_SOURCE.label[lang], url: IIAG_SOURCE.url },
+          { label: L('BAD & CUA — Indice d\'ouverture des visas (AVOI)', 'AfDB & AUC — Africa Visa Openness Index (AVOI)'),
+            url: 'https://www.visaopenness.org/' },
+        ]} />
       </div>
     </section>
   );
@@ -4371,28 +4436,50 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
       </span>
       <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h4>
     </div>
-    <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">{children}</div>
-    {sources.length > 0 && (
-      <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-          {lang === 'fr' ? 'Sources' : 'Sources'}
-        </h4>
-        <ul className="space-y-1.5">
-          {sources.map((src, i) => (
-            <li key={i} className="text-xs leading-snug">
-              {src.url ? (
-                <a href={src.url} target="_blank" rel="noopener noreferrer"
-                   className="inline-flex items-start gap-1.5 hover:underline" style={{ color: 'var(--accent-2)' }}>
-                  <span>{src.label}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-                </a>
-              ) : <span className="text-slate-600">{src.label}</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">
+      {children}
+      <Sources items={sources} lang={lang} />
+    </div>
   </section>
 );
+
+// ---------------------------------------------------------------------------
+// Provenance
+// ---------------------------------------------------------------------------
+// Huit blocs de sources ecrits a la main, chacun en bande teintee de 80 a 145 px,
+// donnaient au site cet air d'encadres poses un peu partout. La provenance doit
+// rester — un chiffre sans sa source ne vaut rien — mais elle se lit comme une
+// legende, pas comme un avertissement. Un seul composant, compact : les sources
+// tiennent sur une ligne, et se deplient quand elles sont nombreuses.
+const Sources = ({ items = [], lang = 'fr', note = null }) => {
+  const [ouvert, setOuvert] = useState(false);
+  if (!items.length && !note) return null;
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const long = items.length > 2;
+  const vus = long && !ouvert ? items.slice(0, 1) : items;
+
+  return (
+    <p className="provenance">
+      <span className="provenance-lbl">{L(items.length > 1 ? 'Sources' : 'Source', items.length > 1 ? 'Sources' : 'Source')}</span>
+      {vus.map((s, i) => (
+        <span key={i} className="provenance-item">
+          {s.url ? (
+            <a href={s.url} target="_blank" rel="noopener noreferrer">
+              {s.label}<ExternalLink className="w-3 h-3 shrink-0" aria-hidden="true" />
+            </a>
+          ) : <span>{s.label}</span>}
+        </span>
+      ))}
+      {long && (
+        <button type="button" className="provenance-plus" aria-expanded={ouvert}
+                onClick={() => setOuvert(o => !o)}>
+          {ouvert ? L('replier', 'collapse') : L(`+ ${items.length - 1} autres`, `+${items.length - 1} more`)}
+        </button>
+      )}
+      {note && <span className="provenance-note">{note}</span>}
+    </p>
+  );
+};
 
 // Repere date/fait : une ligne de chronologie compacte dans un contrepoint.
 const CounterpointFacts = ({ items }) => (
@@ -4522,6 +4609,24 @@ const TabForced = ({ text, lang }) => {
             </div>
           ))}
         </div>
+      </Reveal>
+
+      {/* Le continent d'abord : la masse du deplacement interne se voit d'un
+          coup d'oeil, la ou une liste de chiffres demande un effort. */}
+      <Reveal delay={15}>
+        <CarteSection
+          lang={lang}
+          indicateur={CARTE_DEPLACES}
+          kicker={L('Où sont les déplacés', 'Where the displaced are')}
+          titre={L("Le déplacement se concentre, il ne se répartit pas",
+                   'Displacement concentrates; it does not spread evenly')}
+          plain={{
+            fr: "Chaque pays est teinté selon le nombre de personnes chassées de chez elles par un conflit mais restées dans leur propre pays. Quelques États en portent la plus grande part.",
+            en: 'Each country is shaded by the number of people driven from their homes by conflict but still inside their own country. A handful of states carry most of it.',
+          }}
+          sources={[{ label: L('IDMC — Global Internal Displacement Database', 'IDMC — Global Internal Displacement Database'),
+                      url: 'https://www.internal-displacement.org/database/displacement-data/' }]}
+        />
       </Reveal>
 
       {/* Le cadrage */}
@@ -6487,6 +6592,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   ))}
                 </div>
               </div>
+
+              {/* La meme donnee que la matrice, vue en geographie : la matrice
+                  dit qui a signe quoi, la carte dit ou se trouvent les creux. */}
+              <CarteSection
+                lang={lang}
+                indicateur={CARTE_ANCRAGE}
+                kicker={lang === 'fr' ? "Géographie de l'engagement" : 'Geography of commitment'}
+                titre={lang === 'fr'
+                  ? "Ce que les États ont signé, vu du continent"
+                  : 'What states have signed, seen from the continent'}
+                plain={{
+                  fr: "Chaque pays est teinté selon le nombre de grands textes de l'Union africaine qu'il a officiellement ratifiés, sur six. Plus la teinte est dense, plus l'engagement juridique est complet.",
+                  en: 'Each country is shaded by how many of the African Union’s six major instruments it has formally ratified. The denser the shade, the more complete the legal commitment.',
+                }}
+                sources={[{ label: lang === 'fr'
+                              ? "Union africaine — listes officielles de statut des traités"
+                              : 'African Union — official treaty status lists',
+                            url: 'https://au.int/en/treaties' }]}
+              />
 
               <AnchoringMatrix lang={lang} />
 
@@ -8747,6 +8871,23 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         <LateRound lang={lang} />
       </Reveal>
 
+      {/* La meme information en geographie. Un statut n'est pas une grandeur :
+          la carte est donc categorielle, pas en degrade. */}
+      <Reveal delay={19}>
+        <CarteSection
+          lang={lang}
+          indicateur={CARTE_RECENSEMENT}
+          kicker={L('Qui compte sa population', 'Who counts their population')}
+          titre={L("Le recensement, pays par pays", 'The census, country by country')}
+          plain={{
+            fr: "Chaque pays porte la couleur de son dernier recensement : abouti dans la fenêtre 2015-2024, abouti après elle, en cours, annoncé, ou aucun en vue. Ce n'est pas une quantité, ce sont cinq situations.",
+            en: 'Each country carries the colour of its latest census: completed within the 2015-2024 window, completed after it, under way, announced, or none in sight. This is not a quantity but five situations.',
+          }}
+          sources={[{ label: L("Compilation de l'auteur d'après UNSD et UN DESA, statuts vérifiés en août 2026 sur les instituts nationaux",
+                               "Author's compilation after UNSD and UN DESA; statuses verified in August 2026 against national institutes") }]}
+        />
+      </Reveal>
+
       {/* La norme onusienne : l'etalon contre lequel se mesure la regularite africaine. */}
       <Reveal delay={20}>
         <AfricanCounterpoint
@@ -9965,9 +10106,59 @@ const TabAbout = ({ text, lang, children }) => {
 // 4. COMPOSANT PRINCIPAL (App)
 // ============================================================================
 
+// ---------------------------------------------------------------------------
+// Adressage
+// ---------------------------------------------------------------------------
+// La plateforme vivait entierement sur une seule URL : impossible de partager
+// une fiche pays, de citer une affirmation, d'utiliser precedent/suivant, ou
+// d'etre trouve autrement que par l'accueil. Pour un travail dont l'objet est
+// la preuve citable, c'etait un manque de fond.
+//
+// Pas de bibliotheque de routage : l'API History suffit pour un plan a deux
+// niveaux, et une dependance de plus n'apporterait rien ici. Les segments sont
+// traduits — une URL francaise se lit en francais, ce qui compte autant pour la
+// clarte que pour le referencement.
+const ROUTES = {
+  home:       { fr: 'accueil',      en: 'home' },
+  evidence:   { fr: 'verification', en: 'evidence' },
+  explorer:   { fr: 'pays',         en: 'countries' },
+  forced:     { fr: 'deplacement',  en: 'displacement' },
+  labour:     { fr: 'travail',      en: 'labour' },
+  governance: { fr: 'gouvernance',  en: 'governance' },
+  data:       { fr: 'donnees',      en: 'data' },
+  resources:  { fr: 'ressources',   en: 'resources' },
+  about:      { fr: 'methodologie', en: 'methodology' },
+};
+
+const slugPays = (nom) => String(nom || '')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // on retire les diacritiques
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// URL -> etat. Tolerante : un segment inconnu ramene a l'accueil plutot que
+// d'afficher une page vide.
+const lireURL = () => {
+  const bouts = window.location.pathname.split('/').filter(Boolean);
+  const lang = bouts[0] === 'en' ? 'en' : 'fr';
+  const seg = bouts[1];
+  let tab = 'home';
+  if (seg) {
+    const trouve = Object.entries(ROUTES).find(([, s]) => s.fr === seg || s.en === seg);
+    if (trouve) tab = trouve[0];
+  }
+  return { lang, tab, detail: bouts[2] ? decodeURIComponent(bouts[2]) : null };
+};
+
+const ecrireURL = ({ lang, tab, detail }, remplacer = false) => {
+  const seg = ROUTES[tab]?.[lang] || ROUTES.home[lang];
+  const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
+  if (chemin === window.location.pathname) return;
+  window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
+};
+
 export default function App() {
-  const [lang, setLang] = useState('fr');
-  const [activeTab, setActiveTab] = useState('home');
+  const depart = useRef(lireURL()).current;
+  const [lang, setLang] = useState(depart.lang);
+  const [activeTab, setActiveTab] = useState(depart.tab);
   const [isLoaded, setIsLoaded] = useState(false);
   
   const [activeSubRegion, setActiveSubRegion] = useState('all');
@@ -9984,6 +10175,52 @@ export default function App() {
   const [activeResourceTab, setActiveResourceTab] = useState('library');
 
   useEffect(() => { setIsLoaded(true); }, []);
+
+  // --- Adressage : l'etat ecrit l'URL, l'URL relit l'etat -------------------
+  // Le pays selectionne fait partie de l'adresse : c'est lui qu'on partage ou
+  // qu'on cite. Les autres reglages (vue carte/liste, indicateur) restent hors
+  // URL — ce sont des preferences d'affichage, pas des objets a citer.
+  // Le repere suit la langue de l'adresse : une URL anglaise dit « chad », pas
+  // « tchad ». A la relecture on accepte les deux, pour qu'un lien deja partage
+  // continue de fonctionner apres un changement de langue.
+  const paysSlug = useMemo(() => {
+    if (activeTab !== 'explorer' || activeSubTab === 'perspective') return null;
+    const c = Object.values(countryData).flat().find(x => x.id === activeSubTab);
+    return c ? slugPays(c.name?.[lang] || c.name?.fr || c.name) : null;
+  }, [activeTab, activeSubTab, lang]);
+
+  const paysParSlug = (s) => Object.values(countryData).flat().find(x =>
+    slugPays(x.name?.fr || x.name) === s || slugPays(x.name?.en || x.name) === s);
+
+  useEffect(() => {
+    ecrireURL({ lang, tab: activeTab, detail: paysSlug });
+  }, [lang, activeTab, paysSlug]);
+
+  // Precedent / suivant du navigateur.
+  useEffect(() => {
+    const surRetour = () => {
+      const e = lireURL();
+      setLang(e.lang);
+      setActiveTab(e.tab);
+      if (e.tab === 'explorer') {
+        if (e.detail) {
+          const c = paysParSlug(e.detail);
+          setActiveSubTab(c ? c.id : 'perspective');
+        } else setActiveSubTab('perspective');
+      }
+    };
+    window.addEventListener('popstate', surRetour);
+    return () => window.removeEventListener('popstate', surRetour);
+  }, []);
+
+  // Arrivee par lien profond : on retablit le pays demande.
+  useEffect(() => {
+    if (depart.tab === 'explorer' && depart.detail) {
+      const c = paysParSlug(depart.detail);
+      if (c) setActiveSubTab(c.id);
+    }
+    ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail }, true);
+  }, []);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [activeTab]);
 
@@ -10062,10 +10299,42 @@ export default function App() {
     };
   }, [activeSubTab, activeSubRegion, lang, currentCountries, regionAggregate]);
 
+  // Titre et description suivent l'adresse : c'est ce qui apparait dans un
+  // resultat de recherche, un signet ou un partage. Le titre ne nommait le pays
+  // que dans l'Explorateur ; ailleurs, huit pages portaient le meme.
   useEffect(() => {
-    document.title = `${display.name} | South(s) Mobility DataHub`;
+    // On n'utilise pas `navigation` ici : il est declare plus bas, et la liste
+    // de dependances est evaluee au rendu — la reference leverait une erreur.
+    const NOMS = {
+      home: { fr: 'Accueil', en: 'Home' },
+      evidence: { fr: 'Évaluation des affirmations', en: 'Evidence Check' },
+      explorer: { fr: 'Explorateur', en: 'Data Explorer' },
+      forced: { fr: 'Mobilités contraintes', en: 'Forced mobility' },
+      labour: { fr: 'Migration de travail', en: 'Labour migration' },
+      governance: { fr: 'Gouvernance', en: 'Governance' },
+      data: { fr: 'Données & statistiques', en: 'Data & Statistics' },
+      resources: { fr: 'Ressources', en: 'Resources' },
+      about: { fr: 'Méthodologie & à propos', en: 'Methodology & About' },
+    };
+    const nomSection = NOMS[activeTab]?.[lang];
+    const partie = activeTab === 'explorer' && activeSubTab !== 'perspective'
+      ? display.name
+      : nomSection;
+    document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
     document.documentElement.lang = lang;
-  }, [display, lang]);
+
+    const desc = activeTab === 'explorer' && activeSubTab !== 'perspective'
+      ? (lang === 'fr'
+          ? `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`
+          : `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.`)
+      : (text.headers[activeTab]?.plain
+         || (lang === 'fr'
+             ? "Données vérifiées et en accès libre sur les mobilités africaines."
+             : 'Verified, openly accessible data on African mobility.'));
+    let m = document.querySelector('meta[name="description"]');
+    if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
+    m.content = String(desc).slice(0, 300);
+  }, [display, lang, activeTab, activeSubTab, text]);
 
   const exportIndicatorsCSV = () => {
     let csvContent = "ID,Theme(FR),Theme(EN),Indicator(FR),Indicator(EN),Description(FR),Description(EN)\n";

@@ -1,0 +1,3 @@
+# Toutes les adresses sont servies par l'application : sans cette regle, un lien
+# profond partage (/fr/pays/tchad) renverrait une 404 sur Netlify.
+/*  /index.html  200
