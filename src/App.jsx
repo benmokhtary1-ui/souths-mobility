@@ -7,7 +7,7 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic
+  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic, Type
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
@@ -282,185 +282,115 @@ const Terme = ({ k, lang = 'fr', children }) => {
 };
 
 // ---------------------------------------------------------------------------
-// Sommaire de section
+// Preferences de lecture
 // ---------------------------------------------------------------------------
-// Les sections longues font jusqu'a douze ecrans. L'ascenseur devenait un fil,
-// et rien ne disait ou l'on se trouvait ni combien il restait. Ce sommaire est
-// **deduit du DOM** apres rendu — il lit les titres des blocs au lieu de les
-// repeter dans une liste ecrite a la main, qui se perimerait des le prochain
-// bloc ajoute. Il rend la longueur lisible : dix reperes valent mieux qu'une
-// barre de defilement de trois pixels.
-const SectionNav = ({ lang, tabKey }) => {
-  const [items, setItems] = useState([]);
-  const [active, setActive] = useState(0);
-  const [open, setOpen] = useState(false);
-  const boxRef = useRef(null);
+// « Rendre le site accessible a tout type de cerveau » ne se traite pas en
+// devinant : ce qui aide un lecteur en gene un autre — le fer a gauche soulage
+// la dyslexie mais l'auteur tient a la justification, l'interligne ample aide
+// certains et disperse d'autres. On rend donc la main au lecteur, et on retient
+// son choix. Chaque reglage n'est qu'un attribut sur <html> : le CSS fait le
+// reste, aucun composant du site n'a besoin de les connaitre.
 
-  // La nav principale est collante et sa hauteur varie avec la largeur d'ecran :
-  // on la mesure au lieu de la coder en dur, sinon le sommaire passe dessous.
-  useEffect(() => {
-    const measure = () => {
-      const nav = document.querySelector('nav');
-      if (nav) document.documentElement.style.setProperty('--nav-h', `${Math.round(nav.getBoundingClientRect().height)}px`);
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
+const LECTURE_REGLAGES = [
+  { cle: 'align', defaut: 'justifie',
+    titre: { fr: 'Alignement du texte', en: 'Text alignment' },
+    aide: { fr: "Le fer à gauche supprime les blancs irréguliers entre les mots.",
+            en: 'Ragged-right removes the uneven gaps between words.' },
+    options: [
+      { val: 'justifie', lib: { fr: 'Justifié', en: 'Justified' } },
+      { val: 'fil',      lib: { fr: 'Au fil du texte', en: 'Ragged right' } },
+    ] },
+  { cle: 'air', defaut: 'normal',
+    titre: { fr: 'Espacement', en: 'Spacing' },
+    aide: { fr: "Plus d'air entre les lignes et les lettres.",
+            en: 'More air between lines and letters.' },
+    options: [
+      { val: 'normal', lib: { fr: 'Normal', en: 'Normal' } },
+      { val: 'ample',  lib: { fr: 'Aéré', en: 'Airy' } },
+    ] },
+  { cle: 'corps', defaut: 'normal',
+    titre: { fr: 'Taille du texte', en: 'Text size' },
+    aide: { fr: "Agrandit tout le texte de la page.", en: 'Enlarges all text on the page.' },
+    options: [
+      { val: 'normal', lib: { fr: 'Normale', en: 'Normal' } },
+      { val: 'grand',  lib: { fr: 'Grande', en: 'Large' } },
+    ] },
+  { cle: 'mesure', defaut: 'normale',
+    titre: { fr: 'Largeur des lignes', en: 'Line width' },
+    aide: { fr: "Des lignes plus courtes demandent moins d'allers-retours à l'œil.",
+            en: 'Shorter lines mean fewer eye movements per line.' },
+    options: [
+      { val: 'normale', lib: { fr: 'Normale', en: 'Normal' } },
+      { val: 'courte',  lib: { fr: 'Étroite', en: 'Narrow' } },
+    ] },
+];
 
-  // Collecte : les enfants directs du conteneur d'onglet qui portent un titre.
-  useEffect(() => {
-    setOpen(false);
-    setActive(0);
-    setItems([]);   // sinon le sommaire de l'onglet precedent reste affiche
-    const collect = () => {
-      // Le sommaire vit lui-meme dans <main> : on l'ecarte avant de chercher le
-      // conteneur d'onglet, sinon il se prendrait pour le contenu.
-      const wrap = document.querySelector('#contenu > *:not(.sommaire)');
-      if (!wrap) return setItems([]);
-      const found = [];
-      let n = 0;
-      const push = (el, label) => {
-        if (!el.id) el.id = `repere-${n}`;
-        found.push({ id: el.id, label: label.replace(/\s+/g, ' ').slice(0, 90) });
-        n += 1;
-      };
-
-      [...wrap.children].forEach((el) => {
-        const h = el.getBoundingClientRect().height;
-        if (h < 120) return;
-
-        // Certains onglets ne sont pas decoupes : la Bibliotheque tient dans un
-        // seul bloc de douze ecrans. Quand un bloc depasse une hauteur et demie
-        // d'ecran, on descend chercher ses propres intertitres, sinon le
-        // sommaire ne repererait qu'une seule entree pour toute la section.
-        const seuil = Math.max(1200, window.innerHeight * 1.5);
-        if (h > seuil) {
-          let heads = [...el.querySelectorAll('h3')];
-          if (heads.length < 3) heads = [...el.querySelectorAll('h3, h4')];
-          // On ancre sur l'intertitre lui-meme : remonter vers un « bloc
-          // porteur » faisait converger tous les intertitres sur le meme
-          // ancetre, et le sommaire se reduisait a une entree. Le decalage
-          // applique au defilement suffit a ne pas coller le titre a la nav.
-          let poses = 0;
-          heads.forEach((hd) => {
-            if (hd.getBoundingClientRect().height < 8) return;
-            // textContent, pas innerText : innerText renvoie le texte *rendu*,
-            // donc en capitales pour les intertitres qui portent `uppercase`.
-            // Le sommaire crierait une entree sur deux.
-            const label = hd.textContent?.split('\n')[0]?.trim();
-            if (!label) return;
-            push(hd, label);
-            poses += 1;
-          });
-          if (poses) return;
-        }
-
-        const h2 = el.querySelector('h2, h3, h4');
-        const label = h2?.textContent?.trim();
-        if (label) push(el, label);
-      });
-
-      // Un sommaire doit etre complet, pas trie : j'avais d'abord ecarte les
-      // reperes trop rapproches, en pensant supprimer des etiquettes — la regle
-      // supprimait surtout de vraies parties. Seul reste le filtre qui vaut :
-      // un mot court ne nomme pas une partie (« Source », « Note », « Clé »).
-      const retenus = found.filter(f => !(f.label.split(/\s+/).length < 2 && f.label.length < 14));
-
-      setItems(retenus.length >= 4 ? retenus.slice(0, 24) : []);
-    };
-    // Le contenu arrive avec des animations d'entree echelonnees : on collecte
-    // une premiere fois vite, puis une seconde quand tout s'est pose.
-    const t1 = setTimeout(collect, 350);
-    const t2 = setTimeout(collect, 1200);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [tabKey, lang]);
-
-  // Reperage : le bloc courant est le dernier dont le haut est passe sous la nav.
-  const spyRef = useRef(() => {});
-  useEffect(() => {
-    if (!items.length) return;
-    const spy = () => {
-      const line = 140;
-      let cur = 0;
-      items.forEach((it, i) => {
-        const el = document.getElementById(it.id);
-        if (el && el.getBoundingClientRect().top <= line) cur = i;
-      });
-      setActive(cur);
-    };
-    spyRef.current = spy;
-    // Etranglement par horloge plutot que par requestAnimationFrame : rAF ne
-    // s'execute pas lorsque la page ne peint pas (onglet masque, economie
-    // d'energie), et le reperage resterait alors bloque sur le premier bloc.
-    let last = 0, timer = 0;
-    const run = () => { last = Date.now(); spy(); };
-    const onScroll = () => {
-      const now = Date.now();
-      if (now - last > 80) run();
-      else if (!timer) timer = setTimeout(() => { timer = 0; run(); }, 80);
-    };
-    spy();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { window.removeEventListener('scroll', onScroll); if (timer) clearTimeout(timer); };
-  }, [items]);
+const PrefsLecture = ({ lang }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const [ouvert, setOuvert] = useState(false);
+  const [vals, setVals] = useState(() => {
+    const base = Object.fromEntries(LECTURE_REGLAGES.map(r => [r.cle, r.defaut]));
+    try {
+      const brut = localStorage.getItem('lecture');
+      return brut ? { ...base, ...JSON.parse(brut) } : base;
+    } catch { return base; }
+  });
+  const ref = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
-    const close = (e) => { if (!boxRef.current?.contains(e.target)) setOpen(false); };
-    const esc = (e) => { if (e.key === 'Escape') setOpen(false); };
-    document.addEventListener('mousedown', close);
+    LECTURE_REGLAGES.forEach(r => {
+      document.documentElement.setAttribute(`data-lecture-${r.cle}`, vals[r.cle]);
+    });
+    try { localStorage.setItem('lecture', JSON.stringify(vals)); } catch { /* mode prive */ }
+  }, [vals]);
+
+  useEffect(() => {
+    if (!ouvert) return;
+    const dehors = (e) => { if (!ref.current?.contains(e.target)) setOuvert(false); };
+    const esc = (e) => { if (e.key === 'Escape') setOuvert(false); };
+    document.addEventListener('mousedown', dehors);
     document.addEventListener('keydown', esc);
-    return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', esc); };
-  }, [open]);
+    return () => { document.removeEventListener('mousedown', dehors); document.removeEventListener('keydown', esc); };
+  }, [ouvert]);
 
-  if (!items.length) return null;
-  const go = (id) => {
-    setOpen(false);
-    const el = document.getElementById(id);
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - 120;
-    window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-  };
+  const modifies = LECTURE_REGLAGES.filter(r => vals[r.cle] !== r.defaut).length;
 
   return (
-    <div className="sommaire" ref={boxRef}>
-      <button
-        type="button"
-        className="sommaire-bar"
-        aria-expanded={open}
-        /* On recalcule a l'ouverture : si un evenement de defilement s'est perdu
-           (onglet en arriere-plan, defilement programmatique), la liste montre
-           tout de meme le bon bloc courant. */
-        onClick={() => { spyRef.current(); setOpen((o) => !o); }}
-      >
-        <span className="sommaire-compte">
-          <span className="num">{active + 1}</span>
-          <span className="sommaire-sur">/{items.length}</span>
-        </span>
-        <span className="sommaire-titre">{items[active]?.label}</span>
-        <span className="sommaire-verbe">{lang === 'fr' ? 'Sommaire' : 'Contents'}</span>
-        <ChevronDown className={`w-3.5 h-3.5 shrink-0 sommaire-chev ${open ? 'is-open' : ''}`} aria-hidden="true" />
+    <div className="prefs" ref={ref}>
+      <button type="button" className="prefs-btn" aria-expanded={ouvert}
+              onClick={() => setOuvert(o => !o)}>
+        <Type className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        <span>{L('Lecture', 'Reading')}</span>
+        {modifies > 0 && <span className="prefs-pastille" aria-hidden="true">{modifies}</span>}
       </button>
-      <span className="sommaire-jauge" aria-hidden="true">
-        <span style={{ width: `${((active + 1) / items.length) * 100}%` }} />
-      </span>
-      {open && (
-        <ol className="sommaire-liste">
-          {items.map((it, i) => (
-            <li key={it.id}>
-              <button
-                type="button"
-                onClick={() => go(it.id)}
-                aria-current={i === active ? 'true' : undefined}
-                className="sommaire-item"
-              >
-                <span className="sommaire-item-n num">{i + 1}</span>
-                <span className="sommaire-item-t">{it.label}</span>
-              </button>
-            </li>
+
+      {ouvert && (
+        <div className="prefs-panneau" role="group"
+             aria-label={L('Préférences de lecture', 'Reading preferences')}>
+          <p className="prefs-intro">
+            {L("Réglez la page comme vous la lisez le mieux. Le choix est retenu.",
+               'Set the page the way you read best. Your choice is remembered.')}
+          </p>
+          {LECTURE_REGLAGES.map(r => (
+            <fieldset key={r.cle} className="prefs-champ">
+              <legend className="prefs-titre">{r.titre[lang]}</legend>
+              <div className="prefs-choix">
+                {r.options.map(o => (
+                  <button key={o.val} type="button"
+                          aria-pressed={vals[r.cle] === o.val}
+                          onClick={() => setVals(v => ({ ...v, [r.cle]: o.val }))}>
+                    {o.lib[lang]}
+                  </button>
+                ))}
+              </div>
+              <p className="prefs-aide">{r.aide[lang]}</p>
+            </fieldset>
           ))}
-        </ol>
+          <button type="button" className="prefs-reset"
+                  onClick={() => setVals(Object.fromEntries(LECTURE_REGLAGES.map(r => [r.cle, r.defaut])))}>
+            {L('Tout remettre par défaut', 'Reset everything')}
+          </button>
+        </div>
       )}
     </div>
   );
@@ -543,7 +473,8 @@ const CountUp = ({ value, duration = 1100, className = '' }) => {
       return;
     }
     let raf;
-    let done = false;
+    let done = false;      // l'animation a demarre
+    let arrive = false;    // l'animation est allee jusqu'au bout
     const run = () => {
       if (done) return;
       done = true;
@@ -554,6 +485,7 @@ const CountUp = ({ value, duration = 1100, className = '' }) => {
         const eased = 1 - Math.pow(1 - t, 3);
         setDisplay(Math.round(value * eased));
         if (t < 1) raf = requestAnimationFrame(tick);
+        else arrive = true;
       };
       raf = requestAnimationFrame(tick);
     };
@@ -562,8 +494,14 @@ const CountUp = ({ value, duration = 1100, className = '' }) => {
       { threshold: 0.3 }
     );
     io.observe(el);
-    // Filet de sécurité : garantit que le chiffre final s'affiche même sans déclenchement.
-    const failsafe = setTimeout(() => { if (!done) { done = true; io.disconnect(); setDisplay(value); } }, 1400);
+    // Filet de securite : il doit garantir la VALEUR FINALE, pas seulement le
+    // demarrage. L'ancienne version ne s'activait que si l'animation n'avait pas
+    // commence ; or requestAnimationFrame ne tourne pas dans un onglet en
+    // arriere-plan. L'animation demarrait, n'avancait jamais, et le chiffre de
+    // une restait bloque a zero — c'est ce que montrait le premier ecran.
+    const failsafe = setTimeout(() => {
+      if (!arrive) { done = true; io.disconnect(); if (raf) cancelAnimationFrame(raf); setDisplay(value); }
+    }, 1400);
     return () => { io.disconnect(); clearTimeout(failsafe); if (raf) cancelAnimationFrame(raf); };
   }, [value, duration]);
 
@@ -1137,8 +1075,8 @@ const CensusRhythm = ({ lang }) => {
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
         <p className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }}>
           {L(
-            `Calcul effectué sur la compilation de l'auteur (d'après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D'abord, une date annoncée n'est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s'ils avaient eu lieu, ont été retirés lors de l'audit d'août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n'est pas comptabilisée : mesurer la régularité d'un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l'administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l'Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l'auteur et n'est pas recalculée ici. Les dénominateurs varient donc d'un pays à l'autre — c'est précisément ce que ce calcul rend visible.`,
-            `Computed from the author's compilation (after UNSD / UN DESA), which records the date of every national operation from the 1970 to the 2030 round. Two rules remove an operation from the calculation. First, an announced date is not data: censuses scheduled and then postponed, long carried in the base as though they had happened, were removed in the August 2026 audit. Second, an operation conducted on a territory not yet independent, or by a third state, is flagged in that country's timeline but not counted: measuring a state's regularity from a colonial enumeration would credit it with the rhythm of the power that administered it. Those ${data.exclus} pre-independence operations are therefore visible and uncounted — the timelines for Angola, Namibia and Mozambique carry them plainly. The coverage-by-round row above remains the author's published figure and is not recomputed here. Denominators therefore vary between countries — which is precisely what this calculation makes visible.`
+            `Calcul effectué sur la compilation de l'auteur (d'après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D'abord, une date annoncée n'est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s'ils avaient eu lieu, ont été retirés lors de l'audit d'août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n'est pas comptabilisée. Mesurer la régularité d'un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l'administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l'Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l'auteur et n'est pas recalculée ici. Les dénominateurs varient donc d'un pays à l'autre — c'est précisément ce que ce calcul rend visible.`,
+            `Computed from the author's compilation (after UNSD / UN DESA), which records the date of every national operation from the 1970 to the 2030 round. Two rules remove an operation from the calculation. First, an announced date is not data: censuses scheduled and then postponed, long carried in the base as though they had happened, were removed in the August 2026 audit. Second, an operation conducted on a territory not yet independent, or by a third state, is flagged in that country's timeline but not counted. Measuring a state's regularity from a colonial enumeration would credit it with the rhythm of the power that administered it. Those ${data.exclus} pre-independence operations are therefore visible and uncounted — the timelines for Angola, Namibia and Mozambique carry them plainly. The coverage-by-round row above remains the author's published figure and is not recomputed here. Denominators therefore vary between countries — which is precisely what this calculation makes visible.`
           )}
         </p>
       </div>
@@ -1180,8 +1118,8 @@ const LateRound = ({ lang }) => {
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
         <p className="text-justify">
           {L(
-            `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, sur les instituts nationaux, donne un résultat que la lecture par cycle rendait invisible : six de ces opérations ont bien eu lieu — mais ${rows.length} d'entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n'apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
-            `Nine states still appeared on this platform as "census planned" or "under way", all for dates now past. Checking each against its national institute yields a result the round-by-round reading made invisible: six of those operations did take place — but ${rows.length} of them were completed after the 2020 round closed on 31 December 2024. None therefore counts toward the round's coverage rate, even though the census exists, households were enumerated and results are being published.`
+            `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, auprès des instituts nationaux, donne un résultat que la lecture par cycle rendait invisible. Six de ces opérations ont bien eu lieu. Mais ${rows.length} d'entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n'apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
+            `Nine states still appeared on this platform as "census planned" or "under way", all for dates now past. Checking each against its national institute yields a result the round-by-round reading made invisible. Six of those operations did take place. But ${rows.length} of them were completed after the 2020 round closed on 31 December 2024. None therefore counts toward the round's coverage rate, even though the census exists, households were enumerated and results are being published.`
           )}
         </p>
 
@@ -1266,8 +1204,8 @@ const MobileMoneyRail = ({ lang }) => {
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
         <p className="text-justify">
           {L(
-            "Cette plateforme donnait jusqu'ici le volume des transferts de la diaspora sans dire par où ils passent. La question n'est pas secondaire : dans une bonne partie du continent, l'inclusion financière n'est pas bancaire, elle est mobile. Là où le compte existe, il est très majoritairement un compte de téléphone.",
-            'Until now this platform gave the volume of diaspora remittances without saying how they travel. The question is not secondary: across much of the continent, financial inclusion is not banking, it is mobile. Where an account exists, it is overwhelmingly a phone account.'
+            "Cette plateforme donnait jusqu'ici le volume des transferts de la diaspora sans dire par où ils passent. La question n'est pas secondaire : dans une bonne partie du continent, l'inclusion financière passe par le téléphone bien avant de passer par la banque. Là où le compte existe, il est très majoritairement un compte de téléphone.",
+            'Until now this platform gave the volume of diaspora remittances without saying how they travel. The question is not secondary: across much of the continent, financial inclusion runs through the phone long before it runs through a bank. Where an account exists, it is overwhelmingly a phone account.'
           )}
         </p>
 
@@ -1820,9 +1758,9 @@ const t = {
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial (82,2 millions recensés dans 104 pays) — davantage que le nombre de migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière : elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord, et disparaît de ce fait des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Mais pour les notions juridiques et normatives, c'est l'instrument africain qui fait référence : le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève, et la personne déplacée interne à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains ne sont pas de simples récepteurs passifs des agendas migratoires du Nord, mais des acteurs qui négocient, retournent et instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie systématiquement la proportion à la valeur absolue, la comparaison à l'anecdote, et l'architecture institutionnelle africaine (Union africaine, Communautés économiques régionales) aux seuls cadres normatifs venus du Nord — sans nier les asymétries de pouvoir et de financement qui structurent concrètement ce régime (Bakewell, 2008 ; Bayart, 2000).",
-        p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. Ce n'est donc pas la production normative qui fait défaut, mais son ancrage dans les administrations nationales.",
+        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient, retournent et instrumentalisent les agendas migratoires du Nord, loin d'en être de simples récepteurs la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord, sans nier pour autant les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
+        p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
         p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance (Ben Mokhtar, 2026). Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
         p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être : elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public — en assumant que le choix de ce qui est mis en avant, et de l'échelle à laquelle on le rapporte, constitue déjà un geste analytique et non le simple reflet des données.",
@@ -2120,11 +2058,11 @@ const t = {
         badge: "Scientific Framing Note",
         title: "Why this Knowledge Hub?",
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts only about 29 million international migrants on its soil, or 9.5% of the world stock: far behind Europe and Asia, and well below the continent's demographic weight (close to 18% of the world's population). This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
-        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent is not international but internal. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people — roughly 46% of the global total (82.2 million recorded across 104 countries), and more than the number of international migrants present across the entire continent (IDMC). In other words, Africa's largest form of mobility crosses no border at all: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
+        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people — roughly 46% of the global total (82.2 million recorded across 104 countries), and more than the number of international migrants present across the entire continent (IDMC). In other words, Africa's largest form of mobility crosses no border at all: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA's operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
-        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states are not mere passive recipients of Northern migration agendas, but actors who negotiate, redirect, and instrumentalize migration cooperation to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
+        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
-        p3b: "This architecture produces a paradox the platform documents with figures. Africa is not lagging behind the norm: it has at times moved ahead of it, adopting with the Kampala Convention (2009) the world's first — and still only — binding regional treaty on internally displaced persons. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What is lacking, then, is not normative production but its anchoring in national administrations.",
+        p3b: "This architecture produces a paradox the platform documents with figures. Africa is not lagging behind the norm: it has at times moved ahead of it, adopting with the Kampala Convention (2009) the world's first — and still only — binding regional treaty on internally displaced persons. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
         p5: "This framing owes, finally, to fieldwork: participant observation conducted between 2023 and 2025 within the African Migration Observatory (Rabat), documented in the Governance section (Ben Mokhtar, 2026). It gives access to the regime's ordinary bureaucratic fabric — workshops, budgetary trade-offs, validation circuits — where normative frameworks, examined alone, show only their façade.",
         p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material — while accepting that the choice of what is foregrounded, and of the scale against which it is measured, is already an analytical act rather than a neutral reflection of the data.",
@@ -2975,28 +2913,94 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect }) => {
     return indicator.unit === '' ? formatNumber(v, lang) : `${v}${indicator.unit}`;
   };
 
+  // Le survol ne montrait rien et le clic ne faisait que selectionner en
+  // silence : de l'exterieur, la carte paraissait morte. Elle repond desormais
+  // immediatement, au doigt comme au clavier, et affiche a cote ce qu'elle sait
+  // du pays pointe. On ne s'appuie plus sur l'infobulle native du navigateur,
+  // qui se fait attendre une seconde et n'existe ni au toucher ni au clavier.
+  const [survole, setSurvole] = useState(null);
+  const lu = survole || selectedId;
+  const paysLu = lu ? countryById[lu] : null;
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+
+  const releve = paysLu ? [
+    { l: indicator.label[lang], v: fmt(valueOf(lu)), fort: true },
+    { l: L('Migrants internationaux', 'International migrants'), v: formatNumber(paysLu.stock, lang) },
+    { l: L('Ouverture des visas', 'Visa openness'), v: paysLu.avoi == null ? '—' : `${paysLu.avoi}/100` },
+    { l: L('Rétention Sud-Sud', 'South-South retention'), v: paysLu.retention == null ? '—' : `${paysLu.retention} %` },
+  ] : [];
+
   return (
-    <div>
-      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[34rem] block" role="img"
-           aria-label={lang === 'fr' ? `Carte de l'Afrique — ${indicator.label.fr}` : `Map of Africa — ${indicator.label.en}`}>
+    <div className="grid lg:grid-cols-[1fr_15rem] gap-4 items-start">
+      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[34rem] block"
+           aria-label={L(`Carte de l'Afrique — ${indicator.label.fr}. Chaque pays est sélectionnable.`,
+                         `Map of Africa — ${indicator.label.en}. Each country is selectable.`)}
+           onMouseLeave={() => setSurvole(null)}>
         {Object.entries(africaCountryPaths).map(([id, d]) => {
           const v = valueOf(id);
           const isSel = selectedId === id;
+          const isLu = lu === id;
+          const nom = countryById[id]?.name?.[lang] || id;
           return (
             <path
               key={id}
               d={d}
               fill={colorFor(v)}
-              stroke={isSel ? '#14161C' : '#F7F6F2'}
-              strokeWidth={isSel ? 2.6 : 0.7}
-              className="cursor-pointer"
+              stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#F7F6F2'}
+              strokeWidth={isSel ? 2.6 : isLu ? 2 : 0.7}
+              className="cursor-pointer choro-pays"
+              tabIndex={0}
+              role="button"
+              aria-label={`${nom} — ${fmt(v)}`}
+              onMouseEnter={() => setSurvole(id)}
+              onFocus={() => setSurvole(id)}
+              onBlur={() => setSurvole(null)}
               onClick={() => onSelect && onSelect(id)}
-            >
-              <title>{`${countryById[id]?.name?.[lang] || ''} — ${fmt(v)}`}</title>
-            </path>
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect && onSelect(id); }
+              }}
+            />
           );
         })}
       </svg>
+
+      {/* Relevé : ce que la carte sait du pays pointé, sans attendre ni cliquer. */}
+      <aside className="border p-4" style={{ borderColor: 'var(--rule)', backgroundColor: 'var(--paper-raised)' }}
+             aria-live="polite">
+        {paysLu ? (
+          <>
+            <h4 className="font-serif font-bold text-lg leading-tight text-slate-900">
+              {paysLu.name?.[lang] || ''}
+            </h4>
+            <dl className="mt-3 space-y-2.5">
+              {releve.map((r, i) => (
+                <div key={i}>
+                  <dt className="text-[11px] leading-snug" style={{ color: 'var(--label)' }}>{r.l}</dt>
+                  <dd className={`font-serif font-bold tabular-nums leading-none ${r.fort ? 'text-xl' : 'text-[15px]'}`}
+                      style={{ color: r.fort ? 'var(--accent-deep)' : 'var(--ink)' }}>
+                    {r.v}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            {onSelect && (
+              <p className="text-[11px] mt-3.5 pt-3 border-t leading-snug"
+                 style={{ borderColor: 'var(--rule)', color: 'var(--label)' }}>
+                {selectedId === lu
+                  ? L('Pays sélectionné. Son profil complet est affiché ci-dessous.',
+                      'Country selected. Its full profile appears below.')
+                  : L('Cliquez le pays pour ouvrir son profil complet.',
+                      'Click the country to open its full profile.')}
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="text-[13px] leading-relaxed" style={{ color: 'var(--label)' }}>
+            {L('Survolez un pays — ou parcourez la carte au clavier — pour lire ses chiffres ici.',
+               'Hover a country — or move through the map with the keyboard — to read its figures here.')}
+          </p>
+        )}
+      </aside>
 
       {/* Légende */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 pt-2 border-t border-slate-100">
@@ -3283,12 +3287,25 @@ const TabHome = ({ text, lang, setActiveTab }) => {
     Object.values(countryData).flat().reduce((n, c) => n + (Number(c.idp_conflict) || 0), 0) / 1e6
   );
 
+  // Le premier ecran d'un nouveau venu n'affichait que des nombres nus, sous des
+  // libelles de neuf pixels en gris. Chaque tuile dit maintenant ce qu'elle
+  // compte, et ce qui se passe si on clique — ce sont des portes, pas un decor.
   const statTiles = [
-    { value: totalCountries, label: { fr: "Pays Couverts", en: "Countries Covered" }, tab: 'explorer' },
-    { value: totalRegions, label: { fr: "Sous-Régions (UA)", en: "Sub-Regions (AU)" }, tab: 'explorer' },
-    { value: totalEvidence, label: { fr: "Affirmations Vérifiées", en: "Claims Fact-Checked" }, tab: 'evidence' },
-    { value: totalLibrary, label: { fr: "Sources Documentaires", en: "Documentary Sources" }, tab: 'resources' },
-    { value: totalDisplaced, label: { fr: "Millions de déplacés internes", en: "Million internally displaced" }, tab: 'forced' },
+    { value: totalCountries, unit: null,
+      label: { fr: "pays d'Afrique couverts", en: 'African countries covered' },
+      door: { fr: "Ouvrir l'explorateur", en: 'Open the explorer' }, tab: 'explorer' },
+    { value: totalRegions, unit: null,
+      label: { fr: "régions découpées par l'Union africaine", en: 'regions as defined by the African Union' },
+      door: { fr: 'Voir les régions', en: 'See the regions' }, tab: 'explorer' },
+    { value: totalEvidence, unit: null,
+      label: { fr: "affirmations passées au crible des sources", en: 'claims checked against the sources' },
+      door: { fr: 'Vérifier une affirmation', en: 'Check a claim' }, tab: 'evidence' },
+    { value: totalLibrary, unit: null,
+      label: { fr: "rapports et bases de données consultables", en: 'reports and datasets you can consult' },
+      door: { fr: 'Ouvrir la bibliothèque', en: 'Open the library' }, tab: 'resources' },
+    { value: totalDisplaced, unit: { fr: 'millions', en: 'million' },
+      label: { fr: "de personnes déplacées dans leur propre pays", en: 'people displaced inside their own country' },
+      door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'forced' },
   ];
 
   const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p5, text.home_editorial.p4]
@@ -3316,7 +3333,8 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             <button
               key={idx}
               onClick={() => setActiveTab(stat.tab)}
-              className="relative overflow-hidden px-5 py-6 text-left group"
+              aria-label={`${stat.value} ${stat.unit ? stat.unit[lang] + ' ' : ''}${stat.label[lang]} — ${stat.door[lang]}`}
+              className="relative overflow-hidden px-5 py-6 text-left group flex flex-col"
             >
               <span
                 className="absolute left-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
@@ -3324,9 +3342,23 @@ const TabHome = ({ text, lang, setActiveTab }) => {
               />
               <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
                 <CountUp value={stat.value} />
+                  {/* L'espace est dans le texte, pas seulement dans la marge :
+                      sans lui, un copier-coller donne « 29millions ». */}
+                {stat.unit && (
+                  <span className="text-lg font-semibold" style={{ color: 'var(--label)' }}>
+                    {' '}{stat.unit[lang]}
+                  </span>
+                )}
               </div>
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block transition-colors">
+              {/* Ce que compte le chiffre : c'est cette ligne qui porte le sens. */}
+              <span className="block mt-2 text-[13px] leading-snug text-slate-700 flex-1">
                 {stat.label[lang]}
+              </span>
+              {/* Ce que fait le clic : rien ne disait que ces tuiles menaient quelque part. */}
+              <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold group-hover:gap-2 transition-[gap]"
+                    style={{ color: 'var(--accent)' }}>
+                {stat.door[lang]}
+                <ArrowRight className="w-3 h-3 shrink-0" aria-hidden="true" />
               </span>
             </button>
           ))}
@@ -4524,8 +4556,8 @@ const TabForced = ({ text, lang }) => {
             {
               t: L('Apatride', 'Stateless person'), inst: L('Convention de 1954 ; Déclaration d\'Abidjan (2015)', '1954 Convention; Abidjan Declaration (2015)'),
               accent: 'var(--bad)', wash: 'wash-terra',
-              d: L("N'est reconnu comme ressortissant par aucun État. L'apatridie n'est pas un déplacement mais une condition qui prive de l'accès aux droits, aux documents de voyage et souvent à la mobilité régulière elle-même. Elle se transmet et se reproduit d'une génération à l'autre.",
-                   'Recognised as a national by no state. Statelessness is not a displacement but a condition that denies access to rights, travel documents and often regular mobility itself. It is transmitted and reproduced across generations.'),
+              d: L("N'est reconnu comme ressortissant par aucun État. L'apatridie est une condition, distincte du déplacement, qui prive de l'accès aux droits, aux documents de voyage et souvent à la mobilité régulière elle-même. Elle se transmet et se reproduit d'une génération à l'autre.",
+                   'Recognised as a national by no state. Statelessness is a condition, distinct from displacement, that denies access to rights, travel documents and often regular mobility itself. It is transmitted and reproduced across generations.'),
             },
           ].map((p, i) => (
             <article key={i} className="border border-slate-200 bg-white lift">
@@ -4651,8 +4683,8 @@ const TabForced = ({ text, lang }) => {
           </h2>
           <p className="text-sm leading-relaxed text-justify max-w-4xl" style={{ color: 'var(--ink-soft)' }}>
             {L(
-              `Le rapprochement des deux instruments africains de protection donne un résultat que ni l'un ni l'autre ne fait apparaître séparément : ${data.refOnly.length} États ont ratifié la Convention de l'OUA de 1969 sans ratifier celle de Kampala. Ils s'engagent donc à protéger la personne venue d'ailleurs, mais pas celle que leur propre territoire déplace — alors même que la seconde population est, à l'échelle du continent, plusieurs fois plus nombreuse. Ce n'est pas une lacune de production normative : le traité existe, il est africain, il est contraignant, et il attend ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`,
-              `Bringing the two African protection instruments together yields a result neither shows on its own: ${data.refOnly.length} states have ratified the 1969 OAU Convention without ratifying Kampala. They commit to protecting the person arriving from elsewhere, but not the one their own territory displaces — even though the latter population is, continent-wide, several times larger. This is not a failure of norm production: the treaty exists, it is African, it is binding, and it is waiting on ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`
+              `Le rapprochement des deux instruments africains de protection donne un résultat que ni l'un ni l'autre ne fait apparaître séparément : ${data.refOnly.length} États ont ratifié la Convention de l'OUA de 1969 sans ratifier celle de Kampala. Ils s'engagent donc à protéger la personne venue d'ailleurs, mais pas celle que leur propre territoire déplace — alors même que la seconde population est, à l'échelle du continent, plusieurs fois plus nombreuse. La production normative a fait son oeuvre : le traité existe, il est africain, il est contraignant, et il attend ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`,
+              `Bringing the two African protection instruments together yields a result neither shows on its own: ${data.refOnly.length} states have ratified the 1969 OAU Convention without ratifying Kampala. They commit to protecting the person arriving from elsewhere, but not the one their own territory displaces — even though the latter population is, continent-wide, several times larger. Norm production has done its part: the treaty exists, it is African, it is binding, and it is waiting on ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`
             )}
           </p>
           <p className="text-[11px] mt-4 leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
@@ -4834,8 +4866,8 @@ const TabLabour = ({ text, lang }) => {
             </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
-                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Ce n'est pas une erreur, c'est une révision — méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
-                "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is not an error but a revision — refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
+                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Il s'agit d'une révision : méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
+                "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is a revision: refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
               )}
             </p>
           </div>
@@ -4847,7 +4879,7 @@ const TabLabour = ({ text, lang }) => {
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
                 "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
-                "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit is therefore not in producing raw data but in the reporting and harmonisation chain (Ben Mokhtar, 2026)."
+                "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit therefore sits in the reporting and harmonisation chain rather than in producing raw data (Ben Mokhtar, 2026)."
               )}
             </p>
           </div>
@@ -4900,8 +4932,8 @@ const TabLabour = ({ text, lang }) => {
           <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
             <p className="text-justify">
               {L(
-                "Un travailleur migrant ne tire pas ses droits du nombre de conventions que son pays d'accueil a signées en général, mais de celles qui posent le socle : les onze conventions fondamentales de l'OIT — liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Le compte, pays par pays, donne un résultat net.",
-                "A migrant worker draws rights not from how many conventions their host country has signed overall, but from those that set the floor: the ILO's eleven fundamental conventions — freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. Counted country by country, the result is stark."
+                "Onze conventions de l'OIT posent le socle des droits d'un travailleur migrant : liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont celles-là qui comptent, bien plus que le nombre total de textes signés par le pays d'accueil. Le compte, pays par pays, donne un résultat net.",
+                "Eleven ILO conventions set the floor of a migrant worker's rights: freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. Those are what count, far more than the total number of texts the host country has signed. Counted country by country, the result is stark."
               )}
             </p>
 
@@ -6046,8 +6078,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             >
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Adopté en 2015, l'Agenda 2063 n'est pas la déclinaison régionale de l'Agenda 2030 : il a son calendrier propre, cinquante ans, et sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares."
-                  : "Adopted in 2015, Agenda 2063 is not a regional translation of Agenda 2030: it has its own fifty-year horizon, and its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects."}
+                  ? "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares."
+                  : "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects."}
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
@@ -6278,8 +6310,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique ne construit pas un cadre parallèle, elle occupe celui qui se négocie, en y inscrivant ses propres priorités. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations : revue régionale africaine de la mise en œuvre du GCM en 2021, plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
-                  : "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa is not building a parallel framework, it is occupying the one being negotiated and writing its priorities into it. What follows is legible in bureaucratic machinery rather than declarations: the Africa regional review of GCM implementation in 2021, a continental action plan validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025."}
+                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d'en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations : revue régionale africaine de la mise en œuvre du GCM en 2021, plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
+                  : "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa occupies the framework being negotiated and writes its priorities into it, instead of building one alongside. What follows is legible in bureaucratic machinery rather than declarations: the Africa regional review of GCM implementation in 2021, a continental action plan validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025."}
               </p>
             </AfricanCounterpoint>
           </div>
@@ -8056,7 +8088,7 @@ const glossaryData = [
       {
         term: "Communs migratoires vernaculaires",
         en_term: "Vernacular migration commons",
-        fr: "Arrangements collectifs non étatiques qui organisent concrètement la circulation — réseaux d'hébergement, caisses d'entraide, savoirs de route, régulations de corridor — et qui préexistent souvent aux dispositifs publics ou en comblent les vides. Les penser comme des communs, plutôt que comme du désordre, change la question : non pas comment les supprimer, mais comment les reconnaître (Ben Mokhtar, 2026).",
+        fr: "Arrangements collectifs non étatiques qui organisent concrètement la circulation — réseaux d'hébergement, caisses d'entraide, savoirs de route, régulations de corridor — et qui préexistent souvent aux dispositifs publics ou en comblent les vides. Les penser comme des communs, plutôt que comme du désordre, déplace la question vers celle de leur reconnaissance (Ben Mokhtar, 2026).",
         en: "Non-state collective arrangements that concretely organise movement — accommodation networks, mutual-aid funds, route knowledge, corridor regulation — which often predate public schemes or fill their gaps. Thinking of them as commons rather than as disorder changes the question: not how to suppress them, but how to recognise them (Ben Mokhtar, 2026).",
         source: { fr: "Cadre des communs (Ostrom), appliqué aux corridors africains (Ben Mokhtar, 2026)", en: "Commons framework (Ostrom), applied to African corridors (Ben Mokhtar, 2026)" }
       },
@@ -8489,8 +8521,8 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
           <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs text-amber-900 leading-relaxed text-justify">
             {lang === 'fr'
-              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle ne décrit pas une réalité déjà mesurée à l'échelle continentale : elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants (stocks migratoires, index sécuritaires, cibles ODD), pour objectiver des dimensions structurellement sous-documentées des mobilités africaines — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
-              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It does not describe a reality already measured at continental scale: it proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks (migrant stocks, security indices, SDG targets), to objectify structurally under-documented dimensions of African mobility — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
+              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Ils visent des dimensions structurellement sous-documentées des mobilités africaines, qu'aucune mesure continentale ne couvre encore — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
+              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. They target structurally under-documented dimensions of African mobility, none of which any continental measure yet covers — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
           </p>
         </div>
 
@@ -8882,8 +8914,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                "The 2030 round has only just opened (2025–2034 window): its bar measures progress, not shortfall.")}
           </p>
           <p className="text-[10px] text-slate-500 italic mt-1.5 leading-relaxed text-justify">
-            {L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, actualisée en 2026 pour les recensements aboutis depuis (Angola, Maroc, Tunisie, Ouganda), puis complétée en août 2026 par un audit des statuts encore ouverts : la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024) rejoignent le cycle 2020, qui passe de 29 à 35 États.",
-               "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, updated in 2026 for censuses completed since (Angola, Morocco, Tunisia, Uganda), then completed in August 2026 by an audit of the statuses still open: The Gambia (May 2024) and São Tomé and Príncipe (November 2024) join the 2020 round, which moves from 29 to 35 states.")}
+            {L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, puis actualisée en 2026 pour les recensements aboutis depuis : Angola, Maroc, Tunisie, Ouganda. Un audit des statuts encore ouverts, en août 2026, y a ajouté la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024). Le cycle 2020 passe ainsi de 29 à 35 États.",
+               "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, then updated in 2026 for censuses completed since: Angola, Morocco, Tunisia, Uganda. An audit of the statuses still open, in August 2026, added The Gambia (May 2024) and São Tomé and Príncipe (November 2024). The 2020 round thus moves from 29 to 35 states.")}
           </p>
         </div>
 
@@ -8971,8 +9003,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         >
           <p className="text-justify">
             {L(
-              "Adoptée à Kampala en juillet 2010 par la Conférence des chefs d'État et de gouvernement de l'Union africaine, la Stratégie pour l'harmonisation des statistiques en Afrique porte sur ce qui précède le chiffre : les concepts et les définitions, l'adaptation des bonnes pratiques internationales, et l'usage de méthodologies communes de production et de diffusion. Elle est aujourd'hui dans sa deuxième phase, SHaSA 2, qui court de 2017 à 2026.",
-              "Adopted in Kampala in July 2010 by the African Union Assembly of Heads of State and Government, the Strategy for the Harmonization of Statistics in Africa addresses what comes before the figure: concepts and definitions, the adaptation of international good practice, and the use of common methodologies for producing and disseminating statistics. It is now in its second phase, SHaSA 2, running from 2017 to 2026."
+              "La Conférence des chefs d'État et de gouvernement de l'Union africaine adopte à Kampala, en juillet 2010, la Stratégie pour l'harmonisation des statistiques en Afrique. Elle porte sur ce qui précède le chiffre : les concepts et les définitions, l'adaptation des bonnes pratiques internationales, et l'usage de méthodologies communes de production et de diffusion. Elle est aujourd'hui dans sa deuxième phase, SHaSA 2, qui court de 2017 à 2026.",
+              "The African Union Assembly of Heads of State and Government adopted the Strategy for the Harmonization of Statistics in Africa in Kampala, in July 2010. It addresses what comes before the figure: concepts and definitions, the adaptation of international good practice, and the use of common methodologies for producing and disseminating statistics. It is now in its second phase, SHaSA 2, running from 2017 to 2026."
             )}
           </p>
 
@@ -9004,8 +9036,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
 
           <p className="text-justify">
             {L(
-              "L'ordre de ces thèmes n'est pas anodin. La production vient d'abord, la coordination ensuite, la capacité institutionnelle en troisième — c'est-à-dire que le problème identifié par les États africains eux-mêmes n'est pas de collecter davantage, mais de rendre comparable ce qui est déjà collecté. Harmoniser des concepts et des définitions à l'échelle de 54 appareils statistiques nationaux, c'est exactement l'enjeu que soulève le Glossaire de cette plateforme, porté au niveau continental (Ben Mokhtar, 2026).",
-              "The order of these themes is not incidental. Production comes first, coordination second, institutional capacity third — meaning that the problem African states themselves identify is not collecting more, but making comparable what is already collected. Harmonising concepts and definitions across 54 national statistical systems is exactly the issue this platform's Glossary raises, carried to continental scale (Ben Mokhtar, 2026)."
+              "L'ordre de ces thèmes n'est pas anodin. La production vient d'abord, la coordination ensuite, la capacité institutionnelle en troisième — c'est-à-dire que le problème identifié par les États africains eux-mêmes porte sur la comparabilité de ce qui est déjà collecté. Harmoniser des concepts et des définitions à l'échelle de 54 appareils statistiques nationaux, c'est exactement l'enjeu que soulève le Glossaire de cette plateforme, porté au niveau continental (Ben Mokhtar, 2026).",
+              "The order of these themes is not incidental. Production comes first, coordination second, institutional capacity third — meaning that the problem African states themselves identify is the comparability of what is already collected. Harmonising concepts and definitions across 54 national statistical systems is exactly the issue this platform's Glossary raises, carried to continental scale (Ben Mokhtar, 2026)."
             )}
           </p>
         </AfricanCounterpoint>
@@ -9017,15 +9049,15 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </h2>
         <div className="space-y-4 text-sm text-slate-300 leading-relaxed max-w-4xl text-justify">
           <p>{L(
-            "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : ce n'est pas la donnée brute qui manque, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
-            "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: what is missing is not the raw data but control over its shaping, its interpretation, and the categories it mobilises."
+            "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : la donnée brute existe ; ce qui fait défaut, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
+            "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: the raw data exists; what is missing is control over its shaping, its interpretation, and the categories it mobilises."
           )}</p>
           <p>{L(
             "Or la catégorie n'est jamais neutre. Décider si l'on dénombre les résidents habituels (population de jure) ou toutes les personnes présentes (de facto), retenir la citoyenneté plutôt que le pays de naissance, poser ou non la question du motif : chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
             "Yet the category is never neutral. Deciding whether to enumerate usual residents (de jure population) or all persons present (de facto), retaining citizenship rather than country of birth, asking or not asking the reason: each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
           )}</p>
           <p className="text-white font-medium">{L(
-            "C'est le sens de l'investissement continental dans ses propres instruments — l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique (SHaSA) : non pas collecter davantage, mais reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
+            "C'est le sens de l'investissement continental dans ses propres instruments — l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique (SHaSA), dont l'objet est de reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
             "This is the point of the continental investment in its own instruments — the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa (SHaSA): not to collect more, but to regain control over the framing and analysis of what is already collected."
           )}</p>
         </div>
@@ -9486,8 +9518,8 @@ const TabMethodology = ({ text, lang, children }) => (
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           <p className="text-xs text-slate-700 leading-relaxed">
             {lang === 'fr'
-              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel en cinq régions de l'Union africaine — et non le découpage M49 des Nations Unies qu'utilise UNDESA pour publier ses propres tableaux de stocks migratoires. Les deux grilles divergent sur sept pays : la Mauritanie (Afrique du Nord pour l'UA, Afrique de l'Ouest pour l'ONU) ; le Burundi et le Rwanda (Afrique Centrale pour l'UA, Afrique de l'Est pour l'ONU) ; le Malawi, le Mozambique, la Zambie et le Zimbabwe (Afrique Australe pour l'UA, Afrique de l'Est pour l'ONU). Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
-              : "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries: Mauritania (North Africa under the AU, West Africa under the UN); Burundi and Rwanda (Central Africa under the AU, East Africa under the UN); and Malawi, Mozambique, Zambia and Zimbabwe (Southern Africa under the AU, East Africa under the UN). As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section."}
+              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel en cinq régions de l'Union africaine — et non le découpage M49 des Nations Unies qu'utilise UNDESA pour publier ses propres tableaux de stocks migratoires. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
+              : "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section."}
           </p>
         </div>
       </div>
@@ -10126,7 +10158,12 @@ export default function App() {
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
   // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
   // denses en grilles/tableaux, conservent la pleine largeur.
-  const mainMaxWidth = ['home', 'about', 'resources'].includes(activeTab) ? 'max-w-6xl' : 'max-w-7xl';
+  // Une seule largeur pour tout le site. Trois onglets tenaient dans 1152 px et
+  // six dans 1271 px : la page changeait de laize a chaque changement d'onglet,
+  // ce qui se voit et desoriente. La mesure du confort de lecture se joue au
+  // niveau du paragraphe (voir `.text-justify` et `p` dans theme.css), pas au
+  // niveau du conteneur : c'est la que la largeur doit etre bridee.
+  const mainMaxWidth = 'max-w-7xl';
 
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
@@ -10209,9 +10246,16 @@ export default function App() {
                 <span className="font-sans font-normal italic text-[13px]" style={{ color: '#93A3CF' }}>{text.subtitle}</span>
               </span>
             </div>
-            <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
-              <Languages className="h-3 w-3" /> <span>{lang.toUpperCase()}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Les preferences de lecture voisinent la langue : ce sont les deux
+                  reglages qui decident comment on lit la page. */}
+              <PrefsLecture lang={lang} />
+              <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
+                      aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
+                      className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
+                <Languages className="h-3 w-3" aria-hidden="true" /> <span>{lang.toUpperCase()}</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -10238,8 +10282,9 @@ export default function App() {
         <ScrollProgress />
       </nav>
 
-      <main id="contenu" tabIndex={-1} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-[max-width] duration-300 ${showModal ? 'print:hidden' : ''}`}>
-        <SectionNav lang={lang} tabKey={activeTab} />
+      {/* data-section : c'est lui qui redefinit --accent pour toute la section.
+          Aucun composant n'a besoin de connaitre la couleur de l'onglet. */}
+      <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
         {activeTab === 'home' && (
           <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
         )}

@@ -656,100 +656,6 @@ main:focus { outline: none; }
 
 @media (prefers-reduced-motion: reduce) { .skip-link { transition: none; } }
 
-/* ---------- Sommaire de section ------------------------------------------- */
-/* Une barre collante, discrete, qui repond a trois questions d'un coup d'oeil :
-   ou suis-je, combien reste-t-il, et comment aller ailleurs. Elle remplace la
-   lecture a l'aveugle d'une page de douze ecrans.                             */
-
-.sommaire {
-  position: sticky;
-  top: var(--nav-h, 56px);
-  z-index: 40;
-  margin-bottom: 1.5rem;
-}
-
-.sommaire-bar {
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  width: 100%;
-  padding: .55rem .85rem;
-  background: var(--paper-raised);
-  border: 1px solid var(--rule);
-  border-inline-start: 3px solid var(--accent);
-  text-align: start;
-  cursor: pointer;
-  transition: border-color .16s ease, background-color .16s ease;
-}
-.sommaire-bar:hover { border-color: var(--rule-strong); border-inline-start-color: var(--accent); }
-.sommaire-bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.sommaire-compte { flex: none; font-size: 13px; font-weight: 700; color: var(--accent); }
-.sommaire-compte .sommaire-sur { font-size: 11px; font-weight: 500; color: var(--label); }
-
-.sommaire-titre {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sommaire-verbe {
-  flex: none;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--label);
-}
-@media (max-width: 640px) { .sommaire-verbe { display: none; } }
-
-.sommaire-chev { color: var(--accent); transition: transform .18s ease; }
-.sommaire-chev.is-open { transform: rotate(180deg); }
-
-/* Jauge : la part de section deja parcourue, en un filet de deux pixels. */
-.sommaire-jauge { display: block; height: 2px; background: var(--rule); }
-.sommaire-jauge > span { display: block; height: 100%; background: var(--accent); transition: width .25s ease; }
-
-.sommaire-liste {
-  list-style: none;
-  margin: 0;
-  padding: .35rem;
-  max-height: min(62vh, 30rem);
-  overflow-y: auto;
-  background: var(--paper-raised);
-  border: 1px solid var(--rule);
-  border-top: 0;
-  box-shadow: 0 10px 26px rgba(20,22,28,.12);
-}
-
-.sommaire-item {
-  display: flex;
-  gap: .65rem;
-  width: 100%;
-  padding: .5rem .6rem;
-  text-align: start;
-  border-inline-start: 2px solid transparent;
-  cursor: pointer;
-  transition: background-color .14s ease, border-color .14s ease;
-}
-.sommaire-item:hover { background: var(--paper-sunk); }
-.sommaire-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.sommaire-item[aria-current="true"] { background: var(--accent-soft); border-inline-start-color: var(--accent); }
-
-.sommaire-item-n { flex: none; width: 1.4rem; font-size: 12px; font-weight: 700; color: var(--label); }
-.sommaire-item[aria-current="true"] .sommaire-item-n { color: var(--accent); }
-.sommaire-item-t { font-size: 12.5px; line-height: 1.45; color: var(--ink-soft); }
-.sommaire-item[aria-current="true"] .sommaire-item-t { color: var(--ink); font-weight: 600; }
-
-@media (prefers-reduced-motion: reduce) {
-  .sommaire-chev, .sommaire-jauge > span, .sommaire-item, .sommaire-bar { transition: none; }
-}
-
 /* ---------- Intertitres de partie : titres, mais micro-libelles ------------ */
 /* Ces sous-parties ont ete promues de <span> a <h4> pour que le sommaire et les
    lecteurs d'ecran voient enfin le plan interne des sections longues. Elles ne
@@ -761,3 +667,224 @@ main:focus { outline: none; }
 :is(h1, h2, h3, h4, h5, h6).uppercase.tracking-widest {
   font-family: 'Schibsted Grotesk', system-ui, sans-serif !important;
 }
+
+/* ---------- Mesure : la ligne, pas le conteneur --------------------------- */
+/* Le site tient desormais une seule laize (max-w-7xl) sur tous les onglets :
+   la page ne change plus de largeur quand on navigue. Le confort de lecture se
+   regle alors la ou il se joue vraiment — sur la longueur de ligne. Au-dela de
+   soixante-dix caracteres, l'oeil perd le debut de la ligne suivante.         */
+
+:is(main, .reader) p:not(.en-clair):not(.terme-pop-txt) {
+  max-width: 70ch;
+}
+
+/* Sauf la ou le paragraphe accompagne une figure ou vit dans une grille etroite :
+   il y est deja contraint, et la bride n'aurait aucun effet — on la neutralise
+   pour eviter tout decalage inattendu dans les mises en page a colonnes. */
+:is(main, .reader) :is(td, th, figcaption, .grid) p { max-width: none; }
+
+/* ---------- Une teinte par section ---------------------------------------- */
+/* L'accent n'est plus unique : il est redefini sur <main> selon l'onglet, si
+   bien que tout ce qui s'appuie sur --accent suit sans qu'aucun composant soit
+   touche. Les neuf teintes sont derivees et VERIFIEES par calcul sur quatre
+   emplois : filet sur papier (>= 4,5:1), petit corps (>= 7:1), texte fonce sur
+   aplat clair (>= 4,5:1), reserve sur l'encre (>= 6,2:1). Meme famille de
+   valeur d'une section a l'autre : c'est ce qui evite l'effet carnaval.    */
+
+/* indigo */
+main[data-section="home"] {
+  --accent:       #2B3A67;
+  --accent-deep:  #293969;
+  --accent-soft:  #E5E7ED;
+  --accent-light: #8998C6;
+}
+/* prune */
+main[data-section="evidence"] {
+  --accent:       #5B3A6E;
+  --accent-deep:  #5C3870;
+  --accent-soft:  #EAE6EC;
+  --accent-light: #AC8EBD;
+}
+/* bleu petrole */
+main[data-section="explorer"] {
+  --accent:       #2E5F6B;
+  --accent-deep:  #295A66;
+  --accent-soft:  #E2E9EB;
+  --accent-light: #62A2B1;
+}
+/* grenat */
+main[data-section="forced"] {
+  --accent:       #7A2E3E;
+  --accent-deep:  #7D2B3C;
+  --accent-soft:  #EEE5E7;
+  --accent-light: #CA8795;
+}
+/* bronze */
+main[data-section="labour"] {
+  --accent:       #6B5A18;
+  --accent-deep:  #615112;
+  --accent-soft:  #EAE7D9;
+  --accent-light: #AF9635;
+}
+/* bleu-violet */
+main[data-section="governance"] {
+  --accent:       #3D3A78;
+  --accent-deep:  #3B387A;
+  --accent-soft:  #E6E6ED;
+  --accent-light: #9795C5;
+}
+/* vert profond */
+main[data-section="data"] {
+  --accent:       #2F5D46;
+  --accent-deep:  #2C5B43;
+  --accent-soft:  #E0E8E4;
+  --accent-light: #61A683;
+}
+/* terre brulee */
+main[data-section="resources"] {
+  --accent:       #6B4230;
+  --accent-deep:  #6D412E;
+  --accent-soft:  #EBE5E3;
+  --accent-light: #BB8D79;
+}
+/* graphite */
+main[data-section="about"] {
+  --accent:       #3F4654;
+  --accent-deep:  #3E4655;
+  --accent-soft:  #E5E6E8;
+  --accent-light: #929AA9;
+}
+
+/* ---------- Carte : le pays repond au doigt et au clavier ----------------- */
+/* Le survol ne produisait aucun retour et le clic restait muet. On donne une
+   reaction immediate, et un anneau de focus visible : la carte se parcourt
+   entierement au clavier, ce qui la rend utilisable sans souris.             */
+
+.choro-pays { transition: filter .12s ease, opacity .12s ease; outline: none; }
+.choro-pays:hover { filter: brightness(1.08); }
+.choro-pays:focus-visible {
+  stroke: var(--accent);
+  stroke-width: 2.4;
+  filter: brightness(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) { .choro-pays { transition: none; } }
+
+/* ---------- Mouvement : une seule regle, valable partout ------------------ */
+/* J'avais neutralise le mouvement composant par composant. Mesure faite :
+   26 regles animees y echappaient encore — les utilitaires Tailwind
+   (.transition-all, .transition-colors...) et les transitions posees en style
+   en ligne. Une regle globale les couvre toutes, y compris celles qu'on
+   ajoutera demain. Le !important est ici legitime : il doit battre le style
+   en ligne, qu'aucun selecteur ne peut surclasser autrement.                 */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Preferences de lecture --------------------------------------- */
+/* « Accessible a tout type de cerveau » ne se devine pas : ce qui aide un
+   lecteur dyslexique gene un autre. Plutot que de trancher a sa place, on
+   laisse le reglage au lecteur. Les preferences se posent en attributs sur
+   <html> : le CSS fait tout le reste, aucun composant n'a a les connaitre.   */
+
+/* Alignement. Le fer a gauche supprime les « rivieres » de blanc que la
+   justification creuse, principale gene signalee en lecture dyslexique. */
+html[data-lecture-align="fil"] :is(main, .reader) p,
+html[data-lecture-align="fil"] :is(main, .reader) .text-justify {
+  text-align: start !important;
+  hyphens: manual;
+}
+
+/* Interlignage et interlettrage aeres. */
+html[data-lecture-air="ample"] :is(main, .reader) :is(p, li, dd, dt) {
+  line-height: 1.9 !important;
+  letter-spacing: .012em;
+  word-spacing: .04em;
+}
+html[data-lecture-air="ample"] :is(main, .reader) p + p { margin-top: 1.15em; }
+
+/* Corps agrandi. Le pourcentage doit se poser sur la RACINE : les utilitaires
+   Tailwind expriment leurs tailles en rem, donc ils suivent. Pose sur le
+   conteneur, il ne faisait rien — les enfants portent une taille explicite.  */
+html[data-lecture-corps="grand"] { font-size: 112.5%; }
+/* Les micro-libelles sont, eux, cales en pixels par le plancher de lisibilite :
+   on les remonte explicitement, sinon ils seraient les seuls a ne pas grandir. */
+html[data-lecture-corps="grand"] .text-\[9px\],
+html[data-lecture-corps="grand"] .text-\[10px\] { font-size: 12.5px; }
+html[data-lecture-corps="grand"] .text-\[11px\] { font-size: 13px; }
+html[data-lecture-corps="grand"] .text-\[12px\] { font-size: 14px; }
+
+/* Colonne resserree : moins de saccades oculaires par ligne. */
+html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) { max-width: 52ch; }
+
+/* ---------- Le panneau de preferences de lecture -------------------------- */
+/* C'est le premier endroit ou arrivera un lecteur en difficulte : il doit etre
+   plus simple que le reste du site, pas plus savant.                         */
+
+.prefs { position: relative; }
+
+.prefs-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .35rem .6rem;
+  font-size: 11.5px; font-weight: 600;
+  color: #D3D5DC;
+  border: 1px solid rgba(255,253,249,.22);
+  border-radius: 2px;
+  cursor: pointer;
+}
+.prefs-btn:hover { color: #FBFBF8; border-color: rgba(255,253,249,.45); }
+.prefs-btn:focus-visible { outline: 2px solid #8FA0CE; outline-offset: 2px; }
+
+.prefs-pastille {
+  min-width: 1.15rem; padding: 0 .22rem;
+  font-size: 11px; font-weight: 700; line-height: 1.15rem; text-align: center;
+  color: var(--ink); background: #8FA0CE; border-radius: 99px;
+}
+
+.prefs-panneau {
+  position: absolute; inset-inline-end: 0; top: calc(100% + .5rem);
+  z-index: 90; width: min(20rem, 88vw);
+  padding: 1rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 12px 30px rgba(20,22,28,.18);
+  text-align: start;
+}
+
+.prefs-intro {
+  margin: 0 0 .9rem; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft);
+}
+
+.prefs-champ { border: 0; margin: 0 0 .95rem; padding: 0; }
+.prefs-titre { padding: 0; margin-bottom: .35rem; font-size: 12px; font-weight: 700; color: var(--ink); }
+
+.prefs-choix { display: flex; gap: .3rem; }
+.prefs-choix button {
+  flex: 1 1 0; padding: .4rem .3rem;
+  font-size: 12px; font-weight: 600; color: var(--ink-soft);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 2px;
+  cursor: pointer;
+}
+.prefs-choix button:hover { border-color: var(--rule-strong); }
+.prefs-choix button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.prefs-choix button[aria-pressed="true"] {
+  color: #FBFBF8; background: var(--accent); border-color: var(--accent);
+}
+
+.prefs-aide { margin: .35rem 0 0; font-size: 11.5px; line-height: 1.45; color: var(--label); }
+
+.prefs-reset {
+  width: 100%; padding: .45rem;
+  font-size: 12px; font-weight: 600; color: var(--accent-deep);
+  background: none; border: 1px dashed var(--rule-strong); border-radius: 2px;
+  cursor: pointer;
+}
+.prefs-reset:hover { background: var(--accent-soft); }
+.prefs-reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
