@@ -530,13 +530,234 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
    logique : elle suivra le sens de lecture en arabe sans etre reecrite.       */
 
 .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.num .num-sep { margin-inline: .085em; }
+.num .num-sep { margin-inline: .07em; }
 .num .num-unit { margin-inline-start: .22em; font-size: .78em; font-weight: 600; }
 
-/* Meme respiration pour les nombres deja rendus sous forme de chaine : en
-   francais le separateur est une espace insecable, que word-spacing atteint. */
-:is(main, .reader) .tabular-nums { word-spacing: .1em; }
+/* Meme respiration pour les nombres rendus sous forme de chaine. Verifie dans
+   le navigateur : word-spacing n'agit que sur l'espace insecable ordinaire, pas
+   sur l'espace fine que produit Intl — d'ou la normalisation cote JS.        */
+:is(main, .reader) .tabular-nums { word-spacing: .16em; }
+.num { word-spacing: normal; }   /* la marge de .num-sep suffit deja ici */
 
 /* Les chiffres restent en Fraunces — c'est la seule chose que la refonte
    typographique ne touche pas. */
 .num, .tabular-nums { font-feature-settings: 'tnum' 1; }
+
+/* ---------- Lisibilite : le mot s'explique la ou il est lu ---------------- */
+/* Un terme technique porte un souligne pointille et ouvre, au clic, une phrase
+   simple. Le panneau est en position fixe : aucun parent a overflow cache ne
+   peut le rogner, et il ne cree pas de debordement horizontal.              */
+
+.terme-wrap { position: relative; display: inline; }
+
+.terme {
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: help;
+  text-decoration: underline dotted currentColor;
+  text-underline-offset: .18em;
+  text-decoration-thickness: 1px;
+}
+.terme:hover { color: var(--accent-deep); text-decoration-style: solid; }
+.terme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 1px; }
+.terme[aria-expanded="true"] { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent-soft); }
+
+.terme-pop {
+  position: fixed;
+  z-index: 80;
+  display: block;
+  padding: .75rem .85rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--accent);
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 6px 22px rgba(20,22,28,.13);
+  text-align: left;
+  animation: termeIn .16s ease-out both;
+}
+@keyframes termeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+
+.terme-pop-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .3rem;
+}
+.terme-pop-txt {
+  display: block;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+/* ---------- Lisibilite : le bloc dit d'abord ce qu'il montre -------------- */
+
+.en-clair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .55rem;
+  margin: 0 0 1.15rem;
+  padding: .7rem .9rem;
+  background: var(--accent-soft);
+  border-inline-start: 3px solid var(--accent);
+  text-align: start;
+}
+.en-clair--warn  { background: var(--warn-soft); border-inline-start-color: var(--warn); }
+.en-clair--ok    { background: var(--ok-soft);   border-inline-start-color: var(--ok); }
+
+.en-clair-lbl {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.en-clair--warn .en-clair-lbl { color: var(--warn-ink); }
+.en-clair--ok   .en-clair-lbl { color: var(--ok); }
+
+.en-clair-txt {
+  flex: 1 1 16rem;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-align: start;   /* jamais justifie : c'est une phrase, pas un paragraphe */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terme-pop { animation: none; }
+}
+
+/* ---------- Lien d'evitement --------------------------------------------- */
+/* Invisible tant qu'on n'y arrive pas au clavier, puis pleinement visible.    */
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: 1rem;
+  top: -3.5rem;
+  z-index: 200;
+  padding: .6rem 1rem;
+  background: var(--accent);
+  color: #FBFBF8;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 0 0 3px 3px;
+  transition: top .16s ease-out;
+}
+.skip-link:focus { top: 0; outline: 2px solid var(--paper); outline-offset: -4px; }
+main:focus { outline: none; }
+
+@media (prefers-reduced-motion: reduce) { .skip-link { transition: none; } }
+
+/* ---------- Sommaire de section ------------------------------------------- */
+/* Une barre collante, discrete, qui repond a trois questions d'un coup d'oeil :
+   ou suis-je, combien reste-t-il, et comment aller ailleurs. Elle remplace la
+   lecture a l'aveugle d'une page de douze ecrans.                             */
+
+.sommaire {
+  position: sticky;
+  top: var(--nav-h, 56px);
+  z-index: 40;
+  margin-bottom: 1.5rem;
+}
+
+.sommaire-bar {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  width: 100%;
+  padding: .55rem .85rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-inline-start: 3px solid var(--accent);
+  text-align: start;
+  cursor: pointer;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.sommaire-bar:hover { border-color: var(--rule-strong); border-inline-start-color: var(--accent); }
+.sommaire-bar:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.sommaire-compte { flex: none; font-size: 13px; font-weight: 700; color: var(--accent); }
+.sommaire-compte .sommaire-sur { font-size: 11px; font-weight: 500; color: var(--label); }
+
+.sommaire-titre {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sommaire-verbe {
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+@media (max-width: 640px) { .sommaire-verbe { display: none; } }
+
+.sommaire-chev { color: var(--accent); transition: transform .18s ease; }
+.sommaire-chev.is-open { transform: rotate(180deg); }
+
+/* Jauge : la part de section deja parcourue, en un filet de deux pixels. */
+.sommaire-jauge { display: block; height: 2px; background: var(--rule); }
+.sommaire-jauge > span { display: block; height: 100%; background: var(--accent); transition: width .25s ease; }
+
+.sommaire-liste {
+  list-style: none;
+  margin: 0;
+  padding: .35rem;
+  max-height: min(62vh, 30rem);
+  overflow-y: auto;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-top: 0;
+  box-shadow: 0 10px 26px rgba(20,22,28,.12);
+}
+
+.sommaire-item {
+  display: flex;
+  gap: .65rem;
+  width: 100%;
+  padding: .5rem .6rem;
+  text-align: start;
+  border-inline-start: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color .14s ease, border-color .14s ease;
+}
+.sommaire-item:hover { background: var(--paper-sunk); }
+.sommaire-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.sommaire-item[aria-current="true"] { background: var(--accent-soft); border-inline-start-color: var(--accent); }
+
+.sommaire-item-n { flex: none; width: 1.4rem; font-size: 12px; font-weight: 700; color: var(--label); }
+.sommaire-item[aria-current="true"] .sommaire-item-n { color: var(--accent); }
+.sommaire-item-t { font-size: 12.5px; line-height: 1.45; color: var(--ink-soft); }
+.sommaire-item[aria-current="true"] .sommaire-item-t { color: var(--ink); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sommaire-chev, .sommaire-jauge > span, .sommaire-item, .sommaire-bar { transition: none; }
+}
+
+/* ---------- Intertitres de partie : titres, mais micro-libelles ------------ */
+/* Ces sous-parties ont ete promues de <span> a <h4> pour que le sommaire et les
+   lecteurs d'ecran voient enfin le plan interne des sections longues. Elles ne
+   doivent pas pour autant passer en Fraunces : ce sont des libelles en capitales
+   espacees, pas des titres de bloc. On leur rend leur linear et leur approche.  */
+
+/* L'approche reste celle de la regle « Libelles » plus haut, qui porte un
+   !important : on ne touche donc qu'a la fonte. */
+:is(h1, h2, h3, h4, h5, h6).uppercase.tracking-widest {
+  font-family: 'Schibsted Grotesk', system-ui, sans-serif !important;
+}

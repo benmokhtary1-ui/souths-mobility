@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { 
   Globe, ShieldAlert, TrendingUp, MapPin, Database, 
@@ -77,13 +77,20 @@ const toNumber = (val) => {
   return Number.isFinite(n) ? n : null;
 };
 
+// Intl produit une espace fine insecable (U+202F) comme separateur de groupe en
+// francais. Verifie dans le navigateur : Chrome n'applique PAS word-spacing a ce
+// caractere, alors qu'il l'applique a l'espace insecable ordinaire (U+00A0). On
+// normalise donc vers U+00A0, ce qui rend la tranche de trois elargissable en CSS
+// pour tous les nombres du site, y compris ceux rendus sous forme de chaine.
+const GROUP_SEP = /[  ]/g;
+
 const formatNumber = (val, lang = 'fr') => {
   if (val === undefined || val === null) return '0';
   const strVal = String(val);
   if (strVal.includes('M') || strVal.includes('k')) return strVal;   // deja abrege
   const n = toNumber(strVal);
   if (n === null) return val;
-  return new Intl.NumberFormat(localeOf(lang)).format(n);
+  return new Intl.NumberFormat(localeOf(lang)).format(n).replace(GROUP_SEP, ' ');
 };
 
 // Version JSX : identique, mais chaque separateur de groupe devient un element
@@ -96,13 +103,377 @@ const Num = ({ value, lang = 'fr', unit = null, className = '', ...rest }) => {
     <span className={`num ${className}`.trim()} {...rest}>
       {parts.map((p, i) =>
         p.type === 'group'
-          ? <span key={i} className="num-sep">{p.value}</span>
+          ? <span key={i} className="num-sep">{p.value.replace(GROUP_SEP, ' ')}</span>
           : <span key={i}>{p.value}</span>
       )}
       {unit ? <span className="num-unit">{unit}</span> : null}
     </span>
   );
 };
+
+// ---------------------------------------------------------------------------
+// Lisibilite : deux dispositifs, un seul principe
+// ---------------------------------------------------------------------------
+// Des lecteurs non specialistes ont bute sur la plateforme. Le diagnostic n'est
+// pas que le contenu soit trop savant — c'est qu'il n'existait qu'un seul
+// niveau de lecture, celui de l'auteur. On en ajoute un second, en dessous,
+// sans rien retirer au premier :
+//   1. <Terme> : le mot technique s'explique sur place, en une phrase.
+//   2. <EnClair> : le bloc dit d'abord ce qu'il montre, avant de le demontrer.
+// Regle d'ecriture pour ces deux couches : une phrase, pas de sigle non
+// developpe, pas de subordonnee. Si on ne peut pas le dire simplement, c'est
+// qu'on ne sait pas encore ce qu'on veut dire.
+
+const PLAIN_TERMS = {
+  avoi: {
+    label: { fr: 'AVOI', en: 'AVOI' },
+    fr: "Une note sur 100 qui mesure à quel point un pays africain laisse entrer les autres Africains sans visa. 100 = aucun visa demandé à personne sur le continent.",
+    en: 'A score out of 100 measuring how freely an African country lets other Africans in without a visa. 100 = no visa asked of anyone on the continent.',
+  },
+  zlecaf: {
+    label: { fr: 'ZLECAf', en: 'AfCFTA' },
+    fr: "La zone de libre-échange continentale africaine : le grand accord commercial qui doit permettre aux marchandises de circuler entre pays africains sans droits de douane.",
+    en: 'The African Continental Free Trade Area: the continent-wide trade agreement meant to let goods move between African countries without customs duties.',
+  },
+  ancrage: {
+    label: { fr: "score d'ancrage", en: 'anchoring score' },
+    fr: "Un compte simple, de 0 à 6 : combien des six grands textes de l'Union africaine un pays a-t-il officiellement ratifiés. C'est une mesure construite pour cette plateforme.",
+    en: 'A simple count from 0 to 6: how many of the African Union’s six major instruments a country has formally ratified. It is a measure built for this platform.',
+  },
+  iiag: {
+    label: { fr: 'IIAG', en: 'IIAG' },
+    fr: "L'Indice Ibrahim de la gouvernance africaine : un classement annuel qui note la qualité de la gouvernance des 54 pays du continent. Rang 1 = le mieux classé.",
+    en: 'The Ibrahim Index of African Governance: an annual ranking scoring the quality of governance in all 54 African countries. Rank 1 = best placed.',
+  },
+  kampala: {
+    label: { fr: 'Convention de Kampala', en: 'Kampala Convention' },
+    fr: "Le traité africain de 2009 qui protège les personnes chassées de chez elles mais restées dans leur propre pays. C'est le seul texte contraignant au monde sur ce sujet.",
+    en: 'The 2009 African treaty protecting people driven from their homes but still inside their own country. It is the only binding treaty in the world on this.',
+  },
+  retention: {
+    label: { fr: 'rétention Sud-Sud', en: 'South-South retention' },
+    fr: "La part des personnes parties d'un pays qui sont restées en Afrique, plutôt que d'aller vers l'Europe ou l'Amérique du Nord.",
+    en: 'The share of people who left a country and stayed within Africa, rather than heading to Europe or North America.',
+  },
+  capabilites: {
+    label: { fr: 'capabilités de mouvement', en: 'movement capabilities' },
+    fr: "L'idée qu'on ne part pas seulement parce qu'on le veut, mais parce qu'on le peut : il faut un passeport, un visa, de l'argent, un droit. Vouloir partir et pouvoir partir sont deux choses différentes.",
+    en: 'The idea that people do not move only because they want to, but because they can: it takes a passport, a visa, money, a legal right. Wanting to leave and being able to leave are two different things.',
+  },
+  apatridie: {
+    label: { fr: 'apatridie', en: 'statelessness' },
+    fr: "Le fait de n'être reconnu comme citoyen par aucun pays au monde. Sans nationalité, on ne peut souvent ni travailler légalement, ni voyager, ni être soigné.",
+    en: 'Being recognised as a citizen by no country at all. Without a nationality, people often cannot work legally, travel, or get healthcare.',
+  },
+  gcm: {
+    label: { fr: 'Pacte mondial (GCM)', en: 'Global Compact (GCM)' },
+    fr: "Le Pacte mondial des Nations unies sur les migrations, adopté en 2018. Il fixe des objectifs communs mais n'oblige juridiquement aucun État : un pays peut l'approuver sans rien changer chez lui.",
+    en: 'The United Nations Global Compact for Migration, adopted in 2018. It sets shared objectives but legally binds no state: a country can endorse it and change nothing at home.',
+  },
+  stock: {
+    label: { fr: 'stock de migrants', en: 'migrant stock' },
+    fr: "Le nombre de personnes nées à l'étranger qui vivent dans un pays à une date donnée. C'est une photo, pas un flux : ça ne dit pas combien sont arrivées cette année.",
+    en: 'The number of foreign-born people living in a country on a given date. It is a snapshot, not a flow: it does not say how many arrived this year.',
+  },
+  cer: {
+    label: { fr: 'CER', en: 'REC' },
+    fr: "Les communautés économiques régionales : les blocs qui regroupent les pays africains par région, comme la CEDEAO en Afrique de l'Ouest. Ce sont elles qui décident la libre circulation dans les faits.",
+    en: 'Regional Economic Communities: the blocs grouping African countries by region, such as ECOWAS in West Africa. In practice, they are where free movement is decided.',
+  },
+  oam: {
+    label: { fr: 'OAM', en: 'AMO' },
+    fr: "L'Observatoire africain des migrations, créé par l'Union africaine et installé à Rabat. Sa mission est de produire les chiffres africains sur les migrations, plutôt que de dépendre de ceux venus d'ailleurs.",
+    en: 'The African Migration Observatory, created by the African Union and based in Rabat. Its mandate is to produce African migration figures rather than depend on figures produced elsewhere.',
+  },
+  spearman: {
+    label: { fr: 'corrélation de rang', en: 'rank correlation' },
+    fr: "Une mesure qui dit si deux classements se ressemblent. 0 : aucun lien. 1 : les deux classements sont identiques. Un résultat proche de 0 signifie que les deux choses n'ont rien à voir.",
+    en: 'A measure of whether two rankings resemble each other. 0: no link. 1: the two rankings are identical. A result near 0 means the two things are unrelated.',
+  },
+  cycle: {
+    label: { fr: 'cycle de recensement', en: 'census round' },
+    fr: "La fenêtre de dix ans pendant laquelle l'ONU recommande à chaque pays de compter sa population. Le cycle 2020 couvre les années 2015 à 2024.",
+    en: 'The ten-year window in which the UN recommends every country count its population. The 2020 round covers the years 2015 to 2024.',
+  },
+  desa: {
+    label: { fr: 'UN DESA', en: 'UN DESA' },
+    fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. C'est la source la plus citée, y compris pour l'Afrique.",
+    en: 'The United Nations statistical office that publishes the reference figures on migrants worldwide. It is the most cited source, including for Africa.',
+  },
+};
+
+// Le mot technique s'explique la ou il est lu. Le panneau est en position fixe :
+// cale sur la position reelle du bouton, il ne peut etre ni rogne par un parent
+// a overflow cache, ni provoquer de debordement horizontal.
+const Terme = ({ k, lang = 'fr', children }) => {
+  const [open, setOpen] = useState(false);
+  const [box, setBox] = useState(null);
+  const ref = useRef(null);
+  const entry = PLAIN_TERMS[k];
+  if (!entry) return <>{children}</>;
+
+  const popRef = useRef(null);
+
+  // Placement en deux temps. Le premier pose le panneau sous le terme ; le
+  // second, une fois qu'il est monte, le mesure reellement et le recale pour
+  // qu'il tienne dans l'ecran. Deviner sa hauteur a l'avance ne marche pas :
+  // elle depend de la longueur de la definition et de la largeur disponible.
+  const place = () => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    const w = Math.min(300, window.innerWidth - 24);
+    const left = Math.max(12, Math.min(r.left + r.width / 2 - w / 2, window.innerWidth - w - 12));
+    const h = popRef.current?.getBoundingClientRect().height || 0;
+    const margin = 12;
+    let top = r.bottom + 8;
+    if (h && top + h > window.innerHeight - margin) top = r.top - 8 - h;   // on bascule au-dessus
+    // Puis on borne, sans condition : le terme peut se trouver hors de l'ecran
+    // (ancre dans un conteneur qui a defile), et le panneau doit rester lisible.
+    if (h) top = Math.max(margin, Math.min(top, window.innerHeight - h - margin));
+    setBox({ left, w, top });
+  };
+
+  // useLayoutEffect : on recale avant peinture, sinon le panneau saute a l'ecran.
+  useLayoutEffect(() => { if (open && popRef.current) place(); }, [open, box?.w]);
+
+  useEffect(() => {
+    if (!open) return;
+    place();
+    const close = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+    const esc = (e) => { if (e.key === 'Escape') { setOpen(false); ref.current?.focus(); } };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', esc);
+      window.removeEventListener('scroll', place, true);
+      window.removeEventListener('resize', place);
+    };
+  }, [open]);
+
+  const label = entry.label[lang] || entry.label.fr;
+  return (
+    <span className="terme-wrap">
+      <button
+        ref={ref}
+        type="button"
+        className="terme"
+        aria-expanded={open}
+        aria-label={`${label} — ${lang === 'fr' ? 'voir la définition simple' : 'show the plain definition'}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {children || label}
+      </button>
+      {open && box && (
+        <span
+          ref={popRef}
+          role="tooltip"
+          className="terme-pop"
+          style={{ left: box.left, width: box.w, top: box.top }}
+        >
+          <span className="terme-pop-lbl">{lang === 'fr' ? 'En clair' : 'In plain terms'}</span>
+          <span className="terme-pop-txt">{entry[lang] || entry.fr}</span>
+        </span>
+      )}
+    </span>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Sommaire de section
+// ---------------------------------------------------------------------------
+// Les sections longues font jusqu'a douze ecrans. L'ascenseur devenait un fil,
+// et rien ne disait ou l'on se trouvait ni combien il restait. Ce sommaire est
+// **deduit du DOM** apres rendu — il lit les titres des blocs au lieu de les
+// repeter dans une liste ecrite a la main, qui se perimerait des le prochain
+// bloc ajoute. Il rend la longueur lisible : dix reperes valent mieux qu'une
+// barre de defilement de trois pixels.
+const SectionNav = ({ lang, tabKey }) => {
+  const [items, setItems] = useState([]);
+  const [active, setActive] = useState(0);
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef(null);
+
+  // La nav principale est collante et sa hauteur varie avec la largeur d'ecran :
+  // on la mesure au lieu de la coder en dur, sinon le sommaire passe dessous.
+  useEffect(() => {
+    const measure = () => {
+      const nav = document.querySelector('nav');
+      if (nav) document.documentElement.style.setProperty('--nav-h', `${Math.round(nav.getBoundingClientRect().height)}px`);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  // Collecte : les enfants directs du conteneur d'onglet qui portent un titre.
+  useEffect(() => {
+    setOpen(false);
+    setActive(0);
+    setItems([]);   // sinon le sommaire de l'onglet precedent reste affiche
+    const collect = () => {
+      // Le sommaire vit lui-meme dans <main> : on l'ecarte avant de chercher le
+      // conteneur d'onglet, sinon il se prendrait pour le contenu.
+      const wrap = document.querySelector('#contenu > *:not(.sommaire)');
+      if (!wrap) return setItems([]);
+      const found = [];
+      let n = 0;
+      const push = (el, label) => {
+        if (!el.id) el.id = `repere-${n}`;
+        found.push({ id: el.id, label: label.replace(/\s+/g, ' ').slice(0, 90) });
+        n += 1;
+      };
+
+      [...wrap.children].forEach((el) => {
+        const h = el.getBoundingClientRect().height;
+        if (h < 120) return;
+
+        // Certains onglets ne sont pas decoupes : la Bibliotheque tient dans un
+        // seul bloc de douze ecrans. Quand un bloc depasse une hauteur et demie
+        // d'ecran, on descend chercher ses propres intertitres, sinon le
+        // sommaire ne repererait qu'une seule entree pour toute la section.
+        const seuil = Math.max(1200, window.innerHeight * 1.5);
+        if (h > seuil) {
+          let heads = [...el.querySelectorAll('h3')];
+          if (heads.length < 3) heads = [...el.querySelectorAll('h3, h4')];
+          // On ancre sur l'intertitre lui-meme : remonter vers un « bloc
+          // porteur » faisait converger tous les intertitres sur le meme
+          // ancetre, et le sommaire se reduisait a une entree. Le decalage
+          // applique au defilement suffit a ne pas coller le titre a la nav.
+          let poses = 0;
+          heads.forEach((hd) => {
+            if (hd.getBoundingClientRect().height < 8) return;
+            // textContent, pas innerText : innerText renvoie le texte *rendu*,
+            // donc en capitales pour les intertitres qui portent `uppercase`.
+            // Le sommaire crierait une entree sur deux.
+            const label = hd.textContent?.split('\n')[0]?.trim();
+            if (!label) return;
+            push(hd, label);
+            poses += 1;
+          });
+          if (poses) return;
+        }
+
+        const h2 = el.querySelector('h2, h3, h4');
+        const label = h2?.textContent?.trim();
+        if (label) push(el, label);
+      });
+
+      // Un sommaire doit etre complet, pas trie : j'avais d'abord ecarte les
+      // reperes trop rapproches, en pensant supprimer des etiquettes — la regle
+      // supprimait surtout de vraies parties. Seul reste le filtre qui vaut :
+      // un mot court ne nomme pas une partie (« Source », « Note », « Clé »).
+      const retenus = found.filter(f => !(f.label.split(/\s+/).length < 2 && f.label.length < 14));
+
+      setItems(retenus.length >= 4 ? retenus.slice(0, 24) : []);
+    };
+    // Le contenu arrive avec des animations d'entree echelonnees : on collecte
+    // une premiere fois vite, puis une seconde quand tout s'est pose.
+    const t1 = setTimeout(collect, 350);
+    const t2 = setTimeout(collect, 1200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [tabKey, lang]);
+
+  // Reperage : le bloc courant est le dernier dont le haut est passe sous la nav.
+  const spyRef = useRef(() => {});
+  useEffect(() => {
+    if (!items.length) return;
+    const spy = () => {
+      const line = 140;
+      let cur = 0;
+      items.forEach((it, i) => {
+        const el = document.getElementById(it.id);
+        if (el && el.getBoundingClientRect().top <= line) cur = i;
+      });
+      setActive(cur);
+    };
+    spyRef.current = spy;
+    // Etranglement par horloge plutot que par requestAnimationFrame : rAF ne
+    // s'execute pas lorsque la page ne peint pas (onglet masque, economie
+    // d'energie), et le reperage resterait alors bloque sur le premier bloc.
+    let last = 0, timer = 0;
+    const run = () => { last = Date.now(); spy(); };
+    const onScroll = () => {
+      const now = Date.now();
+      if (now - last > 80) run();
+      else if (!timer) timer = setTimeout(() => { timer = 0; run(); }, 80);
+    };
+    spy();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); if (timer) clearTimeout(timer); };
+  }, [items]);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e) => { if (!boxRef.current?.contains(e.target)) setOpen(false); };
+    const esc = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('mousedown', close); document.removeEventListener('keydown', esc); };
+  }, [open]);
+
+  if (!items.length) return null;
+  const go = (id) => {
+    setOpen(false);
+    const el = document.getElementById(id);
+    if (!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 120;
+    window.scrollTo({ top: y, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  };
+
+  return (
+    <div className="sommaire" ref={boxRef}>
+      <button
+        type="button"
+        className="sommaire-bar"
+        aria-expanded={open}
+        /* On recalcule a l'ouverture : si un evenement de defilement s'est perdu
+           (onglet en arriere-plan, defilement programmatique), la liste montre
+           tout de meme le bon bloc courant. */
+        onClick={() => { spyRef.current(); setOpen((o) => !o); }}
+      >
+        <span className="sommaire-compte">
+          <span className="num">{active + 1}</span>
+          <span className="sommaire-sur">/{items.length}</span>
+        </span>
+        <span className="sommaire-titre">{items[active]?.label}</span>
+        <span className="sommaire-verbe">{lang === 'fr' ? 'Sommaire' : 'Contents'}</span>
+        <ChevronDown className={`w-3.5 h-3.5 shrink-0 sommaire-chev ${open ? 'is-open' : ''}`} aria-hidden="true" />
+      </button>
+      <span className="sommaire-jauge" aria-hidden="true">
+        <span style={{ width: `${((active + 1) / items.length) * 100}%` }} />
+      </span>
+      {open && (
+        <ol className="sommaire-liste">
+          {items.map((it, i) => (
+            <li key={it.id}>
+              <button
+                type="button"
+                onClick={() => go(it.id)}
+                aria-current={i === active ? 'true' : undefined}
+                className="sommaire-item"
+              >
+                <span className="sommaire-item-n num">{i + 1}</span>
+                <span className="sommaire-item-t">{it.label}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
+};
+
+// Le bloc annonce ce qu'il montre avant de le demontrer. Une phrase, lisible
+// seule : qui s'arrete la doit avoir compris l'essentiel.
+const EnClair = ({ lang = 'fr', fr, en, tone = 'accent' }) => (
+  <p className={`en-clair en-clair--${tone}`}>
+    <span className="en-clair-lbl">{lang === 'fr' ? 'En clair' : 'In plain terms'}</span>
+    <span className="en-clair-txt">{lang === 'fr' ? fr : en}</span>
+  </p>
+);
 
 // Respecte le réglage système « réduire les animations ».
 const prefersReducedMotion = () =>
@@ -433,30 +804,30 @@ const AspirationGap = ({ lang }) => {
         </div>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Où ceux qui envisagent de partir voudraient aller', 'Where those considering leaving would go')}
-          </span>
+          </h4>
           {dest.map((d, i) => <Row key={d.l} {...d} color="var(--accent-2)" i={i} />)}
         </div>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Pourquoi', 'Why')}
-          </span>
+          </h4>
           {why.map((d, i) => <Row key={d.l} {...d} color="var(--accent)" i={i} />)}
         </div>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("L'écart entre pays est considérable", 'The gap between countries is considerable')}
-          </span>
+          </h4>
           {pays.map((d, i) => <Row key={d.l} {...d} color="var(--ok)" i={i} />)}
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que l'écart démontre", 'What the gap demonstrates')}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage n'est pas une contradiction dans les données : c'est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
@@ -467,7 +838,7 @@ const AspirationGap = ({ lang }) => {
       </div>
 
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
+        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
         <a href="https://www.afrobarometer.org/articles/international-migrants-day-almost-half-of-africans-have-considered-emigrating-afrobarometer-survey-shows/"
            target="_blank" rel="noopener noreferrer"
            className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
@@ -503,9 +874,9 @@ const ProportionGap = ({ lang }) => {
   return (
     <figure className="my-7 border border-slate-200 bg-white">
       <figcaption className="px-5 py-3 border-b border-slate-200" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
+        <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
           {L('Lecture proportionnelle', 'Reading it proportionally')}
-        </span>
+        </h4>
         <span className="block text-[13px] font-semibold text-slate-800 leading-snug">
           {L(
             "Le continent pèse le double de son poids migratoire",
@@ -517,7 +888,7 @@ const ProportionGap = ({ lang }) => {
       <div className="px-5 py-5 space-y-5">
         {groups.map((g, gi) => (
           <div key={gi} className={gi > 0 ? 'pt-5' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">{g.title}</span>
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">{g.title}</h4>
             <div className="space-y-2.5">
               {g.rows.map((r, ri) => (
                 <div key={ri}>
@@ -703,9 +1074,9 @@ const CensusRhythm = ({ lang }) => {
         </div>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
             {L('Combien d\'opérations datées par pays, depuis 1970', 'How many dated operations per country, since 1970')}
-          </span>
+          </h4>
           <div className="space-y-2">
             {Object.entries(data.byCount).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v], i) => (
               <div key={k} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -726,9 +1097,9 @@ const CensusRhythm = ({ lang }) => {
         </div>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
             {L('Les plus longues interruptions', 'The longest interruptions')}
-          </span>
+          </h4>
           <div className="space-y-2">
             {data.longest.map((r, i) => (
               <div key={r.name} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -747,9 +1118,9 @@ const CensusRhythm = ({ lang }) => {
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Pourquoi la moyenne trompe ici', 'Why the average misleads here')}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               `L'intervalle médian est de ${data.median} ans, contre une moyenne de ${fmt(data.mean.toFixed(1))} : l'écart entre les deux mesure exactement la déformation produite par une poignée de très longues interruptions. ${data.metronomes.length} États ont conduit six recensements sans jamais dépasser douze ans d'écart — un rythme conforme à la recommandation onusienne, tenu sur un demi-siècle. À l'autre extrémité, ${data.jamais.length} n'ont aucune ou qu'une seule opération comptabilisable sur la période — dont la République démocratique du Congo, dont le seul recensement national date de 1984. Parler d'un « rythme africain » unique revient donc à moyenner un métronome et une horloge arrêtée : le résultat ne décrit ni l'un ni l'autre, et il masque là où l'appui statistique serait réellement utile (Ben Mokhtar, 2026).`,
@@ -815,9 +1186,9 @@ const LateRound = ({ lang }) => {
         </p>
 
         <div>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
             {L('Recensements achevés après la clôture du cycle 2020', 'Censuses completed after the 2020 round closed')}
-          </span>
+          </h4>
           <div className="space-y-2">
             {rows.map((r, i) => (
               <div key={r.iso2} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -838,9 +1209,9 @@ const LateRound = ({ lang }) => {
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Ce que le décompte par cycle ne peut pas dire', 'What a round-by-round count cannot say')}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit ; lues comme ce qu'elles sont, elles ouvrent la série 2030 et sortent l'Afrique centrale d'une interruption qui durait, selon les cas, de treize à vingt-deux ans. Le découpage décennal est un instrument de comparaison internationale, pas une mesure de l'effort statistique national — et il pénalise mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
@@ -945,9 +1316,9 @@ const MobileMoneyRail = ({ lang }) => {
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--ok)' }}>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Ce que cela change pour la lecture des transferts', 'What this changes for reading remittances')}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               "Un montant ne dit rien du coût ni de l'accès. Si le canal est mobile, le transfert atteint des zones sans agence bancaire, à des frais et des délais différents, et il laisse une trace numérique exploitable statistiquement. C'est aussi ce qui rend crédible l'objectif de ramener sous 3 % les coûts de transaction (cible 10.c des ODD) : la baisse ne viendra pas des guichets, elle vient déjà des opérateurs. Nommer le canal, c'est cesser de traiter les transferts comme une manne indifférenciée pour les traiter comme une infrastructure — construite en Afrique, sans avoir attendu que le système bancaire s'étende (Ben Mokhtar, 2026).",
@@ -958,7 +1329,7 @@ const MobileMoneyRail = ({ lang }) => {
       </div>
 
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
+        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
         <a href={FINDEX_SOURCE.url} target="_blank" rel="noopener noreferrer"
            className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
           <span>{L(
@@ -989,7 +1360,11 @@ const MovementOpener = ({ n, kicker, thesis, accent = 'var(--accent-deep)' }) =>
   </div>
 );
 
-const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }) => (
+// `plain` : la meme section, dite en une phrase, pour qui n'est pas du metier.
+// Elle ne remplace pas `desc` — le registre institutionnel garde son role — elle
+// se pose en dessous, sur le papier, ou elle se lit sans effort.
+const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', icon: Icon = Globe }) => (
+  <>
   <header
     className="relative overflow-hidden rounded-xl mb-8 px-6 lg:px-12 py-14 md:py-16"
     style={{
@@ -1043,11 +1418,20 @@ const PageHeader = ({ badge, title, highlight, desc, plate, icon: Icon = Globe }
         <span className="italic font-normal" style={{ color: '#8FA0CE' }}>{highlight}</span>
       </h1>
 
-      <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#CFC6BA' }}>
+      <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#D3D5DC' }}>
         {desc}
       </p>
     </div>
   </header>
+  {/* `plain` arrive deja traduit depuis text.headers, ou sous forme {fr, en}. */}
+  {plain && (
+    <EnClair
+      lang={lang}
+      fr={typeof plain === 'string' ? plain : plain.fr}
+      en={typeof plain === 'string' ? plain : plain.en}
+    />
+  )}
+  </>
 );
 
 const PRINT_CITATION = {
@@ -1370,55 +1754,64 @@ const t = {
           badge: "Plateforme de Savoirs & de Données",
           title: "Objectiver les mobilités",
           highlight: "par la science des données.",
-          desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées."
+          desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées.",
+          plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
         },
         explorer: {
           badge: "Explorateur Macrorégional & National",
           title: "Cartographier et analyser",
           highlight: "les dynamiques de mobilité.",
-          desc: "Consultez les profils détaillés par pays ou par sous-région, intégrant les indicateurs de stock démographique, de parité, de rétention sud-sud et les ratifications des traités."
+          desc: "Consultez les profils détaillés par pays ou par sous-région, intégrant les indicateurs de stock démographique, de parité, de rétention sud-sud et les ratifications des traités.",
+          plain: "Choisissez un pays : vous verrez combien de personnes y vivent en venant d'ailleurs, combien en sont parties, où elles sont allées, et quels traités ce pays a signés."
         },
         governance: {
           badge: "Gouvernance & Cadres Stratégiques",
           title: "Architecture panafricaine",
           highlight: "et cadres internationaux.",
-          desc: "Explorez l'ancrage multiniveaux de la gouvernance des mobilités, de l'Union africaine et ses blocs régionalisés (CER) jusqu'aux pactes et objectifs mondiaux."
+          desc: "Explorez l'ancrage multiniveaux de la gouvernance des mobilités, de l'Union africaine et ses blocs régionalisés (CER) jusqu'aux pactes et objectifs mondiaux.",
+          plain: "Qui fixe les règles de circulation en Afrique — l'Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s'appliquent réellement."
         },
         library: {
           badge: "Centre Documentaire",
           title: "Bibliothèque",
           highlight: "et ressources analytiques.",
-          desc: "Un accès centralisé aux rapports de référence, notes de politique (policy briefs), thèses et publications sur la géopolitique des mobilités dans les Suds."
+          desc: "Un accès centralisé aux rapports de référence, notes de politique (policy briefs), thèses et publications sur la géopolitique des mobilités dans les Suds.",
+          plain: "Tous les rapports, articles et bases de données utilisés sur cette plateforme, avec le lien direct pour les consulter. Et un lexique qui explique chaque terme technique."
         },
         labour: {
           badge: "Travail & compétences",
           title: "La mobilité africaine est d'abord",
           highlight: "une mobilité de travail.",
-          desc: "Treize millions de travailleurs migrants, concentrés dans des secteurs à forte intensité de main-d'œuvre et largement informels. Ce volet croise les quatre éditions du rapport continental sur les statistiques de migration de travail avec l'état réel des ratifications de conventions de l'OIT — là où se jouent les droits effectivement opposables."
+          desc: "Treize millions de travailleurs migrants, concentrés dans des secteurs à forte intensité de main-d'œuvre et largement informels. Ce volet croise les quatre éditions du rapport continental sur les statistiques de migration de travail avec l'état réel des ratifications de conventions de l'OIT — là où se jouent les droits effectivement opposables.",
+          plain: "La plupart des Africains qui partent le font pour travailler. Cette section montre dans quels métiers, dans quels pays, et avec quels droits."
         },
         forced: {
           badge: "Déplacement forcé & protection",
           title: "La mobilité qui ne franchit aucune frontière",
           highlight: "et que personne ne compte comme migration.",
-          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux — et c'est là que l'écart entre la norme et l'ancrage se paie le plus cher."
+          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux — et c'est là que l'écart entre la norme et l'ancrage se paie le plus cher.",
+          plain: "En Afrique, la plupart des personnes qui fuient la guerre ou une catastrophe restent dans leur propre pays. Elles n'apparaissent donc dans aucune statistique migratoire. Cette section les compte."
         },
         glossary: {
           badge: "Lexique & Définitions",
           title: "Les mots du régime",
           highlight: "et leur définition africaine.",
-          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence — Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009) — puis, pour les seuls agrégats statistiques, par la définition opératoire d'UN DESA. Le choix du mot n'est jamais neutre : il détermine ce qui est compté."
+          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence — Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009) — puis, pour les seuls agrégats statistiques, par la définition opératoire d'UN DESA. Le choix du mot n'est jamais neutre : il détermine ce qui est compté.",
+          plain: "Le sens exact des mots employés ici. Chaque définition part du texte africain qui fait référence, parce que la façon de nommer décide de ce qui sera compté."
         },
         about: {
           badge: "À propos de la plateforme",
           title: "Une initiative citoyenne",
           highlight: "adossée à une recherche doctorale.",
-          desc: "L'origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être."
+          desc: "L'origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être.",
+          plain: "Qui produit cette plateforme, pourquoi, et avec quels moyens. Elle est adossée à une thèse de doctorat et reste indépendante de toute institution."
         },
         methodology: {
           badge: "Rigueur & Transparence",
           title: "Ingénierie méthodologique",
           highlight: "et cadre d'indicateurs.",
-          desc: "Découvrez l'architecture scientifique de la plateforme, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités."
+          desc: "Découvrez l'architecture scientifique de la plateforme, le processus d'harmonisation des données officielles et la matrice des indicateurs alternatifs pour objectiver les mobilités.",
+          plain: "D'où viennent les chiffres, comment ils ont été vérifiés, et ce que la plateforme ne peut pas dire. Chaque donnée est traçable jusqu'à sa source."
         }
       },
       home_editorial: {
@@ -1663,55 +2056,64 @@ const t = {
           badge: "Knowledge & Data Platform",
           title: "Objectifying mobilities",
           highlight: "through data science.",
-          desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources."
+          desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources.",
+          plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
         },
         explorer: {
           badge: "Macro-Regional & National Explorer",
           title: "Mapping and analyzing",
           highlight: "mobility dynamics.",
-          desc: "Explore detailed country or sub-regional profiles featuring demographic stocks, gender parity, South-South retention rates, and treaty ratifications."
+          desc: "Explore detailed country or sub-regional profiles featuring demographic stocks, gender parity, South-South retention rates, and treaty ratifications.",
+          plain: "Pick a country: you will see how many people live there having come from elsewhere, how many left, where they went, and which treaties the country has signed."
         },
         governance: {
           badge: "Governance & Strategic Frameworks",
           title: "Pan-African architecture",
           highlight: "and international frameworks.",
-          desc: "Explore the multilevel anchoring of mobility governance, from the African Union and its regional building blocks (RECs) to global compacts and goals."
+          desc: "Explore the multilevel anchoring of mobility governance, from the African Union and its regional building blocks (RECs) to global compacts and goals.",
+          plain: "Who sets the rules of movement in Africa — the African Union, the regional blocs, or each state? This section shows the rules on paper, then which ones actually apply."
         },
         library: {
           badge: "Documentary Center",
           title: "Library",
           highlight: "and analytical resources.",
-          desc: "Centralized access to reference reports, policy briefs, theses, and publications on mobility geopolitics in the Global South."
+          desc: "Centralized access to reference reports, policy briefs, theses, and publications on mobility geopolitics in the Global South.",
+          plain: "Every report, article and dataset used on this platform, with a direct link to each. Plus a lexicon explaining every technical term."
         },
         labour: {
           badge: "Labour & skills",
           title: "African mobility is first and foremost",
           highlight: "a mobility of labour.",
-          desc: "Thirteen million migrant workers, concentrated in labour-intensive and largely informal sectors. This section crosses the four editions of the continental report on labour migration statistics with the actual state of ILO convention ratifications — where enforceable rights are decided."
+          desc: "Thirteen million migrant workers, concentrated in labour-intensive and largely informal sectors. This section crosses the four editions of the continental report on labour migration statistics with the actual state of ILO convention ratifications — where enforceable rights are decided.",
+          plain: "Most Africans who leave do so in order to work. This section shows in which trades, in which countries, and with which rights."
         },
         forced: {
           badge: "Forced displacement & protection",
           title: "The mobility that crosses no border",
           highlight: "and that nobody counts as migration.",
-          desc: "Internally displaced people, refugees, stateless persons, disaster displacement: in Africa the constrained forms of mobility are overwhelmingly internal. They fall under African instruments that predate and exceed the global frameworks — and it is here that the gap between norm and anchoring costs the most."
+          desc: "Internally displaced people, refugees, stateless persons, disaster displacement: in Africa the constrained forms of mobility are overwhelmingly internal. They fall under African instruments that predate and exceed the global frameworks — and it is here that the gap between norm and anchoring costs the most.",
+          plain: "In Africa, most people fleeing war or disaster stay inside their own country. They therefore appear in no migration statistic. This section counts them."
         },
         glossary: {
           badge: "Lexicon & Definitions",
           title: "The words of the regime",
           highlight: "and their African definition.",
-          desc: "Each term is defined first by the African instrument that governs it — the OAU Refugee Convention (1969), the Kampala Convention on internally displaced persons (2009) — then, for statistical aggregates only, by UN DESA's operational definition. The choice of word is never neutral: it determines what gets counted."
+          desc: "Each term is defined first by the African instrument that governs it — the OAU Refugee Convention (1969), the Kampala Convention on internally displaced persons (2009) — then, for statistical aggregates only, by UN DESA's operational definition. The choice of word is never neutral: it determines what gets counted.",
+          plain: "The exact meaning of the words used here. Each definition starts from the African instrument that governs it, because how something is named decides what gets counted."
         },
         about: {
           badge: "About the platform",
           title: "A civic initiative",
           highlight: "grounded in doctoral research.",
-          desc: "The origin, scope and stated limits of South(s) Mobility DataHub: who produces it, from which data, and what the platform does not claim to be."
+          desc: "The origin, scope and stated limits of South(s) Mobility DataHub: who produces it, from which data, and what the platform does not claim to be.",
+          plain: "Who produces this platform, why, and with what resources. It is grounded in doctoral research and remains independent of any institution."
         },
         methodology: {
           badge: "Rigor & Transparency",
           title: "Methodological engineering",
           highlight: "and indicators framework.",
-          desc: "Explore the scientific architecture of the platform, the official data harmonization process, and alternative indicators for objective mobility analysis."
+          desc: "Explore the scientific architecture of the platform, the official data harmonization process, and alternative indicators for objective mobility analysis.",
+          plain: "Where the figures come from, how they were checked, and what the platform cannot tell you. Every data point is traceable back to its source."
         }
       },
       home_editorial: {
@@ -2512,32 +2914,40 @@ const mapIndicators = [
   {
     key: 'evolution', label: { fr: "Part de la population", en: "Share of population" },
     unit: '%', get: c => parseFloat(c.evolution),
-    hint: { fr: "Migrants internationaux en % de la population nationale (UN DESA, 2024).", en: "International migrants as % of national population (UN DESA, 2024)." }
+    hint: { fr: "Migrants internationaux en % de la population nationale (UN DESA, 2024).", en: "International migrants as % of national population (UN DESA, 2024)." },
+    plain: { fr: "Sur 100 habitants du pays, combien sont nés à l'étranger. Plus la teinte est dense, plus la part est élevée.", en: "Out of every 100 people living in the country, how many were born abroad. The denser the shade, the higher the share." }
   },
   {
     key: 'female', label: { fr: "Part des femmes", en: "Female share" },
     unit: '%', get: c => parseFloat(c.female),
-    hint: { fr: "Part des femmes parmi les migrants internationaux présents (UN DESA, 2024).", en: "Share of women among resident international migrants (UN DESA, 2024)." }
+    hint: { fr: "Part des femmes parmi les migrants internationaux présents (UN DESA, 2024).", en: "Share of women among resident international migrants (UN DESA, 2024)." },
+    plain: { fr: "Sur 100 personnes venues de l'étranger et vivant dans le pays, combien sont des femmes. Autour de 50, les départs concernent autant les femmes que les hommes.", en: "Out of every 100 foreign-born people living in the country, how many are women. Around 50 means departures involve women as much as men." }
   },
   {
     key: 'retention', label: { fr: "Rétention Sud-Sud", en: "South-South retention" },
     unit: '%', get: c => Number(c.retention),
-    hint: { fr: "Part des mobilités qui restent dans un pays du Sud plutôt que de rejoindre le Nord.", en: "Share of mobility remaining within the Global South rather than moving North." }
+    hint: { fr: "Part des mobilités qui restent dans un pays du Sud plutôt que de rejoindre le Nord.", en: "Share of mobility remaining within the Global South rather than moving North." },
+    plain: { fr: "Sur 100 personnes parties de ce pays, combien sont restées en Afrique plutôt que d'aller vers l'Europe ou l'Amérique du Nord.", en: "Out of every 100 people who left this country, how many stayed in Africa rather than going to Europe or North America." },
+    term: 'retention'
   },
   {
     key: 'avoi', label: { fr: "Ouverture des visas (AVOI)", en: "Visa openness (AVOI)" },
     unit: '/100', get: c => Number(c.avoi),
-    hint: { fr: "Indice d'ouverture des visas aux ressortissants africains (BAD/CUA, 2024).", en: "Visa openness index toward African nationals (AfDB/AUC, 2024)." }
+    hint: { fr: "Indice d'ouverture des visas aux ressortissants africains (BAD/CUA, 2024).", en: "Visa openness index toward African nationals (AfDB/AUC, 2024)." },
+    plain: { fr: "À quel point le pays laisse entrer les autres Africains sans visa, sur une note de 100. Plus la teinte est dense, plus la frontière est ouverte.", en: "How readily the country lets other Africans in without a visa, scored out of 100. The denser the shade, the more open the border." },
+    term: 'avoi'
   },
   {
     key: 'remittances', label: { fr: "Transferts de fonds (% PIB)", en: "Remittances (% GDP)" },
     unit: '%', get: c => (c.remittances === null || c.remittances === undefined ? NaN : Number(c.remittances)),
-    hint: { fr: "Transferts des diasporas rapportés au PIB (Banque mondiale).", en: "Diaspora remittances as a share of GDP (World Bank)." }
+    hint: { fr: "Transferts des diasporas rapportés au PIB (Banque mondiale).", en: "Diaspora remittances as a share of GDP (World Bank)." },
+    plain: { fr: "L'argent envoyé au pays par ceux qui vivent à l'étranger, rapporté à la richesse produite sur place. Dans certains pays, cela dépasse l'aide internationale.", en: "Money sent home by people living abroad, measured against the wealth produced at home. In some countries it exceeds international aid." }
   },
   {
     key: 'idp_conflict', label: { fr: "Déplacés internes (conflit)", en: "IDPs (conflict)" },
     unit: '', get: c => Number(c.idp_conflict),
-    hint: { fr: "Personnes déplacées à l'intérieur du pays par les conflits (IDMC).", en: "People displaced within the country by conflict (IDMC)." }
+    hint: { fr: "Personnes déplacées à l'intérieur du pays par les conflits (IDMC).", en: "People displaced within the country by conflict (IDMC)." },
+    plain: { fr: "Le nombre de personnes chassées de chez elles par un conflit, mais restées dans leur propre pays. Elles ne franchissent aucune frontière.", en: "The number of people driven from their homes by conflict but still inside their own country. They cross no border." }
   },
 ];
 
@@ -2890,6 +3300,8 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       <PageHeader
         badge={text.headers.home.badge}
         plate={"Pl. I"}
+        plain={text.headers.home.plain}
+        lang={lang}
         title={text.headers.home.title}
         highlight={text.headers.home.highlight}
         desc={text.headers.home.desc}
@@ -3117,9 +3529,9 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
       </header>
 
       <div className="px-6 md:px-8 py-6" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
+        <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
           {L("Ce que montrent les donn\u00e9es", "What data shows")}
-        </span>
+        </h4>
         <p className="text-[15px] leading-relaxed text-slate-800">{fiche.reality[lang]}</p>
       </div>
 
@@ -3259,6 +3671,8 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <PageHeader
         badge={L('Observatoire des Narratifs', 'Narratives Observatory')}
         plate={"Pl. II"}
+        plain={{"fr":"Soixante-dix affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité.","en":"Seventy claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."}}
+        lang={lang}
         title={L('\u00c9valuation des affirmations', 'Evidence Check')}
         highlight={L('\u00e0 la lumi\u00e8re des donn\u00e9es.', 'powered by open data.')}
         desc={L(
@@ -3288,6 +3702,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              aria-label={L('Rechercher parmi les affirmations v\u00e9rifi\u00e9es', 'Search the fact-checked claims')}
               placeholder={L("Rechercher une affirmation, une donn\u00e9e, un th\u00e8me\u2026", "Search a claim, a figure, a theme\u2026")}
               className="w-full pl-9 pr-3 py-2.5 text-sm bg-transparent border border-slate-200 focus:outline-none"
               style={{ borderRadius: 2 }}
@@ -3692,9 +4107,9 @@ const GovernanceCross = ({ lang }) => {
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Ce que les trois coefficients disent ensemble', 'What the three coefficients say together')}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Autrement dit : les États qui ouvrent ne sont pas ceux qui signent. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
@@ -3711,7 +4126,7 @@ const GovernanceCross = ({ lang }) => {
       </div>
 
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Sources', 'Sources')}</span>
+        <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Sources', 'Sources')}</h4>
         <a href={IIAG_SOURCE.url} target="_blank" rel="noopener noreferrer"
            className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
           <span>{IIAG_SOURCE.label[lang]}</span><ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
@@ -3815,9 +4230,9 @@ const AnchoringMatrix = ({ lang }) => {
 
         {/* L'asymetrie de protection */}
         <div className="p-5" style={{ backgroundColor: 'var(--bad-soft)', borderLeft: '2px solid var(--bad)' }}>
-          <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--bad)' }}>
+          <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--bad)' }}>
             {L('Une asymétrie que personne ne compte', 'An asymmetry nobody counts')}
-          </span>
+          </h4>
           <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }}>
             {L(
               `${asym.refOnly.length} États ont ratifié la Convention de l'OUA de 1969 — celle qui protège le réfugié venu d'ailleurs — sans ratifier la Convention de Kampala, celle qui protège leur propre population déplacée à l'intérieur des frontières. L'inverse ne se produit que dans ${asym.kampOnly.length} cas. La protection s'arrête donc plus souvent à la frontière qu'elle ne la franchit — alors que le déplacement interne est, en Afrique, la forme de mobilité forcée la plus massive (Ben Mokhtar, 2026).`,
@@ -3893,9 +4308,9 @@ const AnchoringMatrix = ({ lang }) => {
       </div>
 
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+        <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
           {L('Provenance et réserve', 'Provenance and caveat')}
-        </span>
+        </h4>
         <p className="text-[11px] leading-relaxed text-slate-600 text-justify">
           {L(
             "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument, les six restants étant l'Érythrée (non signataire), le Bénin, la Libye, le Soudan et le Soudan du Sud (ratification non approuvée) et la Somalie (approuvée, non déposée). Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts : Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé, et la matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
@@ -3927,9 +4342,9 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
     <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">{children}</div>
     {sources.length > 0 && (
       <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+        <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
           {lang === 'fr' ? 'Sources' : 'Sources'}
-        </span>
+        </h4>
         <ul className="space-y-1.5">
           {sources.map((src, i) => (
             <li key={i} className="text-xs leading-snug">
@@ -3998,7 +4413,8 @@ const TabForced = ({ text, lang }) => {
     };
   }, [lang]);
 
-  const fmt = (v) => v.toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US');
+  // Un seul chemin pour tous les nombres du site : separateur normalise inclus.
+  const fmt = (v) => formatNumber(v, lang);
 
   const exportCSV = () => {
     const all = Object.values(countryData).flat();
@@ -4046,6 +4462,8 @@ const TabForced = ({ text, lang }) => {
       <PageHeader
         badge={text.headers.forced.badge}
         plate={"Pl. IV"}
+        plain={text.headers.forced.plain}
+        lang={lang}
         title={text.headers.forced.title}
         highlight={text.headers.forced.highlight}
         desc={text.headers.forced.desc}
@@ -4118,7 +4536,7 @@ const TabForced = ({ text, lang }) => {
                 </span>
               </div>
               <div className="px-4 py-4">
-                <span className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: p.accent }}>{p.inst}</span>
+                <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: p.accent }}>{p.inst}</h4>
                 <p className="text-xs text-slate-600 leading-relaxed text-justify">{p.d}</p>
               </div>
             </article>
@@ -4193,7 +4611,7 @@ const TabForced = ({ text, lang }) => {
               const mult = a ? b / a : 0;
               return (
                 <div key={x.k} className="border border-slate-200 p-4 lift">
-                  <span className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--label)' }}>{x.l}</span>
+                  <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--label)' }}>{x.l}</h4>
                   <div className={`text-xl font-serif font-bold tabular-nums leading-none ${x.tone}`}>{fmt(b)}</div>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>{fmt(a)} <span className="opacity-70">(2014)</span></span>
@@ -4224,9 +4642,9 @@ const TabForced = ({ text, lang }) => {
       {/* L'asymetrie juridique */}
       <Reveal delay={40}>
         <div className="p-6 md:p-8" style={{ backgroundColor: 'var(--bad-soft)', borderLeft: '3px solid var(--bad)' }}>
-          <span className="block text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--bad)' }}>
+          <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--bad)' }}>
             {L('Le point aveugle du droit continental', 'The blind spot of continental law')}
-          </span>
+          </h4>
           <h2 className="font-serif font-bold text-xl md:text-2xl mb-4 leading-snug" style={{ color: 'var(--ink)' }}>
             {L(`${data.refOnly.length} États protègent le réfugié qui arrive, pas le citoyen qu'ils déplacent`,
                `${data.refOnly.length} states protect the refugee who arrives, not the citizen they displace`)}
@@ -4318,6 +4736,8 @@ const TabLabour = ({ text, lang }) => {
       <PageHeader
         badge={text.headers.labour.badge}
         plate={"Pl. V"}
+        plain={text.headers.labour.plain}
+        lang={lang}
         title={text.headers.labour.title}
         highlight={text.headers.labour.highlight}
         desc={text.headers.labour.desc}
@@ -4409,9 +4829,9 @@ const TabLabour = ({ text, lang }) => {
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L("Ce que la révision de la série nous apprend", "What the revision of the series tells us")}
-            </span>
+            </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
                 "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Ce n'est pas une erreur, c'est une révision — méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
@@ -4421,9 +4841,9 @@ const TabLabour = ({ text, lang }) => {
           </div>
 
           <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L("Là où la donnée manque vraiment", "Where the data really runs out")}
-            </span>
+            </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
                 "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
@@ -4433,9 +4853,9 @@ const TabLabour = ({ text, lang }) => {
           </div>
 
           <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L("Le lien avec la libre circulation et la ZLECAf", "The link with free movement and the AfCFTA")}
-            </span>
+            </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
                 "La 4e édition établit elle-même le lien : l'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
@@ -4451,9 +4871,9 @@ const TabLabour = ({ text, lang }) => {
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', border: '1px solid #E4CFA4' }}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
               {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
-            </span>
+            </h4>
             <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }}>
               {L(
                 "La 4e édition rappelle que 19,1 % seulement de la population africaine est couverte par au moins une prestation de protection sociale (indicateur ODD 1.3.1), contre 52,4 % dans le monde — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
@@ -4486,9 +4906,9 @@ const TabLabour = ({ text, lang }) => {
             </p>
 
             <div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+              <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                 {L('Combien des 11 conventions fondamentales, et combien de pays', 'How many of the 11 fundamental conventions, and how many countries')}
-              </span>
+              </h4>
               <div className="space-y-2">
                 {ilo.buckets.map((b, i) => (
                   <div key={b.k} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -4513,9 +4933,9 @@ const TabLabour = ({ text, lang }) => {
             </div>
 
             <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', borderLeft: '2px solid var(--warn-ink)' }}>
-              <span className="block text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+              <h4 className="block text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
                 {L('Le volume ne dit pas la protection', 'Volume does not equal protection')}
-              </span>
+              </h4>
               <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }}>
                 {L(
                   `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle fondamental complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
@@ -4554,7 +4974,7 @@ const TabLabour = ({ text, lang }) => {
           </div>
 
           <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-            <span className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</span>
+            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
             <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer"
                className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
               <span>{L(
@@ -5492,6 +5912,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       <PageHeader
         badge={text.headers.governance.badge}
         plate={"Pl. VI"}
+        plain={text.headers.governance.plain}
+        lang={lang}
         title={text.headers.governance.title}
         highlight={text.headers.governance.highlight}
         desc={text.headers.governance.desc}
@@ -5629,9 +6051,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {lang === 'fr' ? "Projet phare n° 4 sur 15" : "Flagship project no. 4 of 15"}
-                </span>
+                </h4>
                 <h5 className="font-serif font-bold text-slate-900 mb-2">
                   {lang === 'fr' ? "Le passeport africain et la libre circulation des personnes" : "The African Passport and Free Movement of People"}
                 </h5>
@@ -5700,9 +6122,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {lang === 'fr' ? "Principe de souveraineté nationale (par. 15)" : "National sovereignty principle (para. 15)"}
-                </span>
+                </h4>
                 <p className="text-[13px] text-slate-600 italic leading-relaxed">
                   {lang === 'fr'
                     ? "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »"
@@ -5716,11 +6138,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               <div>
-                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                   {lang === 'fr'
                     ? "Les dix principes directeurs, transversaux et interdépendants (par. 15)"
                     : "The ten cross-cutting and interdependent guiding principles (para. 15)"}
-                </span>
+                </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                   {(lang === 'fr' ? [
                     ["Centré sur les personnes", "place les individus au cœur du dispositif"],
@@ -5825,9 +6247,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               <div>
-                <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                   {lang === 'fr' ? "Les six domaines thématiques de la Position" : "The six thematic areas of the Position"}
-                </span>
+                </h4>
                 <ol className="space-y-2">
                   {(lang === 'fr' ? [
                     "Agir sur les moteurs de la migration — effets du changement climatique, catastrophes naturelles, crises d'origine humaine, inégalités de genre et autres.",
@@ -6569,9 +6991,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             {b.count} {lang === 'fr' ? 'pays' : 'countries'}
                           </span>
                           <span className="pointer-events-none absolute right-0 bottom-full mb-2 z-20 hidden group-hover:block w-64 text-left bg-slate-900 text-white rounded-md shadow-lg p-3">
-                            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+                            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
                               {lang === 'fr' ? b.labelFr : b.labelEn}
-                            </span>
+                            </h4>
                             <span className="block text-[11px] leading-relaxed">
                               {b.members.map((m) => m.name[lang]).join(' · ')}
                             </span>
@@ -6773,6 +7195,8 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
     <PageHeader
       badge={text.headers.explorer.badge}
       plate={"Pl. III"}
+      plain={text.headers.explorer.plain}
+      lang={lang}
       title={text.headers.explorer.title}
       highlight={text.headers.explorer.highlight}
       desc={text.headers.explorer.desc}
@@ -6786,9 +7210,12 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         
         {/* RECHERCHE */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
-          <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
           <input
             type="text"
+            /* Un placeholder n'est pas un nom accessible : il disparait des qu'on
+               saisit et n'est pas restitue de facon fiable par les lecteurs d'ecran. */
+            aria-label={lang === 'fr' ? 'Rechercher un pays' : 'Search for a country'}
             placeholder={text.sidebar.search}
             className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
             value={searchTerm}
@@ -6949,7 +7376,21 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                   <h3 className="text-sm font-bold text-slate-800">
                     {lang === 'fr' ? "Lecture cartographique" : "Map view"}
                   </h3>
-                  <p className="text-xs text-slate-500 mt-0.5 max-w-xl leading-relaxed">{mapIndicator.hint[lang]}</p>
+                  {/* Ce que montre la carte, dit simplement — puis la definition
+                      technique de l'indicateur, pour qui la cherche. */}
+                  <p className="text-[13px] text-slate-700 mt-1 max-w-xl leading-relaxed">
+                    {mapIndicator.plain
+                      ? mapIndicator.plain[lang]
+                      : mapIndicator.hint[lang]}
+                    {mapIndicator.term && (
+                      <> <Terme k={mapIndicator.term} lang={lang}>
+                        {lang === 'fr' ? 'Voir la définition' : 'See the definition'}
+                      </Terme></>
+                    )}
+                  </p>
+                  <p className="text-[11px] mt-1 max-w-xl leading-relaxed" style={{ color: 'var(--label)' }}>
+                    {mapIndicator.hint[lang]}
+                  </p>
                 </div>
                 <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 shrink-0">
                   <button
@@ -7931,6 +8372,8 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
       <PageHeader
         badge={text.headers.library.badge}
         plate={"Pl. VIII"}
+        plain={text.headers.library.plain}
+        lang={lang}
         title={text.headers.library.title}
         highlight={text.headers.library.highlight}
         desc={text.headers.library.desc}
@@ -8206,6 +8649,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
       <PageHeader
         badge={L("Production statistique africaine", "African statistical production")}
         plate={"Pl. VII"}
+        plain={{"fr":"On répète souvent que l'Afrique manque de données. Cette section compte ce que le continent produit réellement, et regarde où le déficit se situe.","en":"It is often repeated that Africa lacks data. This section counts what the continent actually produces, and looks at where the shortfall really sits."}}
+        lang={lang}
         title={L("Données & statistiques", "Data & Statistics")}
         highlight={L("où se situe réellement le déficit.", "where the deficit actually lies.")}
         desc={L(
@@ -8321,9 +8766,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L("Périodicité recommandée (§ 1.12 et 1.13)", "Recommended periodicity (§§ 1.12 and 1.13)")}
-            </span>
+            </h4>
             <p className="text-[13px] text-slate-600 italic leading-relaxed">
               {L(
                 "« Il est recommandé qu'un recensement national soit conduit au moins tous les dix ans. » La norme ajoute que les pays devraient s'efforcer de recenser lors des années se terminant par « 0 », ou au plus près, afin que les résultats restent comparables d'un pays à l'autre.",
@@ -8339,12 +8784,12 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </div>
 
           <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L(
                 "Les caractéristiques de migration internationale prévues par la norme",
                 "The international migration characteristics the standard provides for"
               )}
-            </span>
+            </h4>
             <ul className="space-y-1">
               {(lang === 'fr' ? [
                 ["Pays de naissance", true],
@@ -8472,9 +8917,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </div>
 
         <div className="mt-5 p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que le croisement avec la norme révèle", "What the overlay with the standard reveals")}
-          </span>
+          </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
               "La norme onusienne place trois caractéristiques sur le même plan, toutes « thèmes centraux » : pays de naissance, citoyenneté, année d'arrivée. Les deux premières sont presque universelles dans les recensements africains — 87 % et 91,5 %. La troisième tombe à 15 %. Ce n'est ni une question de moyens ni une question de capacité : les trois figurent dans le même questionnaire de référence, et deux sont posées. Ce qui décroche, c'est précisément la question qui permettrait de dater les trajectoires — donc de les analyser. Quant au motif du départ, posé par 6 États, il ne figure même pas parmi les caractéristiques prévues par la norme : l'interroger est un choix national, au-delà du standard (Ben Mokhtar, 2026).",
@@ -8532,9 +8977,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </p>
 
           <div>
-            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
               {L("Les quatre thèmes stratégiques", "The four strategic themes")}
-            </span>
+            </h4>
             <ol className="space-y-2">
               {(lang === 'fr' ? [
                 "Produire des statistiques de qualité pour l'Afrique.",
@@ -8616,6 +9061,8 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       <PageHeader
         badge={text.headers.glossary.badge}
         plate={"Pl. IX"}
+        plain={text.headers.glossary.plain}
+        lang={lang}
         title={text.headers.glossary.title}
         highlight={text.headers.glossary.highlight}
         desc={text.headers.glossary.desc}
@@ -8670,9 +9117,9 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
                       elle ouvre ou ferme des droits. */}
                   {t.stakes && (
                     <div className="mt-3 pl-3 py-1" style={{ borderLeft: '2px solid var(--accent)' }}>
-                      <span className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
+                      <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
                         {lang === 'fr' ? "Ce que la définition change" : "What the definition changes"}
-                      </span>
+                      </h4>
                       <p className="text-xs text-slate-600 leading-relaxed">{t.stakes[lang]}</p>
                     </div>
                   )}
@@ -8868,6 +9315,8 @@ const TabMethodology = ({ text, lang, children }) => (
     <PageHeader
       badge={text.headers.methodology.badge}
       plate={"Pl. X"}
+      plain={text.headers.methodology.plain}
+      lang={lang}
       title={text.headers.methodology.title}
       highlight={text.headers.methodology.highlight}
       desc={text.headers.methodology.desc}
@@ -9174,6 +9623,8 @@ const TabAbout = ({ text, lang, children }) => {
       <PageHeader
         badge={text.headers.about.badge}
         plate={"Pl. XI"}
+        plain={text.headers.about.plain}
+        lang={lang}
         title={text.headers.about.title}
         highlight={text.headers.about.highlight}
         desc={text.headers.about.desc}
@@ -9679,6 +10130,11 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
+      {/* Lien d'evitement : au clavier, la premiere tabulation saute les neuf
+          onglets de navigation et mene directement au contenu. */}
+      <a href="#contenu" className="skip-link">
+        {lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}
+      </a>
       <style type="text/css">
         {`
           /* Les polices et la palette sont definies dans theme.css (DA « atlas editorial »). */
@@ -9782,7 +10238,8 @@ export default function App() {
         <ScrollProgress />
       </nav>
 
-      <main className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-[max-width] duration-300 ${showModal ? 'print:hidden' : ''}`}>
+      <main id="contenu" tabIndex={-1} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 transition-[max-width] duration-300 ${showModal ? 'print:hidden' : ''}`}>
+        <SectionNav lang={lang} tabKey={activeTab} />
         {activeTab === 'home' && (
           <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
         )}
@@ -9899,7 +10356,7 @@ export default function App() {
                 <button onClick={() => setModalView('geography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'geography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.geo}</button>
                 <button onClick={() => setModalView('economy')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'economy' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.econ}</button>
               </div>
-              <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" /></button>
+              <button onClick={() => setShowModal(false)} aria-label={lang === 'fr' ? 'Fermer le rapport' : 'Close the report'} className="absolute top-6 right-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
             <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
