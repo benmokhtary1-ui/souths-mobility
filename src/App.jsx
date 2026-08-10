@@ -1747,8 +1747,8 @@ const t = {
         badge: "Note de Cadrage Scientifique",
         title: "Pourquoi ce Knowledge Hub ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial (82,2 millions recensés dans 104 pays) — davantage que le nombre de migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière : elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord, et disparaît de ce fait des récits dominants sur « la migration africaine ».",
-        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Mais pour les notions juridiques et normatives, c'est l'instrument africain qui fait référence : le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève, et la personne déplacée interne à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial (82,2 millions recensés dans 104 pays) — davantage que le nombre de migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
+        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
         p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient, retournent et instrumentalisent les agendas migratoires du Nord, loin d'en être de simples récepteurs la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord, sans nier pour autant les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
@@ -1844,7 +1844,7 @@ const t = {
         research_title: "Une plateforme née de la recherche",
         research_p1: "South(s) Mobility est issu d'un projet de recherche doctorale consacré à la gouvernance des migrations africaines.",
         research_p2: "Au cours de cette recherche, un constat s'est imposé : une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources demeurent largement dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
-        research_p3: "South(s) Mobility est né de cette observation. Le projet vise à rassembler ces ressources dans un environnement unique, ouvert et évolutif afin de faciliter leur consultation, leur comparaison et leur réutilisation par les chercheurs, les étudiants, les journalistes, les décideurs publics, les organisations internationales et l'ensemble des personnes intéressées par les mobilités humaines.",
+        research_p3: "South(s) Mobility est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
         research_p4: "Il s'inscrit dans une démarche de science ouverte (Open Science), de diffusion des connaissances et de valorisation de la recherche.",
 
         data_title: "Une approche fondée sur les données",
@@ -2336,7 +2336,7 @@ const countryData = {
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe : l'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens, et les pays du Golfe fournissent plus de 40% des 19,5 milliards de dollars de transferts de fonds reçus par le pays en 2023 (Banque Mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians, and Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
+      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe. L'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians, and Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
       "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
     },
     { 
@@ -2469,7 +2469,7 @@ const countryData = {
       "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "Malgré une diaspora nombreuse au Royaume-Uni et aux États-Unis, les premières destinations réelles des Nigérians sont des pays voisins : le Cameroun et le Niger accueillent à eux deux plus de 320 000 Nigérians, davantage que le Royaume-Uni (OIM, Rapport sur les migrations dans le monde 2024).", "en": "Despite a large diaspora in the UK and US, Nigerians' top real destinations are neighboring countries: Cameroon and Niger together host over 320,000 Nigerians, more than the UK (IOM, World Migration Report 2024)." },
+      "origDest": { "fr": "Malgré une diaspora nombreuse au Royaume-Uni et aux États-Unis, les premières destinations réelles des Nigérians sont des pays voisins. Le Cameroun et le Niger accueillent à eux deux plus de 320 000 Nigérians — davantage que le Royaume-Uni (OIM, Rapport sur les migrations dans le monde 2024).", "en": "Despite a large diaspora in the UK and US, Nigerians' top real destinations are neighboring countries: Cameroon and Niger together host over 320,000 Nigerians, more than the UK (IOM, World Migration Report 2024)." },
       "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
     },
     { 
@@ -3072,6 +3072,181 @@ const CARTE_RECENSEMENT = {
     { key: 'none',      color: '#7A2E2E', label: { fr: 'Aucun recensement prévu', en: 'No census planned' } },
   ],
   get: (c) => censusByCountry[(c.iso2 || '').toLowerCase()]?.status2020 || null,
+};
+
+// ---------------------------------------------------------------------------
+// Recherche transversale
+// ---------------------------------------------------------------------------
+// La recherche etait cloisonnee : les pays d'un cote, les affirmations de
+// l'autre, rien pour le glossaire ni pour les sources. Or on ne cherche pas
+// « dans une section », on cherche une chose. Les quatre corpus n'ont pas la
+// meme forme ; on les ramene donc a une fiche commune — type, titre, contexte,
+// destination — construite une seule fois au chargement.
+const sansAccents = (s) => String(s || '').normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+const construireIndex = (lang) => {
+  const fiches = [];
+  const L = (o) => (typeof o === 'string' ? o : (o?.[lang] || o?.fr || ''));
+  // Les mots-cles sont TOUJOURS bilingues, quelle que soit la langue affichee :
+  // on tape volontiers « Tchad » en lisant l'anglais, ou l'inverse.
+  const D = (o) => (typeof o === 'string' ? o : `${o?.fr || ''} ${o?.en || ''}`);
+
+  // La region n'est pas un champ du pays : c'est la cle qui les regroupe.
+  const REGIONS = {
+    af_med:     { fr: 'Afrique méditerranéenne', en: 'Mediterranean Africa' },
+    af_west:    { fr: "Afrique de l'Ouest",      en: 'West Africa' },
+    af_south:   { fr: 'Afrique australe',        en: 'Southern Africa' },
+    af_east:    { fr: "Afrique de l'Est",        en: 'East Africa' },
+    af_central: { fr: 'Afrique centrale',        en: 'Central Africa' },
+  };
+  Object.entries(countryData).forEach(([region, pays]) => pays.forEach(c => fiches.push({
+    type: 'pays',
+    titre: L(c.name),
+    contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${lang === 'fr' ? 'migrants' : 'migrants'}` : null]
+      .filter(Boolean).join(' · '),
+    aller: { tab: 'explorer', id: c.id },
+    mots: `${D(c.name)} ${c.iso2 || ''} ${D(REGIONS[region])}`,
+  })));
+
+  (evidenceCheckData || []).forEach(e => fiches.push({
+    type: 'affirmation',
+    titre: L(e.narrative),
+    contexte: `${L(e.category)} · ${L(e.verdict)}`,
+    aller: { tab: 'evidence', id: e.id },
+    mots: `${D(e.narrative)} ${D(e.reality)} ${D(e.category)} ${D(e.verdict)}`,
+  }));
+
+  (glossaryData || []).forEach(g => (g.terms || []).forEach(t => fiches.push({
+    type: 'terme',
+    titre: lang === 'fr' ? t.term : (t.en_term || t.term),
+    contexte: L(g.category),
+    aller: { tab: 'resources' },
+    mots: `${t.term} ${t.en_term || ''} ${t.fr || ''} ${t.en || ''} ${D(g.category)}`,
+  })));
+
+  (libraryData || []).forEach(s => (s.items || []).forEach(it => fiches.push({
+    type: 'source',
+    titre: it.title,
+    contexte: `${L(s.section)}${it.year ? ` · ${it.year}` : ''}`,
+    aller: { tab: 'resources' },
+    lien: it.url,
+    mots: `${it.title} ${D(it.desc)} ${D(s.section)}`,
+  })));
+
+  return fiches.map(f => ({ ...f, cle: sansAccents(f.mots) }));
+};
+
+const TYPES = {
+  pays:        { fr: 'Pays',         en: 'Country' },
+  affirmation: { fr: 'Affirmation',  en: 'Claim' },
+  terme:       { fr: 'Définition',   en: 'Definition' },
+  source:      { fr: 'Source',       en: 'Source' },
+};
+
+const RechercheGlobale = ({ lang, aller }) => {
+  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const [q, setQ] = useState('');
+  const [ouvert, setOuvert] = useState(false);
+  const [filtre, setFiltre] = useState(null);
+  const ref = useRef(null);
+  const champRef = useRef(null);
+
+  const index = useMemo(() => construireIndex(lang), [lang]);
+
+  const resultats = useMemo(() => {
+    const t = sansAccents(q).trim();
+    if (t.length < 2) return [];
+    const mots = t.split(/\s+/);
+    return index
+      .filter(f => mots.every(m => f.cle.includes(m)))
+      // Un titre qui commence par la recherche passe devant : c'est presque
+      // toujours ce qu'on cherchait.
+      .map(f => ({ ...f, rang: sansAccents(f.titre).startsWith(mots[0]) ? 0 : 1 }))
+      .sort((a, b) => a.rang - b.rang || a.titre.length - b.titre.length)
+      .slice(0, 40);
+  }, [q, index]);
+
+  const parType = useMemo(() => {
+    const n = {};
+    resultats.forEach(r => { n[r.type] = (n[r.type] || 0) + 1; });
+    return n;
+  }, [resultats]);
+
+  const vus = filtre ? resultats.filter(r => r.type === filtre) : resultats;
+
+  useEffect(() => {
+    const dehors = (e) => { if (!ref.current?.contains(e.target)) setOuvert(false); };
+    const clavier = (e) => {
+      if (e.key === 'Escape') setOuvert(false);
+      // Barre oblique : le raccourci de recherche le plus repandu.
+      if (e.key === '/' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName)) {
+        e.preventDefault(); setOuvert(true); setTimeout(() => champRef.current?.focus(), 20);
+      }
+    };
+    document.addEventListener('mousedown', dehors);
+    document.addEventListener('keydown', clavier);
+    return () => { document.removeEventListener('mousedown', dehors); document.removeEventListener('keydown', clavier); };
+  }, []);
+
+  return (
+    <div className="recherche" ref={ref}>
+      <button type="button" className="recherche-btn" aria-expanded={ouvert}
+              onClick={() => { setOuvert(o => !o); setTimeout(() => champRef.current?.focus(), 20); }}>
+        <Search className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        <span>{L('Rechercher', 'Search')}</span>
+        <kbd className="recherche-kbd" aria-hidden="true">/</kbd>
+      </button>
+
+      {ouvert && (
+        <div className="recherche-panneau">
+          <input
+            ref={champRef}
+            type="search"
+            value={q}
+            onChange={(e) => { setQ(e.target.value); setFiltre(null); }}
+            aria-label={L('Rechercher dans toute la plateforme', 'Search the whole platform')}
+            placeholder={L('Un pays, une affirmation, un mot, une source…', 'A country, a claim, a word, a source…')}
+            className="recherche-champ"
+          />
+
+          {q.trim().length >= 2 && (
+            <>
+              <div className="recherche-filtres">
+                <button type="button" aria-pressed={!filtre} onClick={() => setFiltre(null)}>
+                  {L('Tout', 'All')} <span className="num">{resultats.length}</span>
+                </button>
+                {Object.entries(TYPES).filter(([k]) => parType[k]).map(([k, lib]) => (
+                  <button key={k} type="button" aria-pressed={filtre === k} onClick={() => setFiltre(k)}>
+                    {lib[lang]} <span className="num">{parType[k]}</span>
+                  </button>
+                ))}
+              </div>
+
+              {vus.length === 0 ? (
+                <p className="recherche-vide">
+                  {L('Rien ne correspond. Essayez un mot plus court, ou le nom d’un pays.',
+                     'Nothing matches. Try a shorter word, or a country name.')}
+                </p>
+              ) : (
+                <ul className="recherche-liste">
+                  {vus.map((r, i) => (
+                    <li key={i}>
+                      <button type="button" onClick={() => { setOuvert(false); setQ(''); aller(r); }}>
+                        <span className="recherche-type">{TYPES[r.type][lang]}</span>
+                        <span className="recherche-titre">{r.titre}</span>
+                        <span className="recherche-ctx">{r.contexte}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
 // Une carte posee dans une section : titre, phrase de lecture, carte, sources.
@@ -3969,7 +4144,7 @@ const stcSessions = [
   { num: { fr: "2e session", en: "2nd session" }, date: { fr: "16-21 oct. 2017, Kigali", en: "16-21 Oct. 2017, Kigali" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Libre circulation, MPFA, passeport africain", en: "Free movement, MPFA, African passport" }, outcome: { fr: "Tournant normatif : validation technique du Protocole sur la libre circulation des personnes, adoption du Cadre de politique migratoire révisé (MPFA 2018-2030) et de son plan d'action décennal.", en: "Normative turning point: technical validation of the Free Movement of Persons Protocol, adoption of the revised Migration Policy Framework (MPFA 2018-2030) and its ten-year action plan." } },
   { num: { fr: "3e session", en: "3rd session" }, date: { fr: "5-8 nov. 2019, Addis-Abeba", en: "5-8 Nov. 2019, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Réfugiés (thème de l'année), architecture institutionnelle", en: "Refugees (theme of the year), institutional architecture" }, outcome: { fr: "Densification par outillage : adoption des projets de statuts de quatre agences clés (OAM, AIR, COC, Agence Humanitaire Africaine) ; validation de la position sur l'apatridie.", en: "Densification through institution-building: adoption of draft statutes for four key agencies (AMO, AIR, COC, African Humanitarian Agency); validation of the position on statelessness." } },
   { num: { fr: "4e session", en: "4th session" }, date: { fr: "23-24 mai 2022, Malabo", en: "23-24 May 2022, Malabo" }, format: { fr: "Ministérielle (Sommet extraordinaire)", en: "Ministerial (Extraordinary Summit)" }, focus: { fr: "Urgence humanitaire, climat, nutrition", en: "Humanitarian emergency, climate, nutrition" }, outcome: { fr: "Traduction politique : préparation de la Déclaration de Malabo, conversion de l'agenda politique d'urgence en mandats techniques et mécanismes de suivi post-sommet.", en: "Political translation: preparation of the Malabo Declaration, converting the emergency political agenda into technical mandates and post-summit follow-up mechanisms." } },
-  { num: { fr: "5e session", en: "5th session" }, date: { fr: "10-14 nov. 2025, Addis-Abeba", en: "10-14 Nov. 2025, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Retour/réadmission/réintégration, GCM, traite et trafic", en: "Return/readmission/reintegration, GCM, trafficking and smuggling" }, outcome: { fr: "Virage opérationnel : adoption des lignes directrices continentales sur le retour et la réintégration durable, des plans d'action sur la traite et le trafic, et du plan d'action africain pour la mise en œuvre du GCM ; examen des rapports de l'OAM, du COC et de l'ACSRM.", en: "Operational shift: adoption of continental guidelines on return and sustainable reintegration, action plans on trafficking and smuggling, and the African action plan for implementing the GCM; review of AMO, COC, and ACSRM reports." } },
+  { num: { fr: "5e session", en: "5th session" }, date: { fr: "10-14 nov. 2025, Addis-Abeba", en: "10-14 Nov. 2025, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Retour/réadmission/réintégration, GCM, traite et trafic", en: "Return/readmission/reintegration, GCM, trafficking and smuggling" }, outcome: { fr: "Virage opérationnel. Adoption des lignes directrices continentales sur le retour et la réintégration durable, des plans d'action sur la traite et le trafic, et du plan d'action africain de mise en œuvre du GCM. Examen des rapports de l'OAM, du COC et de l'ACSRM.", en: "Operational shift: adoption of continental guidelines on return and sustainable reintegration, action plans on trafficking and smuggling, and the African action plan for implementing the GCM; review of AMO, COC, and ACSRM reports." } },
 ];
 
 const pafomSessions = [
@@ -4410,7 +4585,7 @@ const AnchoringMatrix = ({ lang }) => {
         </h4>
         <p className="text-[11px] leading-relaxed text-slate-600 text-justify">
           {L(
-            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument, les six restants étant l'Érythrée (non signataire), le Bénin, la Libye, le Soudan et le Soudan du Sud (ratification non approuvée) et la Somalie (approuvée, non déposée). Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts : Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé, et la matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
+            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument. Les six restants sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts : Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé, et la matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
             "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 49 signatories have deposited their instrument, the six outstanding being Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved) and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits: Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
           )}
         </p>
@@ -5154,7 +5329,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger le 29 janvier 2025 ramène la Communauté à douze membres ; la CEDEAO a toutefois demandé à ses États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays et de maintenir leurs ressortissants en circulation sans visa, découplant de fait la sortie politique du régime de mobilité.",
+        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
         en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso, and Niger on 29 January 2025 brings the Community down to twelve members; ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards and to maintain visa-free movement for their nationals, effectively decoupling the political exit from the mobility regime."
       },
       sources: [
@@ -5179,7 +5354,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans — RDC (11 juillet 2022) puis Somalie (membre de plein droit le 4 mars 2024) —, un élargissement rapide qui étend le marché commun à des espaces sécuritairement complexes et dont les feuilles de route d'intégration restent en cours de négociation.",
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d'intégration restent en négociation.",
         en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years — DRC (11 July 2022) then Somalia (full member on 4 March 2024) — a rapid enlargement extending the common market into security-complex areas, with integration roadmaps still under negotiation."
       },
       sources: [
@@ -5329,7 +5504,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1998 Treaty (revised 2013). Free movement of persons is listed among the founding objectives, without a dedicated protocol equivalent to those of ECOWAS or IGAD."
       },
       dynamics: {
-        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique important avec la CEDEAO explique une part de cette ouverture : plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre à la CEN-SAD. Institutionnellement en sommeil après le conflit libyen de 2011 — son secrétariat ayant été replié à N'Djamena —, la Communauté a rouvert son siège de Tripoli en avril 2026 en présence de onze ministres des Affaires étrangères des États membres, une réactivation dont les effets opérationnels restent à observer.",
+        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre. La Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N'Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
         en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself. Institutionally dormant after the 2011 Libyan conflict — its secretariat having relocated to N'Djamena — the Community reopened its Tripoli headquarters in April 2026 in the presence of eleven member-state foreign ministers, a reactivation whose operational effects remain to be seen."
       },
       sources: [
@@ -5436,7 +5611,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "KDMECC (2022) - 12 engagements", en: "KDMECC (2022) - 12 commitments" },
-        textFr: "La déclaration engage notamment les signataires à intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation, à renforcer les données sur les déplacements environnementaux, et à protéger les personnes déplacées par des chocs climatiques dans le cadre des instruments existants (Convention de Kampala 2009).",
+        textFr: "La déclaration engage les signataires sur trois points : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation, renforcer les données sur les déplacements environnementaux, et protéger les personnes déplacées par des chocs climatiques au titre des instruments existants (Convention de Kampala, 2009).",
         en: "The declaration commits signatories in particular to mainstream climate-related mobility into national adaptation strategies, strengthen data on environmental displacement, and protect people displaced by climate shocks under existing instruments (2009 Kampala Convention)."
       }
     }
@@ -6371,7 +6546,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             >
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune (PAC), élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message » et portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État."
+                  ? "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune. Élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message », elle est portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État."
                   : "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP), drafted in October 2017 under the motto \"One Africa, One Voice, One Message\" and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state."}
               </p>
 
@@ -6415,7 +6590,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d'en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations : revue régionale africaine de la mise en œuvre du GCM en 2021, plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
+                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d'en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations. Revue régionale africaine de la mise en œuvre du GCM en 2021. Plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
                   : "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa occupies the framework being negotiated and writes its priorities into it, instead of building one alongside. What follows is legible in bureaucratic machinery rather than declarations: the Africa regional review of GCM implementation in 2021, a continental action plan validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025."}
               </p>
             </AfricanCounterpoint>
@@ -6483,7 +6658,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir : d'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde, et deux d'entre eux — l'Ouganda et le Tchad — sont africains. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026)."
+                  ? "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir. D'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d'entre eux sont africains : l'Ouganda et le Tchad. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026)."
                   : "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims does not describe a burden to come: according to UNHCR, six countries alone host more than a third of the world's refugees, and two of them — Uganda and Chad — are African. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)."}
               </p>
             </AfricanCounterpoint>
@@ -6638,7 +6813,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       </div>
                       <p className="text-xs text-slate-700 leading-relaxed">
                         {lang === 'fr'
-                          ? "Institué en vertu de l'Article 5 de l'Acte Constitutif de l'UA, ce Comité Technique Spécialisé est l'organe politique de tutelle du régime migratoire continental : il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil Exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux."
+                          ? "Institué par l'article 5 de l'Acte constitutif de l'UA, ce Comité technique spécialisé est l'organe politique de tutelle du régime migratoire continental. Il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux."
                           : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work."}
                       </p>
                     </button>
@@ -6672,7 +6847,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       </div>
                       <p className="text-xs text-slate-700 leading-relaxed">
                         {lang === 'fr'
-                          ? "Créé par la Décision EX.CL/276(IX) du Conseil Exécutif (2006), le PAFoM est le processus consultatif continental de référence, réuni pour la première fois à Accra en 2015 : il rassemble les États membres de l'UA, les CER, les processus régionaux (Rabat, Khartoum) et les agences onusiennes pour façonner les politiques migratoires africaines."
+                          ? "Créé en 2006 par la décision EX.CL/276(IX) du Conseil exécutif, le PAFoM est le processus consultatif continental de référence. Il s'est réuni pour la première fois à Accra en 2015. Il rassemble les États membres de l'UA, les CER, les processus régionaux de Rabat et de Khartoum et les agences onusiennes, pour façonner les politiques migratoires africaines."
                           : "Created by Executive Council Decision EX.CL/276(IX) (2006), PAFoM is the continent's flagship consultative process, first convened in Accra in 2015: it brings together AU member states, RECs, regional processes (Rabat, Khartoum), and UN agencies to shape African migration policy."}
                       </p>
                     </button>
@@ -6701,7 +6876,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h4 className="text-sm font-bold text-blue-900 mb-1.5">{lang === 'fr' ? "Le Programme Conjoint sur la Migration de Main-d'œuvre (JLMP)" : "The Joint Labour Migration Programme (JLMP)"}</h4>
                     <p className="text-xs text-blue-800 leading-relaxed">
                       {lang === 'fr'
-                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA (+ PNUD), le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015), en ciblant la portabilité des compétences, la portabilité des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants."
+                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants."
                         : "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM, and ECA (+ UNDP), the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment, targeting skills portability, social security portability, fair recruitment, and migrant worker protection."}
                     </p>
                   </div>
@@ -7071,7 +7246,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </h3>
               <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
                 {lang === 'fr'
-                  ? "L'analyse des seuils d'entrée et de l'obligation de résidence démontre la persistance d'une frontière juridique stricte entre le statut de « visiteur » (toléré pour le commerce ou le tourisme de courte durée) et celui d'« immigrant » (soumis au pouvoir discrétionnaire de l'État pour l'établissement). Le seuil standard en Afrique est de 90 jours."
+                  ? "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours."
                   : "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border between \"visitor\" status (tolerated for short-term trade or tourism) and \"immigrant\" status (subject to the State's discretionary power over settlement). The standard threshold across Africa is 90 days."}
               </p>
             </div>
@@ -7892,7 +8067,7 @@ const glossaryData = [
       {
         term: "Réfugié",
         en_term: "Refugee",
-        fr: "La Convention de l'OUA (1969) définit le réfugié de manière plus large que la Convention de Genève (1951) : elle inclut toute personne contrainte de fuir non seulement par crainte de persécution individuelle, mais aussi du fait d'une agression extérieure, d'une occupation ou d'événements troublant gravement l'ordre public.",
+        fr: "La Convention de l'OUA (1969) définit le réfugié plus largement que celle de Genève (1951). À la crainte de persécution individuelle, elle ajoute l'agression extérieure, l'occupation et les événements troublant gravement l'ordre public.",
         en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order.",
         source: { fr: "Convention de l'OUA (1969), art. I(2) — définition de référence de la plateforme", en: "OAU Convention (1969), Art. I(2) — the platform's reference definition", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
@@ -7946,7 +8121,7 @@ const glossaryData = [
       {
         term: "Asile (droit d')",
         en_term: "Asylum (right to)",
-        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin que la seule reconnaissance d'un droit de chercher : son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation, et pose l'octroi de l'asile comme un acte pacifique et humanitaire qui ne peut être considéré comme inamical envers un autre État.",
+        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin. Son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation. Il pose aussi l'octroi de l'asile comme un acte pacifique et humanitaire, qu'aucun État ne peut tenir pour inamical.",
         en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek: its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement, and establishes that granting asylum is a peaceful and humanitarian act that cannot be regarded as unfriendly by any other state.",
         source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
         stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
@@ -8165,7 +8340,7 @@ const glossaryData = [
       {
         term: "Partenariat de compétences (Global Skills Partnership)",
         en_term: "Global Skills Partnership",
-        fr: "Accord bilatéral entre un pays d'origine et un pays de destination finançant conjointement la formation de travailleurs, avant leur départ, dans des compétences utiles aux deux économies — conçu pour convertir la mobilité de main-d'œuvre en investissement partagé plutôt qu'en simple prélèvement de capital humain déjà formé.",
+        fr: "Accord bilatéral par lequel un pays d'origine et un pays de destination financent ensemble la formation de travailleurs avant leur départ, dans des compétences utiles aux deux économies. L'idée est de faire de la mobilité de main-d'œuvre un investissement partagé, plutôt qu'un prélèvement de capital humain déjà formé.",
         en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital.",
         source: { fr: "Objectif 18 du Pacte mondial pour les migrations", en: "Objective 18 of the Global Compact for Migration" }
       }
@@ -8550,9 +8725,10 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
       <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
           <input
             type="text"
+            aria-label={lang === 'fr' ? 'Rechercher dans la bibliothèque' : 'Search the library'}
             placeholder={lang === 'fr' ? "Rechercher une source, un auteur, un mot-clé…" : "Search a source, author, keyword…"}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -10516,8 +10692,16 @@ export default function App() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {/* Les preferences de lecture voisinent la langue : ce sont les deux
-                  reglages qui decident comment on lit la page. */}
+              {/* La recherche precede les reglages : c'est l'action, eux sont
+                  le confort. Elle mene a une URL reelle, donc partageable. */}
+              <RechercheGlobale
+                lang={lang}
+                aller={(r) => {
+                  if (r.lien) { window.open(r.lien, '_blank', 'noopener'); return; }
+                  setActiveTab(r.aller.tab);
+                  if (r.aller.tab === 'explorer' && r.aller.id) setActiveSubTab(r.aller.id);
+                }}
+              />
               <PrefsLecture lang={lang} />
               <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
                       aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}

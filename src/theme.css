@@ -679,9 +679,10 @@ main:focus { outline: none; }
    regle alors la ou il se joue vraiment — sur la longueur de ligne. Au-dela de
    soixante-dix caracteres, l'oeil perd le debut de la ligne suivante.         */
 
-:is(main, .reader) p:not(.en-clair):not(.terme-pop-txt) {
-  max-width: 70ch;
-}
+/* Bride retiree : plafonner chaque paragraphe dans un conteneur large laissait
+   368 a 654 px de vide a sa droite — le texte pendait a gauche. La longueur de
+   ligne se regle desormais la ou elle doit l'etre : dans les preferences de
+   lecture, ou le lecteur la choisit et ou la colonne est alors centree.      */
 
 /* Sauf la ou le paragraphe accompagne une figure ou vit dans une grille etroite :
    il y est deja contraint, et la bride n'aurait aucun effet — on la neutralise
@@ -826,7 +827,10 @@ html[data-lecture-corps="grand"] .text-\[11px\] { font-size: 13px; }
 html[data-lecture-corps="grand"] .text-\[12px\] { font-size: 14px; }
 
 /* Colonne resserree : moins de saccades oculaires par ligne. */
-html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) { max-width: 52ch; }
+html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
+  max-width: 58ch;
+  margin-inline: auto;   /* choisie volontairement : la colonne se centre */
+}
 
 /* ---------- Le panneau de preferences de lecture -------------------------- */
 /* C'est le premier endroit ou arrivera un lecteur en difficulte : il doit etre
@@ -930,3 +934,128 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) { max-wid
 .provenance-plus:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .provenance-note { flex-basis: 100%; color: var(--label); }
+
+/* ---------- Moins administratif : les intertitres redeviennent des phrases -- */
+/* Mesure sur une seule page : 83 micro-libelles en capitales espacees. Les
+   capitales suivies d'une forte approche sont le signal typographique le plus
+   « administratif » qui soit — c'est ce qui donnait au hub son air technique.
+   Le texte source est deja redige en casse normale : il suffit de cesser de le
+   transformer. On garde les capitales la ou elles nomment vraiment une
+   etiquette (badges, « en clair », provenance), pas un titre de partie.      */
+
+:is(h2, h3, h4, h5, h6).uppercase.tracking-widest {
+  text-transform: none !important;
+  letter-spacing: -0.005em !important;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+/* Ces intertitres ne sont plus des micro-libelles : ils reprennent l'air qui
+   leur revient au-dessus du texte qu'ils annoncent. */
+:is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-bottom: .55rem; }
+:is(main, .reader) * + :is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-top: 1.6rem; }
+
+/* ---------- Respiration : les blocs cessent de se toucher ----------------- */
+/* Ecart median mesure entre blocs de premier niveau : 24 px pour une laize de
+   1271 px. Beaucoup trop serre — les blocs se lisaient comme un seul mur.    */
+
+/* Le !important est necessaire : la regle de Tailwind (.space-y-6 > :not([hidden])
+   ~ :not([hidden])) pese trois classes, la notre deux — sans lui, elle gagne. */
+:is(main, .reader) > .space-y-6 > * + *,
+:is(main, .reader) > .space-y-8 > * + *,
+:is(main, .reader) > .space-y-10 > * + * { margin-top: 3.5rem !important; }
+
+/* ---------- Moins de boites : le filet n'est pas un reflexe --------------- */
+/* 58 conteneurs bordes sur une page : des boites dans des boites. Une feuille
+   posee sur le papier merite son filet ; une boite a l'interieur d'une feuille
+   n'en a pas besoin — l'espace suffit a la separer.                          */
+
+:is(main, .reader) .bg-white .bg-white { border: 0 !important; }
+
+/* ---------- Les capitales redeviennent l'exception ------------------------ */
+/* Il restait 71 libelles en capitales espacees sur une seule page, dont 44 de
+   la meme famille : les etiquettes qui accompagnent les chiffres. Elles
+   restent des etiquettes — petites, sobres, recessives — mais elles cessent de
+   crier. On garde la capitale la ou elle marque un genre : le badge de section
+   et les deux mentions de service (« en clair », « source »).               */
+
+:is(main, .reader) :is(.text-\[9px\], .text-\[10px\], .text-\[11px\]).uppercase.tracking-widest {
+  text-transform: none;
+  letter-spacing: .01em;
+}
+
+/* Les trois exceptions, ou la capitale nomme un genre et non un contenu. */
+:is(main, .reader) header .uppercase,
+.en-clair-lbl,
+.provenance-lbl {
+  text-transform: uppercase;
+  letter-spacing: .16em;
+}
+
+/* ---------- Recherche transversale --------------------------------------- */
+/* On ne cherche pas « dans une section » : on cherche une chose. Le panneau
+   melange donc les quatre corpus et laisse filtrer par type ensuite.        */
+
+.recherche { position: relative; }
+
+.recherche-btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .35rem .6rem .35rem .55rem;
+  font-size: 11.5px; font-weight: 600; color: #D3D5DC;
+  border: 1px solid rgba(255,253,249,.22); border-radius: 2px; cursor: pointer;
+}
+.recherche-btn:hover { color: #FBFBF8; border-color: rgba(255,253,249,.45); }
+.recherche-btn:focus-visible { outline: 2px solid #8FA0CE; outline-offset: 2px; }
+
+.recherche-kbd {
+  padding: 0 .3rem; font-size: 11px; font-family: inherit; line-height: 1.15rem;
+  color: #9BA0AC; border: 1px solid rgba(255,253,249,.22); border-radius: 2px;
+}
+
+.recherche-panneau {
+  position: absolute; inset-inline-end: 0; top: calc(100% + .5rem);
+  z-index: 95; width: min(34rem, 92vw);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong); border-top: 2px solid var(--accent);
+  box-shadow: 0 14px 34px rgba(20,22,28,.2);
+  text-align: start;
+}
+
+.recherche-champ {
+  width: 100%; padding: .8rem .9rem;
+  font: inherit; font-size: 14.5px; color: var(--ink);
+  background: transparent; border: 0; border-bottom: 1px solid var(--rule);
+}
+.recherche-champ:focus { outline: none; border-bottom-color: var(--accent); }
+
+.recherche-filtres { display: flex; flex-wrap: wrap; gap: .3rem; padding: .6rem .7rem; }
+.recherche-filtres button {
+  display: inline-flex; align-items: baseline; gap: .3rem;
+  padding: .25rem .55rem; font-size: 12px; font-weight: 600;
+  color: var(--ink-soft); background: var(--paper);
+  border: 1px solid var(--rule); border-radius: 99px; cursor: pointer;
+}
+.recherche-filtres button .num { font-size: 11px; color: var(--label); }
+.recherche-filtres button[aria-pressed="true"] {
+  color: #FBFBF8; background: var(--accent); border-color: var(--accent);
+}
+.recherche-filtres button[aria-pressed="true"] .num { color: rgba(255,253,249,.75); }
+.recherche-filtres button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.recherche-liste { list-style: none; margin: 0; padding: 0 .35rem .35rem; max-height: 26rem; overflow-y: auto; }
+.recherche-liste button {
+  display: grid; grid-template-columns: 5.5rem 1fr; gap: .1rem .7rem;
+  width: 100%; padding: .55rem .6rem; text-align: start;
+  border-inline-start: 2px solid transparent; cursor: pointer;
+}
+.recherche-liste button:hover { background: var(--paper-sunk); border-inline-start-color: var(--accent); }
+.recherche-liste button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.recherche-type {
+  grid-row: span 2; align-self: start;
+  font-size: 11px; font-weight: 700; color: var(--accent-deep);
+}
+.recherche-titre { font-size: 13.5px; line-height: 1.4; color: var(--ink); }
+.recherche-ctx { font-size: 11.5px; line-height: 1.4; color: var(--label); }
+
+.recherche-vide { margin: 0; padding: 1rem .9rem 1.2rem; font-size: 13px; color: var(--label); }
