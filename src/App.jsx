@@ -1,15 +1,17 @@
-import React, { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import { 
   Globe, ShieldAlert, TrendingUp, MapPin, Database, 
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
-  Search, HeartPulse, ChevronRight, ChevronDown, X, BarChart3, GitMerge, 
+  Search, HeartPulse, ChevronRight, ChevronLeft, ChevronDown, X, BarChart3, GitMerge,
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
   Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic, Type
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
+import { LANGUES, ACTIVES, LANGUE_DEFAUT, estRTL, tagDe } from './i18n/langues';
+import { tr, faireL, pluriel, appliquerLangue, catalogue } from './i18n/tr';
 import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
 import { unhcrByCountry, unhcrTotals, UNHCR_SOURCE } from './unhcrData';
@@ -61,7 +63,7 @@ const downloadCSV = (filename, csvBody) => {
 const fmtNum = (val, lang) => {
   if (val === null || val === undefined || val === '') return null;
   const str = String(val);
-  return lang === 'fr' ? str.replace('.', ',') : str;
+  return tr({ fr: str.replace('.', ','), en: str }, lang);
 };
 
 // --- Nombres -----------------------------------------------------------------
@@ -71,8 +73,9 @@ const fmtNum = (val, lang) => {
 // textuelle (copier-coller, lecteurs d'ecran) mais recoit une marge propre.
 // Cette marge est logique (margin-inline), donc elle suivra le sens de lecture
 // le jour ou l'arabe rejoindra les langues de la plateforme.
-const LOCALES = { fr: 'fr-FR', en: 'en-US' };
-const localeOf = (lang) => LOCALES[lang] || LOCALES.en;
+// Le tag Intl vient desormais du registre des langues : une seule table a
+// tenir a jour le jour ou l'arabe ou le kiswahili rejoignent la plateforme.
+const localeOf = (lang) => tagDe(lang);
 
 const toNumber = (val) => {
   if (typeof val === 'number') return Number.isFinite(val) ? val : null;
@@ -202,11 +205,146 @@ const PLAIN_TERMS = {
     fr: "La fenêtre de dix ans pendant laquelle l'ONU recommande à chaque pays de compter sa population. Le cycle 2020 couvre les années 2015 à 2024.",
     en: 'The ten-year window in which the UN recommends every country count its population. The 2020 round covers the years 2015 to 2024.',
   },
+  pdi: {
+    label: { fr: 'personne déplacée interne', en: 'internally displaced person' },
+    fr: "Quelqu'un qui a dû quitter son foyer — guerre, violence, catastrophe — mais qui est resté dans son propre pays. Il n'a franchi aucune frontière, et n'est donc pas un réfugié au sens du droit. En Afrique, c'est de loin la forme la plus courante de départ contraint.",
+    en: 'Someone forced to leave home — war, violence, disaster — but who has stayed inside their own country. They crossed no border, so they are not a refugee in law. In Africa this is by far the commonest form of forced departure.',
+  },
+  refugie: {
+    label: { fr: 'réfugié', en: 'refugee' },
+    fr: "Quelqu'un qui a franchi une frontière parce qu'il ne pouvait plus rester. Le texte africain de 1969 va plus loin que celui de Genève : il protège aussi ceux qui fuient une guerre, une occupation ou des troubles graves, sans avoir à prouver qu'ils étaient personnellement visés.",
+    en: 'Someone who crossed a border because staying was no longer possible. The 1969 African instrument goes further than the Geneva one: it also protects those fleeing war, occupation or serious unrest, with no need to prove they were personally targeted.',
+  },
+  remises: {
+    label: { fr: 'transferts de fonds', en: 'remittances' },
+    fr: "L'argent que les personnes parties envoient à leur famille restée au pays. Pris ensemble, ces envois dépassent l'aide publique au développement dans de nombreux pays africains, et arrivent directement dans les ménages.",
+    en: 'The money people who have left send back to family at home. Taken together these transfers exceed official development aid in many African countries, and they reach households directly.',
+  },
+  ratification: {
+    label: { fr: 'ratification', en: 'ratification' },
+    fr: "Signer un traité ne l'engage pas encore. Le ratifier, si : l'État le fait approuver chez lui, puis dépose l'instrument auprès de l'organisation. C'est cette dernière étape qui compte dans les décomptes de cette plateforme.",
+    en: 'Signing a treaty does not yet bind a state. Ratifying does: the state has it approved at home, then deposits the instrument with the organisation. It is that last step the counts on this platform record.',
+  },
+  entree_vigueur: {
+    label: { fr: 'entrée en vigueur', en: 'entry into force' },
+    fr: "Le moment où un traité commence réellement à s'appliquer. Il faut pour cela qu'un nombre minimum d'États l'aient ratifié — quinze, pour cette catégorie de protocoles de l'Union africaine. En dessous, le texte existe sans produire d'effet.",
+    en: 'The moment a treaty actually starts to apply. A minimum number of states must have ratified it first — fifteen, for this class of African Union protocols. Below that, the text exists without effect.',
+  },
+  libre_circulation: {
+    label: { fr: 'libre circulation', en: 'free movement' },
+    fr: "Le droit d'entrer, de séjourner et de s'installer dans un autre pays du même ensemble régional sans visa. La CEDEAO l'applique depuis 1979 ; le protocole qui l'étendrait à tout le continent, adopté à Kigali en 2018, n'est pas encore en vigueur.",
+    en: 'The right to enter, stay and settle in another country of the same regional bloc without a visa. ECOWAS has applied it since 1979; the protocol that would extend it to the whole continent, adopted in Kigali in 2018, is not yet in force.',
+  },
+  recensement: {
+    label: { fr: 'recensement', en: 'census' },
+    fr: "L'opération par laquelle un pays compte toute sa population, en principe tous les dix ans. C'est la seule source qui couvre tout le monde — et donc la base de presque tous les autres chiffres. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
+    en: 'The operation by which a country counts its whole population, in principle every ten years. It is the only source covering everyone, and therefore the basis of almost every other figure. A date announced then postponed does not count as a census held.',
+  },
+  dejure: {
+    label: { fr: 'population de jure', en: 'de jure population' },
+    fr: "Compter les résidents habituels (de jure) ou toutes les personnes présentes le jour du recensement (de facto) ne donne pas le même total. Le choix change le nombre de migrants comptés, et il n'est pas le même d'un pays à l'autre.",
+    en: 'Counting usual residents (de jure) or everyone present on census day (de facto) does not give the same total. The choice changes how many migrants are counted, and it differs from country to country.',
+  },
+  externalisation: {
+    label: { fr: 'externalisation des frontières', en: 'border externalisation' },
+    fr: "Quand un État fait contrôler sa frontière loin de chez lui : en finançant et équipant les forces d'un pays tiers, en y postant des agents de liaison, ou en liant son aide à la coopération migratoire. La frontière se déplace ; le contrôle reste.",
+    en: 'When a state has its border policed far from home: by funding and equipping a third country’s forces, posting liaison officers there, or tying its aid to migration cooperation. The border moves; the control stays.',
+  },
+  normlex: {
+    label: { fr: 'NORMLEX', en: 'NORMLEX' },
+    fr: "La base de l'Organisation internationale du travail qui recense, pays par pays, les conventions du travail ratifiées. C'est là qu'on lit si un État s'est engagé sur les droits des travailleurs migrants.",
+    en: 'The International Labour Organization database recording, country by country, which labour conventions have been ratified. It is where one reads whether a state has committed on migrant workers’ rights.',
+  },
   desa: {
     label: { fr: 'UN DESA', en: 'UN DESA' },
-    fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. C'est la source la plus citée, y compris pour l'Afrique.",
+    fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. C'est la source laplus citée, y compris pour l'Afrique.",
     en: 'The United Nations statistical office that publishes the reference figures on migrants worldwide. It is the most cited source, including for Africa.',
   },
+};
+
+// Ou reconnaitre chaque notion dans un texte courant. Les definitions
+// existaient depuis un moment, mais le lecteur ne les rencontrait qu'a deux
+// endroits du site : elles ne servaient a personne. Ces motifs permettent de
+// les proposer partout ou le mot apparait, sans avoir a baliser la prose a la
+// main — et sans jamais la modifier.
+const MOTIFS_TERMES = {
+  avoi:              { fr: /\bAVOI\b/, en: /\bAVOI\b/ },
+  zlecaf:            { fr: /\bZLECAf\b/, en: /\bAfCFTA\b/ },
+  iiag:              { fr: /\bIIAG\b/, en: /\bIIAG\b/ },
+  kampala:           { fr: /Convention de Kampala/, en: /Kampala Convention/ },
+  retention:         { fr: /rétention (?:Sud-Sud|continentale)/, en: /South-South retention/ },
+  capabilites:       { fr: /capabilités de mouvement/, en: /(?:movement capabilities|capabilities of movement)/ },
+  apatridie:         { fr: /apatridie/, en: /statelessness/ },
+  gcm:               { fr: /Pacte mondial(?: sur les migrations)?/, en: /Global Compact for (?:Safe, Orderly and Regular )?Migration/ },
+  stock:             { fr: /stock de migrants/, en: /migrant stock/ },
+  cer:               { fr: /Communautés? économiques? régionales?/, en: /Regional Economic Communit(?:y|ies)/ },
+  oam:               { fr: /Observatoire africain des migrations/, en: /African Migration Observatory/ },
+  spearman:          { fr: /corrélation de rang/, en: /rank correlation/ },
+  cycle:             { fr: /cycles? de recensements?/, en: /census rounds?/ },
+  ancrage:           { fr: /score d'ancrage/, en: /anchoring score/ },
+  desa:              { fr: /UN DESA/, en: /UN DESA/ },
+  pdi:               { fr: /personnes? déplacées? internes?/, en: /internally displaced persons?/ },
+  refugie:           { fr: /réfugiés?\b/, en: /refugees?\b/ },
+  remises:           { fr: /transferts de fonds/, en: /remittances/ },
+  ratification:      { fr: /ratifications?\b/, en: /ratifications?\b/ },
+  entree_vigueur:    { fr: /entrée en vigueur/, en: /entry into force/ },
+  libre_circulation: { fr: /libre circulation/, en: /free movement/ },
+  recensement:       { fr: /recensements?\b/, en: /census(?:es)?\b/ },
+  dejure:            { fr: /population de jure/, en: /de jure population/ },
+  externalisation:   { fr: /externalisation des frontières/, en: /border externalisation/ },
+  normlex:           { fr: /NORMLEX/, en: /NORMLEX/ },
+};
+
+// Assemble une seule expression pour toute la langue : un seul passage sur le
+// texte, et le motif le plus long l'emporte quand deux se chevauchent
+// (« personne deplacee interne » avant « recensement », par exemple).
+const CACHE_MOTIF = new Map();
+const motifGlobal = (lang) => {
+  if (!CACHE_MOTIF.has(lang)) {
+    const parts = Object.entries(MOTIFS_TERMES)
+      .map(([k, m]) => ({ k, src: (m[lang] || m.fr).source }))
+      .sort((a, b) => b.src.length - a.src.length);
+    CACHE_MOTIF.set(lang, {
+      re: new RegExp(parts.map(p => '(?:' + p.src + ')').join('|'), 'gi'),
+      ordre: parts,
+    });
+  }
+  return CACHE_MOTIF.get(lang);
+};
+
+// Retrouve la cle du terme correspondant a un fragment reconnu.
+const cleDuFragment = (fragment, lang) => {
+  for (const { k, src } of motifGlobal(lang).ordre) {
+    if (new RegExp('^(?:' + src + ')$', 'i').test(fragment)) return k;
+  }
+  return null;
+};
+
+// Prose : le texte est rendu tel quel, a ceci pres que la PREMIERE occurrence
+// de chaque notion devient consultable. Une seule par bloc — un paragraphe
+// constelle de mots soulignes se lit plus mal, pas mieux.
+const Prose = ({ children, lang = 'fr', className, ...reste }) => {
+  const texte = typeof children === 'string' ? children : null;
+  if (!texte) return <p className={className} {...reste}>{children}</p>;
+
+  const { re } = motifGlobal(lang);
+  re.lastIndex = 0;
+  const morceaux = [];
+  const vus = new Set();
+  let dernier = 0, m;
+
+  while ((m = re.exec(texte)) !== null) {
+    const k = cleDuFragment(m[0], lang);
+    if (!k || vus.has(k) || !PLAIN_TERMS[k]) continue;
+    vus.add(k);
+    if (m.index > dernier) morceaux.push(texte.slice(dernier, m.index));
+    morceaux.push(<Terme key={k + m.index} k={k} lang={lang}>{m[0]}</Terme>);
+    dernier = m.index + m[0].length;
+  }
+  if (!morceaux.length) return <p className={className} {...reste}>{texte}</p>;
+  morceaux.push(texte.slice(dernier));
+
+  return <p className={className} {...reste}>{morceaux}</p>;
 };
 
 // Le mot technique s'explique la ou il est lu. Le panneau est en position fixe :
@@ -260,7 +398,7 @@ const Terme = ({ k, lang = 'fr', children }) => {
     };
   }, [open]);
 
-  const label = entry.label[lang] || entry.label.fr;
+  const label = tr(entry.label, lang) || entry.label.fr;
   return (
     <span className="terme-wrap">
       <button
@@ -268,7 +406,7 @@ const Terme = ({ k, lang = 'fr', children }) => {
         type="button"
         className="terme"
         aria-expanded={open}
-        aria-label={`${label} — ${lang === 'fr' ? 'voir la définition simple' : 'show the plain definition'}`}
+        aria-label={`${label} — ${tr({ fr: 'voir la définition simple', en: 'show the plain definition' }, lang)}`}
         onClick={() => setOpen((o) => !o)}
       >
         {children || label}
@@ -280,8 +418,8 @@ const Terme = ({ k, lang = 'fr', children }) => {
           className="terme-pop"
           style={{ left: box.left, width: box.w, top: box.top }}
         >
-          <span className="terme-pop-lbl">{lang === 'fr' ? 'En clair' : 'In plain terms'}</span>
-          <span className="terme-pop-txt">{entry[lang] || entry.fr}</span>
+          <span className="terme-pop-lbl">{tr({ fr: 'En clair', en: 'In plain terms' }, lang)}</span>
+          <span className="terme-pop-txt">{tr(entry, lang) || entry.fr}</span>
           {/* Une notion empruntee a un auteur se cite la ou elle est expliquee,
               pas seulement dans la bibliographie. */}
           {entry.source && (
@@ -341,7 +479,7 @@ const LECTURE_REGLAGES = [
 ];
 
 const PrefsLecture = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const [ouvert, setOuvert] = useState(false);
   const [vals, setVals] = useState(() => {
     const base = Object.fromEntries(LECTURE_REGLAGES.map(r => [r.cle, r.defaut]));
@@ -388,17 +526,17 @@ const PrefsLecture = ({ lang }) => {
           </p>
           {LECTURE_REGLAGES.map(r => (
             <fieldset key={r.cle} className="prefs-champ">
-              <legend className="prefs-titre">{r.titre[lang]}</legend>
+              <legend className="prefs-titre">{tr(r.titre, lang)}</legend>
               <div className="prefs-choix">
                 {r.options.map(o => (
                   <button key={o.val} type="button"
                           aria-pressed={vals[r.cle] === o.val}
                           onClick={() => setVals(v => ({ ...v, [r.cle]: o.val }))}>
-                    {o.lib[lang]}
+                    {tr(o.lib, lang)}
                   </button>
                 ))}
               </div>
-              <p className="prefs-aide">{r.aide[lang]}</p>
+              <Prose className="prefs-aide" lang={lang}>{tr(r.aide, lang)}</Prose>
             </fieldset>
           ))}
           <button type="button" className="prefs-reset"
@@ -415,8 +553,8 @@ const PrefsLecture = ({ lang }) => {
 // seule : qui s'arrete la doit avoir compris l'essentiel.
 const EnClair = ({ lang = 'fr', fr, en, tone = 'accent' }) => (
   <p className={`en-clair en-clair--${tone}`}>
-    <span className="en-clair-lbl">{lang === 'fr' ? 'En clair' : 'In plain terms'}</span>
-    <span className="en-clair-txt">{lang === 'fr' ? fr : en}</span>
+    <span className="en-clair-lbl">{tr({ fr: 'En clair', en: 'In plain terms' }, lang)}</span>
+    <span className="en-clair-txt">{tr({ fr: fr, en: en }, lang)}</span>
   </p>
 );
 
@@ -463,8 +601,8 @@ const Reveal = ({ children, delay = 0, className = '' }) => {
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'none' : 'translateY(14px)',
-        transition: `opacity 620ms cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 620ms cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+        transform: shown ? 'none' : 'translateY(var(--reveal-shift))',
+        transition: `opacity var(--dur-slow) var(--ease-entry) ${delay}ms, transform var(--dur-slow) var(--ease-entry) ${delay}ms`,
       }}
     >
       {children}
@@ -524,9 +662,19 @@ const CountUp = ({ value, duration = 1100, className = '' }) => {
 };
 
 // Barre de progression de lecture (repère éditorial discret sous la navigation).
+// Le fil de lecture. Quand le navigateur sait lier une animation au defilement,
+// la barre est purement declarative : plus d'ecouteur de scroll, plus de rendu
+// React a chaque image, et le trait suit le doigt sans retard d'une frame.
+// Sinon, on retombe sur la mesure en JavaScript.
+const pilotageParDefilement = () =>
+  typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline: scroll()');
+
 const ScrollProgress = () => {
+  const natif = useMemo(pilotageParDefilement, []);
   const [pct, setPct] = useState(0);
+
   useEffect(() => {
+    if (natif) return;
     const onScroll = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
       setPct(h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0);
@@ -538,13 +686,18 @@ const ScrollProgress = () => {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, []);
+  }, [natif]);
+
   return (
     <div className="h-0.5 w-full print:hidden" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
-      <div
-        className="h-full transition-[width] duration-150 ease-out"
-        style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, #8FA0CE)' }}
-      />
+      {natif ? (
+        <span className="fil-lecture" />
+      ) : (
+        <div
+          className="h-full transition-[width] duration-150 ease-out"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, #8FA0CE)' }}
+        />
+      )}
     </div>
   );
 };
@@ -582,7 +735,7 @@ const HistoricalChart = ({ data, colorClass }) => {
               className={`w-full max-w-[32px] rounded-t-md transition-all duration-1000 ease-out cursor-pointer shadow-sm group-hover:shadow-md group-hover:opacity-80 ${colorClass} print:!bg-emerald-500`}
               style={{ height: `${Math.max(5, heightPct)}%` }}
             >
-              <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
+              <span className="absolute -top-6 start-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
                 {parseFloat(point.value) > 100 
                   ? (parseFloat(point.value) >= 1000000 ? (parseFloat(point.value)/1000000).toFixed(1) + 'M' : (parseFloat(point.value)/1000).toFixed(0) + 'k') 
                   : point.value + '%'}
@@ -601,9 +754,7 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
   const max = Math.max(hasRemittances ? remittances : 0, aid) * 1.1;
   const remPct = (!hasRemittances || max === 0) ? 0 : (remittances / max) * 100;
   const aidPct = max === 0 ? 0 : (aid / max) * 100;
-  const remLabel = lang === 'fr'
-    ? `Transferts des diasporas (BM, ${remittancesYear || 's.d.'})`
-    : `Remittances (World Bank, ${remittancesYear || 'n.d.'})`;
+  const remLabel = tr({ fr: `Transferts des diasporas (BM, ${remittancesYear || 's.d.'})`, en: `Remittances (World Bank, ${remittancesYear || 'n.d.'})` }, lang);
 
   return (
     <div className="space-y-5 mt-4">
@@ -613,7 +764,7 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
           {hasRemittances ? (
             <span className="text-amber-700 print:!text-amber-700">{remittances}% PIB</span>
           ) : (
-            <span className="text-slate-400 italic normal-case tracking-normal print:!text-slate-400">{lang === 'fr' ? "Donnée non disponible" : "Data not available"}</span>
+            <span className="text-slate-400 italic normal-case tracking-normal print:!text-slate-400">{tr({ fr: "Donnée non disponible", en: "Data not available" }, lang)}</span>
           )}
         </div>
         {hasRemittances ? (
@@ -621,12 +772,12 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
             <div className="h-full bg-amber-500 rounded-full transition-all duration-1000 print:!bg-amber-500" style={{width: `${remPct}%`}}></div>
           </div>
         ) : (
-          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-dashed border-slate-300 print:!bg-slate-200" title={lang === 'fr' ? "La Banque Mondiale ne publie plus de série récente pour ce pays" : "The World Bank no longer publishes a recent series for this country"}></div>
+          <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-dashed border-slate-300 print:!bg-slate-200" title={tr({ fr: "La Banque Mondiale ne publie plus de série récente pour ce pays", en: "The World Bank no longer publishes a recent series for this country" }, lang)}></div>
         )}
       </div>
       <div>
         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
-          <span className="text-slate-500 print:!text-slate-500">{lang === 'fr' ? "Aide Internationale - APD (OCDE, 2024)" : "International Aid - ODA (OECD, 2024)"}</span>
+          <span className="text-slate-500 print:!text-slate-500">{tr({ fr: "Aide Internationale - APD (OCDE, 2024)", en: "International Aid - ODA (OECD, 2024)" }, lang)}</span>
           <span className="text-slate-600 print:!text-slate-600">{aid}% PIB</span>
         </div>
         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
@@ -673,19 +824,200 @@ const BrandMark = ({ className = "w-8 h-8", tone = "paper", style }) => {
 // Planche d'atlas : le continent grave au trait, en filigrane du bandeau de
 // section. Les traces sont ceux que la plateforme utilise deja pour ses cartes,
 // dessines ici sans remplissage — la trame des 54 frontieres fait la texture.
-const AfricaPlate = React.memo(({ opacity = 0.13 }) => (
-  <svg
-    viewBox={AFRICA_VIEWBOX}
-    aria-hidden="true"
-    focusable="false"
-    className="atlas-plate absolute pointer-events-none select-none"
-    style={{ opacity }}
-  >
-    <g fill="none" stroke="#FFFDF9" strokeWidth="0.9" strokeLinejoin="round">
-      {Object.entries(africaCountryPaths).map(([id, d]) => <path key={id} d={d} />)}
-    </g>
-  </svg>
-));
+// ---------------------------------------------------------------------------
+// La planche d'atlas du bandeau de titre.
+//
+// Elle montrait toujours le meme morceau de continent, quelle que soit la
+// section : un decor, donc, et un decor qui ne disait rien. Chaque planche a
+// desormais son propre cadrage, choisi pour ce dont la section parle — la
+// Corne pour le deplacement contraint, le corridor CEDEAO pour le travail,
+// Addis-Abeba pour la gouvernance. Le fond devient une indication de lieu.
+//
+// Reperes en coordonnees de la planche (viewBox 1000 x 1126), pris au centre
+// du trace de chaque pays. Ils servent a la fois aux cadrages et aux
+// trajectoires tracees en arriere-plan.
+const LIEUX = {
+  rabat: [196, 125], tunis: [420, 52], tripoli: [512, 154], caire: [675, 148],
+  nouakchott: [174, 224], dakar: [131, 308], bamako: [257, 268], ouaga: [286, 336],
+  niamey: [402, 269], abidjan: [238, 394], accra: [293, 389], lagos: [409, 375],
+  ndjamena: [530, 295], khartoum: [668, 296], juba: [662, 390], addis: [792, 374],
+  djibouti: [818, 342], mogadiscio: [861, 423], nairobi: [761, 480], kampala: [693, 468],
+  kinshasa: [567, 535], luanda: [520, 622], lusaka: [640, 645], dar: [725, 562],
+  harare: [655, 718], maputo: [732, 716], lecap: [632, 942], tana: [869, 717],
+};
+
+// Une planche par section, reperee par son numero — celui que le bandeau
+// affiche deja. Aucun appel de <PageHeader> n'a besoin d'etre modifie.
+// Le cadrage se lit d'abord comme une carte, ensuite comme un indice de lieu :
+// trop serre, il ne reste qu'une tache. Chaque planche garde donc au moins les
+// deux tiers d'une dimension du continent, et les onze centres sont ecartes les
+// uns des autres — deux sections ne doivent pas ouvrir sur la meme region.
+const ATLAS_CADRAGES = {
+  // Continent entier : l'ouverture et l'outil qui couvre les 54 pays.
+  'Pl. I':    { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
+  'Pl. III':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
+  // Quart nord-ouest : les traversees que le debat public imagine.
+  'Pl. II':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
+  // Facade est, large : Corne, Grands Lacs et vallee du Nil ensemble.
+  'Pl. IV':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
+  // Facade ouest : le corridor CEDEAO d'un bout a l'autre.
+  'Pl. V':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  // Gouvernance : le continent en entier. L'Union africaine gouverne 54 Etats,
+  // pas une region — un cadrage sur la Corne repetait celui du deplacement
+  // contraint et disait le contraire de ce que fait cette section. Les
+  // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
+  'Pl. VI':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  // Centre-sud : la ou se concentrent les appareils statistiques compares.
+  'Pl. VII':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
+  // Moitie sud, jusqu'a Madagascar.
+  'Pl. VIII': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
+  // Bassin centre-equatorial.
+  'Pl. IX':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
+  // Bande mediterraneenne et saharienne, d'un ocean a l'autre.
+  'Pl. X':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
+  // Facade atlantique, du detroit au golfe de Guinee.
+  'Pl. XI':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
+};
+
+// Une trajectoire se courbe : la corde droite dit une ligne sur une carte, la
+// courbe dit un deplacement. Le point de controle est deporte
+// perpendiculairement a la corde, proportionnellement a sa longueur.
+const arcTrajet = ([x1, y1], [x2, y2], k = 0.2) => {
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  const dx = x2 - x1, dy = y2 - y1;
+  return `M${x1} ${y1} Q${(mx - dy * k).toFixed(1)} ${(my + dx * k).toFixed(1)} ${x2} ${y2}`;
+};
+
+const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
+  const cadre = ATLAS_CADRAGES[plate] || ATLAS_CADRAGES['Pl. I'];
+  const [cx, cy, cw, ch] = cadre.crop;
+  const viewBox = `${cx} ${cy} ${cw} ${ch}`;
+  // L'epaisseur est donnee en unites de la planche : sur un cadrage serre,
+  // un trait constant deviendrait un cable. On le ramene a l'echelle du crop.
+  const trait = (0.9 * cw) / 1000;
+
+  return (
+    <svg
+      viewBox={viewBox}
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+      focusable="false"
+      className="atlas-plate absolute pointer-events-none select-none"
+      style={{ opacity }}
+    >
+      <g fill="none" stroke="#FFFDF9" strokeWidth={trait} strokeLinejoin="round">
+        {Object.entries(africaCountryPaths).map(([id, d]) => <path key={id} d={d} />)}
+      </g>
+      {/* Les trajectoires du fond : elles se tracent l'une apres l'autre.
+          `pathLength=1` normalise la longueur, si bien que le meme pointille
+          convient a un arc court comme a un arc qui traverse le continent. */}
+      <g className="atlas-trajets" fill="none" stroke="#FFFDF9" strokeLinecap="round">
+        {cadre.arcs.map(([a, b], i) => (
+          LIEUX[a] && LIEUX[b] ? (
+            <path
+              key={a + b}
+              d={arcTrajet(LIEUX[a], LIEUX[b])}
+              pathLength="1"
+              strokeWidth={trait * 1.6}
+              style={{ animationDelay: `${240 + i * 200}ms` }}
+            />
+          ) : null
+        ))}
+        {[...new Set(cadre.arcs.flat())].map((k, i) => (
+          LIEUX[k] ? (
+            <circle
+              key={k}
+              cx={LIEUX[k][0]} cy={LIEUX[k][1]} r={trait * 2.2}
+              fill="#FFFDF9" stroke="none"
+              className="atlas-escale"
+              style={{ animationDelay: `${520 + i * 90}ms` }}
+            />
+          ) : null
+        ))}
+      </g>
+    </svg>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Rail de cartes : une lecture au doigt, a la molette ou au clavier.
+//
+// L'accrochage (scroll-snap) est natif : le rail s'arrete sur une carte, jamais
+// entre deux. La mise en avant de la carte centrale est pilotee par le
+// defilement du rail lui-meme — la ou le navigateur le sait faire, aucun
+// JavaScript n'intervient dans l'animation. Le composant ne garde en memoire
+// que la position courante, pour l'annoncer et pour griser les fleches.
+const RailCartes = ({ children, lang = 'fr', etiquette, className = '' }) => {
+  const ref = useRef(null);
+  const [pos, setPos] = useState(0);
+  const total = React.Children.count(children);
+  const L = faireL(lang);
+
+  const mesurer = useCallback(() => {
+    const el = ref.current;
+    if (!el || !el.firstElementChild) return;
+    const pas = el.firstElementChild.getBoundingClientRect().width + 16;
+    setPos(Math.round(el.scrollLeft / Math.max(1, pas)));
+  }, []);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let brut = null;
+    const surDefilement = () => {
+      if (brut) return;
+      brut = requestAnimationFrame(() => { brut = null; mesurer(); });
+    };
+    el.addEventListener('scroll', surDefilement, { passive: true });
+    el.addEventListener('scrollend', mesurer);
+    mesurer();
+    return () => {
+      el.removeEventListener('scroll', surDefilement);
+      el.removeEventListener('scrollend', mesurer);
+      if (brut) cancelAnimationFrame(brut);
+    };
+  }, [mesurer, total]);
+
+  const glisser = (sens) => {
+    const el = ref.current;
+    if (!el || !el.firstElementChild) return;
+    const pas = el.firstElementChild.getBoundingClientRect().width + 16;
+    el.scrollBy({ left: sens * pas, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    // Le compteur avance avec le geste, sans attendre l'evenement de
+    // defilement : sur un defilement doux il arriverait une demi-seconde plus
+    // tard, et les fleches resteraient grisees a contretemps.
+    setPos(p => Math.max(0, Math.min(total - 1, p + sens)));
+  };
+
+  return (
+    <div className={className}>
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--label)' }}>
+          {etiquette}
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] tabular-nums" style={{ color: 'var(--muted)' }} aria-live="polite">
+            {Math.min(pos + 1, total)} / {total}
+          </span>
+          <button type="button" onClick={() => glisser(-1)} disabled={pos <= 0}
+            className="rail-fleche" aria-label={L('Carte précédente', 'Previous card')}>
+            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+          </button>
+          <button type="button" onClick={() => glisser(1)} disabled={pos >= total - 1}
+            className="rail-fleche" aria-label={L('Carte suivante', 'Next card')}>
+            <ChevronRight className="w-4 h-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+      {/* tabIndex sur le conteneur : le rail se parcourt aussi aux fleches du
+          clavier, comme n'importe quelle zone defilante. */}
+      <div ref={ref} className="rail custom-scrollbar" tabIndex={0}
+           role="group" aria-label={etiquette}>
+        {children}
+      </div>
+    </div>
+  );
+};
 
 // Comparaison de proportions : la these du site en une image. Toutes les
 // valeurs sont celles du paragraphe voisin, deja sourcees — rien n'est
@@ -694,7 +1026,7 @@ const AfricaPlate = React.memo(({ opacity = 0.13 }) => (
 // Toutes les valeurs proviennent de l'enquete 2024 (24 pays) publiee par
 // Afrobarometer ; aucune n'est derivee ni recalculee ici.
 const AspirationGap = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const dest = [
     { l: L('Amérique du Nord', 'North America'), v: 31 },
     { l: L('Europe', 'Europe'), v: 29 },
@@ -718,7 +1050,7 @@ const AspirationGap = ({ lang }) => {
       <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
         <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`} style={{ width: `${v}%`, backgroundColor: color }} />
       </div>
-      <span className="text-xs font-bold w-10 text-right shrink-0 tabular-nums text-slate-800">{v} %</span>
+      <span className="text-xs font-bold w-10 text-end shrink-0 tabular-nums text-slate-800">{v} %</span>
     </div>
   );
 
@@ -804,7 +1136,7 @@ const AspirationGap = ({ lang }) => {
 };
 
 const ProportionGap = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const groups = [
     {
       title: L("L'Afrique dans le monde", 'Africa in the world'),
@@ -907,11 +1239,11 @@ const censusName = (iso2, fallback, lang) => {
   }
   const n = _nameByIso[String(iso2 || '').toLowerCase()];
   if (!n) return fallback;
-  return typeof n === 'string' ? n : (n[lang] || n.fr || fallback);
+  return typeof n === 'string' ? n : (tr(n, lang) || n.fr || fallback);
 };
 
 const markLegend = (mark, lang) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   if (mark === '*') return L("Territoire non encore indépendant à cette date : opération indiquée, non comptabilisée.",
                              'Territory not yet independent at that date: shown, not counted.');
   if (mark === '**') return L("Recensement conduit par un État tiers : opération indiquée, non comptabilisée.",
@@ -924,7 +1256,7 @@ const markLegend = (mark, lang) => {
 // Les intervalles entre recensements, calcules depuis la compilation de l'auteur.
 // Seules les operations comptabilisables (cf. censusMark) fournissent une borne.
 const CensusRhythm = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const ROUNDS = ['r1970', 'r1980', 'r1990', 'r2000', 'r2010', 'r2020', 'r2030'];
 
   const data = useMemo(() => {
@@ -986,7 +1318,7 @@ const CensusRhythm = ({ lang }) => {
     };
   }, []);
 
-  const fmt = (v) => (lang === 'fr' ? String(v).replace('.', ',') : String(v));
+  const fmt = (v) => (tr({ fr: String(v).replace('.', ','), en: String(v) }, lang));
   const maxBucket = Math.max(...Object.values(data.byCount));
 
   return (
@@ -1038,7 +1370,7 @@ const CensusRhythm = ({ lang }) => {
                        style={{ width: `${(v / maxBucket) * 100}%`,
                                 backgroundColor: Number(k) >= 5 ? 'var(--ok)' : Number(k) >= 3 ? 'var(--warn-ink)' : 'var(--bad)' }} />
                 </div>
-                <span className="text-xs font-bold w-20 text-right shrink-0 tabular-nums text-slate-800">
+                <span className="text-xs font-bold w-20 text-end shrink-0 tabular-nums text-slate-800">
                   {v} {L('pays', v > 1 ? 'countries' : 'country')}
                 </span>
               </div>
@@ -1058,8 +1390,8 @@ const CensusRhythm = ({ lang }) => {
                   <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                        style={{ width: `${(r.gap / data.longest[0].gap) * 100}%`, backgroundColor: 'var(--bad)' }} />
                 </div>
-                <span className="text-xs font-bold w-14 text-right shrink-0 tabular-nums text-slate-800">{r.gap} {L('ans', 'yrs')}</span>
-                <span className="text-[11px] w-24 text-right shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+                <span className="text-xs font-bold w-14 text-end shrink-0 tabular-nums text-slate-800">{r.gap} {L('ans', 'yrs')}</span>
+                <span className="text-[11px] w-24 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                   {r.from} → {r.to}
                 </span>
               </div>
@@ -1100,7 +1432,7 @@ const CensusRhythm = ({ lang }) => {
 // « defaillants » au cycle 2020 avaient pour la plupart un recensement en cours.
 // Il a abouti — apres la cloture du cycle. Le retard n'est pas une absence.
 const LateRound = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
 
   const rows = useMemo(() => Object.entries(censusByCountry)
     .filter(([, r]) => r.status2020 === 'late')
@@ -1147,10 +1479,10 @@ const LateRound = ({ lang }) => {
                   <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                        style={{ width: `${(r.gap / maxGap) * 100}%`, backgroundColor: 'var(--accent)' }} />
                 </div>
-                <span className="text-xs font-bold w-16 text-right shrink-0 tabular-nums text-slate-800">
+                <span className="text-xs font-bold w-16 text-end shrink-0 tabular-nums text-slate-800">
                   {r.gap} {L('ans', 'yrs')}
                 </span>
-                <span className="text-[11px] w-28 text-right shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+                <span className="text-[11px] w-28 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                   {r.precedent} → {r.nouveau}
                 </span>
               </div>
@@ -1164,7 +1496,7 @@ const LateRound = ({ lang }) => {
           </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
-              "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal est un instrument de comparaison internationale, pas une mesure de l'effort statistique national — et il pénalise mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
+              "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal sert la comparaison internationale ; il ne mesure pas l'effort statistique national. Il pénalise même mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
               "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone, they count for zero and feed the deficit narrative. Read for what they are, they open the 2030 series. They also lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
             )}
           </p>
@@ -1184,8 +1516,8 @@ const LateRound = ({ lang }) => {
 };
 
 const MobileMoneyRail = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+  const L = faireL(lang);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
   const rows = useMemo(() => {
     const all = Object.values(countryData).flat();
@@ -1199,7 +1531,7 @@ const MobileMoneyRail = ({ lang }) => {
 
   const overHalf = rows.filter(r => r.mobile >= 50).length;
   const top = rows.slice(0, 10);
-  const fmt = (v) => (lang === 'fr' ? String(v).replace('.', ',') : String(v));
+  const fmt = (v) => (tr({ fr: String(v).replace('.', ','), en: String(v) }, lang));
 
   return (
     <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--ok)' }}>
@@ -1251,13 +1583,13 @@ const MobileMoneyRail = ({ lang }) => {
                   <span className="text-[11px] font-medium text-slate-700">{r.n}</span>
                   <span className="text-[11px] tabular-nums shrink-0" style={{ color: 'var(--label)' }}>
                     {fmt(r.mobile)} % / {fmt(r.account)} %
-                    <span className="ml-2 font-bold" style={{ color: 'var(--ok)' }}>{Math.round(r.share)} %</span>
+                    <span className="ms-2 font-bold" style={{ color: 'var(--ok)' }}>{Math.round(r.share)} %</span>
                   </span>
                 </div>
                 {/* La barre pale porte le compte, la barre pleine la part mobile. */}
                 <div className="relative h-4 w-full" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                  <div className="absolute inset-y-0 left-0" style={{ width: `${r.account}%`, backgroundColor: 'var(--rule-strong)' }} />
-                  <div className={`absolute inset-y-0 left-0 bar-fill bar-fill--d${Math.min(5, i + 1)}`}
+                  <div className="absolute inset-y-0 start-0" style={{ width: `${r.account}%`, backgroundColor: 'var(--rule-strong)' }} />
+                  <div className={`absolute inset-y-0 start-0 bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                        style={{ width: `${r.mobile}%`, backgroundColor: 'var(--ok)' }} />
                 </div>
               </div>
@@ -1279,7 +1611,7 @@ const MobileMoneyRail = ({ lang }) => {
       </div>
 
       <div className="px-6 md:px-8 pb-5">
-        <Sources lang={lang} items={[{ label: FINDEX_SOURCE.label[lang], url: FINDEX_SOURCE.url }]}
+        <Sources lang={lang} items={[{ label: tr(FINDEX_SOURCE.label, lang), url: FINDEX_SOURCE.url }]}
           note={L("Millésime le plus récent disponible par pays (2021 à 2024 selon les séries). Findex est une enquête par sondage : tous les pays ne sont pas couverts à chaque vague.",
                   'Most recent available year per country (2021 to 2024 depending on the series). Findex is a sample survey: not every country is covered in every wave.')} />
       </div>
@@ -1318,11 +1650,14 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
         'radial-gradient(circle at 88% 90%, rgba(31,78,95,.28), transparent 50%)',
     }}
   >
-    <div
-      className="absolute inset-x-0 bottom-0 h-px"
-      style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 45%, transparent)' }}
-    />
-    <AfricaPlate />
+    {/* Le trait d'ouverture de la section : il se trace a l'arrivee. */}
+    <div className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
+      <span
+        className="trait-trace trait-trace--ouverture"
+        style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 45%, transparent)' }}
+      />
+    </div>
+    <AfricaPlate plate={plate} />
     {/* Voile d'encre cote texte : la planche emerge vers la droite au lieu de
         traverser le titre. */}
     <div
@@ -1392,9 +1727,9 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
   const iso = display.iso2;
   const openness = iso ? visaOpenToAllAfrica[iso] : null;
   const recs = iso ? (countryRecAffiliations[iso] || []) : [];
-  const date = new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  const date = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-GB' }, lang), { day: '2-digit', month: 'long', year: 'numeric' });
   const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
 
   const kpis = [
@@ -1476,7 +1811,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
           </tbody></table>
           {openness && (
             <p style={{ margin: '1.2mm 0 0', fontSize: '7pt', color: '#334155' }}>
-              <strong>{visaOpenTiers[openness.tier].label[lang]} — </strong>{openness.note[lang]}
+              <strong>{tr(visaOpenTiers[openness.tier].label, lang)} — </strong>{tr(openness.note, lang)}
             </p>
           )}
         </div>
@@ -1484,9 +1819,9 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         {recs.length > 0 && (
           <div className="pdf-block">
             <h2>{L('Appartenance aux CER', 'REC membership')}</h2>
-            <div>{recs.map(r => <span key={r} className="chip">{recNames[r][lang]}</span>)}</div>
+            <div>{recs.map(r => <span key={r} className="chip">{tr(recNames[r], lang)}</span>)}</div>
             {countryRecNotes[iso] && (
-              <p style={{ margin: '.8mm 0 0', fontSize: '6.8pt', color: '#92400e' }}>{countryRecNotes[iso][lang]}</p>
+              <Prose style={{ margin: '.8mm 0 0', fontSize: '6.8pt', color: '#92400e' }} lang={lang}>{tr(countryRecNotes[iso], lang)}</Prose>
             )}
           </div>
         )}
@@ -1504,7 +1839,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
                 { key: 'zlecaf', fr: 'Accord ZLECAf', en: 'AfCFTA Agreement' },
               ].map(t => (
                 <tr key={t.key}>
-                  <td className="k">{lang === 'fr' ? t.fr : t.en}</td>
+                  <td className="k">{tr({ fr: t.fr, en: t.en }, lang)}</td>
                   <td className="v">{display.au_treaties[t.key] ? L('Ratifié', 'Ratified') : L('Non ratifié', 'Not ratified')}</td>
                 </tr>
               ))}
@@ -1544,7 +1879,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
       {/* Pied de page : provenance et citation */}
       <div style={{ borderTop: '1pt solid #0f172a', marginTop: '3mm', paddingTop: '1.8mm', fontSize: '6.4pt', color: '#475569' }}>
         <div style={{ marginBottom: '.8mm' }}><strong>{L('Sources', 'Sources')} · </strong>{text.modal.data_source}</div>
-        <div style={{ marginBottom: '.8mm' }}><strong>{L('Citation', 'Citation')} · </strong><em>{PRINT_CITATION[lang]}</em></div>
+        <div style={{ marginBottom: '.8mm' }}><strong>{L('Citation', 'Citation')} · </strong><em>{tr(PRINT_CITATION, lang)}</em></div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span>South(s) Mobility DataHub — {siteUrl}</span>
           <span>© 2026 Yassine Ben Mokhtar · {L('Généré le', 'Generated')} {date}</span>
@@ -1556,7 +1891,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
 
 const PrintCitationFooter = ({ lang, sectionLabel }) => {
   const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'South(s) Mobility DataHub';
-  const printDate = new Date().toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  const printDate = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-US' }, lang), { year: 'numeric', month: 'long', day: 'numeric' });
   return (
     <div className="hidden print:block mt-8 pt-4 border-t-2 border-slate-900 break-inside-avoid">
       <div className="flex items-center gap-2 mb-1.5">
@@ -1566,11 +1901,11 @@ const PrintCitationFooter = ({ lang, sectionLabel }) => {
       </div>
       <p className="text-[10px] text-slate-600">{siteUrl}</p>
       <p className="text-[10px] text-slate-600 mt-1.5 leading-relaxed">
-        {lang === 'fr' ? 'Citation suggérée : ' : 'Suggested citation: '}
-        <span className="italic">{PRINT_CITATION[lang]}</span>
+        {tr({ fr: 'Citation suggérée : ', en: 'Suggested citation: ' }, lang)}
+        <span className="italic">{tr(PRINT_CITATION, lang)}</span>
       </p>
       <p className="text-[9px] text-slate-400 mt-1.5">
-        {lang === 'fr' ? 'Document généré le' : 'Document generated on'} {printDate} — © 2026 Yassine Ben Mokhtar
+        {tr({ fr: 'Document généré le', en: 'Document generated on' }, lang)} {printDate} — © 2026 Yassine Ben Mokhtar
       </p>
     </div>
   );
@@ -1584,7 +1919,7 @@ const institutionLogos = [
   { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
   { key: 'au', name: "African Union", src: "/logos/au.png" },
   { key: 'unhcr', name: "UNHCR", src: "/logos/unhcr.svg" },
-  { key: 'ilo', name: "ILO", src: "/logos/ilo.svg" },
+  { key: 'ilo', name: "ILO", full: "OIT / ILO — NORMLEX", src: null },
   { key: 'iom', name: "IOM", src: "/logos/iom.png" },
   { key: 'afdb', name: "AfDB", src: "/logos/afdb.svg" },
   { key: 'oecd', name: "OECD", src: "/logos/oecd.svg" },
@@ -1597,11 +1932,23 @@ const institutionLogos = [
   { key: 'afrobarometer', name: "Afrobarometer", src: "/logos/afrobarometer.png" },
   { key: 'iss', name: "ISS", full: "ISS African Futures", src: "/logos/iss.svg" },
   { key: 'icmpd', name: "ICMPD", src: "/logos/icmpd.jpg" },
-  { key: 'iata', name: "IATA", src: "/logos/iata.png" },
+  // Deux fichiers etaient faux et affichaient l'embleme d'une autre
+  // organisation : iata.png etait celui de l'International Amateur Theatre
+  // Association, ilo.svg un logotype industriel sans rapport avec l'OIT.
+  // Afficher l'embleme d'un tiers sous le nom d'une institution source est pire
+  // que de n'en afficher aucun : en attendant les fichiers officiels, ces deux
+  // entrees s'affichent en toutes lettres.
+  { key: 'iata', name: "IATA", full: "IATA — Travel Information Manual", src: null },
   { key: 'eurostat', name: "Eurostat", src: "/logos/eurostat.png" },
   { key: 'frontex', name: "Frontex", src: "/logos/frontex.svg" },
   { key: 'moibrahim', name: "Mo Ibrahim Foundation", full: "Mo Ibrahim Foundation — IIAG", src: "/logos/moibrahim.svg" },
   { key: 'ecjrc', name: "EC JRC", full: "Commission européenne — Centre commun de recherche (JRC/KCMD)", src: "/logos/ec-jrc.svg" },
+  // Trois sources citees dans les fiches mais absentes du bandeau : le bandeau
+  // annonce « les sources institutionnelles suivantes », il doit donc les
+  // porter toutes. Emblemes officiels a recuperer.
+  { key: 'unodc', name: "UNODC", full: "ONUDC / UNODC — Global Study on Smuggling of Migrants", src: null },
+  { key: 'unesco', name: "UNESCO", full: "UNESCO — Global Education Monitoring", src: null },
+  { key: 'gallup', name: "Gallup", full: "Gallup World Poll — Migration Aspirations", src: null },
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
@@ -1762,14 +2109,13 @@ const t = {
         badge: "Note de Cadrage Scientifique",
         title: "Pourquoi ce Knowledge Hub ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C'est loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L'attention s'y concentre de manière disproportionnée sur les traversées vers l'Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient, retournent et instrumentalisent les agendas migratoires du Nord, loin d'en être de simples récepteurs la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord, sans nier pour autant les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
-        p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
+        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d'en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
+        p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique a parfois devancé la norme internationale. Avec la Convention de Kampala (2009), elle a adopté le premier traité régional contraignant au monde sur les personnes déplacées internes — à ce jour, toujours le seul. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
-        p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance (Ben Mokhtar, 2026). Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
-        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être : elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l'on met en avant, et l'échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l'assume plutôt que de se présenter comme un simple reflet des données.",
+        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être. Elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l'on met en avant, et l'échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l'assume plutôt que de se présenter comme un simple reflet des données.",
         refs_title: "Pour aller plus loin",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -1847,18 +2193,18 @@ const t = {
         { myth: "Le changement climatique va vider l'Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90% des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
         { myth: "Les pays d'Afrique côtière ne sont que de simples zones de transit.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation (2024)", stat_val: 65, color: "bg-indigo-700", desc: "Les données d'installation démontrent que les pays autrefois qualifiés de 'transit' deviennent des pôles d'ancrage économique durable pour la main-d'œuvre régionale." },
         { myth: "Le développement économique stoppe mécaniquement les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur (2024)", stat_val: 80, color: "bg-rose-700", desc: "Démontré empiriquement : l'augmentation initiale des revenus fournit aux ménages le capital financier nécessaire pour financer un projet migratoire régulier." },
-        { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l'emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d'emploi, 27,5 % des migrants occupés travaillent dans l'agriculture, la sylviculture ou la pêche — ils y comblent des pénuries de main-d'œuvre tout en dynamisant les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
+        { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l'emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d'emploi, 27,5 % des migrants occupés travaillent dans l'agriculture, la sylviculture ou la pêche. Ils y comblent des pénuries de main-d'œuvre et dynamisent les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
       ],
       about: {
         intro_title: "À propos de South(s) Mobility",
         intro_subtitle: "Une infrastructure ouverte pour comprendre les mobilités dans les Suds",
         intro_p1: "South(s) Mobility DataHub est une plateforme indépendante de recherche, de données et de visualisation consacrée aux mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique.",
-        intro_p2: "À l'intersection des sciences sociales, de la science des données et des études sur les migrations, la plateforme rassemble, harmonise et valorise des données, indicateurs, cartes, publications, instruments juridiques et ressources documentaires provenant d'institutions internationales, régionales et nationales.",
+        intro_p2: "La plateforme se tient à l'intersection des sciences sociales, de la science des données et des études sur les migrations. Elle rassemble, harmonise et met en valeur des données, indicateurs, cartes, publications, instruments juridiques et ressources documentaires d'institutions internationales, régionales et nationales.",
         intro_p3: "Son ambition est de rendre les données sur les mobilités humaines plus accessibles, plus comparables et plus intelligibles, afin de favoriser une compréhension empirique, nuancée et documentée des dynamiques migratoires contemporaines.",
         
         research_title: "Une plateforme née de la recherche",
         research_p1: "South(s) Mobility est issu d'un projet de recherche doctorale consacré à la gouvernance des migrations africaines.",
-        research_p2: "Au cours de cette recherche, un constat s'est imposé : une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources demeurent largement dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
+        research_p2: "Au cours de cette recherche, un constat s'est imposé. Une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources restent dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
         research_p3: "South(s) Mobility est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
         research_p4: "Il s'inscrit dans une démarche de science ouverte (Open Science), de diffusion des connaissances et de valorisation de la recherche.",
 
@@ -1941,7 +2287,7 @@ const t = {
         m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Le Sahara occidental est intégré au Maroc, y compris cartographiquement. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
         m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d'observation. Aucune interpolation n'est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d'une réserve plutôt que lissé.",
         m4: "Proportion plutôt que valeur absolue. Les effectifs sont systématiquement rapportés à la population de référence. Les échelles ne sont jamais mélangées dans une même représentation (l'indice AVOI est stocké de 0 à 100 au niveau des pays, de 0 à 1 au niveau des CER). Les cartes choroplèthes utilisent un découpage par quantiles, robuste aux distributions très asymétriques comme celle des déplacés internes.",
-        m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur — 15 États parties pour cette catégorie de protocoles — est stocké par instrument et pilote directement l'affichage du statut « en vigueur » ou « pas encore en vigueur ».",
+        m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur est stocké instrument par instrument : 15 États parties pour cette catégorie de protocoles. Il pilote directement l'affichage du statut, « en vigueur » ou « pas encore en vigueur ».",
         m6: "Restitution reproductible. Les huit jeux de données affichés sont exportables en CSV conforme au format RFC 4180, et chaque dossier PDF embarque sa source, l'adresse de la plateforme et la référence de citation. Les fonds cartographiques dérivent de Natural Earth (50 m), en projection Mercator, simplifiés par l'algorithme de Douglas-Peucker.",
         sources_title: "Accès aux Datasets Originaux, Rapports & Cadres Légaux :",
         s1: "Union Africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires (2021)",
@@ -2042,7 +2388,7 @@ const t = {
           badge: "Lexicon & Definitions",
           title: "The words of the regime",
           highlight: "and their African definition.",
-          desc: "Each term is defined first by the African instrument that governs it — the OAU Refugee Convention (1969), the Kampala Convention on internally displaced persons (2009) — then, for statistical aggregates only, by UN DESA's operational definition. The choice of word is never neutral: it determines what gets counted.",
+          desc: "Each term is defined first by the African instrument that governs it: the OAU Refugee Convention (1969), the Kampala Convention on internally displaced persons (2009). UN DESA's operational definition comes in only for statistical aggregates. The choice of word is never neutral: it determines what gets counted.",
           plain: "The exact meaning of the words used here. Each definition starts from the African instrument that governs it, because how something is named decides what gets counted."
         },
         about: {
@@ -2063,15 +2409,14 @@ const t = {
       home_editorial: {
         badge: "Scientific Framing Note",
         title: "Why this Knowledge Hub?",
-        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts only about 29 million international migrants on its soil, or 9.5% of the world stock: far behind Europe and Asia, and well below the continent's demographic weight (close to 18% of the world's population). This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
-        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people — roughly 46% of the global total (82.2 million recorded across 104 countries), and more than the number of international migrants present across the entire continent (IDMC). In other words, Africa's largest form of mobility crosses no border at all: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
+        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil — 9.5% of the world stock. That is far behind Europe and Asia, and well below the continent's demographic weight, close to 18% of the world's population. This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
+        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). In other words, Africa's largest form of mobility crosses no border at all: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA's operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
-        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" invites us to think of mobility and immobility as two faces of the same continuum of aspirations and actually exercisable capabilities, rather than a dichotomy between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one: consolidating, harmonizing, and recontextualizing data already produced by international and African institutions, rather than producing new data of its own. The platform systematically favors proportion over absolute value, comparison over anecdote, and African institutional architecture (the African Union, Regional Economic Communities) over normative frameworks imported solely from the North — without denying the power and funding asymmetries that concretely structure this regime (Bakewell, 2008; Bayart, 2000).",
-        p3b: "This architecture produces a paradox the platform documents with figures. Africa is not lagging behind the norm: it has at times moved ahead of it, adopting with the Kampala Convention (2009) the world's first — and still only — binding regional treaty on internally displaced persons. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
+        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" places mobility and immobility on a single continuum: that of aspirations and of the capabilities people can actually exercise. It thereby departs from the usual split between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one. It consolidates, harmonizes and recontextualizes data already produced by international and African institutions, instead of producing new data of its own. The platform favours proportion over absolute value, comparison over anecdote, and African institutional architecture — the African Union, the Regional Economic Communities — over normative frameworks imported solely from the North. This does not deny the power and funding asymmetries that concretely structure the regime (Bakewell, 2008; Bayart, 2000).",
+        p3b: "This architecture produces a paradox the platform documents with figures. Africa has at times moved ahead of the international norm. With the Kampala Convention (2009) it adopted the world's first binding regional treaty on internally displaced persons — to this day, still the only one. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
-        p5: "This framing owes, finally, to fieldwork: participant observation conducted between 2023 and 2025 within the African Migration Observatory (Rabat), documented in the Governance section (Ben Mokhtar, 2026). It gives access to the regime's ordinary bureaucratic fabric — workshops, budgetary trade-offs, validation circuits — where normative frameworks, examined alone, show only their façade.",
-        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material — while accepting that the choice of what is foregrounded, and of the scale against which it is measured, is already an analytical act rather than a neutral reflection of the data.",
+        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material. Choosing what to foreground, and the scale against which to measure it, is itself an analytical act — one this platform states openly.",
         refs_title: "Further Reading",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -2469,9 +2814,9 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
   const fmt = (v) => {
     if (categoriel) {
       const c = indicator.categories.find(x => x.key === v);
-      return c ? c.label[lang] : (lang === 'fr' ? 'donnée indisponible' : 'no data');
+      return c ? tr(c.label, lang) : (tr({ fr: 'donnée indisponible', en: 'no data' }, lang));
     }
-    if (!Number.isFinite(v)) return lang === 'fr' ? 'donnée indisponible' : 'no data';
+    if (!Number.isFinite(v)) return tr({ fr: 'donnée indisponible', en: 'no data' }, lang);
     return indicator.unit === '' ? formatNumber(v, lang) : `${v}${indicator.unit}`;
   };
 
@@ -2483,10 +2828,10 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
   const [survole, setSurvole] = useState(null);
   const lu = survole || selectedId;
   const paysLu = lu ? countryById[lu] : null;
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
 
   const releve = paysLu ? [
-    { l: indicator.label[lang], v: fmt(valueOf(lu)), fort: true },
+    { l: tr(indicator.label, lang), v: fmt(valueOf(lu)), fort: true },
     { l: L('Migrants internationaux', 'International migrants'), v: formatNumber(paysLu.stock, lang) },
     { l: L('Ouverture des visas', 'Visa openness'), v: paysLu.avoi == null ? '—' : `${paysLu.avoi}/100` },
     { l: L('Rétention Sud-Sud', 'South-South retention'), v: paysLu.retention == null ? '—' : `${paysLu.retention} %` },
@@ -2502,7 +2847,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
           const v = valueOf(id);
           const isSel = selectedId === id;
           const isLu = lu === id;
-          const nom = countryById[id]?.name?.[lang] || id;
+          const nom = tr(countryById[id]?.name, lang) || id;
           return (
             <path
               key={id}
@@ -2532,7 +2877,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
         {paysLu ? (
           <>
             <h4 className="font-serif font-bold text-lg leading-tight text-slate-900">
-              {paysLu.name?.[lang] || ''}
+              {tr(paysLu.name, lang) || ''}
             </h4>
             <dl className="mt-3 space-y-2.5">
               {releve.map((r, i) => (
@@ -2569,13 +2914,13 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
           une grandeur. */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-2 pt-2 border-t border-slate-100 lg:col-span-2">
         <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--label)' }}>
-          {indicator.label[lang]}
+          {tr(indicator.label, lang)}
         </span>
         {categoriel ? (
           indicator.categories.map(c => (
             <span key={c.key} className="flex items-center gap-1.5">
               <span className="w-3.5 h-2.5 rounded-[1px] shrink-0" style={{ background: c.color }} />
-              <span className="text-[11px]" style={{ color: 'var(--ink-soft)' }}>{c.label[lang]}</span>
+              <span className="text-[11px]" style={{ color: 'var(--ink-soft)' }}>{tr(c.label, lang)}</span>
             </span>
           ))
         ) : (
@@ -2645,7 +2990,7 @@ const sansAccents = (s) => String(s || '').normalize('NFD')
 
 const construireIndex = (lang) => {
   const fiches = [];
-  const L = (o) => (typeof o === 'string' ? o : (o?.[lang] || o?.fr || ''));
+  const L = (o) => (typeof o === 'string' ? o : (tr(o, lang) || o?.fr || ''));
   // Les mots-cles sont TOUJOURS bilingues, quelle que soit la langue affichee :
   // on tape volontiers « Tchad » en lisant l'anglais, ou l'inverse.
   const D = (o) => (typeof o === 'string' ? o : `${o?.fr || ''} ${o?.en || ''}`);
@@ -2661,7 +3006,7 @@ const construireIndex = (lang) => {
   Object.entries(countryData).forEach(([region, pays]) => pays.forEach(c => fiches.push({
     type: 'pays',
     titre: L(c.name),
-    contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${lang === 'fr' ? 'migrants' : 'migrants'}` : null]
+    contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${tr({ fr: 'migrants', en: 'migrants' }, lang)}` : null]
       .filter(Boolean).join(' · '),
     aller: { tab: 'explorer', id: c.id },
     mots: `${D(c.name)} ${c.iso2 || ''} ${D(REGIONS[region])}`,
@@ -2677,7 +3022,7 @@ const construireIndex = (lang) => {
 
   (glossaryData || []).forEach(g => (g.terms || []).forEach(t => fiches.push({
     type: 'terme',
-    titre: lang === 'fr' ? t.term : (t.en_term || t.term),
+    titre: tr({ fr: t.term, en: (t.en_term || t.term) }, lang),
     contexte: L(g.category),
     aller: { tab: 'resources' },
     mots: `${t.term} ${t.en_term || ''} ${t.fr || ''} ${t.en || ''} ${D(g.category)}`,
@@ -2703,7 +3048,7 @@ const TYPES = {
 };
 
 const RechercheGlobale = ({ lang, aller }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const [q, setQ] = useState('');
   const [ouvert, setOuvert] = useState(false);
   const [filtre, setFiltre] = useState(null);
@@ -2776,7 +3121,7 @@ const RechercheGlobale = ({ lang, aller }) => {
                 </button>
                 {Object.entries(TYPES).filter(([k]) => parType[k]).map(([k, lib]) => (
                   <button key={k} type="button" aria-pressed={filtre === k} onClick={() => setFiltre(k)}>
-                    {lib[lang]} <span className="num">{parType[k]}</span>
+                    {tr(lib, lang)} <span className="num">{parType[k]}</span>
                   </button>
                 ))}
               </div>
@@ -2791,7 +3136,7 @@ const RechercheGlobale = ({ lang, aller }) => {
                   {vus.map((r, i) => (
                     <li key={i}>
                       <button type="button" onClick={() => { setOuvert(false); setQ(''); aller(r); }}>
-                        <span className="recherche-type">{TYPES[r.type][lang]}</span>
+                        <span className="recherche-type">{tr(TYPES[r.type], lang)}</span>
                         <span className="recherche-titre">{r.titre}</span>
                         <span className="recherche-ctx">{r.contexte}</span>
                       </button>
@@ -2872,7 +3217,7 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
   return (
     <div className="relative">
       <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[26rem] mx-auto block" role="img"
-           aria-label={lang === 'fr' ? "Carte des États membres" : "Map of member states"}>
+           aria-label={tr({ fr: "Carte des États membres", en: "Map of member states" }, lang)}>
         {Object.entries(africaCountryPaths).map(([id, d]) => {
           const isMember = memberIds.has(id);
           const isHovered = hovered === id;
@@ -2892,17 +3237,17 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
         })}
       </svg>
 
-      <div className="absolute top-2 left-2 pointer-events-none">
+      <div className="absolute top-2 start-2 pointer-events-none">
         {hoveredMeta ? (
           <div className="bg-white/95 backdrop-blur-sm border border-slate-200 shadow-md rounded-md px-3 py-2 animate-in fade-in duration-150">
-            <span className="text-xs font-bold text-slate-900 block">{hoveredMeta.name[lang] || hoveredMeta.name.fr}</span>
+            <span className="text-xs font-bold text-slate-900 block">{tr(hoveredMeta.name, lang) || hoveredMeta.name.fr}</span>
             <span className={`text-[10px] font-bold uppercase tracking-widest ${hoveredIsMember ? 'text-emerald-700' : 'text-slate-400'}`}>
-              {hoveredIsMember ? (lang === 'fr' ? 'État membre' : 'Member state') : (lang === 'fr' ? 'Non membre' : 'Not a member')}
+              {hoveredIsMember ? (tr({ fr: 'État membre', en: 'Member state' }, lang)) : (tr({ fr: 'Non membre', en: 'Not a member' }, lang))}
             </span>
           </div>
         ) : (
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            {lang === 'fr' ? 'Survolez la carte' : 'Hover the map'}
+            {tr({ fr: 'Survolez la carte', en: 'Hover the map' }, lang)}
           </span>
         )}
       </div>
@@ -3111,7 +3456,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'forced' },
   ];
 
-  const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p5, text.home_editorial.p4]
+  const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p4]
     .join(' ').trim().split(/\s+/).length;
   const readingMinutes = Math.max(1, Math.round(essayWordCount / 200));
 
@@ -3136,11 +3481,11 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             <button
               key={idx}
               onClick={() => setActiveTab(stat.tab)}
-              aria-label={`${stat.value} ${stat.unit ? stat.unit[lang] + ' ' : ''}${stat.label[lang]} — ${stat.door[lang]}`}
-              className="relative overflow-hidden px-5 py-6 text-left group flex flex-col"
+              aria-label={`${stat.value} ${stat.unit ? tr(stat.unit, lang) + ' ' : ''}${tr(stat.label, lang)} — ${tr(stat.door, lang)}`}
+              className="relative overflow-hidden px-5 py-6 text-start group flex flex-col"
             >
               <span
-                className="absolute left-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
+                className="absolute start-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
                 style={{ backgroundColor: 'var(--accent)' }}
               />
               <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
@@ -3149,18 +3494,18 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                       sans lui, un copier-coller donne « 29millions ». */}
                 {stat.unit && (
                   <span className="text-lg font-semibold" style={{ color: 'var(--label)' }}>
-                    {' '}{stat.unit[lang]}
+                    {' '}{tr(stat.unit, lang)}
                   </span>
                 )}
               </div>
               {/* Ce que compte le chiffre : c'est cette ligne qui porte le sens. */}
               <span className="block mt-2 text-[13px] leading-snug text-slate-700 flex-1">
-                {stat.label[lang]}
+                {tr(stat.label, lang)}
               </span>
               {/* Ce que fait le clic : rien ne disait que ces tuiles menaient quelque part. */}
               <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold group-hover:gap-2 transition-[gap]"
                     style={{ color: 'var(--accent)' }}>
-                {stat.door[lang]}
+                {tr(stat.door, lang)}
                 <ArrowRight className="w-3 h-3 shrink-0" aria-hidden="true" />
               </span>
             </button>
@@ -3169,7 +3514,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       </Reveal>
 
       <Reveal delay={60}>
-        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{lang === 'fr' ? "Explorer le Knowledge Hub" : "Explore the Knowledge Hub"}</h2>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{tr({ fr: "Explorer le Knowledge Hub", en: "Explore the Knowledge Hub" }, lang)}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
           {homeCards.map((card, i) => {
             const Icon = card.icon;
@@ -3177,7 +3522,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
               <button
                 key={card.id}
                 onClick={() => setActiveTab(card.id)}
-                className="hub-card lift text-left p-6 bg-white border border-slate-200 group flex flex-col h-full relative"
+                className="hub-card lift text-start p-6 bg-white border border-slate-200 group flex flex-col h-full relative"
               >
                 {/* Numerotation d'entree : la rubrique se lit comme une section d'ouvrage. */}
                 <div className="flex items-baseline justify-between mb-5">
@@ -3187,10 +3532,10 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                   <Icon className="w-[18px] h-[18px] shrink-0" style={{ color: 'var(--rule-strong)' }} />
                 </div>
                 <span className="block h-px w-full mb-4" style={{ backgroundColor: 'var(--rule)' }} />
-                <h3 className="font-serif font-bold text-lg text-slate-900 mb-2 leading-snug">{card.label[lang]}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed flex-1">{card.desc[lang].replace('{count}', totalLibrary)}</p>
+                <h3 className="font-serif font-bold text-lg text-slate-900 mb-2 leading-snug">{tr(card.label, lang)}</h3>
+                <Prose className="text-xs text-slate-500 leading-relaxed flex-1" lang={lang}>{tr(card.desc, lang).replace('{count}', totalLibrary)}</Prose>
                 <span className="hub-card-cta flex items-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-5">
-                  {lang === 'fr' ? "Découvrir" : "Discover"} <ArrowRight className="w-3 h-3 ml-1.5 group-hover:translate-x-1 transition-transform" />
+                  {tr({ fr: "Découvrir", en: "Discover" }, lang)} <ArrowRight className="w-3 h-3 ms-1.5 group-hover:translate-x-1 transition-transform" />
                 </span>
               </button>
             );
@@ -3204,12 +3549,12 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             {text.home_editorial.badge}
           </span>
           <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            <Clock className="w-3 h-3" /> {readingMinutes} {lang === 'fr' ? "min de lecture" : "min read"}
+            <Clock className="w-3 h-3" /> {readingMinutes} {tr({ fr: "min de lecture", en: "min read" }, lang)}
           </span>
         </div>
         <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p className="lede">{text.home_editorial.p1}</p>
+          <Prose className="lede" lang={lang}>{text.home_editorial.p1}</Prose>
         </div>
 
         <div className="max-w-4xl">
@@ -3218,21 +3563,20 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </div>
 
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p>{text.home_editorial.p1b}</p>
+          <Prose lang={lang}>{text.home_editorial.p1b}</Prose>
         </div>
         <div className="max-w-4xl bg-slate-50 border border-slate-200 rounded-lg p-5 my-5 flex items-start gap-3">
           <AlertTriangle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
-          <p className="text-xs text-slate-600 leading-relaxed text-justify">{text.home_editorial.caveats}</p>
+          <Prose className="text-xs text-slate-600 leading-relaxed text-justify" lang={lang}>{text.home_editorial.caveats}</Prose>
         </div>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p>{text.home_editorial.p2}</p>
-          <p>{text.home_editorial.p3}</p>
-          <p>{text.home_editorial.p3b}</p>
-          <blockquote className="border-l-4 border-amber-400 pl-5 py-1 italic text-slate-800 not-italic font-serif text-base my-2">
+          <Prose lang={lang}>{text.home_editorial.p2}</Prose>
+          <Prose lang={lang}>{text.home_editorial.p3}</Prose>
+          <Prose lang={lang}>{text.home_editorial.p3b}</Prose>
+          <blockquote className="border-s-4 border-amber-400 ps-5 py-1 italic text-slate-800 not-italic font-serif text-base my-2">
             {text.home_editorial.pullquote}
           </blockquote>
-          <p>{text.home_editorial.p5}</p>
-          <p className="font-medium text-slate-800">{text.home_editorial.p4}</p>
+          <Prose className="font-medium text-slate-800" lang={lang}>{text.home_editorial.p4}</Prose>
         </div>
         <div className="mt-8 pt-6 border-t border-slate-100">
           <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
@@ -3250,7 +3594,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
 
       <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 md:p-10">
         <h4 className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
-          {lang === 'fr' ? "Données croisées et vérifiées à partir des sources institutionnelles suivantes" : "Data cross-checked and verified against the following institutional sources"}
+          {tr({ fr: "Données croisées et vérifiées à partir des sources institutionnelles suivantes", en: "Data cross-checked and verified against the following institutional sources" }, lang)}
         </h4>
         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
           {institutionLogos.map((inst) => (
@@ -3260,9 +3604,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           ))}
         </div>
         <p className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed">
-          {lang === 'fr'
-            ? "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation ou un endossement de South(s) Mobility DataHub."
-            : "These institutions are cited as sources of open public data. Their presence does not constitute a partnership, endorsement, or validation of South(s) Mobility DataHub."}
+          {tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation ou un endossement de South(s) Mobility DataHub.", en: "These institutions are cited as sources of open public data. Their presence does not constitute a partnership, endorsement, or validation of South(s) Mobility DataHub." }, lang)}
         </p>
       </Reveal>
     </div>
@@ -3328,7 +3670,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
   const t = tierOf(fiche.confidence_level);
   const VerdictIcon = t.Icon;
   const CatIcon = evidenceCategoryIcons[fiche.category.fr] || Globe;
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const isSubstantiated = fiche.confidence_level === "🟢";
 
   return (
@@ -3345,20 +3687,20 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
       <header className="px-6 md:px-8 pt-6 pb-5">
         <div className="flex items-center gap-2 mb-4">
           <CatIcon className="w-3.5 h-3.5" style={{ color: 'var(--accent-deep)' }} />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{fiche.category[lang]}</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{tr(fiche.category, lang)}</span>
         </div>
 
         <blockquote
-          className="font-serif font-bold text-xl md:text-2xl leading-snug text-slate-900 pl-4"
+          className="font-serif font-bold text-xl md:text-2xl leading-snug text-slate-900 ps-4"
           style={{ borderLeft: '2px solid var(--rule-strong)' }}
         >
-          {fiche.narrative[lang]}
+          {tr(fiche.narrative, lang)}
         </blockquote>
 
         <div className="flex items-center gap-3 mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
           <RobustnessMeter level={fiche.confidence_level} />
           <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest" style={{ color: t.color }}>
-            <VerdictIcon className="w-3.5 h-3.5" /> {fiche.verdict[lang]}
+            <VerdictIcon className="w-3.5 h-3.5" /> {tr(fiche.verdict, lang)}
           </span>
         </div>
       </header>
@@ -3367,11 +3709,11 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
         <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
           {L("Ce que montrent les donn\u00e9es", "What data shows")}
         </h4>
-        <p className="text-[15px] leading-relaxed text-slate-800">{fiche.reality[lang]}</p>
+        <Prose className="text-[15px] leading-relaxed text-slate-800" lang={lang}>{tr(fiche.reality, lang)}</Prose>
       </div>
 
       <div className="px-6 md:px-8 py-6 space-y-6">
-        {fiche.why_persists && fiche.why_persists[lang].length > 0 && (
+        {fiche.why_persists && tr(fiche.why_persists, lang).length > 0 && (
           <section>
             <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {isSubstantiated
@@ -3379,7 +3721,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
                 : L("Pourquoi ce narratif persiste", "Why this narrative persists")}
             </h4>
             <ul className="space-y-1.5">
-              {fiche.why_persists[lang].map((reason, i) => (
+              {tr(fiche.why_persists, lang).map((reason, i) => (
                 <li key={i} className="flex gap-2.5 text-[13px] text-slate-600 leading-relaxed">
                   <span className="shrink-0 mt-[7px] w-1 h-1" style={{ backgroundColor: 'var(--accent)' }} />
                   {reason}
@@ -3395,7 +3737,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
               <BarChart3 className="w-3 h-3" /> {L("Indicateurs crois\u00e9s", "Crossed indicators")}
             </h4>
             <ul className="space-y-1">
-              {fiche.indicators[lang].map((ind, i) => (
+              {tr(fiche.indicators, lang).map((ind, i) => (
                 <li key={i} className="text-xs text-slate-700 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>{ind}</li>
               ))}
             </ul>
@@ -3405,7 +3747,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
               <Landmark className="w-3 h-3" /> {L("Sources", "Sources")}
             </h4>
             <ul className="space-y-1">
-              {fiche.sources[lang].map((src, i) => (
+              {tr(fiche.sources, lang).map((src, i) => (
                 <li key={i} className="text-xs font-medium py-1.5" style={{ color: 'var(--accent-2)', borderBottom: '1px solid var(--rule)' }}>{src}</li>
               ))}
             </ul>
@@ -3416,7 +3758,7 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
           <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <ShieldAlert className="w-3 h-3" /> {L("Limites m\u00e9thodologiques", "Methodological limits")}
           </h4>
-          <p className="text-xs text-slate-500 italic leading-relaxed">{fiche.limits[lang]}</p>
+          <Prose className="text-xs text-slate-500 italic leading-relaxed" lang={lang}>{tr(fiche.limits, lang)}</Prose>
         </section>
       </div>
     </article>
@@ -3465,7 +3807,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const categories = useMemo(() => [...new Set(evidenceCheckData.map(i => i.category.fr))], []);
   const categoryLabel = (key) => {
     const found = evidenceCheckData.find(i => i.category.fr === key);
-    return found ? found.category[lang] : key;
+    return found ? tr(found.category, lang) : key;
   };
 
   const results = useMemo(() => {
@@ -3474,12 +3816,12 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       .filter(f => activeCategory === 'All' || f.category.fr === activeCategory)
       .filter(f => activeTier === 'All' || f.confidence_level === activeTier)
       .filter(f => !q
-        || f.narrative[lang].toLowerCase().includes(q)
-        || f.reality[lang].toLowerCase().includes(q)
-        || f.category[lang].toLowerCase().includes(q))
+        || tr(f.narrative, lang).toLowerCase().includes(q)
+        || tr(f.reality, lang).toLowerCase().includes(q)
+        || tr(f.category, lang).toLowerCase().includes(q))
       .sort((a, b) => {
         if (sortMode === 'theme') {
-          const c = a.category[lang].localeCompare(b.category[lang]);
+          const c = tr(a.category, lang).localeCompare(tr(b.category, lang));
           if (c !== 0) return c;
         }
         return tierOf(a.confidence_level).rank - tierOf(b.confidence_level).rank;
@@ -3497,9 +3839,9 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const tierFilters = ["🟢", "🟡", "🟠", "🔴"];
   const tierName = (level) => {
     const sample = evidenceCheckData.find(f => f.confidence_level === level);
-    return sample ? sample.verdict[lang] : level;
+    return sample ? tr(sample.verdict, lang) : level;
   };
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -3532,14 +3874,14 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <div className="bg-white border border-slate-200 print:hidden">
         <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 border-b border-slate-100">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search className="w-4 h-4 absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               aria-label={L('Rechercher parmi les affirmations v\u00e9rifi\u00e9es', 'Search the fact-checked claims')}
               placeholder={L("Rechercher une affirmation, une donn\u00e9e, un th\u00e8me\u2026", "Search a claim, a figure, a theme\u2026")}
-              className="w-full pl-9 pr-3 py-2.5 text-sm bg-transparent border border-slate-200 focus:outline-none"
+              className="w-full ps-9 pe-3 py-2.5 text-sm bg-transparent border border-slate-200 focus:outline-none"
               style={{ borderRadius: 2 }}
             />
           </div>
@@ -3554,7 +3896,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3 p-3">
           {/* Robustesse : l'axe principal du registre */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {L("Robustesse", "Robustness")}
             </span>
             <FilterChip active={activeTier === 'All'} onClick={() => setActiveTier('All')}>
@@ -3562,14 +3904,14 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             </FilterChip>
             {tierFilters.map(lv => (
               <FilterChip key={lv} active={activeTier === lv} onClick={() => setActiveTier(lv)}>
-                <RobustnessMeter level={lv} className="mr-1.5" /> {tierName(lv)}
+                <RobustnessMeter level={lv} className="me-1.5" /> {tierName(lv)}
               </FilterChip>
             ))}
           </div>
 
           {/* Deux entrees dans le meme corpus : par robustesse ou par theme */}
           <div className="flex items-center gap-1.5">
-            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {L("Classer par", "Sort by")}
             </span>
             <FilterChip active={sortMode === 'robustness'} onClick={() => setSortMode('robustness')}>
@@ -3606,6 +3948,58 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
           </p>
         </div>
       ) : (
+        <>
+        {/* ------- Parcours en cartes -------
+            Le registre donne la vue d'ensemble, le dossier donne la lecture ;
+            entre les deux il manquait le feuilletage. Le rail suit les memes
+            filtres que la liste et designe la meme fiche. */}
+        {results.length > 1 && (
+          <RailCartes
+            lang={lang}
+            className="mb-8 print:hidden"
+            etiquette={L(
+              `Feuilleter — ${results.length} affirmation${results.length > 1 ? 's' : ''}`,
+              `Browse — ${results.length} claim${results.length > 1 ? 's' : ''}`
+            )}
+          >
+            {results.map((f) => {
+              const t = tierOf(f.confidence_level);
+              const CatIcon = evidenceCategoryIcons[f.category.fr] || Globe;
+              const isSel = selected && selected.id === f.id;
+              return (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setSelectedId(f.id)}
+                  aria-current={isSel ? 'true' : undefined}
+                  className="lift text-start bg-white border p-4 flex flex-col gap-3"
+                  style={{
+                    borderColor: isSel ? 'var(--accent)' : 'var(--rule)',
+                    borderInlineStartWidth: '3px',
+                    borderInlineStartColor: t.color,
+                  }}
+                >
+                  <span className="flex items-center gap-2">
+                    <RobustnessMeter level={f.confidence_level} />
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 truncate">
+                      {tr(f.category, lang)}
+                    </span>
+                    <CatIcon className="w-3.5 h-3.5 shrink-0 ms-auto" style={{ color: 'var(--rule-strong)' }} aria-hidden="true" />
+                  </span>
+                  <span className="block text-[13px] leading-snug text-slate-800 font-medium">
+                    {tr(f.narrative, lang)}
+                  </span>
+                  <span className="mt-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"
+                        style={{ color: 'var(--accent-deep)' }}>
+                    {L('Ouvrir le dossier', 'Open the file')}
+                    <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                  </span>
+                </button>
+              );
+            })}
+          </RailCartes>
+        )}
+
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start print:hidden">
 
           {/* ------- Registre ------- */}
@@ -3615,7 +4009,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
                   {L("Registre des affirmations", "Register of claims")}
                 </span>
-                <span className="text-[9px] uppercase tracking-widest text-slate-400 text-right">
+                <span className="text-[9px] uppercase tracking-widest text-slate-400 text-end">
                   {sortMode === 'theme'
                     ? L("group\u00e9 par th\u00e8me", "grouped by theme")
                     : L("class\u00e9 du moins au plus \u00e9tay\u00e9", "least to most substantiated")}
@@ -3638,7 +4032,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                         <div className="sticky top-0 z-10 flex items-baseline justify-between gap-3 px-4 py-2"
                              style={{ backgroundColor: 'var(--paper-sunk)', borderBottom: '1px solid var(--rule)' }}>
                           <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--accent-deep)' }}>
-                            <CatIcon className="w-3 h-3" /> {f.category[lang]}
+                            <CatIcon className="w-3 h-3" /> {tr(f.category, lang)}
                           </span>
                           <span className="text-[10px] font-bold tabular-nums text-slate-500">{groupSize}</span>
                         </div>
@@ -3646,7 +4040,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                       <button
                         onClick={() => setSelectedId(f.id)}
                         aria-current={isSel ? 'true' : undefined}
-                        className="evidence-row w-full text-left flex gap-3 px-4 py-3.5"
+                        className="evidence-row w-full text-start flex gap-3 px-4 py-3.5"
                         style={isSel ? { backgroundColor: 'var(--paper-sunk)' } : undefined}
                       >
                         <span className="block w-[3px] shrink-0 self-stretch" style={{ backgroundColor: t.color }} />
@@ -3654,11 +4048,11 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                           <span className="flex items-center gap-2 mb-1.5">
                             <RobustnessMeter level={f.confidence_level} />
                             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 truncate">
-                              {f.category[lang]}
+                              {tr(f.category, lang)}
                             </span>
                           </span>
                           <span className="block text-[13px] leading-snug text-slate-800 font-medium">
-                            {f.narrative[lang]}
+                            {tr(f.narrative, lang)}
                           </span>
                         </span>
                         <CatIcon className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'var(--rule-strong)' }} />
@@ -3684,6 +4078,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             )}
           </div>
         </div>
+        </>
       )}
 
       {/* Version imprimee : le registre filtre se deplie en dossiers successifs,
@@ -3769,8 +4164,8 @@ const ANCHOR_INSTRUMENTS = [
 // recalcules en direct : si une ratification ou un score AVOI change dans la
 // base, le resultat suit.
 const GovernanceCross = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+  const L = faireL(lang);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
   const [showTable, setShowTable] = useState(false);
 
   const d = useMemo(() => {
@@ -3817,7 +4212,7 @@ const GovernanceCross = ({ lang }) => {
 
   const fmt = (v) => {
     const t = (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2);
-    return lang === 'fr' ? t.replace('.', ',') : t;
+    return tr({ fr: t.replace('.', ','), en: t }, lang);
   };
   const W = 560, H = 360, PAD = 44;
   const x = (g) => PAD + ((g - 1) / 53) * (W - PAD - 14);
@@ -3920,19 +4315,19 @@ const GovernanceCross = ({ lang }) => {
               <table className="w-full text-[12px]">
                 <thead>
                   <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                    <th className="text-left font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Gouvernance', 'Governance')}</th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">AVOI</th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 text-right">{L('Ancrage', 'Anchoring')}</th>
+                    <th className="text-start font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-end">{L('Gouvernance', 'Governance')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-end">AVOI</th>
+                    <th className="px-3 py-2 font-semibold text-slate-700 text-end">{L('Ancrage', 'Anchoring')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {[...d.pts].sort((a, b) => a.rank - b.rank).map(p => (
                     <tr key={p.iso2 || p.n} className="figure-row">
                       <td className="px-3 py-1.5 text-slate-800 whitespace-nowrap">{p.n}</td>
-                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{p.rank}/54</td>
-                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{p.avoi}</td>
-                      <td className="px-3 py-1.5 text-right tabular-nums font-bold" style={{ color: tone(p.anchor) }}>{p.anchor}/6</td>
+                      <td className="px-2 py-1.5 text-end tabular-nums text-slate-600">{p.rank}/54</td>
+                      <td className="px-2 py-1.5 text-end tabular-nums text-slate-600">{p.avoi}</td>
+                      <td className="px-3 py-1.5 text-end tabular-nums font-bold" style={{ color: tone(p.anchor) }}>{p.anchor}/6</td>
                     </tr>
                   ))}
                 </tbody>
@@ -3962,7 +4357,7 @@ const GovernanceCross = ({ lang }) => {
 
       <div className="px-6 md:px-8 pb-5">
         <Sources lang={lang} items={[
-          { label: IIAG_SOURCE.label[lang], url: IIAG_SOURCE.url },
+          { label: tr(IIAG_SOURCE.label, lang), url: IIAG_SOURCE.url },
           { label: L('BAD & CUA — Indice d\'ouverture des visas (AVOI)', 'AfDB & AUC — Africa Visa Openness Index (AVOI)'),
             url: 'https://www.visaopenness.org/' },
         ]} />
@@ -3972,14 +4367,14 @@ const GovernanceCross = ({ lang }) => {
 };
 
 const AnchoringMatrix = ({ lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const [sortBy, setSortBy] = useState('score');
 
   const rows = useMemo(() => {
     const all = Object.values(countryData).flat().filter(c => c.au_treaties);
     return all.map(c => ({
       // c.name est bilingue : on retient le libelle de la langue courante.
-      name: typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''),
+      name: typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''),
       iso2: c.iso2,
       t: c.au_treaties,
       score: ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0),
@@ -4041,7 +4436,7 @@ const AnchoringMatrix = ({ lang }) => {
         <div className="space-y-2.5">
           {totals.map((i, idx) => (
             <div key={i.key} className="flex items-center gap-3">
-              <span className="text-[11px] font-semibold w-40 shrink-0 leading-snug text-slate-700">{i.short[lang]}</span>
+              <span className="text-[11px] font-semibold w-40 shrink-0 leading-snug text-slate-700">{tr(i.short, lang)}</span>
               <div className="flex-1 h-5 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                 <div
                   className={`h-full bar-fill bar-fill--d${Math.min(5, idx + 1)}`}
@@ -4051,7 +4446,7 @@ const AnchoringMatrix = ({ lang }) => {
                   }}
                 />
               </div>
-              <span className="text-xs font-bold w-16 text-right shrink-0 tabular-nums text-slate-800">
+              <span className="text-xs font-bold w-16 text-end shrink-0 tabular-nums text-slate-800">
                 {i.n}/{total}
               </span>
             </div>
@@ -4104,14 +4499,14 @@ const AnchoringMatrix = ({ lang }) => {
             <table className="w-full text-[12px]">
               <thead>
                 <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                  <th className="text-left font-semibold px-3 py-2 text-slate-700 whitespace-nowrap">{L('Pays', 'Country')}</th>
+                  <th className="text-start font-semibold px-3 py-2 text-slate-700 whitespace-nowrap">{L('Pays', 'Country')}</th>
                   {ANCHOR_INSTRUMENTS.map(i => (
                     <th key={i.key} className="px-2 py-2 font-semibold text-slate-700 text-center whitespace-nowrap"
-                        title={i.full[lang]}>
-                      {i.short[lang]}
+                        title={tr(i.full, lang)}>
+                      {tr(i.short, lang)}
                     </th>
                   ))}
-                  <th className="px-3 py-2 font-semibold text-slate-700 text-right whitespace-nowrap">{L('Score', 'Score')}</th>
+                  <th className="px-3 py-2 font-semibold text-slate-700 text-end whitespace-nowrap">{L('Score', 'Score')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -4122,10 +4517,10 @@ const AnchoringMatrix = ({ lang }) => {
                       <td key={i.key} className="px-2 py-1.5 text-center">
                         <span className="dot mx-auto"
                               style={{ backgroundColor: r.t[i.key] ? 'var(--ok)' : 'var(--rule-strong)' }}
-                              title={`${i.full[lang]} — ${r.t[i.key] ? L('ratifié', 'ratified') : L('non ratifié', 'not ratified')}`} />
+                              title={`${tr(i.full, lang)} — ${r.t[i.key] ? L('ratifié', 'ratified') : L('non ratifié', 'not ratified')}`} />
                       </td>
                     ))}
-                    <td className="px-3 py-1.5 text-right font-bold tabular-nums"
+                    <td className="px-3 py-1.5 text-end font-bold tabular-nums"
                         style={{ color: r.score >= 5 ? 'var(--ok)' : r.score >= 4 ? 'var(--warn-ink)' : 'var(--bad)' }}>
                       {r.score}/6
                     </td>
@@ -4144,7 +4539,7 @@ const AnchoringMatrix = ({ lang }) => {
         <p className="text-[11px] leading-relaxed text-slate-600 text-justify">
           {L(
             "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument. Les six restants sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
-            "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 49 signatories have deposited their instrument, the six outstanding being Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved) and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits: Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
+            "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU. 49 signatories have deposited their instrument. Six have not: Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved), and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe was wrongly marked as a non-ratifier; the entry has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
           )}
         </p>
       </div>
@@ -4187,7 +4582,7 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
 const Sources = ({ items = [], lang = 'fr', note = null }) => {
   const [ouvert, setOuvert] = useState(false);
   if (!items.length && !note) return null;
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const long = items.length > 2;
   const vus = long && !ouvert ? items.slice(0, 1) : items;
 
@@ -4233,8 +4628,8 @@ const CounterpointFacts = ({ items }) => (
 // depuis la base pays de la plateforme : aucun total n'est saisi a la main.
 // ---------------------------------------------------------------------------
 const TabForced = ({ text, lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+  const L = faireL(lang);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
   const data = useMemo(() => {
     const all = Object.values(countryData).flat();
@@ -4296,9 +4691,9 @@ const TabForced = ({ text, lang }) => {
               <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                    style={{ width: `${(r.v / max) * 100}%`, backgroundColor: color }} />
             </div>
-            <span className="text-xs font-bold w-24 text-right shrink-0 tabular-nums text-slate-800">{fmt(r.v)}</span>
+            <span className="text-xs font-bold w-24 text-end shrink-0 tabular-nums text-slate-800">{fmt(r.v)}</span>
             {unitTotal ? (
-              <span className="text-[10px] w-12 text-right shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+              <span className="text-[10px] w-12 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                 {Math.round((r.v / unitTotal) * 100)} %
               </span>
             ) : null}
@@ -4371,7 +4766,7 @@ const TabForced = ({ text, lang }) => {
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
           <p className="lede">
             {L(
-              "Parler de « migration » pour désigner l'ensemble des mobilités africaines efface la distinction qui compte le plus juridiquement : celle entre la personne qui choisit de partir et celle qui est contrainte de le faire. Or, parmi les contraintes, le droit distingue encore selon qu'une frontière internationale a été franchie ou non — et cette frontière décide de tout : du statut, de l'institution compétente, du financement, et même de la visibilité statistique.",
+              "Parler de « migration » pour désigner l'ensemble des mobilités africaines efface la distinction qui compte le plus en droit. Celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu'une frontière internationale a été franchie. Cette frontière décide de tout : du statut, de l'institution compétente, du financement, et même de la visibilité statistique.",
               'Speaking of "migration" for all African mobility erases the distinction that matters most in law: between the person who chooses to leave and the person compelled to. And among the compelled, law still distinguishes according to whether an international border was crossed — and that border decides everything: status, competent institution, funding, and even statistical visibility.'
             )}
           </p>
@@ -4485,8 +4880,8 @@ const TabForced = ({ text, lang }) => {
                   <div className={`text-xl font-serif font-bold tabular-nums leading-none ${x.tone}`}>{fmt(b)}</div>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>{fmt(a)} <span className="opacity-70">(2014)</span></span>
-                    <span className="text-[11px] font-bold tabular-nums ml-auto" style={{ color: mult >= 2 ? 'var(--bad)' : 'var(--ink-soft)' }}>
-                      ×{mult.toFixed(1).replace('.', lang === 'fr' ? ',' : '.')}
+                    <span className="text-[11px] font-bold tabular-nums ms-auto" style={{ color: mult >= 2 ? 'var(--bad)' : 'var(--ink-soft)' }}>
+                      ×{mult.toFixed(1).replace('.', tr({ fr: ',', en: '.' }, lang))}
                     </span>
                   </div>
                 </div>
@@ -4496,7 +4891,7 @@ const TabForced = ({ text, lang }) => {
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify mt-4">
             {L(
               "En dix ans, le nombre de personnes déplacées dans leur propre pays et suivies par le HCR a plus que triplé sur le continent. Les réfugiés, eux — ceux qui franchissent une frontière —, ont un peu plus que doublé. La mobilité forcée africaine ne s'internationalise donc pas : elle s'intensifie à l'intérieur des frontières. C'est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
-              "In a decade, the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent, while refugees — those who cross a border — have a little more than doubled. African forced mobility is therefore not internationalising: it is intensifying within borders. That is precisely the population migration statistics do not count, and the one whose protecting treaty is still awaiting ratifications."
+              "In a decade, the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent. Refugees — those who cross a border — have a little more than doubled. African forced mobility is therefore not internationalising: it is intensifying within borders. That is precisely the population migration statistics do not count, and the one whose protecting treaty is still awaiting ratifications."
             )}
           </p>
         </div>
@@ -4567,8 +4962,8 @@ const TabForced = ({ text, lang }) => {
 // reprend les chiffres publies par l'UA, l'OIT et l'OIM.
 // ---------------------------------------------------------------------------
 const TabLabour = ({ text, lang }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (c.name?.[lang] || c.name?.fr || ''));
+  const L = faireL(lang);
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
   const ilo = useMemo(() => {
     const all = Object.values(countryData).flat().filter(c => c.normlex);
@@ -4598,7 +4993,7 @@ const TabLabour = ({ text, lang }) => {
     }))));
   };
 
-  const fmt = (v) => (lang === 'fr' ? String(v).replace('.', ',') : String(v));
+  const fmt = (v) => (tr({ fr: String(v).replace('.', ','), en: String(v) }, lang));
   const maxFund = Math.max(...ilo.buckets.map(b => b.v));
 
   return (
@@ -4667,31 +5062,31 @@ const TabLabour = ({ text, lang }) => {
             <table className="w-full text-[13px]">
               <thead>
                 <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                  <th className="text-left font-semibold px-4 py-2.5 text-slate-700">{L("Indicateur", "Indicator")}</th>
-                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("3e éd. — 2019", "3rd ed. — 2019")}</th>
-                  <th className="text-right font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("4e éd. — 2022", "4th ed. — 2022")}</th>
+                  <th className="text-start font-semibold px-4 py-2.5 text-slate-700">{L("Indicateur", "Indicator")}</th>
+                  <th className="text-end font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("3e éd. — 2019", "3rd ed. — 2019")}</th>
+                  <th className="text-end font-semibold px-4 py-2.5 text-slate-700 whitespace-nowrap">{L("4e éd. — 2022", "4th ed. — 2022")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {(lang === 'fr' ? [
+                {(tr({ fr: [
                   ["Travailleurs migrants internationaux", "14,5 M (9,5 M en 2010)", "13,1 M (9,3 M en 2010)"],
                   ["Migrants en âge de travailler", "20,2 M — 77 % des migrants", "20,4 M — au moins 78 %"],
                   ["Part dans la population active", "72 %", "64 %"],
                   ["Part des femmes parmi les travailleurs migrants", "38 % en moyenne", "37 % en moyenne"],
                   ["Concentration régionale", "—", "Ouest, Est et Sud : 76 % des travailleurs migrants"],
                   ["Envois de fonds — régions dominantes", "Nord 43 % + Ouest 39 % = 82 %", "Nord 45 % + Ouest 34 % = 79 %"],
-                ] : [
+                ], en: [
                   ["International migrant workers", "14.5 M (9.5 M in 2010)", "13.1 M (9.3 M in 2010)"],
                   ["Working-age migrants", "20.2 M — 77% of migrants", "20.4 M — at least 78%"],
                   ["Share in the labour force", "72%", "64%"],
                   ["Women among migrant workers", "38% on average", "37% on average"],
                   ["Regional concentration", "—", "West, East and Southern: 76% of migrant workers"],
                   ["Remittances — leading regions", "North 43% + West 39% = 82%", "North 45% + West 34% = 79%"],
-                ]).map(([k, a, b], i) => (
+                ] }, lang)).map(([k, a, b], i) => (
                   <tr key={i}>
                     <td className="px-4 py-2.5 text-slate-700">{k}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums text-slate-600 whitespace-nowrap">{a}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums font-semibold text-slate-900 whitespace-nowrap">{b}</td>
+                    <td className="px-4 py-2.5 text-end tabular-nums text-slate-600 whitespace-nowrap">{a}</td>
+                    <td className="px-4 py-2.5 text-end tabular-nums font-semibold text-slate-900 whitespace-nowrap">{b}</td>
                   </tr>
                 ))}
               </tbody>
@@ -4728,7 +5123,7 @@ const TabLabour = ({ text, lang }) => {
             </h4>
             <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
               {L(
-                "La 4e édition établit elle-même le lien : l'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
+                "La 4e édition établit elle-même le lien. L'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
                 "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
               )}
             </p>
@@ -4770,7 +5165,7 @@ const TabLabour = ({ text, lang }) => {
           <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
             <p className="text-justify">
               {L(
-                "Onze conventions de l'OIT posent le socle des droits d'un travailleur migrant : liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont celles-là qui comptent, bien plus que le nombre total de textes signés par le pays d'accueil. Le compte, pays par pays, donne un résultat net.",
+                "Onze conventions de l'OIT posent le socle des droits d'un travailleur migrant. Liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont celles-là qui comptent, bien plus que le nombre total de textes signés par le pays d'accueil. Le compte, pays par pays, donne un résultat net.",
                 "Eleven ILO conventions set the floor of a migrant worker's rights: freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. Those are what count, far more than the total number of texts the host country has signed. Counted country by country, the result is stark."
               )}
             </p>
@@ -4790,7 +5185,7 @@ const TabLabour = ({ text, lang }) => {
                            style={{ width: `${(b.v / maxFund) * 100}%`,
                                     backgroundColor: b.k >= 11 ? 'var(--ok)' : b.k >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }} />
                     </div>
-                    <span className="text-xs font-bold w-24 text-right shrink-0 tabular-nums text-slate-800">
+                    <span className="text-xs font-bold w-24 text-end shrink-0 tabular-nums text-slate-800">
                       {b.v} {L(b.v > 1 ? 'pays' : 'pays', b.v > 1 ? 'countries' : 'country')}
                     </span>
                   </div>
@@ -4818,24 +5213,24 @@ const TabLabour = ({ text, lang }) => {
               <table className="w-full text-[12px]">
                 <thead>
                   <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                    <th className="text-left font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Fondamentales', 'Fundamental')}</th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Gouvernance', 'Governance')}</th>
-                    <th className="px-2 py-2 font-semibold text-slate-700 text-right">{L('Techniques', 'Technical')}</th>
-                    <th className="px-3 py-2 font-semibold text-slate-700 text-right">{L('Total', 'Total')}</th>
+                    <th className="text-start font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-end">{L('Fondamentales', 'Fundamental')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-end">{L('Gouvernance', 'Governance')}</th>
+                    <th className="px-2 py-2 font-semibold text-slate-700 text-end">{L('Techniques', 'Technical')}</th>
+                    <th className="px-3 py-2 font-semibold text-slate-700 text-end">{L('Total', 'Total')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {ilo.rows.map(r => (
                     <tr key={r.n} className="figure-row">
                       <td className="px-3 py-1.5 text-slate-800 whitespace-nowrap">{r.n}</td>
-                      <td className="px-2 py-1.5 text-right tabular-nums font-bold"
+                      <td className="px-2 py-1.5 text-end tabular-nums font-bold"
                           style={{ color: r.fund >= 11 ? 'var(--ok)' : r.fund >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }}>
                         {r.fund}/11
                       </td>
-                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.gov}</td>
-                      <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.tech}</td>
-                      <td className="px-3 py-1.5 text-right tabular-nums font-bold text-slate-900">{r.total}</td>
+                      <td className="px-2 py-1.5 text-end tabular-nums text-slate-600">{r.gov}</td>
+                      <td className="px-2 py-1.5 text-end tabular-nums text-slate-600">{r.tech}</td>
+                      <td className="px-3 py-1.5 text-end tabular-nums font-bold text-slate-900">{r.total}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -4877,7 +5272,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1975,
       hq: { fr: 'Abuja, Nigeria', en: 'Abuja, Nigeria' },
       name: { fr: 'CEDEAO / ECOWAS (Afrique de l’Ouest)', en: 'ECOWAS (West Africa)' },
-      tag: lang === 'fr' ? 'Ouverture standardisée & pionnière' : 'Pioneering & standardized openness',
+      tag: tr({ fr: 'Ouverture standardisée & pionnière', en: 'Pioneering & standardized openness' }, lang),
       desc: {
         fr: "La CEDEAO constitue le bloc de référence du régime continental. L'ouverture y est une présomption stabilisée dans les pratiques administratives, malgré la sécession en 2024-2025 de l'Alliance des États du Sahel (AES - Mali, Burkina Faso, Niger) qui vient fragmenter l'acquis historique de 1979.",
         en: "ECOWAS constitutes the reference bloc of the continental regime. Openness is a stabilized presumption in administrative practices, despite the 2024-2025 secession of the Alliance of Sahel States (AES - Mali, Burkina Faso, Niger) which fragments the historical 1979 acquis."
@@ -4888,7 +5283,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       dynamics: {
         fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
-        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso, and Niger on 29 January 2025 brings the Community down to twelve members; ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards and to maintain visa-free movement for their nationals, effectively decoupling the political exit from the mobility regime."
+        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
       },
       sources: [
         { label: "CEDEAO — Retrait du Burkina Faso, du Mali et du Niger (2025)", url: "https://www.ecowas.int/burkina-faso-mali-and-nigers-withdrawal-from-ecowas-is-now-a-reality/" },
@@ -4902,7 +5297,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 2000,
       hq: { fr: 'Arusha, Tanzanie', en: 'Arusha, Tanzania' },
       name: { fr: 'CAE / EAC (Communauté d’Afrique de l’Est)', en: 'EAC (East African Community)' },
-      tag: lang === 'fr' ? 'Citoyenneté de marché & corridors' : 'Market citizenship & corridors',
+      tag: tr({ fr: 'Citoyenneté de marché & corridors', en: 'Market citizenship & corridors' }, lang),
       desc: {
         fr: "La CAE fonde son intégration sur une citoyenneté de marché. La mobilité y est pensée comme une condition de crédibilité du marché commun, articulant droit au travail, résidence et établissement de manière asymétrique.",
         en: "The EAC bases its integration on market citizenship. Mobility is seen as a condition for the credibility of the common market, asymmetrically articulating the right to work, residence, and establishment."
@@ -4913,7 +5308,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       dynamics: {
         fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d'intégration restent en négociation.",
-        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years — DRC (11 July 2022) then Somalia (full member on 4 March 2024) — a rapid enlargement extending the common market into security-complex areas, with integration roadmaps still under negotiation."
+        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
       },
       sources: [
         { label: "CAE — Vue d'ensemble et États partenaires", url: "https://www.eac.int/overview-of-eac" },
@@ -4927,7 +5322,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1992,
       hq: { fr: 'Gaborone, Botswana', en: 'Gaborone, Botswana' },
       name: { fr: 'SADC (Communauté de Développement de l’Afrique Australe)', en: 'SADC (Southern African Development Community)' },
-      tag: lang === 'fr' ? 'Procéduralisation sectorielle & prudence' : 'Sectoral approach & caution',
+      tag: tr({ fr: 'Procéduralisation sectorielle & prudence', en: 'Sectoral approach & caution' }, lang),
       desc: {
         fr: "Face aux réticences souverainistes (notamment de l'Afrique du Sud), la SADC déploie une intégration asymétrique et sélective, privilégiant la gestion logistique des corridors et l'attraction des talents plutôt qu'une ouverture universelle.",
         en: "Faced with sovereign reluctance (notably from South Africa), SADC deploys an asymmetric and selective integration, prioritizing logistics corridor management and talent attraction over universal openness."
@@ -4937,8 +5332,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "2005 Protocol, Labour migration plan (2020-2025). Consultative process: MIDSA (Migration Dialogue for Southern Africa)."
       },
       dynamics: {
-        fr: "Deuxième CER la plus ouverte du continent avec un score AVOI de 0,547 en 2024, en progression continue, portée notamment par l'Angola qui a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
-        en: "The second-most open REC on the continent with an AVOI score of 0.547 in 2024, on a continuing upward trend, driven notably by Angola which nearly doubled the number of nationalities granted visa-free access in late 2023. The space remains polarized by Pretoria (BMA reform and 2024 White Paper); innovation also comes through bilateral agreements (e.g. the joint Botswana-Namibia ID card)."
+        fr: "Deuxième CER la plus ouverte du continent, avec un score AVOI de 0,547 en 2024 et en progression continue. L'Angola y contribue fortement : le pays a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
+        en: "The second-most open REC on the continent, with an AVOI score of 0.547 in 2024 and a continuing upward trend. Angola contributes strongly: it nearly doubled the number of nationalities granted visa-free access in late 2023. The space remains polarized by Pretoria (BMA reform and 2024 White Paper); innovation also comes through bilateral agreements (e.g. the joint Botswana-Namibia ID card)."
       },
       sources: [
         { label: "SADC — États membres", url: "https://www.sadc.int/member-states" },
@@ -4952,7 +5347,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1994,
       hq: { fr: 'Lusaka, Zambie', en: 'Lusaka, Zambia' },
       name: { fr: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)', en: 'COMESA (Common Market for Eastern and Southern Africa)' },
-      tag: lang === 'fr' ? 'Facilitation macro-régionale' : 'Macro-regional facilitation',
+      tag: tr({ fr: 'Facilitation macro-régionale', en: 'Macro-regional facilitation' }, lang),
       desc: {
         fr: "Vaste bloc de 21 États (de la Tunisie à l'Eswatini) où l'intégration humaine avance par accumulation technique (visas d'affaires) afin de réduire les coûts de transaction commerciale dans un espace hétérogène.",
         en: "Vast bloc of 21 States (from Tunisia to Eswatini) where human integration advances through technical accumulation (business visas) to reduce commercial transaction costs in a heterogeneous space."
@@ -4977,7 +5372,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1996,
       hq: { fr: 'Djibouti, Djibouti', en: 'Djibouti City, Djibouti' },
       name: { fr: 'IGAD (Autorité Intergouvernementale pour le Développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
-      tag: lang === 'fr' ? 'Nexus sécurité-climat-mobilité' : 'Security-climate-mobility nexus',
+      tag: tr({ fr: 'Nexus sécurité-climat-mobilité', en: 'Security-climate-mobility nexus' }, lang),
       desc: {
         fr: "Dans une Corne de l'Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l'IGAD à l'articulation exacte entre sécurité régionale, transhumance de survie et développement.",
         en: "In a Horn of Africa marked by conflicts and climate shocks, mobility is captured by IGAD at the exact articulation between regional security, survival transhumance, and development."
@@ -4987,7 +5382,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale (0,501) et parmi les plus bas du continent : l'homogénéisation de l'ouverture reste suspendue à l'instabilité géopolitique chronique de la sous-région (guerre au Soudan). Le retrait formel de l'Érythrée, notifié en décembre 2025 — deux ans seulement après son retour au sein de l'organisation en juin 2023 —, ramène l'Autorité à sept membres et illustre la fragilité du multilatéralisme régional dans la Corne.",
+        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale de 0,501, et parmi les plus bas du continent. L'homogénéisation de l'ouverture reste suspendue à l'instabilité géopolitique chronique de la sous-région, guerre au Soudan comprise. L'Érythrée a notifié son retrait formel en décembre 2025, deux ans seulement après son retour dans l'organisation en juin 2023. L'Autorité revient ainsi à sept membres, ce qui dit la fragilité du multilatéralisme régional dans la Corne.",
         en: "An AVOI score of 0.376 in 2024, well below the continental average (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea's formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
       },
       sources: [
@@ -5002,7 +5397,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1983,
       hq: { fr: 'Libreville, Gabon', en: 'Libreville, Gabon' },
       name: { fr: 'CEEAC & CEMAC (Afrique Centrale)', en: 'ECCAS & CEMAC (Central Africa)' },
-      tag: lang === 'fr' ? 'Configuration à deux étages' : 'Two-tier configuration',
+      tag: tr({ fr: 'Configuration à deux étages', en: 'Two-tier configuration' }, lang),
       desc: {
         fr: "L'Afrique Centrale repose sur une intégration à double vitesse où le noyau dense (CEMAC) porte la facilitation, tandis que le vaste ensemble CEEAC demeure entravé par les contraintes d'enclavement physique.",
         en: "Central Africa relies on a two-tier integration where the dense core (CEMAC) carries facilitation, while the vast ECCAS whole remains hampered by physical landlocked constraints."
@@ -5027,7 +5422,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1989,
       hq: { fr: 'Rabat, Maroc (Secrétariat)', en: 'Rabat, Morocco (Secretariat)' },
       name: { fr: 'UMA (Union du Maghreb Arabe)', en: 'AMU (Arab Maghreb Union)' },
-      tag: lang === 'fr' ? 'Normativité d’horizon & gel institutionnel' : 'Horizon normativity & institutional freeze',
+      tag: tr({ fr: 'Normativité d’horizon & gel institutionnel', en: 'Horizon normativity & institutional freeze' }, lang),
       desc: {
         fr: "La paralysie géopolitique structurelle gèle l'ambition fondatrice de 1989. L'intégration de la mobilité maghrébine se fait aujourd'hui par défaut, via l'externalisation sécuritaire européenne et des accords bilatéraux épars.",
         en: "Structural geopolitical paralysis freezes the 1989 founding ambition. Maghreb mobility integration currently happens by default, via European security externalization and scattered bilateral agreements."
@@ -5052,10 +5447,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       founded: 1998,
       hq: { fr: 'Tripoli, Libye', en: 'Tripoli, Libya' },
       name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
-      tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
+      tag: tr({ fr: 'Coordination sécuritaire de surcouche transrégionale', en: 'Transregional security overlay coordination' }, lang),
       desc: {
         fr: "Avec 24 États membres, qui englobent plusieurs autres CER, la CEN-SAD tient davantage du forum politique et sécuritaire que du régime juridique autonome de libre circulation. Son traité fondateur inscrit pourtant la libre circulation des personnes parmi ses objectifs centraux.",
-        en: "With 24 member states overlapping several other RECs, CEN-SAD functions more as a political and security forum than as an autonomous legal regime of free movement, even though its founding treaty lists free movement of persons among its core objectives."
+        en: "With 24 member states, which overlap several other RECs, CEN-SAD is more a political and security forum than an autonomous legal regime of free movement. Its founding treaty nonetheless lists free movement of persons among its core objectives."
       },
       instruments: {
         fr: "Traité de 1998 (révisé 2013). La libre circulation des personnes figure parmi les objectifs fondateurs, sans protocole dédié équivalent à ceux de la CEDEAO ou de l'IGAD.",
@@ -5063,7 +5458,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       dynamics: {
         fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l'effet d'engagements pris ailleurs, plus que par une dynamique propre. La Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N'Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
-        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself. Institutionally dormant after the 2011 Libyan conflict — its secretariat having relocated to N'Djamena — the Community reopened its Tripoli headquarters in April 2026 in the presence of eleven member-state foreign ministers, a reactivation whose operational effects remain to be seen."
+        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself. The Community lay institutionally dormant after the 2011 Libyan conflict, its secretariat having relocated to N'Djamena. It reopened its Tripoli headquarters in April 2026, in the presence of eleven member-state foreign ministers. The operational effects of that reactivation remain to be seen."
       },
       sources: [
         { label: "CEN-SAD — États membres et Secrétariat exécutif", url: "https://censad.int/en/who-are-we/member-states/" },
@@ -5169,7 +5564,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "KDMECC (2022) - 12 engagements", en: "KDMECC (2022) - 12 commitments" },
-        textFr: "La déclaration engage les signataires sur trois points : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation, renforcer les données sur les déplacements environnementaux, et protéger les personnes déplacées par des chocs climatiques au titre des instruments existants (Convention de Kampala, 2009).",
+        textFr: "La déclaration engage les signataires sur trois points. Intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. Renforcer les données sur les déplacements environnementaux. Protéger les personnes déplacées par des chocs climatiques au titre des instruments existants (Convention de Kampala, 2009).",
         en: "The declaration commits signatories in particular to mainstream climate-related mobility into national adaptation strategies, strengthen data on environmental displacement, and protect people displaced by climate shocks under existing instruments (2009 Kampala Convention)."
       }
     }
@@ -5230,7 +5625,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 1965-046 et Décrets subséquents.", en: "Law N° 1965-046 and subsequent decrees." },
           details: [
             { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de Séjour ».", en: "Visas are issued for 30 to 90 days. A foreigner wishing to stay beyond the visa's validity must apply for a \"Residence Card\"." } },
-            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "Récemment, la validité de la carte de séjour a été étendue d'un an à cinq ans, facilitant la vie des résidents à long terme, mais le seuil d'entrée déclenchant cette obligation demeure l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence.", en: "The residence card's validity was recently extended from one year to five, easing life for long-term residents, but the triggering threshold remains the expiry of the short-stay visa. The \"e-visa\" system facilitates entry but confers no right of residence." } }
+            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La validité de la carte de séjour a été récemment étendue d'un an à cinq ans, ce qui facilite la vie des résidents de longue durée. Le seuil qui déclenche cette obligation reste l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence.", en: "The residence card's validity was recently extended from one year to five, easing life for long-term residents, but the triggering threshold remains the expiry of the short-stay visa. The \"e-visa\" system facilitates entry but confers no right of residence." } }
           ]
         },
         {
@@ -5791,47 +6186,47 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       />
 
       <div className="flex flex-wrap justify-end gap-2 print:hidden">
-        <CsvButton onClick={exportRecsCSV} label={lang === 'fr' ? "CER (CSV)" : "RECs (CSV)"} />
-        <CsvButton onClick={exportLegalMatrixCSV} label={lang === 'fr' ? "Matrice juridique (CSV)" : "Legal matrix (CSV)"} />
-        <button onClick={() => window.print()} className="flex items-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
-          <Printer className="w-3.5 h-3.5" /> <span>{lang === 'fr' ? "Exporter cette section (PDF)" : "Export this section (PDF)"}</span>
+        <CsvButton onClick={exportRecsCSV} label={tr({ fr: "CER (CSV)", en: "RECs (CSV)" }, lang)} />
+        <CsvButton onClick={exportLegalMatrixCSV} label={tr({ fr: "Matrice juridique (CSV)", en: "Legal matrix (CSV)" }, lang)} />
+        <button onClick={() => window.print()} className="flex items-center space-x-1.5 rtl:space-x-reverse bg-white border border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
+          <Printer className="w-3.5 h-3.5" /> <span>{tr({ fr: "Exporter cette section (PDF)", en: "Export this section (PDF)" }, lang)}</span>
         </button>
       </div>
 
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
         {/* Sommaire : trois familles, six entrees, chacune annoncant son contenu. */}
-        <nav className="bg-white border border-slate-200 mb-8" aria-label={lang === 'fr' ? "Sommaire de la section" : "Section contents"}>
+        <nav className="bg-white border border-slate-200 mb-8" aria-label={tr({ fr: "Sommaire de la section", en: "Section contents" }, lang)}>
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200">
             {[
               {
                 icon: Globe,
-                family: lang === 'fr' ? "Cadres mondiaux" : "Global frameworks",
+                family: tr({ fr: "Cadres mondiaux", en: "Global frameworks" }, lang),
                 items: [
-                  { id: 'sdgs', label: lang === 'fr' ? "ODD — Agenda 2030" : "SDGs — 2030 Agenda",
-                    hint: lang === 'fr' ? "6 cibles liées aux mobilités, et l'Agenda 2063 en regard" : "6 mobility-linked targets, with Agenda 2063 alongside" },
-                  { id: 'gcm', label: lang === 'fr' ? "Pacte mondial — Migrations" : "Global Compact — Migration",
-                    hint: lang === 'fr' ? "23 objectifs, et la Position africaine commune" : "23 objectives, and the Common African Position" },
-                  { id: 'gcr', label: lang === 'fr' ? "Pacte mondial — Réfugiés" : "Global Compact — Refugees",
-                    hint: lang === 'fr' ? "Partage des charges, lu depuis la Convention de 1969" : "Responsibility-sharing, read from the 1969 Convention" },
+                  { id: 'sdgs', label: tr({ fr: "ODD — Agenda 2030", en: "SDGs — 2030 Agenda" }, lang),
+                    hint: tr({ fr: "6 cibles liées aux mobilités, et l'Agenda 2063 en regard", en: "6 mobility-linked targets, with Agenda 2063 alongside" }, lang)},
+                  { id: 'gcm', label: tr({ fr: "Pacte mondial — Migrations", en: "Global Compact — Migration" }, lang),
+                    hint: tr({ fr: "23 objectifs, et la Position africaine commune", en: "23 objectives, and the Common African Position" }, lang)},
+                  { id: 'gcr', label: tr({ fr: "Pacte mondial — Réfugiés", en: "Global Compact — Refugees" }, lang),
+                    hint: tr({ fr: "Partage des charges, lu depuis la Convention de 1969", en: "Responsibility-sharing, read from the 1969 Convention" }, lang)},
                 ],
               },
               {
                 icon: MapIcon,
-                family: lang === 'fr' ? "Cadres africains" : "African frameworks",
+                family: tr({ fr: "Cadres africains", en: "African frameworks" }, lang),
                 items: [
-                  { id: 'au', label: lang === 'fr' ? "Union africaine" : "African Union",
-                    hint: lang === 'fr' ? "Traités, organes politiques et 5 agences spécialisées" : "Treaties, political organs and 5 specialized agencies" },
-                  { id: 'recs', label: lang === 'fr' ? "Communautés économiques régionales" : "Regional Economic Communities",
-                    hint: lang === 'fr' ? "8 CER, ouverture comparée et instruments propres" : "8 RECs, compared openness and their own instruments" },
+                  { id: 'au', label: tr({ fr: "Union africaine", en: "African Union" }, lang),
+                    hint: tr({ fr: "Traités, organes politiques et 5 agences spécialisées", en: "Treaties, political organs and 5 specialized agencies" }, lang)},
+                  { id: 'recs', label: tr({ fr: "Communautés économiques régionales", en: "Regional Economic Communities" }, lang),
+                    hint: tr({ fr: "8 CER, ouverture comparée et instruments propres", en: "8 RECs, compared openness and their own instruments" }, lang)},
                 ],
               },
               {
                 icon: Scale,
-                family: lang === 'fr' ? "États juridiques" : "Legal frameworks",
+                family: tr({ fr: "États juridiques", en: "Legal frameworks" }, lang),
                 items: [
-                  { id: 'matrix', label: lang === 'fr' ? "Entrées & séjours" : "Entry & residence",
-                    hint: lang === 'fr' ? "Les 54 pays : seuils légaux, instruments, ouverture" : "All 54 countries: legal thresholds, instruments, openness" },
+                  { id: 'matrix', label: tr({ fr: "Entrées & séjours", en: "Entry & residence" }, lang),
+                    hint: tr({ fr: "Les 54 pays : seuils légaux, instruments, ouverture", en: "All 54 countries: legal thresholds, instruments, openness" }, lang)},
                 ],
               },
             ].map((group, gi) => {
@@ -5850,7 +6245,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <button
                             onClick={() => setActiveSdgzTab(item.id)}
                             aria-current={isActive ? 'true' : undefined}
-                            className="gov-subnav w-full text-left px-3 py-2.5 border"
+                            className="gov-subnav w-full text-start px-3 py-2.5 border"
                           >
                             <span className="gov-subnav-label block text-xs font-semibold leading-snug">{item.label}</span>
                             <span className="gov-subnav-hint block text-[10px] leading-snug mt-0.5">
@@ -5873,8 +6268,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {activeSdgzTab === 'sdgs' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.sdg_desc}</p>
-              <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <Prose className="text-slate-700 text-sm leading-relaxed" lang={lang}>{text.sdg_section.sdg_desc}</Prose>
+              <a href="https://www.un.org/sustainabledevelopment/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -5885,7 +6280,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <img src={sdgIcons[pt.goal]} alt={`SDG ${pt.goal}`} className="w-14 h-14 rounded-md shrink-0 shadow-sm" />
                   )}
                   <div>
-                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{lang === 'fr' ? "Cible ONU" : "UN Target"}</span>
+                    <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{tr({ fr: "Cible ONU", en: "UN Target" }, lang)}</span>
                     <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
                     <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
                   </div>
@@ -5895,61 +6290,41 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             <AfricanCounterpoint
               lang={lang}
-              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
-              title={lang === 'fr'
-                ? "L'Agenda 2063 : l'Afrique s'est dotée de son propre horizon, et il est plus ancien que 2030"
-                : "Agenda 2063: Africa set its own horizon, and it predates 2030"}
+              kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
+              title={tr({ fr: "L'Agenda 2063 : l'Afrique s'est dotée de son propre horizon, et il est plus ancien que 2030", en: "Agenda 2063: Africa set its own horizon, and it predates 2030" }, lang)}
               sources={[
-                { label: lang === 'fr'
-                    ? "Union africaine — Projets phares de l'Agenda 2063 (liste officielle des 15 projets)"
-                    : "African Union — Agenda 2063 Flagship Projects (official list of the 15 projects)",
+                { label: tr({ fr: "Union africaine — Projets phares de l'Agenda 2063 (liste officielle des 15 projets)", en: "African Union — Agenda 2063 Flagship Projects (official list of the 15 projects)" }, lang),
                   url: "https://au.int/en/agenda2063/flagship-projects" },
-                { label: lang === 'fr'
-                    ? "Union africaine — « African Union Passport Launched during Opening of 27th AU Summit in Kigali » (communiqué, 17 juillet 2016)"
-                    : "African Union — \"African Union Passport Launched during Opening of 27th AU Summit in Kigali\" (press release, 17 July 2016)",
+                { label: tr({ fr: "Union africaine — « African Union Passport Launched during Opening of 27th AU Summit in Kigali » (communiqué, 17 juillet 2016)", en: "African Union — \"African Union Passport Launched during Opening of 27th AU Summit in Kigali\" (press release, 17 July 2016)" }, lang),
                   url: "https://au.int/en/pressreleases/20160717/african-union-passport-launched-during-opening-27th-au-summit-kigali" },
-                { label: lang === 'fr'
-                    ? "AUDA-NEPAD — agence de mise en œuvre de l'Agenda 2063"
-                    : "AUDA-NEPAD — implementing agency for Agenda 2063",
+                { label: tr({ fr: "AUDA-NEPAD — agence de mise en œuvre de l'Agenda 2063", en: "AUDA-NEPAD — implementing agency for Agenda 2063" }, lang),
                   url: "https://www.nepad.org/" },
               ]}
             >
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares."
-                  : "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects."}
+                {tr({ fr: "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares.", en: "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects." }, lang)}
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
                 <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-                  {lang === 'fr' ? "Projet phare n° 4 sur 15" : "Flagship project no. 4 of 15"}
+                  {tr({ fr: "Projet phare n° 4 sur 15", en: "Flagship project no. 4 of 15" }, lang)}
                 </h4>
                 <h5 className="font-serif font-bold text-slate-900 mb-2">
-                  {lang === 'fr' ? "Le passeport africain et la libre circulation des personnes" : "The African Passport and Free Movement of People"}
+                  {tr({ fr: "Le passeport africain et la libre circulation des personnes", en: "The African Passport and Free Movement of People" }, lang)}
                 </h5>
                 <p className="text-[13px] text-slate-600 italic leading-relaxed">
-                  {lang === 'fr'
-                    ? "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)"
-                    : "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)"}
+                  {tr({ fr: "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)", en: "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)" }, lang)}
                 </p>
               </div>
 
               <CounterpointFacts items={[
-                { when: "2014", what: lang === 'fr'
-                    ? "Le projet de passeport continental est arrêté comme projet phare de l'Agenda 2063."
-                    : "The continental passport is agreed as an Agenda 2063 flagship project." },
-                { when: lang === 'fr' ? "17 juil. 2016" : "17 July 2016", what: lang === 'fr'
-                    ? "Lancement du passeport de l'UA à l'ouverture du 27e Sommet, à Kigali : les premiers exemplaires sont remis au président en exercice Idriss Déby Itno et au président Paul Kagame par la présidente de la Commission Nkosazana Dlamini-Zuma."
-                    : "The AU passport is launched at the opening of the 27th Summit in Kigali: the first copies are handed to AU Chairperson Idriss Déby Itno and President Paul Kagame by AUC Chairperson Nkosazana Dlamini-Zuma." },
-                { when: "2018", what: lang === 'fr'
-                    ? "Le Protocole sur la libre circulation des personnes est adopté à Kigali — c'est lui qui doit donner au passeport sa portée juridique."
-                    : "The Protocol on Free Movement of Persons is adopted in Kigali — it is what would give the passport its legal reach." },
+                { when: "2014", what: tr({ fr: "Le projet de passeport continental est arrêté comme projet phare de l'Agenda 2063.", en: "The continental passport is agreed as an Agenda 2063 flagship project." }, lang)},
+                { when: tr({ fr: "17 juil. 2016", en: "17 July 2016" }, lang), what: tr({ fr: "Lancement du passeport de l'UA à l'ouverture du 27e Sommet, à Kigali. La présidente de la Commission, Nkosazana Dlamini-Zuma, en remet les premiers exemplaires au président en exercice Idriss Déby Itno et au président Paul Kagame.", en: "The AU passport is launched at the opening of the 27th Summit in Kigali: the first copies are handed to AU Chairperson Idriss Déby Itno and President Paul Kagame by AUC Chairperson Nkosazana Dlamini-Zuma." }, lang)},
+                { when: "2018", what: tr({ fr: "Le Protocole sur la libre circulation des personnes est adopté à Kigali — c'est lui qui doit donner au passeport sa portée juridique.", en: "The Protocol on Free Movement of Persons is adopted in Kigali — it is what would give the passport its legal reach." }, lang)},
               ]} />
 
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "C'est ici que le geste symbolique et l'ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L'Agenda 2063 n'échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026)."
-                  : "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)."}
+                {tr({ fr: "C'est ici que le geste symbolique et l'ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L'Agenda 2063 n'échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026).", en: "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)." }, lang)}
               </p>
             </AfricanCounterpoint>
           </div>
@@ -5958,63 +6333,47 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {activeSdgzTab === 'gcm' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcm_desc}</p>
-              <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <Prose className="text-slate-700 text-sm leading-relaxed" lang={lang}>{text.sdg_section.gcm_desc}</Prose>
+              <a href="https://www.iom.int/global-compact-migration" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
             <AfricanCounterpoint
               lang={lang}
               accent="var(--accent-2)"
-              kicker={lang === 'fr' ? "Clef de lecture" : "How to read it"}
-              title={lang === 'fr'
-                ? "Ce que le Pacte est, et ce qu'il n'est pas"
-                : "What the Compact is, and what it is not"}
+              kicker={tr({ fr: "Clef de lecture", en: "How to read it" }, lang)}
+              title={tr({ fr: "Ce que le Pacte est, et ce qu'il n'est pas", en: "What the Compact is, and what it is not" }, lang)}
               sources={[
-                { label: lang === 'fr'
-                    ? "Pacte mondial pour des migrations sûres, ordonnées et régulières — document final (par. 15 et 49)"
-                    : "Global Compact for Safe, Orderly and Regular Migration — final outcome document (paras. 15 and 49)",
+                { label: tr({ fr: "Pacte mondial pour des migrations sûres, ordonnées et régulières — document final (par. 15 et 49)", en: "Global Compact for Safe, Orderly and Regular Migration — final outcome document (paras. 15 and 49)" }, lang),
                   url: "https://refugeesmigrants.un.org/sites/default/files/180713_agreed_outcome_global_compact_for_migration.pdf" },
-                { label: lang === 'fr'
-                    ? "Assemblée générale des Nations unies, résolution 73/195 (19 décembre 2018)"
-                    : "United Nations General Assembly, resolution 73/195 (19 December 2018)",
+                { label: tr({ fr: "Assemblée générale des Nations unies, résolution 73/195 (19 décembre 2018)", en: "United Nations General Assembly, resolution 73/195 (19 December 2018)" }, lang),
                   url: "https://www.iom.int/resources/global-compact-safe-orderly-and-regular-migration-res-73-195" },
-                { label: lang === 'fr'
-                    ? "Réseau des Nations unies sur les migrations — Forum d'examen des migrations internationales 2026"
-                    : "UN Network on Migration — International Migration Review Forum 2026",
+                { label: tr({ fr: "Réseau des Nations unies sur les migrations — Forum d'examen des migrations internationales 2026", en: "UN Network on Migration — International Migration Review Forum 2026" }, lang),
                   url: "https://migrationnetwork.un.org/international-migration-review-forum-2026" },
               ]}
             >
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen »."
-                  : "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018, then endorsed by the UN General Assembly on 19 December 2018 (resolution 73/195), by a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"."}
+                {tr({ fr: "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen ».", en: "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018. The UN General Assembly endorsed it on 19 December 2018 by resolution 73/195, on a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"." }, lang)}
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
                 <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-                  {lang === 'fr' ? "Principe de souveraineté nationale (par. 15)" : "National sovereignty principle (para. 15)"}
+                  {tr({ fr: "Principe de souveraineté nationale (par. 15)", en: "National sovereignty principle (para. 15)" }, lang)}
                 </h4>
                 <p className="text-[13px] text-slate-600 italic leading-relaxed">
-                  {lang === 'fr'
-                    ? "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »"
-                    : "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\""}
+                  {tr({ fr: "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »", en: "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\"" }, lang)}
                 </p>
                 <p className="text-xs text-slate-500 mt-3 leading-relaxed">
-                  {lang === 'fr'
-                    ? "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées."
-                    : "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike."}
+                  {tr({ fr: "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées.", en: "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike." }, lang)}
                 </p>
               </div>
 
               <div>
                 <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
-                  {lang === 'fr'
-                    ? "Les dix principes directeurs, transversaux et interdépendants (par. 15)"
-                    : "The ten cross-cutting and interdependent guiding principles (para. 15)"}
+                  {tr({ fr: "Les dix principes directeurs, transversaux et interdépendants (par. 15)", en: "The ten cross-cutting and interdependent guiding principles (para. 15)" }, lang)}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
-                  {(lang === 'fr' ? [
+                  {(tr({ fr: [
                     ["Centré sur les personnes", "place les individus au cœur du dispositif"],
                     ["Coopération internationale", "aucun État ne peut traiter seul un phénomène transnational"],
                     ["Souveraineté nationale", "le droit de définir sa politique migratoire est réaffirmé"],
@@ -6025,7 +6384,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ["Prise en compte de l'enfance", "intérêt supérieur de l'enfant comme considération primordiale"],
                     ["Approche pangouvernementale", "cohérence horizontale et verticale entre secteurs et niveaux"],
                     ["Approche pansociétale", "migrants, diasporas, société civile, université, secteur privé, syndicats"],
-                  ] : [
+                  ], en: [
                     ["People-centred", "places individuals at its core"],
                     ["International cooperation", "no state can address a transnational phenomenon alone"],
                     ["National sovereignty", "the right to determine migration policy is reaffirmed"],
@@ -6036,7 +6395,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ["Child-sensitive", "the best interests of the child as a primary consideration"],
                     ["Whole-of-government", "horizontal and vertical coherence across sectors and levels"],
                     ["Whole-of-society", "migrants, diasporas, civil society, academia, private sector, unions"],
-                  ]).map(([name, gloss], i) => (
+                  ] }, lang)).map(([name, gloss], i) => (
                     <div key={i} className="flex gap-2.5 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>
                       <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--accent-2)' }}>
                         {String(i + 1).padStart(2, '0')}
@@ -6049,29 +6408,19 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   ))}
                 </div>
                 <p className="text-xs text-slate-500 mt-3 leading-relaxed text-justify">
-                  {lang === 'fr'
-                    ? "Ces dix principes ne sont pas un préambule décoratif : ils sont la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux — et c'est là que se joue l'écart entre deux mises en œuvre du même texte."
-                    : "These ten principles are not decorative preamble: they are the interpretive grid for the 23 objectives that follow. An objective is always read through them — and that is where two implementations of the same text diverge."}
+                  {tr({ fr: "Ces dix principes ne sont pas un préambule décoratif : ils sont la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux — et c'est là que se joue l'écart entre deux mises en œuvre du même texte.", en: "These ten principles are not decorative preamble: they are the interpretive grid for the 23 objectives that follow. An objective is always read through them — and that is where two implementations of the same text diverge." }, lang)}
                 </p>
               </div>
 
               <CounterpointFacts items={[
-                { when: lang === 'fr' ? "10 déc. 2018" : "10 Dec. 2018", what: lang === 'fr'
-                    ? "Adoption à la conférence intergouvernementale de Marrakech."
-                    : "Adoption at the intergovernmental conference in Marrakech." },
-                { when: lang === 'fr' ? "19 déc. 2018" : "19 Dec. 2018", what: lang === 'fr'
-                    ? "Entérinement par l'Assemblée générale (résolution 73/195) : 152 pour, 5 contre, 12 abstentions."
-                    : "Endorsement by the General Assembly (resolution 73/195): 152 in favour, 5 against, 12 abstentions." },
-                { when: lang === 'fr' ? "16-20 mai 2022" : "16-20 May 2022", what: lang === 'fr'
-                    ? "Premier Forum d'examen des migrations internationales (FEMI), à New York. Prévu au paragraphe 49 du Pacte, il en est la principale plateforme intergouvernementale de suivi, réunie tous les quatre ans."
-                    : "First International Migration Review Forum (IMRF), New York. Provided for in paragraph 49 of the Compact, it is its primary intergovernmental follow-up platform, convened every four years." },
-                { when: lang === 'fr' ? "5-8 mai 2026" : "5-8 May 2026", what: lang === 'fr'
-                    ? "Deuxième FEMI, à New York. Les examens régionaux l'alimentent — celui de l'Afrique a été conduit par l'UA en 2021."
-                    : "Second IMRF, New York. Regional reviews feed into it — Africa's was conducted by the AU in 2021." },
+                { when: tr({ fr: "10 déc. 2018", en: "10 Dec. 2018" }, lang), what: tr({ fr: "Adoption à la conférence intergouvernementale de Marrakech.", en: "Adoption at the intergovernmental conference in Marrakech." }, lang)},
+                { when: tr({ fr: "19 déc. 2018", en: "19 Dec. 2018" }, lang), what: tr({ fr: "Entérinement par l'Assemblée générale (résolution 73/195) : 152 pour, 5 contre, 12 abstentions.", en: "Endorsement by the General Assembly (resolution 73/195): 152 in favour, 5 against, 12 abstentions." }, lang)},
+                { when: tr({ fr: "16-20 mai 2022", en: "16-20 May 2022" }, lang), what: tr({ fr: "Premier Forum d'examen des migrations internationales (FEMI), à New York. Prévu au paragraphe 49 du Pacte, il en est la principale plateforme intergouvernementale de suivi, réunie tous les quatre ans.", en: "First International Migration Review Forum (IMRF), New York. Provided for in paragraph 49 of the Compact, it is its primary intergovernmental follow-up platform, convened every four years." }, lang)},
+                { when: tr({ fr: "5-8 mai 2026", en: "5-8 May 2026" }, lang), what: tr({ fr: "Deuxième FEMI, à New York. Les examens régionaux l'alimentent — celui de l'Afrique a été conduit par l'UA en 2021.", en: "Second IMRF, New York. Regional reviews feed into it — Africa's was conducted by the AU in 2021." }, lang)},
               ]} />
             </AfricanCounterpoint>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pe-2 custom-scrollbar">
               {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
@@ -6083,59 +6432,47 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             <AfricanCounterpoint
               lang={lang}
-              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
-              title={lang === 'fr'
-                ? "La Position africaine commune : l'Afrique est arrivée à Marrakech avec un texte à elle"
-                : "The Common African Position: Africa came to Marrakech with a text of its own"}
+              kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
+              title={tr({ fr: "La Position africaine commune : l'Afrique est arrivée à Marrakech avec un texte à elle", en: "The Common African Position: Africa came to Marrakech with a text of its own" }, lang)}
               sources={[
-                { label: lang === 'fr'
-                    ? "Union africaine — « Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration », octobre 2017 (document de travail, Addis-Abeba)"
-                    : "African Union — \"Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration\", October 2017 (working document, Addis Ababa)",
+                { label: tr({ fr: "Union africaine — « Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration », octobre 2017 (document de travail, Addis-Abeba)", en: "African Union — \"Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration\", October 2017 (working document, Addis Ababa)" }, lang),
                   url: "https://au.int/sites/default/files/newsevents/workingdocuments/33023-wd-english_common_african_position_on_gcom.pdf" },
-                { label: lang === 'fr'
-                    ? "Union africaine — Revue régionale africaine de la mise en œuvre du Pacte mondial sur les migrations (2021)"
-                    : "African Union — Africa Regional Review of the Implementation of the Global Compact on Migration (2021)",
+                { label: tr({ fr: "Union africaine — Revue régionale africaine de la mise en œuvre du Pacte mondial sur les migrations (2021)", en: "African Union — Africa Regional Review of the Implementation of the Global Compact on Migration (2021)" }, lang),
                   url: "https://au.int/en/newsevents/20210826/africa-regional-review-implementation-global-compact-migration" },
-                { label: lang === 'fr'
-                    ? "Union africaine — Validation du plan d'action pour la mise en œuvre du GCM en Afrique (communiqué, 28 août 2024)"
-                    : "African Union — Senior officers validate the action plan for GCM implementation in Africa (press release, 28 August 2024)",
+                { label: tr({ fr: "Union africaine — Validation du plan d'action pour la mise en œuvre du GCM en Afrique (communiqué, 28 août 2024)", en: "African Union — Senior officers validate the action plan for GCM implementation in Africa (press release, 28 August 2024)" }, lang),
                   url: "https://au.int/en/pressreleases/20240828/senior-officers-validate-action-plan-gcm-implementation-africa" },
               ]}
             >
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune. Élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message », elle est portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État."
-                  : "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP), drafted in October 2017 under the motto \"One Africa, One Voice, One Message\" and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state."}
+                {tr({ fr: "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune. Élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message », elle est portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État.", en: "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP). It was drafted in October 2017 under the motto \"One Africa, One Voice, One Message\", and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state." }, lang)}
               </p>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
                 <p className="text-[13px] text-slate-600 italic leading-relaxed">
-                  {lang === 'fr'
-                    ? "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)"
-                    : "\"The adoption of a Common African Position on the Global Compact on Migration will be guided by the fact that human mobility and free movement of all persons within the continent constitute one of the pillars of an integrated Africa.\" (CAP, § 1.6)"}
+                  {tr({ fr: "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)", en: "\"The adoption of a Common African Position on the Global Compact on Migration will be guided by the fact that human mobility and free movement of all persons within the continent constitute one of the pillars of an integrated Africa.\" (CAP, § 1.6)" }, lang)}
                 </p>
               </div>
 
               <div>
                 <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
-                  {lang === 'fr' ? "Les six domaines thématiques de la Position" : "The six thematic areas of the Position"}
+                  {tr({ fr: "Les six domaines thématiques de la Position", en: "The six thematic areas of the Position" }, lang)}
                 </h4>
                 <ol className="space-y-2">
-                  {(lang === 'fr' ? [
+                  {(tr({ fr: [
                     "Agir sur les moteurs de la migration — effets du changement climatique, catastrophes naturelles, crises d'origine humaine, inégalités de genre et autres.",
                     "Droits humains de tous les migrants — inclusion sociale, cohésion, lutte contre le racisme, la xénophobie et les discriminations.",
                     "Trafic de migrants, traite des personnes et formes contemporaines d'esclavage.",
                     "Coopération internationale et gouvernance des migrations — synergies entre États membres, harmonisation de la gestion des frontières et des données.",
                     "Migration irrégulière et voies régulières — créer les canaux dont l'absence pousse vers les routes dangereuses.",
                     "Contributions des migrants et des diasporas — y compris des femmes et des jeunes — aux pays d'origine, de transit et d'accueil.",
-                  ] : [
+                  ], en: [
                     "Addressing the drivers of migration — adverse effects of climate change, natural disasters, human-made crises, gender and other inequalities.",
                     "Human rights of all migrants — social inclusion, cohesion, and countering racism, xenophobia and discrimination.",
                     "Smuggling of migrants, trafficking in persons and contemporary forms of slavery.",
                     "International cooperation and governance of migration — synergies among member states, harmonised border management and data.",
                     "Irregular migration and regular pathways — creating the channels whose absence pushes people onto dangerous routes.",
                     "Contributions of migrants and diasporas — including women and youth — to countries of origin, transit and destination.",
-                  ]).map((t, i) => (
+                  ] }, lang)).map((t, i) => (
                     <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
                       <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                         {String(i + 1).padStart(2, '0')}
@@ -6147,9 +6484,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d'en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations. Revue régionale africaine de la mise en œuvre du GCM en 2021. Plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025."
-                  : "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa occupies the framework being negotiated and writes its priorities into it, instead of building one alongside. What follows is legible in bureaucratic machinery rather than declarations: the Africa regional review of GCM implementation in 2021, a continental action plan validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025."}
+                {tr({ fr: "Ces six domaines épousent délibérément l'architecture thématique du Pacte mondial — l'Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d'en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations. Revue régionale africaine de la mise en œuvre du GCM en 2021. Plan d'action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025.", en: "These six areas deliberately mirror the Global Compact's own thematic architecture — Africa occupies the framework being negotiated and writes its priorities into it, instead of building one alongside. What follows is legible in bureaucratic machinery more than in declarations. The Africa regional review of GCM implementation took place in 2021. A continental action plan was validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025." }, lang)}
               </p>
             </AfricanCounterpoint>
           </div>
@@ -6158,8 +6493,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {activeSdgzTab === 'gcr' && (
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-              <p className="text-slate-700 text-sm leading-relaxed">{text.sdg_section.gcr_desc}</p>
-              <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
+              <Prose className="text-slate-700 text-sm leading-relaxed" lang={lang}>{text.sdg_section.gcr_desc}</Prose>
+              <a href="https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-blue-700 text-white px-4 py-2 rounded-sm text-xs font-bold hover:bg-blue-800 transition shrink-0 shadow-sm">
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -6174,50 +6509,30 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             <AfricanCounterpoint
               lang={lang}
-              kicker={lang === 'fr' ? "Le pendant africain" : "The African counterpart"}
-              title={lang === 'fr'
-                ? "L'Afrique avait déjà son instrument — et il est plus large que celui de Genève"
-                : "Africa already had its instrument — and it is broader than Geneva's"}
+              kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
+              title={tr({ fr: "L'Afrique avait déjà son instrument — et il est plus large que celui de Genève", en: "Africa already had its instrument — and it is broader than Geneva's" }, lang)}
               sources={[
-                { label: lang === 'fr'
-                    ? "OUA — Convention régissant les aspects propres aux problèmes des réfugiés en Afrique (Addis-Abeba, 10 septembre 1969 ; entrée en vigueur le 20 juin 1974)"
-                    : "OAU — Convention Governing the Specific Aspects of Refugee Problems in Africa (Addis Ababa, 10 September 1969; entered into force 20 June 1974)",
+                { label: tr({ fr: "OUA — Convention régissant les aspects propres aux problèmes des réfugiés en Afrique (Addis-Abeba, 10 septembre 1969 ; entrée en vigueur le 20 juin 1974)", en: "OAU — Convention Governing the Specific Aspects of Refugee Problems in Africa (Addis Ababa, 10 September 1969; entered into force 20 June 1974)" }, lang),
                   url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
-                { label: lang === 'fr'
-                    ? "UA — Convention de Kampala sur la protection et l'assistance aux personnes déplacées internes (2009)"
-                    : "AU — Kampala Convention on the Protection and Assistance of Internally Displaced Persons (2009)",
+                { label: tr({ fr: "UA — Convention de Kampala sur la protection et l'assistance aux personnes déplacées internes (2009)", en: "AU — Kampala Convention on the Protection and Assistance of Internally Displaced Persons (2009)" }, lang),
                   url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
-                { label: lang === 'fr'
-                    ? "HCR — Global Trends : Forced Displacement (édition 2025)"
-                    : "UNHCR — Global Trends: Forced Displacement (2025 edition)",
+                { label: tr({ fr: "HCR — Global Trends : Forced Displacement (édition 2025)", en: "UNHCR — Global Trends: Forced Displacement (2025 edition)" }, lang),
                   url: "https://www.unhcr.org/global-trends" },
               ]}
             >
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Le Pacte mondial sur les réfugiés date de 2018. La Convention de l'OUA sur les réfugiés date de 1969 : un demi-siècle plus tôt, et avec une définition plus large que celle de Genève. Là où la Convention de 1951 exige une crainte de persécution individualisée, l'article I(2) du texte africain protège aussi quiconque fuit « une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public ». C'est la définition que cette plateforme retient comme référence."
-                  : "The Global Compact on Refugees dates from 2018. The OAU Refugee Convention dates from 1969: half a century earlier, and with a broader definition than Geneva's. Where the 1951 Convention requires an individualised fear of persecution, Article I(2) of the African text also protects anyone fleeing \"external aggression, occupation, foreign domination or events seriously disturbing public order\". That is the definition this platform treats as its reference."}
+                {tr({ fr: "Le Pacte mondial sur les réfugiés date de 2018. La Convention de l'OUA sur les réfugiés date de 1969 : un demi-siècle plus tôt, et avec une définition plus large que celle de Genève. La Convention de 1951 exige une crainte de persécution individualisée. L'article I(2) du texte africain protège aussi quiconque fuit « une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public ». C'est la définition que cette plateforme retient comme référence.", en: "The Global Compact on Refugees dates from 2018. The OAU Refugee Convention dates from 1969: half a century earlier, and with a broader definition than Geneva's. Where the 1951 Convention requires an individualised fear of persecution, Article I(2) of the African text also protects anyone fleeing \"external aggression, occupation, foreign domination or events seriously disturbing public order\". That is the definition this platform treats as its reference." }, lang)}
               </p>
 
               <CounterpointFacts items={[
-                { when: "1969", what: lang === 'fr'
-                    ? "Convention de l'OUA, adoptée à Addis-Abeba le 10 septembre — définition élargie du réfugié, en vigueur depuis le 20 juin 1974."
-                    : "OAU Convention, adopted in Addis Ababa on 10 September — broadened refugee definition, in force since 20 June 1974." },
-                { when: "2009", what: lang === 'fr'
-                    ? "Convention de Kampala : premier — et toujours seul — traité régional contraignant au monde sur les personnes déplacées internes."
-                    : "Kampala Convention: the first — and still the only — binding regional treaty in the world on internally displaced persons." },
-                { when: "2017", what: lang === 'fr'
-                    ? "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017)."
-                    : "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." },
-                { when: "2018", what: lang === 'fr'
-                    ? "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà."
-                    : "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." },
+                { when: "1969", what: tr({ fr: "Convention de l'OUA, adoptée à Addis-Abeba le 10 septembre — définition élargie du réfugié, en vigueur depuis le 20 juin 1974.", en: "OAU Convention, adopted in Addis Ababa on 10 September — broadened refugee definition, in force since 20 June 1974." }, lang)},
+                { when: "2009", what: tr({ fr: "Convention de Kampala : premier — et toujours seul — traité régional contraignant au monde sur les personnes déplacées internes.", en: "Kampala Convention: the first — and still the only — binding regional treaty in the world on internally displaced persons." }, lang)},
+                { when: "2017", what: tr({ fr: "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017).", en: "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." }, lang)},
+                { when: "2018", what: tr({ fr: "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà.", en: "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." }, lang)},
               ]} />
 
               <p className="text-justify">
-                {lang === 'fr'
-                  ? "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir. D'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d'entre eux sont africains : l'Ouganda et le Tchad. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026)."
-                  : "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims does not describe a burden to come: according to UNHCR, six countries alone host more than a third of the world's refugees, and two of them — Uganda and Chad — are African. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)."}
+                {tr({ fr: "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir. D'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d'entre eux sont africains : l'Ouganda et le Tchad. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026).", en: "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims concerns a burden already borne. According to UNHCR, six countries alone host more than a third of the world's refugees. Two of them are African: Uganda and Chad. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)." }, lang)}
               </p>
             </AfricanCounterpoint>
           </div>
@@ -6229,7 +6544,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {activeSdgzTab === 'au' && (
           <div className="space-y-8 animate-in fade-in duration-300">
             <div className="bg-emerald-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-emerald-800 relative overflow-hidden">
-              <div className="absolute top-0 right-0 -mr-10 -mt-10 opacity-10 pointer-events-none">
+              <div className="absolute top-0 end-0 -me-10 -mt-10 opacity-10 pointer-events-none">
                 <Landmark className="w-48 h-48" />
               </div>
               <div className="relative z-10">
@@ -6239,29 +6554,27 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </span>
                   <div className="min-w-0">
                     <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">
-                      {lang === 'fr' ? 'Architecture Continentale Endogène' : 'Endogenous Continental Architecture'}
+                      {tr({ fr: 'Architecture Continentale Endogène', en: 'Endogenous Continental Architecture' }, lang)}
                     </span>
                     <span className="text-xs text-emerald-200/80">
-                      {lang === 'fr' ? "Union africaine — Addis-Abeba" : "African Union — Addis Ababa"}
+                      {tr({ fr: "Union africaine — Addis-Abeba", en: "African Union — Addis Ababa" }, lang)}
                     </span>
                   </div>
                 </div>
                 <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
-                  {lang === 'fr' ? "L'Union Africaine et le Régime Panafricain des Mobilités" : "The African Union and the Pan-African Mobility Regime"}
+                  {tr({ fr: "L'Union Africaine et le Régime Panafricain des Mobilités", en: "The African Union and the Pan-African Mobility Regime" }, lang)}
                 </h3>
                 <p className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify">
-                  {lang === 'fr'
-                    ? "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer » : une densification normative exceptionnelle (traités, positions communes, agences) qui se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés."
-                    : "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies."}
+                  {tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union Africaine (UA). Cette architecture illustre la tension du « normer sans ancrer ». La densification normative est exceptionnelle — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}
                 </p>
                 <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-xs text-emerald-100"><span className="font-bold text-white">2002</span> — {lang === 'fr' ? 'succède à l\'OUA (fondée en 1963)' : 'succeeds the OAU (founded 1963)'}</span>
+                    <span className="text-xs text-emerald-100"><span className="font-bold text-white">2002</span> — {tr({ fr: 'succède à l\'OUA (fondée en 1963)', en: 'succeeds the OAU (founded 1963)' }, lang)}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-xs text-emerald-100 font-bold text-white">{lang === 'fr' ? 'Addis-Abeba, Éthiopie' : 'Addis Ababa, Ethiopia'}</span>
+                    <span className="text-xs text-emerald-100 font-bold text-white">{tr({ fr: 'Addis-Abeba, Éthiopie', en: 'Addis Ababa, Ethiopia' }, lang)}</span>
                   </div>
                 </div>
               </div>
@@ -6271,18 +6584,18 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {/* Textes Fondateurs */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
-                  <FileText className="w-5 h-5 mr-2 text-emerald-700" />
-                  {lang === 'fr' ? "Textes Fondateurs & Cadres Politiques" : "Foundational Texts & Policy Frameworks"}
+                  <FileText className="w-5 h-5 me-2 text-emerald-700" />
+                  {tr({ fr: "Textes Fondateurs & Cadres Politiques", en: "Foundational Texts & Policy Frameworks" }, lang)}
                 </h4>
                 <div className="space-y-4">
                   {auFrameworks.map((fw, idx) => (
                     <div key={idx} className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-6">
                       <div className="md:w-1/3 shrink-0">
                         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/50 px-2 py-0.5 rounded border border-emerald-200 uppercase tracking-widest inline-block mb-2">
-                          {fw.tag[lang]}
+                          {tr(fw.tag, lang)}
                         </span>
-                        <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{fw.title[lang]}</h5>
-                        <p className="text-xs text-slate-600 leading-relaxed">{fw.desc[lang]}</p>
+                        <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{tr(fw.title, lang)}</h5>
+                        <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(fw.desc, lang)}</Prose>
                         {fw.stats && fw.stats.map((stat, sIdx) => {
                           const inForce = stat.value >= (stat.threshold || 15);
                           const barColor = inForce ? 'bg-emerald-600' : 'bg-rose-600';
@@ -6292,10 +6605,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                               <div className="flex items-baseline justify-between gap-2 mb-1.5 flex-wrap">
                                 <div className="flex items-baseline gap-2">
                                   <span className={`text-2xl font-serif font-bold ${textColor}`}>{stat.value}</span>
-                                  <span className="text-xs font-bold text-slate-500">/ {stat.total} {stat.label[lang]}</span>
+                                  <span className="text-xs font-bold text-slate-500">/ {stat.total} {tr(stat.label, lang)}</span>
                                 </div>
                                 <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border shrink-0 ${inForce ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-700'}`}>
-                                  {inForce ? (lang === 'fr' ? 'En vigueur' : 'In force') : (lang === 'fr' ? 'Pas encore en vigueur' : 'Not yet in force')}
+                                  {inForce ? (tr({ fr: 'En vigueur', en: 'In force' }, lang)) : (tr({ fr: 'Pas encore en vigueur', en: 'Not yet in force' }, lang))}
                                 </span>
                               </div>
                               <div className="flex gap-1">
@@ -6309,16 +6622,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         {fw.badge && (
                           <div className="mt-4 pt-4 border-t border-slate-200">
                             <span className="inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm border bg-emerald-50 border-emerald-200 text-emerald-700">
-                              {fw.badge[lang]}
+                              {tr(fw.badge, lang)}
                             </span>
                           </div>
                         )}
                       </div>
                       <div className="md:w-2/3 bg-white p-5 rounded-lg border border-slate-200 flex flex-col justify-center relative shadow-sm">
-                        <Quote className="absolute top-4 left-4 w-6 h-6 text-slate-100" />
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-6">{fw.article.ref[lang]}</span>
-                        <p className="text-sm font-serif italic text-slate-800 leading-relaxed ml-6 relative z-10">
-                          {lang === 'fr' ? fw.article.textFr : fw.article.textEn}
+                        <Quote className="absolute top-4 start-4 w-6 h-6 text-slate-100" />
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ms-6">{tr(fw.article.ref, lang)}</span>
+                        <p className="text-sm font-serif italic text-slate-800 leading-relaxed ms-6 relative z-10">
+                          {tr({ fr: fw.article.textFr, en: fw.article.textEn }, lang)}
                         </p>
                       </div>
                     </div>
@@ -6331,17 +6644,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <CarteSection
                 lang={lang}
                 indicateur={CARTE_ANCRAGE}
-                kicker={lang === 'fr' ? "Géographie de l'engagement" : 'Geography of commitment'}
-                titre={lang === 'fr'
-                  ? "Ce que les États ont signé, vu du continent"
-                  : 'What states have signed, seen from the continent'}
+                kicker={tr({ fr: "Géographie de l'engagement", en: 'Geography of commitment' }, lang)}
+                titre={tr({ fr: "Ce que les États ont signé, vu du continent", en: 'What states have signed, seen from the continent' }, lang)}
                 plain={{
                   fr: "Chaque pays est teinté selon le nombre de grands textes de l'Union africaine qu'il a officiellement ratifiés, sur six. Plus la teinte est dense, plus l'engagement juridique est complet.",
                   en: 'Each country is shaded by how many of the African Union’s six major instruments it has formally ratified. The denser the shade, the more complete the legal commitment.',
                 }}
-                sources={[{ label: lang === 'fr'
-                              ? "Union africaine — listes officielles de statut des traités"
-                              : 'African Union — official treaty status lists',
+                sources={[{ label: tr({ fr: "Union africaine — listes officielles de statut des traités", en: 'African Union — official treaty status lists' }, lang),
                             url: 'https://au.int/en/treaties' }]}
               />
 
@@ -6352,27 +6661,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {/* Organe de pilotage politique & forum consultatif */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
-                  <Landmark className="w-5 h-5 mr-2 text-emerald-700" />
-                  {lang === 'fr' ? "Pilotage Politique & Forum Consultatif" : "Political Steering & Consultative Forum"}
+                  <Landmark className="w-5 h-5 me-2 text-emerald-700" />
+                  {tr({ fr: "Pilotage Politique & Forum Consultatif", en: "Political Steering & Consultative Forum" }, lang)}
                 </h4>
                 <div className="space-y-4">
                   <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
-                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')} className="w-full text-left p-6 hover:bg-emerald-50 transition-colors">
+                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')} className="w-full text-start p-6 hover:bg-emerald-50 transition-colors">
                       <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
                         <h5 className="font-bold text-emerald-900 text-base">
-                          {lang === 'fr' ? "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)" : "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)"}
+                          {tr({ fr: "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)", en: "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)" }, lang)}
                         </h5>
                         <span className="flex items-center gap-2 shrink-0">
                           <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
-                            {lang === 'fr' ? "5 sessions depuis 2015" : "5 sessions since 2015"}
+                            {tr({ fr: "5 sessions depuis 2015", en: "5 sessions since 2015" }, lang)}
                           </span>
                           <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ${expandedGovBody === 'stc' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 leading-relaxed">
-                        {lang === 'fr'
-                          ? "Institué par l'article 5 de l'Acte constitutif de l'UA, ce Comité technique spécialisé est l'organe politique de tutelle du régime migratoire continental. Il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux."
-                          : "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime: it meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work."}
+                        {tr({ fr: "Institué par l'article 5 de l'Acte constitutif de l'UA, ce Comité technique spécialisé est l'organe politique de tutelle du régime migratoire continental. Il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux.", en: "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime. It meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work." }, lang)}
                       </p>
                     </button>
                     {expandedGovBody === 'stc' && (
@@ -6380,33 +6687,31 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         {stcSessions.map((s, idx) => (
                           <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200">
                             <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
-                              <span className="font-bold text-slate-900 text-xs">{s.num[lang]} — {s.date[lang]}</span>
-                              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{s.format[lang]}</span>
+                              <span className="font-bold text-slate-900 text-xs">{tr(s.num, lang)} — {tr(s.date, lang)}</span>
+                              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{tr(s.format, lang)}</span>
                             </div>
-                            <p className="text-xs text-emerald-700 font-bold mb-1.5">{s.focus[lang]}</p>
-                            <p className="text-xs text-slate-600 leading-relaxed">{s.outcome[lang]}</p>
+                            <Prose className="text-xs text-emerald-700 font-bold mb-1.5" lang={lang}>{tr(s.focus, lang)}</Prose>
+                            <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(s.outcome, lang)}</Prose>
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
                   <div className="bg-amber-50/50 rounded-lg border border-amber-100 overflow-hidden">
-                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')} className="w-full text-left p-6 hover:bg-amber-50 transition-colors">
+                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')} className="w-full text-start p-6 hover:bg-amber-50 transition-colors">
                       <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
                         <h5 className="font-bold text-amber-900 text-base">
-                          {lang === 'fr' ? "Forum Panafricain sur la Migration (PAFoM)" : "Pan-African Forum on Migration (PAFoM)"}
+                          {tr({ fr: "Forum Panafricain sur la Migration (PAFoM)", en: "Pan-African Forum on Migration (PAFoM)" }, lang)}
                         </h5>
                         <span className="flex items-center gap-2 shrink-0">
                           <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
-                            {lang === 'fr' ? "9 sessions depuis 2015" : "9 sessions since 2015"}
+                            {tr({ fr: "9 sessions depuis 2015", en: "9 sessions since 2015" }, lang)}
                           </span>
                           <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${expandedGovBody === 'pafom' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 leading-relaxed">
-                        {lang === 'fr'
-                          ? "Créé en 2006 par la décision EX.CL/276(IX) du Conseil exécutif, le PAFoM est le processus consultatif continental de référence. Il s'est réuni pour la première fois à Accra en 2015. Il rassemble les États membres de l'UA, les CER, les processus régionaux de Rabat et de Khartoum et les agences onusiennes, pour façonner les politiques migratoires africaines."
-                          : "Created by Executive Council Decision EX.CL/276(IX) (2006), PAFoM is the continent's flagship consultative process, first convened in Accra in 2015: it brings together AU member states, RECs, regional processes (Rabat, Khartoum), and UN agencies to shape African migration policy."}
+                        {tr({ fr: "Créé en 2006 par la décision EX.CL/276(IX) du Conseil exécutif, le PAFoM est le processus consultatif continental de référence. Il s'est réuni pour la première fois à Accra en 2015. Il rassemble les États membres de l'UA, les CER, les processus régionaux de Rabat et de Khartoum et les agences onusiennes, pour façonner les politiques migratoires africaines.", en: "Created by Executive Council Decision EX.CL/276(IX) in 2006, PAFoM is the continent's flagship consultative process; it first convened in Accra in 2015. It brings together AU member states, RECs, regional processes such as Rabat and Khartoum, and UN agencies to shape African migration policy." }, lang)}
                       </p>
                     </button>
                     {expandedGovBody === 'pafom' && (
@@ -6414,10 +6719,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         {pafomSessions.map((s, idx) => (
                           <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200">
                             <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
-                              <span className="font-bold text-slate-900 text-xs">{s.num} — {s.date[lang]}</span>
+                              <span className="font-bold text-slate-900 text-xs">{s.num} — {tr(s.date, lang)}</span>
                             </div>
-                            <p className="text-xs text-amber-700 font-bold mb-1.5">{s.focus[lang]}</p>
-                            <p className="text-xs text-slate-600 leading-relaxed">{s.outcome[lang]}</p>
+                            <Prose className="text-xs text-amber-700 font-bold mb-1.5" lang={lang}>{tr(s.focus, lang)}</Prose>
+                            <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(s.outcome, lang)}</Prose>
                           </div>
                         ))}
                       </div>
@@ -6431,20 +6736,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="flex items-start gap-4 mb-5">
                   <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                   <div>
-                    <h4 className="text-sm font-bold text-blue-900 mb-1.5">{lang === 'fr' ? "Le Programme Conjoint sur la Migration de Main-d'œuvre (JLMP)" : "The Joint Labour Migration Programme (JLMP)"}</h4>
+                    <h4 className="text-sm font-bold text-blue-900 mb-1.5">{tr({ fr: "Le Programme Conjoint sur la Migration de Main-d'œuvre (JLMP)", en: "The Joint Labour Migration Programme (JLMP)" }, lang)}</h4>
                     <p className="text-xs text-blue-800 leading-relaxed">
-                      {lang === 'fr'
-                        ? "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants."
-                        : "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM, and ECA (+ UNDP), the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment, targeting skills portability, social security portability, fair recruitment, and migrant worker protection."}
+                      {tr({ fr: "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants.", en: "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM and ECA, with UNDP, the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment. It targets skills portability, social security portability, fair recruitment and migrant worker protection." }, lang)}
                     </p>
                   </div>
                 </div>
                 <div className="bg-white/70 p-4 rounded-lg border border-blue-100">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "Phase actuelle — JLMP Action (jusqu'à déc. 2024)" : "Current Phase — JLMP Action (through Dec. 2024)"}</span>
+                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{tr({ fr: "Phase actuelle — JLMP Action (jusqu'à déc. 2024)", en: "Current Phase — JLMP Action (through Dec. 2024)" }, lang)}</span>
                   <p className="text-xs text-blue-900 leading-relaxed">
-                    {lang === 'fr'
-                      ? "Déploiement ciblé dans 5 États membres (Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc) et 2 CER partenaires (CEEAC, COMESA) — un choix pilote plutôt qu'une couverture continentale immédiate, financé par la SIDA (Suède) depuis la phase « JLMP Priority » (2018)."
-                      : "Targeted rollout in 5 member states (Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco) and 2 partner RECs (ECCAS, COMESA) — a pilot approach rather than immediate continental coverage, funded by SIDA (Sweden) since the \"JLMP Priority\" phase (2018)."}
+                    {tr({ fr: "Déploiement ciblé dans cinq États membres — Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc — et deux CER partenaires, la CEEAC et le COMESA. C'est un choix pilote, financé par la SIDA (Suède) depuis la phase « JLMP Priority » en 2018.", en: "Targeted rollout in five member states — Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco — and two partner RECs, ECCAS and COMESA. This is a pilot approach, funded by SIDA (Sweden) since the \"JLMP Priority\" phase in 2018." }, lang)}
                   </p>
                 </div>
               </div>
@@ -6454,26 +6755,24 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="flex items-start gap-4 mb-5">
                   <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
                   <div>
-                    <h4 className="text-sm font-bold text-teal-900 mb-1.5">{lang === 'fr' ? "Partenariats de Compétences (Global Skills Partnerships) en Action" : "Global Skills Partnerships in Action"}</h4>
+                    <h4 className="text-sm font-bold text-teal-900 mb-1.5">{tr({ fr: "Partenariats de Compétences (Global Skills Partnerships) en Action", en: "Global Skills Partnerships in Action" }, lang)}</h4>
                     <p className="text-xs text-teal-800 leading-relaxed">
-                      {lang === 'fr'
-                        ? "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée."
-                        : "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure."}
+                      {tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée.", en: "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure." }, lang)}
                     </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
-                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "PALIM — Maroc ↔ Belgique (depuis 2019)" : "PALIM — Morocco ↔ Belgium (since 2019)"}</span>
-                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche." : "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss."}</p>
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{tr({ fr: "PALIM — Maroc ↔ Belgique (depuis 2019)", en: "PALIM — Morocco ↔ Belgium (since 2019)" }, lang)}</span>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche.", en: "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss." }, lang)}</Prose>
                   </div>
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
-                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "THAMM / THAMM Plus (2019-2027)" : "THAMM / THAMM Plus (2019-2027)"}</span>
-                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "Développement de compétences en Égypte, au Maroc et en Tunisie, avec des passerelles de mobilité vers la Belgique, la France et l'Allemagne." : "Skills development in Egypt, Morocco, and Tunisia, with mobility pathways to Belgium, France, and Germany."}</p>
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{tr({ fr: "THAMM / THAMM Plus (2019-2027)", en: "THAMM / THAMM Plus (2019-2027)" }, lang)}</span>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "Développement de compétences en Égypte, au Maroc et en Tunisie, avec des passerelles de mobilité vers la Belgique, la France et l'Allemagne.", en: "Skills development in Egypt, Morocco, and Tunisia, with mobility pathways to Belgium, France, and Germany." }, lang)}</Prose>
                   </div>
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
-                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{lang === 'fr' ? "Sénégal / Ghana ↔ Allemagne (dès 2026)" : "Senegal / Ghana ↔ Germany (from 2026)"}</span>
-                    <p className="text-xs text-teal-900 leading-relaxed">{lang === 'fr' ? "Formation professionnelle dans le secteur du bâtiment, avec un premier départ de candidats prévu durant l'été 2026." : "Vocational training in the construction sector, with the first candidates' departure planned for summer 2026."}</p>
+                    <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{tr({ fr: "Sénégal / Ghana ↔ Allemagne (dès 2026)", en: "Senegal / Ghana ↔ Germany (from 2026)" }, lang)}</span>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "Formation professionnelle dans le secteur du bâtiment, avec un premier départ de candidats prévu durant l'été 2026.", en: "Vocational training in the construction sector, with the first candidates' departure planned for summer 2026." }, lang)}</Prose>
                   </div>
                 </div>
               </div>
@@ -6481,152 +6780,69 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {/* Agences et Infrastructures */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
-                  <Database className="w-5 h-5 mr-2 text-indigo-700" />
-                  {lang === 'fr' ? "Agences Spécialisées & Souveraineté Épistémique" : "Specialized Agencies & Epistemic Sovereignty"}
+                  <Database className="w-5 h-5 me-2 text-indigo-700" />
+                  {tr({ fr: "Agences Spécialisées & Souveraineté Épistémique", en: "Specialized Agencies & Epistemic Sovereignty" }, lang)}
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
                   <AuAgencyCard
                     lang={lang}
-                    acronym={lang === 'fr' ? "OAM" : "AMO"}
-                    fullName={lang === 'fr' ? "Observatoire africain des migrations" : "African Migration Observatory"}
-                    seat={lang === 'fr' ? "Rabat, Maroc" : "Rabat, Morocco"}
-                    founded={lang === 'fr' ? "créé 2018 — lancé 2020" : "created 2018 — launched 2020"}
-                    source={{ url: "https://amo.au.int/en", label: lang === 'fr' ? "Site de l'OAM" : "AMO website" }}
+                    acronym={tr({ fr: "OAM", en: "AMO" }, lang)}
+                    fullName={tr({ fr: "Observatoire africain des migrations", en: "African Migration Observatory" }, lang)}
+                    seat={tr({ fr: "Rabat, Maroc", en: "Rabat, Morocco" }, lang)}
+                    founded={tr({ fr: "créé 2018 — lancé 2020", en: "created 2018 — launched 2020" }, lang)}
+                    source={{ url: "https://amo.au.int/en", label: tr({ fr: "Site de l'OAM", en: "AMO website" }, lang)}}
                   >
-                    {lang === 'fr'
-                      ? "Bureau technique spécialisé de l'UA, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (données factuelles), lancé le 18 décembre 2020. Il doit doter le continent de données migratoires centralisées, harmonisées et opportunes — le bras qui permet de produire ses propres diagnostics plutôt que de les recevoir. Son financement reste largement extrabudgétaire."
-                      : "AU specialized technical office, established in the wake of the 2016 New York Declaration and Objective 1 of the Global Compact (evidence-based data), launched on 18 December 2020. Its purpose is to give the continent centralised, harmonised and timely migration data — the arm that allows Africa to produce its own diagnoses rather than receive them. Its funding remains largely off the regular budget."}
+                    {tr({ fr: "Bureau technique spécialisé de l'UA, institué dans le sillage de la Déclaration de New York (2016) et de l'Objectif 1 du Pacte mondial (données factuelles), lancé le 18 décembre 2020. Il doit doter le continent de données migratoires centralisées, harmonisées et opportunes — le bras qui permet de produire ses propres diagnostics plutôt que de les recevoir. Son financement reste largement extrabudgétaire.", en: "AU specialized technical office, established in the wake of the 2016 New York Declaration and Objective 1 of the Global Compact (evidence-based data), launched on 18 December 2020. Its purpose is to give the continent centralised, harmonised and timely migration data — the arm that allows Africa to produce its own diagnoses rather than receive them. Its funding remains largely off the regular budget." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
                     lang={lang}
-                    acronym={lang === 'fr' ? "CERSM / ACSRM" : "ACSRM"}
-                    fullName={lang === 'fr' ? "Centre d'études et de recherche sur les migrations" : "African Centre for the Study and Research on Migration"}
-                    seat={lang === 'fr' ? "Bamako, Mali" : "Bamako, Mali"}
-                    founded={lang === 'fr' ? "décidé 2020 — lancé 2021" : "decided 2020 — launched 2021"}
-                    source={{ url: "https://au.int/", label: lang === 'fr' ? "Union africaine" : "African Union" }}
+                    acronym={tr({ fr: "CERSM / ACSRM", en: "ACSRM" }, lang)}
+                    fullName={tr({ fr: "Centre d'études et de recherche sur les migrations", en: "African Centre for the Study and Research on Migration" }, lang)}
+                    seat={tr({ fr: "Bamako, Mali", en: "Bamako, Mali" }, lang)}
+                    founded={tr({ fr: "décidé 2020 — lancé 2021", en: "decided 2020 — launched 2021" }, lang)}
+                    source={{ url: "https://au.int/", label: tr({ fr: "Union africaine", en: "African Union" }, lang)}}
                   >
-                    {lang === 'fr'
-                      ? "Bureau technique spécialisé de la Commission de l'UA, établi par décision de la 33e Conférence (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire de la connaissance sur les migrations africaines (« African Migration Policy Briefs »), suivre la mise en œuvre des cadres de politique migratoire et renforcer les capacités des États et des CER."
-                      : "Specialized technical office of the AU Commission, established by decision of the 33rd Assembly (February 2020) and officially launched on 19 March 2021. Continental mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring implementation of migration policy frameworks, and building the capacity of States and RECs."}
+                    {tr({ fr: "Bureau technique spécialisé de la Commission de l'UA, établi par décision de la 33e Conférence (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire de la connaissance sur les migrations africaines, à travers les « African Migration Policy Briefs ». Suivre la mise en œuvre des cadres de politique migratoire et renforcer les capacités des États et des CER.", en: "Specialized technical office of the AU Commission, established by decision of the 33rd Assembly (February 2020) and officially launched on 19 March 2021. Continental mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring implementation of migration policy frameworks, and building the capacity of States and RECs." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
                     lang={lang}
                     acronym="COC"
-                    fullName={lang === 'fr' ? "Centre opérationnel continental de Khartoum" : "Continental Operational Centre in Khartoum"}
-                    seat={lang === 'fr' ? "Khartoum, Soudan" : "Khartoum, Sudan"}
-                    founded={lang === 'fr' ? "statut propre" : "own statute"}
-                    source={{ url: "https://au.int/", label: lang === 'fr' ? "Union africaine" : "African Union" }}
+                    fullName={tr({ fr: "Centre opérationnel continental de Khartoum", en: "Continental Operational Centre in Khartoum" }, lang)}
+                    seat={tr({ fr: "Khartoum, Soudan", en: "Khartoum, Sudan" }, lang)}
+                    founded={tr({ fr: "statut propre", en: "own statute" }, lang)}
+                    source={{ url: "https://au.int/", label: tr({ fr: "Union africaine", en: "African Union" }, lang)}}
                   >
-                    {lang === 'fr'
-                      ? "Bureau technique spécialisé doté de son propre statut (Conseil de gestion, Secrétariat), dédié à la lutte contre la migration irrégulière, la traite des personnes et le trafic de migrants. Plateforme de coopération policière continentale, aujourd'hui fragilisée par le conflit au Soudan."
-                      : "Specialized technical office with its own statute (Management Board, Secretariat), dedicated to countering irregular migration, trafficking in persons and migrant smuggling. A continental law-enforcement cooperation platform, today weakened by the conflict in Sudan."}
+                    {tr({ fr: "Bureau technique spécialisé doté de son propre statut (Conseil de gestion, Secrétariat), dédié à la lutte contre la migration irrégulière, la traite des personnes et le trafic de migrants. Plateforme de coopération policière continentale, aujourd'hui fragilisée par le conflit au Soudan.", en: "Specialized technical office with its own statute (Management Board, Secretariat), dedicated to countering irregular migration, trafficking in persons and migrant smuggling. A continental law-enforcement cooperation platform, today weakened by the conflict in Sudan." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
                     lang={lang}
                     acronym="AIR"
-                    fullName={lang === 'fr' ? "Institut africain pour les transferts de fonds" : "African Institute for Remittances"}
-                    seat={lang === 'fr' ? "Nairobi, Kenya" : "Nairobi, Kenya"}
+                    fullName={tr({ fr: "Institut africain pour les transferts de fonds", en: "African Institute for Remittances" }, lang)}
+                    seat={tr({ fr: "Nairobi, Kenya", en: "Nairobi, Kenya" }, lang)}
                     founded="2014"
-                    source={{ url: "https://au.int/en/sa/air", label: lang === 'fr' ? "Fiche AIR (UA)" : "AIR page (AU)" }}
+                    source={{ url: "https://au.int/en/sa/air", label: tr({ fr: "Fiche AIR (UA)", en: "AIR page (AU)" }, lang)}}
                   >
-                    {lang === 'fr'
-                      ? "Le Conseil exécutif ayant accepté l'offre d'accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l'accord de siège est signé et l'Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs : abaisser le coût d'envoi d'argent vers l'Afrique et à l'intérieur du continent, améliorer la mesure et la déclaration des données sur les transferts dans les États membres, et convertir ces flux en effet économique et social. L'AIR touche donc à la fois au droit bancaire et à la statistique migratoire."
-                      : "After the Executive Council accepted Kenya's offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics."}
+                    {tr({ fr: "Le Conseil exécutif ayant accepté l'offre d'accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l'accord de siège est signé et l'Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs. Abaisser le coût d'envoi d'argent vers l'Afrique et à l'intérieur du continent. Améliorer la mesure et la déclaration des transferts dans les États membres. Convertir ces flux en effet économique et social. L'AIR touche donc à la fois au droit bancaire et à la statistique migratoire.", en: "After the Executive Council accepted Kenya's offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
                     lang={lang}
                     acronym="STATAFRIC"
-                    fullName={lang === 'fr' ? "Institut panafricain de statistique de l'Union africaine" : "African Union Institute for Statistics"}
-                    seat={lang === 'fr' ? "Tunis, Tunisie" : "Tunis, Tunisia"}
-                    founded={lang === 'fr' ? "créé 2013 — activités 2019" : "created 2013 — activities 2019"}
-                    source={{ url: "https://statafric.au.int/en/mandate", label: lang === 'fr' ? "Mandat de STATAFRIC" : "STATAFRIC mandate" }}
+                    fullName={tr({ fr: "Institut panafricain de statistique de l'Union africaine", en: "African Union Institute for Statistics" }, lang)}
+                    seat={tr({ fr: "Tunis, Tunisie", en: "Tunis, Tunisia" }, lang)}
+                    founded={tr({ fr: "créé 2013 — activités 2019", en: "created 2013 — activities 2019" }, lang)}
+                    source={{ url: "https://statafric.au.int/en/mandate", label: tr({ fr: "Mandat de STATAFRIC", en: "STATAFRIC mandate" }, lang)}}
                   >
-                    {lang === 'fr'
-                      ? "Créé en janvier 2013 par la Conférence de l'UA à Addis-Abeba, installé à Tunis, ses activités ont été lancées en novembre 2019 en marge de la 13e session des directeurs généraux des instituts nationaux de statistique. Son mandat : conduire la production et la promotion d'une information statistique harmonisée et de qualité à l'appui de l'agenda africain d'intégration, en collectant et en agrégeant ce que publient les instituts nationaux. C'est l'infrastructure sur laquelle repose toute comparabilité continentale — y compris migratoire."
-                      : "Created in January 2013 by the AU Assembly in Addis Ababa and seated in Tunis, its activities were launched in November 2019 alongside the 13th session of the Committee of Directors General of national statistics offices. Its mandate: to lead the provision and promotion of harmonised, quality statistical information in support of the African integration agenda, by collecting and aggregating what national statistics institutes publish. It is the infrastructure on which all continental comparability rests — migration included."}
+                    {tr({ fr: "Créé en janvier 2013 par la Conférence de l'UA à Addis-Abeba, il est installé à Tunis. Ses activités ont été lancées en novembre 2019, en marge de la 13e session des directeurs généraux des instituts nationaux de statistique. Son mandat : conduire la production et la promotion d'une information statistique harmonisée et de qualité à l'appui de l'agenda africain d'intégration, en collectant et en agrégeant ce que publient les instituts nationaux. C'est l'infrastructure sur laquelle repose toute comparabilité continentale — y compris migratoire.", en: "Created in January 2013 by the AU Assembly in Addis Ababa, it is seated in Tunis. Its activities were launched in November 2019, alongside the 13th session of the Committee of Directors General of national statistics offices. Its mandate: to lead the provision and promotion of harmonised, quality statistical information in support of the African integration agenda, by collecting and aggregating what national statistics institutes publish. It is the infrastructure on which all continental comparability rests — migration included." }, lang)}
                   </AuAgencyCard>
                 </div>
 
                 <p className="text-xs text-slate-500 leading-relaxed mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
-                  {lang === 'fr'
-                    ? "AIR et STATAFRIC sont souvent cités ensemble, à tort : le premier est un institut sectoriel adossé à la régulation bancaire kényane, le second l'appareil statistique de l'Union tout entière. Les confondre revient à confondre une source de données avec le système qui les rend comparables (Ben Mokhtar, 2026)."
-                    : "AIR and STATAFRIC are often cited together, wrongly: the first is a sectoral institute anchored in Kenyan banking regulation, the second the statistical apparatus of the Union as a whole. Conflating them means conflating a data source with the system that makes data comparable (Ben Mokhtar, 2026)."}
+                  {tr({ fr: "AIR et STATAFRIC sont souvent cités ensemble, à tort : le premier est un institut sectoriel adossé à la régulation bancaire kényane, le second l'appareil statistique de l'Union tout entière. Les confondre revient à confondre une source de données avec le système qui les rend comparables (Ben Mokhtar, 2026).", en: "AIR and STATAFRIC are often cited together, wrongly: the first is a sectoral institute anchored in Kenyan banking regulation, the second the statistical apparatus of the Union as a whole. Conflating them means conflating a data source with the system that makes data comparable (Ben Mokhtar, 2026)." }, lang)}
                 </p>
-              </div>
-
-              {/* Chronologie OAM : institutionnalisation par couches successives */}
-              <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-2">
-                  <MapPin className="w-5 h-5 mr-2 text-indigo-700" />
-                  {lang === 'fr' ? "Gros Plan : l'OAM, une institution en construction" : "Close-Up: The AMO, an Institution Under Construction"}
-                </h4>
-                <p className="text-xs text-slate-500 mb-2">
-                  {lang === 'fr'
-                    ? "Chronologie construite à partir des documents publics de l'UA — notamment le Rapport d'activités de l'Observatoire Africain des Migrations (2021-2024) — et des communiqués officiels de l'UA."
-                    : "Chronology built from public AU documents — notably the African Migration Observatory's Activity Report (2021-2024) — and official AU press releases."}
-                </p>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-x-6 gap-y-2 mb-6 pb-4 border-b border-slate-100">
-                  <a href="https://amo.au.int/sites/default/files/files/2025-04/amoactivityreport-2021-2024.pdf"
-                     target="_blank" rel="noopener noreferrer"
-                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--accent-deep)' }}>
-                    {lang === 'fr'
-                      ? "→ Rapport d'activités de l'OAM, nov. 2021 – juin 2024 (PDF)"
-                      : "→ AMO Report on Activities, Nov. 2021 – June 2024 (PDF)"} <ExternalLink className="w-3 h-3" />
-                  </a>
-                  <a href="https://amo.au.int/en/resources" target="_blank" rel="noopener noreferrer"
-                     className="inline-flex items-center gap-1.5 text-xs font-bold hover:underline" style={{ color: 'var(--accent-2)' }}>
-                    {lang === 'fr' ? "→ Ressources et documents de l'OAM" : "→ AMO resources and documents"} <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-                <div className="space-y-5">
-                  {[
-                    {
-                      year: "2018",
-                      fr: "Décision d'établissement de l'Observatoire au Maroc par l'Assemblée de l'UA (Assembly/AU/Dec.695(XXXI)).",
-                      en: "AU Assembly decision establishing the Observatory in Morocco (Assembly/AU/Dec.695(XXXI))."
-                    },
-                    {
-                      year: "2020",
-                      fr: "Inauguration officielle à Rabat le 18 décembre. Le siège de Mahaj Riad — bâtiment de 4 étages mis à disposition par le gouvernement marocain via l'AMCI, conformément à l'accord de siège — donne à l'OAM une existence territoriale et matérielle dans l'architecture continentale.",
-                      en: "Official inauguration in Rabat on December 18. The Mahaj Riad headquarters — a 4-storey building provided by the Moroccan government via AMCI, under the host-country agreement — gives the AMO a territorial and material presence in the continental architecture."
-                    },
-                    {
-                      year: "2021–2022",
-                      fr: "Première phase d'activation technique : ateliers de Hammamet, Marrakech et Le Caire sur la désagrégation et l'harmonisation des données migratoires (statuts, définitions, méthodologies).",
-                      en: "First technical activation phase: workshops in Hammamet, Marrakech, and Cairo on disaggregating and harmonizing migration data (statuses, definitions, methodologies)."
-                    },
-                    {
-                      year: "2023",
-                      fr: "Densification : ateliers de Lomé et Marrakech (avec les CER, sur les « Migration Data Hubs »), puis ateliers pilotes nationaux à Windhoek et Kampala.",
-                      en: "Densification: workshops in Lomé and Marrakech (with the RECs, on \"Migration Data Hubs\"), followed by national pilot workshops in Windhoek and Kampala."
-                    },
-                    {
-                      year: "2024",
-                      fr: "Rapport d'activités 2021-2024 structuré autour de 4 axes (harmonisation des données, formations ciblées, Data Hubs régionaux, forums internationaux) ; lancement du projet AU-UMA Migration Data Hub ; side event à l'Assemblée générale de l'ONU sur la « narrative africaine » des données migratoires.",
-                      en: "2021-2024 activity report structured around 4 pillars (data harmonization, targeted training, regional Data Hubs, international forums); launch of the AU-UMA Migration Data Hub project; UN General Assembly side event on the African \"narrative\" of migration data."
-                    },
-                    {
-                      year: "2025",
-                      fr: "Exposition aux circuits de reddition de comptes de l'UA (réunions du STC-MRIDPs à Addis-Abeba, février) ; lancement du site web officiel ; publication d'un glossaire africain des termes de migration et mobilité ; 2e session de travail OAM-CER à Casablanca.",
-                      en: "Exposure to the AU's accountability circuits (STC-MRIDPs meetings in Addis Ababa, February); launch of the official website; publication of an African glossary of migration and mobility terms; 2nd AMO-REC working session in Casablanca."
-                    }
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex gap-4">
-                      <div className="shrink-0 w-16 text-right">
-                        <span className="text-xs font-bold text-indigo-700">{item.year}</span>
-                      </div>
-                      <div className="shrink-0 flex flex-col items-center pt-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
-                        {idx < 5 && <span className="w-px flex-1 bg-slate-200 mt-1"></span>}
-                      </div>
-                      <p className="text-xs text-slate-700 leading-relaxed pb-1">{lang === 'fr' ? item.fr : item.en}</p>
-                    </div>
-                  ))}
-                </div>
               </div>
 
             </div>
@@ -6637,36 +6853,32 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-emerald-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-emerald-800">
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2">
-                {lang === 'fr' ? 'Les Blocs Régionalisés du Régime Continental' : 'Regionalized Blocs of the Continental Regime'}
+                {tr({ fr: 'Les Blocs Régionalisés du Régime Continental', en: 'Regionalized Blocs of the Continental Regime' }, lang)}
               </span>
               <h3 className="font-serif font-bold text-2xl mb-3">
-                {lang === 'fr' ? "Les Communautés Économiques Régionales (CER)" : "Regional Economic Communities (RECs)"}
+                {tr({ fr: "Les Communautés Économiques Régionales (CER)", en: "Regional Economic Communities (RECs)" }, lang)}
               </h3>
               <p className="text-emerald-100 text-sm leading-relaxed">
-                {lang === 'fr' 
-                  ? "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires."
-                  : "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges."}
+                {tr({ fr: "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires.", en: "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges." }, lang)}
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <h4 className="text-sm font-bold text-slate-800 mb-1">
-                {lang === 'fr' ? "Classement de l'ouverture visa (indice AVOI, 2024)" : "Visa openness ranking (AVOI index, 2024)"}
+                {tr({ fr: "Classement de l'ouverture visa (indice AVOI, 2024)", en: "Visa openness ranking (AVOI index, 2024)" }, lang)}
               </h4>
               <p className="text-xs text-slate-500 mb-5">
-                {lang === 'fr'
-                  ? "Score moyen par CER (BAD/UA). Le repère vertical marque la moyenne continentale des 8 CER (0,501)."
-                  : "Average score per REC (AfDB/AU). The vertical marker shows the continental average across the 8 RECs (0.501)."}
+                {tr({ fr: "Score moyen par CER (BAD/UA). Le repère vertical marque la moyenne continentale des 8 CER (0,501).", en: "Average score per REC (AfDB/AU). The vertical marker shows the continental average across the 8 RECs (0.501)." }, lang)}
               </p>
               <div className="space-y-3">
                 {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
-                  <div key={rec.id} className="flex items-center gap-3" title={`${rec.name[lang]}: ${rec.avoi.toFixed(3)}`}>
+                  <div key={rec.id} className="flex items-center gap-3" title={`${tr(rec.name, lang)}: ${rec.avoi.toFixed(3)}`}>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
                     <div className="flex-1 relative h-4 bg-slate-100 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-700 rounded-full bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
                       <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
                     </div>
-                    <span className="text-xs font-bold text-slate-700 w-12 text-right shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
+                    <span className="text-xs font-bold text-slate-700 w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
                   </div>
                 ))}
               </div>
@@ -6677,7 +6889,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 const isOpen = expandedRec === rec.id;
                 return (
                   <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
-                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-left flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
+                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-start flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-4 min-w-0">
                         <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-white border border-emerald-200 flex items-center justify-center overflow-hidden text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
                           {recLogos[rec.id]
@@ -6685,14 +6897,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
                         </span>
                         <div className="min-w-0">
-                          <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{rec.name[lang]}</h4>
+                          <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{tr(rec.name, lang)}</h4>
                           <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
                             {rec.tag}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 shrink-0">
-                        <div className="text-right hidden sm:block">
+                        <div className="text-end hidden sm:block">
                           <div className="text-sm font-serif font-bold text-slate-800 tabular-nums">{rec.avoi.toFixed(3)}</div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">AVOI</span>
                         </div>
@@ -6705,18 +6917,18 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <div className="flex flex-wrap gap-4 pb-4 border-b border-slate-200">
                           <div className="flex items-center gap-2">
                             <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{rec.founded}</span> — {lang === 'fr' ? 'fondation' : 'founded'}</span>
+                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{rec.founded}</span> — {tr({ fr: 'fondation', en: 'founded' }, lang)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600 font-bold text-slate-800">{rec.hq[lang]}</span>
+                            <span className="text-xs text-slate-600 font-bold text-slate-800">{tr(rec.hq, lang)}</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Users className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{Object.values(countryRecAffiliations).filter(a => a.includes(rec.id)).length}</span> {lang === 'fr' ? 'États membres' : 'member states'}</span>
+                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{Object.values(countryRecAffiliations).filter(a => a.includes(rec.id)).length}</span> {tr({ fr: 'États membres', en: 'member states' }, lang)}</span>
                           </div>
                         </div>
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium">{lang === 'fr' ? rec.desc.fr : rec.desc.en}</p>
+                        <Prose className="text-sm text-slate-800 leading-relaxed font-medium" lang={lang}>{tr({ fr: rec.desc.fr, en: rec.desc.en }, lang)}</Prose>
 
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                           <div className="lg:col-span-2 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
@@ -6724,7 +6936,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           </div>
                           <div className="lg:col-span-3 bg-white p-5 rounded-md border border-slate-200 shadow-sm">
                             <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-3">
-                              <Users className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> {lang === 'fr' ? "États membres" : "Member states"}
+                              <Users className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "États membres", en: "Member states" }, lang)}
                             </h5>
                             <div className="flex flex-wrap gap-1.5">
                               {Object.entries(countryRecAffiliations)
@@ -6735,39 +6947,37 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   return (
                                     <span
                                       key={iso2}
-                                      title={note ? note[lang] : undefined}
+                                      title={note ? tr(note, lang) : undefined}
                                       className="group/chip relative inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-default transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 hover:-translate-y-0.5 hover:shadow-sm"
                                     >
                                       <CountryFlag iso2={iso2} emoji="" size="sm" />
-                                      {meta ? (meta.name[lang] || meta.name.fr) : iso2.toUpperCase()}
+                                      {meta ? (tr(meta.name, lang) || meta.name.fr) : iso2.toUpperCase()}
                                       {note && <AlertTriangle className="w-3 h-3 text-amber-500" />}
                                     </span>
                                   );
                                 })}
                             </div>
                             <p className="text-[10px] text-slate-400 italic mt-3">
-                              {lang === 'fr'
-                                ? "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours."
-                                : "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal."}
+                              {tr({ fr: "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours.", en: "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal." }, lang)}
                             </p>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 mr-1.5 text-blue-600" /> {lang === 'fr' ? "Instruments Clés" : "Key Instruments"}</h5>
-                            <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.instruments.fr : rec.instruments.en}</p>
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 me-1.5 text-blue-600" /> {tr({ fr: "Instruments Clés", en: "Key Instruments" }, lang)}</h5>
+                            <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.instruments.fr, en: rec.instruments.en }, lang)}</Prose>
                           </div>
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 mr-1.5 text-emerald-600" /> {lang === 'fr' ? "Dynamique & Défis" : "Dynamics & Challenges"}</h5>
-                            <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? rec.dynamics.fr : rec.dynamics.en}</p>
+                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "Dynamique & Défis", en: "Dynamics & Challenges" }, lang)}</h5>
+                            <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.dynamics.fr, en: rec.dynamics.en }, lang)}</Prose>
                           </div>
                         </div>
 
                         {rec.sources && (
                           <div className="pt-4 border-t border-slate-200">
                             <h5 className="flex items-center font-bold text-[10px] uppercase tracking-widest text-slate-400 mb-2">
-                              <BookOpen className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Sources" : "Sources"}
+                              <BookOpen className="w-3 h-3 me-1.5" /> {tr({ fr: "Sources", en: "Sources" }, lang)}
                             </h5>
                             <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
                               {rec.sources.map((s, si) => (
@@ -6797,24 +7007,22 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-slate-800">
               <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
-                {lang === 'fr' ? "Cartographie Réglementaire Continentale" : "Continental Regulatory Mapping"}
+                {tr({ fr: "Cartographie Réglementaire Continentale", en: "Continental Regulatory Mapping" }, lang)}
               </span>
               <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
-                {lang === 'fr' ? "Matrices de réciprocité des visas et profils d'entrée et de séjour (54 pays)" : "Visa reciprocity matrices and entry/residence profiles (54 countries)"}
+                {tr({ fr: "Matrices de réciprocité des visas et profils d'entrée et de séjour (54 pays)", en: "Visa reciprocity matrices and entry/residence profiles (54 countries)" }, lang)}
               </h3>
               <p className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl">
-                {lang === 'fr'
-                  ? "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours."
-                  : "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border between \"visitor\" status (tolerated for short-term trade or tourism) and \"immigrant\" status (subject to the State's discretionary power over settlement). The standard threshold across Africa is 90 days."}
+                {tr({ fr: "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours.", en: "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border. On one side, \"visitor\" status, tolerated for short-term trade or tourism; on the other, \"immigrant\" status, subject to the State's discretionary power over settlement. The standard threshold across Africa is 90 days." }, lang)}
               </p>
             </div>
 
             {/* Disclaimer Methodologique */}
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-lg shadow-sm">
+            <div className="bg-amber-50 border-s-4 border-amber-500 p-5 rounded-e-lg shadow-sm">
               <div className="flex items-start">
-                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 mr-3 shrink-0" />
+                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 me-3 shrink-0" />
                 <div>
-                  <h4 className="text-sm font-bold text-amber-900 mb-1">{lang === 'fr' ? "À propos de ces données" : "About this data"}</h4>
+                  <h4 className="text-sm font-bold text-amber-900 mb-1">{tr({ fr: "À propos de ces données", en: "About this data" }, lang)}</h4>
                   <p className="text-xs text-amber-800 leading-relaxed">
                     {lang === 'fr' ? (
                       <>Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).</>
@@ -6857,17 +7065,15 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               return (
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                   <h4 className="text-sm font-bold text-slate-800 mb-1">
-                    {lang === 'fr' ? "Distribution des seuils légaux de visiteur (54 pays)" : "Distribution of legal visitor thresholds (54 countries)"}
+                    {tr({ fr: "Distribution des seuils légaux de visiteur (54 pays)", en: "Distribution of legal visitor thresholds (54 countries)" }, lang)}
                   </h4>
                   <p className="text-xs text-slate-500 mb-5">
-                    {lang === 'fr'
-                      ? "Nombre de pays par palier de seuil, calculé en direct depuis la matrice ci-dessous."
-                      : "Number of countries per threshold band, computed live from the matrix below."}
+                    {tr({ fr: "Nombre de pays par palier de seuil, calculé en direct depuis la matrice ci-dessous.", en: "Number of countries per threshold band, computed live from the matrix below." }, lang)}
                   </p>
                   <div className="space-y-3">
                     {counts.filter((b) => b.count > 0).map((b) => (
                       <div key={b.key} className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{lang === 'fr' ? b.labelFr : b.labelEn}</span>
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-28 shrink-0">{tr({ fr: b.labelFr, en: b.labelEn }, lang)}</span>
                         <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-700 ${b.key === '90' ? 'bg-amber-600' : 'bg-slate-400'}`}
@@ -6875,16 +7081,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           ></div>
                         </div>
                         {/* Les pays s'affichent au survol du compte, pour garder le graphique lisible. */}
-                        <span className="group relative w-20 text-right shrink-0">
+                        <span className="group relative w-20 text-end shrink-0">
                           <span className="text-xs font-bold text-slate-700 tabular-nums border-b border-dotted border-slate-300 cursor-help">
-                            {b.count} {lang === 'fr' ? 'pays' : 'countries'}
+                            {b.count} {tr({ fr: 'pays', en: 'countries' }, lang)}
                           </span>
-                          <span className="pointer-events-none absolute right-0 bottom-full mb-2 z-20 hidden group-hover:block w-64 text-left bg-slate-900 text-white rounded-md shadow-lg p-3">
+                          <span className="pointer-events-none absolute end-0 bottom-full mb-2 z-20 hidden group-hover:block w-64 text-start bg-slate-900 text-white rounded-md shadow-lg p-3">
                             <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
-                              {lang === 'fr' ? b.labelFr : b.labelEn}
+                              {tr({ fr: b.labelFr, en: b.labelEn }, lang)}
                             </h4>
                             <span className="block text-[11px] leading-relaxed">
-                              {b.members.map((m) => m.name[lang]).join(' · ')}
+                              {b.members.map((m) => tr(m.name, lang)).join(' · ')}
                             </span>
                           </span>
                         </span>
@@ -6892,9 +7098,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ))}
                   </div>
                   <p className="text-[10px] text-slate-400 italic mt-4 pt-3 border-t border-slate-100">
-                    {lang === 'fr'
-                      ? "Survolez un effectif pour afficher les pays concernés. Les paliers sans aucun pays ne sont pas représentés."
-                      : "Hover a count to reveal the countries concerned. Bands with no country are not shown."}
+                    {tr({ fr: "Survolez un effectif pour afficher les pays concernés. Les paliers sans aucun pays ne sont pas représentés.", en: "Hover a count to reveal the countries concerned. Bands with no country are not shown." }, lang)}
                   </p>
                 </div>
               );
@@ -6906,13 +7110,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 onClick={() => setMatrixView('table')}
                 className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
-                <TableProperties className="w-3.5 h-3.5 mr-2" /> {lang === 'fr' ? "Vue Tableau (Synthèse)" : "Table View (Summary)"}
+                <TableProperties className="w-3.5 h-3.5 me-2" /> {tr({ fr: "Vue Tableau (Synthèse)", en: "Table View (Summary)" }, lang)}
               </button>
               <button
                 onClick={() => setMatrixView('details')}
                 className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'details' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
-                <FileText className="w-3.5 h-3.5 mr-2" /> {lang === 'fr' ? "Fiches Détaillées" : "Detailed Sheets"}
+                <FileText className="w-3.5 h-3.5 me-2" /> {tr({ fr: "Fiches Détaillées", en: "Detailed Sheets" }, lang)}
               </button>
             </div>
 
@@ -6920,13 +7124,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             {matrixView === 'table' && (
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden animate-in fade-in">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-sm">
+                  <table className="w-full text-start border-collapse text-sm">
                     <thead>
                       <tr className="bg-slate-100 border-b border-slate-200 text-slate-600">
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Région" : "Region"}</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Pays" : "Country"}</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Seuil Légal Visiteur" : "Legal Visitor Threshold"}</th>
-                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{lang === 'fr' ? "Notes sur l'Obligation de Résidence" : "Notes on the Residence Obligation"}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{tr({ fr: "Région", en: "Region" }, lang)}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{tr({ fr: "Pays", en: "Country" }, lang)}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{tr({ fr: "Seuil Légal Visiteur", en: "Legal Visitor Threshold" }, lang)}</th>
+                        <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{tr({ fr: "Notes sur l'Obligation de Résidence", en: "Notes on the Residence Obligation" }, lang)}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -6935,25 +7139,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           {regionObj.countries.map((country, cIdx) => (
                             <tr key={cIdx} className="hover:bg-slate-50 transition-colors">
                               {cIdx === 0 && (
-                                <td rowSpan={regionObj.countries.length} className="py-3 px-4 font-bold text-slate-900 bg-slate-50/50 align-top border-r border-slate-100">
-                                  {regionObj.region[lang]}
+                                <td rowSpan={regionObj.countries.length} className="py-3 px-4 font-bold text-slate-900 bg-slate-50/50 align-top border-e border-slate-100">
+                                  {tr(regionObj.region, lang)}
                                 </td>
                               )}
                               <td className="py-3 px-4 font-bold text-slate-800">
                                 <span className="inline-flex items-center gap-1.5">
-                                  {country.name[lang]}
+                                  {tr(country.name, lang)}
                                   {(() => {
                                     const o = opennessByName(country.name.fr);
-                                    return o ? <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${visaOpenTiers[o.tier].label[lang]} — ${o.note[lang]}`} /> : null;
+                                    return o ? <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
                                   })()}
                                 </span>
                               </td>
                               <td className="py-3 px-4">
                                 <span className="inline-block bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap">
-                                  {country.threshold[lang]}
+                                  {tr(country.threshold, lang)}
                                 </span>
                               </td>
-                              <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">{country.tableNotes[lang]}</td>
+                              <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">{tr(country.tableNotes, lang)}</td>
                             </tr>
                           ))}
                         </React.Fragment>
@@ -6965,27 +7169,25 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 {/* Légende des étoiles : indispensable, la même symbolique est utilisée dans l'Explorateur */}
                 <div className="px-5 py-4 border-t border-slate-200 bg-slate-50">
                   <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 block mb-2">
-                    {lang === 'fr' ? "Légende — ouverture aux ressortissants africains" : "Legend — openness to African nationals"}
+                    {tr({ fr: "Légende — ouverture aux ressortissants africains", en: "Legend — openness to African nationals" }, lang)}
                   </span>
                   <div className="flex flex-wrap gap-x-6 gap-y-2">
                     {Object.entries(visaOpenTiers).map(([key, tier]) => (
                       <span key={key} className="flex items-start gap-1.5">
                         <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.dot}`} />
                         <span>
-                          <span className="text-[11px] font-bold text-slate-700 block">{tier.label[lang]}</span>
+                          <span className="text-[11px] font-bold text-slate-700 block">{tr(tier.label, lang)}</span>
                           <span className="text-[10px] text-slate-500">
-                            {key === 'full' && (lang === 'fr' ? "Aucun visa requis, pour tous les Africains" : "No visa required, for all Africans")}
-                            {key === 'partial' && (lang === 'fr' ? "Ouvert, à l'exception de certains États" : "Open, with named exceptions")}
-                            {key === 'announced' && (lang === 'fr' ? "Mesure annoncée, pas encore effective" : "Announced, not yet in force")}
+                            {key === 'full' && (tr({ fr: "Aucun visa requis, pour tous les Africains", en: "No visa required, for all Africans" }, lang))}
+                            {key === 'partial' && (tr({ fr: "Ouvert, à l'exception de certains États", en: "Open, with named exceptions" }, lang))}
+                            {key === 'announced' && (tr({ fr: "Mesure annoncée, pas encore effective", en: "Announced, not yet in force" }, lang))}
                           </span>
                         </span>
                       </span>
                     ))}
                   </div>
                   <p className="text-[10px] text-slate-400 italic mt-3">
-                    {lang === 'fr'
-                      ? "Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA, 2024). Même symbolique que dans l'Explorateur."
-                      : "Sources: official national announcements and the Africa Visa Openness Index (AfDB/AUC, 2024). Same symbols as in the Explorer."}
+                    {tr({ fr: "Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA, 2024). Même symbolique que dans l'Explorateur.", en: "Sources: official national announcements and the Africa Visa Openness Index (AfDB/AUC, 2024). Same symbols as in the Explorer." }, lang)}
                   </p>
                 </div>
               </div>
@@ -6996,31 +7198,31 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="space-y-8 animate-in fade-in">
                 {legalMatrixData.map((regionObj, rIdx) => (
                   <div key={rIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{regionObj.region[lang]}</h4>
-                    <p className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic">{regionObj.intro[lang]}</p>
+                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h4>
+                    <Prose className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic" lang={lang}>{tr(regionObj.intro, lang)}</Prose>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {regionObj.countries.map((country, cIdx) => (
                         <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
                           <div className="flex justify-between items-start mb-3">
                             <h5 className="font-bold text-slate-900 text-lg flex items-center gap-2">
-                              {country.name[lang]}
+                              {tr(country.name, lang)}
                               {(() => {
                                 const o = opennessByName(country.name.fr);
-                                return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${visaOpenTiers[o.tier].label[lang]} — ${o.note[lang]}`} /> : null;
+                                return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
                               })()}
                             </h5>
-                            <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{country.threshold[lang]}</span>
+                            <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{tr(country.threshold, lang)}</span>
                           </div>
                           <div className="text-xs text-slate-500 mb-4 pb-3 border-b border-slate-200">
-                            <strong className="text-slate-700 uppercase tracking-widest">{lang === 'fr' ? "Instrument : " : "Instrument: "}</strong>
-                            <span className="italic">{country.instrument[lang]}</span>
+                            <strong className="text-slate-700 uppercase tracking-widest">{tr({ fr: "Instrument : ", en: "Instrument: " }, lang)}</strong>
+                            <span className="italic">{tr(country.instrument, lang)}</span>
                           </div>
                           <div className="space-y-3 flex-grow">
                             {country.details.map((detail, dIdx) => (
                               <div key={dIdx}>
-                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{detail.label[lang]}</h6>
-                                <p className="text-xs text-slate-800 leading-relaxed">{detail.text[lang]}</p>
+                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{tr(detail.label, lang)}</h6>
+                                <Prose className="text-xs text-slate-800 leading-relaxed" lang={lang}>{tr(detail.text, lang)}</Prose>
                               </div>
                             ))}
                           </div>
@@ -7035,10 +7237,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             {/* Sources Légales */}
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-8">
               <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center">
-                <BookOpen className="w-4 h-4 mr-2 text-slate-400" />
-                {lang === 'fr' ? "Liste des Instruments Juridiques Analysés (Sources)" : "List of Legal Instruments Analyzed (Sources)"}
+                <BookOpen className="w-4 h-4 me-2 text-slate-400" />
+                {tr({ fr: "Liste des Instruments Juridiques Analysés (Sources)", en: "List of Legal Instruments Analyzed (Sources)" }, lang)}
               </h4>
-              <div className="h-48 overflow-y-auto pr-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
+              <div className="h-48 overflow-y-auto pe-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
                 {lang === 'fr' ? (
                   <>
                     <p><strong>Afrique méditerranéenne :</strong><br/>
@@ -7099,14 +7301,14 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         
         {/* RECHERCHE */}
         <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
-          <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
+          <Search className="absolute start-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
           <input
             type="text"
             /* Un placeholder n'est pas un nom accessible : il disparait des qu'on
                saisit et n'est pas restitue de facon fiable par les lecteurs d'ecran. */
-            aria-label={lang === 'fr' ? 'Rechercher un pays' : 'Search for a country'}
+            aria-label={tr({ fr: 'Rechercher un pays', en: 'Search for a country' }, lang)}
             placeholder={text.sidebar.search}
-            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
+            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg ps-10 pe-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -7115,15 +7317,15 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
         {/* FILTRES DE RÉGION */}
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
           <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-            <MapIcon className="w-3.5 h-3.5 mr-1.5" />
+            <MapIcon className="w-3.5 h-3.5 me-1.5" />
             {text.sidebar.title}
           </h3>
           <div className="space-y-1.5">
             <button
               onClick={() => { setActiveSubRegion('all'); setActiveSubTab('perspective'); setSearchTerm(''); }}
-              className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center ${activeSubRegion === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
+              className={`w-full text-start px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center ${activeSubRegion === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
             >
-              <Globe className={`w-4 h-4 mr-2.5 ${activeSubRegion === 'all' ? 'text-blue-400' : 'text-slate-400'}`} />
+              <Globe className={`w-4 h-4 me-2.5 ${activeSubRegion === 'all' ? 'text-blue-400' : 'text-slate-400'}`} />
               {text.all_regions}
             </button>
             
@@ -7135,7 +7337,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               <button
                 key={regionKey}
                 onClick={() => { setActiveSubRegion(regionKey); setActiveSubTab('perspective'); setSearchTerm(''); }}
-                className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex justify-between items-center group ${activeSubRegion === regionKey ? 'bg-blue-50 text-blue-800 border border-blue-100 shadow-sm' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}`}
+                className={`w-full text-start px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex justify-between items-center group ${activeSubRegion === regionKey ? 'bg-blue-50 text-blue-800 border border-blue-100 shadow-sm' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}`}
               >
                 <span>{text.regions[regionKey]}</span>
                 <ChevronRight className={`w-4 h-4 transition-transform ${activeSubRegion === regionKey ? 'text-blue-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
@@ -7164,7 +7366,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
             }}
             className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab !== 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            {lang === 'fr' ? 'Profils Nationaux' : 'National Profiles'} ({filteredCountries.length})
+            {tr({ fr: 'Profils Nationaux', en: 'National Profiles' }, lang)} ({filteredCountries.length})
           </button>
         </div>
 
@@ -7178,16 +7380,16 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                 </span>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
                   {display.flagIcon ? (
-                    <span className={`mr-3 p-1.5 rounded-lg bg-slate-50 border border-slate-200 ${display.flagColor || 'text-blue-700'}`}>
+                    <span className={`me-3 p-1.5 rounded-lg bg-slate-50 border border-slate-200 ${display.flagColor || 'text-blue-700'}`}>
                       <display.flagIcon className="w-6 h-6" />
                     </span>
                   ) : (
-                    <span className="mr-3 text-3xl">{display.flag}</span>
+                    <span className="me-3 text-3xl">{display.flag}</span>
                   )}
                   {display.name}
                 </h2>
               </div>
-              <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
+              <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
                 <BarChart3 className="w-4 h-4" />
                 <span>{text.analysis_btn}</span>
               </button>
@@ -7195,37 +7397,37 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 mr-1.5" /> {text.metrics.stock}</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 me-1.5" /> {text.metrics.stock}</span>
                 <div className="text-3xl font-serif font-bold text-slate-900">{display.stock}</div>
               </div>
               <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><PieChart className="w-3 h-3 mr-1.5" /> {text.metrics.evolution}</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><PieChart className="w-3 h-3 me-1.5" /> {text.metrics.evolution}</span>
                 <div className="text-3xl font-serif font-bold text-blue-700">{display.evolution}%</div>
               </div>
               <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 mr-1.5" /> {text.metrics.female}</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 me-1.5" /> {text.metrics.female}</span>
                 <div className="text-3xl font-serif font-bold text-rose-700">{display.female}%</div>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="bg-emerald-50/60 p-5 rounded-lg border border-emerald-100">
-                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block flex items-center"><ArrowRight className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Rétention (Sud)" : "Retention (South)"}</span>
+                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block flex items-center"><ArrowRight className="w-3 h-3 me-1.5" /> {tr({ fr: "Rétention (Sud)", en: "Retention (South)" }, lang)}</span>
                 <div className="text-3xl font-serif font-bold text-emerald-700">{display.retention}%</div>
               </div>
               <div className="bg-amber-50/60 p-5 rounded-lg border border-amber-100">
-                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 block flex items-center"><TrendingUp className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Transferts (% PIB, moy.)" : "Remittances (% GDP, avg.)"}</span>
-                <div className="text-3xl font-serif font-bold text-amber-700">{display.remittances !== null && display.remittances !== undefined ? `${display.remittances}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
+                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 block flex items-center"><TrendingUp className="w-3 h-3 me-1.5" /> {tr({ fr: "Transferts (% PIB, moy.)", en: "Remittances (% GDP, avg.)" }, lang)}</span>
+                <div className="text-3xl font-serif font-bold text-amber-700">{display.remittances !== null && display.remittances !== undefined ? `${display.remittances}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}</div>
               </div>
               <div className="bg-indigo-50/60 p-5 rounded-lg border border-indigo-100">
-                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 block flex items-center"><Briefcase className="w-3 h-3 mr-1.5" /> {lang === 'fr' ? "Activité Migrants (OIT, moy.)" : "Migrant Activity (ILO, avg.)"}</span>
-                <div className="text-3xl font-serif font-bold text-indigo-700">{display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (lang === 'fr' ? 'N/D' : 'N/A')}</div>
+                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 block flex items-center"><Briefcase className="w-3 h-3 me-1.5" /> {tr({ fr: "Activité Migrants (OIT, moy.)", en: "Migrant Activity (ILO, avg.)" }, lang)}</span>
+                <div className="text-3xl font-serif font-bold text-indigo-700">{display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}</div>
               </div>
             </div>
 
             <div className="bg-blue-50/50 p-6 rounded-lg border border-blue-100">
               <h3 className="font-bold text-blue-900 mb-3 text-sm uppercase tracking-widest flex items-center">
-                <TableProperties className="w-4 h-4 mr-2" />
+                <TableProperties className="w-4 h-4 me-2" />
                 {text.comparative_view_title}
               </h3>
               <p className="text-sm text-slate-700 leading-relaxed font-medium">
@@ -7236,8 +7438,8 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               {display.distribution && (
                 <div className="mt-6 pt-5 border-t border-blue-200/50">
                   <div className="flex justify-between text-xs font-bold mb-2">
-                    <span className="text-blue-800">{display.distribution[0].label[lang]} ({display.distribution[0].value}%)</span>
-                    <span className="text-slate-600">{display.distribution[1].label[lang]} ({display.distribution[1].value}%)</span>
+                    <span className="text-blue-800">{tr(display.distribution[0].label, lang)} ({display.distribution[0].value}%)</span>
+                    <span className="text-slate-600">{tr(display.distribution[1].label, lang)} ({display.distribution[1].value}%)</span>
                   </div>
                   <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
                     <div className="h-full bg-blue-600 transition-all duration-1000" style={{width: `${display.distribution[0].value}%`}}></div>
@@ -7247,7 +7449,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               )}
             </div>
             
-            <button onClick={() => setShowModal(true)} className="w-full mt-6 md:hidden flex justify-center items-center space-x-2 bg-slate-900 text-white hover:bg-slate-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
+            <button onClick={() => setShowModal(true)} className="w-full mt-6 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
               <BarChart3 className="w-4 h-4" />
               <span>{text.analysis_btn}</span>
             </button>
@@ -7263,22 +7465,22 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                 <div className="min-w-0">
                   <h3 className="text-sm font-bold text-slate-800">
-                    {lang === 'fr' ? "Lecture cartographique" : "Map view"}
+                    {tr({ fr: "Lecture cartographique", en: "Map view" }, lang)}
                   </h3>
                   {/* Ce que montre la carte, dit simplement — puis la definition
                       technique de l'indicateur, pour qui la cherche. */}
                   <p className="text-[13px] text-slate-700 mt-1 max-w-xl leading-relaxed">
                     {mapIndicator.plain
-                      ? mapIndicator.plain[lang]
-                      : mapIndicator.hint[lang]}
+                      ? tr(mapIndicator.plain, lang)
+                      : tr(mapIndicator.hint, lang)}
                     {mapIndicator.term && (
                       <> <Terme k={mapIndicator.term} lang={lang}>
-                        {lang === 'fr' ? 'Voir la définition' : 'See the definition'}
+                        {tr({ fr: 'Voir la définition', en: 'See the definition' }, lang)}
                       </Terme></>
                     )}
                   </p>
                   <p className="text-[11px] mt-1 max-w-xl leading-relaxed" style={{ color: 'var(--label)' }}>
-                    {mapIndicator.hint[lang]}
+                    {tr(mapIndicator.hint, lang)}
                   </p>
                 </div>
                 <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 shrink-0">
@@ -7286,13 +7488,13 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     onClick={() => setExplorerView('map')}
                     className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'map' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    {lang === 'fr' ? 'Carte' : 'Map'}
+                    {tr({ fr: 'Carte', en: 'Map' }, lang)}
                   </button>
                   <button
                     onClick={() => setExplorerView('list')}
                     className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'list' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    {lang === 'fr' ? 'Liste' : 'List'}
+                    {tr({ fr: 'Liste', en: 'List' }, lang)}
                   </button>
                 </div>
               </div>
@@ -7310,7 +7512,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                             : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                         }`}
                       >
-                        {ind.label[lang]}
+                        {tr(ind.label, lang)}
                       </button>
                     ))}
                   </div>
@@ -7324,11 +7526,70 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               )}
             </div>
 
+            {/* Feuilletage des pays. La grille de drapeaux sert a viser un pays
+                qu'on connait deja ; le rail sert a parcourir, en montrant sur
+                chaque carte de quoi decider si l'on veut entrer. */}
+            {filteredCountries.length > 1 && (
+              <RailCartes
+                lang={lang}
+                className={`mb-6 print:hidden ${explorerView === 'map' ? 'hidden' : ''}`}
+                etiquette={tr({ fr: `Feuilleter — ${filteredCountries.length} pays`, en: `Browse — ${filteredCountries.length} countries` }, lang)}
+              >
+                {filteredCountries.map(c => {
+                  const openness = visaOpenToAllAfrica[c.iso2];
+                  const actif = activeSubTab === c.id;
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setActiveSubTab(c.id)}
+                      aria-current={actif ? 'true' : undefined}
+                      className="lift text-start bg-white border p-4 flex flex-col gap-3"
+                      style={{ borderColor: actif ? 'var(--accent)' : 'var(--rule)' }}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <CountryFlag iso2={c.iso2} emoji={c.flag} size="md" />
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-serif font-bold text-base text-slate-900 truncate">
+                            {tr(c.name, lang) || c.name.fr}
+                          </span>
+                          <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                            {text.regions[countryRegionMap[c.id]] || ''}
+                          </span>
+                        </span>
+                        {openness && (
+                          <Star className={`w-3.5 h-3.5 shrink-0 ${visaOpenTiers[openness.tier].dot}`}
+                                aria-label={tr(visaOpenTiers[openness.tier].label, lang)} />
+                        )}
+                      </span>
+                      <span className="grid grid-cols-3 gap-2 pt-2.5 border-t" style={{ borderColor: 'var(--rule)' }}>
+                        {[
+                          { l: tr({ fr: 'Migrants', en: 'Migrants' }, lang), v: <Num value={c.stock} lang={lang} /> },
+                          { l: tr({ fr: '% pop.', en: '% pop.' }, lang), v: <><Num value={c.evolution} lang={lang} /> %</> },
+                          { l: 'AVOI', v: <><Num value={c.avoi} lang={lang} /> /100</> },
+                        ].map(x => (
+                          <span key={x.l} className="block">
+                            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400">{x.l}</span>
+                            <span className="block font-serif font-bold text-sm text-slate-900 tabular-nums">{x.v}</span>
+                          </span>
+                        ))}
+                      </span>
+                      <span className="mt-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"
+                            style={{ color: 'var(--accent-deep)' }}>
+                        {tr({ fr: 'Ouvrir la fiche', en: 'Open the profile' }, lang)}
+                        <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                      </span>
+                    </button>
+                  );
+                })}
+              </RailCartes>
+            )}
+
             {/* Grille des drapeaux pour navigation rapide */}
             <div className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm ${explorerView === 'map' ? 'hidden' : ''}`}>
               {filteredCountries.length === 0 && (
                 <div className="w-full p-4 text-center text-slate-400 text-sm">
-                  {lang === 'fr' ? 'Aucun pays trouvé.' : 'No country found.'}
+                  {tr({ fr: 'Aucun pays trouvé.', en: 'No country found.' }, lang)}
                 </div>
               )}
               {activeSubRegion === 'all' && filteredCountries.length > 0 ? (
@@ -7348,15 +7609,15 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                               <button
                                 key={c.id}
                                 onClick={() => setActiveSubTab(c.id)}
-                                title={openness ? `${visaOpenTiers[openness.tier].label[lang]} — ${openness.note[lang]}` : undefined}
-                                className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                                title={openness ? `${tr(visaOpenTiers[openness.tier].label, lang)} — ${tr(openness.note, lang)}` : undefined}
+                                className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 rtl:space-x-reverse ${
                                   activeSubTab === c.id
                                     ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
                                     : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                                 }`}
                               >
                                 <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                                <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                                <span className="hidden sm:inline">{tr(c.name, lang) || c.name.fr}</span>
                                 {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
                               </button>
                             );
@@ -7374,15 +7635,15 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                       <button
                         key={c.id}
                         onClick={() => setActiveSubTab(c.id)}
-                        title={openness ? `${visaOpenTiers[openness.tier].label[lang]} — ${openness.note[lang]}` : undefined}
-                        className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 ${
+                        title={openness ? `${tr(visaOpenTiers[openness.tier].label, lang)} — ${tr(openness.note, lang)}` : undefined}
+                        className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 rtl:space-x-reverse ${
                           activeSubTab === c.id
                             ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
                             : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
                         }`}
                       >
                         <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                        <span className="hidden sm:inline">{c.name[lang] || c.name.fr}</span>
+                        <span className="hidden sm:inline">{tr(c.name, lang) || c.name.fr}</span>
                         {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
                       </button>
                     );
@@ -7391,20 +7652,20 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
               )}
 
               <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-x-5 gap-y-2">
-                <CsvButton onClick={exportCountriesCSV} label={lang === 'fr' ? "54 pays — tous indicateurs (CSV)" : "54 countries — all indicators (CSV)"} className="basis-full sm:basis-auto justify-center" />
+                <CsvButton onClick={exportCountriesCSV} label={tr({ fr: "54 pays — tous indicateurs (CSV)", en: "54 countries — all indicators (CSV)" }, lang)} className="basis-full sm:basis-auto justify-center" />
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
-                  {lang === 'fr' ? "Ouverture aux ressortissants africains" : "Openness to African nationals"}
+                  {tr({ fr: "Ouverture aux ressortissants africains", en: "Openness to African nationals" }, lang)}
                 </span>
                 {Object.entries(visaOpenTiers).map(([key, tier]) => (
                   <span key={key} className="flex items-center gap-1.5">
                     <Star className={`w-3 h-3 ${tier.dot}`} />
-                    <span className="text-[10px] font-bold text-slate-500">{tier.label[lang]}</span>
+                    <span className="text-[10px] font-bold text-slate-500">{tr(tier.label, lang)}</span>
                   </span>
                 ))}
                 <span className="text-[10px] text-slate-400 italic basis-full">
-                  {lang === 'fr' ? "Sources : annonces officielles nationales et " : "Sources: official national announcements and "}
+                  {tr({ fr: "Sources : annonces officielles nationales et ", en: "Sources: official national announcements and " }, lang)}
                   <a href="https://www.visaopenness.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">
-                    {lang === 'fr' ? "Africa Visa Openness Index (BAD/CUA, 2024)" : "Africa Visa Openness Index (AfDB/AUC, 2024)"}
+                    {tr({ fr: "Africa Visa Openness Index (BAD/CUA, 2024)", en: "Africa Visa Openness Index (AfDB/AUC, 2024)" }, lang)}
                   </a>.
                 </span>
               </div>
@@ -7419,10 +7680,10 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                       {text.badge.country}
                     </span>
                     <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center flex-wrap gap-y-2">
-                      <CountryFlag iso2={display.iso2} emoji={display.flag} size="md" className="mr-3" />
+                      <CountryFlag iso2={display.iso2} emoji={display.flag} size="md" className="me-3" />
                       {display.name}
                       {visaOpenToAllAfrica[display.iso2] && (
-                        <Star className={`w-5 h-5 ml-3 ${visaOpenTiers[visaOpenToAllAfrica[display.iso2].tier].dot}`} />
+                        <Star className={`w-5 h-5 ms-3 ${visaOpenTiers[visaOpenToAllAfrica[display.iso2].tier].dot}`} />
                       )}
                     </h2>
                     {visaOpenToAllAfrica[display.iso2] && (() => {
@@ -7432,14 +7693,14 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                         <div className={`mt-3 inline-flex items-start gap-2 px-3 py-2 rounded-md border max-w-2xl ${tier.style}`}>
                           <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.dot}`} />
                           <div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest block">{tier.label[lang]}</span>
-                            <span className="text-xs leading-relaxed block mt-0.5">{o.note[lang]}</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block">{tr(tier.label, lang)}</span>
+                            <span className="text-xs leading-relaxed block mt-0.5">{tr(o.note, lang)}</span>
                           </div>
                         </div>
                       );
                     })()}
                   </div>
-                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 px-5 py-2.5 font-bold text-xs transition shrink-0 self-start" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2, boxShadow: 'inset 2px 0 0 var(--accent)' }}>
+                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 rtl:space-x-reverse px-5 py-2.5 font-bold text-xs transition shrink-0 self-start" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2, boxShadow: 'inset 2px 0 0 var(--accent)' }}>
                     <Target className="w-4 h-4" />
                     <span>{text.analysis_btn}</span>
                   </button>
@@ -7449,36 +7710,36 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                 <div className="border border-slate-200 mb-6 stagger">
                   {[
                     {
-                      title: lang === 'fr' ? "Qui est là" : 'Who is there',
+                      title: tr({ fr: "Qui est là", en: 'Who is there' }, lang),
                       source: 'UN DESA (2024)',
                       wash: 'wash-inkblue', tone: 'figure-inkblue', dot: 'var(--accent-2)',
                       cells: [
-                        { v: <Num value={display.stock} lang={lang} />, l: lang === 'fr' ? 'Migrants internationaux' : 'International migrants' },
-                        { v: `${fmtNum(display.evolution, lang)} %`, l: lang === 'fr' ? 'De la population nationale' : 'Of the national population' },
-                        { v: `${fmtNum(display.female, lang)} %`, l: lang === 'fr' ? 'De femmes parmi eux' : 'Women among them' },
+                        { v: <Num value={display.stock} lang={lang} />, l: tr({ fr: 'Migrants internationaux', en: 'International migrants' }, lang)},
+                        { v: `${fmtNum(display.evolution, lang)} %`, l: tr({ fr: 'De la population nationale', en: 'Of the national population' }, lang)},
+                        { v: `${fmtNum(display.female, lang)} %`, l: tr({ fr: 'De femmes parmi eux', en: 'Women among them' }, lang)},
                       ],
                     },
                     {
-                      title: lang === 'fr' ? "D'où l'on vient" : 'Where they come from',
+                      title: tr({ fr: "D'où l'on vient", en: 'Where they come from' }, lang),
                       source: 'UA / OIT / OIM / CEA (2021)',
                       wash: 'wash-terra', tone: 'figure-terra', dot: 'var(--accent)',
                       cells: [
-                        { v: `${fmtNum(display.retention, lang)} %`, l: lang === 'fr' ? 'Rétention Sud-Sud' : 'South-South retention' },
+                        { v: `${fmtNum(display.retention, lang)} %`, l: tr({ fr: 'Rétention Sud-Sud', en: 'South-South retention' }, lang)},
                       ],
                     },
                     {
-                      title: lang === 'fr' ? 'Ce que cela produit' : 'What it produces',
-                      source: lang === 'fr' ? 'Banque mondiale / OIT' : 'World Bank / ILO',
+                      title: tr({ fr: 'Ce que cela produit', en: 'What it produces' }, lang),
+                      source: tr({ fr: 'Banque mondiale / OIT', en: 'World Bank / ILO' }, lang),
                       wash: 'wash-ok', tone: 'figure-ok', dot: 'var(--ok)',
                       cells: [
                         {
-                          v: display.remittances != null ? `${fmtNum(display.remittances, lang)} %` : (lang === 'fr' ? 'N/D' : 'N/A'),
-                          l: (lang === 'fr' ? 'Transferts de fonds (% PIB)' : 'Remittances (% GDP)')
+                          v: display.remittances != null ? `${fmtNum(display.remittances, lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang)),
+                          l: (tr({ fr: 'Transferts de fonds (% PIB)', en: 'Remittances (% GDP)' }, lang))
                              + (display.remittances_year ? ` — ${display.remittances_year}` : ''),
                         },
                         {
-                          v: display.labour_participation != null ? `${fmtNum(display.labour_participation, lang)} %` : (lang === 'fr' ? 'N/D' : 'N/A'),
-                          l: (lang === 'fr' ? "Activité des migrants" : 'Migrant labour activity')
+                          v: display.labour_participation != null ? `${fmtNum(display.labour_participation, lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang)),
+                          l: (tr({ fr: "Activité des migrants", en: 'Migrant labour activity' }, lang))
                              + (display.labour_participation_year ? ` — ${display.labour_participation_year}` : ''),
                         },
                       ],
@@ -7512,12 +7773,12 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
 
                 {display.impact && (
                    <div className="bg-amber-50 p-5 rounded-lg border border-amber-100 flex items-start mb-6">
-                     <Info className="w-5 h-5 text-amber-600 mr-3 shrink-0 mt-0.5" />
+                     <Info className="w-5 h-5 text-amber-600 me-3 shrink-0 mt-0.5" />
                      <p className="text-sm text-amber-900 font-medium leading-relaxed">{display.impact}</p>
                    </div>
                 )}
                 
-                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 px-5 py-3 font-bold text-sm transition" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2 }}>
+                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse px-5 py-3 font-bold text-sm transition" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2 }}>
                   <Target className="w-4 h-4" />
                   <span>{text.analysis_btn}</span>
                 </button>
@@ -7546,17 +7807,17 @@ const LibraryCard = ({ item, lang, essential = false }) => {
         : `p-4 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5 transition-colors ${item.url ? 'hover:border-amber-300 hover:bg-amber-50/50 group cursor-pointer' : ''}`}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-sm uppercase tracking-widest">{item.type[lang]}</span>
+        <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-sm uppercase tracking-widest">{tr(item.type, lang)}</span>
         {essential ? <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" /> : <span className="text-[9px] font-bold text-slate-400">{item.year}</span>}
       </div>
       <div className="flex items-start justify-between gap-2">
         <span className={`font-bold text-slate-800 leading-snug group-hover:text-amber-900 ${essential ? 'text-sm' : 'text-xs'}`}>{item.title}</span>
         {item.url && !essential && <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0 mt-0.5" />}
       </div>
-      <p className={`text-slate-500 leading-relaxed text-xs ${essential ? 'flex-1' : ''}`}>{item.desc[lang]}</p>
+      <Prose className={`text-slate-500 leading-relaxed text-xs ${essential ? 'flex-1' : ''}`} lang={lang}>{tr(item.desc, lang)}</Prose>
       {essential && (
         <span className="text-[10px] font-bold text-amber-700 flex items-center gap-1 mt-1">
-          {item.url ? <>{lang === 'fr' ? 'Consulter' : 'View source'} <ExternalLink className="w-3 h-3" /></> : (lang === 'fr' ? `Année ${item.year}` : `Year ${item.year}`)}
+          {item.url ? <>{tr({ fr: 'Consulter', en: 'View source' }, lang)} <ExternalLink className="w-3 h-3" /></> : (tr({ fr: `Année ${item.year}`, en: `Year ${item.year}` }, lang))}
         </span>
       )}
     </CardTag>
@@ -7598,9 +7859,9 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
       <div>
         <h3 className="flex items-center text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">
-          <Star className="w-4 h-4 mr-2 text-amber-500 fill-amber-400" />
-          {lang === 'fr' ? "Essentiels — Pour Commencer" : "Essentials — Start Here"}
-          <CsvButton onClick={exportLibraryCSV} label={lang === 'fr' ? "Bibliographie (CSV)" : "Bibliography (CSV)"} className="ml-auto normal-case tracking-normal" />
+          <Star className="w-4 h-4 me-2 text-amber-500 fill-amber-400" />
+          {tr({ fr: "Essentiels — Pour Commencer", en: "Essentials — Start Here" }, lang)}
+          <CsvButton onClick={exportLibraryCSV} label={tr({ fr: "Bibliographie (CSV)", en: "Bibliography (CSV)" }, lang)} className="ms-auto normal-case tracking-normal" />
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {essentials.map((item, idx) => <LibraryCard key={idx} item={item} lang={lang} essential />)}
@@ -7609,14 +7870,14 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
       <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
+          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
           <input
             type="text"
-            aria-label={lang === 'fr' ? 'Rechercher dans la bibliothèque' : 'Search the library'}
-            placeholder={lang === 'fr' ? "Rechercher une source, un auteur, un mot-clé…" : "Search a source, author, keyword…"}
+            aria-label={tr({ fr: 'Rechercher dans la bibliothèque', en: 'Search the library' }, lang)}
+            placeholder={tr({ fr: "Rechercher une source, un auteur, un mot-clé…", en: "Search a source, author, keyword…" }, lang)}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-shadow"
+            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg ps-10 pe-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-shadow"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -7624,7 +7885,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
             onClick={() => setActiveFilter('all')}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${activeFilter === 'all' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
           >
-            {lang === 'fr' ? 'Tout voir' : 'View All'} ({totalDocs})
+            {tr({ fr: 'Tout voir', en: 'View All' }, lang)} ({totalDocs})
           </button>
           {libraryData.map((section, idx) => (
             <button
@@ -7632,7 +7893,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
               onClick={() => setActiveFilter(String(idx))}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${activeFilter === String(idx) ? 'bg-amber-700 text-white border-amber-700' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
             >
-              {section.section[lang]} ({section.items.length})
+              {tr(section.section, lang)} ({section.items.length})
             </button>
           ))}
         </div>
@@ -7642,15 +7903,15 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
         {noResults ? (
           <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
             <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 text-sm">{lang === 'fr' ? "Aucune source ne correspond à votre recherche." : "No source matches your search."}</p>
+            <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucune source ne correspond à votre recherche.", en: "No source matches your search." }, lang)}</Prose>
           </div>
         ) : (
           filteredSections.map((section) => (
             <div key={section.idx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
-                <section.icon className="w-5 h-5 mr-2.5 text-amber-700" />
-                {section.section[lang]}
-                <span className="ml-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{section.items.length}</span>
+                <section.icon className="w-5 h-5 me-2.5 text-amber-700" />
+                {tr(section.section, lang)}
+                <span className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{section.items.length}</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {section.items.map((item, iIdx) => <LibraryCard key={iIdx} item={item} lang={lang} />)}
@@ -7660,9 +7921,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
         )}
 
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs text-amber-800 leading-relaxed">
-          {lang === 'fr'
-            ? `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l'origine de cette plateforme. Chaque référence pointe vers son texte ou portail officiel lorsqu'un lien stable existe.`
-            : `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this platform. Each reference links to its official text or portal where a stable link exists.`}
+          {tr({ fr: `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l'origine de cette plateforme. Chaque référence pointe vers son texte ou portail officiel lorsqu'un lien stable existe.`, en: `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this platform. Each reference links to its official text or portal where a stable link exists.` }, lang)}
         </div>
       </div>
     </div>
@@ -7689,14 +7948,14 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
     <section id="data">
       <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 rtl:space-x-reverse">
             <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
             <div>
               <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
-              <p className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl">{text.indicator_desc}</p>
+              <Prose className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl" lang={lang}>{text.indicator_desc}</Prose>
             </div>
           </div>
-          <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
+          <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 rtl:space-x-reverse bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
             <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
           </button>
         </div>
@@ -7704,9 +7963,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
           <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs text-amber-900 leading-relaxed text-justify">
-            {lang === 'fr'
-              ? "À la différence des autres sections de cette plateforme — qui consolident des données déjà collectées par les institutions internationales — cette matrice est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Ils visent des dimensions structurellement sous-documentées des mobilités africaines, qu'aucune mesure continentale ne couvre encore — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué."
-              : "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. They target structurally under-documented dimensions of African mobility, none of which any continental measure yet covers — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset."}
+            {tr({ fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice, elle, est une proposition originale issue de la recherche doctorale à l'origine du projet. Elle propose 12 indicateurs alternatifs, pensés en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Ils visent des dimensions structurellement sous-documentées des mobilités africaines, qu'aucune mesure continentale ne couvre encore — résilience économique diasporique, féminisation des flux, mobilité circulaire, décriminalisation de l'irrégularité. Chaque fiche explicite, dans « Le Changement de Paradigme », le récit qu'elle vient déplacer. Il s'agit d'une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain — pas d'un jeu de données déjà constitué.", en: "Unlike the other sections of this platform — which consolidate data already collected by international institutions — this matrix is an original proposal stemming from the doctoral research behind the project. It proposes 12 alternative indicators, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. They target structurally under-documented dimensions of African mobility, none of which any continental measure yet covers — diaspora economic resilience, feminization of flows, circular mobility, decriminalization of irregularity. Each card spells out, under \"The Paradigm Shift\", the narrative it displaces. This is a methodological recommendation aimed at national statistical institutes and field researchers — not an already-constituted dataset." }, lang)}
           </p>
         </div>
 
@@ -7714,8 +7971,8 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
           {indicatorThemes.map((theme, i) => (
             <div key={i}>
               <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
-                {React.cloneElement(theme.icon, { className: "w-5 h-5 mr-2" })} 
-                {lang === 'fr' ? theme.theme_fr : theme.theme_en}
+                {React.cloneElement(theme.icon, { className: "w-5 h-5 me-2" })} 
+                {tr({ fr: theme.theme_fr, en: theme.theme_en }, lang)}
               </h3>
               <div className="space-y-3">
                 {theme.items.map((ind, j) => (
@@ -7731,23 +7988,27 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                       <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
                     </div>
                     <p className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10">
-                      {lang === 'fr' ? ind.fr : ind.en}
+                      {tr({ fr: ind.fr, en: ind.en }, lang)}
                     </p>
-                    {(lang === 'fr' ? ind.desc_fr : ind.desc_en) && (
+                    {(tr({ fr: ind.desc_fr, en: ind.desc_en }, lang)) && (
                       <p className="text-xs text-slate-500 mt-1.5 leading-relaxed relative z-10">
-                        {lang === 'fr' ? ind.desc_fr : ind.desc_en}
+                        {tr({ fr: ind.desc_fr, en: ind.desc_en }, lang)}
                       </p>
                     )}
                       
-                    <div className={`w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                    {/* depliable : la hauteur reelle est animee. L'ancien
+                        max-h-96 imposait un plafond de 384 px — au-dela, la
+                        fiche etait tronquee sans que rien ne le signale. */}
+                    <div data-ouvert={expandedIndicator === ind.id ? 'true' : 'false'}
+                         className={`depliable w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                       <div className="space-y-4">
                         <div>
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{lang === 'fr' ? "Méthodologie & Collecte" : "Methodology & Data Collection"}</span>
-                          <p className="text-xs text-slate-700 leading-relaxed">{lang === 'fr' ? ind.method_fr : ind.method_en}</p>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{tr({ fr: "Méthodologie & Collecte", en: "Methodology & Data Collection" }, lang)}</span>
+                          <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: ind.method_fr, en: ind.method_en }, lang)}</Prose>
                         </div>
                         <div className="bg-white p-3 rounded-sm border border-slate-200">
-                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 flex items-center gap-1"><Lightbulb className="w-3 h-3" />{lang === 'fr' ? "Le Changement de Paradigme" : "The Paradigm Shift"}</span>
-                          <p className="text-xs text-slate-800 italic leading-relaxed">{lang === 'fr' ? ind.contrast_fr : ind.contrast_en}</p>
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 flex items-center gap-1"><Lightbulb className="w-3 h-3" />{tr({ fr: "Le Changement de Paradigme", en: "The Paradigm Shift" }, lang)}</span>
+                          <Prose className="text-xs text-slate-800 italic leading-relaxed" lang={lang}>{tr({ fr: ind.contrast_fr, en: ind.contrast_en }, lang)}</Prose>
                         </div>
                       </div>
                     </div>
@@ -7765,7 +8026,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
 const CensusTimeline = ({ iso2, lang, compact = false }) => {
   const rec = iso2 ? censusByCountry[iso2] : null;
   if (!rec) return null;
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const st = census2020Status[rec.status2020] || census2020Status.none;
 
   return (
@@ -7773,7 +8034,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
       {!compact && (
         <>
           <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg">
-            <Calendar className="w-5 h-5 mr-2.5 text-slate-400" /> {L("Recensements de la population", "Population censuses")}
+            <Calendar className="w-5 h-5 me-2.5 text-slate-400" /> {L("Recensements de la population", "Population censuses")}
           </h3>
           <p className="text-sm text-slate-600 mb-5">
             {L("Dates des recensements nationaux par cycle décennal. Le recensement reste la source la plus complète sur les migrants présents sur un territoire.",
@@ -7797,7 +8058,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
                    ? { backgroundColor: 'var(--paper-sunk)', borderColor: 'var(--rule-strong)', color: 'var(--label)' }
                    : undefined}
                  title={!c.counted && !c.empty ? markLegend(c.mark, lang) : undefined}>
-              <span className="block text-[9px] font-bold uppercase tracking-widest opacity-70">{r.label[lang]}</span>
+              <span className="block text-[9px] font-bold uppercase tracking-widest opacity-70">{tr(r.label, lang)}</span>
               <span className="block text-[11px] font-bold tabular-nums mt-0.5 leading-tight">
                 {c.year ? (
                   <>{c.raw.replace(/\*+/, '')}<sup className="font-normal">{c.mark}</sup></>
@@ -7812,15 +8073,15 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm border ${st.cls}`}>
           {rec.status2020 === 'late'
-            ? st[lang]
-            : `${L("Cycle 2020 : ", "2020 round: ")}${st[lang]}`}
+            ? tr(st, lang)
+            : `${L("Cycle 2020 : ", "2020 round: ")}${tr(st, lang)}`}
         </span>
         {rec.updated2026 && (
           <span className="text-[10px] font-medium" style={{ color: 'var(--label)' }}>
             <span className="font-bold" style={{ color: 'var(--accent-2)' }}>
               {L("Vérifié en août 2026 — ", "Verified August 2026 — ")}
             </span>
-            {typeof rec.updated2026 === 'string' ? rec.updated2026 : rec.updated2026[lang]}
+            {typeof rec.updated2026 === 'string' ? rec.updated2026 : tr(rec.updated2026, lang)}
           </span>
         )}
       </div>
@@ -7852,7 +8113,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
 };
 
 const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => {
-  const L = (fr, en) => (lang === 'fr' ? fr : en);
+  const L = faireL(lang);
   const headline = [
     { val: "47/54", lbl: L("États ayant recensé (cycle 2010)", "States that censused (2010 round)"), sub: L("soit 87 % du continent", "i.e. 87% of the continent") },
     { val: "11,1", lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
@@ -7901,14 +8162,14 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           {L("La collecte n'est pas le maillon faible", "Collection is not the weak link")}
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <p>{L(
+          <Prose lang={lang}>{L(
             "Lors du cycle de recensements de 2010 — qui court en pratique de 2006 à 2014 — 47 États africains sur 54 ont conduit un recensement national, soit 87 % du continent. À l'échelle mondiale, 178 des 193 États membres de l'ONU en ont fait autant : la participation africaine se situe donc dans la norme internationale, et non en marge d'elle.",
             "During the 2010 census round — which in practice runs from 2006 to 2014 — 47 of 54 African states conducted a national census, that is 87% of the continent. Globally, 178 of the UN's 193 member states did the same: African participation therefore sits within the international norm, not at its margins."
-          )}</p>
-          <p>{L(
-            "L'intervalle moyen entre deux recensements y est de 11,1 ans, à peine au-delà des dix ans recommandés par les Nations unies, pour un coût compris entre 1 et 5 € par habitant dénombré (Gendreau & Dackam-Ngatchou, 2023). Rapportée à la contrainte budgétaire et logistique que représente un recensement exhaustif, cette régularité traduit une priorité politique assumée, non une défaillance.",
+          )}</Prose>
+          <Prose lang={lang}>{L(
+            "L'intervalle moyen entre deux recensements y est de 11,1 ans, à peine au-delà des dix ans recommandés par les Nations unies. Le coût est compris entre 1 et 5 € par habitant dénombré (Gendreau & Dackam-Ngatchou, 2023). Rapportée à la contrainte budgétaire et logistique que représente un recensement exhaustif, cette régularité traduit une priorité politique assumée, non une défaillance.",
             "The average interval between two censuses there is 11.1 years, barely beyond the ten years recommended by the United Nations, at a cost of between €1 and €5 per inhabitant enumerated (Gendreau & Dackam-Ngatchou, 2023). Set against the budgetary and logistical constraint an exhaustive census represents, this regularity reflects a deliberate political priority, not a failure."
-          )}</p>
+          )}</Prose>
         </div>
 
         <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-5 flex items-start gap-3 max-w-4xl">
@@ -7973,19 +8234,19 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-            {(lang === 'fr' ? [
+            {(tr({ fr: [
               ["Dénombrement individuel", "chaque personne est comptée séparément, avec ses caractéristiques propres"],
               ["Universalité sur un territoire défini", "toute la population du territoire, sans exception"],
               ["Simultanéité", "tous rapportés à un même instant de référence"],
               ["Périodicité définie", "à intervalles réguliers, pour que les cycles soient comparables"],
               ["Capacité à produire des statistiques locales", "descendre sous le niveau national"],
-            ] : [
+            ], en: [
               ["Individual enumeration", "each person counted separately, with their own characteristics"],
               ["Universality within a defined territory", "the whole population of the territory, no exception"],
               ["Simultaneity", "all referred to one and the same reference moment"],
               ["Defined periodicity", "at regular intervals, so that rounds remain comparable"],
               ["Capacity to produce small-area statistics", "going below the national level"],
-            ]).map(([name, gloss], i) => (
+            ] }, lang)).map(([name, gloss], i) => (
               <div key={i} className="flex gap-2.5 py-2" style={{ borderBottom: '1px solid var(--rule)' }}>
                 <span className="shrink-0 text-[11px] font-bold tabular-nums pt-px" style={{ color: 'var(--accent-2)' }}>
                   {String(i + 1).padStart(2, '0')}
@@ -8024,17 +8285,17 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               )}
             </h4>
             <ul className="space-y-1">
-              {(lang === 'fr' ? [
+              {(tr({ fr: [
                 ["Pays de naissance", true],
                 ["Pays de citoyenneté", true],
                 ["Année ou période d'arrivée dans le pays", true],
                 ["Acquisition de la citoyenneté", false],
-              ] : [
+              ], en: [
                 ["Country of birth", true],
                 ["Country of citizenship", true],
                 ["Year or period of arrival in the country", true],
                 ["Acquisition of citizenship", false],
-              ]).map(([name, core], i) => (
+              ] }, lang)).map(([name, core], i) => (
                 <li key={i} className="flex items-baseline justify-between gap-3 py-1.5 text-[13px]" style={{ borderBottom: '1px solid var(--rule)' }}>
                   <span className="text-slate-700">{name}</span>
                   <span className="shrink-0 text-[9px] font-bold uppercase tracking-widest"
@@ -8092,7 +8353,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 <div key={r.key} className="flex items-center gap-3">
                   <span className={`text-[11px] font-bold w-32 shrink-0 ${r.inProgress ? '' : 'text-slate-600'}`}
                         style={r.inProgress ? { color: 'var(--accent-2)' } : undefined}>
-                    {r.label[lang]} <span className="text-slate-400 font-normal">({r.span})</span>
+                    {tr(r.label, lang)} <span className="text-slate-400 font-normal">({r.span})</span>
                   </span>
                   <div className="flex-1 h-4 rounded-full overflow-hidden relative"
                        style={r.inProgress
@@ -8101,7 +8362,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                     <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
                          style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
                   </div>
-                  <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
+                  <span className="text-xs font-bold text-slate-700 w-24 text-end shrink-0 tabular-nums">
                     {r.conducted}/{r.base} · {pct} %
                   </span>
                 </div>
@@ -8109,7 +8370,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             })}
           </div>
           <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
-            <span className="inline-block w-3 h-2 mr-1.5 align-middle rounded-sm"
+            <span className="inline-block w-3 h-2 me-1.5 align-middle rounded-sm"
                   style={{ background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 3px, #FFF 3px 6px)', border: '1px solid var(--rule)' }} />
             {L("Le cycle 2030 vient de s'ouvrir (fenêtre 2025-2034) : sa barre mesure une avance, pas un retard.",
                "The 2030 round has only just opened (2025–2034 window): its bar measures progress, not shortfall.")}
@@ -8135,14 +8396,14 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               <span className="text-[11px] font-medium w-56 shrink-0 leading-snug flex items-start gap-1.5"
                     style={{ color: q.core ? 'var(--accent-2)' : 'var(--ink-soft)' }}>
                 {q.core && <span className="inline-block w-2 h-2 mt-1 shrink-0" style={{ backgroundColor: 'var(--accent-2)' }} />}
-                {q.label[lang]}
+                {tr(q.label, lang)}
               </span>
               {/* Teinte unique : la grandeur est deja portee par la longueur. */}
               <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                 <div className="h-full bar-fill"
                      style={{ width: `${q.pctRound}%`, backgroundColor: 'var(--accent)' }} />
               </div>
-              <span className="text-xs font-bold text-slate-700 w-24 text-right shrink-0 tabular-nums">
+              <span className="text-xs font-bold text-slate-700 w-24 text-end shrink-0 tabular-nums">
                 {q.states}/47 · {String(q.pctRound).replace('.', ',')} %
               </span>
             </div>
@@ -8214,17 +8475,17 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               {L("Les quatre thèmes stratégiques", "The four strategic themes")}
             </h4>
             <ol className="space-y-2">
-              {(lang === 'fr' ? [
+              {(tr({ fr: [
                 "Produire des statistiques de qualité pour l'Afrique.",
                 "Coordonner la production de statistiques de qualité pour l'Afrique.",
                 "Bâtir une capacité institutionnelle durable au sein du système statistique africain.",
                 "Promouvoir une culture de la décision fondée sur la qualité.",
-              ] : [
+              ], en: [
                 "To produce quality statistics for Africa.",
                 "To coordinate the production of quality statistics for Africa.",
                 "To build sustainable institutional capacity in the African statistical system.",
                 "To promote a culture of quality decision-making.",
-              ]).map((t, i) => (
+              ] }, lang)).map((t, i) => (
                 <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
                   <span className="shrink-0 font-serif font-bold tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                     {String(i + 1).padStart(2, '0')}
@@ -8249,18 +8510,18 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           {L("Produire n'est pas analyser", "Producing is not analysing")}
         </h2>
         <div className="space-y-4 text-sm text-slate-300 leading-relaxed max-w-4xl text-justify">
-          <p>{L(
+          <Prose lang={lang}>{L(
             "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : la donnée brute existe ; ce qui fait défaut, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
             "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: the raw data exists; what is missing is control over its shaping, its interpretation, and the categories it mobilises."
-          )}</p>
-          <p>{L(
-            "Or la catégorie n'est jamais neutre. Décider si l'on dénombre les résidents habituels (population de jure) ou toutes les personnes présentes (de facto), retenir la citoyenneté plutôt que le pays de naissance, poser ou non la question du motif : chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
-            "Yet the category is never neutral. Deciding whether to enumerate usual residents (de jure population) or all persons present (de facto), retaining citizenship rather than country of birth, asking or not asking the reason: each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
-          )}</p>
-          <p className="text-white font-medium">{L(
+          )}</Prose>
+          <Prose lang={lang}>{L(
+            "Or la catégorie n'est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
+            "Yet the category is never neutral. Enumerate usual residents (de jure population) or all persons present (de facto)? Retain citizenship or country of birth? Ask the reason for the move, or leave it out? Each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
+          )}</Prose>
+          <Prose className="text-white font-medium" lang={lang}>{L(
             "C'est le sens de l'investissement continental dans ses propres instruments : l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique. Tous ont le même objet — reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
-            "This is the point of the continental investment in its own instruments — the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa (SHaSA): not to collect more, but to regain control over the framing and analysis of what is already collected."
-          )}</p>
+            "This is the point of the continental investment in its own instruments: the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa. All have the same object — to regain control over the framing and the analysis of what is already collected."
+          )}</Prose>
         </div>
       </Reveal>
 
@@ -8282,7 +8543,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       ...cat,
       terms: cat.terms
         .filter(t => !query || t.term.toLowerCase().includes(query) || t.en_term.toLowerCase().includes(query) || t.fr.toLowerCase().includes(query) || t.en.toLowerCase().includes(query))
-        .sort((a, b) => (lang === 'fr' ? a.term : a.en_term).localeCompare(lang === 'fr' ? b.term : b.en_term))
+        .sort((a, b) => (tr({ fr: a.term, en: a.en_term }, lang)).localeCompare(tr({ fr: b.term, en: b.en_term }, lang)))
     }))
     .filter(cat => cat.terms.length > 0);
 
@@ -8305,24 +8566,22 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
           <h2 className="text-xl font-serif font-bold text-slate-900 flex items-center">
-            <Brain className="w-5 h-5 mr-2.5 text-teal-700" />
-            {lang === 'fr' ? 'Glossaire & Concepts Clés' : 'Glossary & Key Concepts'}
+            <Brain className="w-5 h-5 me-2.5 text-teal-700" />
+            {tr({ fr: 'Glossaire & Concepts Clés', en: 'Glossary & Key Concepts' }, lang)}
           </h2>
-          <CsvButton onClick={exportGlossaryCSV} label={lang === 'fr' ? "Glossaire (CSV)" : "Glossary (CSV)"} />
+          <CsvButton onClick={exportGlossaryCSV} label={tr({ fr: "Glossaire (CSV)", en: "Glossary (CSV)" }, lang)} />
         </div>
         <p className="text-sm text-slate-500 leading-relaxed mb-5">
-          {lang === 'fr'
-            ? `${totalTerms} termes techniques et notions théoriques mobilisés à travers cette plateforme, expliqués et référencés.`
-            : `${totalTerms} technical terms and theoretical concepts used throughout this platform, explained and referenced.`}
+          {tr({ fr: `${totalTerms} termes techniques et notions théoriques mobilisés à travers cette plateforme, expliqués et référencés.`, en: `${totalTerms} technical terms and theoretical concepts used throughout this platform, explained and referenced.` }, lang)}
         </p>
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input
             type="text"
-            placeholder={lang === 'fr' ? "Rechercher un terme…" : "Search a term…"}
+            placeholder={tr({ fr: "Rechercher un terme…", en: "Search a term…" }, lang)}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-shadow"
+            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg ps-10 pe-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-shadow"
           />
         </div>
       </div>
@@ -8330,45 +8589,45 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       {noResults ? (
         <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
           <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-500 text-sm">{lang === 'fr' ? "Aucun terme ne correspond à votre recherche." : "No term matches your search."}</p>
+          <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucun terme ne correspond à votre recherche.", en: "No term matches your search." }, lang)}</Prose>
         </div>
       ) : (
         filteredCategories.map((cat, cIdx) => (
           <div key={cIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
             <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
-              <cat.icon className="w-5 h-5 mr-2.5 text-teal-700" />
-              {cat.category[lang]}
-              <span className="ml-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{cat.terms.length}</span>
+              <cat.icon className="w-5 h-5 me-2.5 text-teal-700" />
+              {tr(cat.category, lang)}
+              <span className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{cat.terms.length}</span>
             </h3>
             <div className="space-y-4">
               {cat.terms.map((t, tIdx) => (
                 <div key={tIdx} className="p-4 border border-slate-200 bg-slate-50">
-                  <h4 className="font-serif font-bold text-slate-900 text-[15px] mb-2">{lang === 'fr' ? t.term : t.en_term}</h4>
-                  <p className="text-xs text-slate-600 leading-relaxed text-justify">{lang === 'fr' ? t.fr : t.en}</p>
+                  <h4 className="font-serif font-bold text-slate-900 text-[15px] mb-2">{tr({ fr: t.term, en: t.en_term }, lang)}</h4>
+                  <Prose className="text-xs text-slate-600 leading-relaxed text-justify" lang={lang}>{tr({ fr: t.fr, en: t.en }, lang)}</Prose>
 
                   {/* Ce que le choix du mot produit : la definition n'est pas descriptive,
                       elle ouvre ou ferme des droits. */}
                   {t.stakes && (
-                    <div className="mt-3 pl-3 py-1" style={{ borderLeft: '2px solid var(--accent)' }}>
+                    <div className="mt-3 ps-3 py-1" style={{ borderLeft: '2px solid var(--accent)' }}>
                       <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
-                        {lang === 'fr' ? "Ce que la définition change" : "What the definition changes"}
+                        {tr({ fr: "Ce que la définition change", en: "What the definition changes" }, lang)}
                       </h4>
-                      <p className="text-xs text-slate-600 leading-relaxed">{t.stakes[lang]}</p>
+                      <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(t.stakes, lang)}</Prose>
                     </div>
                   )}
 
                   {t.source && (
                     <div className="mt-3 pt-2.5" style={{ borderTop: '1px solid var(--rule)' }}>
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mr-1.5">
-                        {lang === 'fr' ? "Source" : "Source"}
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1.5">
+                        {tr({ fr: "Source", en: "Source" }, lang)}
                       </span>
                       {t.source.url ? (
                         <a href={t.source.url} target="_blank" rel="noopener noreferrer"
                            className="text-[11px] hover:underline inline-flex items-center gap-1" style={{ color: 'var(--accent-2)' }}>
-                          {t.source[lang]} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                          {tr(t.source, lang)} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
                         </a>
                       ) : (
-                        <span className="text-[11px] text-slate-500">{t.source[lang]}</span>
+                        <span className="text-[11px] text-slate-500">{tr(t.source, lang)}</span>
                       )}
                     </div>
                   )}
@@ -8470,10 +8729,10 @@ const TabMethodology = ({ text, lang, children }) => (
 
     <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
       {[
-        { v: indicatorThemes.length, l: lang === 'fr' ? "Axes thématiques" : "Thematic axes" },
-        { v: indicatorThemes.reduce((sum, th) => sum + th.items.length, 0), l: lang === 'fr' ? "Indicateurs originaux" : "Original indicators" },
-        { v: Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length, l: lang === 'fr' ? "Sources primaires" : "Primary sources" },
-        { v: Object.values(countryData).flat().length, l: lang === 'fr' ? "Pays couverts (UA)" : "Countries covered (AU)" },
+        { v: indicatorThemes.length, l: tr({ fr: "Axes thématiques", en: "Thematic axes" }, lang)},
+        { v: indicatorThemes.reduce((sum, th) => sum + th.items.length, 0), l: tr({ fr: "Indicateurs originaux", en: "Original indicators" }, lang)},
+        { v: Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length, l: tr({ fr: "Sources primaires", en: "Primary sources" }, lang)},
+        { v: Object.values(countryData).flat().length, l: tr({ fr: "Pays couverts (UA)", en: "Countries covered (AU)" }, lang)},
       ].map((k, i) => (
         <div key={i} className="px-5 py-6">
           <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{k.v}</div>
@@ -8485,12 +8744,10 @@ const TabMethodology = ({ text, lang, children }) => (
     {/* Chaîne de traitement */}
     <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
       <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
-        {lang === 'fr' ? "De la source à la page" : "From source to page"}
+        {tr({ fr: "De la source à la page", en: "From source to page" }, lang)}
       </h2>
       <p className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8">
-        {lang === 'fr'
-          ? "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur."
-          : "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator."}
+        {tr({ fr: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur.", en: "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator." }, lang)}
       </p>
       <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {methodPipeline.map((step, i) => {
@@ -8500,8 +8757,8 @@ const TabMethodology = ({ text, lang, children }) => (
               <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white border border-slate-200 text-teal-700 mb-3 group-hover:border-teal-300 transition-colors">
                 <Icon className="w-4 h-4" />
               </span>
-              <h3 className="text-xs font-bold text-slate-900 mb-1.5 leading-snug">{step.title[lang]}</h3>
-              <p className="text-[11px] text-slate-600 leading-relaxed">{step.body[lang]}</p>
+              <h3 className="text-xs font-bold text-slate-900 mb-1.5 leading-snug">{tr(step.title, lang)}</h3>
+              <Prose className="text-[11px] text-slate-600 leading-relaxed" lang={lang}>{tr(step.body, lang)}</Prose>
             </li>
           );
         })}
@@ -8511,21 +8768,19 @@ const TabMethodology = ({ text, lang, children }) => (
     {/* Conventions déclarées */}
     <Reveal delay={40} className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
       <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
-        {lang === 'fr' ? "Conventions déclarées" : "Declared conventions"}
+        {tr({ fr: "Conventions déclarées", en: "Declared conventions" }, lang)}
       </h2>
       <p className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8">
-        {lang === 'fr'
-          ? `Les ${methodConventions.length} choix structurants ci-dessous conditionnent la lecture de l'ensemble des chiffres présentés sur la plateforme. Ils sont explicités pour être discutables — et reproductibles.`
-          : `The ${methodConventions.length} structuring choices below condition how every figure on the platform should be read. They are spelled out so they can be contested — and reproduced.`}
+        {tr({ fr: `Les ${methodConventions.length} choix structurants ci-dessous conditionnent la lecture de l'ensemble des chiffres présentés sur la plateforme. Ils sont explicités pour être discutables — et reproductibles.`, en: `The ${methodConventions.length} structuring choices below condition how every figure on the platform should be read. They are spelled out so they can be contested — and reproduced.` }, lang)}
       </p>
       <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         {methodConventions.map((c, i) => (
-          <div key={i} className="border-l-2 border-teal-200 pl-4">
+          <div key={i} className="border-s-2 border-teal-200 ps-4">
             <dt className="flex flex-wrap items-baseline gap-2 mb-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{c.label[lang]}</span>
-              <span className="text-sm font-serif font-bold text-teal-800">{c.value[lang]}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{tr(c.label, lang)}</span>
+              <span className="text-sm font-serif font-bold text-teal-800">{tr(c.value, lang)}</span>
             </dt>
-            <dd className="text-xs text-slate-600 leading-relaxed text-justify">{c.detail[lang]}</dd>
+            <dd className="text-xs text-slate-600 leading-relaxed text-justify">{tr(c.detail, lang)}</dd>
           </div>
         ))}
       </dl>
@@ -8536,19 +8791,17 @@ const TabMethodology = ({ text, lang, children }) => (
       <div className="flex items-center gap-3 mb-2">
         <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
         <h2 className="text-xl md:text-2xl font-serif font-bold">
-          {lang === 'fr' ? "Ce que ces données ne disent pas" : "What this data does not say"}
+          {tr({ fr: "Ce que ces données ne disent pas", en: "What this data does not say" }, lang)}
         </h2>
       </div>
       <p className="text-sm text-slate-300 leading-relaxed max-w-3xl mb-8">
-        {lang === 'fr'
-          ? "Énoncer les limites d'un jeu de données fait partie du jeu de données. Les cinq réserves suivantes s'appliquent à l'ensemble de la plateforme."
-          : "Stating a dataset's limits is part of the dataset. The following five caveats apply across the whole platform."}
+        {tr({ fr: "Énoncer les limites d'un jeu de données fait partie du jeu de données. Les cinq réserves suivantes s'appliquent à l'ensemble de la plateforme.", en: "Stating a dataset's limits is part of the dataset. The following five caveats apply across the whole platform." }, lang)}
       </p>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
         {methodLimits.map((l, i) => (
           <li key={i} className="flex items-start gap-3">
             <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
-            <p className="text-xs text-slate-300 leading-relaxed text-justify">{l[lang]}</p>
+            <Prose className="text-xs text-slate-300 leading-relaxed text-justify" lang={lang}>{tr(l, lang)}</Prose>
           </li>
         ))}
       </ul>
@@ -8556,8 +8809,8 @@ const TabMethodology = ({ text, lang, children }) => (
 
 
     <section className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
-      <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 mr-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
-      <p className="text-slate-700 text-sm leading-relaxed mb-2">{text.method.summary}</p>
+      <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 me-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
+      <Prose className="text-slate-700 text-sm leading-relaxed mb-2" lang={lang}>{text.method.summary}</Prose>
       <div className="mt-6 pt-6 border-t border-slate-100">
         <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           {['m1', 'm2', 'm3', 'm4', 'm5', 'm6'].filter(k => text.method[k]).map((k, i) => {
@@ -8588,35 +8841,35 @@ const TabMethodology = ({ text, lang, children }) => (
         <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <a href="https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
           </a>
           <a href="https://www.un.org/development/desa/pd/data/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
           </a>
           <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <Users className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <Users className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s3}</span>
           </a>
           <a href="https://www.internal-displacement.org/database/displacement-data/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <MapPin className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <MapPin className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s4}</span>
           </a>
           <a href="https://www.iom.int/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <Globe className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <Globe className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s5}</span>
           </a>
           <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <Scale className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <Scale className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s6}</span>
           </a>
           <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <Landmark className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <Landmark className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s7}</span>
           </a>
           <a href="https://data.worldbank.org/" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
-            <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-blue-600 mr-3 shrink-0" />
+            <TrendingUp className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s8}</span>
           </a>
         </div>
@@ -8624,14 +8877,12 @@ const TabMethodology = ({ text, lang, children }) => (
 
       <div className="mt-8 pt-6 border-t border-slate-100">
         <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
-          <MapIcon className="w-3.5 h-3.5 mr-1.5" />
-          {lang === 'fr' ? "Régionalisation : Union africaine (et non M49/ONU)" : "Regionalization: African Union (not UN M49)"}
+          <MapIcon className="w-3.5 h-3.5 me-1.5" />
+          {tr({ fr: "Régionalisation : Union africaine (et non M49/ONU)", en: "Regionalization: African Union (not UN M49)" }, lang)}
         </h4>
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           <p className="text-xs text-slate-700 leading-relaxed">
-            {lang === 'fr'
-              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. Ce n'est pas celui d'UN DESA, qui publie ses tableaux de stocks selon la nomenclature M49 des Nations unies. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
-              : "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section."}
+            {tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. Ce n'est pas celui d'UN DESA, qui publie ses tableaux de stocks selon la nomenclature M49 des Nations unies. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}
           </p>
         </div>
       </div>
@@ -8787,34 +9038,34 @@ const TabAbout = ({ text, lang, children }) => {
         </h2>
         <span className="block h-px w-24 mb-7" style={{ backgroundColor: 'var(--accent)' }} />
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-3xl text-justify">
-          <p className="lede">{text.about.intro_p1}</p>
-          <p>{text.about.intro_p2}</p>
-          <p>{text.about.intro_p3}</p>
+          <Prose className="lede" lang={lang}>{text.about.intro_p1}</Prose>
+          <Prose lang={lang}>{text.about.intro_p2}</Prose>
+          <Prose lang={lang}>{text.about.intro_p3}</Prose>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse mb-5">
             <div className="p-2 bg-blue-50 rounded-sm"><BookOpen className="w-5 h-5 text-blue-700" /></div>
             <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.research_title}</h2>
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
-            <p>{text.about.research_p1}</p>
-            <p>{text.about.research_p2}</p>
-            <p>{text.about.research_p3}</p>
-            <p className="font-medium text-slate-800">{text.about.research_p4}</p>
+            <Prose lang={lang}>{text.about.research_p1}</Prose>
+            <Prose lang={lang}>{text.about.research_p2}</Prose>
+            <Prose lang={lang}>{text.about.research_p3}</Prose>
+            <Prose className="font-medium text-slate-800" lang={lang}>{text.about.research_p4}</Prose>
           </div>
         </div>
 
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse mb-5">
             <div className="p-2 bg-emerald-50 rounded-sm"><Database className="w-5 h-5 text-emerald-700" /></div>
             <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.data_title}</h2>
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
-            <p>{text.about.data_p1}</p>
+            <Prose lang={lang}>{text.about.data_p1}</Prose>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
               {text.about.data_list.map((item, idx) => {
@@ -8822,7 +9073,7 @@ const TabAbout = ({ text, lang, children }) => {
                 // textuel de InstitutionLogo doublonnerait le nom affiché juste à côté.
                 const logo = item.logo ? institutionLogos.find(i => i.key === item.logo) : null;
                 const logoBox = logo && logo.src && (
-                  <span className="w-8 h-8 rounded-sm bg-white border border-slate-200 flex items-center justify-center p-1 mr-2.5 shrink-0">
+                  <span className="w-8 h-8 rounded-sm bg-white border border-slate-200 flex items-center justify-center p-1 me-2.5 shrink-0">
                     <InstitutionLogo name={logo.name} src={logo.src} className="max-h-5 max-w-full" />
                   </span>
                 );
@@ -8834,77 +9085,75 @@ const TabAbout = ({ text, lang, children }) => {
                     rel="noopener noreferrer"
                     className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 transition-colors group shadow-sm"
                   >
-                    {logoBox || <ExternalLink className="w-4 h-4 text-emerald-600 mr-2.5 shrink-0 group-hover:text-emerald-700" />}
+                    {logoBox || <ExternalLink className="w-4 h-4 text-emerald-600 me-2.5 shrink-0 group-hover:text-emerald-700" />}
                     <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-900">{item.name}</span>
                   </a>
                 ) : (
                   <div key={idx} className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-100">
-                    {logoBox || <CheckCircle2 className="w-4 h-4 text-slate-400 mr-2.5 shrink-0" />}
+                    {logoBox || <CheckCircle2 className="w-4 h-4 text-slate-400 me-2.5 shrink-0" />}
                     <span className="text-xs font-semibold text-slate-600">{item.name}</span>
                   </div>
                 );
               })}
             </div>
             <p className="text-xs italic text-slate-400">
-              {lang === 'fr'
-                ? "Ces institutions sont citées comme sources de données publiques ouvertes ; leur présence ne constitue ni un partenariat ni un endossement du projet."
-                : "These institutions are cited as sources of open public data; their presence does not constitute a partnership or endorsement of the project."}
+              {tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes ; leur présence ne constitue ni un partenariat ni un endossement du projet.", en: "These institutions are cited as sources of open public data; their presence does not constitute a partnership or endorsement of the project." }, lang)}
             </p>
 
-            <p>{text.about.data_p2}</p>
-            <p className="italic">{text.about.data_p3}</p>
+            <Prose lang={lang}>{text.about.data_p2}</Prose>
+            <Prose className="italic" lang={lang}>{text.about.data_p3}</Prose>
           </div>
         </div>
 
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse mb-5">
             <div className="p-2 bg-amber-50 rounded-sm"><Globe className="w-5 h-5 text-amber-700" /></div>
             <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.south_title}</h2>
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
-            <p>{text.about.south_p1}</p>
+            <Prose lang={lang}>{text.about.south_p1}</Prose>
             <ul className="space-y-2 my-4 bg-slate-50 p-4 rounded-md border border-slate-100">
               {text.about.south_list.map((item, idx) => (
                 <li key={idx} className="flex items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-3"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 me-3"></span>
                   <span className="text-sm font-medium text-slate-700">{item}</span>
                 </li>
               ))}
             </ul>
-            <p>{text.about.south_p2}</p>
+            <Prose lang={lang}>{text.about.south_p2}</Prose>
           </div>
         </div>
 
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-          <div className="flex items-center space-x-3 mb-5">
+          <div className="flex items-center space-x-3 rtl:space-x-reverse mb-5">
             <div className="p-2 bg-purple-50 rounded-sm"><TrendingUp className="w-5 h-5 text-purple-700" /></div>
             <h2 className="text-xl font-serif font-bold text-slate-900">{text.about.evolution_title}</h2>
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
-            <p>{text.about.evolution_p1}</p>
+            <Prose lang={lang}>{text.about.evolution_p1}</Prose>
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mt-5 mb-2">
-              {lang === 'fr' ? "Déjà disponible" : "Already available"}
+              {tr({ fr: "Déjà disponible", en: "Already available" }, lang)}
             </h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
               {text.about.evolution_done.map((item, idx) => (
                 <li key={idx} className="flex items-start">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mr-2 shrink-0 mt-1" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 me-2 shrink-0 mt-1" />
                   <span className="text-xs">{item}</span>
                 </li>
               ))}
             </ul>
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-2">
-              {lang === 'fr' ? "Prochaines étapes" : "Next steps"}
+              {tr({ fr: "Prochaines étapes", en: "Next steps" }, lang)}
             </h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
               {text.about.evolution_next.map((item, idx) => (
                 <li key={idx} className="flex items-start">
-                  <ArrowRight className="w-3.5 h-3.5 text-purple-400 mr-2 shrink-0 mt-1" />
+                  <ArrowRight className="w-3.5 h-3.5 text-purple-400 me-2 shrink-0 mt-1" />
                   <span className="text-xs text-slate-500">{item}</span>
                 </li>
               ))}
             </ul>
-            <p className="font-bold text-slate-800">{text.about.evolution_p2}</p>
+            <Prose className="font-bold text-slate-800" lang={lang}>{text.about.evolution_p2}</Prose>
           </div>
         </div>
       </div>
@@ -8913,30 +9162,30 @@ const TabAbout = ({ text, lang, children }) => {
         <div className="flex-1 space-y-4">
           <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.founder_title}</h2>
           <div className="text-sm text-slate-600 leading-relaxed space-y-3 text-justify">
-            <p>{text.about.founder_p1}</p>
-            <p>{text.about.founder_p2}</p>
-            <p>{text.about.founder_p3}</p>
-            <p className="text-xs italic text-slate-500 border-l-2 border-slate-300 pl-3 mt-4">{text.about.founder_p4}</p>
+            <Prose lang={lang}>{text.about.founder_p1}</Prose>
+            <Prose lang={lang}>{text.about.founder_p2}</Prose>
+            <Prose lang={lang}>{text.about.founder_p3}</Prose>
+            <Prose className="text-xs italic text-slate-500 border-s-2 border-slate-300 ps-3 mt-4" lang={lang}>{text.about.founder_p4}</Prose>
           </div>
         </div>
 
         <div className="flex-1 flex flex-col justify-between space-y-6">
           <div>
             <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.collab_title}</h2>
-            <p className="text-sm text-slate-600 leading-relaxed mb-4">{text.about.collab_p1}</p>
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{text.about.contact_p}</p>
+            <Prose className="text-sm text-slate-600 leading-relaxed mb-4" lang={lang}>{text.about.collab_p1}</Prose>
+            <Prose className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3" lang={lang}>{text.about.contact_p}</Prose>
             
             <div className="flex flex-col gap-3">
               <a href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
-                 className="inline-flex items-center space-x-3 bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 hover:text-blue-700 hover:border-blue-200 px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
+                 className="inline-flex items-center space-x-3 rtl:space-x-reverse bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 hover:text-blue-700 hover:border-blue-200 px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm font-bold">benmokhtary1@gmail.com</span>
               </a>
               <a href="https://www.linkedin.com/in/yassine-b-m" target="_blank" rel="noopener noreferrer" 
-                 className="inline-flex items-center space-x-3 bg-[#0a66c2] hover:bg-[#084e96] text-white px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
+                 className="inline-flex items-center space-x-3 rtl:space-x-reverse bg-[#0a66c2] hover:bg-[#084e96] text-white px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
                 <LinkedInIcon className="w-4 h-4" />
                 <span className="text-sm font-bold">Yassine Ben Mokhtar</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-70 ml-1" />
+                <ExternalLink className="w-3.5 h-3.5 opacity-70 ms-1" />
               </a>
             </div>
           </div>
@@ -8949,15 +9198,13 @@ const TabAbout = ({ text, lang, children }) => {
 
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
         <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
-          <Sparkles className="w-4 h-4 mr-2 text-amber-500" /> {lang === 'fr' ? "Récemment enrichi" : "Recently Enriched"}
+          <Sparkles className="w-4 h-4 me-2 text-amber-500" /> {tr({ fr: "Récemment enrichi", en: "Recently Enriched" }, lang)}
         </h3>
         <div className="border border-dashed border-slate-300 rounded-lg py-10 px-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
           <Clock className="w-5 h-5 text-slate-300 mb-3" />
-          <p className="text-sm font-serif font-bold text-slate-500">{lang === 'fr' ? "À venir" : "Coming soon"}</p>
+          <Prose className="text-sm font-serif font-bold text-slate-500" lang={lang}>{tr({ fr: "À venir", en: "Coming soon" }, lang)}</Prose>
           <p className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed">
-            {lang === 'fr'
-              ? "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication."
-              : "This space will flag the platform's recent additions as they are published."}
+            {tr({ fr: "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication.", en: "This space will flag the platform's recent additions as they are published." }, lang)}
           </p>
         </div>
       </div>
@@ -8970,10 +9217,10 @@ const TabAbout = ({ text, lang, children }) => {
               <FileText className="w-4 h-4" />
             </span>
             <div className="flex-1 min-w-0">
-              <h2 className="text-lg font-serif font-bold text-slate-900">{lang === 'fr' ? "Publications" : "Publications"}</h2>
+              <h2 className="text-lg font-serif font-bold text-slate-900">{tr({ fr: "Publications", en: "Publications" }, lang)}</h2>
               <a href="https://shs.cairn.info/publications-de-yassine-ben-mokhtar--773358?lang=fr" target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline mt-0.5">
-                {lang === 'fr' ? "Profil Cairn.info" : "Cairn.info profile"} <ExternalLink className="w-2.5 h-2.5" />
+                {tr({ fr: "Profil Cairn.info", en: "Cairn.info profile" }, lang)} <ExternalLink className="w-2.5 h-2.5" />
               </a>
             </div>
             <span className="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1 tabular-nums shrink-0">
@@ -8989,7 +9236,7 @@ const TabAbout = ({ text, lang, children }) => {
                 <div className="min-w-0">
                   <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{pub.kind[lang]}</span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{tr(pub.kind, lang)}</span>
                     {pub.url && (
                       <a href={pub.url} target="_blank" rel="noopener noreferrer"
                          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline">
@@ -9009,7 +9256,7 @@ const TabAbout = ({ text, lang, children }) => {
             <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rose-600 text-white shrink-0">
               <Mic className="w-4 h-4" />
             </span>
-            <h2 className="text-lg font-serif font-bold text-slate-900 flex-1">{lang === 'fr' ? "Interventions médiatiques" : "Media Appearances"}</h2>
+            <h2 className="text-lg font-serif font-bold text-slate-900 flex-1">{tr({ fr: "Interventions médiatiques", en: "Media Appearances" }, lang)}</h2>
             <span className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-full px-2.5 py-1 tabular-nums">
               {authorMedia.length}
             </span>
@@ -9021,23 +9268,23 @@ const TabAbout = ({ text, lang, children }) => {
                   <span className="font-serif font-bold text-slate-800 text-sm tabular-nums">{yr}</span>
                   <span className="h-px flex-1 bg-slate-100"></span>
                 </div>
-                <ul className="relative pl-4 border-l border-slate-200 space-y-3">
+                <ul className="relative ps-4 border-s border-slate-200 space-y-3">
                   {authorMedia.filter(m => m.year === yr).map((m, idx) => {
                     const st = mediaKindStyle[m.kind] || mediaKindStyle.press;
                     return (
                       <li key={idx} className="relative group">
-                        <span className={`absolute -left-[1.3rem] top-1.5 w-2 h-2 rounded-full ring-2 ring-white transition-transform group-hover:scale-150 ${st.dot}`}></span>
+                        <span className={`absolute -start-[1.3rem] top-1.5 w-2 h-2 rounded-full ring-2 ring-white transition-transform group-hover:scale-150 ${st.dot}`}></span>
                         <div className="flex flex-wrap items-center gap-2 mb-0.5">
                           <span className={`text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-sm ${st.chip}`}>{m.outlet}</span>
-                          <span className="text-[10px] font-bold text-slate-400 tabular-nums">{m.date[lang]}</span>
+                          <span className="text-[10px] font-bold text-slate-400 tabular-nums">{tr(m.date, lang)}</span>
                         </div>
                         {m.url ? (
                           <a href={m.url} target="_blank" rel="noopener noreferrer"
                              className="text-xs text-slate-700 leading-relaxed italic hover:text-rose-800 hover:underline inline-flex items-start gap-1">
-                            {m.title[lang]} <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />
+                            {tr(m.title, lang)} <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />
                           </a>
                         ) : (
-                          <p className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors">{m.title[lang]}</p>
+                          <Prose className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors" lang={lang}>{tr(m.title, lang)}</Prose>
                         )}
                       </li>
                     );
@@ -9051,21 +9298,21 @@ const TabAbout = ({ text, lang, children }) => {
 
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm group hover:border-blue-300 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 rtl:space-x-reverse">
             <Quote className="w-5 h-5 text-blue-500" />
             <h4 className="text-sm font-bold uppercase tracking-widest text-slate-700">{text.about.citation_title}</h4>
           </div>
           
           <button 
             onClick={handleCopyCitation}
-            className={`inline-flex items-center justify-center space-x-1.5 px-4 py-2 rounded-sm text-xs font-bold transition-all border shadow-sm w-full sm:w-auto
+            className={`inline-flex items-center justify-center space-x-1.5 rtl:space-x-reverse px-4 py-2 rounded-sm text-xs font-bold transition-all border shadow-sm w-full sm:w-auto
             ${isCopied ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'}`}
           >
             {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span>{isCopied ? (lang === 'fr' ? 'Copié !' : 'Copied!') : (lang === 'fr' ? 'Copier' : 'Copy')}</span>
+            <span>{isCopied ? (tr({ fr: 'Copié !', en: 'Copied!' }, lang)) : (tr({ fr: 'Copier', en: 'Copy' }, lang))}</span>
           </button>
         </div>
-        <p className="text-sm text-slate-600 font-serif italic border-l-2 border-blue-500 pl-4 leading-relaxed">
+        <p className="text-sm text-slate-600 font-serif italic border-s-2 border-blue-500 ps-4 leading-relaxed">
           {text.about.citation_text}
         </p>
       </div>
@@ -9120,7 +9367,7 @@ const lireURL = () => {
 };
 
 const ecrireURL = ({ lang, tab, detail }, remplacer = false) => {
-  const seg = ROUTES[tab]?.[lang] || ROUTES.home[lang];
+  const seg = tr(ROUTES[tab], lang) || tr(ROUTES.home, lang);
   const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
   if (chemin === window.location.pathname) return;
   window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
@@ -9147,6 +9394,30 @@ export default function App() {
 
   useEffect(() => { setIsLoaded(true); }, []);
 
+  // Changer de section remplace tout le contenu d'un coup : le lecteur perd le
+  // fil de ce qui vient d'arriver. L'API de transition de vue enchaine les deux
+  // etats en un fondu court — le navigateur s'en charge, sans bibliotheque et
+  // sans rendu supplementaire. La ou elle manque, la bascule reste immediate.
+  const allerVers = useCallback((tab) => {
+    const appliquer = () => setActiveTab(tab);
+    if (typeof document === 'undefined' || !document.startViewTransition || prefersReducedMotion()) {
+      appliquer();
+      return;
+    }
+    // flushSync est indispensable : sans lui React repousse le rendu apres la
+    // capture d'ecran de depart, et la transition compare l'ancien etat a
+    // lui-meme — rien ne bouge.
+    const vt = document.startViewTransition(() => flushSync(appliquer));
+    // Un clic qui en interrompt un autre annule la transition en cours, et
+    // celle-ci rejette ses promesses. Sans ce filet, chaque navigation rapide
+    // laisse une erreur non interceptee dans la console : la bascule a bien
+    // lieu, mais le journal se remplit de « Transition was aborted ».
+    const tairel = () => {};
+    vt.ready?.catch(tairel);
+    vt.finished?.catch(tairel);
+    vt.updateCallbackDone?.catch(tairel);
+  }, []);
+
   // --- Adressage : l'etat ecrit l'URL, l'URL relit l'etat -------------------
   // Le pays selectionne fait partie de l'adresse : c'est lui qu'on partage ou
   // qu'on cite. Les autres reglages (vue carte/liste, indicateur) restent hors
@@ -9157,7 +9428,7 @@ export default function App() {
   const paysSlug = useMemo(() => {
     if (activeTab !== 'explorer' || activeSubTab === 'perspective') return null;
     const c = Object.values(countryData).flat().find(x => x.id === activeSubTab);
-    return c ? slugPays(c.name?.[lang] || c.name?.fr || c.name) : null;
+    return c ? slugPays(tr(c.name, lang) || c.name?.fr || c.name) : null;
   }, [activeTab, activeSubTab, lang]);
 
   const paysParSlug = (s) => Object.values(countryData).flat().find(x =>
@@ -9205,7 +9476,9 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const text = t[lang];
+  // Un repli a chaque niveau : une langue partiellement traduite affiche du
+  // francais la ou il manque, au lieu de faire tomber la page.
+  const text = useMemo(() => catalogue(t, lang), [lang]);
 
   const currentCountries = useMemo(() => {
     if (activeSubRegion === 'all') return Object.values(countryData).flat();
@@ -9214,9 +9487,9 @@ export default function App() {
 
   const filteredCountries = useMemo(() => {
     return currentCountries.filter(c => {
-      const cName = c.name?.[lang] || c.name?.fr || 'Unknown';
+      const cName = tr(c.name, lang) || c.name?.fr || 'Unknown';
       return cName.toLowerCase().includes(searchTerm.toLowerCase());
-    }).sort((a, b) => (a.name[lang] || a.name.fr).localeCompare(b.name[lang] || b.name.fr));
+    }).sort((a, b) => (tr(a.name, lang) || a.name.fr).localeCompare(tr(b.name, lang) || b.name.fr));
   }, [currentCountries, searchTerm, lang]);
 
   const regionAggregate = useMemo(() => computeRegionAggregate(currentCountries), [currentCountries]);
@@ -9226,12 +9499,12 @@ export default function App() {
     
     if (country && activeSubTab !== 'perspective') {
       return {
-        name: country.name?.[lang] || country.name?.fr || 'Unknown', flag: country.flag, iso2: country.iso2, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
+        name: tr(country.name, lang) || country.name?.fr || 'Unknown', flag: country.flag, iso2: country.iso2, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
         retention: country.retention ?? 50,
         remittances: country.remittances ?? null, remittances_year: country.remittances_year ?? null,
         labour_participation: country.labour_participation ?? null, labour_participation_year: country.labour_participation_year ?? null,
         aid: country.aid ?? 0, history: country.history || [],
-        evo_desc: country.evo_desc?.[lang] || country.evo_desc?.fr || "", origDest: country.origDest?.[lang] || country.origDest?.fr || "", trigger: country.trigger?.[lang] || country.trigger?.fr || "", response: country.response?.[lang] || country.response?.fr || "", impact: country.impact?.[lang] || country.impact?.fr || "",
+        evo_desc: tr(country.evo_desc, lang) || country.evo_desc?.fr || "", origDest: tr(country.origDest, lang) || country.origDest?.fr || "", trigger: tr(country.trigger, lang) || country.trigger?.fr || "", response: tr(country.response, lang) || country.response?.fr || "", impact: tr(country.impact, lang) || country.impact?.fr || "",
         idp_conflict: country.idp_conflict || 0, idp_disaster: country.idp_disaster || 0, refugees_hosted: country.refugees_hosted || 0, avoi: country.avoi || null,
         normlex: country.normlex || null,
         au_treaties: country.au_treaties || null,
@@ -9244,7 +9517,7 @@ export default function App() {
     const agg = regionAggregate;
 
     return {
-      name: typeof fallback.name === 'object' ? (fallback.name?.[lang] || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
+      name: typeof fallback.name === 'object' ? (tr(fallback.name, lang) || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
       flag: null,
       iso2: null,
       flagIcon: fallback.flagIcon,
@@ -9259,11 +9532,11 @@ export default function App() {
       labour_participation_year: null,
       aid: agg.aid ?? (fallback.aid || 0),
       history: fallback.history, distribution: fallback.distribution || null,
-      evo_desc: typeof fallback.evo_desc === 'object' ? (fallback.evo_desc?.[lang] || fallback.evo_desc?.fr || "") : (fallback.evo_desc || ""),
-      origDest: typeof fallback.origDest === 'object' ? (fallback.origDest?.[lang] || fallback.origDest?.fr || "") : (fallback.origDest || ""),
-      trigger: typeof fallback.trigger === 'object' ? (fallback.trigger?.[lang] || fallback.trigger?.fr || "") : (fallback.trigger || ""),
-      response: typeof fallback.response === 'object' ? (fallback.response?.[lang] || fallback.response?.fr || "") : (fallback.response || ""),
-      impact: typeof fallback.impact === 'object' ? (fallback.impact?.[lang] || fallback.impact?.fr || "") : (fallback.impact || ""),
+      evo_desc: typeof fallback.evo_desc === 'object' ? (tr(fallback.evo_desc, lang) || fallback.evo_desc?.fr || "") : (fallback.evo_desc || ""),
+      origDest: typeof fallback.origDest === 'object' ? (tr(fallback.origDest, lang) || fallback.origDest?.fr || "") : (fallback.origDest || ""),
+      trigger: typeof fallback.trigger === 'object' ? (tr(fallback.trigger, lang) || fallback.trigger?.fr || "") : (fallback.trigger || ""),
+      response: typeof fallback.response === 'object' ? (tr(fallback.response, lang) || fallback.response?.fr || "") : (fallback.response || ""),
+      impact: typeof fallback.impact === 'object' ? (tr(fallback.impact, lang) || fallback.impact?.fr || "") : (fallback.impact || ""),
       idp_conflict: 0, idp_disaster: 0, refugees_hosted: 0, avoi: null, normlex: null, au_treaties: null,
       isRegion: true,
       countryCount: agg.countryCount
@@ -9287,21 +9560,17 @@ export default function App() {
       resources: { fr: 'Ressources', en: 'Resources' },
       about: { fr: 'Méthodologie & à propos', en: 'Methodology & About' },
     };
-    const nomSection = NOMS[activeTab]?.[lang];
+    const nomSection = tr(NOMS[activeTab], lang);
     const partie = activeTab === 'explorer' && activeSubTab !== 'perspective'
       ? display.name
       : nomSection;
     document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
-    document.documentElement.lang = lang;
+    appliquerLangue(lang);
 
     const desc = activeTab === 'explorer' && activeSubTab !== 'perspective'
-      ? (lang === 'fr'
-          ? `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`
-          : `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.`)
+      ? (tr({ fr: `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`, en: `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.` }, lang))
       : (text.headers[activeTab]?.plain
-         || (lang === 'fr'
-             ? "Données vérifiées et en accès libre sur les mobilités africaines."
-             : 'Verified, openly accessible data on African mobility.'));
+         || (tr({ fr: "Données vérifiées et en accès libre sur les mobilités africaines.", en: 'Verified, openly accessible data on African mobility.' }, lang)));
     let m = document.querySelector('meta[name="description"]');
     if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
     m.content = String(desc).slice(0, 300);
@@ -9410,7 +9679,7 @@ export default function App() {
       {/* Lien d'evitement : au clavier, la premiere tabulation saute les neuf
           onglets de navigation et mene directement au contenu. */}
       <a href="#contenu" className="skip-link">
-        {lang === 'fr' ? 'Aller au contenu' : 'Skip to content'}
+        {tr({ fr: 'Aller au contenu', en: 'Skip to content' }, lang)}
       </a>
       <style type="text/css">
         {`
@@ -9476,10 +9745,10 @@ export default function App() {
         }
       `}</style>
 
-      <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden">
+      <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden nav-chrome">
         <div className="border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3 rtl:space-x-reverse">
               <BrandMark className="h-8 w-8 shrink-0" tone="dark" />
               <span className="text-base font-serif font-bold tracking-tight leading-none">
                 <span style={{ color: '#FFFDF9' }}>{text.title}</span>{' '}
@@ -9493,14 +9762,18 @@ export default function App() {
                 lang={lang}
                 aller={(r) => {
                   if (r.lien) { window.open(r.lien, '_blank', 'noopener'); return; }
-                  setActiveTab(r.aller.tab);
+                  allerVers(r.aller.tab);
                   if (r.aller.tab === 'explorer' && r.aller.id) setActiveSubTab(r.aller.id);
                 }}
               />
               <PrefsLecture lang={lang} />
-              <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')}
-                      aria-label={lang === 'fr' ? 'Switch to English' : 'Passer en français'}
-                      className="flex items-center space-x-1 text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
+              {/* Le sélecteur parcourt ACTIVES : le jour où l'arabe ou le
+                  kiswahili y entre, il apparaît ici sans qu'on touche à ce
+                  bouton. Avec deux langues, c'est la bascule d'avant. */}
+              <button onClick={() => setLang(ACTIVES[(ACTIVES.indexOf(lang) + 1) % ACTIVES.length] || LANGUE_DEFAUT)}
+                      aria-label={`${tr({ fr: 'Langue', en: 'Language' }, lang)} : ${tr(LANGUES, lang)?.endonyme || lang} — ${tr({ fr: 'changer', en: 'change' }, lang)}`}
+                      title={ACTIVES.map(c => LANGUES[c]?.endonyme || c).join(' · ')}
+                      className="flex items-center space-x-1 rtl:space-x-reverse text-[10px] font-bold bg-slate-800 px-3 py-1.5 rounded-sm border border-slate-700 transition hover:bg-blue-900 hover:text-white hover:border-blue-700">
                 <Languages className="h-3 w-3" aria-hidden="true" /> <span>{lang.toUpperCase()}</span>
               </button>
             </div>
@@ -9508,20 +9781,20 @@ export default function App() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto custom-scrollbar">
-          <div className="flex space-x-1 py-2">
+          <div className="flex space-x-1 rtl:space-x-reverse py-2">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => allerVers(item.id)}
                   aria-current={isActive ? 'page' : undefined}
                   className="nav-tab flex items-center px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-t-2"
                   style={navTabStyle(isActive)}
                 >
-                  <Icon className="w-4 h-4 mr-2" style={{ color: isActive ? '#8FA0CE' : '#7A7167' }} />
-                  {item.label[lang]}
+                  <Icon className="w-4 h-4 me-2" style={{ color: isActive ? '#8FA0CE' : '#7A7167' }} />
+                  {tr(item.label, lang)}
                 </button>
               );
             })}
@@ -9534,7 +9807,7 @@ export default function App() {
           Aucun composant n'a besoin de connaitre la couleur de l'onglet. */}
       <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
         {activeTab === 'home' && (
-          <TabHome text={text} lang={lang} setActiveTab={setActiveTab} />
+          <TabHome text={text} lang={lang} setActiveTab={allerVers} />
         )}
         {activeTab === 'evidence' && (
           <TabEvidenceCheck text={text} lang={lang} exportEvidenceCSV={exportEvidenceCSV} />
@@ -9563,13 +9836,13 @@ export default function App() {
                     onClick={() => setActiveResourceTab('library')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'library' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <BookOpen className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Bibliothèque' : 'Library'}
+                    <BookOpen className="w-3.5 h-3.5" /> {tr({ fr: 'Bibliothèque', en: 'Library' }, lang)}
                   </button>
                   <button
                     onClick={() => setActiveResourceTab('glossary')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <Brain className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Glossaire' : 'Glossary'}
+                    <Brain className="w-3.5 h-3.5" /> {tr({ fr: 'Glossaire', en: 'Glossary' }, lang)}
                   </button>
                 </div>
               );
@@ -9595,13 +9868,13 @@ export default function App() {
                     onClick={() => setActiveAboutTab('methodology')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <Database className="w-3.5 h-3.5" /> {lang === 'fr' ? 'Méthodologie' : 'Methodology'}
+                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology' }, lang)}
                   </button>
                   <button
                     onClick={() => setActiveAboutTab('about')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'about' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <Info className="w-3.5 h-3.5" /> {lang === 'fr' ? 'À Propos' : 'About'}
+                    <Info className="w-3.5 h-3.5" /> {tr({ fr: 'À Propos', en: 'About' }, lang)}
                   </button>
                 </div>
               );
@@ -9611,7 +9884,7 @@ export default function App() {
             })()}
           </div>
         )}
-        <PrintCitationFooter lang={lang} sectionLabel={navigation.find(i => i.id === activeTab)?.label?.[lang]} />
+        <PrintCitationFooter lang={lang} sectionLabel={tr(navigation.find(i => i.id === activeTab)?.label, lang)} />
       </main>
 
       {/* Dossier PDF dédié : seul élément imprimé quand la fiche pays est ouverte. */}
@@ -9630,7 +9903,7 @@ export default function App() {
             className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
-              <div className="flex items-center space-x-5">
+              <div className="flex items-center space-x-5 rtl:space-x-reverse">
                 {display.flagIcon ? (
                   <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2.5 shadow-sm print:border-none ${display.flagColor || 'text-blue-700'}`}>
                     <display.flagIcon className="w-8 h-8 md:w-9 md:h-9" />
@@ -9640,7 +9913,7 @@ export default function App() {
                 )}
                 <div>
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight">{display.name}</h2>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm">{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</p>
+                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
                 </div>
               </div>
                 
@@ -9649,18 +9922,18 @@ export default function App() {
                 <button onClick={() => setModalView('geography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'geography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.geo}</button>
                 <button onClick={() => setModalView('economy')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'economy' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.econ}</button>
               </div>
-              <button onClick={() => setShowModal(false)} aria-label={lang === 'fr' ? 'Fermer le rapport' : 'Close the report'} className="absolute top-6 right-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
+              <button onClick={() => setShowModal(false)} aria-label={tr({ fr: 'Fermer le rapport', en: 'Close the report' }, lang)} className="absolute top-6 end-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
             <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
               <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Le Réel Poids Démographique" : "The Real Demographic Weight"}</h3>
-                  <p className="text-sm text-slate-600 mb-6 print:mb-3">{lang === 'fr' ? "La population migrante comparée à la population totale." : "Migrant population compared to total population."}</p>
+                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Le Réel Poids Démographique", en: "The Real Demographic Weight" }, lang)}</h3>
+                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "La population migrante comparée à la population totale.", en: "Migrant population compared to total population." }, lang)}</Prose>
                   <div className="relative pt-6 pb-3 print:pt-4">
                     <div className="flex items-baseline justify-between mb-2">
                       <span className="text-2xl font-serif font-bold text-blue-800 print:text-lg">{display.evolution}%</span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{lang === 'fr' ? "Population totale" : "Total population"}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tr({ fr: "Population totale", en: "Total population" }, lang)}</span>
                     </div>
                     <div className="h-10 w-full bg-slate-100 rounded-sm relative overflow-hidden flex items-center border border-slate-200 print:h-8 print:!bg-slate-100">
                       <div className="h-full bg-blue-700 transition-all duration-1000 print:!bg-blue-700" style={{width: `${Math.max(5, parseFloat(display.evolution))}%`}}></div>
@@ -9668,21 +9941,21 @@ export default function App() {
                   </div>
                   <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
                     <h4 className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">
-                      {display.isRegion ? text.modal.evo_title : (lang === 'fr' ? "Évolution du stock migratoire absolu (1990-2024)" : "Absolute migrant stock evolution (1990-2024)")}
+                      {display.isRegion ? text.modal.evo_title : (tr({ fr: "Évolution du stock migratoire absolu (1990-2024)", en: "Absolute migrant stock evolution (1990-2024)" }, lang))}
                     </h4>
                     <HistoricalChart data={display.history} colorClass="bg-blue-700" />
                   </div>
                 </div>
                   
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-center items-center print:border print:p-4">
-                   <h3 className="font-serif font-bold text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
+                   <h3 className="font-serif font-bold text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
                    <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-sm border border-slate-100 print:w-24 print:h-24" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
                      <div className="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center border border-slate-50">
                        <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">{display.female}%</span>
-                       <span className="text-[9px] font-bold text-blue-700 uppercase mt-0.5 tracking-widest">{lang === 'fr' ? "Femmes" : "Women"}</span>
+                       <span className="text-[9px] font-bold text-blue-700 uppercase mt-0.5 tracking-widest">{tr({ fr: "Femmes", en: "Women" }, lang)}</span>
                      </div>
                    </div>
-                   <p className="text-center text-sm text-slate-600 mt-6 max-w-xs leading-relaxed print:mt-3 print:text-[10px]">{lang === 'fr' ? "La migration n'est pas qu'une affaire d'hommes fuyant la misère. Elle est structurellement féminisée." : "Migration is not just men fleeing poverty. It is structurally feminized."}</p>
+                   <Prose className="text-center text-sm text-slate-600 mt-6 max-w-xs leading-relaxed print:mt-3 print:text-[10px]" lang={lang}>{tr({ fr: "La migration n'est pas qu'une affaire d'hommes fuyant la misère. Elle est structurellement féminisée.", en: "Migration is not just men fleeing poverty. It is structurally feminized." }, lang)}</Prose>
                 </div>
               </div>
 
@@ -9694,42 +9967,38 @@ export default function App() {
                     </div>
                     <div>
                       <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
-                        {display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (lang === 'fr' ? 'N/D' : 'N/A')}
+                        {display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}
                       </span>
                       <span className="block text-[10px] font-bold text-emerald-700 uppercase tracking-widest mt-0.5">
-                        {lang === 'fr' ? `Taux d'activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}` : `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}`}
+                        {tr({ fr: `Taux d'activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-l border-slate-100 sm:pl-6 pt-4 sm:pt-0">
+                  <p className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-s border-slate-100 sm:ps-6 pt-4 sm:pt-0">
                     {display.labour_participation !== null && display.labour_participation !== undefined
-                      ? (lang === 'fr'
-                          ? "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d'emploi), estimation modélisée par l'OIT — un indicateur direct de l'insertion économique, distinct du volume migratoire lui-même."
-                          : "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself.")
-                      : (lang === 'fr'
-                          ? "L'OIT ne publie pas d'estimation modélisée pour cette entité (échantillon insuffisant)."
-                          : "The ILO does not publish a modelled estimate for this entity (insufficient sample).")}
+                      ? (tr({ fr: "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d'emploi), estimation modélisée par l'OIT — un indicateur direct de l'insertion économique, distinct du volume migratoire lui-même.", en: "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself." }, lang))
+                      : (tr({ fr: "L'OIT ne publie pas d'estimation modélisée pour cette entité (échantillon insuffisant).", en: "The ILO does not publish a modelled estimate for this entity (insufficient sample)." }, lang))}
                   </p>
                 </div>
               </div>
 
               <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
-                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 mr-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
+                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
                     <div className="absolute inset-4 bg-[#0f172a] print:bg-white rounded-full flex flex-col items-center justify-center border border-slate-800 print:border-slate-100">
                       <span className="text-3xl font-serif font-bold text-white print:text-slate-900 print:text-xl">{display.retention}%</span>
-                      <span className="text-[9px] font-bold text-blue-400 uppercase mt-0.5 tracking-widest text-center px-2">{lang === 'fr' ? "Restent dans la région" : "Stay in the region"}</span>
+                      <span className="text-[9px] font-bold text-blue-400 uppercase mt-0.5 tracking-widest text-center px-2">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
                     </div>
                   </div>
                 </div>
                   
                 <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
                   <div>
-                    <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
+                    <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
                     <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
                     <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
-                      <p className="text-xs text-slate-500 italic print:text-[10px]">{lang === 'fr' ? "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne." : "This dynamic proves that Southern countries are primarily host and internal passage countries."}</p>
+                      <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
                     </div>
                   </div>
                     
@@ -9737,7 +10006,7 @@ export default function App() {
                     <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
                       {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 mr-2 text-slate-400" /> {text.modal.idp_title}</h4>
+                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
                           <div className="space-y-4 print:space-y-2">
                             {display.refugees_hosted > 0 && (
                               <div>
@@ -9767,13 +10036,13 @@ export default function App() {
                               </div>
                             )}
                           </div>
-                          <p className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]">{text.modal.idp_desc}</p>
+                          <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
                         </div>
                       )}
 
                       {display.avoi !== null && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 mr-2 text-slate-400" /> {text.modal.avoi_title}</h4>
+                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
                           <div>
                             <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
                               <span className="text-slate-600 print:!text-slate-600">Score</span>
@@ -9782,15 +10051,15 @@ export default function App() {
                             <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
                               <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
                               {continentalAvoiAvg !== null && (
-                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${lang === 'fr' ? 'Moyenne continentale' : 'Continental average'}: ${continentalAvoiAvg}/100`}></div>
+                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
                               )}
                             </div>
                             {continentalAvoiAvg !== null && (
                               <p className="text-xs text-amber-700 mt-1.5 font-bold">
-                                {lang === 'fr' ? `Moyenne continentale : ${continentalAvoiAvg}/100` : `Continental average: ${continentalAvoiAvg}/100`}
+                                {tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}
                               </p>
                             )}
-                            <p className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5">{text.modal.avoi_desc}</p>
+                            <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
                           </div>
                         </div>
                       )}
@@ -9801,18 +10070,18 @@ export default function App() {
 
               <div className={`space-y-8 animate-in fade-in duration-500 ${modalView === 'economy' ? 'block' : 'hidden print:block'} print:space-y-4 print:break-inside-avoid`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
-                  <p className="text-sm text-slate-600 mb-6 print:mb-3">{lang === 'fr' ? "L'apport des diasporas face à l'Assistance Publique au Développement (APD)." : "Diaspora contribution vs. Official Development Assistance (ODA)."}</p>
+                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
+                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L'apport des diasporas face à l'Assistance Publique au Développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
                   <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
-                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><p className="text-slate-700 text-sm print:text-[10px]">{lang === 'fr' ? "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale." : "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity."}</p></div>
+                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale.", en: "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity." }, lang)}</Prose></div>
                 </div>
 
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
-                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité." : "Ratification status of key OAU/AU conventions on integration and mobility."}</p>
+                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
+                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "État de ratification des conventions phares de l'OUA/UA en matière d'intégration et de mobilité.", en: "Ratification status of key OAU/AU conventions on integration and mobility." }, lang)}</Prose>
                     <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-block text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                      {lang === 'fr' ? "→ Consulter la base des traités de l'UA" : "→ View AU Treaties Database"}
+                      {tr({ fr: "→ Consulter la base des traités de l'UA", en: "→ View AU Treaties Database" }, lang)}
                     </a>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       {[
@@ -9826,9 +10095,9 @@ export default function App() {
                         const ratified = display.au_treaties[t.key];
                         return (
                           <div key={t.key} className={`p-3 rounded-md border flex items-center justify-between ${ratified ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                            <span className="text-xs font-bold">{lang === 'fr' ? t.fr : t.en}</span>
+                            <span className="text-xs font-bold">{tr({ fr: t.fr, en: t.en }, lang)}</span>
                             <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${ratified ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>
-                              {ratified ? (lang === 'fr' ? 'Ratifié' : 'Ratified') : (lang === 'fr' ? 'Non ratifié' : 'Not ratified')}
+                              {ratified ? (tr({ fr: 'Ratifié', en: 'Ratified' }, lang)) : (tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang))}
                             </span>
                           </div>
                         );
@@ -9845,21 +10114,21 @@ export default function App() {
 
                 {display.iso2 && countryRecAffiliations[display.iso2] && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Affiliation aux Communautés Économiques Régionales" : "Regional Economic Community Affiliation"}</h3>
-                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Blocs régionaux dont le pays est membre (l'appartenance à plusieurs CER est courante en Afrique)." : "Regional blocs the country belongs to (multiple REC membership is common in Africa)."}</p>
+                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Affiliation aux Communautés Économiques Régionales", en: "Regional Economic Community Affiliation" }, lang)}</h3>
+                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "Blocs régionaux dont le pays est membre (l'appartenance à plusieurs CER est courante en Afrique).", en: "Regional blocs the country belongs to (multiple REC membership is common in Africa)." }, lang)}</Prose>
                     <div className="flex flex-wrap gap-3">
                       {countryRecAffiliations[display.iso2].map((recId) => (
-                        <div key={recId} className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-full pl-1.5 pr-4 py-1.5 print:bg-white">
+                        <div key={recId} className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-full ps-1.5 pe-4 py-1.5 print:bg-white">
                           <span className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[9px] shrink-0">
                             {recId === 'censad' ? 'CS' : recId.toUpperCase()}
                           </span>
-                          <span className="text-xs font-bold text-emerald-900">{recNames[recId][lang]}</span>
+                          <span className="text-xs font-bold text-emerald-900">{tr(recNames[recId], lang)}</span>
                         </div>
                       ))}
                     </div>
                     {countryRecNotes[display.iso2] && (
                       <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4 flex items-start gap-2 print:bg-white">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {countryRecNotes[display.iso2][lang]}
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {tr(countryRecNotes[display.iso2], lang)}
                       </p>
                     )}
                     {visaOpenToAllAfrica[display.iso2] && (() => {
@@ -9869,8 +10138,8 @@ export default function App() {
                         <div className={`mt-4 p-4 rounded-md border flex items-start gap-3 print:bg-white ${tier.style}`}>
                           <Star className={`w-4 h-4 shrink-0 mt-0.5 ${tier.dot}`} />
                           <div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest block mb-1">{tier.label[lang]}</span>
-                            <p className="text-xs leading-relaxed">{openness.note[lang]}</p>
+                            <span className="text-[10px] font-bold uppercase tracking-widest block mb-1">{tr(tier.label, lang)}</span>
+                            <Prose className="text-xs leading-relaxed" lang={lang}>{tr(openness.note, lang)}</Prose>
                           </div>
                         </div>
                       );
@@ -9880,28 +10149,28 @@ export default function App() {
 
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 mr-2.5 text-slate-400 print:w-4 print:h-4" /> {lang === 'fr' ? "Évaluation Juridique des Droits (Base NORMLEX OIT)" : "Legal Evaluation of Rights (ILO NORMLEX)"}</h3>
-                    <p className="text-sm text-slate-600 mb-4 print:mb-3">{lang === 'fr' ? "Ratification des conventions internationales du travail et protection des travailleurs." : "Ratification of international labor standards and worker protection."}</p>
+                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Évaluation Juridique des Droits (Base NORMLEX OIT)", en: "Legal Evaluation of Rights (ILO NORMLEX)" }, lang)}</h3>
+                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "Ratification des conventions internationales du travail et protection des travailleurs.", en: "Ratification of international labor standards and worker protection." }, lang)}</Prose>
                     {display.normlex.link && (
                       <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-block text-xs text-blue-700 font-bold hover:underline mb-6 print:hidden">
-                        {lang === 'fr' ? "→ Consulter le profil national NORMLEX" : "→ View NORMLEX National Profile"}
+                        {tr({ fr: "→ Consulter le profil national NORMLEX", en: "→ View NORMLEX National Profile" }, lang)}
                       </a>
                     )}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 print:grid-cols-4">
                       <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "Fondamentales" : "Fundamental"}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{tr({ fr: "Fondamentales", en: "Fundamental" }, lang)}</span>
                         <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.fundamental} / 11</span>
                       </div>
                       <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "Gouvernance" : "Governance"}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{tr({ fr: "Gouvernance", en: "Governance" }, lang)}</span>
                         <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.governance} / 4</span>
                       </div>
                       <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "Techniques" : "Technical"}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{tr({ fr: "Techniques", en: "Technical" }, lang)}</span>
                         <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.technical}</span>
                       </div>
                       <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{lang === 'fr' ? "Total Ratifications" : "Total Ratified"}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500 block mb-1">{tr({ fr: "Total Ratifications", en: "Total Ratified" }, lang)}</span>
                         <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.total}</span>
                       </div>
                     </div>
@@ -9926,15 +10195,15 @@ export default function App() {
                   </div>
                 </div>
 
-                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (lang === 'fr' ? 'Profil Régional' : 'Regional Profile') : (lang === 'fr' ? 'Profil Pays' : 'Country Profile')} />
+                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (tr({ fr: 'Profil Régional', en: 'Regional Profile' }, lang)) : (tr({ fr: 'Profil Pays', en: 'Country Profile' }, lang))} />
               </div>
             </div>
 
             <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
               <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest hidden md:block">{text.modal.data_source}</span>
-              <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <button onClick={exportCountryProfileCSV} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 bg-white border border-slate-300 text-slate-700 hover:text-blue-700 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Download className="w-3.5 h-3.5" /> <span>{text.modal.export_csv}</span></button>
-                <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Printer className="w-3.5 h-3.5" /> <span>{text.modal.export_pdf}</span></button>
+              <div className="flex items-center space-x-2 rtl:space-x-reverse w-full sm:w-auto justify-end">
+                <button onClick={exportCountryProfileCSV} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-white border border-slate-300 text-slate-700 hover:text-blue-700 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Download className="w-3.5 h-3.5" /> <span>{text.modal.export_csv}</span></button>
+                <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Printer className="w-3.5 h-3.5" /> <span>{text.modal.export_pdf}</span></button>
               </div>
             </div>
           </div>
@@ -9964,17 +10233,17 @@ export default function App() {
             {/* Navigation secondaire */}
             <div className="md:col-span-3">
               <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--accent-light)' }}>
-                {lang === 'fr' ? 'Explorer' : 'Explore'}
+                {tr({ fr: 'Explorer', en: 'Explore' }, lang)}
               </span>
               <ul className="space-y-2">
                 {navigation.filter(n => n.id !== 'home').map(item => (
                   <li key={item.id}>
                     <button
-                      onClick={() => setActiveTab(item.id)}
+                      onClick={() => allerVers(item.id)}
                       className="text-sm transition-colors hover:text-[#8FA0CE]"
                       style={{ color: '#CFC6BA' }}
                     >
-                      {item.label[lang]}
+                      {tr(item.label, lang)}
                     </button>
                   </li>
                 ))}
@@ -9984,7 +10253,7 @@ export default function App() {
             {/* Provenance & contact */}
             <div className="md:col-span-4">
               <span className="block text-[10px] font-semibold uppercase mb-4" style={{ letterSpacing: '.18em', color: 'var(--accent-light)' }}>
-                {lang === 'fr' ? 'Sources & contact' : 'Sources & contact'}
+                {tr({ fr: 'Sources & contact', en: 'Sources & contact' }, lang)}
               </span>
               <p className="text-xs leading-relaxed mb-4" style={{ color: '#A79E92' }}>
                 {text.footer.sources}
@@ -10001,10 +10270,10 @@ export default function App() {
 
           <div className="mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-3" style={{ borderTop: '1px solid rgba(255,253,249,.10)' }}>
             <p className="text-[11px]" style={{ color: '#8A8175' }}>
-              © 2026 Yassine Ben Mokhtar — {lang === 'fr' ? 'Initiative citoyenne & recherche indépendante' : 'Independent research & civic initiative'}
+              © 2026 Yassine Ben Mokhtar — {tr({ fr: 'Initiative citoyenne & recherche indépendante', en: 'Independent research & civic initiative' }, lang)}
             </p>
             <p className="text-[11px] italic" style={{ color: '#8A8175' }}>
-              {lang === 'fr' ? 'Données publiques consolidées, sources citées.' : 'Consolidated public data, sources cited.'}
+              {tr({ fr: 'Données publiques consolidées, sources citées.', en: 'Consolidated public data, sources cited.' }, lang)}
             </p>
           </div>
         </div>

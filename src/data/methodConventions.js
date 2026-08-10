@@ -38,7 +38,7 @@ export const methodConventions = [
     label: { fr: "Priorité définitionnelle", en: "Definitional priority" },
     value: { fr: "Instrument africain", en: "African instrument" },
     detail: {
-      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence : réfugié selon la Convention de l'OUA (1969), personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
+      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence. Réfugié selon la Convention de l'OUA (1969) ; personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
       en: "For any legal concept holding both a UN and an African definition, the latter is the reference: refugee under the OAU Convention (1969), internally displaced person under the Kampala Convention (2009). The UN definition is cited only for comparison. Purely statistical aggregates, by contrast, follow UN DESA — a precondition for international comparability."
     }
   },
@@ -54,8 +54,8 @@ export const methodConventions = [
     label: { fr: "Chiffres non vérifiables", en: "Unverifiable figures" },
     value: { fr: "Datés et réservés", en: "Dated and caveated" },
     detail: {
-      fr: "Lorsqu'un décompte exact ne peut être confirmé sur une source officielle, la plateforme affiche la dernière valeur vérifiée avec sa date et une réserve explicite — plutôt qu'une estimation lissée ou un chiffre arrondi sans provenance.",
-      en: "When an exact count cannot be confirmed against an official source, the platform shows the last verified value with its date and an explicit caveat — rather than a smoothed estimate or a rounded figure without provenance."
+      fr: "Lorsqu'un décompte exact ne peut être confirmé sur une source officielle, la plateforme affiche la dernière valeur vérifiée avec sa date et une réserve explicite. Jamais une estimation lissée, jamais un chiffre arrondi sans provenance.",
+      en: "When an exact count cannot be confirmed against an official source, the platform shows the last verified value with its date and an explicit caveat. Never a smoothed estimate, never a rounded figure without provenance."
     }
   },
   {

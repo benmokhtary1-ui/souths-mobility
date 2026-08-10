@@ -35,7 +35,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe. L'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians, and Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
+      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe. L'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians. Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
       "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
     },
     { 
@@ -359,7 +359,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc,
-      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens sur le continent — près de 450 000 rien qu'au Kenya, dont la majorité dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
+      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens du continent : près de 450 000 rien qu'au Kenya. La majorité vit dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
     },
     {
       "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 

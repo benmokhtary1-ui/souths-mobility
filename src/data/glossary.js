@@ -99,7 +99,7 @@ export const glossaryData = [
         term: "Réfugié",
         en_term: "Refugee",
         fr: "La Convention de l'OUA (1969) définit le réfugié plus largement que celle de Genève (1951). À la crainte de persécution individuelle, elle ajoute l'agression extérieure, l'occupation et les événements troublant gravement l'ordre public.",
-        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order.",
+        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951). It covers anyone compelled to flee by individual persecution, and equally by external aggression, occupation, or events seriously disturbing public order.",
         source: { fr: "Convention de l'OUA (1969), art. I(2) — définition de référence de la plateforme", en: "OAU Convention (1969), Art. I(2) — the platform's reference definition", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
@@ -153,14 +153,14 @@ export const glossaryData = [
         term: "Asile (droit d')",
         en_term: "Asylum (right to)",
         fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin. Son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation. Il pose aussi l'octroi de l'asile comme un acte pacifique et humanitaire, qu'aucun État ne peut tenir pour inamical.",
-        en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek: its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement, and establishes that granting asylum is a peaceful and humanitarian act that cannot be regarded as unfriendly by any other state.",
+        en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek. Its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement. It also establishes that granting asylum is a peaceful and humanitarian act, which no other state may regard as unfriendly.",
         source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
         stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
       },
       {
         term: "Reconnaissance prima facie",
         en_term: "Prima facie recognition",
-        fr: "Reconnaissance du statut de réfugié fondée sur des circonstances objectives et manifestes dans le pays d'origine, sans examen individuel du dossier. Elle s'applique typiquement aux arrivées massives, où la détermination individuelle serait impraticable. Bien que peu codifiée, c'est la voie par laquelle la majorité des réfugiés du monde sont reconnus — et la pratique dominante en Afrique, où la définition élargie de la Convention de l'OUA s'y prête directement.",
+        fr: "Reconnaissance du statut de réfugié fondée sur des circonstances objectives et manifestes dans le pays d'origine, sans examen individuel du dossier. Elle s'applique typiquement aux arrivées massives, où la détermination individuelle serait impraticable. Bien que peu codifiée, c'est la voie par laquelle la majorité des réfugiés du monde sont reconnus. C'est aussi la pratique dominante en Afrique, où la définition élargie de la Convention de l'OUA s'y prête directement.",
         en: "Recognition of refugee status based on readily apparent, objective circumstances in the country of origin, without individual examination. It typically applies to large-scale arrivals where individual determination would be impracticable. Though thinly codified, it is the route by which most of the world's refugees are recognised — and the dominant practice in Africa, where the OAU Convention's broadened definition lends itself directly to it.",
         source: { fr: "HCR, Principes directeurs sur la protection internationale n° 11 (2015)", en: "UNHCR, Guidelines on International Protection No. 11 (2015)", url: "https://www.unhcr.org/media/guidelines-international-protection-no-11-prima-facie-recognition-refugee-status-5-june-2015" },
         stakes: { fr: "Une reconnaissance de groupe donne un statut immédiat sans file d'attente administrative. La basculer en examen individuel — comme certains États le font sous pression budgétaire ou politique — laisse des dizaines de milliers de personnes sans statut pendant des années, sans qu'aucun texte n'ait changé.", en: "Group recognition confers immediate status with no administrative queue. Switching to individual examination — as some states do under budgetary or political pressure — leaves tens of thousands without status for years, with no text having changed." }
@@ -168,8 +168,8 @@ export const glossaryData = [
       {
         term: "Détermination du statut de réfugié (DSR)",
         en_term: "Refugee Status Determination (RSD)",
-        fr: "Procédure, administrative ou judiciaire, par laquelle un État ou le HCR établit si une personne relève de la définition du réfugié. En Afrique, elle est conduite tantôt par une commission nationale d'éligibilité, tantôt par le HCR agissant sous mandat lorsque l'État n'a pas encore d'appareil dédié — configuration qui déplace vers une organisation internationale une décision de souveraineté.",
-        en: "The administrative or judicial procedure by which a state or UNHCR establishes whether a person falls within the refugee definition. In Africa it is conducted sometimes by a national eligibility commission, sometimes by UNHCR acting under its mandate where the state has no dedicated apparatus — a configuration that shifts a sovereign decision to an international organisation.",
+        fr: "Procédure, administrative ou judiciaire, par laquelle un État ou le HCR établit si une personne relève de la définition du réfugié. En Afrique, elle est conduite tantôt par une commission nationale d'éligibilité, tantôt par le HCR agissant sous mandat lorsque l'État n'a pas encore d'appareil dédié. Cette configuration déplace vers une organisation internationale une décision de souveraineté.",
+        en: "The administrative or judicial procedure by which a state or UNHCR establishes whether a person falls within the refugee definition. In Africa it is conducted sometimes by a national eligibility commission, sometimes by UNHCR acting under its mandate where the state has no dedicated apparatus. That configuration shifts a sovereign decision to an international organisation.",
         source: { fr: "HCR ; Convention de l'OUA (1969)", en: "UNHCR; OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
@@ -183,7 +183,7 @@ export const glossaryData = [
       {
         term: "Externalisation des frontières",
         en_term: "Border externalisation",
-        fr: "Ensemble des dispositifs par lesquels un État reporte le contrôle de ses frontières au-delà de son territoire : financement et équipement de forces de sécurité tierces, agents de liaison, campagnes de dissuasion, conditionnement de l'aide à la coopération migratoire. Le contrôle s'exerce ainsi loin du lieu où le droit d'asile pourrait être invoqué.",
+        fr: "Ensemble des dispositifs par lesquels un État reporte le contrôle de ses frontières au-delà de son territoire. Financement et équipement de forces de sécurité tierces, agents de liaison, campagnes de dissuasion, conditionnement de l'aide à la coopération migratoire. Le contrôle s'exerce ainsi loin du lieu où le droit d'asile pourrait être invoqué.",
         en: "The set of arrangements by which a state pushes control of its borders beyond its own territory: funding and equipping third-country security forces, liaison officers, deterrence campaigns, tying aid to migration cooperation. Control is thereby exercised far from where a right to asylum could be invoked.",
         source: { fr: "Notion analytique consolidée dans la littérature sur les régimes de mobilité ; voir Achiume (2019) et Bakewell (2008) en Bibliothèque", en: "Analytical notion consolidated in the mobility-regimes literature; see Achiume (2019) and Bakewell (2008) in the Library" },
         stakes: { fr: "Le déplacement du contrôle déplace aussi la responsabilité juridique : une personne interceptée avant d'atteindre un territoire ne peut y demander l'asile, et l'État qui a financé l'interception n'est pas celui qui la refuse. La responsabilité se dilue exactement là où elle serait exigible (Ben Mokhtar, 2026).", en: "Displacing control also displaces legal responsibility: a person intercepted before reaching a territory cannot claim asylum there, and the state that funded the interception is not the one refusing it. Accountability dissolves precisely where it would be enforceable (Ben Mokhtar, 2026)." }
@@ -200,7 +200,7 @@ export const glossaryData = [
         term: "Visa (régime de)",
         en_term: "Visa (regime)",
         fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction n'est pas de degré mais de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
-        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is not one of degree but of kind: a prior visa moves the decision to the consulate in the country of departure — that is, beyond the reach of any appeal in the destination country.",
+        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is one of kind, not of degree. A prior visa moves the decision to the consulate in the country of departure, beyond the reach of any appeal in the destination country.",
         source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
       },
       {
@@ -275,7 +275,7 @@ export const glossaryData = [
         term: "Intégration locale",
         en_term: "Local integration",
         fr: "Processus par lequel un réfugié s'installe durablement dans son pays d'asile, avec une dimension juridique (accès à un statut stable, voire à la naturalisation), économique (droit au travail et aux moyens de subsistance) et sociale. C'est la solution durable la plus fréquente en Afrique de fait, et la moins reconnue en droit.",
-        en: "The process by which a refugee settles durably in the country of asylum, with a legal dimension (access to a stable status, possibly naturalisation), an economic one (right to work and to livelihoods), and a social one. It is the most common durable solution in Africa in practice, and the least recognised in law.",
+        en: "The process by which a refugee settles durably in the country of asylum. It has a legal dimension (access to a stable status, possibly naturalisation), an economic one (the right to work and to livelihoods), and a social one. It is the most common durable solution in Africa in practice, and the least recognised in law.",
         source: { fr: "HCR ; Convention de l'OUA (1969), art. II", en: "UNHCR; OAU Convention (1969), Art. II", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
@@ -372,7 +372,7 @@ export const glossaryData = [
         term: "Partenariat de compétences (Global Skills Partnership)",
         en_term: "Global Skills Partnership",
         fr: "Accord bilatéral par lequel un pays d'origine et un pays de destination financent ensemble la formation de travailleurs avant leur départ, dans des compétences utiles aux deux économies. L'idée est de faire de la mobilité de main-d'œuvre un investissement partagé, plutôt qu'un prélèvement de capital humain déjà formé.",
-        en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital.",
+        en: "A bilateral agreement in which an origin country and a destination country jointly fund worker training before departure, in skills useful to both economies. The aim is to turn labour mobility into a shared investment, instead of a simple draw on already-trained human capital.",
         source: { fr: "Objectif 18 du Pacte mondial pour les migrations", en: "Objective 18 of the Global Compact for Migration" }
       }
     ]
@@ -384,13 +384,13 @@ export const glossaryData = [
       {
         term: "Corridor migratoire",
         en_term: "Migration Corridor",
-        fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants, unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque Mondiale) — permet de voir au-delà des agrégats nationaux la géographie réelle des déplacements.",
-        en: "An origin-destination country pair linked by a significant migrant flow or stock, the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank) — lets the real geography of movement be seen beyond national aggregates."
+        fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants. C'est l'unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque mondiale). Elle fait apparaître, au-delà des agrégats nationaux, la géographie réelle des déplacements.",
+        en: "An origin-destination country pair linked by a significant migrant flow or stock. It is the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank), and it reveals the real geography of movement beyond national aggregates."
       },
       {
         term: "Régime (de gouvernance migratoire)",
         en_term: "Regime (of migration governance)",
-        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent et les pratiques effectives des postes-frontières (Ben Mokhtar, 2026).",
+        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent, les pratiques effectives aux postes-frontières (Ben Mokhtar, 2026).",
         en: "A set of principles, norms, rules and decision-making procedures around which actors' expectations converge in a given area. Applied to the African case, the notion holds together what a treaty-only reading separates: the texts adopted, the bureaucracies that carry them, and the actual practices of border posts (Ben Mokhtar, 2026).",
         source: { fr: "Cadre de la théorie des régimes internationaux, appliqué au cas africain par Ben Mokhtar (2026)", en: "International regime theory framework, applied to the African case by Ben Mokhtar (2026)" }
       },

@@ -56,6 +56,24 @@
   --tier-3:       #7A6212;   /* a nuancer */
   --tier-2:       #8C4A16;   /* faiblement etaye */
   --tier-1:       #7A2E2E;   /* non etaye */
+
+  /* ---- Mouvement : un vocabulaire, pas quarante-quatre reglages ----------
+     Le site portait six courbes et huit durees differentes, posees au coup par
+     coup. C'est ce qui fait qu'une interface parait bricolee meme quand chaque
+     effet, pris seul, est correct : rien ne bouge de la meme main.
+
+     Une seule famille de courbes, quatre durees. Depart franc, arrivee longue
+     et amortie — le mouvement se lit sans qu'on l'attende.                    */
+  --ease:        cubic-bezier(.32, .72, 0, 1);    /* le cheval de trait */
+  --ease-both:   cubic-bezier(.65, 0, .35, 1);    /* ce qui va et revient */
+  --ease-entry:  cubic-bezier(.16, 1, .3, 1);     /* les entrees, plus amples */
+
+  --dur-fast:  140ms;   /* couleur, etat menu */
+  --dur:       220ms;   /* survol, bascule */
+  --dur-slow:  420ms;   /* ouverture, revelation */
+  --dur-story: 700ms;   /* ce qui raconte : barres qui poussent, chiffres qui montent */
+
+  --reveal-shift: 14px;
 }
 
 /* ---------- Fondations ---------------------------------------------------- */
@@ -297,7 +315,7 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
 @keyframes barGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .bar-fill {
   transform-origin: left center;
-  animation: barGrow .85s cubic-bezier(.2,.75,.3,1) both;
+  animation: barGrow var(--dur-story) var(--ease) both;
 }
 .bar-fill--d1 { animation-delay: .05s; }
 .bar-fill--d2 { animation-delay: .10s; }
@@ -310,7 +328,7 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: none; }
 }
-.stagger > * { animation: riseIn .5s cubic-bezier(.2,.75,.3,1) both; }
+.stagger > * { animation: riseIn var(--dur-slow) var(--ease-entry) both; }
 .stagger > *:nth-child(1) { animation-delay: .02s; }
 .stagger > *:nth-child(2) { animation-delay: .07s; }
 .stagger > *:nth-child(3) { animation-delay: .12s; }
@@ -319,9 +337,13 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
 .stagger > *:nth-child(6) { animation-delay: .27s; }
 .stagger > *:nth-child(n+7) { animation-delay: .32s; }
 
-/* --- Survol : la feuille repond, sans retomber dans l'ombre portee --- */
-.lift { transition: transform .2s cubic-bezier(.2,.75,.3,1), border-color .2s ease, background-color .2s ease; }
-.lift:hover { transform: translateY(-2px); border-color: var(--rule-strong) !important; }
+/* --- Survol : la feuille repond, sans retomber dans l'ombre portee ---
+   :focus-visible est joint a :hover partout ou une affordance existe. Sans
+   cela, l'effet ne s'adresse qu'a la souris : au clavier, la carte survolee
+   ne se distingue de ses voisines par rien du tout.                        */
+.lift { transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), background-color var(--dur) var(--ease); }
+.lift:is(:hover, :focus-visible),
+.lift:has(:focus-visible) { transform: translateY(-2px); border-color: var(--rule-strong) !important; }
 
 /* --- Bandeaux de groupe : un lavis de la teinte de la famille --- */
 .wash-terra   { background-image: linear-gradient(90deg, var(--accent-soft), transparent 70%); }
@@ -339,23 +361,180 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 99px; flex: none; }
 
 /* --- Le releve reagit au survol ligne par ligne --- */
-.stat-ledger > *, .figure-row { transition: background-color .16s ease; }
-.figure-row:hover { background-color: var(--paper-sunk); }
+.stat-ledger > *, .figure-row { transition: background-color var(--dur-fast) var(--ease); }
+.figure-row:is(:hover, :focus-within) { background-color: var(--paper-sunk); }
 
 /* ---------- Mouvement : sobre, et desactivable -------------------------- */
 
 html { scroll-behavior: smooth; }
-button, a { transition: color .18s ease, background-color .18s ease, border-color .18s ease; }
+button, a { transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease); }
+
+/* Les utilitaires Tailwind sont recales sur le meme vocabulaire. Retoucher
+   ici plutot que les 44 endroits ou une duree a ete posee a la main : la
+   coherence tient alors par construction, pas par vigilance.                */
+.duration-150 { transition-duration: var(--dur-fast) !important; }
+.duration-200, .duration-300 { transition-duration: var(--dur) !important; }
+.duration-500, .duration-700 { transition-duration: var(--dur-slow) !important; }
+.duration-1000 { transition-duration: var(--dur-story) !important; }
+.ease-in-out { transition-timing-function: var(--ease-both) !important; }
+.ease-out, .ease-in { transition-timing-function: var(--ease) !important; }
+:is(main, .reader) :is(.transition, .transition-all, .transition-colors,
+  .transition-transform, .transition-opacity, .transition-shadow) {
+  transition-timing-function: var(--ease);
+}
+
+/* `transition-all` anime aussi la largeur, la hauteur et les marges : le
+   navigateur recalcule alors la mise en page a chaque image. On la ramene aux
+   proprietes de peinture, qui se composent sans recalcul.                    */
+.transition-all {
+  transition-property: color, background-color, border-color, text-decoration-color,
+    fill, stroke, opacity, box-shadow, transform, filter !important;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: .001ms !important; animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
+    animation-timeline: none !important;
   }
   .bar-fill { transform: none !important; }
   .stagger > * { opacity: 1 !important; transform: none !important; }
 }
+
+/* ---------- Ce qui se deplie ------------------------------------------
+   Le repli se faisait par max-height : on devine une valeur (24rem), et tout
+   contenu plus long est coupe net. `interpolate-size` autorise la transition
+   vers `auto` : la hauteur reelle est animee, quelle qu'elle soit. La regle
+   max-height reste en secours pour les navigateurs qui l'ignorent.        */
+@supports (interpolate-size: allow-keywords) {
+  :root { interpolate-size: allow-keywords; }
+  .depliable {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: height var(--dur-slow) var(--ease-both),
+                opacity var(--dur) var(--ease);
+  }
+  .depliable[data-ouvert='true'] { height: auto; opacity: 1; }
+  .depliable.max-h-0, .depliable.max-h-96 { max-height: none !important; }
+  /* A l'impression, tout est ouvert : un PDF ne se deplie pas. */
+  @media print { .depliable { height: auto !important; opacity: 1 !important; overflow: visible !important; } }
+}
+
+/* ---------- Le fil de lecture -----------------------------------------
+   Une regle de progression en tete de page, pilotee par le defilement du
+   document lui-meme : aucun ecouteur, aucun re-rendu React a chaque pixel.  */
+.fil-lecture {
+  display: block; height: 100%; width: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, var(--accent-light));
+  transform: scaleX(0);
+  pointer-events: none;
+}
+@supports (animation-timeline: scroll()) {
+  .fil-lecture {
+    animation: filProgression linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes filProgression { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+:root[dir='rtl'] .fil-lecture { transform-origin: right center; }
+@media (prefers-reduced-motion: reduce) { .fil-lecture { display: none; } }
+
+/* ---------- Le trait qui se trace --------------------------------------
+   La signature de mouvement du site : sous chaque titre de section, un filet
+   se trace de gauche a droite quand la section entre dans le champ. Une
+   trajectoire, pas un ornement — c'est le sujet meme de la plateforme.     */
+.trait-trace {
+  display: block; height: 2px; width: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light) 65%, transparent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+@supports (animation-timeline: view()) {
+  .trait-trace {
+    animation: traitTrace linear both;
+    animation-timeline: view(block);
+    animation-range: entry 10% cover 22%;
+  }
+}
+@keyframes traitTrace { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+:root[dir='rtl'] .trait-trace { transform-origin: right center; }
+/* Sans support du defilement pilote, le filet est simplement en place. */
+@supports not (animation-timeline: view()) { .trait-trace { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .trait-trace { transform: none !important; } }
+
+/* Le trait d'ouverture : sous le bandeau de titre, il se trace une fois a
+   l'arrivee sur la section. C'est le geste qui ouvre la page.              */
+.trait-trace--ouverture {
+  animation: traitTrace var(--dur-story) var(--ease) both;
+  animation-timeline: auto;
+  animation-delay: 90ms;
+}
+
+@supports (animation-timeline: view()) {
+  /* Le meme trait, applique a tout titre deja souligne d'un filet — sans
+     toucher au balisage. `~=` compare des mots entiers : `border-b` ne doit
+     pas attraper `border-blue-200`, dont il est un prefixe.                */
+  :is(main, .reader) :is(h2, h3, h4)[class~='border-b'] { position: relative; }
+  :is(main, .reader) :is(h2, h3, h4)[class~='border-b']::after {
+    content: ''; position: absolute; inset-inline-start: 0; bottom: -1px;
+    height: 2px; width: 4.5rem;
+    background: var(--accent);
+    transform-origin: left center; transform: scaleX(0);
+    animation: traitTrace linear both;
+    animation-timeline: view(block);
+    animation-range: entry 15% cover 24%;
+  }
+  :root[dir='rtl'] :is(main, .reader) :is(h2, h3, h4)[class~='border-b']::after { transform-origin: right center; }
+
+  /* Les grilles s'animaient au chargement, y compris trente ecrans plus bas :
+     le lecteur arrivait toujours apres la fete. Rattachees au defilement,
+     elles se levent au moment ou on les atteint. Le decalage vient alors de
+     la position reelle de chaque carte, pas d'un delai arbitraire.          */
+  .stagger > * {
+    animation: riseIn linear both;
+    animation-timeline: view(block);
+    animation-range: entry 5% cover 18%;
+    animation-delay: 0s;
+  }
+
+  /* Chaque feuille se leve en entrant dans le champ. La regle ne vise que les
+     cartes de premier rang — `:not(main .bg-white *)` ecarte celles imbriquees
+     dans une autre, qui sinon bougeraient deux fois, l'une portant l'autre.
+     L'opacite ne part pas de zero : meme si l'animation ne se declenchait
+     jamais, le contenu resterait lisible.                                   */
+  /* `:not(.rail *)` ecarte les cartes du rail : elles ont leur propre mise en
+     avant, horizontale, et la levee verticale la neutralisait. */
+  :is(main, .reader) .bg-white:not(:is(main, .reader) .bg-white *):not(.rail *) {
+    animation: leveeFeuille linear both;
+    animation-timeline: view(block);
+    animation-range: entry 2% cover 16%;
+  }
+  @media print {
+    :is(main, .reader) .bg-white { animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
+}
+@keyframes leveeFeuille {
+  from { opacity: .35; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Changement de page -----------------------------------------
+   La navigation remplace le contenu d'un coup. Un fondu court donne l'idee
+   que l'on se deplace dans un meme document, au lieu de sauter d'un ecran a
+   l'autre. La barre de navigation, elle, ne bouge pas : elle est le repere.  */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(page) { animation: pageSortie 130ms var(--ease) both; }
+  ::view-transition-new(page) { animation: pageEntree var(--dur-slow) var(--ease-entry) both; }
+  ::view-transition-old(chrome), ::view-transition-new(chrome) { animation: none; }
+}
+@keyframes pageSortie { to { opacity: 0; } }
+@keyframes pageEntree { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+main { view-transition-name: page; }
+.nav-chrome { view-transition-name: chrome; }
 
 /* ---------- Segments : un bouton actif a l'encre, pas une pastille ------- */
 /* Le motif « pilule blanche ombree sur gris » est la signature du diaporama :
@@ -439,6 +618,104 @@ button, a { transition: color .18s ease, background-color .18s ease, border-colo
   .atlas-plate { height: 145%; right: -26%; opacity: .085 !important; }
 }
 @media print { .atlas-plate { display: none; } }
+
+/* --- Les trajectoires du fond ------------------------------------------
+   Elles se tracent au lieu d'apparaitre : un trajet a un sens de parcours,
+   et le montrer vaut mieux que le suggerer. `pathLength=1` rend le pointille
+   independant de la longueur reelle de l'arc.                            */
+.atlas-trajets path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: .55;
+  animation: trajetTrace 1.6s var(--ease) both;
+}
+@keyframes trajetTrace { to { stroke-dashoffset: 0; } }
+
+.atlas-escale {
+  opacity: 0;
+  animation: escaleParaitre .5s var(--ease) both;
+}
+@keyframes escaleParaitre { to { opacity: .8; } }
+
+/* La planche glisse legerement pendant qu'on descend : le fond prend de la
+   profondeur sans jamais entrer en concurrence avec le titre. Pilote par le
+   defilement, donc sans ecouteur ni rendu supplementaire.                 */
+@supports (animation-timeline: view()) {
+  .atlas-plate {
+    animation: plancheDerive linear both;
+    animation-timeline: view(block);
+    animation-range: cover 0% cover 100%;
+  }
+}
+@keyframes plancheDerive {
+  from { transform: translateY(-50%) translate3d(2.5%, -2%, 0) scale(1.04); }
+  to   { transform: translateY(-50%) translate3d(-2.5%, 2%, 0) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-trajets path { stroke-dashoffset: 0; animation: none; }
+  .atlas-escale { opacity: .8; animation: none; }
+  .atlas-plate { animation: none; }
+}
+
+/* ---------- Le rail de cartes ------------------------------------------
+   Une pile de soixante-dix fiches se parcourt mal en grille : on scanne sans
+   rien lire. Le rail impose une carte a la fois, s'arrete dessus, et laisse
+   les voisines depasser — on sait toujours qu'il y a un avant et un apres. */
+.rail {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: .25rem;
+  padding-block: .35rem .75rem;
+  padding-inline: .25rem;
+}
+.rail > * {
+  scroll-snap-align: center;
+  flex: 0 0 min(86%, 25rem);
+  min-width: 0;
+}
+.rail:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+@supports (animation-timeline: view()) {
+  /* La carte au centre est nette ; ses voisines reculent. L'opacite plancher
+     reste haute : une carte a demi sortie doit rester lisible, pas disparaitre. */
+  .rail > * {
+    animation: railFocus linear both;
+    animation-timeline: view(inline);
+    animation-range: entry 20% exit 80%;
+  }
+}
+@keyframes railFocus {
+  0%        { opacity: .5; transform: scale(.945); }
+  42%, 58%  { opacity: 1;  transform: scale(1); }
+  100%      { opacity: .5; transform: scale(.945); }
+}
+
+.rail-fleche {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.75rem; height: 1.75rem;
+  border: 1px solid var(--rule-strong);
+  color: var(--accent-deep);
+  background: var(--paper-raised);
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.rail-fleche:is(:hover, :focus-visible):not(:disabled) {
+  background: var(--accent-soft); border-color: var(--accent);
+}
+.rail-fleche:disabled { opacity: .35; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rail { scroll-behavior: auto; }
+  .rail > * { animation: none; opacity: 1; transform: none; }
+}
+@media print {
+  .rail { display: block; overflow: visible; }
+  .rail > * { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
 
 /* ---------- Justification : les paragraphes, et rien d'autre -------------- */
 /* Un conteneur de prose justifie transmettait son alignement a tout ce qu'il
