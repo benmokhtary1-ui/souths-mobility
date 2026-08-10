@@ -15,6 +15,11 @@ import { censusByCountry, censusRoundMeta, census2020Status } from './censusData
 import { unhcrByCountry, unhcrTotals, UNHCR_SOURCE } from './unhcrData';
 import { findexByCountry, FINDEX_SOURCE } from './findexData';
 import { iiagRank, IIAG_SOURCE } from './iiagData';
+import { countryData } from './data/countries';
+import { genericDesc } from './data/genericDesc';
+import { glossaryData } from './data/glossary';
+import { libraryData } from './data/library';
+import { methodConventions } from './data/methodConventions';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -157,8 +162,10 @@ const PLAIN_TERMS = {
   },
   capabilites: {
     label: { fr: 'capabilités de mouvement', en: 'movement capabilities' },
-    fr: "L'idée qu'on ne part pas seulement parce qu'on le veut, mais parce qu'on le peut : il faut un passeport, un visa, de l'argent, un droit. Vouloir partir et pouvoir partir sont deux choses différentes.",
-    en: 'The idea that people do not move only because they want to, but because they can: it takes a passport, a visa, money, a legal right. Wanting to leave and being able to leave are two different things.',
+    fr: "On ne part pas seulement parce qu'on le veut : il faut aussi le pouvoir — un passeport, un visa, de l'argent, un droit. Le cadre « aspirations et capabilités » de Hein de Haas (2021) va plus loin : la mobilité, c'est la capacité de choisir où vivre, y compris celle de rester.",
+    en: 'People do not move only because they want to: they must also be able to — a passport, a visa, money, a legal right. Hein de Haas\'s aspirations–capabilities framework (2021) goes further: mobility is the capability to choose where to live, including the capability to stay.',
+    source: { label: 'de Haas (2021), A theory of migration: the aspirations–capabilities framework',
+              url: 'https://doi.org/10.1186/s40878-020-00210-4' },
   },
   apatridie: {
     label: { fr: 'apatridie', en: 'statelessness' },
@@ -275,6 +282,14 @@ const Terme = ({ k, lang = 'fr', children }) => {
         >
           <span className="terme-pop-lbl">{lang === 'fr' ? 'En clair' : 'In plain terms'}</span>
           <span className="terme-pop-txt">{entry[lang] || entry.fr}</span>
+          {/* Une notion empruntee a un auteur se cite la ou elle est expliquee,
+              pas seulement dans la bibliographie. */}
+          {entry.source && (
+            <a className="terme-pop-src" href={entry.source.url} target="_blank" rel="noopener noreferrer">
+              {entry.source.label}
+              <ExternalLink className="w-3 h-3 shrink-0" aria-hidden="true" />
+            </a>
+          )}
         </span>
       )}
     </span>
@@ -1149,8 +1164,8 @@ const LateRound = ({ lang }) => {
           </h4>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify">
             {L(
-              "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit ; lues comme ce qu'elles sont, elles ouvrent la série 2030 et sortent l'Afrique centrale d'une interruption qui durait, selon les cas, de treize à vingt-deux ans. Le découpage décennal est un instrument de comparaison internationale, pas une mesure de l'effort statistique national — et il pénalise mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
-              "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone they count for zero and feed the deficit narrative; read for what they are, they open the 2030 series and lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
+              "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal est un instrument de comparaison internationale, pas une mesure de l'effort statistique national — et il pénalise mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
+              "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone, they count for zero and feed the deficit narrative. Read for what they are, they open the 2030 series. They also lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
             )}
           </p>
         </div>
@@ -1725,7 +1740,7 @@ const t = {
           badge: "Lexique & Définitions",
           title: "Les mots du régime",
           highlight: "et leur définition africaine.",
-          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence — Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009) — puis, pour les seuls agrégats statistiques, par la définition opératoire d'UN DESA. Le choix du mot n'est jamais neutre : il détermine ce qui est compté.",
+          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence : Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009). La définition opératoire d'UN DESA n'intervient que pour les agrégats statistiques. Le choix du mot n'est jamais neutre : il détermine ce qui est compté.",
           plain: "Le sens exact des mots employés ici. Chaque définition part du texte africain qui fait référence, parce que la façon de nommer décide de ce qui sera compté."
         },
         about: {
@@ -1746,15 +1761,15 @@ const t = {
       home_editorial: {
         badge: "Note de Cadrage Scientifique",
         title: "Pourquoi ce Knowledge Hub ?",
-        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux sur son sol, soit 9,5 % du stock mondial : loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent (près de 18 % de la population mondiale). Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial (82,2 millions recensés dans 104 pays) — davantage que le nombre de migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
+        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C'est loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental, où l'attention se concentre de manière disproportionnée sur les traversées vers l'Europe — un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » invite à penser mobilité et immobilité comme les deux faces d'un même continuum d'aspirations et de capacités effectivement exerçables, plutôt que comme une dichotomie entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient, retournent et instrumentalisent les agendas migratoires du Nord, loin d'en être de simples récepteurs la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient, retournent et instrumentalisent les agendas migratoires du Nord, loin d'en être de simples récepteurs la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique : consolider, harmoniser et recontextualiser des données déjà produites par les institutions internationales et africaines, plutôt que d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord, sans nier pour autant les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique n'est pas en retard sur la norme : elle l'a parfois devancée, en adoptant avec la Convention de Kampala (2009) le premier — et toujours le seul — traité régional contraignant au monde sur les personnes déplacées internes. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
         p5: "Ce cadrage doit enfin à une enquête de terrain : une observation participante menée entre 2023 et 2025 au sein de l'Observatoire Africain des Migrations (Rabat), documentée dans la section Gouvernance (Ben Mokhtar, 2026). Elle donne accès à la fabrique bureaucratique ordinaire du régime — ateliers, arbitrages budgétaires, circuits de validation — là où les cadres normatifs, examinés seuls, ne montrent que leur façade.",
-        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être : elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public — en assumant que le choix de ce qui est mis en avant, et de l'échelle à laquelle on le rapporte, constitue déjà un geste analytique et non le simple reflet des données.",
+        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être : elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l'on met en avant, et l'échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l'assume plutôt que de se présenter comme un simple reflet des données.",
         refs_title: "Pour aller plus loin",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -2246,13 +2261,7 @@ const t = {
     }
 };
 
-const genericDesc = {
-  evo_desc: { fr: "Proportion migratoirement stable rythmée par la démographie locale.", en: "Migratory proportion structurally stable, driven by local demography." },
-  origDest: { fr: "Mobilités majoritairement de proximité et circulaires au sein de l'espace sous-régional (UA 2021).", en: "Predominantly proximity and circular mobilities within the sub-regional space (AU 2021)." },
-  trigger: { fr: "Asymétries de développement et chocs climatiques.", en: "Development asymmetries and climate shocks." },
-  response: { fr: "Déplacements transfrontaliers de travail et stratégies de survie.", en: "Cross-border labor displacements and survival strategies." },
-  impact: { fr: "Résilience économique via les transferts de fonds (Remittances 86,4 Mrd $ - UA 2021).", en: "Economic resilience through remittances ($86.4B - AU 2021)." }
-};
+
 
 // ----------------------------------------------------------------------------
 // LES AGRÉGATS DES SOUS-RÉGIONS
@@ -2319,458 +2328,7 @@ const countryRecNotes = {
   er: { fr: "Retrait de l'IGAD annoncé en décembre 2025, après un retour à l'organisation en 2023.", en: "Withdrew from IGAD in December 2025, after rejoining the organisation in 2023." },
 };
 
-const countryData = {
-  "af_med": [
-    { 
-      "id": "12", "name": { "fr": "Algérie", "en": "Algeria" }, "flag": "🇩🇿", "iso2": "dz", "retention": 60, "aid": 0.1, "stock": "259458", "female": "47.2", 
-      "history": [ { "year": 1990, "value": "273954" }, { "year": 2024, "value": "259458" } ], "remittances": 0.67, "labour_participation": "40.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.6", 
-      "idp_conflict": 0, "idp_disaster": 10, "refugees_hosted": 0, "avoi": 9, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 48, "total": 60, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103006"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "818", "name": { "fr": "Égypte", "en": "Egypt" }, "flag": "🇪🇬", "iso2": "eg", "retention": 75, "aid": 1.5, "stock": "1139820", "female": "47.1", 
-      "history": [ { "year": 1990, "value": "144713" }, { "year": 2024, "value": "1139820" } ], "remittances": 11.37, "labour_participation": "59.9", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.1", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 834200, "avoi": 11, 
-      "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc,
-      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe. L'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians, and Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
-      "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
-    },
-    { 
-      "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "iso2": "ly", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
-      "history": [ { "year": 1990, "value": "457075" }, { "year": 2024, "value": "897751" } ], "remittances": null, "labour_participation": "61.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "12.8", 
-      "idp_conflict": 85000, "idp_disaster": 21000, "refugees_hosted": 551700, "avoi": 4, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 19, "total": 29, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102919"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
-    },
-    { 
-      "id": "504", "name": { "fr": "Maroc", "en": "Morocco" }, "flag": "🇲🇦", "iso2": "ma", "retention": 55, "aid": 1.2, "stock": "111069", "female": "48.5", 
-      "history": [ { "year": 1990, "value": "54895" }, { "year": 2024, "value": "111069" } ], "remittances": 7.49, "labour_participation": "46.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
-      "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc,
-      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l'Espagne (env. 770 000) et l'Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
-    },
-    {
-      "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "iso2": "tn", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
-      "history": [ { "year": 1990, "value": "37984" }, { "year": 2024, "value": "63201" } ], "remittances": 6.34, "labour_participation": "52.4", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.5", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 38, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102980"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "478", "name": { "fr": "Mauritanie", "en": "Mauritania" }, "flag": "🇲🇷", "iso2": "mr", "retention": 70, "aid": 5.5, "stock": "195937", "female": "43.4", 
-      "history": [ { "year": 1990, "value": "111650" }, { "year": 2024, "value": "195937" } ], "remittances": 0.87, "labour_participation": "68.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 17, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 34, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103031"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    }
-  ],
-  "af_west": [
-    { 
-      "id": "204", "name": { "fr": "Bénin", "en": "Benin" }, "flag": "🇧🇯", "iso2": "bj", "retention": 80, "aid": 4.1, "stock": "418202", "female": "52.9", 
-      "history": [ { "year": 1990, "value": "76751" }, { "year": 2024, "value": "418202" } ], "remittances": 1.72, "labour_participation": "64.4", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "3.0", 
-      "idp_conflict": 26000, "idp_disaster": 1100, "refugees_hosted": 0, "avoi": 100, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 22, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103009"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
-    },
-    { 
-      "id": "854", "name": { "fr": "Burkina Faso", "en": "Burkina Faso" }, "flag": "🇧🇫", "iso2": "bf", "retention": 90, "aid": 6.2, "stock": "739820", "female": "52.4", 
-      "history": [ { "year": 1990, "value": "349652" }, { "year": 2024, "value": "739820" } ], "remittances": 2.57, "labour_participation": "64.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "3.2", 
-      "idp_conflict": 2063000, "idp_disaster": 210, "refugees_hosted": 0, "avoi": 36, 
-      "normlex": {"fundamental": 9, "governance": 4, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103058"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "132", "name": { "fr": "Cabo Verde", "en": "Cabo Verde" }, "flag": "🇨🇻", "iso2": "cv", "retention": 40, "aid": 8.1, "stock": "16515", "female": "49.4", 
-      "history": [ { "year": 1990, "value": "8931" }, { "year": 2024, "value": "16515" } ], "remittances": 11.67, "labour_participation": "72.2", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "3.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 86, 
-      "normlex": {"fundamental": 9, "governance": 2, "technical": 5, "total": 16, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102978"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "iso2": "ci", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
-      "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 2.03, "labour_participation": "74.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "9.0", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 42, 
-      "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "270", "name": { "fr": "Gambie", "en": "Gambia" }, "flag": "🇬🇲", "iso2": "gm", "retention": 60, "aid": 10.5, "stock": "236137", "female": "47.2", 
-      "history": [ { "year": 1990, "value": "118123" }, { "year": 2024, "value": "236137" } ], "remittances": 22.0, "labour_participation": "72.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "8.6", 
-      "idp_conflict": 0, "idp_disaster": 250, "refugees_hosted": 0, "avoi": 100, 
-      "normlex": {"fundamental": 8, "governance": 0, "technical": 11, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103004"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "288", "name": { "fr": "Ghana", "en": "Ghana" }, "flag": "🇬🇭", "iso2": "gh", "retention": 70, "aid": 2.5, "stock": "532286", "female": "46.6", 
-      "history": [ { "year": 1990, "value": "164851" }, { "year": 2024, "value": "532286" } ], "remittances": 2.12, "labour_participation": "64.4", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.6", 
-      "idp_conflict": 3900, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 87, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103271"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "324", "name": { "fr": "Guinée", "en": "Guinea" }, "flag": "🇬🇳", "iso2": "gn", "retention": 85, "aid": 4.8, "stock": "117416", "female": "41.2", 
-      "history": [ { "year": 1990, "value": "403621" }, { "year": 2024, "value": "117416" } ], "remittances": 2.46, "labour_participation": "44.0", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 130, "refugees_hosted": 0, "avoi": 38, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 50, "total": 62, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103001"},
-      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "624", "name": { "fr": "Guinée-Bissau", "en": "Guinea-Bissau" }, "flag": "🇬🇼", "iso2": "gw", "retention": 75, "aid": 9.1, "stock": "15064", "female": "50.6", 
-      "history": [ { "year": 1990, "value": "15368" }, { "year": 2024, "value": "15064" } ], "remittances": 9.88, "labour_participation": "61.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 700, "refugees_hosted": 0, "avoi": 26, 
-      "normlex": {"fundamental": 8, "governance": 1, "technical": 25, "total": 34, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103328"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "430", "name": { "fr": "Libéria", "en": "Liberia" }, "flag": "🇱🇷", "iso2": "lr", "retention": 80, "aid": 15.5, "stock": "72423", "female": "42.4", 
-      "history": [ { "year": 1990, "value": "94964" }, { "year": 2024, "value": "72423" } ], "remittances": 21.28, "labour_participation": "60.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 26, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 17, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102941"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "466", "name": { "fr": "Mali", "en": "Mali" }, "flag": "🇲🇱", "iso2": "ml", "retention": 85, "aid": 7.2, "stock": "545323", "female": "49.3", 
-      "history": [ { "year": 1990, "value": "160736" }, { "year": 2024, "value": "545323" } ], "remittances": 3.99, "labour_participation": "76.0", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.3", 
-      "idp_conflict": 409000, "idp_disaster": 5900, "refugees_hosted": 0, "avoi": 41, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 23, "total": 36, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102987"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "562", "name": { "fr": "Niger", "en": "Niger" }, "flag": "🇳🇪", "iso2": "ne", "retention": 90, "aid": 9.8, "stock": "449236", "female": "53.5", 
-      "history": [ { "year": 1990, "value": "115464" }, { "year": 2024, "value": "449236" } ], "remittances": 3.3, "labour_participation": "50.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.7", 
-      "idp_conflict": 392000, "idp_disaster": 25000, "refugees_hosted": 0, "avoi": 34, 
-      "normlex": {"fundamental": 11, "governance": 3, "technical": 29, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103028"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "566", "name": { "fr": "Nigéria", "en": "Nigeria" }, "flag": "🇳🇬", "iso2": "ng", "retention": 65, "aid": 0.8, "stock": "1403281", "female": "45.5", 
-      "history": [ { "year": 1990, "value": "456621" }, { "year": 2024, "value": "1403281" } ], "remittances": 7.84, "labour_participation": "84.7", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.6", 
-      "idp_conflict": 3496000, "idp_disaster": 170000, "refugees_hosted": 0, "avoi": 32, 
-      "normlex": {"fundamental": 10, "governance": 2, "technical": 32, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103259"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc,
-      "origDest": { "fr": "Malgré une diaspora nombreuse au Royaume-Uni et aux États-Unis, les premières destinations réelles des Nigérians sont des pays voisins. Le Cameroun et le Niger accueillent à eux deux plus de 320 000 Nigérians — davantage que le Royaume-Uni (OIM, Rapport sur les migrations dans le monde 2024).", "en": "Despite a large diaspora in the UK and US, Nigerians' top real destinations are neighboring countries: Cameroon and Niger together host over 320,000 Nigerians, more than the UK (IOM, World Migration Report 2024)." },
-      "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
-    },
-    { 
-      "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "iso2": "sn", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
-      "history": [ { "year": 1990, "value": "270410" }, { "year": 2024, "value": "281867" } ], "remittances": 10.64, "labour_participation": "55.7", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "1.6", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 79, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 31, "total": 44, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103046"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "694", "name": { "fr": "Sierra Leone", "en": "Sierra Leone" }, "flag": "🇸🇱", "iso2": "sl", "retention": 80, "aid": 8.5, "stock": "49997", "female": "43.4", 
-      "history": [ { "year": 1990, "value": "222148" }, { "year": 2024, "value": "49997" } ], "remittances": 4.6, "labour_participation": "68.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.6", 
-      "idp_conflict": 0, "idp_disaster": 4500, "refugees_hosted": 0, "avoi": 81, 
-      "normlex": {"fundamental": 11, "governance": 2, "technical": 33, "total": 46, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103212"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "768", "name": { "fr": "Togo", "en": "Togo" }, "flag": "🇹🇬", "iso2": "tg", "retention": 85, "aid": 4.5, "stock": "281994", "female": "49.3", 
-      "history": [ { "year": 1990, "value": "84844" }, { "year": 2024, "value": "281994" } ], "remittances": 8.69, "labour_participation": "59.0", "remittances_year": 2020, "labour_participation_year": 2022, "evolution": "3.1", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 28, 
-      "normlex": {"fundamental": 9, "governance": 4, "technical": 15, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103134"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    }
-  ],
-  "af_central": [
-    { 
-      "id": "24", "name": { "fr": "Angola", "en": "Angola" }, "flag": "🇦🇴", "iso2": "ao", "retention": 90, "aid": 0.5, "stock": "676507", "female": "49.5", 
-      "history": [ { "year": 1990, "value": "33517" }, { "year": 2024, "value": "676507" } ], "remittances": 0.04, "labour_participation": "80.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.8", 
-      "idp_conflict": 0, "idp_disaster": 27000, "refugees_hosted": 0, "avoi": 34, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 30, "total": 43, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102951"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "120", "name": { "fr": "Cameroun", "en": "Cameroon" }, "flag": "🇨🇲", "iso2": "cm", "retention": 85, "aid": 2.1, "stock": "642948", "female": "50.6", 
-      "history": [ { "year": 1990, "value": "265967" }, { "year": 2024, "value": "642948" } ], "remittances": 1.29, "labour_participation": "84.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.2", 
-      "idp_conflict": 954000, "idp_disaster": 50000, "refugees_hosted": 0, "avoi": 11, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 39, "total": 51, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102973"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "140", "name": { "fr": "Centrafrique", "en": "Central African Republic" }, "flag": "🇨🇫", "iso2": "cf", "retention": 95, "aid": 12.5, "stock": "94556", "female": "47.6", 
-      "history": [ { "year": 1990, "value": "67234" }, { "year": 2024, "value": "94556" } ], "remittances": null, "labour_participation": "77.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "1.8", 
-      "idp_conflict": 427000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 25, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 35, "total": 47, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103002"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "148", "name": { "fr": "Tchad", "en": "Chad" }, "flag": "🇹🇩", "iso2": "td", "retention": 95, "aid": 5.5, "stock": "1269673", "female": "55.6", 
-      "history": [ { "year": 1990, "value": "74342" }, { "year": 2024, "value": "1269673" } ], "remittances": null, "labour_participation": "60.5", "remittances_year": null, "labour_participation_year": 2022, "evolution": "6.3", 
-      "idp_conflict": 593000, "idp_disaster": 48000, "refugees_hosted": 1500000, "avoi": 28, 
-      "normlex": {"fundamental": 8, "governance": 3, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103022"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "178", "name": { "fr": "Congo", "en": "Congo" }, "flag": "🇨🇬", "iso2": "cg", "retention": 90, "aid": 2.5, "stock": "385589", "female": "45.5", 
-      "history": [ { "year": 1990, "value": "129391" }, { "year": 2024, "value": "385589" } ], "remittances": 0.3, "labour_participation": "60.6", "remittances_year": 2021, "labour_participation_year": 2022, "evolution": "6.1", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 22, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 23, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103014"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "180", "name": { "fr": "R.D. Congo", "en": "DR Congo" }, "flag": "🇨🇩", "iso2": "cd", "retention": 95, "aid": 6.5, "stock": "1085090", "female": "51.8", 
-      "history": [ { "year": 1990, "value": "754194" }, { "year": 2024, "value": "1085090" } ], "remittances": 3.65, "labour_participation": "62.3", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "1.0", 
-      "idp_conflict": 4276000, "idp_disaster": 630000, "refugees_hosted": 0, "avoi": 14, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
-      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc,
-      "origDest": { "fr": "Plus de 1,2 million de Congolais réfugiés sont hébergés en Afrique, près de la moitié en Ouganda seul (env. 560 000-575 000 personnes), avec le Burundi, la Tanzanie, le Rwanda et la Zambie comme autres pays d'accueil majeurs (HCR, 2025).", "en": "Over 1.2 million Congolese refugees are hosted across Africa, nearly half in Uganda alone (approx. 560,000-575,000 people), with Burundi, Tanzania, Rwanda, and Zambia as other major host countries (UNHCR, 2025)." }
-    },
-    {
-      "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "iso2": "gq", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
-      "history": [ { "year": 1990, "value": "2740" }, { "year": 2024, "value": "248930" } ], "remittances": null, "labour_participation": "78.0", "remittances_year": null, "labour_participation_year": 2022, "evolution": "13.2", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 11, 
-      "normlex": {"fundamental": 8, "governance": 0, "technical": 6, "total": 14, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103102"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "266", "name": { "fr": "Gabon", "en": "Gabon" }, "flag": "🇬🇦", "iso2": "ga", "retention": 95, "aid": 0.8, "stock": "449746", "female": "35.7", 
-      "history": [ { "year": 1990, "value": "128188" }, { "year": 2024, "value": "449746" } ], "remittances": 0.13, "labour_participation": "64.7", "remittances_year": 2015, "labour_participation_year": 2022, "evolution": "17.7", 
-      "idp_conflict": 0, "idp_disaster": 1500, "refugees_hosted": 0, "avoi": 17, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 30, "total": 42, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103008"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "678", "name": { "fr": "Sao Tomé-et-Principe", "en": "Sao Tome and Principe" }, "flag": "🇸🇹", "iso2": "st", "retention": 80, "aid": 10.5, "stock": "1955", "female": "50.1", 
-      "history": [ { "year": 1990, "value": "5582" }, { "year": 2024, "value": "1955" } ], "remittances": 9.71, "labour_participation": "51.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 15, 
-      "normlex": {"fundamental": 10, "governance": 2, "technical": 13, "total": 25, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103126"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": true, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "108", "name": { "fr": "Burundi", "en": "Burundi" }, "flag": "🇧🇮", "iso2": "bi", "retention": 95, "aid": 15.5, "stock": "387101", "female": "50.7", 
-      "history": [ { "year": 1990, "value": "333110" }, { "year": 2024, "value": "387101" } ], "remittances": 8.12, "labour_participation": "69.7", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "2.6", 
-      "idp_conflict": 6800, "idp_disaster": 82000, "refugees_hosted": 0, "avoi": 82, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 21, "total": 31, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102988"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "646", "name": { "fr": "Rwanda", "en": "Rwanda" }, "flag": "🇷🇼", "iso2": "rw", "retention": 95, "aid": 12.5, "stock": "513316", "female": "49.4", 
-      "history": [ { "year": 1990, "value": "160024" }, { "year": 2024, "value": "513316" } ], "remittances": 3.42, "labour_participation": "63.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "3.6", 
-      "idp_conflict": 0, "idp_disaster": 81, "refugees_hosted": 0, "avoi": 100, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 22, "total": 35, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103153"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": true, "zlecaf": true },
-      ...genericDesc 
-    }
-  ],
-  "af_east": [
-    { 
-      "id": "174", "name": { "fr": "Comores", "en": "Comoros" }, "flag": "🇰🇲", "iso2": "km", "retention": 40, "aid": 10.2, "stock": "12449", "female": "51.6", 
-      "history": [ { "year": 1990, "value": "14079" }, { "year": 2024, "value": "12449" } ], "remittances": 20.84, "labour_participation": "36.7", "remittances_year": 2023, "labour_participation_year": 2022, "evolution": "1.4", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 26, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103322"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "262", "name": { "fr": "Djibouti", "en": "Djibouti" }, "flag": "🇩🇯", "iso2": "dj", "retention": 90, "aid": 8.5, "stock": "125996", "female": "47.5", 
-      "history": [ { "year": 1990, "value": "122221" }, { "year": 2024, "value": "125996" } ], "remittances": 1.35, "labour_participation": "44.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "10.8", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 80, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 58, "total": 70, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102996"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "232", "name": { "fr": "Érythrée", "en": "Eritrea" }, "flag": "🇪🇷", "iso2": "er", "retention": 85, "aid": 5.5, "stock": "12512", "female": "43.9", 
-      "history": [ { "year": 1990, "value": "11848" }, { "year": 2024, "value": "12512" } ], "remittances": null, "labour_participation": "80.6", "remittances_year": null, "labour_participation_year": 2022, "evolution": "0.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 81, 
-      "normlex": {"fundamental": 8, "governance": 0, "technical": 0, "total": 8, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103290"},
-      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
-    },
-    { 
-      "id": "231", "name": { "fr": "Éthiopie", "en": "Ethiopia" }, "flag": "🇪🇹", "iso2": "et", "retention": 90, "aid": 3.5, "stock": "1168455", "female": "49.7", 
-      "history": [ { "year": 1990, "value": "875325" }, { "year": 2024, "value": "1168455" } ], "remittances": 4.77, "labour_participation": "65.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.9", 
-      "idp_conflict": 2378000, "idp_disaster": 757000, "refugees_hosted": 521400, "avoi": 73, 
-      "normlex": {"fundamental": 9, "governance": 1, "technical": 13, "total": 23, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102950"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "404", "name": { "fr": "Kenya", "en": "Kenya" }, "flag": "🇰🇪", "iso2": "ke", "retention": 85, "aid": 2.8, "stock": "992536", "female": "49.5", 
-      "history": [ { "year": 1990, "value": "298089" }, { "year": 2024, "value": "992536" } ], "remittances": 4.15, "labour_participation": "64.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.8", 
-      "idp_conflict": 10000, "idp_disaster": 3800, "refugees_hosted": 0, "avoi": 96, 
-      "normlex": {"fundamental": 7, "governance": 3, "technical": 42, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103315"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "450", "name": { "fr": "Madagascar", "en": "Madagascar" }, "flag": "🇲🇬", "iso2": "mg", "retention": 80, "aid": 4.5, "stock": "38625", "female": "43.0", 
-      "history": [ { "year": 1990, "value": "23917" }, { "year": 2024, "value": "38625" } ], "remittances": 2.31, "labour_participation": "71.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.1", 
-      "idp_conflict": 0, "idp_disaster": 70000, "refugees_hosted": 0, "avoi": 79, 
-      "normlex": {"fundamental": 11, "governance": 4, "technical": 38, "total": 53, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102956"},
-      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "480", "name": { "fr": "Maurice", "en": "Mauritius" }, "flag": "🇲🇺", "iso2": "mu", "retention": 60, "aid": 0.5, "stock": "29142", "female": "44.6", 
-      "history": [ { "year": 1990, "value": "3613" }, { "year": 2024, "value": "29142" } ], "remittances": 1.92, "labour_participation": "73.4", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.3", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 83, 
-      "normlex": {"fundamental": 10, "governance": 2, "technical": 40, "total": 52, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103139"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "690", "name": { "fr": "Seychelles", "en": "Seychelles" }, "flag": "🇸🇨", "iso2": "sc", "retention": 60, "aid": 1.5, "stock": "13261", "female": "30.0", 
-      "history": [ { "year": 1990, "value": "3721" }, { "year": 2024, "value": "13261" } ], "remittances": 0.54, "labour_participation": null, "remittances_year": 2024, "labour_participation_year": null, "evolution": "10.2", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 100,
-      "normlex": {"fundamental": 9, "governance": 2, "technical": 27, "total": 38, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103310"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "706", "name": { "fr": "Somalie", "en": "Somalia" }, "flag": "🇸🇴", "iso2": "so", "retention": 95, "aid": 15.5, "stock": "77972", "female": "44.9", 
-      "history": [ { "year": 1990, "value": "478294" }, { "year": 2024, "value": "77972" } ], "remittances": null, "labour_participation": "41.2", "remittances_year": null, "labour_participation_year": 2022, "evolution": "0.4", 
-      "idp_conflict": 3347000, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 19, 
-      "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
-      "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
-      ...genericDesc,
-      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens sur le continent — près de 450 000 rien qu'au Kenya, dont la majorité dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
-    },
-    {
-      "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
-      "history": [ { "year": 1990, "value": "652365" }, { "year": 2024, "value": "914001" } ], "remittances": 9.49, "labour_participation": "76.8", "remittances_year": 2015, "labour_participation_year": 2022, "evolution": "8.0", 
-      "idp_conflict": 945000, "idp_disaster": 630000, "refugees_hosted": 571100, "avoi": 9, 
-      "normlex": {"fundamental": 7, "governance": 0, "technical": 0, "total": 7, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103154"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
-    },
-    { 
-      "id": "729", "name": { "fr": "Soudan", "en": "Sudan" }, "flag": "🇸🇩", "iso2": "sd", "retention": 90, "aid": 5.5, "stock": "2397113", "female": "50.3", 
-      "history": [ { "year": 1990, "value": "1402896" }, { "year": 2024, "value": "2397113" } ], "remittances": 2.9, "labour_participation": "28.9", "remittances_year": 2022, "labour_participation_year": 2022, "evolution": "4.8", 
-      "idp_conflict": 9117000, "idp_disaster": 0, "refugees_hosted": 635000, "avoi": 3, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102958"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": false },
-      ...genericDesc 
-    },
-    { 
-      "id": "834", "name": { "fr": "Tanzanie", "en": "Tanzania" }, "flag": "🇹🇿", "iso2": "tz", "retention": 90, "aid": 3.5, "stock": "462371", "female": "50.0", 
-      "history": [ { "year": 1990, "value": "574025" }, { "year": 2024, "value": "462371" } ], "remittances": 1.42, "labour_participation": "78.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 6300, "refugees_hosted": 0, "avoi": 71, 
-      "normlex": {"fundamental": 8, "governance": 1, "technical": 28, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103136"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "800", "name": { "fr": "Ouganda", "en": "Uganda" }, "flag": "🇺🇬", "iso2": "ug", "retention": 95, "aid": 6.5, "stock": "2057759", "female": "55.0", 
-      "history": [ { "year": 1990, "value": "560570" }, { "year": 2024, "value": "2057759" } ], "remittances": 2.65, "labour_participation": "68.9", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.3", 
-      "idp_conflict": 2000, "idp_disaster": 20000, "refugees_hosted": 1900000, "avoi": 40, 
-      "normlex": {"fundamental": 8, "governance": 3, "technical": 21, "total": 32, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103324"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    }
-  ],
-  "af_south": [
-    { 
-      "id": "454", "name": { "fr": "Malawi", "en": "Malawi" }, "flag": "🇲🇼", "iso2": "mw", "retention": 90, "aid": 9.5, "stock": "186719", "female": "51.1", 
-      "history": [ { "year": 1990, "value": "1127724" }, { "year": 2024, "value": "186719" } ], "remittances": 1.65, "labour_participation": "70.2", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "0.8", 
-      "idp_conflict": 0, "idp_disaster": 24000, "refugees_hosted": 0, "avoi": 47, 
-      "normlex": {"fundamental": 11, "governance": 3, "technical": 19, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103138"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "508", "name": { "fr": "Mozambique", "en": "Mozambique" }, "flag": "🇲🇿", "iso2": "mz", "retention": 95, "aid": 10.5, "stock": "353143", "female": "51.2", 
-      "history": [ { "year": 1990, "value": "122332" }, { "year": 2024, "value": "353143" } ], "remittances": 1.17, "labour_participation": "82.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.1", 
-      "idp_conflict": 465000, "idp_disaster": 144000, "refugees_hosted": 0, "avoi": 84, 
-      "normlex": {"fundamental": 11, "governance": 3, "technical": 12, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103149"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "894", "name": { "fr": "Zambie", "en": "Zambia" }, "flag": "🇿🇲", "iso2": "zm", "retention": 90, "aid": 4.5, "stock": "249205", "female": "48.1", 
-      "history": [ { "year": 1990, "value": "279463" }, { "year": 2024, "value": "249205" } ], "remittances": 1.32, "labour_participation": "66.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "1.2", 
-      "idp_conflict": 0, "idp_disaster": 2300, "refugees_hosted": 0, "avoi": 48, 
-      "normlex": {"fundamental": 10, "governance": 4, "technical": 35, "total": 49, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103233"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "716", "name": { "fr": "Zimbabwe", "en": "Zimbabwe" }, "flag": "🇿🇼", "iso2": "zw", "retention": 85, "aid": 5.5, "stock": "429108", "female": "43.2", 
-      "history": [ { "year": 1990, "value": "634621" }, { "year": 2024, "value": "429108" } ], "remittances": 8.45, "labour_participation": "69.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.6", 
-      "idp_conflict": 0, "idp_disaster": 2200, "refugees_hosted": 0, "avoi": 47, 
-      "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc,
-      "origDest": { "fr": "L'Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
-    },
-    {
-      "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "iso2": "bw", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 
-      "history": [ { "year": 1990, "value": "27510" }, { "year": 2024, "value": "116402" } ], "remittances": 0.67, "labour_participation": "76.6", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.4", 
-      "idp_conflict": 0, "idp_disaster": 7, "refugees_hosted": 0, "avoi": 34, 
-      "normlex": {"fundamental": 8, "governance": 3, "technical": 6, "total": 17, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103184"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "748", "name": { "fr": "Eswatini", "en": "Eswatini" }, "flag": "🇸🇿", "iso2": "sz", "retention": 98, "aid": 5.5, "stock": "33268", "female": "48.5", 
-      "history": [ { "year": 1990, "value": "74991" }, { "year": 2024, "value": "33268" } ], "remittances": 0.69, "labour_participation": "67.7", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "2.7", 
-      "idp_conflict": 0, "idp_disaster": 8, "refugees_hosted": 0, "avoi": 32, 
-      "normlex": {"fundamental": 8, "governance": 2, "technical": 23, "total": 33, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103185"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "426", "name": { "fr": "Lesotho", "en": "Lesotho" }, "flag": "🇱🇸", "iso2": "ls", "retention": 98, "aid": 8.5, "stock": "15039", "female": "45.8", 
-      "history": [ { "year": 1990, "value": "8240" }, { "year": 2024, "value": "15039" } ], "remittances": 20.72, "labour_participation": "63.8", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "0.7", 
-      "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 30, 
-      "normlex": {"fundamental": 11, "governance": 2, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103186"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "516", "name": { "fr": "Namibie", "en": "Namibia" }, "flag": "🇳🇦", "iso2": "na", "retention": 95, "aid": 1.5, "stock": "116035", "female": "46.0", 
-      "history": [ { "year": 1990, "value": "120641" }, { "year": 2024, "value": "116035" } ], "remittances": 0.71, "labour_participation": "70.3", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "4.3", 
-      "idp_conflict": 0, "idp_disaster": 1300, "refugees_hosted": 0, "avoi": 65, 
-      "normlex": {"fundamental": 9, "governance": 3, "technical": 7, "total": 19, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103187"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    },
-    { 
-      "id": "710", "name": { "fr": "Afrique du Sud", "en": "South Africa" }, "flag": "🇿🇦", "iso2": "za", "retention": 95, "aid": 0.5, "stock": "2631100", "female": "41.9", 
-      "history": [ { "year": 1990, "value": "1285707" }, { "year": 2024, "value": "2631100" } ], "remittances": 0.24, "labour_participation": "72.5", "remittances_year": 2025, "labour_participation_year": 2022, "evolution": "4.3", 
-      "idp_conflict": 0, "idp_disaster": 28000, "refugees_hosted": 0, "avoi": 38, 
-      "normlex": {"fundamental": 9, "governance": 2, "technical": 17, "total": 28, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103188"},
-      "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
-      ...genericDesc 
-    }
-  ]
-};
+
 
 // ----------------------------------------------------------------------------
 // Agrégation en direct depuis countryData (remplace les totaux saisis à la main)
@@ -4585,7 +4143,7 @@ const AnchoringMatrix = ({ lang }) => {
         </h4>
         <p className="text-[11px] leading-relaxed text-slate-600 text-justify">
           {L(
-            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument. Les six restants sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts : Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé, et la matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
+            "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 49 signataires ont déposé leur instrument. Les six restants sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
             "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 49 signatories have deposited their instrument, the six outstanding being Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved) and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits: Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
           )}
         </p>
@@ -4937,7 +4495,7 @@ const TabForced = ({ text, lang }) => {
           </div>
           <p className="text-[13px] text-slate-600 leading-relaxed text-justify mt-4">
             {L(
-              "En dix ans, le nombre de personnes déplacées à l'intérieur de leur propre pays et suivies par le HCR a plus que triplé sur le continent, quand les réfugiés — ceux qui franchissent une frontière — ont un peu plus que doublé. La mobilité forcée africaine ne s'internationalise donc pas : elle s'intensifie à l'intérieur des frontières. C'est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
+              "En dix ans, le nombre de personnes déplacées dans leur propre pays et suivies par le HCR a plus que triplé sur le continent. Les réfugiés, eux — ceux qui franchissent une frontière —, ont un peu plus que doublé. La mobilité forcée africaine ne s'internationalise donc pas : elle s'intensifie à l'intérieur des frontières. C'est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
               "In a decade, the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent, while refugees — those who cross a border — have a little more than doubled. African forced mobility is therefore not internationalising: it is intensifying within borders. That is precisely the population migration statistics do not count, and the one whose protecting treaty is still awaiting ratifications."
             )}
           </p>
@@ -5188,7 +4746,7 @@ const TabLabour = ({ text, lang }) => {
             </h4>
             <p className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }}>
               {L(
-                "La 4e édition rappelle que 19,1 % seulement de la population africaine est couverte par au moins une prestation de protection sociale (indicateur ODD 1.3.1), contre 52,4 % dans le monde — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
+                "La 4e édition rappelle que 19,1 % seulement de la population africaine bénéficie d'au moins une prestation de protection sociale (indicateur ODD 1.3.1). La moyenne mondiale est de 52,4 % — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
                 "The 4th edition recalls that only 19.1% of Africa's population is covered by at least one social protection benefit (SDG indicator 1.3.1), against 52.4% worldwide — the first time half of humanity is covered. A migrant worker compounds this continental deficit with the non-portability of entitlements across borders."
               )}
             </p>
@@ -5496,7 +5054,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: lang === 'fr' ? 'Coordination sécuritaire de surcouche transrégionale' : 'Transregional security overlay coordination',
       desc: {
-        fr: "Avec 24 États membres englobant plusieurs autres CER, la CEN-SAD fonctionne davantage comme un forum politique et sécuritaire que comme un régime juridique autonome de libre circulation, même si letraité fondateur inscrit la libre circulation des personnes parmi ses objectifs centraux.",
+        fr: "Avec 24 États membres, qui englobent plusieurs autres CER, la CEN-SAD tient davantage du forum politique et sécuritaire que du régime juridique autonome de libre circulation. Son traité fondateur inscrit pourtant la libre circulation des personnes parmi ses objectifs centraux.",
         en: "With 24 member states overlapping several other RECs, CEN-SAD functions more as a political and security forum than as an autonomous legal regime of free movement, even though its founding treaty lists free movement of persons among its core objectives."
       },
       instruments: {
@@ -5738,7 +5296,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Act (Cap 16:02).", en: "Immigration Act (Cap 16:02)." },
           details: [
             { label: { fr: "Entrée Standard", en: "Standard Entry" }, text: { fr: "Les visiteurs reçoivent généralement un tampon de 28 jours initialement, extensible.", en: "Visitors generally receive an initial 28-day stamp, extendable." } },
-            { label: { fr: "Nationaux non-CEDEAO", en: "Non-ECOWAS Nationals" }, text: { fr: "Sont tenus d'obtenir un permis de résidence (« Alien Card » + « Residential Permit B ») s'ils séjournent au-delà de 56 jours, bien que 90 jours soit souvent la limite pratique maximale pour les extensions avant l'application stricte de la résidence.", en: "Required to obtain a residence permit (\"Alien Card\" + \"Residential Permit B\") if staying beyond 56 days, although 90 days is often the practical maximum for extensions before residence is strictly enforced." } }
+            { label: { fr: "Nationaux non-CEDEAO", en: "Non-ECOWAS Nationals" }, text: { fr: "Un permis de résidence est exigé au-delà de 56 jours : « Alien Card » et « Residential Permit B ». En pratique, les extensions dépassent rarement 90 jours avant que la règle de résidence ne s'applique strictement.", en: "Required to obtain a residence permit (\"Alien Card\" + \"Residential Permit B\") if staying beyond 56 days, although 90 days is often the practical maximum for extensions before residence is strictly enforced." } }
           ]
         },
         {
@@ -6097,7 +5655,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       region: { fr: "Afrique Australe", en: "Southern Africa" },
-      intro: { fr: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Contrairement à d'autres régions où une sortie et réentrée (« border run ») réinitialise le compteur de 90 jours, les pays de la SADC comme l'Afrique du Sud et le Botswana appliquent souvent une limite annuelle agrégée pour empêcher la résidence de fait.", en: "The SADC region is characterized by a \"days per year\" calculation for visitors. Unlike other regions where an exit-and-re-entry (\"border run\") resets the 90-day counter, SADC countries such as South Africa and Botswana often apply an aggregate annual cap to prevent de facto residence." },
+      intro: { fr: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Ailleurs, une sortie suivie d'une réentrée — le « border run » — remet le compteur de 90 jours à zéro. Plusieurs pays de la SADC, dont l'Afrique du Sud et le Botswana, appliquent au contraire une limite annuelle cumulée, pour empêcher la résidence de fait.", en: "The SADC region is characterized by a \"days per year\" calculation for visitors. Unlike other regions where an exit-and-re-entry (\"border run\") resets the 90-day counter, SADC countries such as South Africa and Botswana often apply an aggregate annual cap to prevent de facto residence." },
       countries: [
         {
           name: { fr: "Botswana", en: "Botswana" },
@@ -6429,7 +5987,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             >
               <p className="text-justify">
                 {lang === 'fr'
-                  ? "Le Pacte a été adopté lors de la conférence intergouvernementale de Marrakech le 10 décembre 2018, puis entériné par l'Assemblée générale des Nations unies le 19 décembre 2018 (résolution 73/195), au terme d'un vote enregistré de 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable, et le texte lui-même précise que « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen »."
+                  ? "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen »."
                   : "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018, then endorsed by the UN General Assembly on 19 December 2018 (resolution 73/195), by a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"."}
               </p>
 
@@ -6899,7 +6457,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h4 className="text-sm font-bold text-teal-900 mb-1.5">{lang === 'fr' ? "Partenariats de Compétences (Global Skills Partnerships) en Action" : "Global Skills Partnerships in Action"}</h4>
                     <p className="text-xs text-teal-800 leading-relaxed">
                       {lang === 'fr'
-                        ? "Au-delà des cadres continentaux, des accords bilatéraux concrets appliquent déjà le modèle du « partenariat de compétences » (voir Glossaire) entre États africains et européens — une alternative testée à la fuite des cerveaux, où la formation est financée conjointement avant le départ."
+                        ? "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée."
                         : "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure."}
                     </p>
                   </div>
@@ -7973,683 +7531,9 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   );
 };
 
-const glossaryData = [
-  {
-    category: { fr: "Typologie des Mobilités", en: "Mobility Typology" },
-    icon: Globe,
-    terms: [
-      {
-        term: "Migration",
-        en_term: "Migration",
-        fr: "Le mouvement d'une personne ou d'un groupe de personnes d'une unité géographique à une autre à travers une frontière administrative ou politique, avec l'intention de s'installer indéfiniment ou temporairement dans un lieu autre que son lieu d'origine (Statut de l'OAM).",
-        en: "The movement of a person or group of persons from one geographical unit to another across an administrative or political border, with the intention of settling indefinitely or temporarily in a place other than their place of origin (AMO Statute).",
-        source: { fr: "Statut de l'Observatoire africain des migrations (UA)", en: "Statute of the African Migration Observatory (AU)", url: "https://amo.au.int/en" }
-      },
-      {
-        term: "Migration internationale",
-        en_term: "International Migration",
-        fr: "Mouvement d'individus à travers des frontières étatiques internationalement reconnues avec l'intention d'établir une résidence. À des fins statistiques, l'ONU (UNDESA) et l'OIM définissent un migrant international comme une personne qui change de pays de résidence habituelle pour une période d'au moins 12 mois.",
-        en: "Movement of individuals across internationally recognized state borders with the intention of establishing residence. For statistical purposes, the UN (UNDESA) and IOM define an international migrant as a person who moves to a country other than their usual residence for at least 12 months.",
-        source: { fr: "UN DESA — définition opératoire (résidence habituelle, 12 mois)", en: "UN DESA — operational definition (usual residence, 12 months)" }
-      },
-      {
-        term: "Migration interne",
-        en_term: "Internal Migration",
-        fr: "Mouvement de personnes à l'intérieur d'un État impliquant l'établissement d'une nouvelle résidence temporaire ou permanente (ex: rural vers urbain). C'est la forme de migration la plus courante (OIM).",
-        en: "Movement of people within a State involving the establishment of a new temporary or permanent residence (e.g., rural-to-urban). It is the most common form of migration (IOM).",
-        source: { fr: "OIM — Glossaire de la migration", en: "IOM — Glossary on Migration" }
-      },
-      {
-        term: "Migration de travail",
-        en_term: "Labor Migration",
-        fr: "Mouvement d'individus de leur pays d'origine vers un autre pays à des fins d'emploi. L'OIT et le MPFA (2018-2030) soulignent qu'elle peut générer un « triple gain » (pour le pays d'origine, de destination et le migrant) si elle est bien gouvernée.",
-        en: "Movement of individuals from their home country to another country for the purpose of employment. The ILO and MPFA (2018-2030) emphasize that it can create a 'triple win' scenario if well-governed."
-      },
-      {
-        term: "Migration circulaire",
-        en_term: "Circular Migration",
-        fr: "Mouvement temporaire et répété d'individus entre leur pays d'origine et un ou plusieurs pays d'accueil, souvent à des fins économiques, permettant le maintien de liens forts avec les communautés d'origine (OIM).",
-        en: "Temporary and repeated movement of individuals between their country of origin and one or more host countries, typically for economic purposes, allowing the maintenance of strong links with home communities (IOM).",
-        source: { fr: "OIM — Glossaire de la migration", en: "IOM — Glossary on Migration" }
-      },
-      {
-        term: "Migration saisonnière",
-        en_term: "Seasonal Migration (Labor)",
-        fr: "Déplacement temporaire lié aux fluctuations saisonnières de secteurs spécifiques (agriculture, tourisme). En Afrique, c'est une stratégie de subsistance traditionnelle facilitée par des protocoles régionaux comme celui de la CEDEAO.",
-        en: "Temporary movement linked to seasonal fluctuations in specific industries (agriculture, tourism). In Africa, it is a traditional livelihood strategy facilitated by regional protocols like ECOWAS.",
-        source: { fr: "Protocole de la CEDEAO sur la libre circulation", en: "ECOWAS Protocol on Free Movement" }
-      },
-      {
-        term: "Mobilité induite par le climat",
-        en_term: "Climate-Induced Mobility",
-        fr: "Mouvement (interne ou transfrontalier, volontaire ou forcé) déclenché par des changements climatiques soudains (inondations) ou progressifs (sécheresse). Bien que le terme « réfugié climatique » n'ait pas d'existence légale sous la Convention de 1951, ces populations nécessitent une protection (HCR, Déclaration de Kampala 2022).",
-        en: "Movement (internal or cross-border, voluntary or forced) driven by sudden (floods) or progressive (drought) climate changes. While the term 'climate refugee' has no legal standing under the 1951 Convention, these populations require protection (UNHCR, Kampala Declaration 2022).",
-        source: { fr: "HCR ; Déclaration ministérielle de Kampala sur migrations, environnement et changement climatique (2022)", en: "UNHCR; Kampala Ministerial Declaration on Migration, Environment and Climate Change (2022)", url: "https://au.int/" }
-      },
-      {
-        term: "Migration régulière",
-        en_term: "Regular Migration",
-        fr: "Mouvement s'effectuant en conformité avec les lois et règlements des pays d'origine, de transit et de destination (OIM). Le Pacte Mondial (GCM) encourage l'expansion des voies régulières pour réduire les vulnérabilités.",
-        en: "Movement that occurs in compliance with the laws and regulations of sending, transit, and receiving states (IOM). The Global Compact (GCM) encourages expanding regular pathways to reduce vulnerabilities.",
-        source: { fr: "Pacte mondial pour les migrations (GCM, 2018)", en: "Global Compact for Migration (GCM, 2018)" }
-      },
-      {
-        term: "Migration irrégulière",
-        en_term: "Irregular Migration",
-        fr: "Mouvement de personnes s'opérant en dehors des lois, règlements ou accords internationaux régissant l'entrée ou la sortie (OIM). Cela inclut le franchissement non autorisé des frontières ou le dépassement de la durée de validité d'un visa (overstaying).",
-        en: "Movement of persons that takes place outside the laws, regulations, or international agreements governing entry or exit (IOM). This includes unauthorized border crossings or visa overstaying."
-      },
-      {
-        term: "Dépassement de séjour (Overstaying)",
-        en_term: "Overstaying",
-        fr: "Fait de rester dans un pays au-delà de la période autorisée par un visa ou un permis. C'est l'une des formes les plus courantes de migration irrégulière, souvent liée à des lenteurs administratives ou à l'absence de voies de régularisation claires.",
-        en: "Remaining in a country beyond the authorized period granted by a visa or permit. It is one of the most common forms of irregular migration, often linked to administrative delays or lack of clear regularization pathways."
-      },
-      { 
-        term: "Nomadisme & Pastoralisme", 
-        en_term: "Nomadism & Mobile Pastoralism", 
-        fr: "Forme traditionnelle et adaptative de mobilité où les communautés se déplacent pour assurer leurs moyens de subsistance, étroitement liée à la gestion du bétail et aux variations climatiques. Le MPFA souligne la nécessité de sécuriser cette mobilité vitale, souvent menacée par le changement climatique et l'expansion agricole sédentaire.", 
-        en: "Traditional and adaptive form of mobility where communities move to sustain their livelihoods, closely tied to livestock management and climatic variations. The MPFA highlights the need to secure this vital mobility, often threatened by climate change and sedentary agricultural expansion." 
-      },
-    ]
-  },
-  {
-    category: { fr: "Personnes & Statuts Juridiques", en: "People & Legal Statuses" },
-    icon: Users,
-    terms: [
-      {
-        term: "Migrant international",
-        en_term: "International Migrant",
-        fr: "Toute personne résidant dans un pays autre que son pays de naissance ou de nationalité, indépendamment de son statut légal ou du motif de son déplacement (UN DESA).",
-        en: "Any person residing in a country other than their country of birth or nationality, regardless of their legal status or the reason for their movement (UN DESA).",
-        source: { fr: "UN DESA", en: "UN DESA" }
-      },
-      {
-        term: "Réfugié",
-        en_term: "Refugee",
-        fr: "La Convention de l'OUA (1969) définit le réfugié plus largement que celle de Genève (1951). À la crainte de persécution individuelle, elle ajoute l'agression extérieure, l'occupation et les événements troublant gravement l'ordre public.",
-        en: "The OAU Convention (1969) defines a refugee more broadly than the Geneva Convention (1951): it includes anyone compelled to flee not only due to individual persecution but also due to external aggression, occupation, or events seriously disturbing public order.",
-        source: { fr: "Convention de l'OUA (1969), art. I(2) — définition de référence de la plateforme", en: "OAU Convention (1969), Art. I(2) — the platform's reference definition", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
-      },
-      {
-        term: "Demandeur d'asile",
-        en_term: "Asylum Seeker",
-        fr: "Individu ayant quitté son pays d'origine et formellement demandé une protection internationale, mais dont la demande de statut de réfugié n'a pas encore été statuée (HCR). Contrairement au réfugié, son statut juridique est en cours d'évaluation.",
-        en: "An individual who has left their country of origin and formally applied for international protection, but whose claim for refugee status has not yet been determined (UNHCR). Unlike a refugee, their legal status is pending assessment.",
-        source: { fr: "HCR", en: "UNHCR" }
-      },
-      {
-        term: "Personne déplacée interne (PDI)",
-        en_term: "Internally Displaced Person (IDP)",
-        fr: "Selon la Convention de Kampala (2009, Art. 1) : personne ou groupe forcé de fuir son foyer (conflit, violences, catastrophes) sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale.",
-        en: "Under the Kampala Convention (2009, Art. 1): persons or groups forced to flee their homes (conflict, violence, disasters) without crossing an internationally recognized State border. They are not counted in international migration statistics.",
-        source: { fr: "Convention de Kampala (2009), art. 1", en: "Kampala Convention (2009), Art. 1", url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" }
-      },
-      {
-        term: "Apatride",
-        en_term: "Stateless Person",
-        fr: "Personne qu'aucun État ne considère comme son ressortissant par l'application de sa législation (Convention de 1954). Cette situation prive l'individu de l'accès aux droits fondamentaux, à l'identité légale et aux services de base.",
-        en: "A person who is not considered as a national by any State under the operation of its law (1954 Convention). This condition deprives individuals of access to fundamental rights, legal identity, and basic services.",
-        source: { fr: "Convention de 1954 relative au statut des apatrides", en: "1954 Convention relating to the Status of Stateless Persons" }
-      },
-      {
-        term: "Mineur non accompagné",
-        en_term: "Unaccompanied Migrant Minor",
-        fr: "Enfant (moins de 18 ans) séparé de ses parents ou de son tuteur légal lors d'un mouvement migratoire. L'approche juridique (Charte africaine des droits et du bien-être de l'enfant) exige que « l'intérêt supérieur de l'enfant » prime sur toute décision migratoire.",
-        en: "A child (under 18) separated from both parents and legally responsible caregivers during a migratory movement. The legal approach (African Charter on the Rights and Welfare of the Child) requires that the 'best interests of the child' be the primary consideration.",
-        source: { fr: "Charte africaine des droits et du bien-être de l'enfant ; Convention relative aux droits de l'enfant", en: "African Charter on the Rights and Welfare of the Child; Convention on the Rights of the Child", url: "https://au.int/" }
-      },
-      {
-        term: "Travailleur transfrontalier",
-        en_term: "Cross-Border Worker",
-        fr: "Individu maintenant sa résidence principale dans un pays tout en se rendant régulièrement dans un autre pour y travailler. Une pratique courante en Afrique, facilitée par les zones de libre circulation des CER (CEDEAO, CAE).",
-        en: "An individual maintaining their primary residence in one country while regularly traveling to another for employment. A common practice in Africa, facilitated by REC free movement zones (ECOWAS, EAC).",
-        source: { fr: "Protocoles de libre circulation des CER (CEDEAO, CAE)", en: "REC free movement protocols (ECOWAS, EAC)" }
-      },
-      {
-        term: "Survivant de la traite",
-        en_term: "Survivor of Human Trafficking",
-        fr: "Personne ayant subi une exploitation (travail forcé, exploitation sexuelle) via le recrutement ou le transfert par la menace, la force ou la tromperie (Protocole de Palerme). Le terme « survivant » (plutôt que victime) reconnaît l'agentivité de l'individu dans sa reconstruction.",
-        en: "A person who has experienced exploitation (forced labor, sexual exploitation) through recruitment or transfer by means of threat, force, or deception (Palermo Protocol). The term 'survivor' (rather than victim) acknowledges the individual's agency in recovery."
-      }
-    ]
-  },
-  {
-    category: { fr: "Frontières, Droits & Protection", en: "Borders, Rights & Protection" },
-    icon: ShieldAlert,
-    terms: [
-      {
-        term: "Asile (droit d')",
-        en_term: "Asylum (right to)",
-        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin. Son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation. Il pose aussi l'octroi de l'asile comme un acte pacifique et humanitaire, qu'aucun État ne peut tenir pour inamical.",
-        en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek: its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement, and establishes that granting asylum is a peaceful and humanitarian act that cannot be regarded as unfriendly by any other state.",
-        source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
-        stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
-      },
-      {
-        term: "Reconnaissance prima facie",
-        en_term: "Prima facie recognition",
-        fr: "Reconnaissance du statut de réfugié fondée sur des circonstances objectives et manifestes dans le pays d'origine, sans examen individuel du dossier. Elle s'applique typiquement aux arrivées massives, où la détermination individuelle serait impraticable. Bien que peu codifiée, c'est la voie par laquelle la majorité des réfugiés du monde sont reconnus — et la pratique dominante en Afrique, où la définition élargie de la Convention de l'OUA s'y prête directement.",
-        en: "Recognition of refugee status based on readily apparent, objective circumstances in the country of origin, without individual examination. It typically applies to large-scale arrivals where individual determination would be impracticable. Though thinly codified, it is the route by which most of the world's refugees are recognised — and the dominant practice in Africa, where the OAU Convention's broadened definition lends itself directly to it.",
-        source: { fr: "HCR, Principes directeurs sur la protection internationale n° 11 (2015)", en: "UNHCR, Guidelines on International Protection No. 11 (2015)", url: "https://www.unhcr.org/media/guidelines-international-protection-no-11-prima-facie-recognition-refugee-status-5-june-2015" },
-        stakes: { fr: "Une reconnaissance de groupe donne un statut immédiat sans file d'attente administrative. La basculer en examen individuel — comme certains États le font sous pression budgétaire ou politique — laisse des dizaines de milliers de personnes sans statut pendant des années, sans qu'aucun texte n'ait changé.", en: "Group recognition confers immediate status with no administrative queue. Switching to individual examination — as some states do under budgetary or political pressure — leaves tens of thousands without status for years, with no text having changed." }
-      },
-      {
-        term: "Détermination du statut de réfugié (DSR)",
-        en_term: "Refugee Status Determination (RSD)",
-        fr: "Procédure, administrative ou judiciaire, par laquelle un État ou le HCR établit si une personne relève de la définition du réfugié. En Afrique, elle est conduite tantôt par une commission nationale d'éligibilité, tantôt par le HCR agissant sous mandat lorsque l'État n'a pas encore d'appareil dédié — configuration qui déplace vers une organisation internationale une décision de souveraineté.",
-        en: "The administrative or judicial procedure by which a state or UNHCR establishes whether a person falls within the refugee definition. In Africa it is conducted sometimes by a national eligibility commission, sometimes by UNHCR acting under its mandate where the state has no dedicated apparatus — a configuration that shifts a sovereign decision to an international organisation.",
-        source: { fr: "HCR ; Convention de l'OUA (1969)", en: "UNHCR; OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
-      },
-      {
-        term: "Déplacement prolongé",
-        en_term: "Protracted displacement",
-        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit non pas une crise mais un régime d'attente institutionnalisé.",
-        en: "A situation in which displaced people remain durably without a solution — no return, no local integration, no resettlement — often for years or decades. The notion shifts attention from emergency to duration: it describes not a crisis but an institutionalised regime of waiting.",
-        source: { fr: "HCR, Global Trends", en: "UNHCR, Global Trends", url: "https://www.unhcr.org/global-trends" },
-        stakes: { fr: "Tant qu'une situation est nommée « urgence », elle appelle des financements humanitaires courts et renouvelables. La nommer « prolongée » ouvre au contraire les instruments de développement — mais suppose de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire.", en: "As long as a situation is named an \"emergency\", it draws short, renewable humanitarian funding. Naming it \"protracted\" opens development instruments instead — but requires acknowledging a lasting presence, which host states are often reluctant to do." }
-      },
-      {
-        term: "Externalisation des frontières",
-        en_term: "Border externalisation",
-        fr: "Ensemble des dispositifs par lesquels un État reporte le contrôle de ses frontières au-delà de son territoire : financement et équipement de forces de sécurité tierces, agents de liaison, campagnes de dissuasion, conditionnement de l'aide à la coopération migratoire. Le contrôle s'exerce ainsi loin du lieu où le droit d'asile pourrait être invoqué.",
-        en: "The set of arrangements by which a state pushes control of its borders beyond its own territory: funding and equipping third-country security forces, liaison officers, deterrence campaigns, tying aid to migration cooperation. Control is thereby exercised far from where a right to asylum could be invoked.",
-        source: { fr: "Notion analytique consolidée dans la littérature sur les régimes de mobilité ; voir Achiume (2019) et Bakewell (2008) en Bibliothèque", en: "Analytical notion consolidated in the mobility-regimes literature; see Achiume (2019) and Bakewell (2008) in the Library" },
-        stakes: { fr: "Le déplacement du contrôle déplace aussi la responsabilité juridique : une personne interceptée avant d'atteindre un territoire ne peut y demander l'asile, et l'État qui a financé l'interception n'est pas celui qui la refuse. La responsabilité se dilue exactement là où elle serait exigible (Ben Mokhtar, 2026).", en: "Displacing control also displaces legal responsibility: a person intercepted before reaching a territory cannot claim asylum there, and the state that funded the interception is not the one refusing it. Accountability dissolves precisely where it would be enforceable (Ben Mokhtar, 2026)." }
-      },
-      {
-        term: "Accord de réadmission",
-        en_term: "Readmission agreement",
-        fr: "Instrument bilatéral ou régional par lequel un État s'engage à reprendre ses ressortissants — et parfois des ressortissants de pays tiers ayant transité par son territoire — éloignés depuis un autre État. Souvent négocié en contrepartie de facilités de visa, d'aide au développement ou de coopération commerciale.",
-        en: "A bilateral or regional instrument by which a state undertakes to take back its nationals — and sometimes third-country nationals who transited its territory — removed from another state. Often negotiated in exchange for visa facilitation, development aid or trade cooperation.",
-        source: { fr: "Pratique conventionnelle bilatérale ; voir Adamson & Tsourapas (2019) sur la diplomatie migratoire, en Bibliothèque", en: "Bilateral treaty practice; see Adamson & Tsourapas (2019) on migration diplomacy, in the Library" },
-        stakes: { fr: "La clause « ressortissants de pays tiers » transforme un État de transit en dépositaire de personnes qui n'en sont pas originaires. C'est le point où un accord technique produit des effets de séjour durables, sans qu'aucun droit de séjour n'ait été accordé.", en: "The \"third-country nationals\" clause turns a transit state into the custodian of people who are not from it. That is where a technical agreement produces lasting residence effects without any residence right having been granted." }
-      },
-      {
-        term: "Visa (régime de)",
-        en_term: "Visa (regime)",
-        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction n'est pas de degré mais de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
-        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is not one of degree but of kind: a prior visa moves the decision to the consulate in the country of departure — that is, beyond the reach of any appeal in the destination country.",
-        source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
-      },
-      {
-        term: "Gestion intégrée des frontières",
-        en_term: "Integrated Border Management",
-        fr: "Administration globale et coordonnée visant à réguler les flux transfrontaliers, harmonisant les contrôles d'immigration, les douanes et la sécurité, tout en identifiant les personnes vulnérables nécessitant une protection (OIM, 2019).",
-        en: "Comprehensive and coordinated administration to regulate cross-border flows, harmonizing immigration, customs, and security controls, while identifying vulnerable persons requiring protection (IOM, 2019).",
-        source: { fr: "OIM (2019)", en: "IOM (2019)" }
-      },
-      {
-        term: "Principe de non-refoulement",
-        en_term: "Non-Refoulement Principle",
-        fr: "Norme impérative (jus cogens) du droit international interdisant à un État d'expulser ou de renvoyer un individu vers un territoire où sa vie ou sa liberté seraient menacées (Art. 33 de la Convention de Genève 1951 ; Art. II(3) de la Convention de l'OUA 1969).",
-        en: "Peremptory norm (jus cogens) of international law prohibiting a state from expelling or returning an individual to a territory where their life or freedom would be threatened (Art. 33 of the 1951 Geneva Convention; Art. II(3) of the 1969 OAU Convention).",
-        source: { fr: "Convention de Genève (1951), art. 33 ; Convention de l'OUA (1969), art. II(3)", en: "Geneva Convention (1951), Art. 33; OAU Convention (1969), Art. II(3)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
-      },
-      {
-        term: "Trafic illicite de migrants",
-        en_term: "Smuggling of Migrants",
-        fr: "Fait d'assurer, afin d'en tirer un avantage financier, l'entrée illégale d'une personne dans un État (Protocole de Palerme, 2000). Contrairement à la traite, le trafic implique le consentement initial du migrant et prend fin une fois la frontière franchie, bien que les risques d'abus soient immenses.",
-        en: "The procurement, for financial benefit, of the illegal entry of a person into a State (Palermo Protocol, 2000). Unlike trafficking, smuggling involves the initial consent of the migrant and ends once the border is crossed, though the risks of abuse are immense.",
-        source: { fr: "Protocole de Palerme (2000)", en: "Palermo Protocol (2000)" }
-      },
-      {
-        term: "Traite des êtres humains",
-        en_term: "Human Trafficking",
-        fr: "Recrutement, transport, transfert ou hébergement de personnes par la force, la contrainte ou la tromperie à des fins d'exploitation (travail forcé, servitude, exploitation sexuelle). Elle n'implique pas nécessairement le franchissement d'une frontière internationale (Protocole de Palerme).",
-        en: "Recruitment, transportation, transfer, or harboring of persons by force, coercion, or deception for the purpose of exploitation (forced labor, servitude, sexual exploitation). It does not necessarily involve crossing an international border (Palermo Protocol).",
-        source: { fr: "Protocole de Palerme (2000)", en: "Palermo Protocol (2000)" }
-      },
-      {
-        term: "Vulnérabilités des migrants",
-        en_term: "Migrant Vulnerabilities",
-        fr: "Capacité diminuée d'un individu à résister ou se relever de l'exploitation, de la violence ou des violations de droits (OIM, 2019). Ces vulnérabilités naissent de l'interaction entre des facteurs personnels (âge, sexe, santé) et structurels (absence de statut légal, pauvreté, discrimination).",
-        en: "The diminished capacity of an individual to resist or recover from exploitation, violence, or rights violations (IOM, 2019). These vulnerabilities arise from the interaction of personal factors (age, gender, health) and structural factors (lack of legal status, poverty, discrimination)."
-      },
-      {
-        term: "Identité légale",
-        en_term: "Legal Identity",
-        fr: "Reconnaissance de l'identité d'un individu par l'État (enregistrement des naissances, documents de voyage). Sans identité légale, les migrants sont exposés à l'exclusion systémique, à la détention arbitraire et au risque d'apatridie (Cible ODD 16.9).",
-        en: "State recognition of an individual's identity (birth registration, travel documents). Without legal identity, migrants face systemic exclusion, arbitrary detention, and the risk of statelessness (SDG Target 16.9).",
-        source: { fr: "Cible 16.9 des Objectifs de développement durable", en: "Sustainable Development Goal target 16.9", url: "https://www.un.org/sustainabledevelopment/" }
-      }
-    ]
-  },
-  {
-    category: { fr: "Retour, Intégration & Résidence", en: "Return, Integration & Residence" },
-    icon: MapPin,
-    terms: [
-      {
-        term: "Solutions durables",
-        en_term: "Durable solutions",
-        fr: "Les trois issues reconnues à une situation de déplacement : le rapatriement volontaire dans le pays d'origine, l'intégration locale dans le pays d'accueil, et la réinstallation dans un pays tiers. Une solution n'est dite durable que lorsqu'elle met fin au besoin de protection internationale — critère rarement rempli à l'échelle des effectifs déplacés.",
-        en: "The three recognised outcomes of a displacement situation: voluntary repatriation to the country of origin, local integration in the host country, and resettlement in a third country. A solution counts as durable only when it ends the need for international protection — a threshold rarely met at the scale of displaced populations.",
-        source: { fr: "HCR ; Pacte mondial sur les réfugiés (2018)", en: "UNHCR; Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
-      },
-      {
-        term: "Réinstallation",
-        en_term: "Resettlement",
-        fr: "Transfert d'un réfugié depuis son pays d'asile vers un pays tiers qui accepte de l'admettre et de lui accorder une résidence durable. Les places de réinstallation offertes chaque année restent très inférieures aux besoins identifiés, ce qui en fait moins une solution générale qu'un dispositif de protection ciblée.",
-        en: "The transfer of a refugee from their country of asylum to a third state that agrees to admit them and grant durable residence. The resettlement places offered each year remain far below identified needs, making it less a general solution than a targeted protection mechanism.",
-        source: { fr: "HCR, Projected Global Resettlement Needs", en: "UNHCR, Projected Global Resettlement Needs", url: "https://www.unhcr.org/global-trends" }
-      },
-      {
-        term: "Voies complémentaires",
-        en_term: "Complementary pathways",
-        fr: "Canaux d'admission légale distincts de la réinstallation — visas humanitaires, regroupement familial élargi, bourses d'études, mobilité professionnelle — mobilisés pour ouvrir des accès sûrs sans passer par le contingent de réinstallation. Complémentaires signifie qu'elles s'ajoutent à la protection, sans s'y substituer.",
-        en: "Legal admission channels distinct from resettlement — humanitarian visas, extended family reunification, scholarships, labour mobility — used to open safe access outside the resettlement quota. \"Complementary\" means they add to protection rather than replace it.",
-        source: { fr: "Pacte mondial sur les réfugiés (2018)", en: "Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
-      },
-      {
-        term: "Intégration locale",
-        en_term: "Local integration",
-        fr: "Processus par lequel un réfugié s'installe durablement dans son pays d'asile, avec une dimension juridique (accès à un statut stable, voire à la naturalisation), économique (droit au travail et aux moyens de subsistance) et sociale. C'est la solution durable la plus fréquente en Afrique de fait, et la moins reconnue en droit.",
-        en: "The process by which a refugee settles durably in the country of asylum, with a legal dimension (access to a stable status, possibly naturalisation), an economic one (right to work and to livelihoods), and a social one. It is the most common durable solution in Africa in practice, and the least recognised in law.",
-        source: { fr: "HCR ; Convention de l'OUA (1969), art. II", en: "UNHCR; OAU Convention (1969), Art. II", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
-      },
-      {
-        term: "Retour (Volontaire vs Forcé)",
-        en_term: "Return (Voluntary vs Forced)",
-        fr: "Processus par lequel un migrant regagne son pays d'origine. Le retour est « volontaire » lorsqu'il repose sur un consentement libre et éclairé. Il est « forcé » (expulsion, déportation) lorsqu'imposé par l'État hôte, devant toutefois respecter les droits humains et le non-refoulement (MPFA 2018-2030).",
-        en: "Process by which a migrant goes back to their country of origin. Return is 'voluntary' when based on free and informed consent. It is 'forced' (expulsion, deportation) when imposed by the host state, though it must respect human rights and non-refoulement (MPFA 2018-2030).",
-        source: { fr: "Cadre de politique migratoire pour l'Afrique (MPFA 2018-2030)", en: "Migration Policy Framework for Africa (MPFA 2018-2030)", url: "https://au.int/" }
-      },
-      {
-        term: "Rapatriement",
-        en_term: "Repatriation",
-        fr: "Droit d'un réfugié ou d'une personne déplacée à retourner dans son pays d'origine dans des conditions de sécurité et de dignité, telles que définies par le droit international (Convention de Genève, Convention de l'OUA 1969).",
-        en: "The right of a refugee or displaced person to return to their country of origin in safety and dignity, as defined by international law (Geneva Convention, 1969 OAU Convention).",
-        source: { fr: "Convention de Genève (1951) ; Convention de l'OUA (1969)", en: "Geneva Convention (1951); OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
-      },
-      {
-        term: "Réintégration",
-        en_term: "Reintegration",
-        fr: "Processus permettant aux migrants de retour de se réinsérer économiquement, socialement et psychologiquement dans leur communauté d'origine. Une réintégration durable prévient la réémigration irrégulière (MPFA 2018-2030).",
-        en: "Process through which returning migrants re-establish themselves economically, socially, and psychologically in their community of origin. Sustainable reintegration prevents irregular re-migration (MPFA 2018-2030).",
-        source: { fr: "Cadre de politique migratoire pour l'Afrique (MPFA 2018-2030)", en: "Migration Policy Framework for Africa (MPFA 2018-2030)", url: "https://au.int/" }
-      },
-      {
-        term: "Résidence (Droit de)",
-        en_term: "Residence",
-        fr: "Statut légal accordé à un non-ressortissant pour séjourner légalement sur le territoire. Le Protocole de Kigali de l'UA (2018) promeut le droit de résidence pour l'emploi ou l'établissement commercial pour tous les citoyens africains.",
-        en: "Legal status granted to a non-citizen to lawfully stay in the territory. The AU Kigali Protocol (2018) promotes the right of residence for employment or business establishment for all African citizens.",
-        source: { fr: "Protocole de l'UA sur la libre circulation (2018)", en: "AU Free Movement Protocol (2018)", url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" }
-      },
-      {
-        term: "Naturalisation",
-        en_term: "Naturalization",
-        fr: "Processus légal (souvent discrétionnaire) par lequel un non-national acquiert la citoyenneté d'un pays d'accueil. Reconnue comme un levier d'intégration sociale et de réduction de l'apatridie (Déclaration d'Abidjan, 2015).",
-        en: "Legal process (often discretionary) by which a non-national acquires the citizenship of a host country. Recognized as a tool for social integration and reducing statelessness (Abidjan Declaration, 2015).",
-        source: { fr: "Déclaration d'Abidjan sur l'éradication de l'apatridie (2015)", en: "Abidjan Declaration on the Eradication of Statelessness (2015)" }
-      },
-      {
-        term: "Résilience des migrants",
-        en_term: "Resilience of Migrants",
-        fr: "Capacité des migrants à s'adapter, résister et se remettre des chocs (économiques, climatiques, discriminatoires) rencontrés durant le parcours migratoire, souvent soutenue par les réseaux de la diaspora et les cadres d'inclusion locaux.",
-        en: "The capacity of migrants to adapt, resist, and recover from shocks (economic, climatic, discriminatory) encountered during the migration journey, often supported by diaspora networks and local inclusion frameworks."
-      }
-    ]
-  },
-  {
-    category: { fr: "Économie, Compétences & Développement", en: "Economy, Skills & Development" },
-    icon: Briefcase,
-    terms: [
-      {
-        term: "Transferts de fonds (Remittances)",
-        en_term: "Remittances",
-        fr: "Fonds ou biens transférés par les migrants vers leur pays d'origine. Les remises migratoires constituent souvent la première source de financement externe en Afrique, dépassant l'Aide publique au développement (OIM, 2019).",
-        en: "Money or goods transferred by migrants to their country of origin. Remittances are often the leading source of external financing in Africa, exceeding Official Development Assistance (IOM, 2019).",
-        source: { fr: "OIM (2019) ; Banque mondiale — données sur les transferts", en: "IOM (2019); World Bank — remittances data" }
-      },
-      {
-        term: "Fuite des cerveaux (Brain Drain)",
-        en_term: "Brain Drain",
-        fr: "Émigration d'individus hautement qualifiés entraînant l'épuisement du capital humain du pays d'origine, un défi critique pour les secteurs de la santé et de l'éducation en Afrique.",
-        en: "Emigration of highly skilled individuals leading to the depletion of the source country's human capital, a critical challenge for Africa's health and education sectors."
-      },
-      {
-        term: "Gain de compétences (Brain Gain)",
-        en_term: "Brain Gain",
-        fr: "Bénéfice tiré par un pays grâce à l'immigration de professionnels hautement qualifiés ou au retour de ses nationaux ayant acquis une expertise à l'étranger (Réseaux de la diaspora).",
-        en: "The benefit a country derives from the immigration of highly qualified professionals or the return of its nationals who acquired expertise abroad (Diaspora networks)."
-      },
-      {
-        term: "Circulation des cerveaux (Brain Circulation)",
-        en_term: "Brain Circulation",
-        fr: "Mouvement répété et bidirectionnel de professionnels qualifiés entre pays d'origine et de destination, par opposition à un départ ou un retour définitifs. Ce cadre déplace le débat de la « fuite » (perte nette et irréversible) vers un échange continu de compétences, de capitaux et de réseaux.",
-        en: "Repeated, bidirectional movement of skilled professionals between origin and destination countries, as opposed to a one-way departure or permanent return. This framework shifts the debate from \"drain\" (a net, irreversible loss) toward a continuous exchange of skills, capital, and networks."
-      },
-      {
-        term: "Gaspillage de compétences (Brain Waste)",
-        en_term: "Brain Waste",
-        fr: "Situation où des migrants hautement qualifiés occupent des emplois sans rapport avec leurs diplômes, souvent en raison de la non-reconnaissance de leurs qualifications étrangères ou de barrières systémiques.",
-        en: "Situation where highly skilled migrants are employed in jobs unrelated to their qualifications, often due to the non-recognition of foreign credentials or systemic barriers."
-      },
-      {
-        term: "Coût de la fuite (Brain Cost)",
-        en_term: "Brain Cost",
-        fr: "Pertes économiques, sociales et développementales (incluant les fonds publics investis dans l'éducation de l'individu) subies par l'État d'origine lorsque ses travailleurs qualifiés émigrent définitivement.",
-        en: "The economic, social, and developmental losses (including public funds invested in the individual's education) incurred by the origin State when its skilled workers emigrate permanently."
-      },
-      {
-        term: "Investissement des diasporas",
-        en_term: "Investment by Migrants",
-        fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs.",
-        en: "Economic contributions of migrants beyond basic family remittances: entrepreneurship, real estate, diaspora bonds, technology transfer, and capital investment in productive sectors."
-      },
-      {
-        term: "Partenariat de compétences (Global Skills Partnership)",
-        en_term: "Global Skills Partnership",
-        fr: "Accord bilatéral par lequel un pays d'origine et un pays de destination financent ensemble la formation de travailleurs avant leur départ, dans des compétences utiles aux deux économies. L'idée est de faire de la mobilité de main-d'œuvre un investissement partagé, plutôt qu'un prélèvement de capital humain déjà formé.",
-        en: "A bilateral agreement between an origin and a destination country jointly funding worker training, before departure, in skills useful to both economies — designed to convert labour mobility into shared investment rather than a simple draw on already-trained human capital.",
-        source: { fr: "Objectif 18 du Pacte mondial pour les migrations", en: "Objective 18 of the Global Compact for Migration" }
-      }
-    ]
-  },
-  {
-    category: { fr: "Gouvernance, Données & Concepts Théoriques", en: "Governance, Data & Theoretical Concepts" },
-    icon: Brain,
-    terms: [
-      {
-        term: "Corridor migratoire",
-        en_term: "Migration Corridor",
-        fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants, unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque Mondiale) — permet de voir au-delà des agrégats nationaux la géographie réelle des déplacements.",
-        en: "An origin-destination country pair linked by a significant migrant flow or stock, the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank) — lets the real geography of movement be seen beyond national aggregates."
-      },
-      {
-        term: "Régime (de gouvernance migratoire)",
-        en_term: "Regime (of migration governance)",
-        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent et les pratiques effectives des postes-frontières (Ben Mokhtar, 2026).",
-        en: "A set of principles, norms, rules and decision-making procedures around which actors' expectations converge in a given area. Applied to the African case, the notion holds together what a treaty-only reading separates: the texts adopted, the bureaucracies that carry them, and the actual practices of border posts (Ben Mokhtar, 2026).",
-        source: { fr: "Cadre de la théorie des régimes internationaux, appliqué au cas africain par Ben Mokhtar (2026)", en: "International regime theory framework, applied to the African case by Ben Mokhtar (2026)" }
-      },
-      {
-        term: "Extraversion",
-        en_term: "Extraversion",
-        fr: "Stratégie par laquelle des acteurs africains convertissent leur position de dépendance en ressource, en mobilisant la relation extérieure — financements, coopération, reconnaissance — comme instrument de pouvoir interne. Appliquée aux migrations, elle éclaire pourquoi certains États négocient activement une coopération qui semble d'abord servir l'agenda de leurs partenaires.",
-        en: "A strategy by which African actors convert a position of dependence into a resource, mobilising the external relationship — funding, cooperation, recognition — as an instrument of domestic power. Applied to migration, it explains why some states actively negotiate cooperation that appears to serve their partners' agenda first.",
-        source: { fr: "Bayart (2000), « Africa in the World: A History of Extraversion » — voir Bibliothèque", en: "Bayart (2000), \"Africa in the World: A History of Extraversion\" — see Library" }
-      },
-      {
-        term: "Gouvernementalité",
-        en_term: "Governmentality",
-        fr: "Manière dont un pouvoir gouverne des populations non par la contrainte directe mais par des dispositifs de savoir : catégories, recensements, indicateurs, procédures. Dans le champ migratoire, la notion invite à examiner les instruments de mesure eux-mêmes — compter, classer, nommer — comme des actes de gouvernement plutôt que comme des descriptions neutres.",
-        en: "The way a power governs populations not through direct coercion but through knowledge devices: categories, censuses, indicators, procedures. In the migration field, the notion invites examining measurement instruments themselves — counting, classifying, naming — as acts of government rather than neutral descriptions.",
-        source: { fr: "Cadre foucaldien, mobilisé dans l'analyse du régime africain (Ben Mokhtar, 2026)", en: "Foucauldian framework, mobilised in the analysis of the African regime (Ben Mokhtar, 2026)" }
-      },
-      {
-        term: "Lecture décoloniale",
-        en_term: "Decolonial reading",
-        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : ce ne sont pas les mêmes personnes qui peuvent circuler, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
-        en: "An approach that relates contemporary asymmetries of mobility to the colonial order that instituted them: not everyone can move, and that inequality has a history. Applied to international migration law, it contests the claim that global mobility regimes are neutral as to origin.",
-        source: { fr: "Achiume (2019), « Migration as Decolonization » — voir Bibliothèque", en: "Achiume (2019), \"Migration as Decolonization\" — see Library", url: "https://ssrn.com/abstract=3330353" }
-      },
-      {
-        term: "Communs migratoires vernaculaires",
-        en_term: "Vernacular migration commons",
-        fr: "Arrangements collectifs non étatiques qui organisent concrètement la circulation — réseaux d'hébergement, caisses d'entraide, savoirs de route, régulations de corridor — et qui préexistent souvent aux dispositifs publics ou en comblent les vides. Les penser comme des communs, plutôt que comme du désordre, déplace la question vers celle de leur reconnaissance (Ben Mokhtar, 2026).",
-        en: "Non-state collective arrangements that concretely organise movement — accommodation networks, mutual-aid funds, route knowledge, corridor regulation — which often predate public schemes or fill their gaps. Thinking of them as commons rather than as disorder changes the question: not how to suppress them, but how to recognise them (Ben Mokhtar, 2026).",
-        source: { fr: "Cadre des communs (Ostrom), appliqué aux corridors africains (Ben Mokhtar, 2026)", en: "Commons framework (Ostrom), applied to African corridors (Ben Mokhtar, 2026)" }
-      },
-      {
-        term: "Souveraineté épistémique",
-        en_term: "Epistemic sovereignty",
-        fr: "Capacité d'un ensemble politique à produire lui-même les catégories, les données et les diagnostics qui le décrivent, plutôt que de les recevoir. C'est la justification explicite des organes africains de données migratoires : sans appareil propre, le continent se lit dans les instruments de ceux qui l'observent.",
-        en: "The capacity of a political entity to produce for itself the categories, data and diagnoses that describe it, rather than receiving them. It is the explicit rationale of Africa's migration-data bodies: without its own apparatus, the continent reads itself through the instruments of those who observe it.",
-        source: { fr: "Justification institutionnelle des organes de données de l'UA (OAM, STATAFRIC) ; lecture développée dans Ben Mokhtar (2026)", en: "Institutional rationale of the AU's data bodies (AMO, STATAFRIC); reading developed in Ben Mokhtar (2026)" }
-      },
-      {
-        term: "Conditionnalité migratoire",
-        en_term: "Migration conditionality",
-        fr: "Subordination d'un avantage — aide, préférence commerciale, facilitation de visa — à la coopération d'un État en matière de contrôle migratoire ou de réadmission. Elle installe la migration comme monnaie d'échange dans des négociations qui portent formellement sur autre chose.",
-        en: "Making a benefit — aid, trade preference, visa facilitation — conditional on a state's cooperation in migration control or readmission. It installs migration as a bargaining chip in negotiations formally about something else.",
-        source: { fr: "Voir Adamson & Tsourapas (2019) sur la diplomatie migratoire — Bibliothèque", en: "See Adamson & Tsourapas (2019) on migration diplomacy — Library", url: "https://doi.org/10.1093/isp/eky015" }
-      },
-      {
-        term: "Entre-deux national",
-        en_term: "National In-Between",
-        fr: "L'espace de traduction, de filtrage et de mise en procédure où les engagements normatifs continentaux (UA, CER) sont retravaillés, ralentis ou réinterprétés par les bureaucraties nationales. Concept central de la thèse à l'origine de cette plateforme (Ben Mokhtar, 2026).",
-        en: "The space of translation, filtering, and procedural conversion where continental normative commitments (AU, RECs) are reworked, slowed, or reinterpreted by national bureaucracies. A central concept of the thesis behind this platform (Ben Mokhtar, 2026).",
-        source: { fr: "Ben Mokhtar (2026) — concept central de la thèse à l'origine de la plateforme", en: "Ben Mokhtar (2026) — core concept of the doctoral thesis behind this platform" }
-      },
-      {
-        term: "Capabilités de mouvement",
-        en_term: "Capabilities of Movement",
-        fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, dépassant la dichotomie simpliste volontaire/forcé.",
-        en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, moving beyond the simplistic voluntary/forced dichotomy.",
-        source: { fr: "de Haas (2021), « A theory of migration: the aspirations–capabilities framework »", en: "de Haas (2021), 'A theory of migration: the aspirations-capabilities framework'", url: "https://doi.org/10.1186/s40878-020-00210-4" }
-      },
-      {
-        term: "Gouvernance des migrations",
-        en_term: "Migration Governance",
-        fr: "Ensemble des normes juridiques, politiques, institutions et processus (du niveau local au niveau mondial) façonnant la gestion des mobilités, les droits des migrants et la coopération entre États (OIM, 2015 ; MPFA, 2018).",
-        en: "The combined frameworks of legal norms, policies, institutions, and processes (from local to global levels) shaping the management of mobility, migrant rights, and inter-state cooperation (IOM, 2015; MPFA, 2018).",
-        source: { fr: "OIM (2015) ; Cadre de politique migratoire pour l'Afrique (MPFA, 2018)", en: "IOM (2015); Migration Policy Framework for Africa (MPFA, 2018)", url: "https://au.int/" }
-      },
-      {
-        term: "Sécurisation (Securitization)",
-        en_term: "Securitization",
-        fr: "Processus par lequel la migration est progressivement traitée comme une menace sécuritaire (contrôle des frontières, criminalisation) au détriment de ses dimensions développementales et des droits humains.",
-        en: "The process by which migration is increasingly framed and governed as a security threat (border control, criminalization) at the expense of its developmental and human rights dimensions."
-      },
-      {
-        term: "Désagrégation des données",
-        en_term: "Data Disaggregation",
-        fr: "Processus technique consistant à ventiler des données statistiques agrégées en sous-catégories (par âge, sexe, statut migratoire) pour identifier les disparités et orienter l'élaboration de politiques basées sur des preuves (Cible ODD 17.18).",
-        en: "The technical process of breaking down aggregated statistical data into subcategories (by age, gender, migration status) to identify disparities and guide evidence-based policymaking (SDG Target 17.18).",
-        source: { fr: "Cible 17.18 des Objectifs de développement durable", en: "Sustainable Development Goal target 17.18", url: "https://www.un.org/sustainabledevelopment/" }
-      },
-      {
-        term: "Facteurs Push & Pull (Causes profondes)",
-        en_term: "Push & Pull Factors (Root Causes)",
-        fr: "Conditions structurelles motivant le départ d'une région (Push : pauvreté, chocs climatiques, conflits) ou l'attraction vers une autre (Pull : emploi, réseaux familiaux, stabilité). Le GCM et le MPFA appellent à traiter ces causes profondes pour faire de la migration un choix et non une nécessité vitale.",
-        en: "Structural conditions motivating departure from a region (Push: poverty, climate shocks, conflict) or attraction to another (Pull: jobs, family networks, stability). The GCM and MPFA call for addressing these root causes to make migration a choice rather than a necessity."
-      },
-      {
-        term: "Diplomatie migratoire",
-        en_term: "Migration Diplomacy",
-        fr: "Utilisation stratégique de la coopération migratoire par les États dans l'arène internationale, s'en servant comme levier de négociation pour obtenir des financements, une reconnaissance politique ou des accords commerciaux (Adamson & Tsourapas, 2019).",
-        en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019).",
-        source: { fr: "Adamson & Tsourapas (2019), « Migration Diplomacy in World Politics »", en: "Adamson & Tsourapas (2019), 'Migration Diplomacy in World Politics'", url: "https://doi.org/10.1093/isp/eky015" }
-      },
-      { 
-        term: "Nord Global & Sud Global", 
-        en_term: "Global North & Global South", 
-        fr: "Dichotomie socio-économique et politique. Le Sud Global ne désigne pas une géographie stricte, mais un ensemble d'économies en développement partageant des héritages historiques de colonialisme, d'exploitation des ressources et d'inégalités structurelles dans les accords commerciaux mondiaux.", 
-        en: "Socio-economic and political dichotomy. The Global South does not refer to a strict geography, but rather developing economies sharing historical legacies of colonialism, resource exploitation, and structural inequalities in global trade agreements." 
-      },
-      { 
-        term: "Numérisation de la gouvernance (Digitalization)", 
-        en_term: "Digitalization of Migration Governance", 
-        fr: "Intégration de technologies numériques (biométrie, e-visas, systèmes de surveillance) pour gérer les migrations. L'utilisation généralisée d'outils développés hors du continent soulève des préoccupations majeures quant à l'appropriation africaine (African ownership) et à la souveraineté épistémique des données.", 
-        en: "Integration of digital technologies (biometrics, e-visas, surveillance systems) to manage migration. The widespread use of tools developed outside the continent raises major concerns regarding African ownership and the epistemic sovereignty of data." 
-      },
-      { 
-        term: "Processus Consultatifs Régionaux (RCPs)", 
-        en_term: "Regional Consultative Processes (RCPs)", 
-        fr: "Plateformes étatiques, informelles et non contraignantes de dialogue sur les migrations (ex: MIDWA en Afrique de l'Ouest, MIDSA en Afrique Australe). Les Processus de Rabat et de Khartoum illustrent cette dynamique en structurant la coopération entre l'Afrique et l'Europe.", 
-        en: "State-led, informal, and non-binding platforms for migration dialogue (e.g., MIDWA in West Africa, MIDSA in Southern Africa). The Rabat and Khartoum Processes illustrate this dynamic by structuring cooperation between Africa and Europe." 
-      },
-    ]
-  },
-  {
-    category: { fr: "Instruments & Institutions du Régime Africain", en: "Instruments & Institutions of the African Regime" },
-    icon: Landmark,
-    terms: [
-      {
-        term: "Convention de l'OUA (1969)",
-        en_term: "OAU Convention (1969)",
-        fr: "Convention régissant les aspects propres aux problèmes des réfugiés en Afrique, adoptée à Addis-Abeba le 10 septembre 1969, en vigueur depuis le 20 juin 1974. Son article I(2) élargit la définition du réfugié à quiconque fuit une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public — sans exiger de crainte de persécution individualisée. C'est la définition de référence de cette plateforme.",
-        en: "Convention Governing the Specific Aspects of Refugee Problems in Africa, adopted in Addis Ababa on 10 September 1969, in force since 20 June 1974. Its Article I(2) broadens the refugee definition to anyone fleeing external aggression, occupation, foreign domination or events seriously disturbing public order — with no individualised fear of persecution required. It is this platform's reference definition.",
-        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
-        stakes: { fr: "Sous la définition de Genève, une personne fuyant une guerre généralisée sans être personnellement visée peut être écartée. Sous l'article I(2), elle est réfugiée. Le même trajet, deux textes, deux issues.", en: "Under the Geneva definition, someone fleeing generalised war without being personally targeted can be excluded. Under Article I(2), they are a refugee. Same journey, two texts, two outcomes." }
-      },
-      {
-        term: "Convention de Kampala (2009)",
-        en_term: "Kampala Convention (2009)",
-        fr: "Convention de l'Union africaine sur la protection et l'assistance aux personnes déplacées en Afrique. Premier — et toujours seul — traité régional contraignant au monde consacré aux personnes déplacées internes. Son article 1 donne la définition de référence de la PDI retenue sur cette plateforme.",
-        en: "African Union Convention for the Protection and Assistance of Internally Displaced Persons in Africa. The first — and still the only — binding regional treaty in the world devoted to internally displaced persons. Its Article 1 provides the reference IDP definition used on this platform.",
-        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" }
-      },
-      {
-        term: "Protocole sur la libre circulation (2018)",
-        en_term: "Free Movement Protocol (2018)",
-        fr: "Protocole au Traité d'Abuja relatif à la libre circulation des personnes, au droit de résidence et au droit d'établissement, adopté à Kigali en 2018. Il organise l'ouverture en trois phases successives — entrée, résidence, établissement — chacune conditionnant la suivante. Son entrée en vigueur requiert 15 ratifications ; il en compte 4 sur 54.",
-        en: "Protocol to the Abuja Treaty on Free Movement of Persons, Right of Residence and Right of Establishment, adopted in Kigali in 2018. It organises opening in three successive phases — entry, residence, establishment — each conditioning the next. Entry into force requires 15 ratifications; it stands at 4 of 54.",
-        source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
-        stakes: { fr: "Le découpage en phases est ce qui rend le texte signable : un État peut adhérer au principe d'entrée sans s'engager sur le droit d'établissement. C'est aussi ce qui permet de s'arrêter à la première phase indéfiniment.", en: "The phased design is what makes the text signable: a state can endorse entry without committing to establishment rights. It is also what allows stopping at phase one indefinitely." }
-      },
-      {
-        term: "MPFA (2018-2030)",
-        en_term: "MPFA (2018-2030)",
-        fr: "Cadre de politique migratoire pour l'Afrique et son plan d'action décennal, révisé et adopté en 2018. Document d'orientation non contraignant qui décline les priorités continentales — gouvernance du travail migrant, données, protection, diaspora — et sert de référence aux politiques migratoires nationales et régionales.",
-        en: "Migration Policy Framework for Africa and its ten-year action plan, revised and adopted in 2018. A non-binding guidance document setting out continental priorities — labour migration governance, data, protection, diaspora — and serving as the reference for national and regional migration policies.",
-        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
-      },
-      {
-        term: "AVOI",
-        en_term: "AVOI",
-        fr: "Indice d'ouverture des visas en Afrique (Africa Visa Openness Index), publié conjointement par la Banque africaine de développement et la Commission de l'Union africaine. Il mesure, pour chaque pays, la facilité d'entrée offerte aux ressortissants des autres États africains selon la part de pays admis sans visa, avec visa à l'arrivée ou avec visa préalable.",
-        en: "Africa Visa Openness Index, published jointly by the African Development Bank and the African Union Commission. For each country it measures the ease of entry offered to nationals of other African states, based on the share of countries admitted visa-free, with visa on arrival, or requiring a prior visa.",
-        source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
-      },
-      {
-        term: "CER",
-        en_term: "REC",
-        fr: "Communauté économique régionale. Huit CER sont reconnues par l'Union africaine comme les blocs constitutifs de l'intégration continentale. Elles sont, en matière de mobilité, l'échelon où la libre circulation s'exerce réellement : plusieurs ont ouvert leurs frontières intérieures bien avant que le protocole continental n'existe.",
-        en: "Regional Economic Community. Eight RECs are recognised by the African Union as the building blocs of continental integration. On mobility they are the level at which free movement actually operates: several opened their internal borders long before the continental protocol existed.",
-        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
-      },
-      {
-        term: "ZLECAf",
-        en_term: "AfCFTA",
-        fr: "Zone de libre-échange continentale africaine. Accord commercial continental dont la mise en œuvre suppose une mobilité des personnes que le protocole sur la libre circulation n'a pas encore rendue effective — ce qui fait de la circulation des marchandises et de celle des personnes deux chantiers volontairement dissociés.",
-        en: "African Continental Free Trade Area. A continental trade agreement whose implementation presupposes a mobility of persons that the free movement protocol has not yet made effective — making the movement of goods and of people two deliberately decoupled projects.",
-        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/en/agenda2063/flagship-projects" }
-      },
-      {
-        term: "GCR",
-        en_term: "GCR",
-        fr: "Pacte mondial sur les réfugiés, affirmé par l'Assemblée générale des Nations unies en 2018. Instrument non contraignant organisé autour du partage équitable des charges et des responsabilités. Il est postérieur d'un demi-siècle à la Convention de l'OUA, qui portait déjà l'essentiel de ses principes en droit contraignant.",
-        en: "Global Compact on Refugees, affirmed by the UN General Assembly in 2018. A non-binding instrument organised around equitable sharing of burdens and responsibilities. It postdates by half a century the OAU Convention, which already carried most of its principles in binding law.",
-        source: { fr: "Nations unies / HCR", en: "United Nations / UNHCR", url: "https://globalcompactrefugees.org/" }
-      },
-      {
-        term: "CTS-MRIDP",
-        en_term: "STC-MRIDPs",
-        fr: "Comité technique spécialisé sur la migration, les réfugiés et les personnes déplacées. Organe ministériel de l'Union africaine institué sur la base de l'article 5 de l'Acte constitutif ; il se réunit tous les deux ans et supervise la redevabilité des organes techniques du régime, dont l'OAM.",
-        en: "Specialized Technical Committee on Migration, Refugees and Displaced Persons. An African Union ministerial organ established under Article 5 of the Constitutive Act; it meets every two years and oversees the accountability of the regime's technical bodies, including the AMO.",
-        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
-      },
-      {
-        term: "PAFoM",
-        en_term: "PAFoM",
-        fr: "Forum panafricain sur la migration. Processus consultatif continental créé par décision du Conseil exécutif en 2006, dont la première session s'est tenue à Accra en 2015. Il réunit États membres, CER, processus régionaux et agences onusiennes, sans pouvoir décisionnel propre.",
-        en: "Pan-African Forum on Migration. A continental consultative process created by Executive Council decision in 2006, whose first session was held in Accra in 2015. It brings together member states, RECs, regional processes and UN agencies, with no decision-making power of its own.",
-        source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
-      },
-      {
-        term: "JLMP",
-        en_term: "JLMP",
-        fr: "Programme conjoint sur la migration de travail (Joint Labour Migration Programme), porté par la Commission de l'UA avec l'OIT, l'OIM et la CEA. Il met en œuvre le cinquième domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015) autour de quatre axes : portabilité des compétences, portabilité de la protection sociale, recrutement équitable et protection des travailleurs.",
-        en: "Joint Labour Migration Programme, led by the AU Commission with the ILO, IOM and ECA. It implements the fifth priority area of the 2015 Addis Ababa Declaration on Employment around four axes: skills portability, social-security portability, fair recruitment and worker protection.",
-        source: { fr: "Union africaine / OIT / OIM / CEA", en: "African Union / ILO / IOM / ECA", url: "https://au.int/" }
-      }
-    ]
-  }
-];
 
-const libraryData = [
-  {
-    section: { fr: "Rapports Institutionnels & Données", en: "Institutional Reports & Data" },
-    icon: Database,
-    items: [
-      { title: "UN DESA — International Migrant Stock (2024)", year: 2024, type: { fr: "Données", en: "Data" }, desc: { fr: "Stocks migratoires mondiaux par pays d'origine et de destination.", en: "Global migrant stocks by country of origin and destination." }, url: "https://www.un.org/development/desa/pd/data/international-migrant-stock" },
-      { title: "UNHCR — Global Trends Report (2025)", year: 2025, essential: true, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Statistiques mondiales sur les réfugiés et demandeurs d'asile.", en: "Global statistics on refugees and asylum seekers." }, url: "https://www.unhcr.org/refugee-statistics/" },
-      { title: "IDMC — Global Report on Internal Displacement / GRID (2025)", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Déplacements internes liés aux conflits et aux catastrophes.", en: "Internal displacement linked to conflict and disasters." }, url: "https://www.internal-displacement.org/database/displacement-data/" },
-      { title: "IOM — World Migration Report (2024)", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Panorama biennal des tendances migratoires mondiales.", en: "Biennial overview of global migration trends." }, url: "https://www.iom.int/" },
-      { title: "AfDB & AUC — Africa Visa Openness Report (2024)", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Indice d'ouverture des visas par pays et par CER.", en: "Visa openness index by country and REC." }, url: "https://www.afdb.org/en" },
-      { title: "World Bank — Remittances Data (2024)", year: 2024, essential: true, type: { fr: "Données", en: "Data" }, desc: { fr: "Transferts de fonds des diasporas, par pays et par an.", en: "Diaspora remittances, by country and year." }, url: "https://data.worldbank.org/" },
-      { title: "World Bank / KNOMAD — Migration and Development Brief 39", year: 2023, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Analyse semestrielle des flux de transferts de fonds mondiaux et régionaux.", en: "Biannual analysis of global and regional remittance flows." }, url: "https://www.knomad.org/publication/migration-and-development-brief-39" },
-      { title: "AUC & IOM — Africa Migration Report, 2nd Edition", year: 2024, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Panorama continental reliant politiques, pratiques et bien-être des migrants africains.", en: "Continental overview linking policy, practice, and the welfare of African migrants." }, url: "https://publications.iom.int/system/files/pdf/pub2023-132-r-iom-au-africa-migration-report-second-edition_3.pdf" },
-      { title: "AUC, AfDB & UNECA — Africa Regional Integration Index (ARII)", year: 2019, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Indice comparatif de l'intégration régionale, incluant la dimension libre circulation.", en: "Comparative regional integration index, including the free movement dimension." }, url: "https://www.arii.uneca.org" },
-      { title: "AUC, ILO, IOM & UNECA — Labour Migration Statistics Report in Africa, 3rd Ed.", year: 2021, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Statistiques comparées sur la migration de main-d'œuvre en Afrique.", en: "Comparative statistics on labour migration in Africa." }, url: "https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" },
-      { title: "AUC, ILO & IOM — Report on Labour Migration Statistics in Africa, 4th Ed. (2022 data)", year: 2026, essential: true, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Quatrieme edition du rapport continental, produite sous le programme JLMP. Serie 2010-2022 des travailleurs migrants, part des femmes, envois de fonds par sous-region, couverture de protection sociale. Revise a la baisse la serie de la 3e edition.", en: "Fourth edition of the continental report, produced under the JLMP programme. 2010-2022 series on migrant workers, women's share, remittances by subregion, social protection coverage. Revises the 3rd edition's series downward." }, url: "https://au.int/sites/default/files/4th_Edi_LMSRA_EN_WEB_20260626.pdf" },
-      { title: "Banque mondiale — Global Findex (inclusion financiere)", year: 2025, essential: true, type: { fr: "Base de donnees", en: "Database" }, desc: { fr: "Enquete mondiale sur la detention de comptes, le mobile money et la reception de transferts, par pays et par vague. Interrogeable via l API v2 de la Banque mondiale. Integree ici pour 48 pays africains : elle documente le canal par lequel les transferts arrivent, la ou les autres sources ne donnent que le montant.", en: "Global survey on account ownership, mobile money and remittance receipt, by country and wave. Queryable through the World Bank v2 API. Integrated here for 48 African countries: it documents the rail remittances travel on, where other sources give only the amount." }, url: "https://www.worldbank.org/en/publication/globalfindex" },
-      { title: "UNHCR — Refugee Data Finder (API publique)", year: 2026, essential: true, type: { fr: "Base de donnees", en: "Database" }, desc: { fr: "Base publique du HCR sur les populations deplacees et apatrides, par pays d asile et par annee, sur plus de 70 ans. Interrogeable par API. Integree a cette plateforme pour les millesimes 2014 et 2024 : refugies, demandeurs d asile, deplaces internes suivis, apatrides.", en: "UNHCR public database on displaced and stateless populations, by country of asylum and year, spanning over 70 years. Queryable by API. Integrated into this platform for 2014 and 2024: refugees, asylum seekers, monitored IDPs, stateless persons." }, url: "https://www.unhcr.org/refugee-statistics" },
-      { title: "UN DESA — Principles and Recommendations for Population and Housing Censuses, Rev. 3", year: 2017, type: { fr: "Norme statistique", en: "Statistical standard" }, desc: { fr: "La norme onusienne du recensement : cinq caractéristiques essentielles, périodicité d'au moins dix ans, et les caractéristiques de migration internationale à collecter. C'est l'étalon contre lequel se mesure la régularité des recensements africains.", en: "The UN census standard: five essential features, a periodicity of at least ten years, and the international migration characteristics to be collected. It is the yardstick against which the regularity of African censuses is measured." }, url: "https://unstats.un.org/unsd/demographic-social/Standards-and-Methods/files/Principles_and_Recommendations/Population-and-Housing-Censuses/Series_M67rev3-E.pdf" },
-      { title: "African Union — Strategy for the Harmonization of Statistics in Africa (SHaSA / SHaSA 2)", year: 2010, type: { fr: "Stratégie continentale (UA)", en: "Continental strategy (AU)" }, desc: { fr: "Adoptée à Kampala en juillet 2010 par la Conférence des chefs d'État. Porte sur l'harmonisation des concepts, des définitions et des méthodologies statistiques à l'échelle du continent ; deuxième phase 2017-2026, mise en œuvre par STATAFRIC.", en: "Adopted in Kampala in July 2010 by the Assembly of Heads of State. Covers the harmonisation of statistical concepts, definitions and methodologies continent-wide; second phase 2017-2026, implemented by STATAFRIC." }, url: "https://au.int/en/ea/statistics/shasa" },
-      { title: "Mixed Migration Centre — 4Mi Data Explorer", year: 2026, essential: true, type: { fr: "Données de terrain", en: "Field Data" }, desc: { fr: "Plus de 100 000 entretiens directs avec des migrants et réfugiés sur leur parcours, leurs motivations et les risques rencontrés — une contrepartie empirique de terrain aux statistiques agrégées des organisations internationales.", en: "Over 100,000 direct interviews with migrants and refugees on their journeys, motivations, and risks faced — a field-level empirical counterpart to international organizations' aggregate statistics." }, url: "https://mixedmigration.org/4mi-data-explorer/en" },
-      { title: "Afrobarometer — Attitudes on Migration & Cross-Border Mobility", year: 2026, type: { fr: "Enquête d'opinion", en: "Opinion Survey" }, desc: { fr: "Sondages d'opinion publique menés dans plus de 30 pays africains sur les perceptions de l'immigration, de l'émigration et de la libre circulation — rare source de données sur ce que pensent les citoyens africains eux-mêmes, plutôt que sur les seules statistiques de flux.", en: "Public opinion surveys conducted in 30+ African countries on perceptions of immigration, emigration, and free movement — a rare source of data on what African citizens themselves think, rather than flow statistics alone." }, url: "https://www.afrobarometer.org/" },
-      { title: "ISS African Futures — Migration & Demographic Projections", year: 2026, type: { fr: "Recherche & prospective", en: "Research & Foresight" }, desc: { fr: "Modélisation prospective des dynamiques migratoires et démographiques africaines par l'Institute for Security Studies (Pretoria).", en: "Forward-looking modelling of African migration and demographic dynamics by the Institute for Security Studies (Pretoria)." }, url: "https://futures.issafrica.org/" },
-      { title: "World Bank — Groundswell: Acting on Internal Climate Migration", year: 2021, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Projections de migration climatique interne à l'horizon 2050 : jusqu'à 216 millions de personnes dans le monde, dont environ 86 millions pour la seule Afrique subsaharienne.", en: "Projections of internal climate migration to 2050: up to 216 million people worldwide, including roughly 86 million in Sub-Saharan Africa alone." }, url: "https://www.worldbank.org/en/news/feature/2021/09/13/millions-on-the-move-in-their-own-countries-the-human-face-of-climate-change" },
-      { title: "WHO — Health Workforce Support and Safeguards List", year: 2023, type: { fr: "Liste officielle", en: "Official List" }, desc: { fr: "Recense les pays confrontés aux pénuries les plus critiques de personnel de santé — largement concentrés en Afrique subsaharienne. Référence du débat sur la « fuite des cerveaux » médicale.", en: "Identifies countries facing the most critical health-personnel shortages — heavily concentrated in Sub-Saharan Africa. The reference point for the medical brain-drain debate." }, url: "https://www.who.int/publications/i/item/9789240069787" },
-      { title: "IATA — Travel Information Manual (TIM)", year: 2024, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Source primaire des exigences de visa par nationalité ; alimente notamment l'Africa Visa Openness Index de la BAD et de la CUA.", en: "Primary source on visa requirements by nationality; notably feeds the AfDB/AUC Africa Visa Openness Index." }, url: "https://www.iata.org/en/publications/timatic/" },
-      { title: "Eurostat — Migration and Asylum Statistics", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Statistiques européennes de migration et d'asile, mobilisées ici comme contrepoint pour situer les flux Afrique-Europe.", en: "European migration and asylum statistics, used here as a counterpoint to situate Africa-Europe flows." }, url: "https://ec.europa.eu/eurostat/web/migration-asylum/overview" },
-      { title: "Frontex — Risk Analysis", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Détections de franchissements irréguliers aux frontières extérieures de l'UE. Citée comme donnée européenne de comparaison, avec ses limites méthodologiques connues (comptage d'événements et non de personnes).", en: "Detections of irregular crossings at the EU's external borders. Cited as European comparison data, with its known methodological limits (it counts events, not persons)." }, url: "https://www.frontex.europa.eu/publications/" },
-      { title: "ICMPD — Migration Policy Frameworks", year: 2025, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Analyses des cadres de politique migratoire, notamment sur les dialogues Afrique-Europe (Processus de Rabat et de Khartoum).", en: "Analyses of migration policy frameworks, notably on the Africa-Europe dialogues (Rabat and Khartoum Processes)." }, url: "https://www.icmpd.org/" },
-      { title: "UN DESA — Drivers of Migration and Urbanization in Africa", year: 2017, type: { fr: "Document de travail", en: "Working Paper" }, desc: { fr: "Décompose les moteurs de l'urbanisation africaine et la part respective de la migration rurale-urbaine, de l'accroissement naturel et de la reclassification administrative.", en: "Breaks down the drivers of African urbanization and the respective shares of rural-urban migration, natural increase, and administrative reclassification." }, url: "https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/unpd_egm_201709_s3_paper-awunbila-final.pdf" },
-      { title: "Mo Ibrahim Foundation — Ibrahim Index of African Governance (IIAG)", year: 2024, essential: true, type: { fr: "Indice & base de données", en: "Index & Database" }, desc: { fr: "Évaluation biennale de la qualité de la gouvernance dans les 54 pays africains : 81 indicateurs issus de 47 sources africaines et internationales. Fournit le contexte institutionnel dans lequel s'inscrivent les politiques migratoires.", en: "Biennial assessment of governance quality across all 54 African countries: 81 indicators drawn from 47 African and international sources. Provides the institutional context in which migration policy operates." }, url: "https://mo.ibrahim.foundation/our-research/iiag" },
-      { title: "Mo Ibrahim Foundation — IIAG Data Portal", year: 2024, type: { fr: "Portail de données", en: "Data Portal" }, desc: { fr: "Portail interactif permettant d'explorer et de télécharger les séries de l'IIAG pays par pays.", en: "Interactive portal to explore and download IIAG series country by country." }, url: "https://iiag.online/" },
-      { title: "Commission européenne (JRC/KCMD) — Atlas of Migration", year: 2025, essential: true, type: { fr: "Atlas & base de données", en: "Atlas & Database" }, desc: { fr: "Atlas annuel du Centre commun de recherche : données migratoires harmonisées et validées pour 171 pays et territoires, avec profils nationaux. Source de comparaison européenne, à lire en tenant compte de son point de vue institutionnel.", en: "Annual atlas from the Joint Research Centre: harmonised and validated migration data for 171 countries and territories, with country profiles. A European comparison source, to be read with its institutional standpoint in mind." }, url: "https://knowledge4policy.ec.europa.eu/atlas-migration_en" },
-      { title: "Commission européenne — Knowledge Centre on Migration and Demography (KCMD)", year: 2025, type: { fr: "Centre de connaissances", en: "Knowledge Centre" }, desc: { fr: "Portail du centre de connaissances de la Commission sur la migration et la démographie, dont dépend l'Atlas of Migration.", en: "Portal of the Commission's knowledge centre on migration and demography, which produces the Atlas of Migration." }, url: "https://knowledge4policy.ec.europa.eu/migration-demography_en" },
-    ]
-  },
-  {
-    section: { fr: "Union africaine, agences & Communautés économiques régionales", en: "African Union, Agencies & Regional Economic Communities" },
-    icon: Landmark,
-    items: [
-      { title: "Observatoire africain des migrations (OAM / AMO)", year: 2025, essential: true, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Organe de l'Union africaine chargé de la collecte, de l'analyse et de l'harmonisation des données migratoires continentales. Siège à Rabat ; publie rapports d'activités et notes analytiques.", en: "African Union body responsible for collecting, analysing, and harmonising continental migration data. Based in Rabat; publishes activity reports and analytical notes." }, url: "https://amo.au.int/en" },
-      { title: "Centre africain d'études et de recherche sur les migrations (ACSRM / CERSM)", year: 2025, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Bureau technique spécialisé de la CUA (lancé en 2021) : recherche appliquée et « African Migration Policy Briefs » à destination des États et des CER.", en: "AUC specialised technical office (launched 2021): applied research and \"African Migration Policy Briefs\" for member states and RECs." }, url: "https://acsrm-au.org/" },
-      { title: "Union africaine — Documents, rapports et décisions", year: 2025, type: { fr: "Portail documentaire", en: "Document Portal" }, desc: { fr: "Portail officiel des documents de l'UA : décisions des sommets, rapports des CTS, cadres politiques et communiqués — source primaire pour tout élément de gouvernance cité sur cette plateforme.", en: "Official AU document portal: summit decisions, STC reports, policy frameworks, and communiqués — the primary source for governance material cited across this platform." }, url: "https://au.int/en/documents" },
-      { title: "AUDA-NEPAD — Agence de développement de l'Union africaine", year: 2025, type: { fr: "Agence de l'UA", en: "AU Agency" }, desc: { fr: "Agence de mise en œuvre de l'Agenda 2063, notamment sur la libre circulation des personnes et le passeport africain.", en: "Implementing agency for Agenda 2063, notably on free movement of persons and the African passport." }, url: "https://www.nepad.org/" },
-      { title: "CEDEAO / ECOWAS — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole de 1979 sur la libre circulation, actes additionnels et processus consultatif MIDWA. Bloc le plus ouvert du continent (AVOI 0,629).", en: "1979 free movement Protocol, additional acts, and the MIDWA consultative process. The continent's most open bloc (AVOI 0.629)." }, url: "https://www.ecowas.int/" },
-      { title: "CAE / EAC — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole du Marché commun (2010), politique de migration de travail et postes-frontières à arrêt unique (OSBP).", en: "Common Market Protocol (2010), labour migration policy, and One-Stop Border Posts (OSBP)." }, url: "https://www.eac.int/" },
-      { title: "SADC — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocole de 2005 sur la facilitation des mouvements de personnes, plan sur la migration de travail et processus consultatif MIDSA.", en: "2005 Protocol on the Facilitation of Movement of Persons, labour migration plan, and the MIDSA consultative process." }, url: "https://www.sadc.int/" },
-      { title: "COMESA — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Protocoles de 1984 et 1998, facilitation des visas d'affaires et processus consultatif MIDCOM sur un espace de 21 États.", en: "1984 and 1998 Protocols, business visa facilitation, and the MIDCOM consultative process across 21 states." }, url: "https://www.comesa.int/" },
-      { title: "IGAD — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Deux protocoles pionniers adoptés en 2020 : libre circulation des personnes et transhumance pastorale transfrontalière.", en: "Two pioneering protocols adopted in 2020: free movement of persons and cross-border pastoral transhumance." }, url: "https://igad.int/" },
-      { title: "CEEAC / ECCAS — Portail officiel", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité révisé de 2019 ; intégration à deux étages avec la CEMAC (suppression des visas 90 jours, passeport biométrique communautaire).", en: "Revised 2019 Treaty; two-tier integration alongside CEMAC (90-day visa abolition, community biometric passport)." }, url: "https://www.ceeac-eccas.org/" },
-      { title: "UMA / AMU — Fiche officielle de l'Union africaine", year: 2025, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité de Marrakech (1989), secrétariat à Rabat. Le site propre de l'organisation étant indisponible, la fiche de l'UA fait référence.", en: "Marrakech Treaty (1989), secretariat in Rabat. As the organisation's own site is unavailable, the AU factsheet serves as reference." }, url: "https://au.int/en/recs/uma" },
-      { title: "CEN-SAD — Portail officiel", year: 2026, type: { fr: "CER", en: "REC" }, desc: { fr: "Traité de 1998 (révisé en 2013), 24 États membres. Siège rouvert à Tripoli en avril 2026 après relocalisation post-2011.", en: "1998 Treaty (revised 2013), 24 member states. Headquarters reopened in Tripoli in April 2026 after post-2011 relocation." }, url: "https://censad.int/en/" },
-    ]
-  },
-  {
-    section: { fr: "Cadres Juridiques & Instruments", en: "Legal Frameworks & Instruments" },
-    icon: Scale,
-    items: [
-      { title: "African Union — Treaties, Conventions & Protocols Database", year: 2025, essential: true, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Textes et statuts de ratification des instruments de l'UA.", en: "Texts and ratification status of AU instruments." }, url: "https://au.int/en/treaties" },
-      { title: "ILO NORMLEX — International Labour Standards Database", year: 2025, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Ratifications des conventions de l'OIT, pays par pays.", en: "ILO convention ratifications, country by country." }, url: "https://normlex.ilo.org/" },
-      { title: "AU Protocol on Free Movement of Persons, Right of Residence and Right of Establishment", year: 2018, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Protocole continental sur la libre circulation, la résidence et l'établissement.", en: "Continental protocol on free movement, residence, and establishment." }, url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
-      { title: "Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration", year: 2017, type: { fr: "Position commune (UA)", en: "Common Position (AU)" }, desc: { fr: "Doctrine africaine négociée en amont du Pacte de Marrakech, structurée en six domaines thématiques et adossée à la libre circulation continentale. Document de travail de l'UA, Addis-Abeba, octobre 2017.", en: "African doctrine negotiated ahead of the Marrakech Compact, structured around six thematic areas and anchored in continental free movement. AU working document, Addis Ababa, October 2017." }, url: "https://au.int/sites/default/files/newsevents/workingdocuments/33023-wd-english_common_african_position_on_gcom.pdf" },
-      { title: "Agenda 2063 — Flagship Projects (African Passport and Free Movement of People)", year: 2015, type: { fr: "Cadre stratégique (UA)", en: "Strategic Framework (AU)" }, desc: { fr: "Liste officielle des quinze projets phares de l'Agenda 2063 ; le quatrième porte le passeport africain et la libre circulation des personnes.", en: "Official list of Agenda 2063's fifteen flagship projects; the fourth carries the African Passport and free movement of persons." }, url: "https://au.int/en/agenda2063/flagship-projects" },
-      { title: "AU Convention for the Protection and Assistance of IDPs (Kampala Convention)", year: 2009, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Premier traité contraignant au monde sur les personnes déplacées internes.", en: "World's first binding treaty on internally displaced persons." }, url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
-      { title: "Treaty Establishing the African Economic Community (Abuja Treaty)", year: 1991, type: { fr: "Instrument juridique", en: "Legal Instrument" }, desc: { fr: "Traité fondateur du projet d'intégration économique continentale.", en: "Founding treaty of the continental economic integration project." }, url: "https://au.int/en/treaties/treaty-establishing-african-economic-community" },
-      { title: "Migration Policy Framework for Africa and Plan of Action (2018–2030)", year: 2018, essential: true, type: { fr: "Cadre politique", en: "Policy Framework" }, desc: { fr: "Cadre stratégique continental de référence en matière de gouvernance des migrations.", en: "The continent's reference strategic framework for migration governance." }, url: "https://au.int/sites/default/files/documents/35956-doc-2018_mpfa_english_version.pdf" },
-      { title: "Global Compact for Migration (GCM)", year: 2018, type: { fr: "Pacte mondial", en: "Global Compact" }, desc: { fr: "Texte intégral et portail officiel du pacte de Marrakech.", en: "Full text and official portal of the Marrakech Compact." }, url: "https://www.iom.int/global-compact-migration" },
-      { title: "Global Compact on Refugees (GCR)", year: 2018, type: { fr: "Pacte mondial", en: "Global Compact" }, desc: { fr: "Cadre de partage équitable des charges pour les réfugiés.", en: "Framework for equitable responsibility-sharing on refugees." }, url: "https://globalcompactrefugees.org/about-digital-platform/global-compact-refugees" },
-      { title: "UN Sustainable Development Goals — Agenda 2030", year: 2015, type: { fr: "Cadre mondial", en: "Global Framework" }, desc: { fr: "Cibles 10.7, 10.c, 17.18 et 8.8 sur la mobilité et le travail.", en: "Targets 10.7, 10.c, 17.18 and 8.8 on mobility and labour." }, url: "https://www.un.org/sustainabledevelopment/" },
-    ]
-  },
-  {
-    section: { fr: "Recherche & Références Académiques", en: "Research & Academic References" },
-    icon: BookOpen,
-    items: [
-      { title: "Ben Mokhtar, Y. — Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national", year: 2026, essential: true, type: { fr: "Thèse doctorale", en: "Doctoral Thesis" }, desc: { fr: "Thèse doctorale (UIR, septembre 2026) sur le régime africain de gouvernance migratoire, à l'origine de cette plateforme.", en: "Doctoral thesis (UIR, September 2026) on the African migration governance regime, the origin of this platform." }, url: null },
-      { title: "de Haas, H. (2021) — A Theory of Migration: The Aspirations–Capabilities Framework", year: 2021, essential: true, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Cadre analytique des capabilités de mouvement (Comparative Migration Studies).", en: "Analytical framework of movement capabilities (Comparative Migration Studies)." }, url: "https://doi.org/10.1186/s40878-020-00210-4" },
-      { title: "de Haas, H. (2023) — How Migration Really Works", year: 2023, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Guide factuel contre les principaux mythes du débat migratoire contemporain.", en: "A factful guide against the major myths of the contemporary migration debate." }, url: null },
-      { title: "Adamson, F. & Tsourapas, G. (2019) — Migration Diplomacy in World Politics", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Concept de diplomatie migratoire (International Studies Perspectives).", en: "The concept of migration diplomacy (International Studies Perspectives)." }, url: "https://doi.org/10.1093/isp/eky015" },
-      { title: "Achiume, E. T. (2019) — Migration as Decolonization", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Relit le droit international de la migration à travers le prisme décolonial.", en: "Reframes international migration law through a decolonial lens." }, url: "https://ssrn.com/abstract=3330353" },
-      { title: "Bakewell, O. (2008) — 'Keeping Them in Their Place'", year: 2008, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Critique le lien ambivalent entre développement et migration en Afrique.", en: "Critiques the ambivalent relationship between development and migration in Africa." }, url: "https://doi.org/10.1080/01436590802386492" },
-      { title: "Flahaux, M.-L. & de Haas, H. (2016) — African Migration: Trends, Patterns, Drivers", year: 2016, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Synthèse des grandes tendances et moteurs des migrations africaines.", en: "Synthesis of the major trends and drivers of African migration." }, url: "https://doi.org/10.1186/s40878-015-0015-6" },
-      { title: "Mbembe, A. & Sarr, F. (dir., 2017) — Écrire l'Afrique-Monde", year: 2017, type: { fr: "Ouvrage collectif", en: "Edited Volume" }, desc: { fr: "Perspective panafricaine sur les recompositions du monde contemporain.", en: "A pan-African perspective on the reconfigurations of the contemporary world." }, url: null },
-      { title: "Mamdani, M. (1996) — Citizen and Subject", year: 1996, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Analyse fondatrice de l'héritage institutionnel colonial en Afrique.", en: "Foundational analysis of the colonial institutional legacy in Africa." }, url: null },
-      { title: "Landau, L. B. (2019) — A Chronotope of Containment Development", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Analyse la reterritorialisation de l'Afrique face à la crise migratoire européenne.", en: "Analyzes Africa's reterritorialization in response to Europe's migration crisis." }, url: "https://doi.org/10.1111/anti.12420" },
-      { title: "De Genova, N. (2013) — Spectacles of Migrant 'Illegality'", year: 2013, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Déconstruit la fabrication politique de l'« illégalité » migratoire.", en: "Deconstructs the political production of migrant 'illegality'." }, url: "https://doi.org/10.1080/01419870.2013.783710" },
-      { title: "Adepoju, A. (2008) — Migration in Sub-Saharan Africa", year: 2008, type: { fr: "Chapitre d'ouvrage", en: "Book Chapter" }, desc: { fr: "Chapitre de référence sur les dynamiques migratoires subsahariennes.", en: "Reference chapter on Sub-Saharan African migration dynamics." }, url: "https://publications.iom.int/books/migration-and-development-perspectives-south" },
-      { title: "Bayart, J.-F. (2000) — Africa in the World: A History of Extraversion", year: 2000, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Théorie de l'extraversion comme stratégie historique des élites africaines.", en: "Theory of extraversion as a historical strategy of African elites." }, url: "https://doi.org/10.1093/afraf/99.395.217" },
-    ]
-  }
-];
+
+
 
 const LibraryCard = ({ item, lang, essential = false }) => {
   const CardTag = item.url ? 'a' : 'div';
@@ -9374,7 +8258,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             "Yet the category is never neutral. Deciding whether to enumerate usual residents (de jure population) or all persons present (de facto), retaining citizenship rather than country of birth, asking or not asking the reason: each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
           )}</p>
           <p className="text-white font-medium">{L(
-            "C'est le sens de l'investissement continental dans ses propres instruments — l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique (SHaSA), dont l'objet est de reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
+            "C'est le sens de l'investissement continental dans ses propres instruments : l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique. Tous ont le même objet — reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
             "This is the point of the continental investment in its own instruments — the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa (SHaSA): not to collect more, but to regain control over the framing and analysis of what is already collected."
           )}</p>
         </div>
@@ -9545,96 +8429,7 @@ const methodPipeline = [
   },
 ];
 
-const methodConventions = [
-  {
-    label: { fr: "Périmètre géographique", en: "Geographic perimeter" },
-    value: { fr: "54 pays", en: "54 countries" },
-    detail: {
-      fr: "Le Sahara occidental n'est pas traité comme une entité distincte : il est intégré au Maroc, y compris dans les cartes. Ce choix est constant sur l'ensemble de la plateforme.",
-      en: "Western Sahara is not treated as a separate entity: it is integrated into Morocco, including on maps. This choice is applied consistently across the platform."
-    }
-  },
-  {
-    label: { fr: "Découpage régional", en: "Regional breakdown" },
-    value: { fr: "5 régions de l'UA", en: "5 AU regions" },
-    detail: {
-      fr: "La plateforme suit le découpage officiel de l'Union africaine, et non la nomenclature M49 des Nations unies : la Mauritanie est rattachée au Nord, le Burundi et le Rwanda au Centre, le Malawi, le Mozambique, la Zambie et le Zimbabwe au Sud.",
-      en: "The platform follows the African Union's official breakdown rather than the UN M49 nomenclature: Mauritania is attached to the North, Burundi and Rwanda to Central, and Malawi, Mozambique, Zambia, and Zimbabwe to the South."
-    }
-  },
-  {
-    label: { fr: "Appartenance aux CER", en: "REC membership" },
-    value: { fr: "Multiple assumée", en: "Multiple by design" },
-    detail: {
-      fr: "L'appartenance simultanée à plusieurs CER est la règle et non l'exception : elle est représentée telle quelle. Les retraits récents ou en cours sont signalés et datés plutôt que silencieusement appliqués.",
-      en: "Simultaneous membership in several RECs is the rule, not the exception: it is represented as such. Recent or ongoing withdrawals are flagged and dated rather than silently applied."
-    }
-  },
-  {
-    label: { fr: "Échelles de l'indice AVOI", en: "AVOI index scales" },
-    value: { fr: "0-100 / 0-1", en: "0-100 / 0-1" },
-    detail: {
-      fr: "Il s'agit du même indice d'ouverture des visas (BAD/CUA), stocké à l'échelle 0-100 au niveau des pays et 0-1 au niveau des CER. Les deux échelles ne sont jamais comparées directement dans un même graphique.",
-      en: "This is the same visa openness index (AfDB/AUC), stored on a 0-100 scale at country level and 0-1 at REC level. The two scales are never compared directly within a single chart."
-    }
-  },
-  {
-    label: { fr: "Priorité définitionnelle", en: "Definitional priority" },
-    value: { fr: "Instrument africain", en: "African instrument" },
-    detail: {
-      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence : réfugié selon la Convention de l'OUA (1969), personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
-      en: "For any legal concept holding both a UN and an African definition, the latter is the reference: refugee under the OAU Convention (1969), internally displaced person under the Kampala Convention (2009). The UN definition is cited only for comparison. Purely statistical aggregates, by contrast, follow UN DESA — a precondition for international comparability."
-    }
-  },
-  {
-    label: { fr: "Millésimes", en: "Vintages" },
-    value: { fr: "Datés, non alignés", en: "Dated, not aligned" },
-    detail: {
-      fr: "Les séries ne partagent pas toutes la même année de référence. Chaque champ concerné porte son année d'observation (transferts de fonds, activité des migrants, ratifications). Aucune interpolation n'est pratiquée pour produire une homogénéité de façade.",
-      en: "Series do not all share a reference year. Each affected field carries its own observation year (remittances, migrant activity, ratifications). No interpolation is applied to manufacture surface-level homogeneity."
-    }
-  },
-  {
-    label: { fr: "Chiffres non vérifiables", en: "Unverifiable figures" },
-    value: { fr: "Datés et réservés", en: "Dated and caveated" },
-    detail: {
-      fr: "Lorsqu'un décompte exact ne peut être confirmé sur une source officielle, la plateforme affiche la dernière valeur vérifiée avec sa date et une réserve explicite — plutôt qu'une estimation lissée ou un chiffre arrondi sans provenance.",
-      en: "When an exact count cannot be confirmed against an official source, the platform shows the last verified value with its date and an explicit caveat — rather than a smoothed estimate or a rounded figure without provenance."
-    }
-  },
-  {
-    label: { fr: "Seuil d'entrée en vigueur", en: "Entry-into-force threshold" },
-    value: { fr: "15 ratifications", en: "15 ratifications" },
-    detail: {
-      fr: "Les instruments de l'UA soumis à ratification sont affichés en rouge tant qu'ils n'atteignent pas 15 États parties — seuil standard d'entrée en vigueur pour cette catégorie de protocoles — et en vert au-delà. Le seuil est stocké par instrument, non codé en dur.",
-      en: "AU instruments subject to ratification display in red below 15 states parties — the standard entry-into-force threshold for this class of protocol — and green above it. The threshold is stored per instrument, not hard-coded."
-    }
-  },
-  {
-    label: { fr: "Dénomination des pays", en: "Country naming" },
-    value: { fr: "Variantes réconciliées", en: "Reconciled variants" },
-    detail: {
-      fr: "Un même État peut porter des libellés différents selon le jeu de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde »). Les deux formes restent affichées telles quelles ; la correspondance est assurée par une table d'alias, sans renommage des sources.",
-      en: "A single state may carry different labels depending on the dataset (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\"). Both forms remain displayed as-is; matching is handled by an alias table, without renaming the sources."
-    }
-  },
-  {
-    label: { fr: "Affirmations évaluées", en: "Assessed claims" },
-    value: { fr: "Formulées par l'auteur", en: "Authored in-house" },
-    detail: {
-      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes ; ce ne sont pas des citations de médias ou d'institutions identifiés. Seules les sections « ce que montrent les données » sont sourcées institutionnellement.",
-      en: "The claims examined in Evidence Check are written by the author to illustrate common perceptions; they are not quotations from identified media or institutions. Only the \"what the data shows\" sections carry institutional sourcing."
-    }
-  },
-  {
-    label: { fr: "Matrice d'indicateurs", en: "Indicator matrix" },
-    value: { fr: "Proposition, non collecte", en: "Proposal, not collection" },
-    detail: {
-      fr: "Les 12 indicateurs alternatifs présentés plus bas sont une proposition méthodologique issue de la recherche doctorale, adressée aux instituts nationaux de statistique. Ils ne décrivent pas une réalité déjà mesurée à l'échelle continentale.",
-      en: "The 12 alternative indicators presented below are a methodological proposal stemming from doctoral research, addressed to national statistical institutes. They do not describe a reality already measured at continental scale."
-    }
-  },
-];
+
 
 const methodLimits = [
   {
@@ -9835,7 +8630,7 @@ const TabMethodology = ({ text, lang, children }) => (
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           <p className="text-xs text-slate-700 leading-relaxed">
             {lang === 'fr'
-              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel en cinq régions de l'Union africaine — et non le découpage M49 des Nations Unies qu'utilise UNDESA pour publier ses propres tableaux de stocks migratoires. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
+              ? "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. Ce n'est pas celui d'UN DESA, qui publie ses tableaux de stocks selon la nomenclature M49 des Nations unies. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance."
               : "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section."}
           </p>
         </div>

@@ -1059,3 +1059,14 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche-ctx { font-size: 11.5px; line-height: 1.4; color: var(--label); }
 
 .recherche-vide { margin: 0; padding: 1rem .9rem 1.2rem; font-size: 13px; color: var(--label); }
+
+/* La reference d'un terme emprunte, dans le panneau de definition. */
+.terme-pop-src {
+  display: inline-flex; align-items: baseline; gap: .3em;
+  margin-top: .6rem; padding-top: .5rem;
+  border-top: 1px solid var(--rule);
+  font-size: 11.5px; line-height: 1.45; color: var(--accent-deep);
+  text-decoration: underline; text-decoration-color: var(--rule-strong);
+}
+.terme-pop-src:hover { text-decoration-color: currentColor; }
+.terme-pop-src svg { align-self: center; }
