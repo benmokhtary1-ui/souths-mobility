@@ -3202,6 +3202,117 @@ const RechercheGlobale = ({ lang, aller }) => {
 
 // Une carte posee dans une section : titre, phrase de lecture, carte, sources.
 // Le continent devient un argument, pas une illustration.
+// ---------------------------------------------------------------------------
+// L'ATLAS — la carte cesse d'etre un composant pour devenir l'ecran.
+//
+// L'ancienne entree posait neuf onglets nommes par discipline : « Gouvernance »,
+// « Donnees & statistiques ». Ils demandaient au lecteur de savoir d'avance
+// dans quelle case habitait sa question. Ici, on n'entre plus par une
+// discipline mais par une question — et la reponse est le continent lui-meme,
+// colore par la donnee qui repond.
+//
+// Chaque couche est un indicateur deja verifie ailleurs sur la plateforme :
+// rien de neuf n'est introduit, c'est la meme donnee, prise par l'autre bout.
+const COUCHES_ATLAS = [
+  { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'), mene: 'explorer',
+    question: { fr: 'Qui accueille ?', en: 'Who hosts?' } },
+  { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'labour',
+    question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?' } },
+  { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance',
+    question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?' } },
+  { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'forced',
+    question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?' } },
+  { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'labour',
+    question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?' } },
+  { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'labour',
+    question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?' } },
+  { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance',
+    question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?' },
+    plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
+             en: 'How many of the African Union’s six major instruments each country has formally ratified. Six is full commitment; zero is none.' },
+    hint: { fr: "Décompte établi sur les listes officielles de statut de l'Union africaine.", en: 'Counted from the African Union’s official status lists.' } },
+  { cle: 'compte', ind: () => CARTE_RECENSEMENT, mene: 'data',
+    question: { fr: 'Qui compte sa population ?', en: 'Who counts its people?' },
+    plain: { fr: "Où en est chaque pays de son recensement. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
+             en: 'Where each country stands on its census. A date announced then postponed does not count as a census held.' },
+    hint: { fr: 'Compilation de l’auteur d’après UNSD et UN DESA, statuts vérifiés en 2026 sur les instituts nationaux.', en: 'Compiled by the author from UNSD and UN DESA, statuses verified in 2026 against national institutes.' } },
+];
+
+const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
+  const L = faireL(lang);
+  const [coucheCle, setCoucheCle] = useState('accueil');
+  const couche = COUCHES_ATLAS.find(c => c.cle === coucheCle) || COUCHES_ATLAS[0];
+  const indicateur = couche.ind();
+  const plain = couche.plain || indicateur.plain;
+  const hint = couche.hint || indicateur.hint;
+
+  return (
+    <div className="space-y-8">
+      {/* L'ouverture : ce qu'est le site, en une ligne, puis la carte. */}
+      <header className="max-w-3xl">
+        <span className="block text-[10px] font-semibold uppercase mb-3" style={{ letterSpacing: '.2em', color: 'var(--label)' }}>
+          {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
+        </span>
+        <h1 className="font-serif font-bold text-3xl md:text-5xl leading-[1.06] text-slate-900">
+          {L('Les mobilités africaines,', 'African mobility,')}{' '}
+          <span style={{ color: 'var(--accent)' }}>{L('par les données africaines.', 'through African data.')}</span>
+        </h1>
+        <Prose className="mt-4 text-[15px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
+          "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
+          'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
+        )}</Prose>
+      </header>
+
+      {/* La barre de couches. Une question par bouton — jamais un nom de
+          discipline : c'est ce qui permet d'entrer sans savoir ou chercher. */}
+      <nav aria-label={L('Couches de la carte', 'Map layers')}>
+        <div className="flex flex-wrap gap-2">
+          {COUCHES_ATLAS.map(c => {
+            const actif = c.cle === coucheCle;
+            return (
+              <button
+                key={c.cle}
+                type="button"
+                onClick={() => setCoucheCle(c.cle)}
+                aria-pressed={actif}
+                className="couche-btn"
+                data-actif={actif ? 'true' : 'false'}
+              >
+                {tr(c.question, lang)}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* La carte. Le composant porte deja son releve au survol, sa legende et
+          son parcours au clavier — on ne le reecrit pas, on lui donne la
+          place qui lui manquait. */}
+      <div className="atlas-scene">
+        <AfricaChoropleth
+          indicator={{ ...indicateur, plain, hint }}
+          lang={lang}
+          onSelect={ouvrirPays}
+        />
+      </div>
+
+      {/* Ce que la couche montre, et par ou continuer. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-4 pt-1 border-t" style={{ borderColor: 'var(--rule)' }}>
+        <Prose className="text-[13px] leading-relaxed max-w-2xl mt-4" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
+        <button
+          type="button"
+          onClick={() => allerVers(couche.mene)}
+          className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
+          style={{ color: 'var(--accent-deep)' }}
+        >
+          {L('Approfondir cette question', 'Go deeper on this question')}
+          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const CarteSection = ({ lang, indicateur, kicker, titre, plain, sources = [] }) => (
   <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent)' }}>
     <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
@@ -9227,6 +9338,7 @@ const TabAbout = ({ text, lang, children }) => {
 // traduits — une URL francaise se lit en francais, ce qui compte autant pour la
 // clarte que pour le referencement.
 const ROUTES = {
+  atlas:      { fr: 'atlas',        en: 'atlas' },
   home:       { fr: 'accueil',      en: 'home' },
   evidence:   { fr: 'verification', en: 'evidence' },
   explorer:   { fr: 'pays',         en: 'countries' },
@@ -9440,6 +9552,7 @@ export default function App() {
     // On n'utilise pas `navigation` ici : il est declare plus bas, et la liste
     // de dependances est evaluee au rendu — la reference leverait une erreur.
     const NOMS = {
+      atlas: { fr: 'Atlas', en: 'Atlas' },
       home: { fr: 'Accueil', en: 'Home' },
       evidence: { fr: 'Évaluation des affirmations', en: 'Evidence Check' },
       explorer: { fr: 'Explorateur', en: 'Data Explorer' },
@@ -9543,6 +9656,7 @@ export default function App() {
   };
 
   const navigation = [
+    { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas' } },
     { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
@@ -9696,6 +9810,12 @@ export default function App() {
       {/* data-section : c'est lui qui redefinit --accent pour toute la section.
           Aucun composant n'a besoin de connaitre la couleur de l'onglet. */}
       <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
+        {activeTab === 'atlas' && (
+          <TabAtlas
+            lang={lang} text={text} allerVers={allerVers}
+            ouvrirPays={(id) => { setActiveSubTab(id); allerVers('explorer'); }}
+          />
+        )}
         {activeTab === 'home' && (
           <TabHome text={text} lang={lang} setActiveTab={allerVers} />
         )}
