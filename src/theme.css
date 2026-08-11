@@ -1720,3 +1720,48 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: none; }
 }
+
+/* ---------- Le chapitre repliable ----------------------------------------
+   La hauteur est bornee, pas le contenu : le texte reste dans le document,
+   donc selectionnable, imprimable et indexable. Seul son debordement est
+   masque, et un degrade annonce qu'il y a une suite plutot que de couper net. */
+.chapitre { position: relative; }
+.chapitre-corps {
+  overflow: hidden;
+  transition: max-height var(--dur-slow) var(--ease-both);
+}
+.chapitre[data-replie='true'] .chapitre-corps {
+  max-height: 620px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
+}
+.chapitre[data-replie='false'] .chapitre-corps { max-height: none; }
+
+.chapitre-bouton {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: .85rem;
+  padding: .45rem .95rem;
+  border-radius: 999px;
+  font-size: 11.5px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--accent-deep);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              background-color var(--dur-fast) var(--ease);
+}
+.chapitre-bouton:is(:hover, :focus-visible) {
+  color: var(--paper-raised); background: var(--accent-deep); border-color: var(--accent-deep);
+}
+.chapitre-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chapitre-bouton svg { transition: transform var(--dur) var(--ease); }
+.chapitre-bouton[aria-expanded='true'] svg { transform: rotate(180deg); }
+
+/* A l'impression, tout est deplie : un PDF ne se replie pas. */
+@media print {
+  .chapitre[data-replie='true'] .chapitre-corps {
+    max-height: none !important; -webkit-mask-image: none !important; mask-image: none !important;
+  }
+  .chapitre-bouton { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .chapitre-corps { transition: none; } }
