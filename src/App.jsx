@@ -3325,9 +3325,121 @@ const SceneFlux = ({ lang, children }) => {
   );
 };
 
+// Le panneau de lecture. Cliquer un pays ne doit plus faire quitter la carte :
+// on perdait le continent des yeux, donc le contexte, et il fallait revenir en
+// arriere pour comparer. Le panneau s'ouvre a cote, la carte se resserre, le
+// pays reste eclaire. La fiche complete demeure a un clic, pour qui la veut.
+const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
+  const L = faireL(lang);
+  const ref = useRef(null);
+
+  // Le clavier doit pouvoir entrer dans le panneau et en sortir. On y place le
+  // focus a l'ouverture, et Echap le referme comme n'importe quel tiroir.
+  useEffect(() => {
+    ref.current?.focus();
+    const surTouche = (e) => { if (e.key === 'Escape') onFermer(); };
+    window.addEventListener('keydown', surTouche);
+    return () => window.removeEventListener('keydown', surTouche);
+  }, [onFermer]);
+
+  if (!pays) return null;
+  const ouverture = visaOpenToAllAfrica[pays.iso2];
+  const cer = countryRecAffiliations[pays.iso2] || [];
+  const ratifies = pays.au_treaties
+    ? ['constitutive', 'abuja', 'refugees_1969', 'zlecaf', 'kampala', 'free_movement']
+        .reduce((n, k) => n + (pays.au_treaties[k] ? 1 : 0), 0)
+    : null;
+  // La valeur de la couche en cours vient en tete : c'est la question posee.
+  const valeurCouche = indicateur?.get ? indicateur.get(pays) : null;
+  const lisible = (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : formatNumber(v, lang));
+
+  // Le releve ne repete pas la valeur mise en avant : lire deux fois le meme
+  // chiffre a dix centimetres d'ecart fait douter qu'il s'agisse du meme.
+  const releve = [
+    { cle: 'stock', l: L('Migrants présents', 'Resident migrants'), v: formatNumber(pays.stock, lang) },
+    { cle: 'evolution', l: L('Part de la population', 'Share of population'), v: `${formatNumber(pays.evolution, lang)} %` },
+    { cle: 'avoi', l: L('Ouverture des visas', 'Visa openness'), v: pays.avoi == null ? '—' : `${formatNumber(pays.avoi, lang)}/100` },
+    { cle: 'retention', l: L('Rétention Sud-Sud', 'South-South retention'), v: pays.retention == null ? '—' : `${formatNumber(pays.retention, lang)} %` },
+  ].filter(r => r.cle !== indicateur?.key);
+
+  return (
+    <aside ref={ref} tabIndex={-1} className="panneau-pays" aria-label={tr(pays.name, lang)}>
+      <div className="flex items-start gap-3 mb-4">
+        <CountryFlag iso2={pays.iso2} emoji={pays.flag} size="md" />
+        <div className="min-w-0 flex-1">
+          <h3 className="font-serif font-bold text-xl leading-tight text-slate-900 truncate">
+            {tr(pays.name, lang)}
+          </h3>
+          <span className="block text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--label)' }}>
+            {tr(text.regions?.[countryRegionMap[pays.id]], lang) || ''}
+          </span>
+        </div>
+        <button type="button" onClick={onFermer} className="panneau-fermer"
+                aria-label={L('Fermer le panneau', 'Close the panel')}>
+          <X className="w-4 h-4" aria-hidden="true" />
+        </button>
+      </div>
+
+      {/* La réponse à la question posée par la couche, mise en avant. */}
+      {indicateur && (
+        <div className="panneau-vedette">
+          <span className="block text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--label)' }}>
+            {tr(indicateur.label, lang)}
+          </span>
+          <span className="font-serif font-bold text-3xl tabular-nums leading-none" style={{ color: 'var(--accent-deep)' }}>
+            {Array.isArray(indicateur.categories)
+              ? (tr(indicateur.categories.find(c => c.key === valeurCouche)?.label, lang) || '—')
+              : <>{lisible(valeurCouche)}<span className="text-base font-semibold"> {indicateur.unit}</span></>}
+          </span>
+        </div>
+      )}
+
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 mt-4">
+        {releve.map((r, i) => (
+          <div key={i}>
+            <dt className="text-[10px] leading-snug" style={{ color: 'var(--label)' }}>{r.l}</dt>
+            <dd className="font-serif font-bold text-[15px] tabular-nums text-slate-900">{r.v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-4 pt-3.5 border-t space-y-3" style={{ borderColor: 'var(--rule)' }}>
+        {ratifies !== null && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[11px]" style={{ color: 'var(--label)' }}>
+              {L("Textes de l'UA ratifiés", 'AU instruments ratified')}
+            </span>
+            <span className="font-serif font-bold tabular-nums text-slate-900">{ratifies}<span className="text-[11px] font-semibold" style={{ color: 'var(--muted)' }}> / 6</span></span>
+          </div>
+        )}
+        {cer.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[11px] me-1" style={{ color: 'var(--label)' }}>{L('CER', 'RECs')}</span>
+            {cer.map(k => <span key={k} className="panneau-cer">{recNames[k] ? tr(recNames[k], lang) : k}</span>)}
+          </div>
+        )}
+        {ouverture && (
+          <div className="flex items-start gap-2">
+            <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${visaOpenTiers[ouverture.tier].dot}`} aria-hidden="true" />
+            <span className="text-[11px] leading-snug" style={{ color: 'var(--ink-soft)' }}>
+              {tr(visaOpenTiers[ouverture.tier].label, lang)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <button type="button" onClick={() => onFiche(pays.id)} className="panneau-fiche">
+        {L('Ouvrir la fiche complète', 'Open the full profile')}
+        <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+      </button>
+    </aside>
+  );
+};
+
 const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
   const L = faireL(lang);
   const [coucheCle, setCoucheCle] = useState('accueil');
+  const [paysOuvert, setPaysOuvert] = useState(null);
   const couche = COUCHES_ATLAS.find(c => c.cle === coucheCle) || COUCHES_ATLAS[0];
   const indicateur = couche.ind();
   const plain = couche.plain || indicateur.plain;
@@ -3382,15 +3494,29 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
         </div>
       </SceneFlux>
 
-      {/* La carte. Le composant porte deja son releve au survol, sa legende et
-          son parcours au clavier — on ne le reecrit pas, on lui donne la
-          place qui lui manquait. */}
-      <div className="atlas-scene">
-        <AfricaChoropleth
-          indicator={{ ...indicateur, plain, hint }}
-          lang={lang}
-          onSelect={ouvrirPays}
-        />
+      {/* La carte et sa lecture. Choisir un pays ouvre le panneau a cote au
+          lieu de quitter l'ecran : le continent reste sous les yeux, le pays
+          choisi reste eclaire, et la comparaison d'un pays a l'autre se fait
+          sans aller-retour. */}
+      <div className="atlas-scene" data-panneau={paysOuvert ? 'ouvert' : 'ferme'}>
+        <div className="atlas-carte">
+          <AfricaChoropleth
+            indicator={{ ...indicateur, plain, hint }}
+            lang={lang}
+            selectedId={paysOuvert}
+            onSelect={(id) => setPaysOuvert(id === paysOuvert ? null : id)}
+          />
+        </div>
+        {paysOuvert && countryById[paysOuvert] && (
+          <PanneauPays
+            pays={countryById[paysOuvert]}
+            lang={lang}
+            text={text}
+            indicateur={indicateur}
+            onFermer={() => setPaysOuvert(null)}
+            onFiche={ouvrirPays}
+          />
+        )}
       </div>
 
       {/* Ce que la couche montre, et par ou continuer. */}
