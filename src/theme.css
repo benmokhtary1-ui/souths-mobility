@@ -14,48 +14,69 @@
    classes et rend la refonte réversible.
    ========================================================================== */
 
-/* Fraunces reste : c'est la police des chiffres, et elle seule. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap');
+/* Fraunces reste : c'est la police des chiffres, et elle seule.
+   Pour le texte, IBM Plex Sans remplace Schibsted Grotesk. Le choix n'est plus
+   libre depuis que l'arabe est active : il faut une famille dessinee d'un seul
+   trait pour les deux ecritures, sinon la page change de main en changeant de
+   langue. IBM Plex a sa compagne arabe, concue avec elle. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
 
+/* ============================================================================
+   Fondation — « chrome silencieux, donnee sonore »
+   ----------------------------------------------------------------------------
+   Le coton ecru et l'indigo faisaient une belle page de papier. Sur un site ou
+   la carte devient l'interface, ils faisaient surtout concurrence a la donnee :
+   un fond teinte et un accent sombre entrent en conflit avec toute echelle de
+   couleur posee sur le continent.
+
+   La regle change donc de sens. Le chrome — fonds, filets, texte courant — se
+   tait : un blanc froid, une encre presque noire, des filets a peine visibles.
+   La couleur est reservee a ce qui porte de l'information : les couches de la
+   carte, les echelles de robustesse, l'etat d'un traite.
+
+   Chaque valeur a ete mesuree avant d'entrer ici, sur les trois fonds du site.
+   Aucune ne descend sous 5,1:1 ; le seuil AA est a 4,5.
+   ========================================================================== */
 :root {
-  --paper:        #F7F6F2;   /* coton écru, froid — plus de crème */
-  --paper-raised: #FCFCFA;
-  --paper-sunk:   #EDECE6;
-  --ink:          #14161C;   /* presque noir, légèrement bleuté */
-  --ink-soft:     #333743;
-  --ink-mute:     #5C6270;
-  --muted:        #5F6573;   /* 5,4:1 sur le papier, 4,9:1 sur le papier creusé */
-  --label:        #454A57;   /* micro-libellés : 8,2:1, reste récessif */
-  --rule:         #DEDDD6;
-  --rule-strong:  #C5C4BB;
+  --paper:        #FBFBFC;   /* blanc froid, presque neutre — la carte respire dessus */
+  --paper-raised: #FFFFFF;
+  --paper-sunk:   #F1F2F5;
+  --ink:          #0E1116;   /* 18,3:1 — l'encre du texte courant */
+  --ink-soft:     #2B303A;   /* 12,8:1 */
+  --ink-mute:     #565D6B;   /* 6,4:1 */
+  --muted:        #5F6674;   /* 5,6:1 sur le papier, 5,2:1 sur le papier creusé */
+  --label:        #464C58;   /* micro-libellés : 8,3:1, reste récessif */
+  --rule:         #E3E5E9;
+  --rule-strong:  #C8CCD3;
 
-  /* Accent de structure : filets, onglet actif, liens, barres. */
-  --accent:       #2B3A67;   /* indigo — 10,2:1 sur le papier */
-  --accent-deep:  #1E2A4F;   /* indigo de petit corps */
-  --accent-soft:  #E5E8F1;
-  --accent-light: #8FA0CE;   /* indigo en réserve sur l'encre : 7,1:1 */
+  /* Accent de structure : filets, onglet actif, liens, barres. Un bleu franc,
+     pas un indigo de couverture — il doit se lire comme un instrument. */
+  --accent:       #1F49C7;   /* 7,2:1 sur le papier */
+  --accent-deep:  #16358F;   /* 10,5:1 — petit corps et texte dense */
+  --accent-soft:  #E6EBFA;
+  --accent-light: #93A9F0;   /* en réserve sur l'encre : 8,3:1 */
 
-  /* Accent secondaire : bleu d'ardoise. Même famille froide, valeur distincte —
-     il sépare deux familles de blocs sans ajouter une teinte étrangère. */
-  --accent-2:      #3F6B7A;  /* 5,4:1 sur le papier */
-  --accent-2-soft: #E3EBEE;
+  /* Accent secondaire : un bleu-vert. Assez loin du premier pour separer deux
+     familles de blocs, assez froid pour ne pas devenir une troisieme couleur. */
+  --accent-2:      #0F6E78;  /* 5,8:1 sur le papier */
+  --accent-2-soft: #E1F0F1;
+  --accent-2-light:#5FB6C0;  /* sur l'encre : 8,1:1 */
 
-  /* Le safran ne sert qu'à l'attention. Une seule famille, un seul emploi :
-     deux jaunes voisins pour deux fonctions voisines auraient brouillé la lecture. */
-  --ok:           #3F6B4A;
-  --ok-soft:      #E4EDE7;
-  --warn:         #C8892B;   /* safran, aplats */
-  --warn-ink:     #8A5A16;   /* safran de texte : 5,5:1 sur le papier */
-  --warn-soft:    #F7EEDD;
-  --bad:          #7A2E2E;
-  --bad-soft:     #F2E3E1;
+  /* L'ambre ne sert qu'à l'attention. Une seule famille, un seul emploi. */
+  --ok:           #0E6B45;   /* 6,3:1 */
+  --ok-soft:      #E2F1E9;
+  --warn:         #C8892B;   /* aplats */
+  --warn-ink:     #8A5510;   /* texte : 6,0:1 */
+  --warn-soft:    #FAF0DF;
+  --bad:          #A32222;   /* 7,2:1 */
+  --bad-soft:     #FAE6E4;
 
   /* Echelle de robustesse (Evidence Check) : ordinale, quatre crans.
-     Verifiees >= 4,9:1 sur papier releve, creuse et courant. */
-  --tier-4:       #3F6B4A;   /* etaye */
-  --tier-3:       #7A6212;   /* a nuancer */
-  --tier-2:       #8C4A16;   /* faiblement etaye */
-  --tier-1:       #7A2E2E;   /* non etaye */
+     Mesurees >= 5,8:1 sur papier releve, creuse et courant. */
+  --tier-4:       #0E6B45;   /* etaye */
+  --tier-3:       #6E5A0E;   /* a nuancer */
+  --tier-2:       #8A4310;   /* faiblement etaye */
+  --tier-1:       #A32222;   /* non etaye */
 
   /* ---- Mouvement : un vocabulaire, pas quarante-quatre reglages ----------
      Le site portait six courbes et huit durees differentes, posees au coup par
@@ -81,7 +102,7 @@
 html, body { background: var(--paper) !important; }
 
 body {
-  font-family: 'Schibsted Grotesk', system-ui, sans-serif !important;
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif !important;
   color: var(--ink);
 }
 
@@ -959,7 +980,7 @@ main:focus { outline: none; }
 /* L'approche reste celle de la regle « Libelles » plus haut, qui porte un
    !important : on ne touche donc qu'a la fonte. */
 :is(h1, h2, h3, h4, h5, h6).uppercase.tracking-widest {
-  font-family: 'Schibsted Grotesk', system-ui, sans-serif !important;
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif !important;
 }
 
 /* ---------- Mesure : la ligne, pas le conteneur --------------------------- */
