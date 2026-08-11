@@ -3238,6 +3238,93 @@ const COUCHES_ATLAS = [
     hint: { fr: 'Compilation de l’auteur d’après UNSD et UN DESA, statuts vérifiés en 2026 sur les instituts nationaux.', en: 'Compiled by the author from UNSD and UN DESA, statuses verified in 2026 against national institutes.' } },
 ];
 
+// Les corridors qui vivent dans le bandeau d'ouverture. Ce ne sont pas des
+// traces decoratifs : chacun relie deux points que la plateforme documente, et
+// tous figurent dans les sections correspondantes. Le mouvement est le sujet du
+// site — autant le montrer plutot que le dire.
+const CORRIDORS = [
+  { de: 'dakar', vers: 'abidjan', via: 'ouaga' },
+  { de: 'abidjan', vers: 'lagos', via: 'accra' },
+  { de: 'bamako', vers: 'abidjan' },
+  { de: 'mogadiscio', vers: 'nairobi' },
+  { de: 'khartoum', vers: 'kampala', via: 'juba' },
+  { de: 'kinshasa', vers: 'luanda' },
+  { de: 'addis', vers: 'djibouti' },
+  { de: 'niamey', vers: 'tripoli' },
+  { de: 'nouakchott', vers: 'rabat' },
+  { de: 'dar', vers: 'lusaka' },
+  { de: 'harare', vers: 'maputo' },
+  { de: 'lagos', vers: 'ndjamena' },
+];
+
+// Une courbe qui passe par un point intermediaire quand il y en a un, sinon un
+// arc simple. La corde droite dirait une ligne sur une carte ; la courbe dit
+// un trajet.
+const traceCorridor = (c) => {
+  const a = LIEUX[c.de], b = LIEUX[c.vers], m = c.via ? LIEUX[c.via] : null;
+  if (!a || !b) return null;
+  if (m) return `M${a[0]} ${a[1]} Q${m[0]} ${m[1]} ${b[0]} ${b[1]}`;
+  const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+  const dx = b[0] - a[0], dy = b[1] - a[1];
+  return `M${a[0]} ${a[1]} Q${(mx - dy * 0.22).toFixed(1)} ${(my + dx * 0.22).toFixed(1)} ${b[0]} ${b[1]}`;
+};
+
+// Le bandeau d'ouverture de l'Atlas : le continent en clair sur l'encre, les
+// corridors qui se tracent, et des grains qui les parcourent.
+//
+// Les grains sont portes par `offset-path` : le navigateur deplace l'element le
+// long du trace lui-meme, sur le compositeur, sans qu'aucun JavaScript ne
+// tourne. C'est la seule facon d'animer une douzaine de particules sans faire
+// chauffer la page — et cela suit exactement la courbe, pas une approximation.
+const SceneFlux = ({ lang, children }) => {
+  const traces = useMemo(() => CORRIDORS.map(traceCorridor).filter(Boolean), []);
+  // animateMotion echappe a `prefers-reduced-motion` : la regle CSS ne l'atteint
+  // pas. On ne monte donc simplement pas les grains quand le mouvement est
+  // refuse — les corridors, eux, restent visibles, traces d'un coup.
+  const reduit = useMemo(prefersReducedMotion, []);
+  return (
+    <section className="scene-flux">
+      <svg className="scene-flux-carte" viewBox={AFRICA_VIEWBOX} aria-hidden="true" focusable="false"
+           preserveAspectRatio="xMaxYMid meet">
+        <g className="flux-continent">
+          {Object.entries(africaCountryPaths).map(([id, d]) => <path key={id} d={d} />)}
+        </g>
+        <g className="flux-corridors">
+          {traces.map((d, i) => (
+            <path key={i} d={d} pathLength="1" style={{ animationDelay: `${300 + i * 140}ms` }} />
+          ))}
+        </g>
+        {/* Les escales : elles battent, faiblement, decalees les unes des autres. */}
+        <g className="flux-escales">
+          {[...new Set(CORRIDORS.flatMap(c => [c.de, c.vers]))].map((k, i) => (
+            LIEUX[k] ? <circle key={k} cx={LIEUX[k][0]} cy={LIEUX[k][1]} r="4"
+                               style={{ animationDelay: `${i * 260}ms` }} /> : null
+          ))}
+        </g>
+        {/* Les grains voyagent DANS le dessin, portes par animateMotion.
+            `offset-path` en CSS aurait ete tentant, mais il travaille en pixels
+            quand le trace est en unites du dessin : il aurait fallu recalculer
+            l'echelle a chaque redimensionnement, et la moindre erreur decalait
+            les grains hors de leur corridor. Ici la geometrie est la meme des
+            deux cotes, par construction. */}
+        {!reduit && (
+          <g className="flux-grains">
+            {traces.flatMap((d, i) => [0, 1].map(j => (
+              <circle key={i + '-' + j} r="3.4">
+                <animateMotion path={d} rotate="auto" repeatCount="indefinite"
+                  dur={`${(5.5 + (i % 4) * 1.1).toFixed(1)}s`}
+                  begin={`${(i * 0.7 + j * 2.6).toFixed(2)}s`} />
+              </circle>
+            )))}
+          </g>
+        )}
+      </svg>
+      <div className="scene-flux-voile" aria-hidden="true" />
+      <div className="scene-flux-texte">{children}</div>
+    </section>
+  );
+};
+
 const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
   const L = faireL(lang);
   const [coucheCle, setCoucheCle] = useState('accueil');
@@ -3248,20 +3335,28 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
 
   return (
     <div className="space-y-8">
-      {/* L'ouverture : ce qu'est le site, en une ligne, puis la carte. */}
-      <header className="max-w-3xl">
-        <span className="block text-[10px] font-semibold uppercase mb-3" style={{ letterSpacing: '.2em', color: 'var(--label)' }}>
-          {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
-        </span>
-        <h1 className="font-serif font-bold text-3xl md:text-5xl leading-[1.06] text-slate-900">
-          {L('Les mobilités africaines,', 'African mobility,')}{' '}
-          <span style={{ color: 'var(--accent)' }}>{L('par les données africaines.', 'through African data.')}</span>
-        </h1>
-        <Prose className="mt-4 text-[15px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
-          "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
-          'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
-        )}</Prose>
-      </header>
+      {/* L'ouverture. Le continent y est deja vivant : douze corridors reels,
+          parcourus. On comprend le sujet avant d'avoir lu une ligne. */}
+      <SceneFlux lang={lang}>
+        <div className="max-w-3xl">
+          <span className="block text-[10px] font-semibold uppercase mb-3"
+                style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
+            {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
+          </span>
+          <h1 className="font-serif font-bold text-3xl md:text-5xl lg:text-6xl leading-[1.04]"
+              style={{ color: '#FFFFFF' }}>
+            {L('Les mobilités africaines,', 'African mobility,')}{' '}
+            <span style={{ color: 'var(--accent-light)' }}>
+              {L('par les données africaines.', 'through African data.')}
+            </span>
+          </h1>
+          <Prose className="mt-5 text-[15px] md:text-base leading-relaxed max-w-2xl"
+                 style={{ color: '#D6DAE4' }} lang={lang}>{L(
+            "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
+            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
+          )}</Prose>
+        </div>
+      </SceneFlux>
 
       {/* La barre de couches. Une question par bouton — jamais un nom de
           discipline : c'est ce qui permet d'entrer sans savoir ou chercher. */}

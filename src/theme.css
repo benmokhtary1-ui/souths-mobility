@@ -1421,3 +1421,101 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   .couche-btn { font-size: 12px; padding: .45rem .7rem; }
   .atlas-scene svg { max-height: 52vh; }
 }
+
+/* ---------- La scene de flux ----------------------------------------------
+   Le bandeau d'ouverture de l'Atlas. Le continent en clair sur l'encre, les
+   corridors qui se tracent, des grains qui les parcourent.
+
+   Ce n'est pas un decor : chaque corridor relie deux points que la plateforme
+   documente. Le sujet du site est le mouvement — on le montre au lieu de le
+   dire. C'est notre reponse au balayage radar de Climate Policy Radar : meme
+   ambition d'objet vivant, mais tire de la donnee et non d'une metaphore
+   empruntee.                                                                */
+.scene-flux {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(30rem, 76vh, 46rem);
+  display: flex;
+  align-items: flex-end;
+  border: 1px solid var(--rule);
+  background:
+    radial-gradient(120% 90% at 78% 18%, rgba(31, 73, 199, .38), transparent 62%),
+    radial-gradient(90% 80% at 12% 92%, rgba(15, 110, 120, .30), transparent 58%),
+    linear-gradient(147deg, #070A12 0%, #0E1116 46%, #131A33 100%);
+}
+
+/* Le continent tient entier, cale a droite : le titre occupe la gauche,
+   la carte la droite, et aucun corridor ne tombe hors cadre. Un cadrage
+   « slice » remplissait mieux la boite mais rognait les deux tiers du
+   continent — dont la Corne et toute l'Afrique australe. */
+.scene-flux-carte {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  padding-block: 2%;
+}
+
+/* Le trait du continent : present, jamais bavard. */
+.flux-continent path {
+  fill: none;
+  stroke: rgba(255, 255, 255, .13);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+/* Les corridors se tracent l'un apres l'autre, puis restent. */
+.flux-corridors path {
+  fill: none;
+  stroke: var(--accent-light);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  opacity: .58;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: trajetTrace 2.2s var(--ease) both;
+}
+
+/* Les escales battent faiblement, decalees : le continent respire. */
+.flux-escales circle {
+  fill: var(--accent-light);
+  animation: escaleBat 4.4s var(--ease-both) infinite both;
+}
+@keyframes escaleBat {
+  0%, 100% { opacity: .32; r: 3.2; }
+  50%      { opacity: .85; r: 5.4; }
+}
+
+/* Les grains : un point lumineux qui parcourt son corridor. La lueur vient
+   d'un filtre, pas d'une image — elle suit donc la teinte de la section.   */
+.flux-grains circle {
+  fill: #FFFFFF;
+  filter: drop-shadow(0 0 5px var(--accent-light)) drop-shadow(0 0 12px rgba(147, 169, 240, .55));
+}
+
+/* Le voile : il garantit le contraste du titre quoi qu'il se passe derriere. */
+.scene-flux-voile {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(100deg, rgba(7, 10, 18, .96) 0%, rgba(7, 10, 18, .88) 34%, rgba(7, 10, 18, .34) 62%, transparent 88%),
+    linear-gradient(to top, rgba(7, 10, 18, .72) 0%, transparent 42%);
+  pointer-events: none;
+}
+
+.scene-flux-texte {
+  position: relative; z-index: 2;
+  width: 100%;
+  max-width: 62ch;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+}
+
+@media (max-width: 767px) {
+  .scene-flux { min-height: 30rem; }
+  .flux-corridors path { stroke-width: 2.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flux-corridors path { stroke-dashoffset: 0; animation: none; }
+  .flux-escales circle { animation: none; opacity: .6; }
+}
+@media print { .scene-flux { display: none; } }
