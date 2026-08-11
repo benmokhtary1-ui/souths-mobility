@@ -3355,30 +3355,32 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
             "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
             'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
           )}</Prose>
+
+          {/* Les questions vivent dans le bandeau, pas en dessous. Elles y
+              tiennent la colonne de gauche sur toute sa hauteur : le vide qui
+              separait le titre du continent disparait parce qu'il est occupe,
+              et l'entree du site devient utilisable des le premier ecran. */}
+          <nav aria-label={L('Couches de la carte', 'Map layers')} className="mt-7">
+            <div className="flex flex-wrap gap-2">
+              {COUCHES_ATLAS.map(c => {
+                const actif = c.cle === coucheCle;
+                return (
+                  <button
+                    key={c.cle}
+                    type="button"
+                    onClick={() => setCoucheCle(c.cle)}
+                    aria-pressed={actif}
+                    className="couche-btn couche-btn--sombre"
+                    data-actif={actif ? 'true' : 'false'}
+                  >
+                    {tr(c.question, lang)}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
         </div>
       </SceneFlux>
-
-      {/* La barre de couches. Une question par bouton — jamais un nom de
-          discipline : c'est ce qui permet d'entrer sans savoir ou chercher. */}
-      <nav aria-label={L('Couches de la carte', 'Map layers')}>
-        <div className="flex flex-wrap gap-2">
-          {COUCHES_ATLAS.map(c => {
-            const actif = c.cle === coucheCle;
-            return (
-              <button
-                key={c.cle}
-                type="button"
-                onClick={() => setCoucheCle(c.cle)}
-                aria-pressed={actif}
-                className="couche-btn"
-                data-actif={actif ? 'true' : 'false'}
-              >
-                {tr(c.question, lang)}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
 
       {/* La carte. Le composant porte deja son releve au survol, sa legende et
           son parcours au clavier — on ne le reecrit pas, on lui donne la

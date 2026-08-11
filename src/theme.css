@@ -143,11 +143,15 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
   box-shadow: none !important;
 }
 
-/* Rayons resserrés : le papier se plie, il ne s'arrondit pas. */
-.rounded-xl { border-radius: 3px !important; }
-.rounded-lg { border-radius: 3px !important; }
-.rounded-md { border-radius: 2px !important; }
-.rounded-sm { border-radius: 2px !important; }
+/* Les rayons : le papier se plie, mais pas au fil du rasoir. Deux ou trois
+   pixels donnaient une interface taillée à l'équerre — juste sur une planche
+   imprimée, sèche à l'écran. On desserre, sans aller jusqu'à la pastille. */
+.rounded-xl { border-radius: 12px !important; }
+.rounded-lg { border-radius: 9px !important; }
+.rounded-md { border-radius: 7px !important; }
+.rounded-sm { border-radius: 5px !important; }
+.rounded-full { border-radius: 999px !important; }
+.rounded { border-radius: 7px !important; }
 
 /* Une carte sans bordure explicite reçoit tout de même son filet. */
 :is(main, .reader) .bg-white { border: 1px solid var(--rule); }
@@ -1449,12 +1453,21 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
    la carte la droite, et aucun corridor ne tombe hors cadre. Un cadrage
    « slice » remplissait mieux la boite mais rognait les deux tiers du
    continent — dont la Corne et toute l'Afrique australe. */
+/* Le continent deborde volontairement du cadre : plus haut que la scene, il
+   est rogne en haut et en bas, et sa bordure droite sort de l'image. Il
+   commence alors au tiers gauche, la ou le titre finit — les deux s'emboitent
+   au lieu de se faire face de part et d'autre d'un vide.
+   Un cadrage sagement contenu laissait sept cents pixels morts au milieu. */
 .scene-flux-carte {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  position: absolute;
+  top: 50%;
+  inset-inline-end: -5%;
+  transform: translateY(-50%);
+  height: 124%;
+  width: auto;
   z-index: 0;
-  padding-block: 2%;
 }
+:root[dir='rtl'] .scene-flux-carte { inset-inline-end: -5%; transform: translateY(-50%) scaleX(-1); }
 
 /* Le trait du continent : present, jamais bavard. */
 .flux-continent path {
@@ -1519,3 +1532,88 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   .flux-escales circle { animation: none; opacity: .6; }
 }
 @media print { .scene-flux { display: none; } }
+
+/* L'ecran Atlas respire sans se disloquer : l'espacement general de 3,5 rem
+   etait juste pour une page de lecture, trop lache pour un tableau de bord. */
+main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !important; }
+
+/* Les questions posees sur l'encre du bandeau : meme mecanique que sur le
+   papier, valeurs inversees. L'actif prend le clair, les autres restent en
+   retrait sans jamais descendre sous le seuil de lecture. */
+.couche-btn--sombre {
+  color: #D6DAE4;
+  background: rgba(255, 255, 255, .07);
+  border-color: rgba(255, 255, 255, .20);
+  backdrop-filter: blur(6px);
+}
+.couche-btn--sombre:is(:hover, :focus-visible) {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, .14);
+  border-color: var(--accent-light);
+}
+.couche-btn--sombre[data-actif='true'] {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #0E1116;
+}
+.couche-btn--sombre:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+
+/* Le bandeau cale son contenu en bas : titre, phrase et questions forment un
+   bloc qui pousse depuis le pied plutot que de flotter au centre. */
+.scene-flux-texte { padding-block-end: clamp(1.75rem, 4vh, 3rem); }
+
+/* ---------- Moins d'angles droits ----------------------------------------
+   Les composants dessines a la main gardaient leurs aretes vives : ils
+   detonnaient une fois les rayons desserres ailleurs. On les aligne.       */
+.scene-flux    { border-radius: 16px; }
+.atlas-scene   { border-radius: 12px; }
+.couche-btn    { border-radius: 999px; }
+.rail > *      { border-radius: 10px; }
+.rail-fleche   { border-radius: 999px; }
+.terme[aria-expanded="true"] { border-radius: 3px; }
+.terme-pop     { border-radius: 10px; }
+:is(main, .reader) .bg-white { border-radius: 10px; }
+
+/* ---------- Le dynamisme des blocs ---------------------------------------
+   Une carte ne doit pas seulement se soulever : elle doit repondre. Le filet
+   prend l'accent, un halo tres doux se pose, et l'ensemble monte d'un cheveu.
+   Trois signaux faibles valent mieux qu'un seul appuye.                     */
+:is(main, .reader) .bg-white {
+  transition: transform var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+:is(main, .reader) .bg-white:is(:hover, :focus-within) {
+  transform: translateY(-2px);
+  border-color: var(--rule-strong);
+  box-shadow: 0 1px 2px rgba(14, 17, 22, .04), 0 10px 26px -12px rgba(14, 17, 22, .18);
+}
+/* Une carte cliquable va plus loin : son filet passe a l'accent de section. */
+:is(main, .reader) :is(button, a).bg-white:is(:hover, :focus-visible) {
+  border-color: var(--accent) !important;
+  box-shadow: 0 1px 2px rgba(14, 17, 22, .04), 0 12px 30px -12px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+/* Les cartes imbriquees ne bougent pas : sinon le contenu flotte dans son
+   propre conteneur pendant que celui-ci se souleve deja. */
+:is(main, .reader) .bg-white .bg-white:is(:hover, :focus-within) {
+  transform: none; box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(main, .reader) .bg-white:is(:hover, :focus-within) { transform: none; }
+}
+
+/* ---------- Passer d'une section a l'autre -------------------------------
+   Le fondu simple disait « la page a change » ; il ne disait pas qu'on se
+   deplace. La sortie recule d'un cran, l'entree monte et s'ouvre depuis le
+   haut. La barre de navigation, elle, ne bouge pas : c'est le repere.      */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(page) { animation: pageSortie 180ms var(--ease) both; }
+  ::view-transition-new(page) { animation: pageEntree 460ms var(--ease-entry) both; }
+}
+@keyframes pageSortie {
+  to { opacity: 0; transform: translateY(-10px) scale(.985); filter: blur(2px); }
+}
+@keyframes pageEntree {
+  from { opacity: 0; transform: translateY(18px) scale(.995); clip-path: inset(0 0 12% 0 round 12px); }
+  to   { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 12px); }
+}
