@@ -5315,26 +5315,6 @@ const TabForced = ({ text, lang }) => {
           )}</Prose>
       </Reveal>
 
-      {/* L'asymetrie juridique */}
-      <Reveal delay={40}>
-        <div className="p-6 md:p-8" style={{ backgroundColor: 'var(--bad-soft)', borderLeft: '3px solid var(--bad)' }}>
-          <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--bad)' }}>
-            {L('Le point aveugle du droit continental', 'The blind spot of continental law')}
-          </h4>
-          <h2 className="font-serif font-bold text-xl md:text-2xl mb-4 leading-snug" style={{ color: 'var(--ink)' }}>
-            {L(`${data.refOnly.length} États protègent le réfugié qui arrive, pas le citoyen qu'ils déplacent`,
-               `${data.refOnly.length} states protect the refugee who arrives, not the citizen they displace`)}
-          </h2>
-          <Prose className="text-sm leading-relaxed text-justify max-w-4xl" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
-              `Le rapprochement des deux instruments africains de protection donne un résultat que ni l'un ni l'autre ne fait apparaître séparément : ${data.refOnly.length} États ont ratifié la Convention de l'OUA de 1969 sans ratifier celle de Kampala. Ils s'engagent donc à protéger la personne venue d'ailleurs, mais pas celle que leur propre territoire déplace — alors même que la seconde population est, à l'échelle du continent, plusieurs fois plus nombreuse. La production normative a fait son oeuvre : le traité existe, il est africain, il est contraignant, et il attend ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`,
-              `Bringing the two African protection instruments together yields a result neither shows on its own: ${data.refOnly.length} states have ratified the 1969 OAU Convention without ratifying Kampala. They commit to protecting the person arriving from elsewhere, but not the one their own territory displaces — even though the latter population is, continent-wide, several times larger. Norm production has done its part: the treaty exists, it is African, it is binding, and it is waiting on ${data.total - data.kampalaRatified} ratifications (Ben Mokhtar, 2026).`
-            )}</Prose>
-          <p className="text-[11px] mt-4 leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-            <span className="font-bold uppercase tracking-widest">{L('Concernés :', 'Concerned:')}</span> {data.refOnly.join(', ')}.
-          </p>
-        </div>
-      </Reveal>
-
       {/* Solutions durables */}
       <Reveal delay={50} className="bg-white border border-slate-200 p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
