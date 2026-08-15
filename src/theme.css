@@ -1440,7 +1440,9 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: clamp(30rem, 76vh, 46rem);
+  /* Le bandeau ecrasait la carte : 820 px contre 666, alors que c'est la
+     carte que le lecteur vient voir. Il annonce, il n'occupe plus l'ecran. */
+  min-height: clamp(19rem, 46vh, 27rem);
   display: flex;
   align-items: flex-end;
   border: 1px solid var(--rule);
@@ -1561,7 +1563,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 
 /* Le bandeau cale son contenu en bas : titre, phrase et questions forment un
    bloc qui pousse depuis le pied plutot que de flotter au centre. */
-.scene-flux-texte { padding-block-end: clamp(1.75rem, 4vh, 3rem); }
+.scene-flux-texte { padding-block-end: clamp(1.25rem, 3vh, 2rem); padding-block-start: clamp(1.25rem, 3vh, 2rem); }
 
 /* ---------- Moins d'angles droits ----------------------------------------
    Les composants dessines a la main gardaient leurs aretes vives : ils

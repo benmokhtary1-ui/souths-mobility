@@ -927,30 +927,33 @@ const LIEUX = {
 // deux tiers d'une dimension du continent, et les onze centres sont ecartes les
 // uns des autres — deux sections ne doivent pas ouvrir sur la meme region.
 const ATLAS_CADRAGES = {
+  // Pl. I — l'Atlas : le continent entier, sans cadrage. C'est la premiere
+  // feuille du recueil, celle par laquelle on entre.
+  'Pl. I':     { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
   // Continent entier : l'ouverture et l'outil qui couvre les 54 pays.
-  'Pl. I':    { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
-  'Pl. III':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
+  'Pl. II':    { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
+  'Pl. IV':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
   // Quart nord-ouest : les traversees que le debat public imagine.
-  'Pl. II':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
+  'Pl. III':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
   // Facade est, large : Corne, Grands Lacs et vallee du Nil ensemble.
-  'Pl. IV':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
+  'Pl. V':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
   // Facade ouest : le corridor CEDEAO d'un bout a l'autre.
-  'Pl. V':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  'Pl. VI':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
   // Gouvernance : le continent en entier. L'Union africaine gouverne 54 Etats,
   // pas une region — un cadrage sur la Corne repetait celui du deplacement
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
-  'Pl. VI':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  'Pl. VII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
-  'Pl. VII':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
+  'Pl. VIII':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu'a Madagascar.
-  'Pl. VIII': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
+  'Pl. IX': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
   // Bassin centre-equatorial.
-  'Pl. IX':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
+  'Pl. X':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
   // Bande mediterraneenne et saharienne, d'un ocean a l'autre.
-  'Pl. X':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
+  'Pl. XI':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
   // Facade atlantique, du detroit au golfe de Guinee.
-  'Pl. XI':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
+  'Pl. XII':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
 };
 
 // Une trajectoire se courbe : la corde droite dit une ligne sur une carte, la
@@ -3508,16 +3511,16 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
         <div className="max-w-3xl">
           <span className="block text-[10px] font-semibold uppercase mb-3"
                 style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
-            {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
+            Pl. I · {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
           </span>
-          <h1 className="font-serif font-bold text-3xl md:text-5xl lg:text-6xl leading-[1.04]"
+          <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
               style={{ color: '#FFFFFF' }}>
             {L('Les mobilités africaines,', 'African mobility,')}{' '}
             <span style={{ color: 'var(--accent-light)' }}>
               {L('par les données africaines.', 'through African data.')}
             </span>
           </h1>
-          <Prose className="mt-5 text-[15px] md:text-base leading-relaxed max-w-2xl"
+          <Prose className="mt-3 text-[13.5px] md:text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#D6DAE4' }} lang={lang}>{L(
             "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
             'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
@@ -3527,7 +3530,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
               tiennent la colonne de gauche sur toute sa hauteur : le vide qui
               separait le titre du continent disparait parce qu'il est occupe,
               et l'entree du site devient utilisable des le premier ecran. */}
-          <nav aria-label={L('Couches de la carte', 'Map layers')} className="mt-7">
+          <nav aria-label={L('Couches de la carte', 'Map layers')} className="mt-5">
             <div className="flex flex-wrap gap-2">
               {COUCHES_ATLAS.map(c => {
                 const actif = c.cle === coucheCle;
@@ -3903,7 +3906,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-10">
       <PageHeader
         badge={text.headers.home.badge}
-        plate={"Pl. I"}
+        plate={"Pl. II"}
         plain={text.headers.home.plain}
         lang={lang}
         title={text.headers.home.title}
@@ -4284,7 +4287,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={L('Observatoire des Narratifs', 'Narratives Observatory')}
-        plate={"Pl. II"}
+        plate={"Pl. III"}
         plain={{"fr":"Soixante-dix affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité.","en":"Seventy claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."}}
         lang={lang}
         title={L('\u00c9valuation des affirmations', 'Evidence Check')}
@@ -5129,7 +5132,7 @@ const TabForced = ({ text, lang }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.forced.badge}
-        plate={"Pl. IV"}
+        plate={"Pl. V"}
         plain={text.headers.forced.plain}
         lang={lang}
         title={text.headers.forced.title}
@@ -5431,7 +5434,7 @@ const TabLabour = ({ text, lang }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.labour.badge}
-        plate={"Pl. V"}
+        plate={"Pl. VI"}
         plain={text.headers.labour.plain}
         lang={lang}
         title={text.headers.labour.title}
@@ -6593,7 +6596,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
-        plate={"Pl. VI"}
+        plate={"Pl. VII"}
         plain={text.headers.governance.plain}
         lang={lang}
         title={text.headers.governance.title}
@@ -7648,7 +7651,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
-      plate={"Pl. III"}
+      plate={"Pl. IV"}
       plain={text.headers.explorer.plain}
       lang={lang}
       title={text.headers.explorer.title}
@@ -8206,7 +8209,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
       <PageHeader
         badge={text.headers.library.badge}
-        plate={"Pl. VIII"}
+        plate={"Pl. IX"}
         plain={text.headers.library.plain}
         lang={lang}
         title={text.headers.library.title}
@@ -8476,7 +8479,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={L("Production statistique africaine", "African statistical production")}
-        plate={"Pl. VII"}
+        plate={"Pl. VIII"}
         plain={{"fr":"On répète souvent que l'Afrique manque de données. Cette section compte ce que le continent produit réellement, et regarde où le déficit se situe.","en":"It is often repeated that Africa lacks data. This section counts what the continent actually produces, and looks at where the shortfall really sits."}}
         lang={lang}
         title={L("Données & statistiques", "Data & Statistics")}
@@ -8883,7 +8886,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
     <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={text.headers.glossary.badge}
-        plate={"Pl. IX"}
+        plate={"Pl. X"}
         plain={text.headers.glossary.plain}
         lang={lang}
         title={text.headers.glossary.title}
@@ -9044,7 +9047,7 @@ const TabMethodology = ({ text, lang, children }) => (
   <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
-      plate={"Pl. X"}
+      plate={"Pl. XI"}
       plain={text.headers.methodology.plain}
       lang={lang}
       title={text.headers.methodology.title}
@@ -9336,7 +9339,7 @@ const TabAbout = ({ text, lang, children }) => {
     <section className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
       <PageHeader
         badge={text.headers.about.badge}
-        plate={"Pl. XI"}
+        plate={"Pl. XII"}
         plain={text.headers.about.plain}
         lang={lang}
         title={text.headers.about.title}
@@ -9702,7 +9705,6 @@ export default function App() {
   const [modalView, setModalView] = useState('demography'); 
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
-  const [activeAboutTab, setActiveAboutTab] = useState('methodology');
   const [activeResourceTab, setActiveResourceTab] = useState('library');
   // Le volet ouvert dans la section Mobilites : contraintes ou travail.
   const [voletMobilites, setVoletMobilites] = useState('contraintes');
@@ -9874,7 +9876,7 @@ export default function App() {
       governance: { fr: 'Gouvernance', en: 'Governance' },
       data: { fr: 'Données & statistiques', en: 'Data & Statistics' },
       resources: { fr: 'Ressources', en: 'Resources' },
-      about: { fr: 'Méthodologie & à propos', en: 'Methodology & About' },
+      about: { fr: 'À propos', en: 'About' },
     };
     const nomSection = tr(NOMS[activeTab], lang);
     const partie = activeTab === 'explorer' && activeSubTab !== 'perspective'
@@ -9976,8 +9978,8 @@ export default function App() {
     { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' } },
-    { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' } },
-    { id: 'about', icon: Database, label: { fr: 'Méthodologie & À Propos', en: 'Methodology & About' } },
+    { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method' } },
+    { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About' } },
   ];
 
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
@@ -10167,8 +10169,20 @@ export default function App() {
                   >
                     <Brain className="w-3.5 h-3.5" /> {tr({ fr: 'Glossaire', en: 'Glossary' }, lang)}
                   </button>
+                  {/* La methodologie rejoint les ressources : d'ou viennent les
+                      chiffres, ce que veulent dire les mots et ou lire la suite
+                      relevent d'un meme geste — verifier. « A propos » reste a
+                      part : ce n'est pas une ressource, c'est une signature. */}
+                  <button
+                    onClick={() => setActiveResourceTab('methodology')}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+                  >
+                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology' }, lang)}
+                  </button>
                 </div>
               );
+              if (activeResourceTab === 'methodology')
+                return <TabMethodology text={text} lang={lang}>{resourceSwitch}</TabMethodology>;
               return activeResourceTab === 'library'
                 ? <TabLibrary text={text} lang={lang} exportLibraryCSV={exportLibraryCSV}>{resourceSwitch}</TabLibrary>
                 : <TabGlossary lang={lang} text={text} exportGlossaryCSV={exportGlossaryCSV}>{resourceSwitch}</TabGlossary>;
@@ -10182,31 +10196,7 @@ export default function App() {
             exportIndicatorsCSV={exportIndicatorsCSV}
           />
         )}
-        {activeTab === 'about' && (
-          <div className="space-y-8">
-            {(() => {
-              const aboutSwitch = (
-                <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg">
-                  <button
-                    onClick={() => setActiveAboutTab('methodology')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology' }, lang)}
-                  </button>
-                  <button
-                    onClick={() => setActiveAboutTab('about')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeAboutTab === 'about' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    <Info className="w-3.5 h-3.5" /> {tr({ fr: 'À Propos', en: 'About' }, lang)}
-                  </button>
-                </div>
-              );
-              return activeAboutTab === 'about'
-                ? <TabAbout text={text} lang={lang}>{aboutSwitch}</TabAbout>
-                : <TabMethodology text={text} lang={lang}>{aboutSwitch}</TabMethodology>;
-            })()}
-          </div>
-        )}
+        {activeTab === 'about' && <TabAbout text={text} lang={lang} />}
         <PrintCitationFooter lang={lang} sectionLabel={tr(navigation.find(i => i.id === activeTab)?.label, lang)} />
       </main>
 
