@@ -2003,7 +2003,6 @@ const institutionLogos = [
   // porter toutes. Emblemes officiels a recuperer.
   { key: 'unodc', name: "UNODC", full: "ONUDC / UNODC — Global Study on Smuggling of Migrants", src: "/logos/unodc.jpg" },
   { key: 'unesco', name: "UNESCO", full: "UNESCO — Global Education Monitoring", src: "/logos/unesco.svg" },
-  { key: 'gallup', name: "Gallup", full: "Gallup World Poll — Migration Aspirations", src: "/logos/gallup.svg" },
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
@@ -9712,6 +9711,29 @@ export default function App() {
   const [voletMobilites, setVoletMobilites] = useState('contraintes');
 
   useEffect(() => { setIsLoaded(true); }, []);
+
+  // La fiche pays laissait le site défiler derrière elle : en la refermant, on
+  // se retrouvait là où le doigt avait emmené l'arrière-plan — souvent tout en
+  // bas, très loin du pays qu'on venait de quitter.
+  //
+  // On fige le corps le temps de la lecture et on restitue la position exacte à
+  // la fermeture. `position: fixed` plutôt que `overflow: hidden` : lui seul
+  // arrête aussi le défilement tactile sur iOS, où le second n'a aucun effet.
+  useEffect(() => {
+    if (!showModal) return;
+    const y = window.scrollY;
+    const corps = document.body;
+    const memo = { position: corps.style.position, top: corps.style.top, width: corps.style.width };
+    corps.style.position = 'fixed';
+    corps.style.top = `-${y}px`;
+    corps.style.width = '100%';
+    return () => {
+      corps.style.position = memo.position;
+      corps.style.top = memo.top;
+      corps.style.width = memo.width;
+      window.scrollTo({ top: y, behavior: 'instant' });
+    };
+  }, [showModal]);
 
   // Changer de section remplace tout le contenu d'un coup : le lecteur perd le
   // fil de ce qui vient d'arriver. L'API de transition de vue enchaine les deux

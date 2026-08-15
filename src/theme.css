@@ -2070,3 +2070,13 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 @media (max-width: 640px) {
   .note-cadrage-corps > .lede::first-letter { font-size: 2.5em; }
 }
+
+/* ---------- Atlas : un seul releve a la fois ------------------------------
+   Le choropleth porte son propre releve au survol. Quand le panneau pays
+   s'ouvre a cote, les deux disent la meme chose l'un au-dessus de l'autre :
+   le lecteur voit un doublon, et la carte perd la largeur du releve pour rien.
+   Le releve interne s'efface donc des que le panneau prend le relais.      */
+.atlas-scene[data-panneau='ouvert'] .atlas-carte aside { display: none; }
+.atlas-scene[data-panneau='ouvert'] .atlas-carte > div {
+  grid-template-columns: 1fr !important;
+}
