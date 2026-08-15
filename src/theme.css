@@ -2104,3 +2104,61 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    pastille posee par-dessus. Meme reaction au survol que les traces. */
 .choro-amorce { transition: r var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease); }
 .choro-amorce:is(:hover, :focus-visible) { filter: brightness(1.1) drop-shadow(0 1px 4px rgba(14,17,22,.35)); }
+
+/* ============================================================================
+   Harmonisation des formes — la passe transversale
+   ----------------------------------------------------------------------------
+   Mesure sur les huit sections avant d'y toucher :
+
+     9 echelles de titre        pour deux roles
+     9 formes de chapeau        pour un seul role
+     9 rembourrages de carte    pour trois tailles de bloc
+     3 ecarts entre blocs       pour un seul rythme
+
+   Chacune est le residu d'une section composee separement. On ne touche pas au
+   balisage : on pose la regle ici, et les huit sections s'y rangent.
+   ==========================================================================*/
+
+/* --- Les chapeaux : un seul dessin ---------------------------------------
+   Ils variaient de 1,76 a 2,20 px d'interlettrage et du gras 600 au gras 700,
+   pour dire exactement la meme chose : « voici de quoi parle ce bloc ». */
+:is(main, .reader) span[class*="uppercase"][class*="tracking"] {
+  font-size: 11px !important;
+  letter-spacing: .18em !important;
+  font-weight: 700 !important;
+  line-height: 1.4;
+}
+
+/* --- Les titres : deux crans, pas neuf ------------------------------------
+   Le serif porte le titre, le sans-serif porte l'etiquette. On ne touche pas
+   aux seconds — ce sont des libelles, pas des titres — mais les premiers se
+   rangent sur deux tailles.                                                */
+:is(main, .reader) h2.font-serif,
+:is(main, .reader) h2:not([class*="text-"]) { font-size: 1.5rem; line-height: 1.18; }
+:is(main, .reader) h3.font-serif { font-size: 1.125rem; line-height: 1.28; }
+@media (min-width: 768px) {
+  :is(main, .reader) h2.font-serif { font-size: 1.75rem; }
+}
+
+/* --- Le rembourrage des cartes : trois tailles de bloc, trois valeurs -----
+   Une carte de relevé, une carte de lecture, un bloc majeur. Rien entre. */
+/* Trois tailles de bloc, trois valeurs — et l'ordre compte : une regle unique
+   posee sur toutes les cartes ramenait les grands blocs a 16 px et leur otait
+   toute respiration. La regle de base ne s'applique donc qu'aux cartes qui ne
+   declarent pas leur propre rembourrage. */
+:is(main, .reader) .bg-white:not([class*="p-"]):not(.rail > *):not(.panneau-pays) { padding: 1rem; }
+:is(main, .reader) .bg-white[class~="p-4"] { padding: 1rem; }
+:is(main, .reader) .bg-white[class~="p-5"] { padding: 1.25rem; }
+:is(main, .reader) .bg-white[class~="p-6"] { padding: 1.5rem; }
+:is(main, .reader) .bg-white[class~="p-8"] { padding: 2rem; }
+@media (min-width: 768px) {
+  :is(main, .reader) .bg-white[class~="md:p-8"]  { padding: 2rem; }
+  :is(main, .reader) .bg-white[class~="md:p-10"] { padding: 2.5rem; }
+  :is(main, .reader) .bg-white[class~="md:p-12"] { padding: 3rem; }
+}
+
+/* --- Le rythme vertical : un seul ecart entre blocs de premier rang ------ */
+:is(main, .reader) > div > * + * { margin-block-start: 3.5rem; }
+
+/* --- Les filets de separation : une seule epaisseur, une seule teinte ---- */
+:is(main, .reader) :is(hr, .border-t, .border-b) { border-color: var(--rule); }
