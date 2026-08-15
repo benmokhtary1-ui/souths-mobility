@@ -3277,6 +3277,17 @@ const ESCALES_OIM = {
 // La source est citee dans le bandeau : un trace sur une carte est une
 // affirmation comme une autre.
 const CORRIDORS = [
+  // ---- Corridors intra-africains -------------------------------------------
+  // Ils viennent en premier parce qu'ils pesent le plus, et parce qu'aucun
+  // atlas ne les trace. Effectifs : stocks bilateraux d'UN DESA, repris par
+  // l'OIM dans le Rapport sur les migrations dans le monde.
+  { de: 'ouaga', vers: 'abidjan', intra: true, poids: 1376350, note: { fr: "Burkina Faso → Côte d'Ivoire", en: "Burkina Faso → Côte d'Ivoire" } },
+  { de: 'bamako', vers: 'abidjan', intra: true, poids: 522146, note: { fr: "Mali → Côte d'Ivoire", en: "Mali → Côte d'Ivoire" } },
+  { de: 'conakry', vers: 'abidjan', intra: true, poids: 167516, note: { fr: "Guinée → Côte d'Ivoire", en: "Guinea → Côte d'Ivoire" } },
+  { de: 'juba', vers: 'kampala', intra: true, poids: 1100000, note: { fr: 'Soudan du Sud → Ouganda', en: 'South Sudan → Uganda' } },
+  { de: 'kinshasa', vers: 'kampala', intra: true, poids: 320000, note: { fr: 'RDC → Ouganda', en: 'DRC → Uganda' } },
+
+  // ---- Routes extracontinentales, cartographiees par l'OIM -----------------
   // Route atlantique ouest-africaine
   { de: 'bamako', vers: 'nouakchott' },
   { de: 'dakar', vers: 'nouadhibou' },
@@ -3334,7 +3345,14 @@ const SceneFlux = ({ lang, children }) => {
         </g>
         <g className="flux-corridors">
           {traces.map((d, i) => (
-            <path key={i} d={d} pathLength="1" style={{ animationDelay: `${300 + i * 140}ms` }} />
+            /* Le trait dit le rapport de grandeur : plein pour les corridors
+               intra-africains, fin pour les routes qui sortent du continent.
+               Sans cette hiérarchie, la carte donnerait le même poids visuel à
+               un corridor d'1,4 million de personnes et à une route qui en
+               compte quarante mille par an. */
+            <path key={i} d={d} pathLength="1"
+                  className={CORRIDORS[i]?.intra ? 'flux-intra' : 'flux-hors'}
+                  style={{ animationDelay: `${300 + i * 140}ms` }} />
           ))}
         </g>
         {/* Les escales : elles battent, faiblement, decalees les unes des autres. */}
@@ -3587,8 +3605,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
           {/* La provenance des traces. Un corridor dessine sur une carte est
               une affirmation : il se source comme un chiffre. */}
           <p className="scene-flux-source">
-            {L('Corridors : OIM — Global Overview of Migration Routes, janvier-avril 2026',
-               'Corridors: IOM — Global Overview of Migration Routes, January-April 2026',
+            {L("Corridors intra-africains : stocks bilatéraux UN DESA, repris par l'OIM. Routes extracontinentales : OIM, Global Overview of Migration Routes, janvier-avril 2026. Le trait plein pèse ce que pèse le corridor.",
+               "Intra-African corridors: UN DESA bilateral stocks, reported by IOM. Extra-continental routes: IOM, Global Overview of Migration Routes, January-April 2026. Line weight follows corridor size.",
                { ar: 'الممرات: المنظمة الدولية للهجرة — نظرة عامة عالمية على مسارات الهجرة، يناير-أبريل 2026' })}
           </p>
         </div>

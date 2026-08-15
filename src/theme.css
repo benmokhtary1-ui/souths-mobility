@@ -2088,3 +2088,14 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
   line-height: 1.45;
   color: #AEB6C6;
 }
+
+/* Les corridors intra-africains portent le trait plein ; les routes qui
+   sortent du continent, un trait fin. Sans cette hierarchie, la carte donnerait
+   le meme poids visuel a un corridor d'1,4 million de personnes et a une route
+   qui en compte quarante mille par an — et reproduirait exactement le biais
+   que la plateforme documente. */
+.flux-corridors .flux-intra { stroke-width: 3; opacity: .78; }
+.flux-corridors .flux-hors  { stroke-width: 1.2; opacity: .40; }
+@media (max-width: 767px) {
+  .flux-corridors .flux-intra { stroke-width: 4; }
+}
