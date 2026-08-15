@@ -1765,3 +1765,60 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   .chapitre-bouton { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .chapitre-corps { transition: none; } }
+
+/* ---------- L'Atlas : la carte a la bonne echelle -------------------------
+   Le bandeau faisait 813 px de haut, le dessin du continent 446 : un rapport
+   de 1,82, et l'ouverture ecrasait l'outil. Pire, le dessin est en portrait
+   dans une colonne `1fr` : 504 px de vide dormaient a l'interieur meme du SVG.
+
+   La colonne prend donc la largeur du dessin — plus d'etirement, plus de vide —
+   et la carte monte a la hauteur d'un ecran. Le releve occupe tout le reste au
+   lieu d'une bande de 240 px.                                              */
+/* La grille du choropleth est descendue d'un niveau depuis l'ajout du
+   conteneur .atlas-carte : c'est lui, desormais, qui porte les colonnes. */
+.atlas-carte > div {
+  grid-template-columns: auto minmax(16rem, 1fr) !important;
+  gap: clamp(1rem, 2.5vw, 2.25rem) !important;
+  align-items: center !important;
+}
+.atlas-scene .atlas-carte svg {
+  width: auto !important;
+  height: min(74vh, 46rem);
+  max-height: none !important;
+  justify-self: center;
+}
+
+/* ---------- Le mouvement de la carte -------------------------------------
+   Changer de couche repeignait les 54 pays d'un coup sec. Les aplats se
+   fondent desormais d'une teinte a l'autre : on suit le deplacement des
+   valeurs au lieu de constater un nouvel etat.                             */
+.atlas-carte svg path {
+  transition: fill var(--dur-slow) var(--ease-both),
+              filter var(--dur-fast) var(--ease),
+              opacity var(--dur-fast) var(--ease),
+              stroke-width var(--dur-fast) var(--ease);
+}
+/* Le pays survole se detache : il s'eclaircit et se cerne, sans bouger — un
+   pays qui se deplace sur une carte est un contresens. */
+.atlas-carte svg path:is(:hover, :focus-visible) {
+  filter: brightness(1.12) drop-shadow(0 2px 6px rgba(14, 17, 22, .28));
+  stroke-width: 1.6;
+  outline: none;
+}
+.atlas-carte svg path[aria-current='true'],
+.atlas-carte svg path.choro-selection {
+  stroke: var(--ink);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 0 2px var(--paper)) drop-shadow(0 3px 10px rgba(14, 17, 22, .3));
+}
+.atlas-carte svg path:focus-visible {
+  stroke: var(--accent-deep); stroke-width: 2.4;
+}
+
+@media (max-width: 1023px) {
+  .atlas-carte > div { grid-template-columns: 1fr !important; }
+  .atlas-scene .atlas-carte svg { width: 100% !important; height: auto; max-height: 62vh !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atlas-carte svg path { transition: none; }
+}
