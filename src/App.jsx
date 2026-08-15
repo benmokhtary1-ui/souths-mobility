@@ -2842,7 +2842,41 @@ const mapIndicators = [
 // d'une rampe sequentielle a un jeu de categories nommees. Un statut de
 // recensement n'est pas une grandeur — le colorer par degrade mentirait sur
 // la nature de la donnee.
-const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = false }) => {
+// Les douze États dont le tracé tombe sous le seuil de visibilité, avec le
+// centre de leur emprise. Mesuré sur les tracés eux-mêmes plutôt que choisi :
+// est petit ce qui couvre moins de 1 000 unités carrées sur une planche de
+// 1000 × 1126 — les Seychelles en occupent cinq.
+const PETITS_ETATS = [
+  ['690', 972, 541],   // Seychelles
+  ['480', 997, 733],   // Maurice
+  ['174', 832, 628],   // Comores
+  ['678', 388, 474],   // Sao Tomé-et-Principe
+  ['270', 120, 322],   // Gambie
+  ['748', 683, 816],   // Eswatini
+  ['262', 817, 341],   // Djibouti
+  ['646', 664, 508],   // Rwanda
+  ['108', 665, 525],   // Burundi
+  ['624', 122, 342],   // Guinée-Bissau
+  ['426', 644, 858],   // Lesotho
+  ['132',  16, 290],   // Cabo Verde
+];
+
+// Le cadrage d'une sous-région, calculé sur l'emprise réunie de ses pays plutôt
+// que choisi à la main : ajouter un pays à une région recalcule son cadre.
+// Marge de 4 % pour que les côtes ne collent pas au bord.
+//
+// Regarder l'Afrique de l'Ouest en affichant tout le continent oblige à
+// chercher la région dans l'image à chaque fois. Une carte régionale doit
+// cadrer sa région.
+const CADRES_REGIONS = {
+  af_med:     [73, -26, 701, 357],
+  af_west:    [-20, 154, 537, 299],
+  af_central: [362, 174, 339, 551],
+  af_east:    [544, 187, 480, 640],
+  af_south:   [424, 562, 393, 586],
+};
+
+const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = false, region = null }) => {
   const categoriel = Array.isArray(indicator.categories);
 
   const { buckets, valueOf } = useMemo(() => {
@@ -2893,7 +2927,8 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
 
   return (
     <div className="grid lg:grid-cols-[1fr_15rem] gap-4 items-start">
-      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[34rem] block"
+      <svg viewBox={(region && CADRES_REGIONS[region]) ? CADRES_REGIONS[region].join(' ') : AFRICA_VIEWBOX}
+           className="w-full h-auto max-h-[34rem] block"
            aria-label={L(`Carte de l'Afrique — ${indicator.label.fr}. Chaque pays est sélectionnable.`,
                          `Map of Africa — ${indicator.label.en}. Each country is selectable.`)}
            onMouseLeave={() => setSurvole(null)}>
@@ -2910,6 +2945,44 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
               stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#F7F6F2'}
               strokeWidth={isSel ? 2.6 : isLu ? 2 : 0.7}
               className="cursor-pointer choro-pays"
+              tabIndex={0}
+              role="button"
+              aria-label={`${nom} — ${fmt(v)}`}
+              onMouseEnter={() => setSurvole(id)}
+              onFocus={() => setSurvole(id)}
+              onBlur={() => setSurvole(null)}
+              onClick={() => onSelect && onSelect(id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect && onSelect(id); }
+              }}
+            />
+          );
+        })}
+
+        {/* Les États trop petits pour être vus.
+            Les Seychelles occupent 1,9 × 2,7 unités sur une planche de
+            1000 × 1126 : à l'écran, une poussière. Douze pays sont dans ce cas,
+            dont Cabo Verde, Maurice, les Comores et São Tomé — l'essentiel des
+            États insulaires du continent. Une carte qui les rend invisibles les
+            efface de la comparaison.
+
+            Ils reçoivent une amorce : un cercle à leur position, de la teinte
+            que porte leur valeur, cerné de blanc pour se détacher de la mer.
+            Le cercle porte aussi l'interaction — le tracé, lui, est trop petit
+            pour être visé. */}
+        {PETITS_ETATS.map(([id, cx, cy]) => {
+          const v = valueOf(id);
+          const isSel = selectedId === id;
+          const isLu = lu === id;
+          const nom = tr(countryById[id]?.name, lang) || id;
+          return (
+            <circle
+              key={'amorce-' + id}
+              cx={cx} cy={cy} r={isSel || isLu ? 11 : 8.5}
+              fill={colorFor(v)}
+              stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#FFFFFF'}
+              strokeWidth={isSel ? 2.6 : isLu ? 2.2 : 1.6}
+              className="cursor-pointer choro-pays choro-amorce"
               tabIndex={0}
               role="button"
               aria-label={`${nom} — ${fmt(v)}`}
@@ -7953,6 +8026,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                     lang={lang}
                     selectedId={activeSubTab}
                     onSelect={(id) => setActiveSubTab(id)}
+                    region={activeSubRegion !== 'all' ? activeSubRegion : null}
                   />
                 </>
               )}

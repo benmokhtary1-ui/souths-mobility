@@ -2099,3 +2099,8 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 @media (max-width: 767px) {
   .flux-corridors .flux-intra { stroke-width: 4; }
 }
+
+/* L'amorce d'un petit Etat : elle doit se lire comme le pays, pas comme une
+   pastille posee par-dessus. Meme reaction au survol que les traces. */
+.choro-amorce { transition: r var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease); }
+.choro-amorce:is(:hover, :focus-visible) { filter: brightness(1.1) drop-shadow(0 1px 4px rgba(14,17,22,.35)); }
