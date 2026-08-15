@@ -3,16 +3,8 @@
 
 export const methodConventions = [
   {
-    label: { fr: "Périmètre géographique", en: "Geographic perimeter" },
-    value: { fr: "54 pays", en: "54 countries" },
-    detail: {
-      fr: "Le Sahara occidental n'est pas traité comme une entité distincte : il est intégré au Maroc, y compris dans les cartes. Ce choix est constant sur l'ensemble de la plateforme.",
-      en: "Western Sahara is not treated as a separate entity: it is integrated into Morocco, including on maps. This choice is applied consistently across the platform."
-    }
-  },
-  {
-    label: { fr: "Découpage régional", en: "Regional breakdown" },
-    value: { fr: "5 régions de l'UA", en: "5 AU regions" },
+    label: { fr: "Périmètre et découpage", en: "Perimeter and breakdown" },
+    value: { fr: "54 pays, 5 régions", en: "54 countries, 5 regions" },
     detail: {
       fr: "La plateforme suit le découpage officiel de l'Union africaine, et non la nomenclature M49 des Nations unies. La Mauritanie est donc rattachée au Nord ; le Burundi et le Rwanda au Centre ; le Malawi, le Mozambique, la Zambie et le Zimbabwe au Sud.",
       en: "The platform follows the African Union's official breakdown rather than the UN M49 nomenclature: Mauritania is attached to the North, Burundi and Rwanda to Central, and Malawi, Mozambique, Zambia, and Zimbabwe to the South."

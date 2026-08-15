@@ -64,7 +64,7 @@ Chaque terme porte `term`, `en_term`, `fr`, `en` et une `source`.
 
 ## `methodConventions.js` — les choix structurants
 
-11 conventions qui conditionnent la lecture de tous les chiffres : périmètre,
+10 conventions qui conditionnent la lecture de tous les chiffres : périmètre,
 définitions retenues, découpages, dates de référence.
 
 ---
@@ -98,8 +98,9 @@ privé — et **le défaut ne se voit qu'à l'exécution, jamais au build**.
    reportés ne comptent pas comme réalisés.
 3. **Les définitions africaines priment** pour les notions juridiques.
 4. **Quand deux sources divergent, on montre les deux** avec leur provenance,
-   plutôt que d'en choisir une en silence. Exemple : l'écart d'une unité sur les
-   ratifications de la ZLECAf, 48 comptés contre 49 publiés.
+   plutôt que d'en choisir une en silence. Exemple : les totaux de déplacés
+   internes, que l'IDMC et le HCR n'établissent ni sur le même périmètre de
+   suivi ni par la même méthode — les deux séries sont affichées.
 5. **Les noms sont toujours bilingues** (`{ fr, en }`), jamais des chaînes
    simples — une comparaison de chaînes sur un nom de pays casse dès qu'on
    change de langue.

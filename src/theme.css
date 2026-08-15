@@ -190,7 +190,10 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* bleus -> bleu d'ardoise (accent secondaire) */
 .text-blue-600, .text-blue-700, .text-blue-800, .text-blue-900 { color: var(--accent-2) !important; }
 .bg-blue-50, .bg-blue-100 { background-color: var(--accent-2-soft) !important; }
-.border-blue-100, .border-blue-200, .border-blue-300 { border-color: #C9CFE0 !important; }
+/* Le filet coloré prend la teinte de la section. Il était figé sur un bleu-gris
+   unique : dans une section grenat ou terre brûlée, chaque encadré rappelait
+   une couleur qui n'était plus la sienne. */
+.border-blue-100, .border-blue-200, .border-blue-300 { border-color: color-mix(in oklab, var(--accent) 20%, var(--rule)) !important; }
 .bg-blue-700, .bg-blue-800 { background-color: var(--accent-2) !important; }
 .text-blue-300, .text-blue-400, .text-blue-500 { color: var(--accent-2) !important; }
 
@@ -201,7 +204,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .text-purple-400, .text-purple-700 { color: var(--accent) !important; }
 .bg-indigo-800, .bg-teal-800, .bg-violet-800, .bg-cyan-800 { background-color: var(--accent-deep) !important; }
 .bg-teal-50, .bg-indigo-50, .bg-purple-50 { background-color: var(--accent-soft) !important; }
-.border-teal-100, .border-teal-200, .border-indigo-100, .border-indigo-200 { border-color: #D3D8E6 !important; }
+.border-teal-100, .border-teal-200, .border-indigo-100, .border-indigo-200 { border-color: color-mix(in oklab, var(--accent) 20%, var(--rule)) !important; }
 .bg-teal-600, .bg-teal-700 { background-color: var(--accent) !important; }
 
 /* Terracotta sur aplat terracotta : la version pleine tombe a 4,45:1, on passe
@@ -1076,6 +1079,20 @@ main[data-section="about"] {
   --accent-light: #929AA9;
 }
 
+/* L'accent secondaire reste le meme bleu-vert d'un bout a l'autre du site :
+   c'est lui qui separe deux familles de blocs a l'interieur d'une page, et il
+   perdrait ce role s'il changeait completement de section en section. Mais fige
+   au meme bleu-vert exact, il ne se rattachait a rien dans une section grenat
+   ou terre brulee. Un quart de l'accent de section suffit a le faire
+   appartenir sans lui faire perdre sa fonction. La sélection porte sur
+   `main[data-section]` seul : moins specifique que les neuf blocs ci-dessus,
+   elle ne peut pas ecraser leur `--accent`, dont elle se sert.               */
+main[data-section] {
+  --accent-2:       color-mix(in oklab, #0F6E78 76%, var(--accent));
+  --accent-2-soft:  color-mix(in oklab, #E1F0F1 80%, var(--accent-soft));
+  --accent-2-light: color-mix(in oklab, #5FB6C0 76%, var(--accent-light));
+}
+
 /* ---------- Carte : le pays repond au doigt et au clavier ----------------- */
 /* Le survol ne produisait aucun retour et le clic restait muet. On donne une
    reaction immediate, et un anneau de focus visible : la carte se parcourt
@@ -1564,6 +1581,25 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 /* Le bandeau cale son contenu en bas : titre, phrase et questions forment un
    bloc qui pousse depuis le pied plutot que de flotter au centre. */
 .scene-flux-texte { padding-block-end: clamp(1.25rem, 3vh, 2rem); padding-block-start: clamp(1.25rem, 3vh, 2rem); }
+
+/* ---------- Barre d'outils de section --------------------------------------
+   Le meme bouton, au meme endroit, dans chaque section. Il prend la teinte de
+   la section plutot qu'un indigo fixe : c'est un outil de la page ou il se
+   trouve, pas un element de chrome pose par-dessus.                          */
+.barre-section-pdf {
+  color: var(--accent-deep);
+  background-color: var(--paper-raised, #FFFFFF);
+  border: 1px solid color-mix(in oklab, var(--accent) 26%, var(--rule));
+  transition: background-color .18s var(--sortie, ease), border-color .18s var(--sortie, ease), color .18s var(--sortie, ease);
+}
+.barre-section-pdf:hover {
+  background-color: var(--accent-soft);
+  border-color: color-mix(in oklab, var(--accent) 46%, var(--rule));
+}
+.barre-section-pdf:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 /* ---------- Moins d'angles droits ----------------------------------------
    Les composants dessines a la main gardaient leurs aretes vives : ils

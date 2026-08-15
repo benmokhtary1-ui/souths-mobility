@@ -930,20 +930,21 @@ const ATLAS_CADRAGES = {
   // Pl. I — l'Atlas : le continent entier, sans cadrage. C'est la premiere
   // feuille du recueil, celle par laquelle on entre.
   'Pl. I':     { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
-  // Continent entier : l'ouverture et l'outil qui couvre les 54 pays.
+  // Pl. II — l'accueil : le meme continent entier, puisqu'on s'y oriente.
   'Pl. II':    { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
-  'Pl. IV':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
   // Quart nord-ouest : les traversees que le debat public imagine.
   'Pl. III':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
   // Facade est, large : Corne, Grands Lacs et vallee du Nil ensemble.
-  'Pl. V':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
+  'Pl. IV':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
   // Facade ouest : le corridor CEDEAO d'un bout a l'autre.
-  'Pl. VI':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  'Pl. V':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
   // Gouvernance : le continent en entier. L'Union africaine gouverne 54 Etats,
   // pas une region — un cadrage sur la Corne repetait celui du deplacement
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
-  'Pl. VII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  'Pl. VI':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  // Explorateur : presque tout le continent, puisque l'outil couvre les 54.
+  'Pl. VII':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
   'Pl. VIII':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu'a Madagascar.
@@ -1731,7 +1732,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
       {/* Tete de planche : on sait ou l'on est avant meme de lire le titre. */}
       {plate && (
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-[10px] font-semibold uppercase tabular-nums" style={{ letterSpacing: '.2em', color: '#8FA0CE' }}>
+          <span className="text-[10px] font-semibold uppercase tabular-nums" style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
             {plate}
           </span>
           <span className="block h-px flex-1 max-w-[7rem]" style={{ backgroundColor: 'rgba(255,253,249,.22)' }} />
@@ -1739,13 +1740,18 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
         </div>
       )}
 
+      {/* Le numero de planche, l'etiquette et le mot en italique du titre
+          prenaient le meme indigo dans les neuf sections : la couleur de
+          section s'arretait au fond du bandeau, sans jamais toucher la
+          typographie. Ils se calculent maintenant sur l'accent de la section,
+          au-dessus de l'encre. */}
       <span
         className="inline-flex items-center gap-2 px-3 py-1 rounded-sm mb-5 text-[10px] font-semibold uppercase"
         style={{
           letterSpacing: '.18em',
-          color: '#C9D2E8',
-          backgroundColor: 'rgba(43,58,103,.14)',
-          border: '1px solid rgba(43,58,103,.40)',
+          color: 'color-mix(in oklab, var(--accent-light) 62%, #FFFDF9)',
+          backgroundColor: 'color-mix(in oklab, var(--accent) 24%, transparent)',
+          border: '1px solid color-mix(in oklab, var(--accent-light) 34%, transparent)',
         }}
       >
         {badge}
@@ -1756,7 +1762,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
         style={{ color: '#FFFDF9' }}
       >
         {title}{' '}
-        <span className="italic font-normal" style={{ color: '#8FA0CE' }}>{highlight}</span>
+        <span className="italic font-normal" style={{ color: 'var(--accent-light)' }}>{highlight}</span>
       </h1>
 
       <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#D3D5DC' }}>
@@ -1773,6 +1779,32 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
     />
   )}
   </>
+);
+
+// Barre d'outils de section : sous le bandeau, alignee a droite, la meme
+// partout.
+//
+// L'export PDF n'existait que dans Gouvernance. Une fonction offerte dans une
+// seule section sur douze n'est pas une fonction : personne ne va la chercher
+// ailleurs, et celui qui la trouve croit qu'elle vaut pour tout le site. Elle
+// est donc au meme endroit dans chaque section — l'impression emporte deja le
+// pied de citation, rendu pour toutes les sections.
+//
+// Les exports CSV, eux, restent contre le tableau qu'ils exportent : un bouton
+// « Recensements (CSV) » en haut de page ne dirait pas ce qu'il telecharge.
+// Ceux qui portent sur la section entiere peuvent etre passes en enfants.
+const BarreSection = ({ lang, children = null }) => (
+  <div className="flex flex-wrap items-center justify-end gap-2 -mt-4 print:hidden">
+    {children}
+    <button
+      type="button"
+      onClick={() => window.print()}
+      className="barre-section-pdf inline-flex items-center gap-1.5 px-4 py-2 rounded-sm text-xs font-bold"
+    >
+      <Printer className="w-3.5 h-3.5" aria-hidden="true" />
+      <span>{tr({ fr: "Exporter cette section (PDF)", en: "Export this section (PDF)" }, lang)}</span>
+    </button>
+  </div>
 );
 
 const PRINT_CITATION = {
@@ -1951,8 +1983,17 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
   );
 };
 
-const PrintCitationFooter = ({ lang, sectionLabel }) => {
-  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : 'South(s) Mobility DataHub';
+const PrintCitationFooter = ({ lang, sectionLabel, tab = null, detail = null }) => {
+  // L'adresse imprimee se deduit de la section, pas de la barre du navigateur.
+  // L'URL est ecrite par un effet, donc apres le rendu : la lire pendant le
+  // rendu donnait l'adresse de la section PRECEDENTE — la citation d'un
+  // document imprime renvoyait ailleurs que ce qu'il contient. Les effets d'un
+  // enfant s'executent avant ceux du parent : attendre ne reglait rien.
+  const seg = tab ? tr(ROUTES[tab], lang) : null;
+  const chemin = seg
+    ? `/${lang}/${seg}${detail ? `/${detail}` : ''}`
+    : (typeof window !== 'undefined' ? window.location.pathname : '');
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'South(s) Mobility DataHub';
   const printDate = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-US' }, lang), { year: 'numeric', month: 'long', day: 'numeric' });
   return (
     <div className="hidden print:block mt-8 pt-4 border-t-2 border-slate-900 break-inside-avoid">
@@ -2338,7 +2379,7 @@ const t = {
       method: { 
         summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
         m1: "Traçabilité de la source. Chaque indicateur est rattaché à une institution productrice nommée (UN DESA, HCR, IDMC, OIT, Banque mondiale, BAD, CUA, OIM) et à une série publiquement consultable. Les {libraryCount} références mobilisées sont listées dans la Bibliothèque ; aucune valeur n'est retenue sans provenance identifiable.",
-        m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Le Sahara occidental est intégré au Maroc, y compris cartographiquement. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
+        m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
         m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d'observation. Aucune interpolation n'est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d'une réserve plutôt que lissé.",
         m4: "Proportion plutôt que valeur absolue. Les effectifs sont systématiquement rapportés à la population de référence. Les échelles ne sont jamais mélangées dans une même représentation (l'indice AVOI est stocké de 0 à 100 au niveau des pays, de 0 à 1 au niveau des CER). Les cartes choroplèthes utilisent un découpage par quantiles, robuste aux distributions très asymétriques comme celle des déplacés internes.",
         m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur est stocké instrument par instrument : 15 États parties pour cette catégorie de protocoles. Il pilote directement l'affichage du statut, « en vigueur » ou « pas encore en vigueur ».",
@@ -2639,7 +2680,7 @@ const t = {
       method: { 
         summary: "The platform produces no primary data: it consolidates public series and documents every operation applied to them. Six principles govern that processing.",
         m1: "Source traceability. Each indicator is tied to a named producing institution (UN DESA, UNHCR, IDMC, ILO, World Bank, AfDB, AUC, IOM) and to a publicly consultable series. The {libraryCount} references drawn upon are listed in the Library; no value is retained without identifiable provenance.",
-        m2: "Perimeter harmonisation. Series are brought onto a 54-country perimeter and the African Union's regional breakdown — not the UN M49 nomenclature. Western Sahara is integrated into Morocco, including on maps. An alias table reconciles naming variants across datasets (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\") without renaming the sources.",
+        m2: "Perimeter harmonisation. Series are brought onto a 54-country perimeter and the African Union's regional breakdown — not the UN M49 nomenclature. An alias table reconciles naming variants across datasets (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\") without renaming the sources.",
         m3: "Field-level dating. Vintages are not artificially aligned: remittances, migrant activity, and ratifications each carry their own observation year. No interpolation is applied to manufacture surface-level homogeneity, and an unverifiable figure is shown dated and caveated rather than smoothed.",
         m4: "Proportion over absolute value. Counts are systematically related to their reference population. Scales are never mixed within a single representation (the AVOI index is stored 0-100 at country level, 0-1 at REC level). Choropleth maps use quantile binning, which is robust to heavily skewed distributions such as internal displacement.",
         m5: "Threshold-driven legal assessment. Ratification counts are checked against official portals before publication. The entry-into-force threshold — 15 states parties for this class of protocol — is stored per instrument and directly drives the \"in force\" or \"not yet in force\" status shown.",
@@ -3291,7 +3332,7 @@ const COUCHES_ATLAS = [
     question: { fr: 'Qui accueille ?', en: 'Who hosts?', ar: 'مَن يستقبل؟' } },
   { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
     question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?', ar: 'مَن يبقى في أفريقيا؟' } },
-  { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance',
+  { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance', sousOnglet: 'recs',
     question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?', ar: 'مَن يفتح حدوده؟' } },
   { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'mobilites', volet: 'contraintes',
     question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?', ar: 'مَن نزح داخل بلده؟' } },
@@ -3299,7 +3340,7 @@ const COUCHES_ATLAS = [
     question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?', ar: 'إلى أين تعود الأموال؟' } },
   { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'mobilites', volet: 'travail',
     question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?', ar: 'أين تهاجر النساء بالقدر نفسه؟' } },
-  { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance',
+  { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance', sousOnglet: 'au',
     question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?', ar: 'مَن صادَق؟' },
     plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
              en: 'How many of the African Union’s six major instruments each country has formally ratified. Six is full commitment; zero is none.' },
@@ -3619,7 +3660,7 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
   );
 };
 
-const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
+const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSousOngletGouvernance }) => {
   const L = faireL(lang);
   const [coucheCle, setCoucheCle] = useState('accueil');
   const [paysOuvert, setPaysOuvert] = useState(null);
@@ -3715,7 +3756,13 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
         <Prose className="text-[13px] leading-relaxed max-w-2xl mt-4" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
         <button
           type="button"
-          onClick={() => { if (couche.volet) setVoletMobilites?.(couche.volet); allerVers(couche.mene); }}
+          onClick={() => {
+            // La question posee sur la carte doit retomber sur le volet qui y
+            // repond, pas sur la premiere page de la section.
+            if (couche.volet) setVoletMobilites?.(couche.volet);
+            if (couche.sousOnglet) setSousOngletGouvernance?.(couche.sousOnglet);
+            allerVers(couche.mene);
+          }}
           className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
           style={{ color: 'var(--accent-deep)' }}
         >
@@ -3980,15 +4027,15 @@ const homeCards = [
   { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' },
     desc: { fr: `${evidenceCheckData.length} affirmations courantes sur les migrations confrontées aux meilleures données disponibles.`,
             en: `${evidenceCheckData.length} common migration claims tested against the best available data.` } },
-  { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' },
-    desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.",
-            en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
   { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' },
-    desc: { fr: "Déplacés internes, réfugiés, apatrides : la mobilité qui ne franchit aucune frontière.",
-            en: "Internally displaced, refugees, stateless: the mobility that crosses no border." } },
+    desc: { fr: "Déplacement contraint et migration de travail : ce qui pousse au départ, et ce qui se gagne à l'arrivée.",
+            en: "Forced displacement and labour migration: what drives departure, and what is earned on arrival." } },
   { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' },
     desc: { fr: "L'architecture juridique panafricaine, et ce que les États ont réellement ratifié.",
             en: "The pan-African legal architecture, and what states have actually ratified." } },
+  { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' },
+    desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.",
+            en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
   { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' },
     desc: { fr: "Où se situe réellement le déficit statistique africain — et ce qui y répond.",
             en: "Where Africa's statistical deficit actually sits — and what answers it." } },
@@ -4047,6 +4094,8 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         desc={text.headers.home.desc}
         icon={Globe}
       />
+
+      <BarreSection lang={lang} />
 
       {/* Releve de chiffres : une seule feuille divisee par des filets, plutot que
           quatre vignettes posees cote a cote. */}
@@ -4434,6 +4483,8 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         )}
         icon={Search}
       />
+
+      <BarreSection lang={lang} />
 
       {/* Note de provenance : les affirmations sont de l'auteur, les donnees ne le sont pas. */}
       <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
@@ -5098,8 +5149,8 @@ const AnchoringMatrix = ({ lang }) => {
             {L('Provenance et réserve', 'Provenance and caveat')}
           </h4>
           <Prose className="text-[11px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
-              "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : la plateforme en compte 48 ayant déposé leur instrument, quand la liste publiée en annonce 49 — l'écart d'une unité est conservé plutôt que tranché en silence. Les six que la plateforme ne compte pas sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde désormais exactement avec l'UA. Subsiste un écart d'une unité sur la ZLECAf entre le décompte de la matrice (48) et le chiffre publié (49), lié à la façon dont sont comptés signataires et États membres. Les valeurs divergentes sont affichées plutôt qu'harmonisées de force.",
-              "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU. the platform counts 48 as having deposited their instrument, where the published list states 49 — the one-unit gap is kept rather than silently resolved. The six the platform does not count are: Eritrea (not a signatory), Benin, Libya, Sudan and South Sudan (ratification not approved), and Somalia (approved, not deposited). Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe was wrongly marked as a non-ratifier; the entry has been corrected, and the matrix now matches the AU exactly. A one-unit gap remains on the AfCFTA between the matrix count (48) and the published figure (49), tied to how signatories and member states are counted. Divergent values are shown rather than forcibly reconciled."
+              "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 48 États ont déposé leur instrument. Les six qui manquent sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde avec les listes de l'UA, État par État.",
+              "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 48 states have deposited their instrument. The six outstanding are Eritrea, not a signatory; Benin, Libya, Sudan and South Sudan, whose ratification is not approved; and Somalia, which approved without depositing. Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected. The matrix matches the AU lists state by state."
             )}</Prose>
         </div>
       </section>
@@ -5268,7 +5319,7 @@ const TabForced = ({ text, lang, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.forced.badge}
-        plate={"Pl. V"}
+        plate={"Pl. IV"}
         plain={text.headers.forced.plain}
         lang={lang}
         title={text.headers.forced.title}
@@ -5276,6 +5327,8 @@ const TabForced = ({ text, lang, children }) => {
         desc={text.headers.forced.desc}
         icon={ShieldAlert}
       />
+
+      <BarreSection lang={lang} />
       {children}
 
       <div className="flex justify-end print:hidden">
@@ -5478,7 +5531,7 @@ const TabForced = ({ text, lang, children }) => {
           )}</Prose>
       </Reveal>
 
-      <PrintCitationFooter lang={lang} sectionLabel={L('Mobilités contraintes', 'Forced mobility')} />
+      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Mobilités contraintes', 'Forced mobility')} />
     </div>
   );
 };
@@ -5576,7 +5629,7 @@ const TabLabour = ({ text, lang, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.labour.badge}
-        plate={"Pl. VI"}
+        plate={"Pl. V"}
         plain={text.headers.labour.plain}
         lang={lang}
         title={text.headers.labour.title}
@@ -5584,6 +5637,8 @@ const TabLabour = ({ text, lang, children }) => {
         desc={text.headers.labour.desc}
         icon={Briefcase}
       />
+
+      <BarreSection lang={lang} />
       {children}
 
       <div className="flex justify-end print:hidden">
@@ -5815,7 +5870,7 @@ const TabLabour = ({ text, lang, children }) => {
         </Chapitre>
       </Reveal>
 
-      <PrintCitationFooter lang={lang} sectionLabel={L('Migration de travail', 'Labour migration')} />
+      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Migration de travail', 'Labour migration')} />
     </div>
   );
 };
@@ -6739,7 +6794,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
-        plate={"Pl. VII"}
+        plate={"Pl. VI"}
         plain={text.headers.governance.plain}
         lang={lang}
         title={text.headers.governance.title}
@@ -6748,20 +6803,31 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         icon={Landmark}
       />
 
-      <div className="flex flex-wrap justify-end gap-2 print:hidden">
+      <BarreSection lang={lang}>
         <CsvButton onClick={exportRecsCSV} label={tr({ fr: "CER (CSV)", en: "RECs (CSV)" }, lang)} />
         <CsvButton onClick={exportLegalMatrixCSV} label={tr({ fr: "Matrice juridique (CSV)", en: "Legal matrix (CSV)" }, lang)} />
-        <button onClick={() => window.print()} className="flex items-center space-x-1.5 rtl:space-x-reverse bg-white border border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 px-4 py-2 rounded-sm text-xs font-bold transition-colors shadow-sm">
-          <Printer className="w-3.5 h-3.5" /> <span>{tr({ fr: "Exporter cette section (PDF)", en: "Export this section (PDF)" }, lang)}</span>
-        </button>
-      </div>
+      </BarreSection>
 
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
-        {/* Sommaire : trois familles, six entrees, chacune annoncant son contenu. */}
+        {/* Sommaire : trois familles, six entrees, chacune annoncant son contenu.
+            Les cadres africains ouvrent la section. La plateforme declare que
+            l'instrument africain fait reference pour toute notion disposant
+            aussi d'une definition onusienne : ouvrir sur l'Agenda 2030 aurait
+            dit l'inverse de ce que la methode annonce. */}
         <nav className="bg-white border border-slate-200 mb-8" aria-label={tr({ fr: "Sommaire de la section", en: "Section contents" }, lang)}>
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200">
             {[
+              {
+                icon: MapIcon,
+                family: tr({ fr: "Cadres africains", en: "African frameworks" }, lang),
+                items: [
+                  { id: 'au', label: tr({ fr: "Union africaine", en: "African Union" }, lang),
+                    hint: tr({ fr: "Traités, organes politiques et 5 agences spécialisées", en: "Treaties, political organs and 5 specialized agencies" }, lang)},
+                  { id: 'recs', label: tr({ fr: "Communautés économiques régionales", en: "Regional Economic Communities" }, lang),
+                    hint: tr({ fr: "8 CER, ouverture comparée et instruments propres", en: "8 RECs, compared openness and their own instruments" }, lang)},
+                ],
+              },
               {
                 icon: Globe,
                 family: tr({ fr: "Cadres mondiaux", en: "Global frameworks" }, lang),
@@ -6772,16 +6838,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     hint: tr({ fr: "23 objectifs, et la Position africaine commune", en: "23 objectives, and the Common African Position" }, lang)},
                   { id: 'gcr', label: tr({ fr: "Pacte mondial — Réfugiés", en: "Global Compact — Refugees" }, lang),
                     hint: tr({ fr: "Partage des charges, lu depuis la Convention de 1969", en: "Responsibility-sharing, read from the 1969 Convention" }, lang)},
-                ],
-              },
-              {
-                icon: MapIcon,
-                family: tr({ fr: "Cadres africains", en: "African frameworks" }, lang),
-                items: [
-                  { id: 'au', label: tr({ fr: "Union africaine", en: "African Union" }, lang),
-                    hint: tr({ fr: "Traités, organes politiques et 5 agences spécialisées", en: "Treaties, political organs and 5 specialized agencies" }, lang)},
-                  { id: 'recs', label: tr({ fr: "Communautés économiques régionales", en: "Regional Economic Communities" }, lang),
-                    hint: tr({ fr: "8 CER, ouverture comparée et instruments propres", en: "8 RECs, compared openness and their own instruments" }, lang)},
                 ],
               },
               {
@@ -7794,7 +7850,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
-      plate={"Pl. IV"}
+      plate={"Pl. VII"}
       plain={text.headers.explorer.plain}
       lang={lang}
       title={text.headers.explorer.title}
@@ -7802,6 +7858,8 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
       desc={text.headers.explorer.desc}
       icon={MapIcon}
     />
+
+    <BarreSection lang={lang} />
 
     <div className="flex flex-col lg:flex-row gap-8 items-start">
       
@@ -8361,6 +8419,8 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
         desc={text.headers.library.desc}
         icon={BookOpen}
       />
+
+      <BarreSection lang={lang} />
       {children}
 
       <div>
@@ -8634,6 +8694,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         )}
         icon={Database}
       />
+
+      <BarreSection lang={lang} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
         {headline.map((h, i) => (
@@ -9038,6 +9100,8 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
         desc={text.headers.glossary.desc}
         icon={Brain}
       />
+
+      <BarreSection lang={lang} />
       {children}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
@@ -9199,6 +9263,8 @@ const TabMethodology = ({ text, lang, children }) => (
       desc={text.headers.methodology.desc}
       icon={Database}
     />
+
+    <BarreSection lang={lang} />
     {children}
 
     <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
@@ -9491,6 +9557,8 @@ const TabAbout = ({ text, lang, children }) => {
         desc={text.headers.about.desc}
         icon={Info}
       />
+
+      <BarreSection lang={lang} />
       {children}
       
       {/* Ouverture editoriale : le bandeau sombre est desormais porte par le masthead,
@@ -9805,7 +9873,15 @@ const ROUTES = {
   governance: { fr: 'gouvernance',  en: 'governance' },
   data:       { fr: 'donnees',      en: 'data' },
   resources:  { fr: 'ressources',   en: 'resources' },
-  about:      { fr: 'methodologie', en: 'methodology' },
+  about:      { fr: 'a-propos',     en: 'about' },
+};
+
+// La methodologie a rejoint « Ressources » ; « A propos » a donc change de
+// segment. Les adresses de l'ancienne organisation restent valides plutot que
+// de rendre 404 : une URL citee dans un article ne se rattrape pas.
+const ROUTES_ANCIENNES = {
+  methodologie: 'resources',
+  methodology: 'resources',
 };
 
 const slugPays = (nom) => String(nom || '')
@@ -9822,6 +9898,7 @@ const lireURL = () => {
   if (seg) {
     const trouve = Object.entries(ROUTES).find(([, s]) => s.fr === seg || s.en === seg);
     if (trouve) tab = trouve[0];
+    else if (ROUTES_ANCIENNES[seg]) tab = ROUTES_ANCIENNES[seg];
   }
   return { lang, tab, detail: bouts[2] ? decodeURIComponent(bouts[2]) : null };
 };
@@ -9848,7 +9925,8 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [modalView, setModalView] = useState('demography'); 
   const [expandedIndicator, setExpandedIndicator] = useState(null);
-  const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
+  // La Gouvernance ouvre sur l'Union africaine, pas sur l'Agenda 2030.
+  const [activeSdgzTab, setActiveSdgzTab] = useState('au');
   const [activeResourceTab, setActiveResourceTab] = useState('library');
   // Le volet ouvert dans la section Mobilites : contraintes ou travail.
   const [voletMobilites, setVoletMobilites] = useState('contraintes');
@@ -10137,13 +10215,24 @@ export default function App() {
     downloadCSV('souths_library.csv', toCSV(rows));
   };
 
+  // L'ordre suit quatre familles, dans l'ordre ou on les lit : on entre par la
+  // carte, on s'oriente, on eprouve une idee recue, on lit les deux analyses,
+  // on ouvre les deux outils de donnees, on verifie l'appareil.
+  //   entrer     — Atlas, Accueil
+  //   eprouver   — Evidence Check
+  //   analyser   — Mobilites, Gouvernance
+  //   consulter  — Explorateur, Donnees & Stats
+  //   verifier   — Ressources & methode, A propos
+  // L'Explorateur separait auparavant l'epreuve des analyses, et « Donnees »
+  // etait coupe de l'Explorateur par la Gouvernance : les deux outils qui
+  // servent le meme geste se suivent maintenant.
   const navigation = [
     { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas', ar: 'الأطلس' } },
     { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home', ar: 'الرئيسية' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check', ar: 'فحص الأدلة' } },
-    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer', ar: 'مستكشف البلدان' } },
     { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities', ar: 'التنقلات' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance', ar: 'الحوكمة' } },
+    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer', ar: 'مستكشف البلدان' } },
     { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats', ar: 'البيانات والإحصاءات' } },
     { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method', ar: 'المراجع والمنهجية' } },
     { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About', ar: 'عن المنصة' } },
@@ -10295,6 +10384,8 @@ export default function App() {
           <TabAtlas
             lang={lang} text={text} allerVers={allerVers}
             ouvrirPays={(id) => { setActiveSubTab(id); allerVers('explorer'); }}
+            setVoletMobilites={setVoletMobilites}
+            setSousOngletGouvernance={setActiveSdgzTab}
           />
         )}
         {activeTab === 'home' && (
@@ -10364,7 +10455,7 @@ export default function App() {
           />
         )}
         {activeTab === 'about' && <TabAbout text={text} lang={lang} />}
-        <PrintCitationFooter lang={lang} sectionLabel={tr(navigation.find(i => i.id === activeTab)?.label, lang)} />
+        <PrintCitationFooter lang={lang} tab={activeTab} detail={paysSlug} sectionLabel={tr(navigation.find(i => i.id === activeTab)?.label, lang)} />
       </main>
 
       {/* Dossier PDF dédié : seul élément imprimé quand la fiche pays est ouverte. */}
