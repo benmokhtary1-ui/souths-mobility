@@ -1442,7 +1442,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   overflow: hidden;
   /* Le bandeau ecrasait la carte : 820 px contre 666, alors que c'est la
      carte que le lecteur vient voir. Il annonce, il n'occupe plus l'ecran. */
-  min-height: clamp(19rem, 46vh, 27rem);
+  min-height: clamp(17rem, 40vh, 24rem);
   display: flex;
   align-items: flex-end;
   border: 1px solid var(--rule);
@@ -1786,7 +1786,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 }
 .atlas-scene .atlas-carte svg {
   width: auto !important;
-  height: min(74vh, 46rem);
+  height: min(82vh, 52rem);
   max-height: none !important;
   justify-self: center;
 }
@@ -1874,3 +1874,80 @@ main[data-section] .couche-btn[data-actif='true'] {
 
 /* Le chapeau d'une section : un lavis très pâle plutôt qu'un blanc nu. */
 main[data-section] .en-clair { background: var(--accent-lavis); border-color: var(--accent-filet); }
+
+/* ============================================================================
+   Finitions — ce que le navigateur sait faire et qu'on n'utilisait pas
+   ==========================================================================*/
+
+/* --- Typographie : les titres ne se cassent plus n'importe ou -------------
+   `balance` repartit les lignes d'un titre pour qu'aucune ne reste seule avec
+   deux mots ; `pretty` empeche l'orpheline en fin de paragraphe. C'est la
+   difference entre un texte compose et un texte simplement affiche.        */
+:is(main, .reader) :is(h1, h2, h3, h4) { text-wrap: balance; }
+:is(main, .reader) :is(p, li, dd, figcaption) { text-wrap: pretty; }
+.scene-flux h1 { text-wrap: balance; }
+
+/* --- Les chapitres replies ne sont plus calcules tant qu'on ne les voit pas
+   Sur une section de douze ecrans, le navigateur mettait en page l'integralite
+   du contenu au chargement. `content-visibility` lui permet de sauter ce qui
+   est hors champ ; `contain-intrinsic-size` lui donne une hauteur presumee
+   pour que la barre de defilement ne saute pas.                            */
+.chapitre { content-visibility: auto; contain-intrinsic-size: auto 620px; }
+@media print { .chapitre { content-visibility: visible; } }
+
+/* --- L'arrivee d'un element : le navigateur anime depuis un etat de depart
+   `@starting-style` decrit ce qu'etait l'element avant d'exister. Aucune
+   classe a poser, aucun observateur : le style suffit.                     */
+@media (prefers-reduced-motion: no-preference) {
+  .panneau-pays, .terme-pop, .rail-fleche {
+    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  }
+  @starting-style {
+    .panneau-pays { opacity: 0; transform: translateX(12px); }
+    .terme-pop    { opacity: 0; transform: translateY(-4px); }
+  }
+}
+
+/* --- Le geste : un bouton s'enfonce quand on le presse -------------------- */
+:is(main, .reader) button:active:not(:disabled),
+.couche-btn:active:not(:disabled),
+.chapitre-bouton:active,
+.panneau-fiche:active { transform: translateY(1px) scale(.994); }
+@media (prefers-reduced-motion: reduce) {
+  :is(main, .reader) button:active { transform: none; }
+}
+
+/* --- Les tableaux larges gardent leur en-tete sous les yeux --------------- */
+:is(main, .reader) .overflow-x-auto table thead th,
+:is(main, .reader) table.sticky-head thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--paper-raised);
+  box-shadow: inset 0 -1px 0 var(--rule);
+}
+
+/* --- Le defilement s'arrete sous la barre de navigation ------------------- */
+:is(main, .reader) :is(h2, h3, section, .chapitre) { scroll-margin-block-start: 6.5rem; }
+
+/* --- La selection prend la teinte de la section --------------------------- */
+main[data-section] ::selection { background: var(--accent-soft); color: var(--accent-deep); }
+
+/* --- Le pointeur dit ce qui est cliquable, partout ------------------------ */
+:is(main, .reader) :is(button, a, summary, [role='button']):not(:disabled) { cursor: pointer; }
+:is(main, .reader) button:disabled { cursor: not-allowed; }
+
+/* --- Le bandeau prend la gamme de sa section ------------------------------
+   Deux halos indigo etaient ecrits en dur : la meme couleur dans les neuf
+   sections. Le bandeau derive desormais ses lueurs de --accent, donc chaque
+   section a bien sa teinte ET sa gamme de degrades.
+   Le fond reste l'encre : c'est ce qui garantit le contraste du titre quelle
+   que soit la teinte, y compris les plus claires.                          */
+.page-bandeau {
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(circle at 10% 15%, color-mix(in oklab, var(--accent) 62%, transparent), transparent 46%),
+    radial-gradient(circle at 88% 88%, color-mix(in oklab, var(--accent-light) 34%, transparent), transparent 52%),
+    linear-gradient(152deg, transparent 40%, color-mix(in oklab, var(--accent-deep) 42%, transparent) 100%);
+}
+
+/* La bascule de volet, calee sous le bandeau plutot qu'au-dessus du titre. */
+.page-bandeau + nav .couche-btn { box-shadow: 0 1px 2px rgba(14, 17, 22, .05); }

@@ -1705,13 +1705,12 @@ const MovementOpener = ({ n, kicker, thesis, accent = 'var(--accent-deep)' }) =>
 const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', icon: Icon = Globe }) => (
   <>
   <header
-    className="relative overflow-hidden rounded-xl mb-8 px-6 lg:px-12 py-14 md:py-16"
-    style={{
-      backgroundColor: 'var(--ink)',
-      backgroundImage:
-        'radial-gradient(circle at 10% 15%, rgba(43,58,103,.24), transparent 45%),' +
-        'radial-gradient(circle at 88% 90%, rgba(31,78,95,.28), transparent 50%)',
-    }}
+    /* Le bandeau portait deux halos indigo écrits en dur : la même couleur dans
+       les neuf sections, quelle que soit leur teinte. Il prend maintenant la
+       gamme de la section — l'accent en haut à gauche, sa variante claire en
+       bas à droite, sur l'encre. C'est la plus grande surface du site : c'est
+       là que la couleur de section doit se voir. */
+    className="page-bandeau relative overflow-hidden rounded-xl mb-8 px-6 lg:px-12 py-14 md:py-16"
   >
     {/* Le trait d'ouverture de la section : il se trace a l'arrivee. */}
     <div className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
@@ -5051,7 +5050,7 @@ const CounterpointFacts = ({ items }) => (
 // Mobilites contraintes. Tout ce qui est chiffre ici est calcule en direct
 // depuis la base pays de la plateforme : aucun total n'est saisi a la main.
 // ---------------------------------------------------------------------------
-const TabForced = ({ text, lang }) => {
+const TabForced = ({ text, lang, children }) => {
   const L = faireL(lang);
   const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
@@ -5140,6 +5139,7 @@ const TabForced = ({ text, lang }) => {
         desc={text.headers.forced.desc}
         icon={ShieldAlert}
       />
+      {children}
 
       <div className="flex justify-end print:hidden">
         <CsvButton onClick={exportCSV} label={L('Mobilités contraintes (CSV)', 'Forced mobility (CSV)')} />
@@ -5372,11 +5372,10 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
     { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility' } },
     { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration' } },
   ];
-  return (
-    <div className="space-y-6">
-      {/* Une bascule, pas une barre qui defile : deux volets tiennent dans la
-          largeur, et le lecteur voit d'un coup ce que la section contient. */}
-      <nav className="flex flex-wrap gap-2" aria-label={L('Volets de la section', 'Section panes')}>
+  // La bascule est passee en enfant au volet, qui la place sous son bandeau :
+  // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
+  const bascule = (
+    <nav className="flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes')}>
         {volets.map(v => (
           <button
             key={v.cle}
@@ -5388,14 +5387,20 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
           >
             {tr(v.label, lang)}
           </button>
-        ))}
-      </nav>
-      {volet === 'travail' ? <TabLabour text={text} lang={lang} /> : <TabForced text={text} lang={lang} />}
+      ))}
+    </nav>
+  );
+
+  return (
+    <div className="space-y-6">
+      {volet === 'travail'
+        ? <TabLabour text={text} lang={lang}>{bascule}</TabLabour>
+        : <TabForced text={text} lang={lang}>{bascule}</TabForced>}
     </div>
   );
 };
 
-const TabLabour = ({ text, lang }) => {
+const TabLabour = ({ text, lang, children }) => {
   const L = faireL(lang);
   const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
@@ -5442,6 +5447,7 @@ const TabLabour = ({ text, lang }) => {
         desc={text.headers.labour.desc}
         icon={Briefcase}
       />
+      {children}
 
       <div className="flex justify-end print:hidden">
         <CsvButton onClick={exportCSV} label={L('Conventions OIT (CSV)', 'ILO conventions (CSV)')} />
