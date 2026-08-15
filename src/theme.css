@@ -2080,3 +2080,11 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 .atlas-scene[data-panneau='ouvert'] .atlas-carte > div {
   grid-template-columns: 1fr !important;
 }
+
+/* La provenance des corridors, en pied de bandeau : discrete, jamais absente. */
+.scene-flux-source {
+  margin-top: 1.15rem;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #AEB6C6;
+}

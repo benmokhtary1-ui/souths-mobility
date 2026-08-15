@@ -3242,26 +3242,69 @@ const COUCHES_ATLAS = [
 // traces decoratifs : chacun relie deux points que la plateforme documente, et
 // tous figurent dans les sections correspondantes. Le mouvement est le sujet du
 // site — autant le montrer plutot que le dire.
+// Escales supplementaires, tirees des cartes de routes de l'OIM. Coordonnees
+// posees dans le repere de la planche a partir de l'emprise du pays concerne.
+const ESCALES_OIM = {
+  nouadhibou: [112, 196],   // Mauritanie, cote nord-ouest
+  dakhla:     [116, 178],   // sud du Maroc, cote atlantique
+  conakry:    [140, 385],   // Guinee
+  obock:      [820, 336],   // Djibouti, depart vers le Yemen
+  bosasso:    [880, 352],   // Puntland, Somalie
+  moyale:     [745, 425],   // frontiere Ethiopie-Kenya
+  beitbridge: [648, 752],   // frontiere Zimbabwe-Afrique du Sud
+};
+
+// Les corridors du bandeau d'ouverture.
+//
+// Ils etaient jusqu'ici plausibles mais de mon fait : des arcs entre capitales,
+// sans reference. Ils suivent desormais les trois routes africaines documentees
+// par l'Organisation internationale pour les migrations dans son « Global
+// Overview of Migration Routes » (DTM, janvier-avril 2026), avec leurs points
+// de passage reels.
+//
+//   Route atlantique ouest-africaine — Bamako-Kayes, Nouakchott-Rosso, puis
+//   l'embarquement depuis Nouadhibou, Dakhla et la cote senegalaise vers les
+//   Canaries. L'OIM note le glissement des departs vers le sud (Guinee,
+//   Guinee-Bissau, Gambie) a mesure que les controles se durcissent au nord.
+//
+//   Route orientale de la Corne — de l'Ethiopie et de la Somalie vers la
+//   peninsule Arabique, par Obock a Djibouti et Bosasso au Puntland.
+//
+//   Route Afrique orientale-australe (ESAR) — du sud de l'Ethiopie (zones
+//   Hadiya et Kembata) vers l'Afrique du Sud, par Moyale, Nairobi, la Tanzanie
+//   et Beitbridge.
+//
+// La source est citee dans le bandeau : un trace sur une carte est une
+// affirmation comme une autre.
 const CORRIDORS = [
-  { de: 'dakar', vers: 'abidjan', via: 'ouaga' },
-  { de: 'abidjan', vers: 'lagos', via: 'accra' },
-  { de: 'bamako', vers: 'abidjan' },
-  { de: 'mogadiscio', vers: 'nairobi' },
-  { de: 'khartoum', vers: 'kampala', via: 'juba' },
-  { de: 'kinshasa', vers: 'luanda' },
-  { de: 'addis', vers: 'djibouti' },
-  { de: 'niamey', vers: 'tripoli' },
-  { de: 'nouakchott', vers: 'rabat' },
+  // Route atlantique ouest-africaine
+  { de: 'bamako', vers: 'nouakchott' },
+  { de: 'dakar', vers: 'nouadhibou' },
+  { de: 'conakry', vers: 'dakar' },
+  { de: 'nouadhibou', vers: 'dakhla' },
+  { de: 'dakhla', vers: 'rabat' },
+  // Route orientale de la Corne
+  { de: 'addis', vers: 'obock' },
+  { de: 'mogadiscio', vers: 'bosasso' },
+  { de: 'obock', vers: 'bosasso' },
+  // Route Afrique orientale-australe
+  { de: 'addis', vers: 'moyale' },
+  { de: 'moyale', vers: 'nairobi' },
+  { de: 'nairobi', vers: 'dar' },
   { de: 'dar', vers: 'lusaka' },
+  { de: 'lusaka', vers: 'beitbridge' },
+  { de: 'beitbridge', vers: 'lecap' },
   { de: 'harare', vers: 'maputo' },
-  { de: 'lagos', vers: 'ndjamena' },
 ];
 
 // Une courbe qui passe par un point intermediaire quand il y en a un, sinon un
 // arc simple. La corde droite dirait une ligne sur une carte ; la courbe dit
 // un trajet.
+// Un seul repere pour les deux jeux de points : capitales et escales de l'OIM.
+const POINTS = { ...LIEUX, ...ESCALES_OIM };
+
 const traceCorridor = (c) => {
-  const a = LIEUX[c.de], b = LIEUX[c.vers], m = c.via ? LIEUX[c.via] : null;
+  const a = POINTS[c.de], b = POINTS[c.vers], m = c.via ? POINTS[c.via] : null;
   if (!a || !b) return null;
   if (m) return `M${a[0]} ${a[1]} Q${m[0]} ${m[1]} ${b[0]} ${b[1]}`;
   const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
@@ -3297,7 +3340,7 @@ const SceneFlux = ({ lang, children }) => {
         {/* Les escales : elles battent, faiblement, decalees les unes des autres. */}
         <g className="flux-escales">
           {[...new Set(CORRIDORS.flatMap(c => [c.de, c.vers]))].map((k, i) => (
-            LIEUX[k] ? <circle key={k} cx={LIEUX[k][0]} cy={LIEUX[k][1]} r="4"
+            POINTS[k] ? <circle key={k} cx={POINTS[k][0]} cy={POINTS[k][1]} r="4"
                                style={{ animationDelay: `${i * 260}ms` }} /> : null
           ))}
         </g>
@@ -3541,6 +3584,13 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
               })}
             </div>
           </nav>
+          {/* La provenance des traces. Un corridor dessine sur une carte est
+              une affirmation : il se source comme un chiffre. */}
+          <p className="scene-flux-source">
+            {L('Corridors : OIM — Global Overview of Migration Routes, janvier-avril 2026',
+               'Corridors: IOM — Global Overview of Migration Routes, January-April 2026',
+               { ar: 'الممرات: المنظمة الدولية للهجرة — نظرة عامة عالمية على مسارات الهجرة، يناير-أبريل 2026' })}
+          </p>
         </div>
       </SceneFlux>
 
