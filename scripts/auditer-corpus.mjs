@@ -7,7 +7,7 @@
 // La similarite se mesure sur les mots pleins, pas sur les chaines brutes :
 // deux affirmations peuvent etre jumelles en disant « migration » ici et
 // « migrations » la.
-import { evidenceCheckData } from './src/narrativesData.js';
+import { evidenceCheckData } from '../src/narrativesData.js';
 
 const VIDES = new Set(['le','la','les','des','de','du','un','une','et','ou','a','au','aux','en','dans',
   'pour','par','sur','que','qui','ne','pas','plus','est','sont','ce','cette','ces','son','sa','ses',
