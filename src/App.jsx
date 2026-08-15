@@ -2136,6 +2136,20 @@ const t = {
         method_title: "Ingénierie & Source des Données" 
       },
       headers: {
+        evidence: {
+          badge: "Observatoire des Narratifs",
+          title: "Évaluation des affirmations",
+          highlight: "à la lumière des données.",
+          desc: "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles.",
+          plain: "Soixante-dix affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité."
+        },
+        data: {
+          badge: "Production statistique africaine",
+          title: "Données & statistiques",
+          highlight: "où se situe réellement le déficit.",
+          desc: "Le récit d'une Afrique « sans données » est l'un des plus solidement installés — et l'un des moins vérifiés. Cette section confronte ce récit au volume réel de la production statistique du continent.",
+          plain: "On répète souvent que l'Afrique manque de données. Cette section compte ce que le continent produit réellement, et regarde où le déficit se situe."
+        },
         home: {
           badge: "Plateforme de Savoirs & de Données",
           title: "Les mobilités africaines,",
@@ -2437,6 +2451,20 @@ const t = {
         method_title: "Engineering & Data Sourcing" 
       },
       headers: {
+        evidence: {
+          badge: "Narratives Observatory",
+          title: "Evidence Check",
+          highlight: "powered by open data.",
+          desc: "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources.",
+          plain: "Seventy claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."
+        },
+        data: {
+          badge: "African statistical production",
+          title: "Data & Statistics",
+          highlight: "where the deficit actually lies.",
+          desc: "The narrative of an Africa \"without data\" is among the most firmly established — and the least verified. This section tests it against the continent's actual statistical output.",
+          plain: "It is often repeated that Africa lacks data. This section counts what the continent actually produces, and looks at where the shortfall really sits."
+        },
         home: {
           badge: "Knowledge & Data Platform",
           title: "African mobility,",
@@ -3670,7 +3698,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
   const hint = couche.hint || indicateur.hint;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* L'ouverture. Le continent y est deja vivant : douze corridors reels,
           parcourus. On comprend le sujet avant d'avoir lu une ligne. */}
       <SceneFlux lang={lang}>
@@ -4083,7 +4111,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   const readingMinutes = Math.max(1, Math.round(essayWordCount / 200));
 
   return (
-    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-10">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.home.badge}
         plate={"Pl. II"}
@@ -4471,16 +4499,13 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
-        badge={L('Observatoire des Narratifs', 'Narratives Observatory')}
+        badge={text.headers.evidence.badge}
         plate={"Pl. III"}
-        plain={{"fr":"Soixante-dix affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité.","en":"Seventy claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."}}
+        plain={text.headers.evidence.plain}
         lang={lang}
-        title={L('\u00c9valuation des affirmations', 'Evidence Check')}
-        highlight={L('\u00e0 la lumi\u00e8re des donn\u00e9es.', 'powered by open data.')}
-        desc={L(
-          "Cette section \u00e9value le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas \u00e0 juger, mais \u00e0 objectiver le d\u00e9bat en croisant les meilleures sources institutionnelles disponibles.",
-          "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources."
-        )}
+        title={text.headers.evidence.title}
+        highlight={text.headers.evidence.highlight}
+        desc={text.headers.evidence.desc}
         icon={Search}
       />
 
@@ -5582,7 +5607,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {volet === 'travail'
         ? <TabLabour text={text} lang={lang}>{bascule}</TabLabour>
         : <TabForced text={text} lang={lang}>{bascule}</TabForced>}
@@ -6791,7 +6816,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
         plate={"Pl. VI"}
@@ -7137,7 +7162,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {/* Rendu des Onglets Africains (UA, CER) */}
         {/* ============================================================== */}
         {activeSdgzTab === 'au' && (
-          <div className="space-y-8 animate-in fade-in duration-300">
+          <div className="space-y-6 animate-in fade-in duration-300">
             <div className="bg-emerald-900 text-white p-6 md:p-8 rounded-xl shadow-md border border-emerald-800 relative overflow-hidden">
               <div className="absolute top-0 end-0 -me-10 -mt-10 opacity-10 pointer-events-none">
                 <Landmark className="w-48 h-48" />
@@ -7847,7 +7872,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal, exportCountriesCSV, explorerView, setExplorerView, mapIndicatorKey, setMapIndicatorKey }) => {
   const mapIndicator = mapIndicators.find(i => i.key === mapIndicatorKey) || mapIndicators[0];
   return (
-  <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+  <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
       plate={"Pl. VII"}
@@ -8408,7 +8433,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
   const noResults = filteredSections.length === 0;
 
   return (
-    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.library.badge}
         plate={"Pl. IX"}
@@ -8680,18 +8705,15 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
   ];
 
   return (
-    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
-        badge={L("Production statistique africaine", "African statistical production")}
+        badge={text.headers.data.badge}
         plate={"Pl. VIII"}
-        plain={{"fr":"On répète souvent que l'Afrique manque de données. Cette section compte ce que le continent produit réellement, et regarde où le déficit se situe.","en":"It is often repeated that Africa lacks data. This section counts what the continent actually produces, and looks at where the shortfall really sits."}}
+        plain={text.headers.data.plain}
         lang={lang}
-        title={L("Données & statistiques", "Data & Statistics")}
-        highlight={L("où se situe réellement le déficit.", "where the deficit actually lies.")}
-        desc={L(
-          "Le récit d'une Afrique « sans données » est l'un des plus solidement installés — et l'un des moins vérifiés. Cette section confronte ce récit au volume réel de la production statistique du continent.",
-          "The narrative of an Africa \"without data\" is among the most firmly established — and the least verified. This section tests it against the continent's actual statistical output."
-        )}
+        title={text.headers.data.title}
+        highlight={text.headers.data.highlight}
+        desc={text.headers.data.desc}
         icon={Database}
       />
 
@@ -9089,7 +9111,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
   const noResults = filteredCategories.length === 0;
 
   return (
-    <div className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.glossary.badge}
         plate={"Pl. X"}
@@ -9252,7 +9274,7 @@ const methodLimits = [
 ];
 
 const TabMethodology = ({ text, lang, children }) => (
-  <div className="space-y-10 animate-in fade-in zoom-in-95 duration-500">
+  <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
       plate={"Pl. XI"}
@@ -9546,7 +9568,7 @@ const TabAbout = ({ text, lang, children }) => {
   };
 
   return (
-    <section className="animate-in fade-in zoom-in-95 duration-500 space-y-6">
+    <section className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.about.badge}
         plate={"Pl. XII"}
