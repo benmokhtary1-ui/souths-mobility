@@ -1712,10 +1712,10 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
   >
     {/* Le trait d'ouverture de la section : il se trace a l'arrivee. */}
     <div className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
-      <span
-        className="trait-trace trait-trace--ouverture"
-        style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 45%, transparent)' }}
-      />
+      {/* Le dégradé vient de la section, plus d'un indigo écrit en dur ici :
+          c'est ce qui fait que le filet d'ouverture change de teinte d'une
+          section à l'autre au lieu de rester bleu partout. */}
+      <span className="trait-trace trait-trace--ouverture" />
     </div>
     <AfricaPlate plate={plate} />
     {/* Voile d'encre cote texte : la planche emerge vers la droite au lieu de
@@ -3222,15 +3222,15 @@ const RechercheGlobale = ({ lang, aller }) => {
 const COUCHES_ATLAS = [
   { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'), mene: 'explorer',
     question: { fr: 'Qui accueille ?', en: 'Who hosts?' } },
-  { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'labour',
+  { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
     question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?' } },
   { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance',
     question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?' } },
-  { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'forced',
+  { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'mobilites', volet: 'contraintes',
     question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?' } },
-  { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'labour',
+  { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'mobilites', volet: 'travail',
     question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?' } },
-  { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'labour',
+  { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'mobilites', volet: 'travail',
     question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?' } },
   { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance',
     question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?' },
@@ -3491,7 +3491,7 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
   );
 };
 
-const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
+const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
   const L = faireL(lang);
   const [coucheCle, setCoucheCle] = useState('accueil');
   const [paysOuvert, setPaysOuvert] = useState(null);
@@ -3579,7 +3579,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays }) => {
         <Prose className="text-[13px] leading-relaxed max-w-2xl mt-4" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
         <button
           type="button"
-          onClick={() => allerVers(couche.mene)}
+          onClick={() => { if (couche.volet) setVoletMobilites?.(couche.volet); allerVers(couche.mene); }}
           className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
           style={{ color: 'var(--accent-deep)' }}
         >
@@ -3847,7 +3847,7 @@ const homeCards = [
   { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' },
     desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.",
             en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
-  { id: 'forced', icon: ShieldAlert, label: { fr: 'Mobilités contraintes', en: 'Forced mobility' },
+  { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' },
     desc: { fr: "Déplacés internes, réfugiés, apatrides : la mobilité qui ne franchit aucune frontière.",
             en: "Internally displaced, refugees, stateless: the mobility that crosses no border." } },
   { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' },
@@ -3892,7 +3892,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       door: { fr: 'Ouvrir la bibliothèque', en: 'Open the library' }, tab: 'resources' },
     { value: totalDisplaced, unit: { fr: 'millions', en: 'million' },
       label: { fr: "de personnes déplacées dans leur propre pays", en: 'people displaced inside their own country' },
-      door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'forced' },
+      door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'mobilites' },
   ];
 
   const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p4]
@@ -5348,6 +5348,50 @@ const TabForced = ({ text, lang }) => {
 // calcules en direct depuis la base pays ; le panneau des quatre editions
 // reprend les chiffres publies par l'UA, l'OIT et l'OIM.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Les mobilites, en une seule section.
+//
+// « Mobilites contraintes » et « Migration de travail » vivaient separement.
+// Les separer revenait a poser en entree du site la coupure volontaire /
+// contraint — celle-la meme que le cadre theorique de la plateforme discute :
+// de Haas place mobilite et immobilite sur un continuum d'aspirations et de
+// capacites exercables, pas de part et d'autre d'une frontiere nette. Une
+// personne qui part travailler parce que son exploitation a brule n'est ni tout
+// a fait volontaire ni tout a fait deplacee.
+//
+// Les deux corpus restent distincts — ils ne decrivent pas la meme chose et
+// leurs sources different — mais ils se lisent sous un meme toit, et l'on passe
+// de l'un a l'autre sans revenir au menu. Aucun contenu n'a ete deplace : ce
+// sont les memes composants, sous une entree commune.
+const TabMobilites = ({ text, lang, volet, setVolet }) => {
+  const L = faireL(lang);
+  const volets = [
+    { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility' } },
+    { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration' } },
+  ];
+  return (
+    <div className="space-y-6">
+      {/* Une bascule, pas une barre qui defile : deux volets tiennent dans la
+          largeur, et le lecteur voit d'un coup ce que la section contient. */}
+      <nav className="flex flex-wrap gap-2" aria-label={L('Volets de la section', 'Section panes')}>
+        {volets.map(v => (
+          <button
+            key={v.cle}
+            type="button"
+            onClick={() => setVolet(v.cle)}
+            aria-pressed={volet === v.cle}
+            className="couche-btn"
+            data-actif={volet === v.cle ? 'true' : 'false'}
+          >
+            {tr(v.label, lang)}
+          </button>
+        ))}
+      </nav>
+      {volet === 'travail' ? <TabLabour text={text} lang={lang} /> : <TabForced text={text} lang={lang} />}
+    </div>
+  );
+};
+
 const TabLabour = ({ text, lang }) => {
   const L = faireL(lang);
   const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
@@ -9610,8 +9654,7 @@ const ROUTES = {
   home:       { fr: 'accueil',      en: 'home' },
   evidence:   { fr: 'verification', en: 'evidence' },
   explorer:   { fr: 'pays',         en: 'countries' },
-  forced:     { fr: 'deplacement',  en: 'displacement' },
-  labour:     { fr: 'travail',      en: 'labour' },
+  mobilites:  { fr: 'mobilites',    en: 'mobilities' },
   governance: { fr: 'gouvernance',  en: 'governance' },
   data:       { fr: 'donnees',      en: 'data' },
   resources:  { fr: 'ressources',   en: 'resources' },
@@ -9628,7 +9671,7 @@ const lireURL = () => {
   const bouts = window.location.pathname.split('/').filter(Boolean);
   const lang = bouts[0] === 'en' ? 'en' : 'fr';
   const seg = bouts[1];
-  let tab = 'home';
+  let tab = 'atlas';
   if (seg) {
     const trouve = Object.entries(ROUTES).find(([, s]) => s.fr === seg || s.en === seg);
     if (trouve) tab = trouve[0];
@@ -9637,7 +9680,7 @@ const lireURL = () => {
 };
 
 const ecrireURL = ({ lang, tab, detail }, remplacer = false) => {
-  const seg = tr(ROUTES[tab], lang) || tr(ROUTES.home, lang);
+  const seg = tr(ROUTES[tab], lang) || tr(ROUTES.atlas, lang);
   const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
   if (chemin === window.location.pathname) return;
   window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
@@ -9661,6 +9704,8 @@ export default function App() {
   const [activeSdgzTab, setActiveSdgzTab] = useState('sdgs');
   const [activeAboutTab, setActiveAboutTab] = useState('methodology');
   const [activeResourceTab, setActiveResourceTab] = useState('library');
+  // Le volet ouvert dans la section Mobilites : contraintes ou travail.
+  const [voletMobilites, setVoletMobilites] = useState('contraintes');
 
   useEffect(() => { setIsLoaded(true); }, []);
 
@@ -9824,8 +9869,8 @@ export default function App() {
       home: { fr: 'Accueil', en: 'Home' },
       evidence: { fr: 'Évaluation des affirmations', en: 'Evidence Check' },
       explorer: { fr: 'Explorateur', en: 'Data Explorer' },
-      forced: { fr: 'Mobilités contraintes', en: 'Forced mobility' },
-      labour: { fr: 'Migration de travail', en: 'Labour migration' },
+      mobilites: { fr: 'Mobilités', en: 'Mobilities' },
+      mobilites: { fr: 'Mobilités', en: 'Mobilities' },
       governance: { fr: 'Gouvernance', en: 'Governance' },
       data: { fr: 'Données & statistiques', en: 'Data & Statistics' },
       resources: { fr: 'Ressources', en: 'Resources' },
@@ -9928,8 +9973,7 @@ export default function App() {
     { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
-    { id: 'forced', icon: ShieldAlert, label: { fr: 'Mobilités contraintes', en: 'Forced mobility' } },
-    { id: 'labour', icon: Briefcase, label: { fr: 'Migration de travail', en: 'Labour migration' } },
+    { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
     { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' } },
     { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' } },
@@ -10100,8 +10144,9 @@ export default function App() {
             explorerView={explorerView} setExplorerView={setExplorerView} mapIndicatorKey={mapIndicatorKey} setMapIndicatorKey={setMapIndicatorKey}
           />
         )}
-        {activeTab === 'forced' && <TabForced text={text} lang={lang} />}
-        {activeTab === 'labour' && <TabLabour text={text} lang={lang} />}
+        {activeTab === 'mobilites' && (
+          <TabMobilites text={text} lang={lang} volet={voletMobilites} setVolet={setVoletMobilites} />
+        )}
         {activeTab === 'governance' && (
           <TabGovernance text={text} lang={lang} activeSdgzTab={activeSdgzTab} setActiveSdgzTab={setActiveSdgzTab} />
         )}

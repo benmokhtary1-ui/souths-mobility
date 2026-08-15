@@ -1032,19 +1032,20 @@ main[data-section="explorer"] {
   --accent-soft:  #E2E9EB;
   --accent-light: #62A2B1;
 }
-/* grenat */
-main[data-section="forced"] {
+/* grenat — les deux corpus de mobilité, réunis, partagent une teinte */
+main[data-section="mobilites"] {
   --accent:       #7A2E3E;
   --accent-deep:  #7D2B3C;
   --accent-soft:  #EEE5E7;
   --accent-light: #CA8795;
 }
-/* bronze */
-main[data-section="labour"] {
-  --accent:       #6B5A18;
-  --accent-deep:  #615112;
-  --accent-soft:  #EAE7D9;
-  --accent-light: #AF9635;
+/* L'Atlas porte la couleur générale du site : c'est le point de départ, il
+   n'appartient à aucune section en particulier. */
+main[data-section="atlas"] {
+  --accent:       #1F49C7;
+  --accent-deep:  #16358F;
+  --accent-soft:  #E6EBFA;
+  --accent-light: #93A9F0;
 }
 /* bleu-violet */
 main[data-section="governance"] {
@@ -1822,3 +1823,52 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 @media (prefers-reduced-motion: reduce) {
   .atlas-carte svg path { transition: none; }
 }
+
+/* ---------- La déclinaison d'une teinte de section ------------------------
+   Une couleur générale pour le site, une couleur propre à chaque section — et
+   cette couleur-là se décline, plutôt que d'être posée seule sur du blanc.
+
+   Les variantes sont CALCULÉES depuis l'accent de la section, avec color-mix,
+   au lieu d'être choisies à la main neuf fois. Conséquence : ajouter une
+   section, c'est déclarer quatre valeurs, et toutes ses déclinaisons suivent.
+   Aucune ne porte de texte — ce sont des fonds et des filets — donc aucune ne
+   peut faire chuter un contraste. */
+main[data-section] {
+  --accent-lavis:   color-mix(in oklab, var(--accent) 7%,  var(--paper));
+  --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
+  --accent-filet:   color-mix(in oklab, var(--accent) 34%, var(--rule));
+
+  --degrade:        linear-gradient(135deg,
+                      var(--accent-deep) 0%,
+                      var(--accent) 52%,
+                      color-mix(in oklab, var(--accent) 55%, var(--accent-light)) 100%);
+  --degrade-doux:   linear-gradient(160deg,
+                      var(--accent-soft) 0%,
+                      color-mix(in oklab, var(--accent-soft) 45%, var(--paper)) 100%);
+  --degrade-filet:  linear-gradient(90deg,
+                      var(--accent) 0%,
+                      color-mix(in oklab, var(--accent) 45%, transparent) 55%,
+                      transparent 100%);
+}
+
+/* Le filet d'ouverture du bandeau prend le dégradé de la section. */
+.trait-trace, .trait-trace--ouverture { background: var(--degrade-filet); }
+
+/* Les surfaces qui portaient un aplat plat prennent la déclinaison. */
+.panneau-vedette { background: var(--degrade-doux); }
+.wash-terra { background-image: var(--degrade-doux); }
+
+/* Le bouton actif d'un volet ou d'une couche : la teinte de la section, pas
+   l'encre neutre — c'est elle qui dit où l'on se trouve. */
+main[data-section] .couche-btn[data-actif='true'] {
+  background: var(--degrade);
+  border-color: var(--accent-deep);
+  color: #FFFFFF;
+}
+/* Sur l'encre du bandeau, le rapport s'inverse : l'actif reste au clair. */
+.scene-flux .couche-btn--sombre[data-actif='true'] {
+  background: #FFFFFF; border-color: #FFFFFF; color: #0E1116;
+}
+
+/* Le chapeau d'une section : un lavis très pâle plutôt qu'un blanc nu. */
+main[data-section] .en-clair { background: var(--accent-lavis); border-color: var(--accent-filet); }
