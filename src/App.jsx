@@ -3984,8 +3984,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </div>
       </Reveal>
 
-      <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-10">
-        <div className="flex flex-wrap items-center gap-3 mb-4">
+      <Reveal delay={40} className="note-cadrage bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-12">
+        <span className="note-cadrage-filet" aria-hidden="true" />
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
           <span className="inline-block px-2.5 py-1 rounded bg-slate-100 border border-slate-200 text-slate-600 text-[10px] font-bold uppercase tracking-widest">
             {text.home_editorial.badge}
           </span>
@@ -3993,8 +3994,8 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             <Clock className="w-3 h-3" /> {readingMinutes} {tr({ fr: "min de lecture", en: "min read" }, lang)}
           </span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 mb-5">{text.home_editorial.title}</h2>
-        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+        <h2 className="text-2xl md:text-4xl font-serif font-bold text-slate-900 mb-6 text-center">{text.home_editorial.title}</h2>
+        <div className="note-cadrage-corps space-y-4 text-sm text-slate-700 leading-relaxed text-justify">
           <Prose className="lede" lang={lang}>{text.home_editorial.p1}</Prose>
         </div>
 
@@ -4097,8 +4098,8 @@ const FilterChip = ({ active, onClick, children }) => (
     onClick={onClick}
     className="inline-flex items-center px-2.5 py-1.5 text-[11px] font-semibold border transition-colors"
     style={active
-      ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)', borderRadius: 2 }
-      : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)', borderRadius: 2 }}
+      ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)', borderRadius: 999 }
+      : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)', borderRadius: 999 }}
   >
     {children}
   </button>
@@ -4319,7 +4320,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
               aria-label={L('Rechercher parmi les affirmations v\u00e9rifi\u00e9es', 'Search the fact-checked claims')}
               placeholder={L("Rechercher une affirmation, une donn\u00e9e, un th\u00e8me\u2026", "Search a claim, a figure, a theme\u2026")}
               className="w-full ps-9 pe-3 py-2.5 text-sm bg-transparent border border-slate-200 focus:outline-none"
-              style={{ borderRadius: 2 }}
+              style={{ borderRadius: 999 }}
             />
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -4368,7 +4369,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
               value={activeCategory}
               onChange={(e) => setActiveCategory(e.target.value)}
               className="text-xs font-semibold bg-transparent border border-slate-200 px-2.5 py-1.5"
-              style={{ borderRadius: 2 }}
+              style={{ borderRadius: 999 }}
             >
               <option value="All">{L("Tous les th\u00e8mes", "All themes")}</option>
               {categories.map(c => <option key={c} value={c}>{categoryLabel(c)}</option>)}
@@ -8146,7 +8147,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
                    </div>
                 )}
                 
-                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse px-5 py-3 font-bold text-sm transition" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2 }}>
+                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse px-5 py-3 font-bold text-sm transition" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 999 }}>
                   <Target className="w-4 h-4" />
                   <span>{text.analysis_btn}</span>
                 </button>

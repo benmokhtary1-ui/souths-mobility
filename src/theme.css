@@ -1951,3 +1951,122 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 
 /* La bascule de volet, calee sous le bandeau plutot qu'au-dessus du titre. */
 .page-bandeau + nav .couche-btn { box-shadow: 0 1px 2px rgba(14, 17, 22, .05); }
+
+/* ============================================================================
+   Uniformisation des formes
+   ----------------------------------------------------------------------------
+   Vingt-sept formes de bouton coexistaient pour trois roles. Le site avait ete
+   compose section par section, chacune inventant sa bascule : une pilule
+   blanche ombree sur gris ici, un onglet a filet la, une pastille ailleurs.
+
+   On ramene tout a trois formes, une par role, definies ici plutot que dans
+   cent appels de composant :
+     — la BASCULE, pour choisir entre des vues (pilule, actif a la teinte) ;
+     — le FILTRE, pour restreindre une liste (pilule fine, actif a l'encre) ;
+     — l'ACTION, pour declencher (rectangle a coins doux).
+   ==========================================================================*/
+
+/* --- La bascule segmentee : le rail gris cede la place au meme vocabulaire
+   que les couches de l'Atlas. Un seul geste visuel dans tout le site.      */
+:is(main, .reader) .bg-slate-200.p-1\.5 {
+  background: transparent !important;
+  padding: 0 !important;
+  gap: .5rem;
+  border-radius: 0 !important;
+}
+:is(main, .reader) .bg-slate-200.p-1\.5 > button {
+  border-radius: 999px !important;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: .5rem .95rem;
+  box-shadow: none !important;
+  transition: color var(--dur-fast) var(--ease),
+              background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+:is(main, .reader) .bg-slate-200.p-1\.5 > button:is(:hover, :focus-visible) {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+/* L'actif porte la teinte de la section, comme partout ailleurs. */
+:is(main, .reader) .bg-slate-200.p-1\.5 > button.bg-white {
+  background: var(--degrade) !important;
+  border-color: var(--accent-deep);
+  color: #FFFFFF !important;
+}
+
+/* --- Les rayons restes en arriere : plus rien sous 5 px ------------------- */
+:is(main, .reader) [class*="rounded-[1px]"],
+:is(main, .reader) [class*="rounded-[2px]"] { border-radius: 5px !important; }
+
+/* --- Les filtres : pilule fine, actif a l'encre --------------------------- */
+:is(main, .reader) button[aria-pressed] { border-radius: 999px; }
+
+/* --- Toute action garde le meme rayon ------------------------------------- */
+:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-bouton):not(.panneau-fiche):not(.terme) {
+  border-radius: 7px;
+}
+
+/* --- Le focus, une seule fois pour tout le site --------------------------- */
+:is(main, .reader) :is(button, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- La note de cadrage scientifique -------------------------------
+   Elle se lisait plaquee a gauche d'une carte deux fois plus large qu'elle :
+   une colonne de texte flottant dans du blanc. Elle se compose desormais comme
+   une page d'ouvrage — filet d'ouverture, chapeau et titre centres, puis la
+   prose dans une justification confortable, centree dans sa carte.        */
+.note-cadrage { position: relative; overflow: hidden; }
+
+/* Le filet d'ouverture, a la teinte de la section, qui se trace a l'arrivee. */
+.note-cadrage-filet {
+  position: absolute; inset-block-start: 0; inset-inline: 0;
+  display: block; height: 3px;
+  background: var(--degrade);
+  transform-origin: left center;
+  animation: traitTrace var(--dur-story) var(--ease) both;
+}
+:root[dir='rtl'] .note-cadrage-filet { transform-origin: right center; }
+@media (prefers-reduced-motion: reduce) { .note-cadrage-filet { animation: none; transform: none; } }
+
+/* La mesure : 68 caracteres, la largeur ou l'oeil retrouve le debut de la
+   ligne suivante sans effort. Centree, pas alignee au bord. */
+.note-cadrage-corps {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+/* La lettrine ouvre la note : un signe que l'on entre dans un texte, pas dans
+   un bloc d'interface. */
+.note-cadrage-corps > .lede::first-letter {
+  float: inline-start;
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 3.1em;
+  line-height: .82;
+  margin-inline-end: .09em;
+  margin-block-start: .06em;
+  color: var(--accent-deep);
+}
+.note-cadrage-corps > .lede { text-indent: 0; }
+
+/* La citation en exergue : elle sort de la colonne et respire. */
+.note-cadrage-corps blockquote {
+  margin-block: 1.75rem;
+  padding-inline-start: 1.1rem;
+  border-inline-start: 3px solid var(--accent);
+  font-size: 1.06em;
+  text-align: start;
+}
+
+/* Les references de fin, centrees avec le reste. */
+.note-cadrage > div:last-child { max-width: 68ch; margin-inline: auto; }
+
+@media (max-width: 640px) {
+  .note-cadrage-corps > .lede::first-letter { font-size: 2.5em; }
+}
