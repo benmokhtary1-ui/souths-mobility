@@ -3995,6 +3995,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           </span>
         </div>
         <h2 className="text-2xl md:text-4xl font-serif font-bold text-slate-900 mb-6 text-center">{text.home_editorial.title}</h2>
+        <Chapitre lang={lang}>
         <div className="note-cadrage-corps space-y-4 text-sm text-slate-700 leading-relaxed text-justify">
           <Prose className="lede" lang={lang}>{text.home_editorial.p1}</Prose>
         </div>
@@ -4020,6 +4021,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           </blockquote>
           <Prose className="font-medium text-slate-800" lang={lang}>{text.home_editorial.p4}</Prose>
         </div>
+        </Chapitre>
         <div className="mt-8 pt-6 border-t border-slate-100">
           <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
           <ul className="space-y-1.5">
