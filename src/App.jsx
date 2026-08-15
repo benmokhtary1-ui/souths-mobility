@@ -1981,7 +1981,7 @@ const institutionLogos = [
   { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
   { key: 'au', name: "African Union", src: "/logos/au.png" },
   { key: 'unhcr', name: "UNHCR", src: "/logos/unhcr.svg" },
-  { key: 'ilo', name: "ILO", full: "OIT / ILO — NORMLEX", src: null },
+  { key: 'ilo', name: "OIT", full: "OIT / ILO — NORMLEX", src: null },   // embleme officiel a recuperer aupres de l'OIT : le fichier Commons portant ce sigle est celui d'un motoriste allemand
   { key: 'iom', name: "IOM", src: "/logos/iom.png" },
   { key: 'afdb', name: "AfDB", src: "/logos/afdb.svg" },
   { key: 'oecd', name: "OECD", src: "/logos/oecd.svg" },
@@ -1994,13 +1994,6 @@ const institutionLogos = [
   { key: 'afrobarometer', name: "Afrobarometer", src: "/logos/afrobarometer.png" },
   { key: 'iss', name: "ISS", full: "ISS African Futures", src: "/logos/iss.svg" },
   { key: 'icmpd', name: "ICMPD", src: "/logos/icmpd.jpg" },
-  // Deux fichiers etaient faux et affichaient l'embleme d'une autre
-  // organisation : iata.png etait celui de l'International Amateur Theatre
-  // Association, ilo.svg un logotype industriel sans rapport avec l'OIT.
-  // Afficher l'embleme d'un tiers sous le nom d'une institution source est pire
-  // que de n'en afficher aucun : en attendant les fichiers officiels, ces deux
-  // entrees s'affichent en toutes lettres.
-  { key: 'iata', name: "IATA", full: "IATA — Travel Information Manual", src: null },
   { key: 'eurostat', name: "Eurostat", src: "/logos/eurostat.png" },
   { key: 'frontex', name: "Frontex", src: "/logos/frontex.svg" },
   { key: 'moibrahim', name: "Mo Ibrahim Foundation", full: "Mo Ibrahim Foundation — IIAG", src: "/logos/moibrahim.svg" },
@@ -2008,9 +2001,9 @@ const institutionLogos = [
   // Trois sources citees dans les fiches mais absentes du bandeau : le bandeau
   // annonce « les sources institutionnelles suivantes », il doit donc les
   // porter toutes. Emblemes officiels a recuperer.
-  { key: 'unodc', name: "UNODC", full: "ONUDC / UNODC — Global Study on Smuggling of Migrants", src: null },
-  { key: 'unesco', name: "UNESCO", full: "UNESCO — Global Education Monitoring", src: null },
-  { key: 'gallup', name: "Gallup", full: "Gallup World Poll — Migration Aspirations", src: null },
+  { key: 'unodc', name: "UNODC", full: "ONUDC / UNODC — Global Study on Smuggling of Migrants", src: "/logos/unodc.jpg" },
+  { key: 'unesco', name: "UNESCO", full: "UNESCO — Global Education Monitoring", src: "/logos/unesco.svg" },
+  { key: 'gallup', name: "Gallup", full: "Gallup World Poll — Migration Aspirations", src: "/logos/gallup.svg" },
 ];
 
 const sdgIcons = { 4: "/logos/sdg04.svg", 8: "/logos/sdg08.svg", 10: "/logos/sdg10.svg", 16: "/logos/sdg16.svg", 17: "/logos/sdg17.svg" };
