@@ -17,7 +17,18 @@
 export const LANGUES = {
   fr: { tag: 'fr-FR', dir: 'ltr', endonyme: 'Français',  nom: { fr: 'Français',  en: 'French' } },
   en: { tag: 'en-GB', dir: 'ltr', endonyme: 'English',   nom: { fr: 'Anglais',   en: 'English' } },
-  ar: { tag: 'ar',    dir: 'rtl', endonyme: 'العربية',    nom: { fr: 'Arabe',     en: 'Arabic' } },
+  // Numeration epinglee. Laisse a lui-meme, « ar » rend des chiffres arabes
+  // orientaux dans certaines variantes (ar-EG : ١٬٤٠٣٬٢٨١), des chiffres latins
+  // dans d'autres (ar-MA : 1.403.281) — cela depend de la version d'ICU du
+  // navigateur. Une plateforme de donnees ne peut pas dependre de cela.
+  //
+  // Deux raisons de retenir les chiffres latins :
+  //   — Fraunces, la police des nombres de la plateforme, ne dessine pas les
+  //     chiffres arabes orientaux : ils tomberaient sur une police systeme et
+  //     rompraient tout le traitement typographique des donnees ;
+  //   — le Maghreb, qui forme l'essentiel des Etats arabophones de l'Union
+  //     africaine, ecrit ses chiffres en caracteres latins.
+  ar: { tag: 'ar-u-nu-latn', dir: 'rtl', endonyme: 'العربية', nom: { fr: 'Arabe', en: 'Arabic', ar: 'العربية' } },
   pt: { tag: 'pt-PT', dir: 'ltr', endonyme: 'Português', nom: { fr: 'Portugais', en: 'Portuguese' } },
   es: { tag: 'es-ES', dir: 'ltr', endonyme: 'Español',   nom: { fr: 'Espagnol',  en: 'Spanish' } },
   sw: { tag: 'sw',    dir: 'ltr', endonyme: 'Kiswahili', nom: { fr: 'Kiswahili', en: 'Kiswahili' } },

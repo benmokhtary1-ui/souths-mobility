@@ -1077,11 +1077,11 @@ const RailCartes = ({ children, lang = 'fr', etiquette, className = '' }) => {
             {Math.min(pos + 1, total)} / {total}
           </span>
           <button type="button" onClick={() => glisser(-1)} disabled={pos <= 0}
-            className="rail-fleche" aria-label={L('Carte précédente', 'Previous card')}>
+            className="rail-fleche" aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
             <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           </button>
           <button type="button" onClick={() => glisser(1)} disabled={pos >= total - 1}
-            className="rail-fleche" aria-label={L('Carte suivante', 'Next card')}>
+            className="rail-fleche" aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
@@ -3215,24 +3215,24 @@ const RechercheGlobale = ({ lang, aller }) => {
 // rien de neuf n'est introduit, c'est la meme donnee, prise par l'autre bout.
 const COUCHES_ATLAS = [
   { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'), mene: 'explorer',
-    question: { fr: 'Qui accueille ?', en: 'Who hosts?' } },
+    question: { fr: 'Qui accueille ?', en: 'Who hosts?', ar: 'مَن يستقبل؟' } },
   { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
-    question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?' } },
+    question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?', ar: 'مَن يبقى في أفريقيا؟' } },
   { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance',
-    question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?' } },
+    question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?', ar: 'مَن يفتح حدوده؟' } },
   { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'mobilites', volet: 'contraintes',
-    question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?' } },
+    question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?', ar: 'مَن نزح داخل بلده؟' } },
   { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'mobilites', volet: 'travail',
-    question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?' } },
+    question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?', ar: 'إلى أين تعود الأموال؟' } },
   { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'mobilites', volet: 'travail',
-    question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?' } },
+    question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?', ar: 'أين تهاجر النساء بالقدر نفسه؟' } },
   { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance',
-    question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?' },
+    question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?', ar: 'مَن صادَق؟' },
     plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
              en: 'How many of the African Union’s six major instruments each country has formally ratified. Six is full commitment; zero is none.' },
     hint: { fr: "Décompte établi sur les listes officielles de statut de l'Union africaine.", en: 'Counted from the African Union’s official status lists.' } },
   { cle: 'compte', ind: () => CARTE_RECENSEMENT, mene: 'data',
-    question: { fr: 'Qui compte sa population ?', en: 'Who counts its people?' },
+    question: { fr: 'Qui compte sa population ?', en: 'Who counts its people?', ar: 'مَن يُحصي سكانه؟' },
     plain: { fr: "Où en est chaque pays de son recensement. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
              en: 'Where each country stands on its census. A date announced then postponed does not count as a census held.' },
     hint: { fr: 'Compilation de l’auteur d’après UNSD et UN DESA, statuts vérifiés en 2026 sur les instituts nationaux.', en: 'Compiled by the author from UNSD and UN DESA, statuses verified in 2026 against national institutes.' } },
@@ -3366,7 +3366,7 @@ const Chapitre = ({ children, lang = 'fr' }) => {
       <div ref={ref} className="chapitre-corps">{children}</div>
       {long && (
         <button type="button" className="chapitre-bouton" onClick={() => setOuvert(o => !o)} aria-expanded={ouvert}>
-          {ouvert ? L('Replier', 'Collapse') : L('Lire la suite', 'Read on')}
+          {ouvert ? L('Replier', 'Collapse', { ar: 'طيّ' }) : L('Lire la suite', 'Read on', { ar: 'تابع القراءة' })}
           <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
       )}
@@ -3424,7 +3424,7 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
           </span>
         </div>
         <button type="button" onClick={onFermer} className="panneau-fermer"
-                aria-label={L('Fermer le panneau', 'Close the panel')}>
+                aria-label={L('Fermer le panneau', 'Close the panel', { ar: 'إغلاق اللوحة' })}>
           <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
@@ -3478,7 +3478,7 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
       </div>
 
       <button type="button" onClick={() => onFiche(pays.id)} className="panneau-fiche">
-        {L('Ouvrir la fiche complète', 'Open the full profile')}
+        {L('Ouvrir la fiche complète', 'Open the full profile', { ar: 'فتح البطاقة الكاملة' })}
         <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
       </button>
     </aside>
@@ -3502,26 +3502,27 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
         <div className="max-w-3xl">
           <span className="block text-[10px] font-semibold uppercase mb-3"
                 style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
-            Pl. I · {L('Atlas des mobilités africaines', 'Atlas of African mobilities')}
+            Pl. I · {L('Atlas des mobilités africaines', 'Atlas of African mobilities', { ar: 'أطلس التنقلات الأفريقية' })}
           </span>
           <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
               style={{ color: '#FFFFFF' }}>
-            {L('Les mobilités africaines,', 'African mobility,')}{' '}
+            {L('Les mobilités africaines,', 'African mobility,', { ar: 'التنقلات الأفريقية،' })}{' '}
             <span style={{ color: 'var(--accent-light)' }}>
-              {L('par les données africaines.', 'through African data.')}
+              {L('par les données africaines.', 'through African data.', { ar: 'من خلال البيانات الأفريقية.' })}
             </span>
           </h1>
           <Prose className="mt-3 text-[13.5px] md:text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#D6DAE4' }} lang={lang}>{L(
             "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
-            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.'
+            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.',
+            { ar: 'اختر سؤالاً. تجيب عنه القارة، بلداً بلداً. مرّر المؤشر لقراءة رقم، وانقر لفتح البطاقة الكاملة.' }
           )}</Prose>
 
           {/* Les questions vivent dans le bandeau, pas en dessous. Elles y
               tiennent la colonne de gauche sur toute sa hauteur : le vide qui
               separait le titre du continent disparait parce qu'il est occupe,
               et l'entree du site devient utilisable des le premier ecran. */}
-          <nav aria-label={L('Couches de la carte', 'Map layers')} className="mt-5">
+          <nav aria-label={L('Couches de la carte', 'Map layers', { ar: 'طبقات الخريطة' })} className="mt-5">
             <div className="flex flex-wrap gap-2">
               {COUCHES_ATLAS.map(c => {
                 const actif = c.cle === coucheCle;
@@ -3577,7 +3578,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites }) => {
           className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
           style={{ color: 'var(--accent-deep)' }}
         >
-          {L('Approfondir cette question', 'Go deeper on this question')}
+          {L('Approfondir cette question', 'Go deeper on this question', { ar: 'التعمّق في هذا السؤال' })}
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
       </div>
@@ -5364,13 +5365,13 @@ const TabForced = ({ text, lang, children }) => {
 const TabMobilites = ({ text, lang, volet, setVolet }) => {
   const L = faireL(lang);
   const volets = [
-    { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility' } },
-    { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration' } },
+    { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility', ar: 'التنقلات القسرية' } },
+    { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration', ar: 'هجرة العمل' } },
   ];
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
   const bascule = (
-    <nav className="flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes')}>
+    <nav className="flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes', { ar: 'أقسام الصفحة' })}>
         {volets.map(v => (
           <button
             key={v.cle}
@@ -9995,15 +9996,15 @@ export default function App() {
   };
 
   const navigation = [
-    { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas' } },
-    { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home' } },
-    { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' } },
-    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' } },
-    { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' } },
-    { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' } },
-    { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' } },
-    { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method' } },
-    { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About' } },
+    { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas', ar: 'الأطلس' } },
+    { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home', ar: 'الرئيسية' } },
+    { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check', ar: 'فحص الأدلة' } },
+    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer', ar: 'مستكشف البلدان' } },
+    { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities', ar: 'التنقلات' } },
+    { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance', ar: 'الحوكمة' } },
+    { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats', ar: 'البيانات والإحصاءات' } },
+    { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method', ar: 'المراجع والمنهجية' } },
+    { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About', ar: 'عن المنصة' } },
   ];
 
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
@@ -10185,13 +10186,13 @@ export default function App() {
                     onClick={() => setActiveResourceTab('library')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'library' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <BookOpen className="w-3.5 h-3.5" /> {tr({ fr: 'Bibliothèque', en: 'Library' }, lang)}
+                    <BookOpen className="w-3.5 h-3.5" /> {tr({ fr: 'Bibliothèque', en: 'Library', ar: 'المكتبة' }, lang)}
                   </button>
                   <button
                     onClick={() => setActiveResourceTab('glossary')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <Brain className="w-3.5 h-3.5" /> {tr({ fr: 'Glossaire', en: 'Glossary' }, lang)}
+                    <Brain className="w-3.5 h-3.5" /> {tr({ fr: 'Glossaire', en: 'Glossary', ar: 'المعجم' }, lang)}
                   </button>
                   {/* La methodologie rejoint les ressources : d'ou viennent les
                       chiffres, ce que veulent dire les mots et ou lire la suite
@@ -10201,7 +10202,7 @@ export default function App() {
                     onClick={() => setActiveResourceTab('methodology')}
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                   >
-                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology' }, lang)}
+                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology', ar: 'المنهجية' }, lang)}
                   </button>
                 </div>
               );
