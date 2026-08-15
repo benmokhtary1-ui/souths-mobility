@@ -35,6 +35,8 @@ export const glossaryData = [
         en_term: "Labor Migration",
         fr: "Mouvement d'individus de leur pays d'origine vers un autre pays à des fins d'emploi. L'OIT et le MPFA (2018-2030) soulignent qu'elle peut générer un « triple gain » (pour le pays d'origine, de destination et le migrant) si elle est bien gouvernée.",
         en: "Movement of individuals from their home country to another country for the purpose of employment. The ILO and MPFA (2018-2030) emphasize that it can create a 'triple win' scenario if well-governed."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Migration circulaire",
@@ -69,18 +71,24 @@ export const glossaryData = [
         en_term: "Irregular Migration",
         fr: "Mouvement de personnes s'opérant en dehors des lois, règlements ou accords internationaux régissant l'entrée ou la sortie (OIM). Cela inclut le franchissement non autorisé des frontières ou le dépassement de la durée de validité d'un visa (overstaying).",
         en: "Movement of persons that takes place outside the laws, regulations, or international agreements governing entry or exit (IOM). This includes unauthorized border crossings or visa overstaying."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Dépassement de séjour (Overstaying)",
         en_term: "Overstaying",
         fr: "Fait de rester dans un pays au-delà de la période autorisée par un visa ou un permis. C'est l'une des formes les plus courantes de migration irrégulière, souvent liée à des lenteurs administratives ou à l'absence de voies de régularisation claires.",
         en: "Remaining in a country beyond the authorized period granted by a visa or permit. It is one of the most common forms of irregular migration, often linked to administrative delays or lack of clear regularization pathways."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       { 
         term: "Nomadisme & Pastoralisme", 
         en_term: "Nomadism & Mobile Pastoralism", 
         fr: "Forme traditionnelle et adaptative de mobilité où les communautés se déplacent pour assurer leurs moyens de subsistance, étroitement liée à la gestion du bétail et aux variations climatiques. Le MPFA souligne la nécessité de sécuriser cette mobilité vitale, souvent menacée par le changement climatique et l'expansion agricole sédentaire.", 
         en: "Traditional and adaptive form of mobility where communities move to sustain their livelihoods, closely tied to livestock management and climatic variations. The MPFA highlights the need to secure this vital mobility, often threatened by climate change and sedentary agricultural expansion." 
+      ,
+        source: "Union africaine — Cadre de politique pour le pastoralisme en Afrique (2010)"
       },
     ]
   },
@@ -142,6 +150,8 @@ export const glossaryData = [
         en_term: "Survivor of Human Trafficking",
         fr: "Personne ayant subi une exploitation (travail forcé, exploitation sexuelle) via le recrutement ou le transfert par la menace, la force ou la tromperie (Protocole de Palerme). Le terme « survivant » (plutôt que victime) reconnaît l'agentivité de l'individu dans sa reconstruction.",
         en: "A person who has experienced exploitation (forced labor, sexual exploitation) through recruitment or transfer by means of threat, force, or deception (Palermo Protocol). The term 'survivor' (rather than victim) acknowledges the individual's agency in recovery."
+      ,
+        source: "Protocole de Palerme (2000), art. 3 — ONUDC"
       }
     ]
   },
@@ -236,6 +246,8 @@ export const glossaryData = [
         en_term: "Migrant Vulnerabilities",
         fr: "Capacité diminuée d'un individu à résister ou se relever de l'exploitation, de la violence ou des violations de droits (OIM, 2019). Ces vulnérabilités naissent de l'interaction entre des facteurs personnels (âge, sexe, santé) et structurels (absence de statut légal, pauvreté, discrimination).",
         en: "The diminished capacity of an individual to resist or recover from exploitation, violence, or rights violations (IOM, 2019). These vulnerabilities arise from the interaction of personal factors (age, gender, health) and structural factors (lack of legal status, poverty, discrimination)."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Identité légale",
@@ -318,6 +330,8 @@ export const glossaryData = [
         en_term: "Resilience of Migrants",
         fr: "Capacité des migrants à s'adapter, résister et se remettre des chocs (économiques, climatiques, discriminatoires) rencontrés durant le parcours migratoire, souvent soutenue par les réseaux de la diaspora et les cadres d'inclusion locaux.",
         en: "The capacity of migrants to adapt, resist, and recover from shocks (economic, climatic, discriminatory) encountered during the migration journey, often supported by diaspora networks and local inclusion frameworks."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       }
     ]
   },
@@ -337,36 +351,48 @@ export const glossaryData = [
         en_term: "Brain Drain",
         fr: "Émigration d'individus hautement qualifiés entraînant l'épuisement du capital humain du pays d'origine, un défi critique pour les secteurs de la santé et de l'éducation en Afrique.",
         en: "Emigration of highly skilled individuals leading to the depletion of the source country's human capital, a critical challenge for Africa's health and education sectors."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Gain de compétences (Brain Gain)",
         en_term: "Brain Gain",
         fr: "Bénéfice tiré par un pays grâce à l'immigration de professionnels hautement qualifiés ou au retour de ses nationaux ayant acquis une expertise à l'étranger (Réseaux de la diaspora).",
         en: "The benefit a country derives from the immigration of highly qualified professionals or the return of its nationals who acquired expertise abroad (Diaspora networks)."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Circulation des cerveaux (Brain Circulation)",
         en_term: "Brain Circulation",
         fr: "Mouvement répété et bidirectionnel de professionnels qualifiés entre pays d'origine et de destination, par opposition à un départ ou un retour définitifs. Ce cadre déplace le débat de la « fuite » (perte nette et irréversible) vers un échange continu de compétences, de capitaux et de réseaux.",
         en: "Repeated, bidirectional movement of skilled professionals between origin and destination countries, as opposed to a one-way departure or permanent return. This framework shifts the debate from \"drain\" (a net, irreversible loss) toward a continuous exchange of skills, capital, and networks."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Gaspillage de compétences (Brain Waste)",
         en_term: "Brain Waste",
         fr: "Situation où des migrants hautement qualifiés occupent des emplois sans rapport avec leurs diplômes, souvent en raison de la non-reconnaissance de leurs qualifications étrangères ou de barrières systémiques.",
         en: "Situation where highly skilled migrants are employed in jobs unrelated to their qualifications, often due to the non-recognition of foreign credentials or systemic barriers."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Coût de la fuite (Brain Cost)",
         en_term: "Brain Cost",
         fr: "Pertes économiques, sociales et développementales (incluant les fonds publics investis dans l'éducation de l'individu) subies par l'État d'origine lorsque ses travailleurs qualifiés émigrent définitivement.",
         en: "The economic, social, and developmental losses (including public funds invested in the individual's education) incurred by the origin State when its skilled workers emigrate permanently."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Investissement des diasporas",
         en_term: "Investment by Migrants",
         fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs.",
         en: "Economic contributions of migrants beyond basic family remittances: entrepreneurship, real estate, diaspora bonds, technology transfer, and capital investment in productive sectors."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Partenariat de compétences (Global Skills Partnership)",
@@ -386,6 +412,8 @@ export const glossaryData = [
         en_term: "Migration Corridor",
         fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants. C'est l'unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque mondiale). Elle fait apparaître, au-delà des agrégats nationaux, la géographie réelle des déplacements.",
         en: "An origin-destination country pair linked by a significant migrant flow or stock. It is the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank), and it reveals the real geography of movement beyond national aggregates."
+      ,
+        source: "UN DESA — International Migrant Stock ; Banque mondiale"
       },
       {
         term: "Régime (de gouvernance migratoire)",
@@ -462,6 +490,8 @@ export const glossaryData = [
         en_term: "Securitization",
         fr: "Processus par lequel la migration est progressivement traitée comme une menace sécuritaire (contrôle des frontières, criminalisation) au détriment de ses dimensions développementales et des droits humains.",
         en: "The process by which migration is increasingly framed and governed as a security threat (border control, criminalization) at the expense of its developmental and human rights dimensions."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Désagrégation des données",
@@ -475,6 +505,8 @@ export const glossaryData = [
         en_term: "Push & Pull Factors (Root Causes)",
         fr: "Conditions structurelles motivant le départ d'une région (Push : pauvreté, chocs climatiques, conflits) ou l'attraction vers une autre (Pull : emploi, réseaux familiaux, stabilité). Le GCM et le MPFA appellent à traiter ces causes profondes pour faire de la migration un choix et non une nécessité vitale.",
         en: "Structural conditions motivating departure from a region (Push: poverty, climate shocks, conflict) or attraction to another (Pull: jobs, family networks, stability). The GCM and MPFA call for addressing these root causes to make migration a choice rather than a necessity."
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       {
         term: "Diplomatie migratoire",
@@ -488,18 +520,24 @@ export const glossaryData = [
         en_term: "Global North & Global South", 
         fr: "Dichotomie socio-économique et politique. Le Sud Global ne désigne pas une géographie stricte, mais un ensemble d'économies en développement partageant des héritages historiques de colonialisme, d'exploitation des ressources et d'inégalités structurelles dans les accords commerciaux mondiaux.", 
         en: "Socio-economic and political dichotomy. The Global South does not refer to a strict geography, but rather developing economies sharing historical legacies of colonialism, resource exploitation, and structural inequalities in global trade agreements." 
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       { 
         term: "Numérisation de la gouvernance (Digitalization)", 
         en_term: "Digitalization of Migration Governance", 
         fr: "Intégration de technologies numériques (biométrie, e-visas, systèmes de surveillance) pour gérer les migrations. L'utilisation généralisée d'outils développés hors du continent soulève des préoccupations majeures quant à l'appropriation africaine (African ownership) et à la souveraineté épistémique des données.", 
         en: "Integration of digital technologies (biometrics, e-visas, surveillance systems) to manage migration. The widespread use of tools developed outside the continent raises major concerns regarding African ownership and the epistemic sovereignty of data." 
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
       { 
         term: "Processus Consultatifs Régionaux (RCPs)", 
         en_term: "Regional Consultative Processes (RCPs)", 
         fr: "Plateformes étatiques, informelles et non contraignantes de dialogue sur les migrations (ex: MIDWA en Afrique de l'Ouest, MIDSA en Afrique Australe). Les Processus de Rabat et de Khartoum illustrent cette dynamique en structurant la coopération entre l'Afrique et l'Europe.", 
         en: "State-led, informal, and non-binding platforms for migration dialogue (e.g., MIDWA in West Africa, MIDSA in Southern Africa). The Rabat and Khartoum Processes illustrate this dynamic by structuring cooperation between Africa and Europe." 
+      ,
+        source: "OIM — Glossaire de la migration (2019)"
       },
     ]
   },
