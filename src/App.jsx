@@ -2145,8 +2145,8 @@ const t = {
         },
         home: {
           badge: "Plateforme de Savoirs & de Données",
-          title: "Les mobilités africaines,",
-          highlight: "par les données africaines.",
+          title: "Ce que rassemble cette plateforme,",
+          highlight: "et par où la prendre.",
           desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées.",
           plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
         },
@@ -2459,8 +2459,8 @@ const t = {
         },
         home: {
           badge: "Knowledge & Data Platform",
-          title: "African mobility,",
-          highlight: "through African data.",
+          title: "What this platform gathers,",
+          highlight: "and where to take it up.",
           desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources.",
           plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
         },
@@ -4268,6 +4268,11 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   const totalLibrary = libraryData.reduce((sum, s) => sum + s.items.length, 0);
   // Le deplacement interne : la donnee la plus massive du continent, calculee
   // en direct depuis la base pays et arrondie au million.
+  //
+  // Ce total ne compte QUE le conflit. Le libelle doit donc le dire : la
+  // plateforme avance ailleurs 31,75 millions de deplaces internes, catastrophes
+  // comprises. Deux chiffres justes du meme phenomene sous la meme phrase, c'est
+  // exactement ce que la methode s'interdit.
   const totalDisplaced = Math.round(
     Object.values(countryData).flat().reduce((n, c) => n + (Number(c.idp_conflict) || 0), 0) / 1e6
   );
@@ -4289,7 +4294,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       label: { fr: "rapports et bases de données consultables", en: 'reports and datasets you can consult' },
       door: { fr: 'Ouvrir la bibliothèque', en: 'Open the library' }, tab: 'resources' },
     { value: totalDisplaced, unit: { fr: 'millions', en: 'million' },
-      label: { fr: "de personnes déplacées dans leur propre pays", en: 'people displaced inside their own country' },
+      label: { fr: "de personnes déplacées dans leur propre pays par un conflit", en: 'people displaced inside their own country by conflict' },
       door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'mobilites' },
   ];
 

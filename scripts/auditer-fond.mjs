@@ -19,12 +19,12 @@ const corpus = tousLesTextes.join(' \n ') + ' \n ' + app;
 
 // --- 1. Chiffres repetes : disent-ils la meme chose partout ? --------------
 const CLES = [
-  { nom: 'Protocole de Kigali, ratifications', re: /(\d{1,2})\s*(?:ratifications?|\/\s*54)[^.]{0,40}(?:libre circulation|Kigali)/gi,
+  { nom: 'Protocole de Kigali, ratifications', re: /(?:Kigali|Protocole sur la libre circulation(?: des personnes)?)[^.]{0,40}?(?<![\d,.])(\d{1,2})\s*(?:sur 54|\/\s*54|ratifications?)/gi,
     attendu: '4 sur 54' },
   { nom: 'Convention de Kampala, ratifications', re: /Kampala[^.]{0,80}?(\d{2})\s*(?:ratifications?|\/\s*54|Etats|États)/gi, attendu: '33' },
-  { nom: 'ZLECAf, depots', re: /(?:ZLECAf|AfCFTA)[^.]{0,90}?(\d{2})\s*(?:signataires|ratifications?|ont depose|instrument)/gi, attendu: '49' },
+  { nom: 'ZLECAf, depots', re: /(?:ZLECAf|AfCFTA)[^.]{0,90}?(\d{2})\s*(?:signataires|ratifications?|ont depose|instrument)/gi, attendu: '48' },
   { nom: 'Convention OUA 1969', re: /(?:1969|OUA)[^.]{0,80}?(\d{2})\s*(?:ratifications?|\/\s*54)/gi, attendu: '46' },
-  { nom: 'Migrants presents en Afrique', re: /(\d{2}(?:[\s,.]\d)?)\s*millions? de (?:migrants|personnes)[^.]{0,40}(?:en Afrique|sur le continent)/gi, attendu: '~29' },
+  { nom: 'Migrants presents en Afrique', re: /(?<![\d,.])(\d{2}(?:[,.]\d{1,2})?)\s*millions? de (?:migrants|personnes)[^.]{0,40}(?:en Afrique|sur le continent)/gi, attendu: '~28,9' },
   { nom: 'Part mondiale de l\'Afrique', re: /(\d[,.]\d)\s*%[^.]{0,50}(?:stock mondial|migrants dans le monde)/gi, attendu: '9,5' },
   { nom: 'Intervalle inter-recensitaire', re: /(\d{2}[,.]\d)\s*ans?[^.]{0,50}recensements?/gi, attendu: '11,1' },
   { nom: 'Deplaces internes subsahariens', re: /(\d{2}[,.]\d)\s*millions? de (?:personnes )?deplacees?/gi, attendu: '38,8' },
