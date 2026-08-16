@@ -37,6 +37,27 @@ export const LANGUES = {
 // Ce qui est effectivement servi aujourd'hui.
 export const ACTIVES = ['fr', 'en', 'ar'];
 
+// Jusqu'ou va la traduction, langue par langue.
+//
+//   'complete'  — le corps du site est traduit ;
+//   'interface' — la navigation, les intitules et les resumes le sont ; les
+//                 analyses s'affichent encore dans la langue de redaction.
+//
+// La distinction n'est pas cosmetique. Un lecteur qui bascule en arabe obtient
+// une interface arabe et des paragraphes francais : sans un mot pour le dire,
+// il croit a une panne. La plateforme annonce ce qu'elle n'a pas encore,
+// exactement comme elle le fait pour un chiffre manquant.
+export const COUVERTURE = {
+  fr: 'complete',
+  en: 'complete',
+  ar: 'interface',
+  pt: 'interface',
+  es: 'interface',
+  sw: 'interface',
+};
+
+export const estPartielle = (lang) => COUVERTURE[lang] === 'interface';
+
 // Ordre de repli. Le francais d'abord : c'est la langue de redaction, donc la
 // seule ou aucune chaine ne manque. L'anglais ensuite. Un lecteur arabophone
 // devant une fiche non encore traduite voit du francais — jamais un vide.
