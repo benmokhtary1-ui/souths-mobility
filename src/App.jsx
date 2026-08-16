@@ -320,6 +320,78 @@ const PLAIN_TERMS = {
     fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. Ses chiffres sont les plus cités, Afrique comprise.",
     en: 'The United Nations statistical office that publishes the reference figures on migrants worldwide. Its figures are the most cited, Africa included.',
   },
+  // Quatorze notions ecrites partout et cliquables nulle part : le mot etait
+  // dans le texte, sa definition dans une autre section.
+  visa: {
+    label: { fr: "visa", en: "visa" },
+    fr: "L'autorisation qu'un pays demande avant de laisser entrer un étranger. Trois régimes coexistent en Afrique : le visa à obtenir avant de partir, le visa délivré à l'arrivée, ou aucun visa.",
+    en: "The permission a country requires before letting a foreigner in. Three regimes coexist in Africa: a visa obtained before departure, a visa issued on arrival, or none at all.",
+  },
+  residence: {
+    label: { fr: "droit de séjour", en: "right of residence" },
+    fr: "Le droit de vivre durablement dans un pays dont on n'a pas la nationalité, avec un titre qui le prouve. Il se distingue du droit d'entrer : on peut être admis sans pouvoir rester.",
+    en: "The right to live long-term in a country you are not a national of, with a document proving it. It differs from the right to enter: you can be admitted without being allowed to stay.",
+  },
+  regime: {
+    label: { fr: "régime de gouvernance migratoire", en: "migration governance regime" },
+    fr: "L'ensemble des principes, normes, règles et procédures autour desquels les attentes des États convergent en matière de migration. Le mot désigne un ordre négocié entre États, et non une administration (Ben Mokhtar, 2026).",
+    en: "The set of principles, norms, rules and procedures around which states’ expectations converge on migration. The word names an order negotiated between states, not an administration (Ben Mokhtar, 2026).",
+  },
+  entredeux: {
+    label: { fr: "entre-deux national", en: "national in-between" },
+    fr: "L'espace où l'État se tient entre ce qu'il a signé au niveau continental et ce qu'il applique chez lui. C'est là que le régime se fait et se défait (Ben Mokhtar, 2026).",
+    en: "The space where a state stands between what it has signed continentally and what it applies at home. That is where the regime is made and unmade (Ben Mokhtar, 2026).",
+  },
+  retour: {
+    label: { fr: "retour volontaire ou forcé", en: "voluntary or forced return" },
+    fr: "Le fait de rentrer dans son pays d'origine. « Volontaire » et « forcé » séparent un départ décidé d'un éloignement imposé — la frontière entre les deux est souvent discutée.",
+    en: "Going back to one’s country of origin. “Voluntary” and “forced” separate a chosen departure from an imposed removal — the line between them is often contested.",
+  },
+  asile: {
+    label: { fr: "asile", en: "asylum" },
+    fr: "La protection qu'un État accorde à qui fuit des persécutions. Demander l'asile est un droit ; l'obtenir dépend de l'examen de chaque situation.",
+    en: "The protection a state grants to someone fleeing persecution. Claiming asylum is a right; obtaining it depends on an examination of each case.",
+  },
+  pafom: {
+    label: { fr: "PAFoM", en: "PAFoM" },
+    fr: "Le Forum panafricain sur la migration : la rencontre où les États africains, les communautés régionales et les agences discutent ensemble des politiques migratoires. Créé en 2006, il se réunit depuis 2015.",
+    en: "The Pan-African Forum on Migration: where African states, regional communities and agencies discuss migration policy together. Created in 2006, convening since 2015.",
+  },
+  jlmp: {
+    label: { fr: "JLMP", en: "JLMP" },
+    fr: "Le Programme conjoint sur la migration de main-d'œuvre, porté par la Commission de l'UA avec l'OIT, l'OIM et la CEA. Il avance par la voie technique là où le droit bloque.",
+    en: "The Joint Labour Migration Programme, run by the AU Commission with the ILO, IOM and ECA. It advances by technical means where law is blocked.",
+  },
+  oua1969: {
+    label: { fr: "Convention de l'OUA (1969)", en: "OAU Convention (1969)" },
+    fr: "Le traité africain de 1969 sur les réfugiés. Il va plus loin que la Convention de Genève : il protège aussi ceux qui fuient une agression extérieure, une occupation ou des troubles graves de l'ordre public.",
+    en: "The 1969 African refugee treaty. It reaches further than the Geneva Convention: it also protects those fleeing external aggression, occupation or serious disturbance of public order.",
+  },
+  reintegration: {
+    label: { fr: "réintégration", en: "reintegration" },
+    fr: "Ce qui suit le retour : retrouver un logement, un travail, des papiers, une place. Un retour compté comme réussi ne dit rien de ce qui vient après.",
+    en: "What follows return: finding housing, work, papers, a place. A return counted as successful says nothing about what comes next.",
+  },
+  irreguliere: {
+    label: { fr: "migration irrégulière", en: "irregular migration" },
+    fr: "Le fait d'entrer ou de rester sans les autorisations requises. Le mot qualifie une situation administrative, jamais une personne.",
+    en: "Entering or staying without the required authorisations. The word describes an administrative situation, never a person.",
+  },
+  reinstallation: {
+    label: { fr: "réinstallation", en: "resettlement" },
+    fr: "Le transfert d'un réfugié vers un pays tiers qui accepte de l'accueillir durablement. Les places offertes chaque année couvrent une fraction des besoins.",
+    en: "Transferring a refugee to a third country that agrees to host them long-term. The places offered each year cover a fraction of the need.",
+  },
+  braindrain: {
+    label: { fr: "fuite des cerveaux", en: "brain drain" },
+    fr: "Le départ de personnes qualifiées vers d'autres pays. L'expression suppose une perte sèche, ce que les travaux sur les retours et les transferts de fonds discutent.",
+    en: "The departure of skilled people to other countries. The phrase assumes a net loss, which work on return and remittances disputes.",
+  },
+  identite_legale: {
+    label: { fr: "identité légale", en: "legal identity" },
+    fr: "Le fait d'être enregistré par un État : naissance déclarée, papiers délivrés. Sans elle, une personne existe sans pouvoir le prouver.",
+    en: "Being registered by a state: birth declared, papers issued. Without it, a person exists without being able to prove it.",
+  },
 };
 
 // Ou reconnaitre chaque notion dans un texte courant. Les definitions
@@ -365,6 +437,20 @@ const MOTIFS_TERMES = {
   oim:               { fr: /\bOIM\b/, en: /\bIOM\b/ },
   oit:               { fr: /\bOIT\b/, en: /\bILO\b/ },
   idmc:              { fr: /\bIDMC\b/, en: /\bIDMC\b/ },
+  visa:             { fr: /\bvisas?\b/, en: /\bvisas?\b/ },
+  residence:        { fr: /(?:droit|titre|permis|carte) de (?:séjour|résidence)/, en: /residence (?:permit|right)|right of residence/ },
+  regime:           { fr: /régime (?:africain )?(?:de gouvernance )?migratoire/, en: /migration (?:governance )?regime/ },
+  entredeux:        { fr: /entre-deux national/, en: /national in-between/ },
+  retour:           { fr: /retours? (?:volontaires?|forcés?)/, en: /(?:voluntary|forced) returns?/ },
+  asile:            { fr: /(?:droit d'|demande d')?asile\b/, en: /asylum\b/ },
+  pafom:            { fr: /\bPAFoM\b/, en: /\bPAFoM\b/ },
+  jlmp:             { fr: /\bJLMP\b/, en: /\bJLMP\b/ },
+  oua1969:          { fr: /Convention de l'OUA/, en: /OAU Convention/ },
+  reintegration:    { fr: /réintégration/, en: /reintegration/ },
+  irreguliere:      { fr: /migrations? irrégulières?/, en: /irregular migration/ },
+  reinstallation:   { fr: /réinstallation/, en: /resettlement/ },
+  braindrain:       { fr: /fuite des cerveaux/, en: /brain drain/ },
+  identite_legale:  { fr: /identité légale/, en: /legal identity/ },
 };
 
 // Assemble une seule expression pour toute la langue : un seul passage sur le
