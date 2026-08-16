@@ -2134,7 +2134,7 @@ const t = {
           title: "Évaluation des affirmations",
           highlight: "à la lumière des données.",
           desc: "Cette section évalue le niveau de robustesse scientifique des affirmations publiques courantes sur les migrations. Elle ne cherche pas à juger, mais à objectiver le débat en croisant les meilleures sources institutionnelles disponibles.",
-          plain: "Soixante-dix affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité."
+          plain: "Les affirmations qu'on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité."
         },
         data: {
           badge: "Production statistique africaine",
@@ -2448,7 +2448,7 @@ const t = {
           title: "Evidence Check",
           highlight: "powered by open data.",
           desc: "This section assesses the scientific robustness of common public claims regarding migrations based on the best available institutional sources.",
-          plain: "Seventy claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."
+          plain: "The claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."
         },
         data: {
           badge: "African statistical production",
