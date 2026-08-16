@@ -58,13 +58,24 @@ const compte = {};
 recentes.forEach(a => { compte[a] = (compte[a] || 0) + 1; });
 Object.entries(compte).sort((a,b) => b[0]-a[0]).slice(0, 8)
   .forEach(([a, n]) => console.log('     ' + a + '  ' + String(n).padStart(4) + ' mentions'));
-const vieilles = evidenceCheckData.filter(f => {
+// Une reference n'a pas de date de peremption, et un fait historique encore
+// moins. La premiere version de ce controle rangeait parmi les fiches
+// « perimees » celle qui cite Keohane et Nye (1977) et celle qui date la
+// Convention de Kampala de 2009 : dans les deux cas la date EST l'information.
+//
+// On ne cherche donc plus la vieillesse, mais l'absence d'ancrage recent sur
+// les fiches qui avancent un CHIFFRE. Une affirmation quantifiee dont aucune
+// source ne porte d'annee posterieure a 2020 merite un regard ; une fiche de
+// concept ou d'instrument, non.
+const chiffree = (f) => /\b\d+(?:[.,]\d+)?\s*(?:%|millions?|milliards?)\b/i.test(String(f.reality?.fr || ''));
+const sansAncrageRecent = evidenceCheckData.filter(f => {
+  if (!chiffree(f)) return false;
   const t = (f.sources?.fr || []).join(' ') + ' ' + String(f.reality?.fr || '');
   const a = [...t.matchAll(/\b(20[0-2]\d)\b/g)].map(m => +m[1]);
   return a.length && Math.max(...a) < 2020;
 });
-console.log('  fiches dont la source la plus recente est anterieure a 2020 : ' + vieilles.length);
-vieilles.slice(0, 6).forEach(f => console.log('     ' + f.id + '  ' + String(f.narrative.fr).slice(0, 56)));
+console.log('  fiches chiffrees sans source posterieure a 2020 : ' + sansAncrageRecent.length);
+sansAncrageRecent.slice(0, 6).forEach(f => console.log('     ' + f.id + '  ' + String(f.narrative.fr).slice(0, 56)));
 
 // --- 4. Equilibre des verdicts ---------------------------------------------
 console.log('\n=== 4. Equilibre des verdicts ===');

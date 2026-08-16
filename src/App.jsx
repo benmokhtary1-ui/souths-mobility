@@ -339,8 +339,8 @@ const PLAIN_TERMS = {
   },
   entredeux: {
     label: { fr: "entre-deux national", en: "national in-between" },
-    fr: "L'espace où l'État se tient entre ce qu'il a signé au niveau continental et ce qu'il applique chez lui. C'est là que le régime se fait et se défait (Ben Mokhtar, 2026).",
-    en: "The space where a state stands between what it has signed continentally and what it applies at home. That is where the regime is made and unmade (Ben Mokhtar, 2026).",
+    fr: "L'espace où l'État se tient entre ce qu'il a signé au niveau continental et ce qu'il applique chez lui. Le régime s'y fait et s'y défait (Ben Mokhtar, 2026).",
+    en: "The space where a state stands between what it has signed continentally and what it applies at home. The regime is made and unmade there (Ben Mokhtar, 2026).",
   },
   retour: {
     label: { fr: "retour volontaire ou forcé", en: "voluntary or forced return" },
