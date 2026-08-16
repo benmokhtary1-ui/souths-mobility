@@ -943,18 +943,16 @@ const ATLAS_CADRAGES = {
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
   'Pl. VII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
-  // Explorateur : presque tout le continent, puisque l'outil couvre les 54.
-  'Pl. VIII':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
   'Pl. IV':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu'a Madagascar.
-  'Pl. IX': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
+  'Pl. VIII': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
   // Bassin centre-equatorial.
-  'Pl. X':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
+  'Pl. IX':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
   // Bande mediterraneenne et saharienne, d'un ocean a l'autre.
-  'Pl. XI':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
+  'Pl. X':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
   // Facade atlantique, du detroit au golfe de Guinee.
-  'Pl. XII':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
+  'Pl. XI':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
 };
 
 // Une trajectoire se courbe : la corde droite dit une ligne sur une carte, la
@@ -2026,7 +2024,6 @@ const t = {
       sections: { 
         debunk: "Déconstruction Factuelle des Narratifs", 
         global: "Perspective Globale des Stocks Migratoires (UNDESA, 2024)", 
-        explorer: "Explorateur Analytique & Données Consolidées", 
         data: "Cadre d'Indicateurs Recommandés", 
         sdg_gcm: "Alignement ODD (SDGs 2030) & Pactes Mondiaux (GCM / GCR 2018)",
         about_title: "À Propos du Projet", 
@@ -2053,13 +2050,6 @@ const t = {
           highlight: "par les données africaines.",
           desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l'Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées.",
           plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
-        },
-        explorer: {
-          badge: "Explorateur Macrorégional & National",
-          title: "Cartographier et analyser",
-          highlight: "les dynamiques de mobilité.",
-          desc: "Consultez les profils détaillés par pays ou par sous-région, intégrant les indicateurs de stock démographique, de parité, de rétention sud-sud et les ratifications des traités.",
-          plain: "Choisissez un pays : vous verrez combien de personnes y vivent en venant d'ailleurs, combien en sont parties, où elles sont allées, et quels traités ce pays a signés."
         },
         governance: {
           badge: "Gouvernance & Cadres Stratégiques",
@@ -2341,7 +2331,6 @@ const t = {
       sections: { 
         debunk: "Factual Deconstruction of Narratives", 
         global: "Global Perspective of Migrant Stocks (UNDESA, 2024)", 
-        explorer: "Analytical Explorer & Consolidated Data", 
         data: "Recommended Indicators Framework", 
         sdg_gcm: "SDG Alignment (SDGs 2030) & Global Compacts (GCM / GCR 2018)",
         about_title: "About the Project", 
@@ -2368,13 +2357,6 @@ const t = {
           highlight: "through African data.",
           desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources.",
           plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
-        },
-        explorer: {
-          badge: "Macro-Regional & National Explorer",
-          title: "Mapping and analyzing",
-          highlight: "mobility dynamics.",
-          desc: "Explore detailed country or sub-regional profiles featuring demographic stocks, gender parity, South-South retention rates, and treaty ratifications.",
-          plain: "Pick a country: you will see how many people live there having come from elsewhere, how many left, where they went, and which treaties the country has signed."
         },
         governance: {
           badge: "Governance & Strategic Frameworks",
@@ -3097,7 +3079,7 @@ const construireIndex = (lang) => {
     titre: L(c.name),
     contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${tr({ fr: 'migrants', en: 'migrants' }, lang)}` : null]
       .filter(Boolean).join(' · '),
-    aller: { tab: 'explorer', id: c.id },
+    aller: { tab: 'atlas', id: c.id },
     mots: `${D(c.name)} ${c.iso2 || ''} ${D(REGIONS[region])}`,
   })));
 
@@ -3253,7 +3235,8 @@ const RechercheGlobale = ({ lang, aller }) => {
 // Chaque couche est un indicateur deja verifie ailleurs sur la plateforme :
 // rien de neuf n'est introduit, c'est la meme donnee, prise par l'autre bout.
 const COUCHES_ATLAS = [
-  { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'), mene: 'explorer',
+  // Sans `mene` : la carte, le panneau et la vue d'ensemble repondent ici meme.
+  { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'),
     question: { fr: 'Qui accueille ?', en: 'Who hosts?', ar: 'مَن يستقبل؟' } },
   { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
     question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?', ar: 'مَن يبقى في أفريقيا؟' } },
@@ -3585,7 +3568,9 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
   );
 };
 
-const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSousOngletGouvernance }) => {
+const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSousOngletGouvernance,
+                    activeSubRegion, setActiveSubRegion, searchTerm, setSearchTerm,
+                    filteredCountries, display, exportCountriesCSV }) => {
   const L = faireL(lang);
   const [coucheCle, setCoucheCle] = useState('accueil');
   const [paysOuvert, setPaysOuvert] = useState(null);
@@ -3593,6 +3578,19 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
   const indicateur = couche.ind();
   const plain = couche.plain || indicateur.plain;
   const hint = couche.hint || indicateur.hint;
+
+  // Changer de sous-region recadre la planche : on ne regarde plus le continent
+  // en entier avec cinq pays eclaires, on regarde la region seule.
+  const regions = Object.keys(text.regions || {});
+  const cadre = activeSubRegion === 'all' ? null : activeSubRegion;
+
+  // La recherche ne quitte pas la carte : elle designe un pays, la carte
+  // l'ouvre. Une liste de resultats a cote du continent ferait un deuxieme
+  // outil pour le meme geste.
+  const suggestions = useMemo(
+    () => (searchTerm.trim().length < 2 ? [] : filteredCountries.slice(0, 6)),
+    [searchTerm, filteredCountries]
+  );
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -3651,6 +3649,61 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
         </div>
       </SceneFlux>
 
+      <BarreSection lang={lang}>
+        <CsvButton onClick={exportCountriesCSV}
+                   label={L('54 pays — tous indicateurs (CSV)', '54 countries — all indicators (CSV)', { ar: '54 بلداً — كل المؤشرات (CSV)' })} />
+      </BarreSection>
+
+      {/* Chercher un pays, ou cadrer une region. Deux gestes, une seule barre,
+          posee sur la carte qu'ils commandent — plutot que dans une colonne
+          laterale qui aurait fait un second outil a cote du premier. */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative grow sm:grow-0 sm:w-72">
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
+                  style={{ color: 'var(--label)' }} aria-hidden="true" />
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label={L('Chercher un pays sur la carte', 'Search for a country on the map', { ar: 'ابحث عن بلد على الخريطة' })}
+            placeholder={L('Chercher un pays…', 'Search a country…', { ar: '…ابحث عن بلد' })}
+            className="w-full text-[13px] ps-9 pe-3 py-2 border"
+            style={{ backgroundColor: 'var(--paper-raised)', borderColor: 'var(--rule)', borderRadius: 999 }}
+          />
+          {suggestions.length > 0 && (
+            <ul className="absolute z-20 mt-1 w-full overflow-hidden border shadow-sm"
+                style={{ backgroundColor: 'var(--paper-raised)', borderColor: 'var(--rule)', borderRadius: 10 }}>
+              {suggestions.map(c => (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    onClick={() => { setPaysOuvert(String(c.id)); setSearchTerm(''); }}
+                    className="w-full text-start px-3 py-2 text-[13px] hover:bg-slate-50"
+                  >
+                    {tr(c.name, lang) || c.name?.fr}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <nav className="flex flex-wrap gap-1.5" aria-label={L('Cadrer une sous-région', 'Frame a sub-region', { ar: 'تأطير منطقة فرعية' })}>
+          {['all', ...regions].map(r => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => { setActiveSubRegion(r); setPaysOuvert(null); }}
+              aria-pressed={activeSubRegion === r}
+              className="couche-btn"
+              data-actif={activeSubRegion === r ? 'true' : 'false'}
+            >
+              {r === 'all' ? tr(text.all_regions, lang) : tr(text.regions[r], lang)}
+            </button>
+          ))}
+        </nav>
+      </div>
+
       {/* La carte et sa lecture. Choisir un pays ouvre le panneau a cote au
           lieu de quitter l'ecran : le continent reste sous les yeux, le pays
           choisi reste eclaire, et la comparaison d'un pays a l'autre se fait
@@ -3660,6 +3713,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           <AfricaChoropleth
             indicator={{ ...indicateur, plain, hint }}
             lang={lang}
+            region={cadre}
             selectedId={paysOuvert}
             onSelect={(id) => setPaysOuvert(id === paysOuvert ? null : id)}
           />
@@ -3679,22 +3733,135 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
       {/* Ce que la couche montre, et par ou continuer. */}
       <div className="flex flex-wrap items-baseline justify-between gap-4 pt-1 border-t" style={{ borderColor: 'var(--rule)' }}>
         <Prose className="text-[13px] leading-relaxed max-w-2xl mt-4" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
-        <button
-          type="button"
-          onClick={() => {
-            // La question posee sur la carte doit retomber sur le volet qui y
-            // repond, pas sur la premiere page de la section.
-            if (couche.volet) setVoletMobilites?.(couche.volet);
-            if (couche.sousOnglet) setSousOngletGouvernance?.(couche.sousOnglet);
-            allerVers(couche.mene);
-          }}
-          className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
-          style={{ color: 'var(--accent-deep)' }}
-        >
-          {L('Approfondir cette question', 'Go deeper on this question', { ar: 'التعمّق في هذا السؤال' })}
-          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-        </button>
+        {/* Une couche sans destination repond ici meme : le bouton ne s'affiche
+            que s'il mene reellement quelque part. */}
+        {couche.mene && (
+          <button
+            type="button"
+            onClick={() => {
+              // La question posee sur la carte doit retomber sur le volet qui y
+              // repond, pas sur la premiere page de la section.
+              if (couche.volet) setVoletMobilites?.(couche.volet);
+              if (couche.sousOnglet) setSousOngletGouvernance?.(couche.sousOnglet);
+              allerVers(couche.mene);
+            }}
+            className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest"
+            style={{ color: 'var(--accent-deep)' }}
+          >
+            {L('Approfondir cette question', 'Go deeper on this question', { ar: 'التعمّق في هذا السؤال' })}
+            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+          </button>
+        )}
       </div>
+
+      {/* L'ensemble, sous le detail. La carte repond pays par pays ; ce releve
+          repond pour le cadrage choisi — le continent, ou la sous-region qu'on
+          vient de selectionner. */}
+      <section className="bg-white border border-slate-200 overflow-hidden">
+        <div className="flex flex-wrap items-baseline justify-between gap-3 px-6 md:px-8 pt-6 pb-4">
+          <div>
+            <span className="block text-[10px] font-bold uppercase mb-1" style={{ letterSpacing: '.18em', color: 'var(--label)' }}>
+              {activeSubRegion === 'all'
+                ? L("Vue d'ensemble du continent", 'Continental overview', { ar: 'نظرة عامة على القارة' })
+                : L("Vue d'ensemble de la sous-région", 'Sub-regional overview', { ar: 'نظرة عامة على المنطقة الفرعية' })}
+            </span>
+            <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{display.name}</h2>
+          </div>
+          <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
+            {filteredCountries.length}{' '}
+            {filteredCountries.length > 1 ? L('pays', 'countries', { ar: 'بلداً' }) : L('pays', 'country', { ar: 'بلد' })}
+          </span>
+        </div>
+
+        <dl className="grid grid-cols-2 md:grid-cols-3 border-t border-slate-100 divide-x divide-y md:divide-y-0 divide-slate-100">
+          {[
+            { v: display.stock, l: L('Personnes nées ailleurs', 'People born elsewhere', { ar: 'أشخاص وُلدوا في مكان آخر' }) },
+            { v: `${display.evolution}%`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
+            { v: `${display.female}%`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
+            { v: `${display.retention}%`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) },
+            { v: display.remittances != null ? `${display.remittances}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+              l: L('Transferts, en part du PIB', 'Remittances, share of GDP', { ar: 'التحويلات كنسبة من الناتج' }) },
+            { v: display.labour_participation != null ? `${display.labour_participation}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+              l: L('Migrants en activité', 'Migrants in work', { ar: 'المهاجرون العاملون' }) },
+          ].map((k, i) => (
+            <div key={i} className="px-5 py-5">
+              <dd className="text-2xl md:text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{k.v}</dd>
+              <dt className="block mt-2 text-[11px] leading-snug" style={{ color: 'var(--label)' }}>{k.l}</dt>
+            </div>
+          ))}
+        </dl>
+
+        {display.distribution && (
+          <div className="px-6 md:px-8 py-5 border-t border-slate-100">
+            <div className="flex justify-between text-[11px] font-bold mb-2">
+              <span style={{ color: 'var(--accent-deep)' }}>
+                {tr(display.distribution[0].label, lang)} ({display.distribution[0].value} %)
+              </span>
+              <span style={{ color: 'var(--label)' }}>
+                {tr(display.distribution[1].label, lang)} ({display.distribution[1].value} %)
+              </span>
+            </div>
+            <div className="h-2.5 w-full flex overflow-hidden" style={{ backgroundColor: 'var(--rule)', borderRadius: 999 }}>
+              <div style={{ width: `${display.distribution[0].value}%`, backgroundColor: 'var(--accent)' }} />
+              <div style={{ width: `${display.distribution[1].value}%`, backgroundColor: 'var(--rule-strong)' }} />
+            </div>
+          </div>
+        )}
+
+        <div className="px-6 md:px-8 py-4 border-t border-slate-100" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+          <Prose className="text-[12px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>
+            {text.comparative_view_desc}
+          </Prose>
+        </div>
+      </section>
+
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Ce que contient une fiche pays, et d'où vient chaque ligne",
+                 en: 'What a country profile holds, and where each line comes from',
+                 ar: 'ما تحتويه بطاقة البلد، ومن أين يأتي كل سطر' }}
+        chapeau={{
+          fr: "Chaque profil rassemble des mesures produites par des institutions différentes, à des dates différentes. Aucune n'a été recalculée : elles sont présentées avec leur source et leur année d'observation.",
+          en: 'Each profile gathers measurements produced by different institutions, at different dates. None has been recomputed: each is shown with its source and its observation year.'
+        }}
+        notions={[
+          { mot: { fr: "Stock d'immigrés", en: 'Immigrant stock' },
+            sens: { fr: "Personnes nées à l'étranger résidant dans le pays, d'après UN DESA. Une photographie à une date, jamais un flux d'arrivées.",
+                    en: 'People born abroad and residing in the country, per UN DESA. A snapshot at a date, never a flow of arrivals.' } },
+          { mot: { fr: 'Rétention Sud-Sud', en: 'South-South retention' },
+            sens: { fr: "Part des partants restés sur le continent. Agrégat régional (UA, OIT, OIM, CEA) appliqué au pays : une approximation, signalée comme telle.",
+                    en: 'Share of those who left who stayed on the continent. A regional aggregate (AU, ILO, IOM, ECA) applied to the country: an approximation, flagged as such.' } },
+          { mot: { fr: 'Ouverture des visas', en: 'Visa openness' },
+            sens: { fr: "Note sur 100 mesurant la facilité d'entrée pour les autres Africains, publiée par la BAD et la Commission de l'UA sous le nom d'indice AVOI.",
+                    en: 'A score out of 100 measuring ease of entry for other Africans, published by the AfDB and the AU Commission as the AVOI index.' } },
+          { mot: { fr: "Score d'ancrage", en: 'Anchoring score' },
+            sens: { fr: "Nombre des six grands instruments de l'UA que le pays a déposés. Mesure construite pour cette plateforme, sur les listes officielles de statut.",
+                    en: 'How many of the AU’s six major instruments the country has deposited. A measure built for this platform, from the official status lists.' } },
+        ]}
+        colonnes={[
+          { fr: "Famille d'indicateurs", en: 'Family of indicators' },
+          { fr: 'Qui la produit', en: 'Who produces it' },
+          { fr: 'Ce qu’il faut en savoir', en: 'What to know about it' },
+        ]}
+        lignes={[
+          { source: { fr: 'Démographie', en: 'Demography' },
+            mesure: { fr: 'UN DESA, révision 2024.', en: 'UN DESA, 2024 revision.' },
+            angle: { fr: "Photographie à une date : additionner deux années ne donne pas un flux.", en: 'A snapshot at a date: adding two years does not produce a flow.' } },
+          { source: { fr: 'Mobilité contrainte', en: 'Forced mobility' },
+            mesure: { fr: 'IDMC et HCR.', en: 'IDMC and UNHCR.' },
+            angle: { fr: "Deux périmètres de suivi distincts : les deux séries sont affichées plutôt qu'harmonisées.", en: 'Two distinct monitoring perimeters: both series are shown rather than reconciled.' } },
+          { source: { fr: 'Économie', en: 'Economy' },
+            mesure: { fr: 'Banque mondiale.', en: 'World Bank.' },
+            angle: { fr: "Transferts déclarés seulement, en pourcentage du PIB.", en: 'Declared remittances only, as a share of GDP.' } },
+          { source: { fr: 'Droit', en: 'Law' },
+            mesure: { fr: "Listes officielles de statut de l'Union africaine.", en: 'Official African Union status lists.' },
+            angle: { fr: "Le dépôt compte, pas la signature.", en: 'The deposit counts, not the signature.' } },
+        ]}
+        pied={{
+          fr: "Les années d'observation ne sont pas alignées entre les champs, et ne le seront pas : chaque champ porte la sienne. Une fiche se lit donc ligne par ligne, jamais comme un instantané unique.",
+          en: 'Observation years are not aligned across fields, and will not be: each field carries its own. A profile therefore reads line by line, never as a single snapshot.'
+        }}
+      />
     </div>
   );
 };
@@ -3961,9 +4128,6 @@ const homeCards = [
   { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' },
     desc: { fr: "L'architecture juridique panafricaine, et ce que les États ont réellement ratifié.",
             en: "The pan-African legal architecture, and what states have actually ratified." } },
-  { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' },
-    desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.",
-            en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
   // {count} est substitué au rendu (libraryData est déclaré plus bas dans le module).
   { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' },
     desc: { fr: "{count} sources vérifiées et un glossaire de 79 notions, définies d'abord par l'instrument africain.",
@@ -3988,10 +4152,10 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   const statTiles = [
     { value: totalCountries, unit: null,
       label: { fr: "pays d'Afrique couverts", en: 'African countries covered' },
-      door: { fr: "Ouvrir l'explorateur", en: 'Open the explorer' }, tab: 'explorer' },
+      door: { fr: "Ouvrir l'atlas", en: 'Open the atlas' }, tab: 'atlas' },
     { value: totalRegions, unit: null,
       label: { fr: "régions découpées par l'Union africaine", en: 'regions as defined by the African Union' },
-      door: { fr: 'Voir les régions', en: 'See the regions' }, tab: 'explorer' },
+      door: { fr: 'Voir les régions', en: 'See the regions' }, tab: 'atlas' },
     { value: totalEvidence, unit: null,
       label: { fr: "affirmations passées au crible des sources", en: 'claims checked against the sources' },
       door: { fr: 'Vérifier une affirmation', en: 'Check a claim' }, tab: 'evidence' },
@@ -7908,523 +8072,6 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     </div>
   );
 };
-
-const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSubTab, setActiveSubTab, searchTerm, setSearchTerm, filteredCountries, display, setShowModal, exportCountriesCSV, explorerView, setExplorerView, mapIndicatorKey, setMapIndicatorKey }) => {
-  const mapIndicator = mapIndicators.find(i => i.key === mapIndicatorKey) || mapIndicators[0];
-  return (
-  <div className="space-y-8 animate-in fade-in duration-500">
-    <PageHeader
-      badge={text.headers.explorer.badge}
-      plate={"Pl. VIII"}
-      plain={text.headers.explorer.plain}
-      lang={lang}
-      title={text.headers.explorer.title}
-      highlight={text.headers.explorer.highlight}
-      desc={text.headers.explorer.desc}
-      icon={MapIcon}
-    />
-
-    <BarreSection lang={lang} />
-
-    <div className="flex flex-col lg:flex-row gap-8 items-start">
-      
-      {/* SIDEBAR GAUCHE : NAVIGATION */}
-      <div className="w-full lg:w-1/4 space-y-6 lg:sticky lg:top-24">
-        
-        {/* RECHERCHE */}
-        <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm relative">
-          <Search className="absolute start-7 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
-          <input
-            type="text"
-            /* Un placeholder n'est pas un nom accessible : il disparait des qu'on
-               saisit et n'est pas restitue de facon fiable par les lecteurs d'ecran. */
-            aria-label={tr({ fr: 'Rechercher un pays', en: 'Search for a country' }, lang)}
-            placeholder={text.sidebar.search}
-            className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg ps-10 pe-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        {/* FILTRES DE RÉGION */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-            <MapIcon className="w-3.5 h-3.5 me-1.5" />
-            {text.sidebar.title}
-          </h3>
-          <div className="space-y-1.5">
-            <button
-              onClick={() => { setActiveSubRegion('all'); setActiveSubTab('perspective'); setSearchTerm(''); }}
-              className={`w-full text-start px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center ${activeSubRegion === 'all' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}
-            >
-              <Globe className={`w-4 h-4 me-2.5 ${activeSubRegion === 'all' ? 'text-blue-400' : 'text-slate-400'}`} />
-              {text.all_regions}
-            </button>
-            
-            <div className="pt-3 pb-2">
-              <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest px-4">{text.sidebar.subregion}</span>
-            </div>
-            
-            {Object.keys(text.regions).map(regionKey => (
-              <button
-                key={regionKey}
-                onClick={() => { setActiveSubRegion(regionKey); setActiveSubTab('perspective'); setSearchTerm(''); }}
-                className={`w-full text-start px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex justify-between items-center group ${activeSubRegion === regionKey ? 'bg-blue-50 text-blue-800 border border-blue-100 shadow-sm' : 'text-slate-600 hover:bg-slate-50 border border-transparent'}`}
-              >
-                <span>{text.regions[regionKey]}</span>
-                <ChevronRight className={`w-4 h-4 transition-transform ${activeSubRegion === regionKey ? 'text-blue-600' : 'text-slate-300 group-hover:text-slate-400'}`} />
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ZONE PRINCIPALE : RÉSULTATS */}
-      <div className="w-full lg:w-3/4 space-y-6">
-        
-        {/* TABS (Perspective globale vs Liste de pays) */}
-        <div className="flex bg-slate-200 p-1.5 rounded-xl">
-          <button
-            onClick={() => setActiveSubTab('perspective')}
-            className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab === 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            {activeSubRegion === 'all' ? text.perspectives.continent : text.perspectives.subregion}
-          </button>
-          <button
-            onClick={() => {
-              if (filteredCountries.length > 0) {
-                setActiveSubTab(filteredCountries[0].id);
-              }
-            }}
-            className={`flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeSubTab !== 'perspective' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            {tr({ fr: 'Profils Nationaux', en: 'National Profiles' }, lang)} ({filteredCountries.length})
-          </button>
-        </div>
-
-        {/* CONTENU (Vue Perspective) */}
-        {activeSubTab === 'perspective' && (
-          <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
-            <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
-              <div>
-                <span className="inline-block px-2.5 py-1 rounded bg-blue-50 border border-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-widest mb-3">
-                  {text.badge.regional}
-                </span>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center">
-                  {display.flagIcon ? (
-                    <span className={`me-3 p-1.5 rounded-lg bg-slate-50 border border-slate-200 ${display.flagColor || 'text-blue-700'}`}>
-                      <display.flagIcon className="w-6 h-6" />
-                    </span>
-                  ) : (
-                    <span className="me-3 text-3xl">{display.flag}</span>
-                  )}
-                  {display.name}
-                </h2>
-              </div>
-              <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-5 py-2.5 rounded-md font-bold text-xs transition shadow-sm">
-                <BarChart3 className="w-4 h-4" />
-                <span>{text.analysis_btn}</span>
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><Users className="w-3 h-3 me-1.5" /> {text.metrics.stock}</span>
-                <div className="text-3xl font-serif font-bold text-slate-900">{display.stock}</div>
-              </div>
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><PieChart className="w-3 h-3 me-1.5" /> {text.metrics.evolution}</span>
-                <div className="text-3xl font-serif font-bold text-blue-700">{display.evolution}%</div>
-              </div>
-              <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 block flex items-center"><HeartPulse className="w-3 h-3 me-1.5" /> {text.metrics.female}</span>
-                <div className="text-3xl font-serif font-bold text-rose-700">{display.female}%</div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-emerald-50/60 p-5 rounded-lg border border-emerald-100">
-                <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1.5 block flex items-center"><ArrowRight className="w-3 h-3 me-1.5" /> {tr({ fr: "Rétention (Sud)", en: "Retention (South)" }, lang)}</span>
-                <div className="text-3xl font-serif font-bold text-emerald-700">{display.retention}%</div>
-              </div>
-              <div className="bg-amber-50/60 p-5 rounded-lg border border-amber-100">
-                <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-1.5 block flex items-center"><TrendingUp className="w-3 h-3 me-1.5" /> {tr({ fr: "Transferts (% PIB, moy.)", en: "Remittances (% GDP, avg.)" }, lang)}</span>
-                <div className="text-3xl font-serif font-bold text-amber-700">{display.remittances !== null && display.remittances !== undefined ? `${display.remittances}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}</div>
-              </div>
-              <div className="bg-indigo-50/60 p-5 rounded-lg border border-indigo-100">
-                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-1.5 block flex items-center"><Briefcase className="w-3 h-3 me-1.5" /> {tr({ fr: "Activité Migrants (OIT, moy.)", en: "Migrant Activity (ILO, avg.)" }, lang)}</span>
-                <div className="text-3xl font-serif font-bold text-indigo-700">{display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}</div>
-              </div>
-            </div>
-
-            <div className="bg-blue-50/50 p-6 rounded-lg border border-blue-100">
-              <h3 className="font-bold text-blue-900 mb-3 text-sm uppercase tracking-widest flex items-center">
-                <TableProperties className="w-4 h-4 me-2" />
-                {text.comparative_view_title}
-              </h3>
-              <Prose className="text-sm text-slate-700 leading-relaxed font-medium" lang={lang}>{text.comparative_view_desc}</Prose>
-              
-              {/* Distribution Bar if available (for 'all' regions view) */}
-              {display.distribution && (
-                <div className="mt-6 pt-5 border-t border-blue-200/50">
-                  <div className="flex justify-between text-xs font-bold mb-2">
-                    <span className="text-blue-800">{tr(display.distribution[0].label, lang)} ({display.distribution[0].value}%)</span>
-                    <span className="text-slate-600">{tr(display.distribution[1].label, lang)} ({display.distribution[1].value}%)</span>
-                  </div>
-                  <div className="h-3 w-full bg-slate-200 rounded-full overflow-hidden flex">
-                    <div className="h-full bg-blue-600 transition-all duration-1000" style={{width: `${display.distribution[0].value}%`}}></div>
-                    <div className="h-full bg-slate-500 transition-all duration-1000" style={{width: `${display.distribution[1].value}%`}}></div>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <button onClick={() => setShowModal(true)} className="w-full mt-6 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-5 py-3 rounded-md font-bold text-sm transition shadow-sm">
-              <BarChart3 className="w-4 h-4" />
-              <span>{text.analysis_btn}</span>
-            </button>
-          </div>
-        )}
-
-        {/* CONTENU (Liste des Pays) */}
-        {activeSubTab !== 'perspective' && (
-          <div className="space-y-4">
-
-            {/* Carte interactive : porte d'entrée principale */}
-            <div className="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                <div className="min-w-0">
-                  <h3 className="text-sm font-bold text-slate-800">
-                    {tr({ fr: "Lecture cartographique", en: "Map view" }, lang)}
-                  </h3>
-                  {/* Ce que montre la carte, dit simplement — puis la definition
-                      technique de l'indicateur, pour qui la cherche. */}
-                  <p className="text-[13px] text-slate-700 mt-1 max-w-xl leading-relaxed">
-                    {mapIndicator.plain
-                      ? tr(mapIndicator.plain, lang)
-                      : tr(mapIndicator.hint, lang)}
-                    {mapIndicator.term && (
-                      <> <Terme k={mapIndicator.term} lang={lang}>
-                        {tr({ fr: 'Voir la définition', en: 'See the definition' }, lang)}
-                      </Terme></>
-                    )}
-                  </p>
-                  <Prose className="text-[11px] mt-1 max-w-xl leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{tr(mapIndicator.hint, lang)}</Prose>
-                </div>
-                <div className="flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 shrink-0">
-                  <button
-                    onClick={() => setExplorerView('map')}
-                    className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'map' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    {tr({ fr: 'Carte', en: 'Map' }, lang)}
-                  </button>
-                  <button
-                    onClick={() => setExplorerView('list')}
-                    className={`px-3 py-1.5 rounded-md text-[11px] font-bold transition-all ${explorerView === 'list' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                  >
-                    {tr({ fr: 'Liste', en: 'List' }, lang)}
-                  </button>
-                </div>
-              </div>
-
-              {explorerView === 'map' && (
-                <>
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {mapIndicators.map(ind => (
-                      <button
-                        key={ind.key}
-                        onClick={() => setMapIndicatorKey(ind.key)}
-                        className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
-                          ind.key === mapIndicator.key
-                            ? 'bg-slate-900 text-white border-slate-900'
-                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                        }`}
-                      >
-                        {tr(ind.label, lang)}
-                      </button>
-                    ))}
-                  </div>
-                  <AfricaChoropleth
-                    indicator={mapIndicator}
-                    lang={lang}
-                    selectedId={activeSubTab}
-                    onSelect={(id) => setActiveSubTab(id)}
-                    region={activeSubRegion !== 'all' ? activeSubRegion : null}
-                  />
-                </>
-              )}
-            </div>
-
-            {/* Feuilletage des pays. La grille de drapeaux sert a viser un pays
-                qu'on connait deja ; le rail sert a parcourir, en montrant sur
-                chaque carte de quoi decider si l'on veut entrer. */}
-            {filteredCountries.length > 1 && (
-              <RailCartes
-                lang={lang}
-                className={`mb-6 print:hidden ${explorerView === 'map' ? 'hidden' : ''}`}
-                etiquette={tr({ fr: `Feuilleter — ${filteredCountries.length} pays`, en: `Browse — ${filteredCountries.length} countries` }, lang)}
-              >
-                {filteredCountries.map(c => {
-                  const openness = visaOpenToAllAfrica[c.iso2];
-                  const actif = activeSubTab === c.id;
-                  return (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => setActiveSubTab(c.id)}
-                      aria-current={actif ? 'true' : undefined}
-                      className="lift text-start bg-white border p-4 flex flex-col gap-3"
-                      style={{ borderColor: actif ? 'var(--accent)' : 'var(--rule)' }}
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <CountryFlag iso2={c.iso2} emoji={c.flag} size="md" />
-                        <span className="min-w-0 flex-1">
-                          <span className="block font-serif font-bold text-base text-slate-900 truncate">
-                            {tr(c.name, lang) || c.name.fr}
-                          </span>
-                          <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400">
-                            {text.regions[countryRegionMap[c.id]] || ''}
-                          </span>
-                        </span>
-                        {openness && (
-                          <Star className={`w-3.5 h-3.5 shrink-0 ${visaOpenTiers[openness.tier].dot}`}
-                                aria-label={tr(visaOpenTiers[openness.tier].label, lang)} />
-                        )}
-                      </span>
-                      <span className="grid grid-cols-3 gap-2 pt-2.5 border-t" style={{ borderColor: 'var(--rule)' }}>
-                        {[
-                          { l: tr({ fr: 'Migrants', en: 'Migrants' }, lang), v: <Num value={c.stock} lang={lang} /> },
-                          { l: tr({ fr: '% pop.', en: '% pop.' }, lang), v: <><Num value={c.evolution} lang={lang} /> %</> },
-                          { l: 'AVOI', v: <><Num value={c.avoi} lang={lang} /> /100</> },
-                        ].map(x => (
-                          <span key={x.l} className="block">
-                            <span className="block text-[9px] font-bold uppercase tracking-widest text-slate-400">{x.l}</span>
-                            <span className="block font-serif font-bold text-sm text-slate-900 tabular-nums">{x.v}</span>
-                          </span>
-                        ))}
-                      </span>
-                      <span className="mt-auto inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest"
-                            style={{ color: 'var(--accent-deep)' }}>
-                        {tr({ fr: 'Ouvrir la fiche', en: 'Open the profile' }, lang)}
-                        <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                      </span>
-                    </button>
-                  );
-                })}
-              </RailCartes>
-            )}
-
-            {/* Grille des drapeaux pour navigation rapide */}
-            <div className={`bg-white p-4 rounded-xl border border-slate-200 shadow-sm ${explorerView === 'map' ? 'hidden' : ''}`}>
-              {filteredCountries.length === 0 && (
-                <div className="w-full p-4 text-center text-slate-400 text-sm">
-                  {tr({ fr: 'Aucun pays trouvé.', en: 'No country found.' }, lang)}
-                </div>
-              )}
-              {activeSubRegion === 'all' && filteredCountries.length > 0 ? (
-                <div className="space-y-4">
-                  {Object.keys(text.regions).map(regionKey => {
-                    const regionCountries = filteredCountries.filter(c => countryRegionMap[c.id] === regionKey);
-                    if (regionCountries.length === 0) return null;
-                    return (
-                      <div key={regionKey}>
-                        <h4 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2 px-0.5">
-                          {text.regions[regionKey]} <span className="text-slate-300">({regionCountries.length})</span>
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {regionCountries.map(c => {
-                            const openness = visaOpenToAllAfrica[c.iso2];
-                            return (
-                              <button
-                                key={c.id}
-                                onClick={() => setActiveSubTab(c.id)}
-                                title={openness ? `${tr(visaOpenTiers[openness.tier].label, lang)} — ${tr(openness.note, lang)}` : undefined}
-                                className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 rtl:space-x-reverse ${
-                                  activeSubTab === c.id
-                                    ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
-                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                                }`}
-                              >
-                                <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                                <span className="hidden sm:inline">{tr(c.name, lang) || c.name.fr}</span>
-                                {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {filteredCountries.map(c => {
-                    const openness = visaOpenToAllAfrica[c.iso2];
-                    return (
-                      <button
-                        key={c.id}
-                        onClick={() => setActiveSubTab(c.id)}
-                        title={openness ? `${tr(visaOpenTiers[openness.tier].label, lang)} — ${tr(openness.note, lang)}` : undefined}
-                        className={`px-3 py-1.5 rounded border transition-all text-xs font-bold flex items-center space-x-2 rtl:space-x-reverse ${
-                          activeSubTab === c.id
-                            ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-md'
-                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                        }`}
-                      >
-                        <CountryFlag iso2={c.iso2} emoji={c.flag} size="sm" />
-                        <span className="hidden sm:inline">{tr(c.name, lang) || c.name.fr}</span>
-                        {openness && <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[openness.tier].dot}`} />}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-x-5 gap-y-2">
-                <CsvButton onClick={exportCountriesCSV} label={tr({ fr: "54 pays — tous indicateurs (CSV)", en: "54 countries — all indicators (CSV)" }, lang)} className="basis-full sm:basis-auto justify-center" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">
-                  {tr({ fr: "Ouverture aux ressortissants africains", en: "Openness to African nationals" }, lang)}
-                </span>
-                {Object.entries(visaOpenTiers).map(([key, tier]) => (
-                  <span key={key} className="flex items-center gap-1.5">
-                    <Star className={`w-3 h-3 ${tier.dot}`} />
-                    <span className="text-[10px] font-bold text-slate-500">{tr(tier.label, lang)}</span>
-                  </span>
-                ))}
-                <span className="text-[10px] text-slate-400 italic basis-full">
-                  {tr({ fr: "Sources : annonces officielles nationales et ", en: "Sources: official national announcements and " }, lang)}
-                  <a href="https://www.visaopenness.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">
-                    {tr({ fr: "Africa Visa Openness Index (BAD/CUA, 2024)", en: "Africa Visa Openness Index (AfDB/AUC, 2024)" }, lang)}
-                  </a>.
-                </span>
-              </div>
-            </div>
-
-            {/* Profil du pays sélectionné */}
-            {filteredCountries.find(c => c.id === activeSubTab) && (
-              <div className="bg-white rounded-xl p-8 border border-slate-200 shadow-sm animate-in fade-in">
-                <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
-                  <div>
-                    <span className="inline-block px-2.5 py-1 rounded bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-widest mb-3">
-                      {text.badge.country}
-                    </span>
-                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 flex items-center flex-wrap gap-y-2">
-                      <CountryFlag iso2={display.iso2} emoji={display.flag} size="md" className="me-3" />
-                      {display.name}
-                      {visaOpenToAllAfrica[display.iso2] && (
-                        <Star className={`w-5 h-5 ms-3 ${visaOpenTiers[visaOpenToAllAfrica[display.iso2].tier].dot}`} />
-                      )}
-                    </h2>
-                    {visaOpenToAllAfrica[display.iso2] && (() => {
-                      const o = visaOpenToAllAfrica[display.iso2];
-                      const tier = visaOpenTiers[o.tier];
-                      return (
-                        <div className={`mt-3 inline-flex items-start gap-2 px-3 py-2 rounded-md border max-w-2xl ${tier.style}`}>
-                          <Star className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tier.dot}`} />
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest block">{tr(tier.label, lang)}</span>
-                            <span className="text-xs leading-relaxed block mt-0.5">{tr(o.note, lang)}</span>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                  <button onClick={() => setShowModal(true)} className="hidden md:flex items-center space-x-2 rtl:space-x-reverse px-5 py-2.5 font-bold text-xs transition shrink-0 self-start" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 2, boxShadow: 'inset 2px 0 0 var(--accent)' }}>
-                    <Target className="w-4 h-4" />
-                    <span>{text.analysis_btn}</span>
-                  </button>
-                </div>
-
-                {/* Releve d'indicateurs, groupe par ce qu'il dit et source par famille. */}
-                <div className="border border-slate-200 mb-6 stagger">
-                  {[
-                    {
-                      title: tr({ fr: "Qui est là", en: 'Who is there' }, lang),
-                      source: 'UN DESA (2024)',
-                      wash: 'wash-inkblue', tone: 'figure-inkblue', dot: 'var(--accent-2)',
-                      cells: [
-                        { v: <Num value={display.stock} lang={lang} />, l: tr({ fr: 'Migrants internationaux', en: 'International migrants' }, lang)},
-                        { v: `${fmtNum(display.evolution, lang)} %`, l: tr({ fr: 'De la population nationale', en: 'Of the national population' }, lang)},
-                        { v: `${fmtNum(display.female, lang)} %`, l: tr({ fr: 'De femmes parmi eux', en: 'Women among them' }, lang)},
-                      ],
-                    },
-                    {
-                      title: tr({ fr: "D'où l'on vient", en: 'Where they come from' }, lang),
-                      source: 'UA / OIT / OIM / CEA (2021)',
-                      wash: 'wash-terra', tone: 'figure-terra', dot: 'var(--accent)',
-                      cells: [
-                        { v: `${fmtNum(display.retention, lang)} %`, l: tr({ fr: 'Rétention Sud-Sud', en: 'South-South retention' }, lang)},
-                      ],
-                    },
-                    {
-                      title: tr({ fr: 'Ce que cela produit', en: 'What it produces' }, lang),
-                      source: tr({ fr: 'Banque mondiale / OIT', en: 'World Bank / ILO' }, lang),
-                      wash: 'wash-ok', tone: 'figure-ok', dot: 'var(--ok)',
-                      cells: [
-                        {
-                          v: display.remittances != null ? `${fmtNum(display.remittances, lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang)),
-                          l: (tr({ fr: 'Transferts de fonds (% PIB)', en: 'Remittances (% GDP)' }, lang))
-                             + (display.remittances_year ? ` — ${display.remittances_year}` : ''),
-                        },
-                        {
-                          v: display.labour_participation != null ? `${fmtNum(display.labour_participation, lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang)),
-                          l: (tr({ fr: "Activité des migrants", en: 'Migrant labour activity' }, lang))
-                             + (display.labour_participation_year ? ` — ${display.labour_participation_year}` : ''),
-                        },
-                      ],
-                    },
-                  ].map((grp, gi) => (
-                    <div key={gi} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
-                      <div className={`flex flex-wrap items-baseline justify-between gap-2 px-5 py-2.5 ${grp.wash}`}>
-                        <span className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
-                              style={{ color: 'var(--ink)' }}>
-                          <span className="dot" style={{ backgroundColor: grp.dot }} />
-                          {grp.title}
-                        </span>
-                        <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--label)' }}>
-                          {grp.source}
-                        </span>
-                      </div>
-                      <div className={`grid grid-cols-1 divide-y sm:divide-y-0 sm:divide-x divide-slate-100 ${grp.cells.length === 1 ? '' : grp.cells.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
-                        {grp.cells.map((c, ci) => (
-                          <div key={ci} className="figure-row px-5 py-4">
-                            <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${grp.tone}`}>{c.v}</div>
-                            <span className="block text-[10px] font-bold uppercase tracking-widest mt-2 leading-snug"
-                                  style={{ color: 'var(--label)' }}>
-                              {c.l}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {display.impact && (
-                   <div className="bg-amber-50 p-5 rounded-lg border border-amber-100 flex items-start mb-6">
-                     <Info className="w-5 h-5 text-amber-600 me-3 shrink-0 mt-0.5" />
-                     <p className="text-sm text-amber-900 font-medium leading-relaxed">{display.impact}</p>
-                   </div>
-                )}
-                
-                <button onClick={() => setShowModal(true)} className="w-full mt-4 md:hidden flex justify-center items-center space-x-2 rtl:space-x-reverse px-5 py-3 font-bold text-sm transition" style={{ backgroundColor: 'var(--ink)', color: '#FFFDF9', borderRadius: 999 }}>
-                  <Target className="w-4 h-4" />
-                  <span>{text.analysis_btn}</span>
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-  );
-};
-
-
-
-
-
 const LibraryCard = ({ item, lang, essential = false }) => {
   const CardTag = item.url ? 'a' : 'div';
   const cardProps = item.url ? { href: item.url, target: "_blank", rel: "noopener noreferrer" } : {};
@@ -8476,7 +8123,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.library.badge}
-        plate={"Pl. IX"}
+        plate={"Pl. VIII"}
         plain={text.headers.library.plain}
         lang={lang}
         title={text.headers.library.title}
@@ -9297,7 +8944,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.glossary.badge}
-        plate={"Pl. X"}
+        plate={"Pl. IX"}
         plain={text.headers.glossary.plain}
         lang={lang}
         title={text.headers.glossary.title}
@@ -9460,7 +9107,7 @@ const TabMethodology = ({ text, lang, children }) => (
   <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
-      plate={"Pl. XI"}
+      plate={"Pl. X"}
       plain={text.headers.methodology.plain}
       lang={lang}
       title={text.headers.methodology.title}
@@ -9757,7 +9404,7 @@ const TabAbout = ({ text, lang, children }) => {
     <section className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.about.badge}
-        plate={"Pl. XII"}
+        plate={"Pl. XI"}
         plain={text.headers.about.plain}
         lang={lang}
         title={text.headers.about.title}
@@ -10100,7 +9747,6 @@ const ROUTES = {
   atlas:      { fr: 'atlas',        en: 'atlas' },
   home:       { fr: 'accueil',      en: 'home' },
   evidence:   { fr: 'verification', en: 'evidence' },
-  explorer:   { fr: 'pays',         en: 'countries' },
   mobilites:  { fr: 'mobilites',    en: 'mobilities' },
   governance: { fr: 'gouvernance',  en: 'governance' },
   data:       { fr: 'donnees',      en: 'data' },
@@ -10114,6 +9760,9 @@ const ROUTES = {
 const ROUTES_ANCIENNES = {
   methodologie: 'resources',
   methodology: 'resources',
+  // L'Explorateur a ete verse dans l'Atlas ; ses adresses y menent.
+  pays: 'atlas',
+  countries: 'atlas',
 };
 
 const slugPays = (nom) => String(nom || '')
@@ -10150,8 +9799,6 @@ export default function App() {
   
   const [activeSubRegion, setActiveSubRegion] = useState('all');
   const [activeSubTab, setActiveSubTab] = useState('perspective');
-  const [explorerView, setExplorerView] = useState('map');          // 'map' | 'list'
-  const [mapIndicatorKey, setMapIndicatorKey] = useState('evolution');
   const [searchTerm, setSearchTerm] = useState('');
   
   const [showModal, setShowModal] = useState(false);
@@ -10219,11 +9866,15 @@ export default function App() {
   // Le repere suit la langue de l'adresse : une URL anglaise dit « chad », pas
   // « tchad ». A la relecture on accepte les deux, pour qu'un lien deja partage
   // continue de fonctionner apres un changement de langue.
+  // L'adresse porte un pays tant que son dossier est ouvert. Depuis que la
+  // fiche s'ouvre en surimpression de l'Atlas, `activeSubTab` reste sur le
+  // dernier pays consulte apres fermeture : sans la condition sur la modale,
+  // l'URL garderait un pays qui n'est plus a l'ecran.
   const paysSlug = useMemo(() => {
-    if (activeTab !== 'explorer' || activeSubTab === 'perspective') return null;
+    if (activeTab !== 'atlas' || !showModal || activeSubTab === 'perspective') return null;
     const c = Object.values(countryData).flat().find(x => x.id === activeSubTab);
     return c ? slugPays(tr(c.name, lang) || c.name?.fr || c.name) : null;
-  }, [activeTab, activeSubTab, lang]);
+  }, [activeTab, activeSubTab, showModal, lang]);
 
   const paysParSlug = (s) => Object.values(countryData).flat().find(x =>
     slugPays(x.name?.fr || x.name) === s || slugPays(x.name?.en || x.name) === s);
@@ -10238,11 +9889,11 @@ export default function App() {
       const e = lireURL();
       setLang(e.lang);
       setActiveTab(e.tab);
-      if (e.tab === 'explorer') {
-        if (e.detail) {
-          const c = paysParSlug(e.detail);
-          setActiveSubTab(c ? c.id : 'perspective');
-        } else setActiveSubTab('perspective');
+      if (e.tab === 'atlas') {
+        // Une adresse de pays rouvre son dossier ; l'Atlas seul le referme.
+        const c = e.detail ? paysParSlug(e.detail) : null;
+        setActiveSubTab(c ? c.id : 'perspective');
+        setShowModal(Boolean(c));
       }
     };
     window.addEventListener('popstate', surRetour);
@@ -10251,9 +9902,9 @@ export default function App() {
 
   // Arrivee par lien profond : on retablit le pays demande.
   useEffect(() => {
-    if (depart.tab === 'explorer' && depart.detail) {
+    if (depart.tab === 'atlas' && depart.detail) {
       const c = paysParSlug(depart.detail);
-      if (c) setActiveSubTab(c.id);
+      if (c) { setActiveSubTab(c.id); setShowModal(true); }
     }
     ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail }, true);
   }, []);
@@ -10347,7 +9998,6 @@ export default function App() {
       atlas: { fr: 'Atlas', en: 'Atlas' },
       home: { fr: 'Accueil', en: 'Home' },
       evidence: { fr: 'Évaluation des affirmations', en: 'Evidence Check' },
-      explorer: { fr: 'Explorateur', en: 'Data Explorer' },
       mobilites: { fr: 'Mobilités', en: 'Mobilities' },
       mobilites: { fr: 'Mobilités', en: 'Mobilities' },
       governance: { fr: 'Gouvernance', en: 'Governance' },
@@ -10356,20 +10006,20 @@ export default function App() {
       about: { fr: 'À propos', en: 'About' },
     };
     const nomSection = tr(NOMS[activeTab], lang);
-    const partie = activeTab === 'explorer' && activeSubTab !== 'perspective'
+    const partie = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
       ? display.name
       : nomSection;
     document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
     appliquerLangue(lang);
 
-    const desc = activeTab === 'explorer' && activeSubTab !== 'perspective'
+    const desc = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
       ? (tr({ fr: `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`, en: `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.` }, lang))
       : (text.headers[activeTab]?.plain
          || (tr({ fr: "Données vérifiées et en accès libre sur les mobilités africaines.", en: 'Verified, openly accessible data on African mobility.' }, lang)));
     let m = document.querySelector('meta[name="description"]');
     if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
     m.content = String(desc).slice(0, 300);
-  }, [display, lang, activeTab, activeSubTab, text]);
+  }, [display, lang, activeTab, activeSubTab, showModal, text]);
 
   const exportIndicatorsCSV = () => {
     let csvContent = "ID,Theme(FR),Theme(EN),Indicator(FR),Indicator(EN),Description(FR),Description(EN)\n";
@@ -10466,7 +10116,6 @@ export default function App() {
     { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats', ar: 'البيانات والإحصاءات' } },
     { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities', ar: 'التنقلات' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance', ar: 'الحوكمة' } },
-    { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer', ar: 'مستكشف البلدان' } },
     { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method', ar: 'المراجع والمنهجية' } },
     { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About', ar: 'عن المنصة' } },
   ];
@@ -10570,7 +10219,7 @@ export default function App() {
                 aller={(r) => {
                   if (r.lien) { window.open(r.lien, '_blank', 'noopener'); return; }
                   allerVers(r.aller.tab);
-                  if (r.aller.tab === 'explorer' && r.aller.id) setActiveSubTab(r.aller.id);
+                  if (r.aller.tab === 'atlas' && r.aller.id) { setActiveSubTab(r.aller.id); setShowModal(true); }
                 }}
               />
               <PrefsLecture lang={lang} />
@@ -10616,9 +10265,15 @@ export default function App() {
         {activeTab === 'atlas' && (
           <TabAtlas
             lang={lang} text={text} allerVers={allerVers}
-            ouvrirPays={(id) => { setActiveSubTab(id); allerVers('explorer'); }}
+            /* La fiche complete s'ouvre sur place, dans le dossier qui porte
+               deja l'export PDF — plus de saut vers une autre section. */
+            ouvrirPays={(id) => { setActiveSubTab(id); setShowModal(true); }}
             setVoletMobilites={setVoletMobilites}
             setSousOngletGouvernance={setActiveSdgzTab}
+            activeSubRegion={activeSubRegion} setActiveSubRegion={setActiveSubRegion}
+            searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+            filteredCountries={filteredCountries} display={display}
+            exportCountriesCSV={exportCountriesCSV}
           />
         )}
         {activeTab === 'home' && (
@@ -10626,16 +10281,6 @@ export default function App() {
         )}
         {activeTab === 'evidence' && (
           <TabEvidenceCheck text={text} lang={lang} exportEvidenceCSV={exportEvidenceCSV} />
-        )}
-        {activeTab === 'explorer' && (
-          <TabExplorer 
-            text={text} lang={lang} 
-            activeSubRegion={activeSubRegion} setActiveSubRegion={setActiveSubRegion}
-            activeSubTab={activeSubTab} setActiveSubTab={setActiveSubTab}
-            searchTerm={searchTerm} setSearchTerm={setSearchTerm}
-            filteredCountries={filteredCountries} display={display} setShowModal={setShowModal} exportCountriesCSV={exportCountriesCSV}
-            explorerView={explorerView} setExplorerView={setExplorerView} mapIndicatorKey={mapIndicatorKey} setMapIndicatorKey={setMapIndicatorKey}
-          />
         )}
         {activeTab === 'mobilites' && (
           <TabMobilites text={text} lang={lang} volet={voletMobilites} setVolet={setVoletMobilites} />
