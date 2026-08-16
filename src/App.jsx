@@ -936,18 +936,18 @@ const ATLAS_CADRAGES = {
   // Quart nord-ouest : les traversees que le debat public imagine.
   'Pl. III':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
   // Facade est, large : Corne, Grands Lacs et vallee du Nil ensemble.
-  'Pl. IV':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
+  'Pl. V':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
   // Facade ouest : le corridor CEDEAO d'un bout a l'autre.
-  'Pl. V':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  'Pl. VI':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
   // Gouvernance : le continent en entier. L'Union africaine gouverne 54 Etats,
   // pas une region — un cadrage sur la Corne repetait celui du deplacement
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
-  'Pl. VI':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  'Pl. VII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
   // Explorateur : presque tout le continent, puisque l'outil couvre les 54.
-  'Pl. VII':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
+  'Pl. VIII':  { crop: [10, 40, 980, 1040], arcs: [['dakar','ndjamena'], ['ndjamena','nairobi'], ['lagos','kinshasa'], ['kinshasa','lusaka']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
-  'Pl. VIII':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
+  'Pl. IV':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu'a Madagascar.
   'Pl. IX': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
   // Bassin centre-equatorial.
@@ -4056,6 +4056,9 @@ const homeCards = [
   { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check' },
     desc: { fr: `${evidenceCheckData.length} affirmations courantes sur les migrations confrontées aux meilleures données disponibles.`,
             en: `${evidenceCheckData.length} common migration claims tested against the best available data.` } },
+  { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' },
+    desc: { fr: "D'où viennent les chiffres, ce que chaque source mesure — et où se situe réellement le déficit africain.",
+            en: "Where the figures come from, what each source measures — and where Africa's shortfall actually sits." } },
   { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' },
     desc: { fr: "Déplacement contraint et migration de travail : ce qui pousse au départ, et ce qui se gagne à l'arrivée.",
             en: "Forced displacement and labour migration: what drives departure, and what is earned on arrival." } },
@@ -4065,9 +4068,6 @@ const homeCards = [
   { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer' },
     desc: { fr: "Profils détaillés pour 54 pays africains et leurs 5 sous-régions.",
             en: "Detailed profiles for 54 African countries and their 5 sub-regions." } },
-  { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats' },
-    desc: { fr: "Où se situe réellement le déficit statistique africain — et ce qui y répond.",
-            en: "Where Africa's statistical deficit actually sits — and what answers it." } },
   // {count} est substitué au rendu (libraryData est déclaré plus bas dans le module).
   { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' },
     desc: { fr: "{count} sources vérifiées et un glossaire de 79 notions, définies d'abord par l'instrument africain.",
@@ -5345,7 +5345,7 @@ const TabForced = ({ text, lang, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.forced.badge}
-        plate={"Pl. IV"}
+        plate={"Pl. V"}
         plain={text.headers.forced.plain}
         lang={lang}
         title={text.headers.forced.title}
@@ -5655,7 +5655,7 @@ const TabLabour = ({ text, lang, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.labour.badge}
-        plate={"Pl. V"}
+        plate={"Pl. VI"}
         plain={text.headers.labour.plain}
         lang={lang}
         title={text.headers.labour.title}
@@ -6820,7 +6820,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
-        plate={"Pl. VI"}
+        plate={"Pl. VII"}
         plain={text.headers.governance.plain}
         lang={lang}
         title={text.headers.governance.title}
@@ -7890,7 +7890,7 @@ const TabExplorer = ({ text, lang, activeSubRegion, setActiveSubRegion, activeSu
   <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
       badge={text.headers.explorer.badge}
-      plate={"Pl. VII"}
+      plate={"Pl. VIII"}
       plain={text.headers.explorer.plain}
       lang={lang}
       title={text.headers.explorer.title}
@@ -8710,6 +8710,101 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
   );
 };
 
+// Reperes : le b.a.-ba d'une section, avant d'entrer dans le detail.
+//
+// Une section qui ouvre sur « 47 Etats sur 54 ont recense » suppose acquis ce
+// qu'est un recensement, ce qu'il mesure, et pourquoi ce chiffre-la vaut d'etre
+// cite. Le lecteur qui ne l'a pas lit des nombres sans grammaire.
+//
+// Le bloc est generique : un chapeau, deux a quatre notions definies, et une
+// table de ce que chaque source mesure et de ce qu'elle rate. Il se replie une
+// fois lu — celui qui connait le sujet ne le traverse pas deux fois.
+const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes = [], pied = null }) => {
+  const L = faireL(lang);
+  const [ouvert, setOuvert] = useState(true);
+  return (
+    <section className="bg-white border border-slate-200 overflow-hidden" aria-labelledby="reperes-titre">
+      <button
+        type="button"
+        onClick={() => setOuvert(v => !v)}
+        aria-expanded={ouvert}
+        className="w-full text-start px-6 md:px-8 pt-6 pb-4 flex items-start gap-4"
+      >
+        <span className="inline-flex items-center justify-center w-8 h-8 shrink-0 rounded-lg mt-0.5"
+              style={{ backgroundColor: 'var(--accent-voile)', color: 'var(--accent-deep)' }}>
+          <Lightbulb className="w-4 h-4" aria-hidden="true" />
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[10px] font-bold uppercase mb-1" style={{ letterSpacing: '.18em', color: 'var(--label)' }}>
+            {L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
+          </span>
+          <span id="reperes-titre" className="block font-serif font-bold text-lg md:text-xl text-slate-900 leading-snug">
+            {tr(titre, lang)}
+          </span>
+        </span>
+        <ChevronDown className={`w-4 h-4 shrink-0 mt-1 transition-transform ${ouvert ? 'rotate-180' : ''}`}
+                     style={{ color: 'var(--rule-strong)' }} aria-hidden="true" />
+      </button>
+
+      {ouvert && (
+        <div className="px-6 md:px-8 pb-7 animate-in fade-in duration-300">
+          <Prose className="text-sm leading-relaxed max-w-3xl mb-6" style={{ color: 'var(--ink-soft)' }} lang={lang}>
+            {tr(chapeau, lang)}
+          </Prose>
+
+          {notions.length > 0 && (
+            <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5 mb-7">
+              {notions.map((n, i) => (
+                <div key={i} className="border-s-2 ps-4" style={{ borderColor: 'var(--accent-filet)' }}>
+                  <dt className="font-serif font-bold text-[15px] text-slate-900 mb-1">{tr(n.mot, lang)}</dt>
+                  <dd className="text-[13px] leading-relaxed" style={{ color: 'var(--ink-soft)' }}>{tr(n.sens, lang)}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {lignes.length > 0 && (
+            /* La table dit deux choses de chaque source, et la seconde compte
+               autant que la premiere : ce qu'elle ne voit pas. */
+            <div className="overflow-x-auto border border-slate-200 rounded-lg">
+              <table className="w-full text-[13px] border-collapse">
+                <thead>
+                  <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                    {colonnes.map((c, i) => (
+                      <th key={i} scope="col"
+                          className="text-start font-bold uppercase text-[9px] px-4 py-2.5 border-b border-slate-200"
+                          style={{ letterSpacing: '.14em', color: 'var(--label)' }}>
+                        {tr(c, lang)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {lignes.map((r, i) => (
+                    <tr key={i} className="border-b border-slate-100 last:border-b-0">
+                      <th scope="row" className="text-start align-top px-4 py-3 font-bold text-slate-900 whitespace-nowrap">
+                        {tr(r.source, lang)}
+                      </th>
+                      <td className="align-top px-4 py-3 leading-relaxed" style={{ color: 'var(--ink-soft)' }}>{tr(r.mesure, lang)}</td>
+                      <td className="align-top px-4 py-3 leading-relaxed" style={{ color: 'var(--label)' }}>{tr(r.angle, lang)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {pied && (
+            <Prose className="text-[12px] leading-relaxed mt-5 max-w-3xl" style={{ color: 'var(--label)' }} lang={lang}>
+              {tr(pied, lang)}
+            </Prose>
+          )}
+        </div>
+      )}
+    </section>
+  );
+};
+
 const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpandedIndicator, exportIndicatorsCSV }) => {
   const L = faireL(lang);
   const headline = [
@@ -8723,7 +8818,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.data.badge}
-        plate={"Pl. VIII"}
+        plate={"Pl. IV"}
         plain={text.headers.data.plain}
         lang={lang}
         title={text.headers.data.title}
@@ -8733,6 +8828,57 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
       />
 
       <BarreSection lang={lang} />
+
+      {/* Le b.a.-ba, avant les chiffres. Cette section s'ouvrait sur « 47 Etats
+          sur 54 ont recense » : un lecteur qui ignore ce que compte un
+          recensement, et ce qu'il rate, lit des nombres sans grammaire. */}
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Comment se fabrique un chiffre sur les migrations",
+                 en: 'How a migration figure is made',
+                 ar: 'كيف يُصنع رقم عن الهجرة' }}
+        chapeau={{
+          fr: "Aucune institution ne compte les migrants du monde. Les chiffres que l'on cite sont assemblés, à partir de ce que chaque État a lui-même mesuré — et chaque façon de mesurer voit une chose et en manque une autre. Savoir laquelle change la lecture de tout ce qui suit.",
+          en: 'No institution counts the world’s migrants. The figures we quote are assembled from what each state measured itself — and every way of measuring sees one thing and misses another. Knowing which changes how everything below reads.'
+        }}
+        notions={[
+          { mot: { fr: 'Stock', en: 'Stock' },
+            sens: { fr: "Combien de personnes nées ailleurs vivent dans un pays à une date donnée. Une photographie. La quasi-totalité des chiffres cités dans le débat public sont des stocks.",
+                    en: 'How many people born elsewhere live in a country on a given date. A photograph. Almost every figure quoted in public debate is a stock.' } },
+          { mot: { fr: 'Flux', en: 'Flow' },
+            sens: { fr: "Combien de personnes ont franchi une frontière pendant une période. Un film. Beaucoup plus rare, et beaucoup plus difficile à établir — c'est pourtant ce que le mot « arrivées » laisse entendre.",
+                    en: 'How many people crossed a border during a period. A film. Far rarer and far harder to establish — yet it is what the word “arrivals” suggests.' } },
+          { mot: { fr: 'Millésime', en: 'Vintage' },
+            sens: { fr: "L'année à laquelle la mesure se rapporte, qui n'est pas celle de la publication. Un rapport paru en 2024 peut porter des stocks de 2020. Un chiffre sans son année ne veut rien dire.",
+                    en: 'The year the measurement refers to, which is not the year of publication. A 2024 report may carry 2020 stocks. A figure without its year says nothing.' } },
+          { mot: { fr: 'Compilateur', en: 'Compiler' },
+            sens: { fr: "L'organisation qui rassemble et harmonise les mesures nationales — UN DESA, HCR, IDMC, OIT, Banque mondiale. Elle ne mesure pas : elle réunit ce que les États déclarent, avec leurs trous.",
+                    en: 'The body that gathers and harmonises national measurements — UN DESA, UNHCR, IDMC, ILO, World Bank. It does not measure: it assembles what states declare, holes included.' } },
+        ]}
+        colonnes={[
+          { fr: 'Source', en: 'Source' },
+          { fr: 'Ce qu’elle voit', en: 'What it sees' },
+          { fr: 'Ce qu’elle manque', en: 'What it misses' },
+        ]}
+        lignes={[
+          { source: { fr: 'Recensement', en: 'Census' },
+            mesure: { fr: "Tous les résidents, pays de naissance compris, tous les dix ans environ.", en: 'Every resident, country of birth included, roughly every ten years.' },
+            angle: { fr: "Ceux qui sont partis, et tout ce qui bouge entre deux passages.", en: 'Those who have left, and everything that moves between two rounds.' } },
+          { source: { fr: 'Registres administratifs', en: 'Administrative registers' },
+            mesure: { fr: "Les personnes titulaires d'un droit au séjour, en continu.", en: 'People holding a residence right, continuously.' },
+            angle: { fr: "Les personnes sans titre, qui existent sans figurer.", en: 'People without a permit, who exist without appearing.' } },
+          { source: { fr: 'Enquêtes auprès des ménages', en: 'Household surveys' },
+            mesure: { fr: "Les motifs, les conditions de vie, l'argent envoyé au pays.", en: 'Motives, living conditions, money sent home.' },
+            angle: { fr: "Le détail national fin : l'échantillon est trop mince pour descendre au pays d'origine.", en: 'Fine national detail: the sample is too thin to break down by country of origin.' } },
+          { source: { fr: 'Registres de frontière', en: 'Border records' },
+            mesure: { fr: "Les passages enregistrés à un poste officiel.", en: 'Crossings recorded at an official post.' },
+            angle: { fr: "Les passages non enregistrés — et le même voyageur, compté à chaque aller-retour.", en: 'Unrecorded crossings — and the same traveller, counted at every round trip.' } },
+        ]}
+        pied={{
+          fr: "Trois pièges suivent de là. Un chiffre sans année ne se lit pas. Un pourcentage sans son dénominateur non plus. Et deux institutions peuvent publier deux chiffres justes du même phénomène, parce qu'elles ne comptent pas la même population : c'est le cas des déplacés internes chez l'IDMC et au HCR, et cette plateforme affiche alors les deux. Cadre de référence : Nations unies, Recommandations en matière de statistiques des migrations internationales, révision 1.",
+          en: 'Three traps follow. A figure without a year cannot be read. Neither can a percentage without its denominator. And two institutions can publish two correct figures for the same phenomenon, because they are not counting the same population — as with internally displaced people at IDMC and UNHCR, where this platform shows both. Reference framework: United Nations, Recommendations on Statistics of International Migration, Revision 1.'
+        }}
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
         {headline.map((h, i) => (
@@ -10284,20 +10430,21 @@ export default function App() {
   // on ouvre les deux outils de donnees, on verifie l'appareil.
   //   entrer     — Atlas, Accueil
   //   eprouver   — Evidence Check
+  //   comprendre — Donnees & Stats : d'ou vient le chiffre, avant de s'en servir
   //   analyser   — Mobilites, Gouvernance
-  //   consulter  — Explorateur, Donnees & Stats
+  //   consulter  — Explorateur
   //   verifier   — Ressources & methode, A propos
-  // L'Explorateur separait auparavant l'epreuve des analyses, et « Donnees »
-  // etait coupe de l'Explorateur par la Gouvernance : les deux outils qui
-  // servent le meme geste se suivent maintenant.
+  // « Donnees & Stats » suit immediatement l'epreuve des idees recues : on a
+  // vu ce que les chiffres dementent, on apprend alors comment ils sont
+  // fabriques — et seulement ensuite on lit le continent avec.
   const navigation = [
     { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas', ar: 'الأطلس' } },
     { id: 'home', icon: Compass, label: { fr: 'Accueil', en: 'Home', ar: 'الرئيسية' } },
     { id: 'evidence', icon: Globe, label: { fr: 'Evidence Check', en: 'Evidence Check', ar: 'فحص الأدلة' } },
+    { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats', ar: 'البيانات والإحصاءات' } },
     { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities', ar: 'التنقلات' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance', ar: 'الحوكمة' } },
     { id: 'explorer', icon: MapPin, label: { fr: 'Explorateur', en: 'Data Explorer', ar: 'مستكشف البلدان' } },
-    { id: 'data', icon: BarChart3, label: { fr: 'Données & Stats', en: 'Data & Stats', ar: 'البيانات والإحصاءات' } },
     { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method', ar: 'المراجع والمنهجية' } },
     { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About', ar: 'عن المنصة' } },
   ];
