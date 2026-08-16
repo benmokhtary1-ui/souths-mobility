@@ -70,8 +70,8 @@ export const methodConventions = [
     label: { fr: "Affirmations évaluées", en: "Assessed claims" },
     value: { fr: "Formulées par l'auteur", en: "Authored in-house" },
     detail: {
-      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes ; ce ne sont pas des citations de médias ou d'institutions identifiés. Seules les sections « ce que montrent les données » sont sourcées institutionnellement.",
-      en: "The claims examined in Evidence Check are written by the author to illustrate common perceptions; they are not quotations from identified media or institutions. Only the \"what the data shows\" sections carry institutional sourcing."
+      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes, sans reprendre les mots d'un média ou d'une institution identifiés. Seules les sections « ce que montrent les données » portent une source institutionnelle.",
+      en: "The claims examined in Evidence Check are written by the author to illustrate common perceptions, without quoting any identified outlet or institution. Only the \"what the data shows\" sections carry institutional sourcing."
     }
   },
   {

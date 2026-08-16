@@ -185,8 +185,8 @@ export const glossaryData = [
       {
         term: "Déplacement prolongé",
         en_term: "Protracted displacement",
-        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit non pas une crise mais un régime d'attente institutionnalisé.",
-        en: "A situation in which displaced people remain durably without a solution — no return, no local integration, no resettlement — often for years or decades. The notion shifts attention from emergency to duration: it describes not a crisis but an institutionalised regime of waiting.",
+        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit un régime d'attente institutionnalisé, où provisoire veut dire des années.",
+        en: "A situation in which displaced people remain durably without a solution — no return, no local integration, no resettlement — often for years or decades. The notion shifts attention from emergency to duration: it describes an institutionalised regime of waiting, where temporary means years.",
         source: { fr: "HCR, Global Trends", en: "UNHCR, Global Trends", url: "https://www.unhcr.org/global-trends" },
         stakes: { fr: "Tant qu'une situation est nommée « urgence », elle appelle des financements humanitaires courts et renouvelables. La nommer « prolongée » ouvre au contraire les instruments de développement — mais suppose de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire.", en: "As long as a situation is named an \"emergency\", it draws short, renewable humanitarian funding. Naming it \"protracted\" opens development instruments instead — but requires acknowledging a lasting presence, which host states are often reluctant to do." }
       },
@@ -209,8 +209,8 @@ export const glossaryData = [
       {
         term: "Visa (régime de)",
         en_term: "Visa (regime)",
-        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction n'est pas de degré mais de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
-        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is one of kind, not of degree. A prior visa moves the decision to the consulate in the country of departure, beyond the reach of any appeal in the destination country.",
+        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction est de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
+        en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is one of kind. A prior visa moves the decision to the consulate in the country of departure, beyond the reach of any appeal in the destination country.",
         source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
       },
       {
@@ -439,8 +439,8 @@ export const glossaryData = [
       {
         term: "Lecture décoloniale",
         en_term: "Decolonial reading",
-        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : ce ne sont pas les mêmes personnes qui peuvent circuler, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
-        en: "An approach that relates contemporary asymmetries of mobility to the colonial order that instituted them: not everyone can move, and that inequality has a history. Applied to international migration law, it contests the claim that global mobility regimes are neutral as to origin.",
+        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : le droit de circuler se distribue selon des lignes héritées, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
+        en: "An approach that relates contemporary asymmetries of mobility to the colonial order that instituted them: the right to move is distributed along inherited lines, and that inequality has a history. Applied to international migration law, it contests the claim that global mobility regimes are neutral as to origin.",
         source: { fr: "Achiume (2019), « Migration as Decolonization » — voir Bibliothèque", en: "Achiume (2019), \"Migration as Decolonization\" — see Library", url: "https://ssrn.com/abstract=3330353" }
       },
       {

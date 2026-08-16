@@ -155,8 +155,8 @@ const PLAIN_TERMS = {
   },
   kampala: {
     label: { fr: 'Convention de Kampala', en: 'Kampala Convention' },
-    fr: "Le traité africain de 2009 qui protège les personnes chassées de chez elles mais restées dans leur propre pays. C'est le seul texte contraignant au monde sur ce sujet.",
-    en: 'The 2009 African treaty protecting people driven from their homes but still inside their own country. It is the only binding treaty in the world on this.',
+    fr: "Le traité africain de 2009 qui protège les personnes chassées de chez elles mais restées dans leur propre pays. Le seul texte contraignant au monde sur ce sujet.",
+    en: 'The 2009 African treaty protecting people driven from their homes but still inside their own country. The only binding treaty in the world on this subject.',
   },
   retention: {
     label: { fr: 'rétention Sud-Sud', en: 'South-South retention' },
@@ -237,8 +237,8 @@ const PLAIN_TERMS = {
   },
   recensement: {
     label: { fr: 'recensement', en: 'census' },
-    fr: "L'opération par laquelle un pays compte toute sa population, en principe tous les dix ans. C'est la seule source qui couvre tout le monde — et donc la base de presque tous les autres chiffres. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
-    en: 'The operation by which a country counts its whole population, in principle every ten years. It is the only source covering everyone, and therefore the basis of almost every other figure. A date announced then postponed does not count as a census held.',
+    fr: "L'opération par laquelle un pays compte toute sa population, en principe tous les dix ans. Couvrant tout le monde, il sert de base à presque tous les autres chiffres. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
+    en: 'The operation by which a country counts its whole population, in principle every ten years. Covering everyone, it underpins almost every other figure. A date announced then postponed does not count as a census held.',
   },
   dejure: {
     label: { fr: 'population de jure', en: 'de jure population' },
@@ -267,8 +267,8 @@ const PLAIN_TERMS = {
   },
   mpfa: {
     label: { fr: 'MPFA', en: 'MPFA' },
-    fr: "Le Cadre de politique migratoire pour l'Afrique, adopté par l'Union africaine et révisé pour 2018-2030. Ce n'est pas un traité : il n'oblige personne. Il propose aux États une trame commune pour écrire leurs propres politiques.",
-    en: 'The Migration Policy Framework for Africa, adopted by the African Union and revised for 2018-2030. It is not a treaty and binds no one. It offers states a shared template for writing their own policies.',
+    fr: "Le Cadre de politique migratoire pour l'Afrique, adopté par l'Union africaine et révisé pour 2018-2030. Un texte d'orientation, adopté sans procédure de ratification : il propose aux États une trame commune pour écrire leurs propres politiques.",
+    en: 'The Migration Policy Framework for Africa, adopted by the African Union and revised for 2018-2030. A policy orientation adopted without any ratification procedure: it offers states a shared template for writing their own policies.',
   },
   shasa: {
     label: { fr: 'SHaSA', en: 'SHaSA' },
@@ -307,8 +307,8 @@ const PLAIN_TERMS = {
   },
   idmc: {
     label: { fr: 'IDMC', en: 'IDMC' },
-    fr: "Le centre de Genève qui compte, année après année, les personnes déplacées à l'intérieur de leur propre pays — par un conflit ou par une catastrophe. C'est la source de référence sur ce déplacement-là.",
-    en: 'The Geneva centre that counts, year after year, people displaced inside their own country — by conflict or by disaster. It is the reference source on that form of displacement.',
+    fr: "Le centre de Genève qui compte, année après année, les personnes déplacées à l'intérieur de leur propre pays — par un conflit ou par une catastrophe. Sur ce déplacement-là, ses chiffres font référence.",
+    en: 'The Geneva centre that counts, year after year, people displaced inside their own country — by conflict or by disaster. On that form of displacement, its figures are the reference.',
   },
   normlex: {
     label: { fr: 'NORMLEX', en: 'NORMLEX' },
@@ -317,8 +317,8 @@ const PLAIN_TERMS = {
   },
   desa: {
     label: { fr: 'UN DESA', en: 'UN DESA' },
-    fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. C'est la source laplus citée, y compris pour l'Afrique.",
-    en: 'The United Nations statistical office that publishes the reference figures on migrants worldwide. It is the most cited source, including for Africa.',
+    fr: "Le service statistique des Nations unies qui publie les chiffres de référence sur les migrants dans le monde. Ses chiffres sont les plus cités, Afrique comprise.",
+    en: 'The United Nations statistical office that publishes the reference figures on migrants worldwide. Its figures are the most cited, Africa included.',
   },
 };
 
@@ -1190,8 +1190,8 @@ const AspirationGap = ({ lang }) => {
             {L("Ce que l'écart démontre", 'What the gap demonstrates')}
           </h4>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage n'est pas une contradiction dans les données : c'est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
-              'Sixty per cent of those considering leaving name North America or Europe. Yet in fact more than seven in ten migrants of African origin stay on the continent. This discrepancy is not a contradiction in the data: it is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
+              "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
+              'Sixty per cent of those considering leaving name North America or Europe. Yet in fact more than seven in ten migrants of African origin stay on the continent. That gap is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
             )}</Prose>
         </div>
       </div>
@@ -2189,7 +2189,7 @@ const t = {
           badge: "Déplacement forcé & protection",
           title: "La mobilité qui ne franchit aucune frontière",
           highlight: "et que personne ne compte comme migration.",
-          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux — et c'est là que l'écart entre la norme et l'ancrage se paie le plus cher.",
+          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux, là où l'écart entre la norme et l'ancrage se paie le plus cher.",
           plain: "En Afrique, la plupart des personnes qui fuient la guerre ou une catastrophe restent dans leur propre pays. Elles n'apparaissent donc dans aucune statistique migratoire. Cette section les compte."
         },
         glossary: {
@@ -2218,9 +2218,9 @@ const t = {
         badge: "Note de Cadrage Scientifique",
         title: "Pourquoi ce Knowledge Hub ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C'est loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L'attention s'y concentre de manière disproportionnée sur les traversées vers l'Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent n'est pas internationale mais interne. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). Autrement dit, la forme de mobilité la plus massive en Afrique ne franchit aucune frontière. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L'attention s'y concentre de manière disproportionnée sur les traversées vers l'Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent se joue à l'intérieur des frontières nationales. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l'intérieur d'un pays. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Ce constat s'inscrit dans un cadre théorique plus large. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d'en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p2: "Un cadre théorique plus large éclaire ce constat. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d'en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique a parfois devancé la norme internationale. Avec la Convention de Kampala (2009), elle a adopté le premier traité régional contraignant au monde sur les personnes déplacées internes — à ce jour, toujours le seul. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
@@ -2252,7 +2252,7 @@ const t = {
         gcr_desc: "Affirmé en 2018, le Pacte Mondial sur les Réfugiés (GCR) établit un cadre de partage équitable des charges pour soutenir les pays du Sud qui accueillent 76% des réfugiés mondiaux.",
         link_text: "Accéder au portail officiel",
         sdg_points: [
-          { goal: 10, title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées. Pierre angulaire de l'Agenda 2030 pour la migration, suivie par 4 indicateurs (coûts de recrutement, gouvernance, sécurité des parcours, réfugiés)." },
+          { goal: 10, title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées. La cible migratoire de l'Agenda 2030, suivie par 4 indicateurs (coûts de recrutement, gouvernance, sécurité des parcours, réfugiés)." },
           { goal: 10, title: "Cible 10.c (Réduction des coûts de transfert)", desc: "Ramener à moins de 3% les coûts de transaction des envois de fonds des diasporas (Banque Mondiale)." },
           { goal: 17, title: "Cible 17.18 (Désagrégation des données)", desc: "Renforcer les capacités statistiques nationales pour ventiler les données selon le statut migratoire." },
           { goal: 8, title: "Cible 8.8 (Droits des travailleurs migrants)", desc: "Protéger les droits du travail et promouvoir un environnement sûr pour tous les travailleurs migrants, en particulier les femmes (OIT)." },
@@ -2312,10 +2312,10 @@ const t = {
         intro_p3: "Son ambition est de rendre les données sur les mobilités humaines plus accessibles, plus comparables et plus intelligibles, afin de favoriser une compréhension empirique, nuancée et documentée des dynamiques migratoires contemporaines.",
         
         research_title: "Une plateforme née de la recherche",
-        research_p1: "South(s) Mobility est issu d'un projet de recherche doctorale consacré à la gouvernance des migrations africaines.",
+        research_p1: "Un projet de recherche doctorale sur la gouvernance des migrations africaines est à l'origine de ce travail.",
         research_p2: "Au cours de cette recherche, un constat s'est imposé. Une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources restent dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
-        research_p3: "South(s) Mobility est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
-        research_p4: "Il s'inscrit dans une démarche de science ouverte (Open Science), de diffusion des connaissances et de valorisation de la recherche.",
+        research_p3: "Le projet est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
+        research_p4: "Il relève de la science ouverte : diffuser les connaissances et rendre la recherche utilisable.",
 
         data_title: "Une approche fondée sur les données",
         data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
@@ -2339,10 +2339,10 @@ const t = {
           { name: "Instituts nationaux de statistique", url: null, logo: null }
         ],
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
-        data_p3: "South(s) Mobility ne produit pas de statistiques officielles. La plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
+        data_p3: "Aucune statistique officielle n'est produite ici : la plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
 
         south_title: "Une perspective ancrée dans les Suds",
-        south_p1: "South(s) Mobility adopte une perspective centrée sur les Suds, en accordant une attention particulière aux dynamiques souvent moins visibles dans les bases de données internationales. Cela inclut notamment :",
+        south_p1: "Le regard porte depuis les Suds, avec une attention particulière aux dynamiques souvent moins visibles dans les bases de données internationales. Cela inclut notamment :",
         south_list: [
           "Les migrations intra-africaines",
           "Les mobilités Sud-Sud",
@@ -2504,7 +2504,7 @@ const t = {
           badge: "Forced displacement & protection",
           title: "The mobility that crosses no border",
           highlight: "and that nobody counts as migration.",
-          desc: "Internally displaced people, refugees, stateless persons, disaster displacement: in Africa the constrained forms of mobility are overwhelmingly internal. They fall under African instruments that predate and exceed the global frameworks — and it is here that the gap between norm and anchoring costs the most.",
+          desc: "Internally displaced people, refugees, stateless persons, disaster displacement: in Africa the constrained forms of mobility are overwhelmingly internal. They fall under African instruments that predate and exceed the global frameworks, where the gap between norm and anchoring costs the most.",
           plain: "In Africa, most people fleeing war or disaster stay inside their own country. They therefore appear in no migration statistic. This section counts them."
         },
         glossary: {
@@ -2533,9 +2533,9 @@ const t = {
         badge: "Scientific Framing Note",
         title: "Why this Knowledge Hub?",
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world's international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world's population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil — 9.5% of the world stock. That is far behind Europe and Asia, and well below the continent's demographic weight, close to 18% of the world's population. This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
-        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). In other words, Africa's largest form of mobility crosses no border at all: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
+        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). Africa's largest form of mobility therefore unfolds entirely inside a single country: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA's operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
-        p2: "This observation sits within a broader theoretical framework. Research on \"capabilities of movement\" places mobility and immobility on a single continuum: that of aspirations and of the capabilities people can actually exercise. It thereby departs from the usual split between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
+        p2: "A broader theoretical framework lights this observation. Research on \"capabilities of movement\" places mobility and immobility on a single continuum: that of aspirations and of the capabilities people can actually exercise. It thereby departs from the usual split between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one. It consolidates, harmonizes and recontextualizes data already produced by international and African institutions, instead of producing new data of its own. The platform favours proportion over absolute value, comparison over anecdote, and African institutional architecture — the African Union, the Regional Economic Communities — over normative frameworks imported solely from the North. This does not deny the power and funding asymmetries that concretely structure the regime (Bakewell, 2008; Bayart, 2000).",
         p3b: "This architecture produces a paradox the platform documents with figures. Africa has at times moved ahead of the international norm. With the Kampala Convention (2009) it adopted the world's first binding regional treaty on internally displaced persons — to this day, still the only one. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
@@ -2627,10 +2627,10 @@ const t = {
         intro_p3: "Its ambition is to make data on human mobility more accessible, comparable, and intelligible, in order to foster an empirical, nuanced, and documented understanding of contemporary migratory dynamics.",
         
         research_title: "A platform born from research",
-        research_p1: "South(s) Mobility stems from a doctoral research project focused on the governance of African migrations.",
+        research_p1: "A doctoral research project on the governance of African migration is where this work began.",
         research_p2: "During this research, a clear observation emerged: a vast amount of quality data is already produced by public and international institutions, but these resources remain widely scattered, heterogeneous, and sometimes difficult to access. Cross-referencing, contextualizing, or simply finding them often requires considerable effort.",
-        research_p3: "South(s) Mobility was born from this observation. The project aims to gather these resources in a single, open, and scalable environment to facilitate their consultation, comparison, and reuse by researchers, students, journalists, public decision-makers, international organizations, and anyone interested in human mobility.",
-        research_p4: "It is part of an Open Science approach, aimed at disseminating knowledge and promoting research.",
+        research_p3: "The project was born from this observation. The project aims to gather these resources in a single, open, and scalable environment to facilitate their consultation, comparison, and reuse by researchers, students, journalists, public decision-makers, international organizations, and anyone interested in human mobility.",
+        research_p4: "It follows an Open Science approach: disseminate knowledge and make research usable.",
 
         data_title: "A data-driven approach",
         data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
@@ -2654,10 +2654,10 @@ const t = {
           { name: "National Statistical Institutes", url: null, logo: null }
         ],
         data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
-        data_p3: "South(s) Mobility does not produce official statistics. The platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
+        data_p3: "No official statistics are produced here: the platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
 
         south_title: "A perspective rooted in the Souths",
-        south_p1: "South(s) Mobility adopts a Global South-centric perspective, paying special attention to dynamics that are often less visible in international databases. This includes:",
+        south_p1: "The vantage point is the Global South, with particular attention to dynamics that are often less visible in international databases. This includes:",
         south_list: [
           "Intra-African migrations",
           "South-South mobilities",
@@ -3956,7 +3956,7 @@ const indicatorThemes = [
         id: "1.2", fr: "Volume du commerce informel transfrontalier", en: "Volume of cross-border informal trade", 
         desc_fr: "Impact des mobilités de proximité sur l'intégration économique réelle par le bas.", desc_en: "Impact of proximity mobilities on real economic integration from below.",
         method_fr: "Enquêtes micro-économiques aux frontières et modélisation des flux non-douaniers.", method_en: "Micro-economic surveys at borders and modeling of non-customs flows.",
-        contrast_fr: "Le PIB classique ignore l'économie informelle. Cet indicateur montre que les mobilités circulaires sont le véritable moteur de la survie et de l'intégration des communautés frontalières.", contrast_en: "Classic GDP ignores the informal economy. This indicator shows that circular mobilities are the true engine of survival and integration for border communities."
+        contrast_fr: "Le PIB classique ignore l'économie informelle. Cet indicateur montre que les mobilités circulaires portent la survie et l'intégration des communautés frontalières.", contrast_en: "Classic GDP ignores the informal economy. This indicator shows that circular mobilities carry the survival and integration of border communities."
       }
     ]
   },
@@ -4515,7 +4515,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <Prose className="text-xs text-amber-800 leading-relaxed" lang={lang}>{L(
-            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Il ne s'agit pas de citations directes issues de m\u00e9dias ou d'institutions identifi\u00e9es : seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d'institutions v\u00e9rifiables (voir Sources).",
+            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d'un m\u00e9dia ou d'une institution identifi\u00e9s ; seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d'institutions v\u00e9rifiables (voir Sources).",
             "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."
           )}</Prose>
       </div>
@@ -4984,8 +4984,8 @@ const GovernanceCross = ({ lang }) => {
               {L('Ce que les trois coefficients disent ensemble', 'What the three coefficients say together')}
             </h4>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Autrement dit : les États qui ouvrent ne sont pas ceux qui signent. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
-                `Governing better does go with opening more: the relationship exists, moderate but clear. Governance quality, however, says nothing about legal anchoring — and, the sharpest result, effective border openness says nothing about ratifications, nor the reverse. In other words: the states that open are not the states that sign. Rwanda alone does both fully. Seychelles opens completely while having ratified only four instruments out of six; Botswana and Lesotho are well governed and closed; Burundi and Mozambique open widely with poorly ranked governance. Openness is therefore neither a product of administrative capacity nor a consequence of legal commitment: it is a sovereign decision, taken instrument by instrument and border by border. That is precisely what the national in-between describes (Ben Mokhtar, 2026).`
+                `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Les États qui ouvrent et ceux qui signent forment deux groupes distincts. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
+                `Governing better does go with opening more: the relationship exists, moderate but clear. Governance quality, however, says nothing about legal anchoring — and, the sharpest result, effective border openness says nothing about ratifications, nor the reverse. The states that open and the states that sign form two distinct groups. Rwanda alone does both fully. Seychelles opens completely while having ratified only four instruments out of six; Botswana and Lesotho are well governed and closed; Burundi and Mozambique open widely with poorly ranked governance. Openness is therefore neither a product of administrative capacity nor a consequence of legal commitment: it is a sovereign decision, taken instrument by instrument and border by border. That is precisely what the national in-between describes (Ben Mokhtar, 2026).`
               )}</Prose>
             <Prose className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L(
                 "Une corrélation de rang ne dit rien d'une causalité, et l'IIAG comme l'AVOI sont des indices composites dont la construction porte ses propres choix. Le résultat qui compte ici est négatif — l'absence de lien — et c'est le type de résultat le plus robuste à ces réserves.",
@@ -5487,8 +5487,8 @@ const TabForced = ({ text, lang, children }) => {
           color="var(--bad)"
           unitTotal={data.totalStateless}
           note={L(
-            "L'apatridie recensée sur le continent est écrasée par un seul pays. Ce n'est pas une anomalie statistique : la Côte d'Ivoire concentre l'héritage des migrations de main-d'œuvre coloniales et post-coloniales dont les descendants n'ont jamais obtenu de nationalité. Ailleurs, l'apatridie est probablement sous-recensée plutôt qu'absente — elle ne se compte que là où un État accepte de la mesurer.",
-            "Recorded statelessness on the continent is dominated by a single country. This is not a statistical anomaly: Côte d'Ivoire concentrates the legacy of colonial and post-colonial labour migrations whose descendants never obtained nationality. Elsewhere statelessness is likely under-recorded rather than absent — it is only counted where a state agrees to measure it."
+            "L'apatridie recensée sur le continent est écrasée par un seul pays. Ce chiffre a une histoire : la Côte d'Ivoire concentre l'héritage des migrations de main-d'œuvre coloniales et post-coloniales dont les descendants n'ont jamais obtenu de nationalité. Ailleurs, l'apatridie est probablement sous-recensée plutôt qu'absente — elle ne se compte que là où un État accepte de la mesurer.",
+            "Recorded statelessness on the continent is dominated by a single country. That figure has a history: Côte d'Ivoire concentrates the legacy of colonial and post-colonial labour migrations whose descendants never obtained nationality. Elsewhere statelessness is likely under-recorded rather than absent — it is only counted where a state agrees to measure it."
           )}
         />
 
@@ -5541,8 +5541,8 @@ const TabForced = ({ text, lang, children }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
           {[
             { t: L('Rapatriement volontaire', 'Voluntary repatriation'), d: L("Le retour au pays d'origine, librement consenti et dans la sécurité. Suppose que la cause du départ ait cessé — condition rarement réunie dans les situations prolongées.", 'Return to the country of origin, freely consented and in safety. Presupposes that the cause of flight has ceased — a condition rarely met in protracted situations.') },
-            { t: L('Intégration locale', 'Local integration'), d: L("L'installation durable dans le pays d'asile, avec accès à un statut, au travail et aux services. C'est de fait la solution la plus fréquente en Afrique, et la moins reconnue en droit.", 'Durable settlement in the country of asylum, with access to status, work and services. In practice the most common solution in Africa, and the least recognised in law.') },
-            { t: L('Réinstallation', 'Resettlement'), d: L("Le transfert vers un pays tiers. Les places offertes chaque année restent très inférieures aux besoins : c'est moins une solution générale qu'un dispositif de protection ciblée.", 'Transfer to a third country. The places offered each year remain far below needs: less a general solution than a targeted protection mechanism.') },
+            { t: L('Intégration locale', 'Local integration'), d: L("L'installation durable dans le pays d'asile, avec accès à un statut, au travail et aux services. Fréquente dans les faits, rarement consacrée par le droit.", 'Durable settlement in the country of asylum, with access to status, work and services. Common in fact, seldom enshrined in law.') },
+            { t: L('Réinstallation', 'Resettlement'), d: L("Le transfert vers un pays tiers. Les places offertes chaque année couvrent une fraction des besoins : un dispositif de protection ciblée.", 'Transfer to a third country. The places offered each year cover a fraction of the need: a targeted protection mechanism.') },
           ].map((x, i) => (
             <div key={i} className="border border-slate-200 p-5 lift">
               <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
@@ -5777,8 +5777,8 @@ const TabLabour = ({ text, lang, children }) => {
                 "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
               )}</Prose>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify mt-3" lang={lang}>{L(
-                "C'est là que le paradoxe documenté ailleurs sur cette plateforme prend sa mesure économique : la ZLECAf compte 48 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, c'est au niveau régional qu'elle a été conquise — et c'est là que la mobilité de travail se mesure.",
-                "This is where the paradox documented elsewhere on this platform takes its economic measure: the AfCFTA has 48 ratifications out of 54, the Protocol on Free Movement of Persons 4 out of 54. Goods obtained their continental framework; the workers who produce them did not. Where free movement nonetheless exists, it was won at regional level — and that is where labour mobility can be measured."
+                "Le paradoxe documenté ailleurs sur cette plateforme prend ici sa mesure économique : la ZLECAf compte 48 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, elle a été conquise au niveau régional, et c'est à cette échelle que la mobilité de travail se mesure.",
+                "The paradox documented elsewhere on this platform takes its economic measure here: the AfCFTA has 48 ratifications out of 54, the Protocol on Free Movement of Persons 4 out of 54. Goods obtained their continental framework; the workers who produce them did not. Where free movement nonetheless exists, it was won at regional level, and that is the scale at which labour mobility can be measured."
               )}</Prose>
           </div>
 
@@ -5846,7 +5846,7 @@ const TabLabour = ({ text, lang, children }) => {
                   {L('Le volume ne dit pas la protection', 'Volume does not equal protection')}
                 </h4>
                 <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
-                    `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle fondamental complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
+                    `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
                     `The total number of ratified conventions ranges from ${ilo.rows[ilo.rows.length - 1].total} to ${ilo.rows[0].total}, averaging ${fmt(ilo.moyenne)}. But a high total guarantees nothing: several states at the top of the overall ranking lack the complete fundamental floor, while Madagascar holds it in full with a far more modest total. It is the same pattern observed on continental instruments — broad accession precedes, and sometimes replaces, binding commitment (Ben Mokhtar, 2026).`
                   )}</Prose>
               </div>
@@ -6119,8 +6119,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       title: { fr: "L'Agenda 2063 & STYIP (2024-2033)", en: "Agenda 2063 & STYIP (2024-2033)" },
       tag: { fr: "Vision Téléologique", en: "Teleological Vision" },
       desc: {
-        fr: "Adopté en 2015, c'est le grand parapluie stratégique de l'Union. Son Second Plan Décennal de Mise en Œuvre (STYIP) place la libre circulation au cœur du développement.",
-        en: "Adopted in 2015, it is the Union's overarching strategic umbrella. Its Second Ten-Year Implementation Plan (STYIP) places free movement at the heart of development."
+        fr: "Adopté en 2015, c'est le grand parapluie stratégique de l'Union. Son Second Plan Décennal de Mise en Œuvre (STYIP) fait de la libre circulation un levier de développement.",
+        en: "Adopted in 2015, it is the Union's overarching strategic umbrella. Its Second Ten-Year Implementation Plan (STYIP) makes free movement a lever of development."
       },
       article: {
         ref: { fr: "Aspiration N°2 (Agenda 2063)", en: "Aspiration N°2 (Agenda 2063)" },
@@ -7006,7 +7006,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                   {(tr({ fr: [
-                    ["Centré sur les personnes", "place les individus au cœur du dispositif"],
+                    ["Centré sur les personnes", "traite les migrants comme des sujets de droit"],
                     ["Coopération internationale", "aucun État ne peut traiter seul un phénomène transnational"],
                     ["Souveraineté nationale", "le droit de définir sa politique migratoire est réaffirmé"],
                     ["État de droit et régularité de la procédure", "accès à la justice à tous les stades"],
@@ -7017,7 +7017,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     ["Approche pangouvernementale", "cohérence horizontale et verticale entre secteurs et niveaux"],
                     ["Approche pansociétale", "migrants, diasporas, société civile, université, secteur privé, syndicats"],
                   ], en: [
-                    ["People-centred", "places individuals at its core"],
+                    ["People-centred", "treats migrants as bearers of rights"],
                     ["International cooperation", "no state can address a transnational phenomenon alone"],
                     ["National sovereignty", "the right to determine migration policy is reaffirmed"],
                     ["Rule of law and due process", "access to justice at every stage"],
@@ -7039,7 +7039,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </div>
                   ))}
                 </div>
-                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes ne sont pas un préambule décoratif : ils sont la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux — et c'est là que se joue l'écart entre deux mises en œuvre du même texte.", en: "These ten principles are not decorative preamble: they are the interpretive grid for the 23 objectives that follow. An objective is always read through them — and that is where two implementations of the same text diverge." }, lang)}</Prose>
+                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes forment la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux : deux États peuvent appliquer le même texte et diverger sur ce seul point.", en: "These ten principles form the interpretive grid for the 23 objectives that follow. An objective is always read through them: two states can apply the same text and part company on this point alone." }, lang)}</Prose>
               </div>
 
               <CounterpointFacts items={[
@@ -7148,7 +7148,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               <CounterpointFacts items={[
                 { when: "1969", what: tr({ fr: "Convention de l'OUA, adoptée à Addis-Abeba le 10 septembre — définition élargie du réfugié, en vigueur depuis le 20 juin 1974.", en: "OAU Convention, adopted in Addis Ababa on 10 September — broadened refugee definition, in force since 20 June 1974." }, lang)},
-                { when: "2009", what: tr({ fr: "Convention de Kampala : premier — et toujours seul — traité régional contraignant au monde sur les personnes déplacées internes.", en: "Kampala Convention: the first — and still the only — binding regional treaty in the world on internally displaced persons." }, lang)},
+                { when: "2009", what: tr({ fr: "Convention de Kampala : le continent se dote du seul traité régional contraignant au monde sur les déplacés internes.", en: "Kampala Convention: the continent adopts the world's only binding regional treaty on internally displaced persons." }, lang)},
                 { when: "2017", what: tr({ fr: "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017).", en: "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." }, lang)},
                 { when: "2018", what: tr({ fr: "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà.", en: "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." }, lang)},
               ]} />
@@ -8763,16 +8763,16 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             "During the 2010 census round — which in practice runs from 2006 to 2014 — 47 of 54 African states conducted a national census, that is 87% of the continent. Globally, 178 of the UN's 193 member states did the same: African participation therefore sits within the international norm, not at its margins."
           )}</Prose>
           <Prose lang={lang}>{L(
-            "L'intervalle moyen entre deux recensements y est de 11,1 ans, à peine au-delà des dix ans recommandés par les Nations unies. Le coût est compris entre 1 et 5 € par habitant dénombré (Gendreau & Dackam-Ngatchou, 2023). Rapportée à la contrainte budgétaire et logistique que représente un recensement exhaustif, cette régularité traduit une priorité politique assumée, non une défaillance.",
-            "The average interval between two censuses there is 11.1 years, barely beyond the ten years recommended by the United Nations, at a cost of between €1 and €5 per inhabitant enumerated (Gendreau & Dackam-Ngatchou, 2023). Set against the budgetary and logistical constraint an exhaustive census represents, this regularity reflects a deliberate political priority, not a failure."
+            "Le rythme observé est de 11,1 ans entre deux recensements, pour une recommandation onusienne de dix ans. Le coût est compris entre 1 et 5 € par habitant dénombré (Gendreau & Dackam-Ngatchou, 2023). Rapportée à la contrainte budgétaire et logistique que représente un recensement exhaustif, cette régularité traduit une priorité politique assumée, non une défaillance.",
+            "The observed rhythm is 11.1 years between two censuses, against a UN recommendation of ten, at a cost of between €1 and €5 per inhabitant enumerated (Gendreau & Dackam-Ngatchou, 2023). Set against the budgetary and logistical constraint an exhaustive census represents, this regularity reflects a deliberate political priority, not a failure."
           )}</Prose>
         </div>
 
         <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-5 flex items-start gap-3 max-w-4xl">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{L(
-              "Un taux de couverture ne dit rien de la qualité des dénombrements. Sept États n'ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join(", ") + " — et la République démocratique du Congo n'a conduit qu'un seul recensement dans son histoire, en 1984. L'Éthiopie a recensé, mais sans question sur la migration internationale.",
-              "A coverage rate says nothing about enumeration quality. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + " — and the Democratic Republic of the Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
+              "Derrière le taux, la qualité des dénombrements reste à établir. Sept États n'ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join(", ") + " — et la République démocratique du Congo n'a conduit qu'un seul recensement dans son histoire, en 1984. L'Éthiopie a recensé, mais sans question sur la migration internationale.",
+              "Behind the rate, enumeration quality remains to be established. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + " — and the Democratic Republic of the Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
             )}</Prose>
         </div>
       </Reveal>
@@ -8795,8 +8795,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           kicker={L('Qui compte sa population', 'Who counts their population')}
           titre={L("Le recensement, pays par pays", 'The census, country by country')}
           plain={{
-            fr: "Chaque pays porte la couleur de son dernier recensement : abouti dans la fenêtre 2015-2024, abouti après elle, en cours, annoncé, ou aucun en vue. Ce n'est pas une quantité, ce sont cinq situations.",
-            en: 'Each country carries the colour of its latest census: completed within the 2015-2024 window, completed after it, under way, announced, or none in sight. This is not a quantity but five situations.',
+            fr: "Chaque pays porte la couleur de son dernier recensement : abouti dans la fenêtre 2015-2024, abouti après elle, en cours, annoncé, ou aucun en vue. Cinq situations, sur une échelle qualitative.",
+            en: 'Each country carries the colour of its latest census: completed within the 2015-2024 window, completed after it, under way, announced, or none in sight. Five situations, on a qualitative scale.',
           }}
           sources={[{ label: L("Compilation de l'auteur d'après UNSD et UN DESA, statuts vérifiés en août 2026 sur les instituts nationaux",
                                "Author's compilation after UNSD and UN DESA; statuses verified in August 2026 against national institutes") }]}
@@ -8894,8 +8894,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               ))}
             </ul>
             <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{L(
-                "Trois de ces quatre caractéristiques sont des « thèmes centraux » : la norme recommande que tout recensement les collecte. L'instrument de mesure des migrations est donc déjà à l'intérieur du standard que les États africains appliquent. Ce n'est pas l'outil qui manque — c'est ce qu'on en fait en aval.",
-                "Three of these four characteristics are \"core topics\": the standard recommends that every census collect them. The instrument for measuring migration is therefore already inside the standard African states apply. It is not the tool that is missing — it is what is done with it downstream."
+                "Trois de ces quatre caractéristiques sont des « thèmes centraux » : la norme recommande que tout recensement les collecte. L'instrument de mesure des migrations est donc déjà à l'intérieur du standard que les États africains appliquent. L'outil est là ; ce qui se perd se perd en aval, au dépouillement et à la publication.",
+                "Three of these four characteristics are \"core topics\": the standard recommends that every census collect them. The instrument for measuring migration is therefore already inside the standard African states apply. The tool is there; what gets lost is lost downstream, in tabulation and publication."
               )}</Prose>
           </div>
         </AfricanCounterpoint>
@@ -9451,7 +9451,7 @@ const TabMethodology = ({ text, lang, children }) => (
           {tr({ fr: "Régionalisation : Union africaine (et non M49/ONU)", en: "Regionalization: African Union (not UN M49)" }, lang)}
         </h4>
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-          <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. Ce n'est pas celui d'UN DESA, qui publie ses tableaux de stocks selon la nomenclature M49 des Nations unies. Les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}</Prose>
+          <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & Séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. UN DESA publie les siens selon la nomenclature M49 des Nations unies : les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}</Prose>
         </div>
       </div>
     </section>
