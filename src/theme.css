@@ -1638,6 +1638,12 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   [class*="bg-emerald-900"], [class*="bg-slate-900"]
 ) { border-radius: 10px !important; }
 
+/* Le cadre d'une figure est une surface, pas une action : il prend le rayon des
+   cartes. Les boutons gardent le leur — 7 px, pose plus bas par « toute action
+   garde le meme rayon ». Deux valeurs, deux familles : c'est un systeme, et
+   l'entree de sommaire de la Gouvernance reste du cote des actions. */
+:is(main, .reader) .overflow-x-auto[class*="border"] { border-radius: 10px; }
+
 /* Les treize fonds accidentels rejoignent le lavis de la section. L'ambre plein
    est exclu : il porte un sens — la reserve — et doit rester reconnaissable.
    L'ambre translucide, lui, n'etait qu'un decor : deux accordeons voisins
