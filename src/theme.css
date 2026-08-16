@@ -1601,6 +1601,71 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   outline-offset: 2px;
 }
 
+/* ---------- La carte, mise en systeme --------------------------------------
+   Releve avant correction, sur les huit sections : un seul et meme objet — un
+   bloc a fond et a filet — portait CINQ rayons (0, 7, 9, 10 et 12 px) et SEIZE
+   fonds. Trois de ces fonds tenaient le systeme (blanc 124 fois, papier creuse
+   82, ambre 18). Les treize autres servaient une ou deux fois chacun : un bleu
+   pour le JLMP, un turquoise pour les partenariats de competences, trois
+   pastels pour trois chiffres de l'Explorateur qui ne demandaient aucune
+   distinction, un blanc translucide, un bleu encore ailleurs.
+
+   Une couleur employee une seule fois n'est pas un code, c'est un accident. Et
+   treize accidents, dans un site qui declare une teinte par section, sont
+   precisement ce qui fait « gabarit » : chaque bloc rappelle une couleur qui ne
+   vient de nulle part.
+
+   Quatre roles, un rayon.
+     papier   fond blanc          le cas general
+     creuse   fond --paper-sunk   listes et blocs secondaires
+     reserve  fond ambre          les mises en garde, et rien d'autre
+     encre    fond sombre         le bloc de rupture
+   Tout accent colore prend desormais la teinte de la section.               */
+
+/* Un rayon. On reconnait la carte a sa signature — un fond declare — plutot
+   qu'a la classe d'arrondi employee ce jour-la. Les pastilles gardent le leur :
+   `.rounded-full` porte deja !important plus haut.                          */
+:is(main, .reader) :is(
+  [class*="bg-white"], [class*="bg-slate-50"], [class*="bg-amber-50"],
+  [class*="bg-blue-50"], [class*="bg-teal-50"], [class*="bg-emerald-50"],
+  [class*="bg-indigo-50"], [class*="bg-violet-50"], [class*="bg-purple-50"],
+  [class*="bg-cyan-50"], [class*="bg-rose-50"],
+  [class*="bg-emerald-900"], [class*="bg-slate-900"]
+) { border-radius: 10px !important; }
+
+/* Les treize fonds accidentels rejoignent le lavis de la section. L'ambre plein
+   est exclu : il porte un sens — la reserve — et doit rester reconnaissable.
+   L'ambre translucide, lui, n'etait qu'un decor : deux accordeons voisins
+   s'opposaient en vert et en ambre sans qu'aucun sens ne les separe. */
+:is(main, .reader) :is(
+  [class*="bg-blue-50"], [class*="bg-teal-50"], [class*="bg-emerald-50"],
+  [class*="bg-indigo-50"], [class*="bg-violet-50"], [class*="bg-purple-50"],
+  [class*="bg-cyan-50"], [class*="bg-rose-50"], [class*="bg-amber-50/"]
+) {
+  background-color: var(--accent-lavis) !important;
+  border-color: color-mix(in oklab, var(--accent) 22%, var(--rule)) !important;
+}
+
+/* Le blanc translucide laissait voir le fond a travers : sur un lavis, il
+   virait au gris sale. Il devient un vrai papier souleve. */
+:is(main, .reader) [class*="bg-white/"] {
+  background-color: var(--paper-raised, #FFFFFF) !important;
+}
+
+/* Meme traitement pour le gris translucide, qui virait selon ce qu'il avait
+   dessous : il devient le papier creuse, franchement. */
+:is(main, .reader) [class*="bg-slate-50/"] {
+  background-color: var(--paper-sunk) !important;
+}
+
+/* Les encres de titraille qui accompagnaient ces fonds suivent le meme
+   mouvement. L'ambre, encore une fois, garde la sienne. */
+:is(main, .reader) :is(
+  .text-emerald-600, .text-emerald-700, .text-emerald-800, .text-emerald-900,
+  .text-indigo-600, .text-indigo-700, .text-indigo-800, .text-indigo-900,
+  .text-blue-900, .text-teal-900
+) { color: var(--accent-deep) !important; }
+
 /* ---------- Moins d'angles droits ----------------------------------------
    Les composants dessines a la main gardaient leurs aretes vives : ils
    detonnaient une fois les rayons desserres ailleurs. On les aligne.       */
