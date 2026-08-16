@@ -11,7 +11,7 @@ import {
   PlayCircle
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
-import { LANGUES, ACTIVES, LANGUE_DEFAUT, estRTL, tagDe } from './i18n/langues';
+import { LANGUES, ACTIVES, LANGUE_DEFAUT, estRTL, tagDe, estPartielle } from './i18n/langues';
 import { tr, faireL, pluriel, appliquerLangue, catalogue } from './i18n/tr';
 import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
@@ -10085,7 +10085,11 @@ const slugPays = (nom) => String(nom || '')
 // d'afficher une page vide.
 const lireURL = () => {
   const bouts = window.location.pathname.split('/').filter(Boolean);
-  const lang = bouts[0] === 'en' ? 'en' : 'fr';
+  // Toute langue servie est reconnue dans l'adresse, pas seulement les deux
+  // premieres. Le selecteur ecrivait bien /ar/…, mais le lecteur d'URL ne
+  // connaissait que « en » et renvoyait tout le reste au francais : un lien
+  // arabe se partageait pour retomber en francais a l'ouverture.
+  const lang = ACTIVES.includes(bouts[0]) ? bouts[0] : LANGUE_DEFAUT;
   const seg = bouts[1];
   let tab = 'atlas';
   if (seg) {
@@ -10570,6 +10574,30 @@ export default function App() {
         </div>
         <ScrollProgress />
       </nav>
+
+      {/* Ce que la langue choisie couvre reellement.
+
+          Bascule en arabe, le lecteur obtient une navigation arabe et des
+          paragraphes francais. Le repli est voulu — mieux vaut du francais
+          qu'un vide — mais sans un mot pour le dire, il ressemble a une panne.
+          La plateforme annonce ce qu'elle n'a pas encore, exactement comme elle
+          le fait pour un chiffre manquant. */}
+      {estPartielle(lang) && (
+        <div className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 pt-8 print:hidden`}>
+          <p className="flex items-start gap-3 px-5 py-3.5 text-[13px] leading-relaxed border"
+             style={{ backgroundColor: 'var(--accent-lavis)', color: 'var(--ink-soft)',
+                      borderColor: 'color-mix(in oklab, var(--accent) 22%, var(--rule))', borderRadius: 10 }}>
+            <Languages className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--accent-deep)' }} aria-hidden="true" />
+            <span>
+              {tr({
+                fr: "L'interface est traduite ; les analyses restent pour l'instant dans leur langue de rédaction. Elles s'affichent en français plutôt que de laisser un vide.",
+                en: 'The interface is translated; the analyses remain for now in their language of writing. They display in French rather than leaving a gap.',
+                ar: 'الواجهة مترجمة؛ أما التحليلات فتبقى في الوقت الحالي بلغة تحريرها، وتُعرض بالفرنسية بدلاً من ترك فراغ.',
+              }, lang)}
+            </span>
+          </p>
+        </div>
+      )}
 
       {/* data-section : c'est lui qui redefinit --accent pour toute la section.
           Aucun composant n'a besoin de connaitre la couleur de l'onglet. */}

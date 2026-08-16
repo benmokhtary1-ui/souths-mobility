@@ -1984,6 +1984,16 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    section, c'est déclarer quatre valeurs, et toutes ses déclinaisons suivent.
    Aucune ne porte de texte — ce sont des fonds et des filets — donc aucune ne
    peut faire chuter un contraste. */
+/* Les declinaisons existent aussi a la racine : un bandeau pose hors de <main>
+   — l'avis de couverture linguistique, par exemple — s'y appuie sans avoir de
+   section a laquelle se rattacher. Sans cela, `var(--accent-lavis)` n'y resout
+   rien, le fond disparait et le texte se retrouve sur du transparent. */
+:root {
+  --accent-lavis:   color-mix(in oklab, var(--accent) 7%,  var(--paper));
+  --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
+  --accent-filet:   color-mix(in oklab, var(--accent) 34%, var(--rule));
+}
+
 main[data-section] {
   --accent-lavis:   color-mix(in oklab, var(--accent) 7%,  var(--paper));
   --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
