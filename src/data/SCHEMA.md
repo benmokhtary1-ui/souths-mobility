@@ -57,7 +57,7 @@ Chaque terme porte `term`, `en_term`, `fr`, `en` et une `source`.
 
 ## `library.js` — la bibliothèque
 
-4 sections, 65 sources, chacune avec son lien d'origine.
+4 sections, 64 sources, chacune avec son lien d'origine.
 **Toute source citée ailleurs sur la plateforme doit y figurer.**
 
 ---
@@ -83,9 +83,8 @@ privé — et **le défaut ne se voit qu'à l'exécution, jamais au build**.
 |---|---|---|
 | `../censusData.js` | recensements 1970-2030, 54 pays | compilation de l'auteur d'après UNSD et UN DESA, statuts vérifiés en août 2026 sur les instituts nationaux |
 | `../unhcrData.js` | réfugiés, demandeurs, déplacés, apatrides — 52 pays, 2014 et 2024 | HCR, *Refugee Data Finder* |
-| `../findexData.js` | compte, mobile, transferts — 48 pays | Banque mondiale, *Global Findex* |
 | `../iiagData.js` | rang de gouvernance 2023, 54 pays | Mo Ibrahim Foundation, IIAG |
-| `../narrativesData.js` | 70 affirmations évaluées | rédigées par l'auteur, sources vérifiées une par une |
+| `../narrativesData.js` | 69 affirmations évaluées | rédigées par l'auteur, sources vérifiées une par une |
 | `../africaMapPaths.js` | tracés SVG des 54 pays | — |
 
 ---

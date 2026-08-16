@@ -16,7 +16,6 @@ import { tr, faireL, pluriel, appliquerLangue, catalogue } from './i18n/tr';
 import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
 import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
 import { unhcrByCountry, unhcrTotals, UNHCR_SOURCE } from './unhcrData';
-import { findexByCountry, FINDEX_SOURCE } from './findexData';
 import { iiagRank, IIAG_SOURCE } from './iiagData';
 import { countryData } from './data/countries';
 import { genericDesc } from './data/genericDesc';
@@ -1581,109 +1580,6 @@ const LateRound = ({ lang }) => {
     </Chapitre>
   );
 };
-
-const MobileMoneyRail = ({ lang }) => {
-  const L = faireL(lang);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
-
-  const rows = useMemo(() => {
-    const all = Object.values(countryData).flat();
-    return all.map(c => {
-      const f = findexByCountry[(c.iso2 || '').toLowerCase()];
-      if (!f || !f.account || !f.mobile) return null;
-      const share = f.account.v > 0 ? (f.mobile.v / f.account.v) * 100 : 0;
-      return { n: nm(c), account: f.account.v, mobile: f.mobile.v, share, remit: f.remit?.v ?? null, y: f.mobile.y };
-    }).filter(Boolean).sort((a, b) => b.mobile - a.mobile);
-  }, [lang]);
-
-  const overHalf = rows.filter(r => r.mobile >= 50).length;
-  const top = rows.slice(0, 10);
-  const fmt = (v) => (tr({ fr: String(v).replace('.', ','), en: String(v) }, lang));
-
-  return (
-    <Chapitre lang={lang}>
-      <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--ok)' }}>
-        <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
-          <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--ok)' }}>
-            {L("Le canal, pas le montant", 'The rail, not the amount')}
-          </span>
-          <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-            {L("L'Afrique n'a pas attendu la banque : elle a bâti son propre rail",
-               'Africa did not wait for banking: it built its own rail')}
-          </h4>
-        </div>
-  
-        <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
-          <Prose className="text-justify" lang={lang}>{L(
-              "Cette plateforme donnait jusqu'ici le volume des transferts de la diaspora sans dire par où ils passent. La question n'est pas secondaire : dans une bonne partie du continent, l'inclusion financière passe par le téléphone bien avant de passer par la banque. Là où le compte existe, il est très majoritairement un compte de téléphone.",
-              'Until now this platform gave the volume of diaspora remittances without saying how they travel. The question is not secondary: across much of the continent, financial inclusion runs through the phone long before it runs through a bank. Where an account exists, it is overwhelmingly a phone account.'
-            )}</Prose>
-  
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
-            {[
-              { v: `${overHalf}`, l: L('pays où le mobile money dépasse la moitié des adultes', 'countries where mobile money exceeds half of adults'), tone: 'figure-ok' },
-              { v: `${Math.round(top[0].share)} %`, l: L(`de l'inclusion financière passe par le mobile au ${top[0].n}`, `of financial inclusion runs on mobile in ${top[0].n}`), tone: 'figure-terra' },
-              { v: `${rows.length}`, l: L('pays couverts par les deux séries', 'countries covered by both series'), tone: 'figure-inkblue' },
-            ].map((k, i) => (
-              <div key={i} className="border border-slate-200 p-4 lift">
-                <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
-                <span className="block text-[11px] font-bold uppercase tracking-widest mt-2 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
-              </div>
-            ))}
-          </div>
-  
-          <div>
-            <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-                {L('Compte, dont mobile money — part des adultes', 'Account, of which mobile money — share of adults')}
-              </span>
-              <span className="inline-flex items-center gap-3 text-[11px]" style={{ color: 'var(--label)' }}>
-                <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--rule-strong)' }} />{L('compte, tous types', 'account, all types')}</span>
-                <span className="inline-flex items-center gap-1.5"><span className="dot" style={{ backgroundColor: 'var(--ok)' }} />{L('dont mobile money', 'of which mobile money')}</span>
-              </span>
-            </div>
-            <div className="space-y-2.5">
-              {top.map((r, i) => (
-                <div key={r.n} className="figure-row px-1 py-1">
-                  <div className="flex items-baseline justify-between gap-3 mb-1">
-                    <span className="text-[11px] font-medium text-slate-700">{r.n}</span>
-                    <span className="text-[11px] tabular-nums shrink-0" style={{ color: 'var(--label)' }}>
-                      {fmt(r.mobile)} % / {fmt(r.account)} %
-                      <span className="ms-2 font-bold" style={{ color: 'var(--ok)' }}>{Math.round(r.share)} %</span>
-                    </span>
-                  </div>
-                  {/* La barre pale porte le compte, la barre pleine la part mobile. */}
-                  <div className="relative h-4 w-full" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                    <div className="absolute inset-y-0 start-0" style={{ width: `${r.account}%`, backgroundColor: 'var(--rule-strong)' }} />
-                    <div className={`absolute inset-y-0 start-0 bar-fill bar-fill--d${Math.min(5, i + 1)}`}
-                         style={{ width: `${r.mobile}%`, backgroundColor: 'var(--ok)' }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-  
-          <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--ok)' }}>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
-              {L('Ce que cela change pour la lecture des transferts', 'What this changes for reading remittances')}
-            </h4>
-            <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "Un montant ne dit rien du coût ni de l'accès. Si le canal est mobile, le transfert atteint des zones sans agence bancaire, à des frais et des délais différents, et il laisse une trace numérique exploitable statistiquement. C'est aussi ce qui rend crédible l'objectif de ramener sous 3 % les coûts de transaction (cible 10.c des ODD) : la baisse ne viendra pas des guichets, elle vient déjà des opérateurs. Nommer le canal, c'est cesser de traiter les transferts comme une manne indifférenciée pour les traiter comme une infrastructure — construite en Afrique, sans avoir attendu que le système bancaire s'étende (Ben Mokhtar, 2026).",
-                'An amount says nothing about cost or access. If the rail is mobile, the transfer reaches areas with no bank branch, at different fees and delays, and it leaves a digital trace that can be exploited statistically. It is also what makes the target of cutting transaction costs below 3% (SDG target 10.c) credible: the fall will not come from counters, it is already coming from operators. Naming the rail means ceasing to treat remittances as an undifferentiated windfall and treating them as infrastructure — built in Africa, without waiting for the banking system to extend (Ben Mokhtar, 2026).'
-              )}</Prose>
-          </div>
-        </div>
-  
-        <div className="px-6 md:px-8 pb-5">
-          <Sources lang={lang} items={[{ label: tr(FINDEX_SOURCE.label, lang), url: FINDEX_SOURCE.url }]}
-            note={L("Millésime le plus récent disponible par pays (2021 à 2024 selon les séries). Findex est une enquête par sondage : tous les pays ne sont pas couverts à chaque vague.",
-                    'Most recent available year per country (2021 to 2024 depending on the series). Findex is a sample survey: not every country is covered in every wave.')} />
-        </div>
-      </section>
-    </Chapitre>
-  );
-};
-
 const MovementOpener = ({ n, kicker, thesis, accent = 'var(--accent-deep)' }) => (
   <div className="pt-4">
     <div className="flex items-baseline gap-4 mb-3">
@@ -9164,9 +9060,6 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         )}
       />
 
-      <Reveal delay={25}>
-        <MobileMoneyRail lang={lang} />
-      </Reveal>
 
       {/* SHaSA : la reponse africaine, endogene, a la question de l'harmonisation. */}
       <Reveal delay={30}>
