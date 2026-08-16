@@ -2889,6 +2889,22 @@ const mapIndicators = [
     hint: { fr: "Personnes déplacées à l'intérieur du pays par les conflits (IDMC).", en: "People displaced within the country by conflict (IDMC)." },
     plain: { fr: "Le nombre de personnes chassées de chez elles par un conflit, mais restées dans leur propre pays. Elles ne franchissent aucune frontière.", en: "The number of people driven from their homes by conflict but still inside their own country. They cross no border." }
   },
+  // Deux mesures que la base portait sans que la carte les interroge : le
+  // deplacement par catastrophe — la mobilite climatique, deja mesuree et non
+  // pas seulement projetee — et l'accueil de refugies, qui dit qui porte la
+  // charge de la protection sur le continent.
+  {
+    key: 'idp_disaster', label: { fr: "Déplacés internes (catastrophe)", en: "IDPs (disaster)" },
+    unit: '', get: c => Number(c.idp_disaster),
+    hint: { fr: "Personnes déplacées à l'intérieur du pays par une catastrophe (IDMC).", en: "People displaced within the country by a disaster (IDMC)." },
+    plain: { fr: "Le nombre de personnes chassées de chez elles par une inondation, une sécheresse ou une tempête, et restées dans leur pays. La mobilité climatique se mesure déjà.", en: "The number of people driven from home by flood, drought or storm, and still inside their country. Climate mobility is already measured." }
+  },
+  {
+    key: 'refugees_hosted', label: { fr: "Réfugiés accueillis", en: "Refugees hosted" },
+    unit: '', get: c => Number(c.refugees_hosted),
+    hint: { fr: "Réfugiés sous mandat du HCR présents dans le pays (HCR, 2024).", en: "Refugees under UNHCR mandate present in the country (UNHCR, 2024)." },
+    plain: { fr: "Le nombre de réfugiés qu'un pays héberge. Les plus gros pays d'accueil du continent sont voisins des pays d'où l'on fuit.", en: "How many refugees a country hosts. The continent’s largest hosts neighbour the countries people flee." }
+  },
 ];
 
 // La carte sert desormais ailleurs que dans l'Explorateur. Plutot que d'en
@@ -2972,8 +2988,27 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
   const paysLu = lu ? countryById[lu] : null;
   const L = faireL(lang);
 
+  // Le rang du pays lu sur la couche courante.
+  //
+  // Un chiffre seul ne situe pas : « 0,6 % » ne dit rien tant qu'on ignore si
+  // c'est beaucoup. Le rang le dit d'un coup, et il change avec la couche —
+  // c'est l'interaction qui produit l'information, pas un ornement pose dessus.
+  const rangs = useMemo(() => {
+    if (categoriel) return null;
+    const paires = Object.keys(countryById)
+      .map(id => [id, valueOf(id)])
+      .filter(([, v]) => Number.isFinite(v))
+      .sort((a, b) => b[1] - a[1]);
+    const table = {};
+    paires.forEach(([id], i) => { table[id] = i + 1; });
+    return { table, total: paires.length };
+  }, [valueOf, categoriel]);
+
+  const rangDe = (id) => (rangs && rangs.table[id]) || null;
+
   const releve = paysLu ? [
-    { l: tr(indicator.label, lang), v: fmt(valueOf(lu)), fort: true },
+    { l: tr(indicator.label, lang), v: fmt(valueOf(lu)), fort: true,
+      rang: rangDe(lu), surTotal: rangs?.total },
     { l: L('Migrants internationaux', 'International migrants'), v: formatNumber(paysLu.stock, lang) },
     { l: L('Ouverture des visas', 'Visa openness'), v: paysLu.avoi == null ? '—' : `${paysLu.avoi}/100` },
     { l: L('Rétention Sud-Sud', 'South-South retention'), v: paysLu.retention == null ? '—' : `${paysLu.retention} %` },
@@ -3068,6 +3103,14 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
                       style={{ color: r.fort ? 'var(--accent-deep)' : 'var(--ink)' }}>
                     {r.v}
                   </dd>
+                  {/* Le rang situe le chiffre. « 0,6 % » ne dit rien tant qu'on
+                      ignore si c'est beaucoup ; « 51e sur 54 » le dit. */}
+                  {r.rang && (
+                    <span className="block mt-1 text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
+                      {r.rang}<sup>{r.rang === 1 ? (lang === 'en' ? 'st' : 'er') : (lang === 'en' ? 'e' : 'e')}</sup>
+                      {' '}{L('sur', 'of', { ar: 'من' })} {r.surTotal}
+                    </span>
+                  )}
                 </div>
               ))}
             </dl>
@@ -3343,19 +3386,27 @@ const RechercheGlobale = ({ lang, aller }) => {
 const COUCHES_ATLAS = [
   // Sans `mene` : la carte, le panneau et la vue d'ensemble repondent ici meme.
   { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'),
-    question: { fr: 'Qui accueille ?', en: 'Who hosts?', ar: 'مَن يستقبل؟' } },
+    question: { fr: 'Qui accueille le plus ?', en: 'Who hosts the most?', ar: 'مَن يستقبل الأكثر؟' } },
   { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
-    question: { fr: 'Qui reste en Afrique ?', en: 'Who stays in Africa?', ar: 'مَن يبقى في أفريقيا؟' } },
+    question: { fr: "Qui part sans quitter l'Afrique ?", en: 'Who leaves without leaving Africa?', ar: 'مَن يهاجر دون مغادرة أفريقيا؟' } },
   { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance', sousOnglet: 'recs',
-    question: { fr: 'Qui ouvre ses frontières ?', en: 'Who opens its borders?', ar: 'مَن يفتح حدوده؟' } },
+    question: { fr: 'Qui ouvre ses frontières aux Africains ?', en: 'Who opens its borders to Africans?', ar: 'مَن يفتح حدوده أمام الأفارقة؟' } },
   { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'mobilites', volet: 'contraintes',
-    question: { fr: 'Qui est déplacé chez soi ?', en: 'Who is displaced at home?', ar: 'مَن نزح داخل بلده؟' } },
+    question: { fr: 'Qui fuit sans franchir de frontière ?', en: 'Who flees without crossing a border?', ar: 'مَن يفرّ دون عبور حدود؟' } },
+  // La mobilite climatique, deja mesuree : elle manquait a la carte alors que
+  // la base la porte pays par pays.
+  { cle: 'climat', ind: () => mapIndicators.find(i => i.key === 'idp_disaster'), mene: 'mobilites', volet: 'contraintes',
+    question: { fr: 'Qui est chassé par le climat ?', en: 'Who is driven out by the climate?', ar: 'مَن يطرده المناخ؟' } },
+  // Qui porte la charge de la protection : la reponse dement le recit du
+  // fardeau europeen mieux qu'un paragraphe.
+  { cle: 'refugies', ind: () => mapIndicators.find(i => i.key === 'refugees_hosted'), mene: 'mobilites', volet: 'contraintes',
+    question: { fr: 'Qui héberge les réfugiés ?', en: 'Who hosts the refugees?', ar: 'مَن يؤوي اللاجئين؟' } },
   { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'mobilites', volet: 'travail',
-    question: { fr: "Où l'argent revient-il ?", en: 'Where does the money return?', ar: 'إلى أين تعود الأموال؟' } },
+    question: { fr: "Où l'argent des diasporas revient-il ?", en: 'Where does diaspora money return?', ar: 'إلى أين تعود أموال المهجر؟' } },
   { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'mobilites', volet: 'travail',
-    question: { fr: 'Où les femmes partent-elles autant ?', en: 'Where do women leave as much?', ar: 'أين تهاجر النساء بالقدر نفسه؟' } },
+    question: { fr: 'Où les femmes migrent-elles autant que les hommes ?', en: 'Where do women migrate as much as men?', ar: 'أين تهاجر النساء بقدر الرجال؟' } },
   { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance', sousOnglet: 'au',
-    question: { fr: 'Qui a ratifié ?', en: 'Who has ratified?', ar: 'مَن صادَق؟' },
+    question: { fr: "Qui s'est vraiment engagé ?", en: 'Who has actually committed?', ar: 'مَن التزم فعلاً؟' },
     plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
              en: 'How many of the African Union’s six major instruments each country has formally ratified. Six is full commitment; zero is none.' },
     hint: { fr: "Décompte établi sur les listes officielles de statut de l'Union africaine.", en: 'Counted from the African Union’s official status lists.' } },
@@ -3414,6 +3465,30 @@ const CORRIDORS = [
   { de: 'conakry', vers: 'abidjan', intra: true, poids: 167516, note: { fr: "Guinée → Côte d'Ivoire", en: "Guinea → Côte d'Ivoire" } },
   { de: 'juba', vers: 'kampala', intra: true, poids: 1100000, note: { fr: 'Soudan du Sud → Ouganda', en: 'South Sudan → Uganda' } },
   { de: 'kinshasa', vers: 'kampala', intra: true, poids: 320000, note: { fr: 'RDC → Ouganda', en: 'DRC → Uganda' } },
+
+  // ---- Les deux plus grandes origines vers l'Afrique du Sud ----------------
+  // Le recensement sud-africain donne des parts, non des effectifs : 84 % des
+  // migrants internationaux viennent de la SADC, Zimbabwe 48,5 % et Mozambique
+  // 20 % en tete. On porte la part telle qu'elle est publiee plutot que de la
+  // multiplier par un stock venu d'une autre source — deux systemes de mesure
+  // ne se croisent pas pour fabriquer un troisieme chiffre.
+  { de: 'harare', vers: 'lecap', intra: true, part: '48,5 %',
+    note: { fr: "Zimbabwe → Afrique du Sud", en: 'Zimbabwe → South Africa' } },
+  { de: 'maputo', vers: 'lecap', intra: true, part: '20 %',
+    note: { fr: "Mozambique → Afrique du Sud", en: 'Mozambique → South Africa' } },
+
+  // ---- Le deplacement soudanais, 2023-2024 ---------------------------------
+  // Un objet distinct du corridor de peuplement : ce sont des personnes qui
+  // fuient, comptees a l'arrivee par le HCR et l'OIM, non un stock de residents
+  // releve par recensement. La carte les trace, la legende les separe.
+  { de: 'khartoum', vers: 'caire', deplacement: true, poids: 1200000,
+    note: { fr: 'Soudan → Égypte', en: 'Sudan → Egypt' } },
+  { de: 'khartoum', vers: 'juba', deplacement: true, poids: 675000,
+    note: { fr: 'Soudan → Soudan du Sud', en: 'Sudan → South Sudan' } },
+  { de: 'khartoum', vers: 'ndjamena', deplacement: true, poids: 600000,
+    note: { fr: 'Soudan → Tchad', en: 'Sudan → Chad' } },
+  { de: 'khartoum', vers: 'addis', deplacement: true, poids: 75000,
+    note: { fr: 'Soudan → Éthiopie', en: 'Sudan → Ethiopia' } },
 
   // ---- Routes extracontinentales, cartographiees par l'OIM -----------------
   // Route atlantique ouest-africaine
@@ -3479,7 +3554,8 @@ const SceneFlux = ({ lang, children }) => {
                un corridor d'1,4 million de personnes et à une route qui en
                compte quarante mille par an. */
             <path key={i} d={d} pathLength="1"
-                  className={CORRIDORS[i]?.intra ? 'flux-intra' : 'flux-hors'}
+                  className={CORRIDORS[i]?.intra ? 'flux-intra'
+                           : CORRIDORS[i]?.deplacement ? 'flux-deplace' : 'flux-hors'}
                   style={{ animationDelay: `${300 + i * 140}ms` }} />
           ))}
         </g>
@@ -3671,6 +3747,79 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
         <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
       </button>
     </aside>
+  );
+};
+
+// Le palmares de la couche affichee : les cinq premiers, les trois derniers.
+//
+// La carte dit ou ; elle ne dit pas qui. Or chaque question de l'Atlas commence
+// par « qui ». Le classement repond directement, et chaque ligne ouvre le pays
+// — la reponse devient un chemin, pas une image.
+//
+// Il se recompose a chaque changement de couche : c'est ce qui donne au bouton
+// de question une consequence visible, au-dela du repeignage de la carte.
+const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selection }) => {
+  const L = faireL(lang);
+  const categoriel = Array.isArray(indicateur?.categories);
+
+  // Un pays ne porte pas sa region : c'est `countryData` qui la lui donne, par
+  // la cle sous laquelle il est range. On part donc du decoupage, pas du pays.
+  const rangs = useMemo(() => {
+    if (categoriel || !indicateur?.get) return null;
+    const pays = region ? (countryData[region] || []) : Object.values(countryData).flat();
+    return pays
+      .map(c => ({ id: String(c.id), nom: tr(c.name, lang) || c.name?.fr, v: indicateur.get(c) }))
+      .filter(x => Number.isFinite(x.v))
+      .sort((a, b) => b.v - a.v);
+  }, [indicateur, categoriel, region, lang]);
+
+  if (!rangs || rangs.length < 8) return null;
+
+  const tete = rangs.slice(0, 5);
+  const queue = rangs.slice(-3);
+  const max = tete[0].v || 1;
+  const fmt = (v) => (indicateur.unit === '' ? formatNumber(v, lang) : `${v}${indicateur.unit}`);
+
+  const Ligne = ({ r, i, sourd }) => (
+    <li>
+      <button
+        type="button"
+        onClick={() => onChoisir?.(r.id)}
+        aria-current={selection === r.id ? 'true' : undefined}
+        className="classement-ligne w-full text-start"
+      >
+        <span className="classement-rang tabular-nums">{sourd ? rangs.indexOf(r) + 1 : i + 1}</span>
+        <span className="classement-nom">{r.nom}</span>
+        <span className="classement-jauge" aria-hidden="true">
+          <span style={{ width: `${Math.max(2, (r.v / max) * 100)}%` }} />
+        </span>
+        <span className="classement-valeur tabular-nums">{fmt(r.v)}</span>
+      </button>
+    </li>
+  );
+
+  return (
+    <section className="bg-white border border-slate-200 overflow-hidden" aria-label={L('Classement de la couche affichée', 'Ranking for the displayed layer')}>
+      <div className="px-6 md:px-8 pt-5 pb-3 flex flex-wrap items-baseline justify-between gap-3">
+        <h2 className="font-serif font-bold text-lg text-slate-900 leading-snug">
+          {L('Qui est en tête, qui ferme la marche', 'Who leads, who trails', { ar: 'مَن يتصدّر ومَن يُغلق' })}
+        </h2>
+        <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
+          {tr(indicateur.label, lang)} · {rangs.length} {L('pays classés', 'countries ranked', { ar: 'بلداً مصنفاً' })}
+        </span>
+      </div>
+      <ol className="px-6 md:px-8 pb-3 space-y-1">
+        {tete.map((r, i) => <Ligne key={r.id} r={r} i={i} />)}
+      </ol>
+      <div className="px-6 md:px-8 pb-5">
+        <span className="block text-[10px] font-bold uppercase mb-1.5" style={{ letterSpacing: '.16em', color: 'var(--label)' }}>
+          {L('En bas du classement', 'At the bottom', { ar: 'في ذيل الترتيب' })}
+        </span>
+        <ol className="space-y-1">
+          {queue.map((r, i) => <Ligne key={r.id} r={r} i={i} sourd />)}
+        </ol>
+      </div>
+    </section>
   );
 };
 
@@ -3876,6 +4025,21 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           </button>
         )}
       </div>
+
+      {/* Le palmares de la couche courante.
+
+          Une carte repond « ou », un classement repond « qui » — et la question
+          posee en haut de page commence par « qui ». Les cinq premiers et les
+          trois derniers, cliquables : la reponse devient un chemin vers le pays
+          plutot qu'une image a contempler. Il se recompose a chaque changement
+          de couche, ce qui donne au bouton une consequence visible. */}
+      <ClassementCouche
+        lang={lang}
+        indicateur={indicateur}
+        region={cadre}
+        onChoisir={(id) => setPaysOuvert(id)}
+        selection={paysOuvert}
+      />
 
       {/* L'ensemble, sous le detail. La carte repond pays par pays ; ce releve
           repond pour le cadrage choisi — le continent, ou la sous-region qu'on

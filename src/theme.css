@@ -1607,6 +1607,37 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    bloc qui pousse depuis le pied plutot que de flotter au centre. */
 .scene-flux-texte { padding-block-end: clamp(1.25rem, 3vh, 2rem); padding-block-start: clamp(1.25rem, 3vh, 2rem); }
 
+/* ---------- Le classement de la couche -------------------------------------
+   Chaque ligne est une porte vers le pays. La jauge se redessine quand la
+   couche change : c'est le meme mouvement que celui de la carte, pour que
+   l'oeil comprenne qu'il regarde la meme donnee autrement.                  */
+.classement-ligne {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(6rem, 11rem) 1fr auto;
+  align-items: center;
+  gap: .75rem;
+  padding: .4rem .5rem;
+  border-radius: 7px;
+  transition: background-color .16s var(--ease, ease);
+}
+.classement-ligne:hover,
+.classement-ligne:focus-visible { background-color: var(--accent-lavis); outline: none; }
+.classement-ligne[aria-current='true'] { background-color: var(--accent-voile); }
+.classement-rang   { font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
+.classement-nom    { font-size: 13.5px; color: var(--ink); font-weight: 600; }
+.classement-valeur { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.classement-jauge  { display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
+.classement-jauge > span {
+  display: block; height: 100%; border-radius: 999px;
+  background: var(--accent);
+  transition: width var(--dur-slow, 420ms) var(--ease-both, cubic-bezier(.32,.72,0,1));
+}
+@media (prefers-reduced-motion: reduce) { .classement-jauge > span { transition: none; } }
+@media (max-width: 767px) {
+  .classement-ligne { grid-template-columns: 1.4rem 1fr auto; }
+  .classement-jauge { display: none; }
+}
+
 /* ---------- Barre d'outils de section --------------------------------------
    Le meme bouton, au meme endroit, dans chaque section. Il prend la teinte de
    la section plutot qu'un indigo fixe : c'est un outil de la page ou il se
@@ -2266,6 +2297,15 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    que la plateforme documente. */
 .flux-corridors .flux-intra { stroke-width: 3; opacity: .78; }
 .flux-corridors .flux-hors  { stroke-width: 1.2; opacity: .40; }
+/* Le deplacement soudanais : epais comme un corridor de peuplement, puisqu'il
+   pese autant, mais tirete — ce sont des personnes qui fuient, comptees a
+   l'arrivee, non un stock de residents releve par recensement. La forme du
+   trait dit de quel objet il s'agit. */
+.flux-corridors .flux-deplace {
+  stroke-width: 2.4;
+  opacity: .68;
+  stroke-dasharray: 7 5;
+}
 @media (max-width: 767px) {
   .flux-corridors .flux-intra { stroke-width: 4; }
 }
