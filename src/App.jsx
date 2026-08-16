@@ -1664,8 +1664,11 @@ const LateRound = ({ lang }) => {
     </Chapitre>
   );
 };
+// L'ouverture d'un mouvement se pose au rythme de la section, sans ajouter le
+// sien : le `pt-4` s'additionnait aux 56 px de l'intervalle et faisait 70 px la
+// ou tous les voisins tenaient 56. Quatre trous dans la page, pour rien.
 const MovementOpener = ({ n, kicker, thesis, accent = 'var(--accent-deep)' }) => (
-  <div className="pt-4">
+  <div>
     <div className="flex items-baseline gap-4 mb-3">
       <span className="font-serif font-black text-[2.6rem] leading-none tabular-nums" style={{ color: accent }}>
         {n}
@@ -2330,7 +2333,7 @@ const t = {
         south_p2: "À plus long terme, cette approche a vocation à être progressivement étendue à d'autres régions du monde, notamment l'Amérique latine, les Caraïbes et l'Asie.",
 
         evolution_title: "Une plateforme en évolution permanente",
-        evolution_p1: "South(s) Mobility est un projet évolutif, enrichi au fil de la recherche. Plutôt que d'annoncer une feuille de route indistincte, la plateforme distingue ici ce qui est effectivement disponible de ce qui reste à construire.",
+        evolution_p1: "Le projet évolue, enrichi au fil de la recherche. Plutôt que d'annoncer une feuille de route indistincte, la plateforme distingue ici ce qui est effectivement disponible de ce qui reste à construire.",
         evolution_done: [
           "Un observatoire des narratifs, confrontant les affirmations courantes aux données",
           "Des profils détaillés pour les 54 pays et les 5 sous-régions de l'UA",
@@ -2352,11 +2355,11 @@ const t = {
         founder_title: "À propos du fondateur",
         founder_p1: "South(s) Mobility a été fondé par Yassine Ben Mokhtar, doctorant en relations internationales dont les recherches portent sur la gouvernance des migrations africaines, les dynamiques institutionnelles continentales et les politiques de mobilité.",
         founder_p2: "Le projet s'appuie sur plusieurs années de recherche académique, d'analyse documentaire et de terrain, ainsi que sur une expérience professionnelle auprès d'institutions travaillant sur les questions migratoires et de gouvernance en Afrique.",
-        founder_p3: "South(s) Mobility constitue à la fois un prolongement de cette recherche et une initiative de valorisation scientifique destinée à rendre les connaissances, les données et les ressources plus accessibles au plus grand nombre.",
+        founder_p3: "La plateforme prolonge cette recherche et en assure la valorisation scientifique, destinée à rendre les connaissances, les données et les ressources plus accessibles au plus grand nombre.",
         founder_p4: "Les analyses, interprétations et éventuelles erreurs relèvent de la seule responsabilité de son auteur et n'engagent aucune institution avec laquelle il a collaboré.",
 
         collab_title: "Collaborer & Contact",
-        collab_p1: "South(s) Mobility est ouvert aux collaborations académiques, institutionnelles et techniques. Les propositions de jeux de données, publications, visualisations, corrections, projets communs ou partenariats sont les bienvenues.",
+        collab_p1: "Les collaborations académiques, institutionnelles et techniques sont bienvenues, qu'il s'agisse de jeux de données, de publications, de visualisations, de corrections, de projets communs ou de partenariats.",
         contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
         disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
         
@@ -2637,7 +2640,7 @@ const t = {
         south_p2: "In the longer term, this approach is intended to be progressively extended to other regions of the world, notably Latin America, the Caribbean, and Asia.",
 
         evolution_title: "A constantly evolving platform",
-        evolution_p1: "South(s) Mobility is an evolving project, enriched as the research advances. Rather than announcing an undifferentiated roadmap, the platform distinguishes here between what is actually available and what remains to be built.",
+        evolution_p1: "The project evolves, enriched as the research advances. Rather than announcing an undifferentiated roadmap, the platform distinguishes here between what is actually available and what remains to be built.",
         evolution_done: [
           "A narratives observatory testing common claims against the data",
           "Detailed profiles for all 54 countries and the AU's 5 sub-regions",
@@ -2659,11 +2662,11 @@ const t = {
         founder_title: "About the founder",
         founder_p1: "South(s) Mobility was founded by Yassine Ben Mokhtar, a PhD candidate in international relations whose research focuses on African migration governance, continental institutional dynamics, and mobility policies.",
         founder_p2: "The project is built on several years of academic research, documentary and field analysis, as well as professional experience with institutions working on migration and governance issues in Africa.",
-        founder_p3: "South(s) Mobility constitutes both an extension of this research and a scientific dissemination initiative designed to make knowledge, data, and resources more accessible to a wider audience.",
+        founder_p3: "The platform extends this research and carries its scientific dissemination, designed to make knowledge, data, and resources more accessible to a wider audience.",
         founder_p4: "Analyses, interpretations, and any potential errors are the sole responsibility of the author and do not commit any institution with which he has collaborated.",
 
         collab_title: "Collaborate & Contact",
-        collab_p1: "South(s) Mobility is open to academic, institutional, and technical collaborations. Proposals for datasets, publications, visualizations, corrections, joint projects, or partnerships are welcome.",
+        collab_p1: "Academic, institutional and technical collaborations are welcome — datasets, publications, visualizations, corrections, joint projects or partnerships alike.",
         contact_p: "For any questions, collaboration proposals, or contributions to the project:",
         disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
         
@@ -2962,7 +2965,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
   return (
     <div className="grid lg:grid-cols-[1fr_15rem] gap-4 items-start">
       <svg viewBox={(region && CADRES_REGIONS[region]) ? CADRES_REGIONS[region].join(' ') : AFRICA_VIEWBOX}
-           className="w-full h-auto max-h-[34rem] block"
+           className="w-full h-auto max-h-[40rem] block"
            aria-label={L(`Carte de l'Afrique — ${indicator.label.fr}. Chaque pays est sélectionnable.`,
                          `Map of Africa — ${indicator.label.en}. Each country is selectable.`)}
            onMouseLeave={() => setSurvole(null)}>
@@ -4016,7 +4019,7 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
 
   return (
     <div className="relative">
-      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[26rem] mx-auto block" role="img"
+      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[30rem] mx-auto block" role="img"
            aria-label={tr({ fr: "Carte des États membres", en: "Map of member states" }, lang)}>
         {Object.entries(africaCountryPaths).map(([id, d]) => {
           const isMember = memberIds.has(id);
@@ -7326,7 +7329,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               ]} />
             </AfricanCounterpoint>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pe-2 custom-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[583px] overflow-y-auto pe-2 custom-scrollbar">
               {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>

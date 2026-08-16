@@ -166,7 +166,15 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* ---------- Fonds sombres : encre, pas bleu-nuit générique ---------------- */
 
 .bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800 { background-color: var(--ink) !important; }
-.bg-emerald-900 { background-color: var(--accent-2) !important; }
+/* Une seule encre sur le site. Ce bloc tenait un vert-bleu mi-teinte quand son
+   voisin de « Donnees » tenait le noir : deux fonds sombres differents pour le
+   meme role. Et la regle qui donne aux termes de glossaire leur variante claire
+   suppose l'encre — sur la mi-teinte, « entre-deux national » tombait a 2,4:1.
+   Le filet, lui, garde la teinte de la section. */
+.bg-emerald-900 {
+  background-color: var(--ink) !important;
+  border-color: color-mix(in oklab, var(--accent) 34%, var(--ink)) !important;
+}
 .border-slate-700, .border-slate-800, .border-emerald-800 { border-color: rgba(255,253,249,.14) !important; }
 .bg-\[\#0f172a\] .text-slate-300, .bg-slate-900 .text-slate-300 { color: #D3D5DC !important; }
 .bg-\[\#0f172a\] .text-slate-400, .bg-slate-900 .text-slate-400 { color: #9BA0AC !important; }
@@ -766,10 +774,22 @@ main { view-transition-name: page; }
 /* Le plancher ne connait pas de zone : la barre de langue et les intitules de
    colonne du pied de page etaient restes a 10 px parce que la regle etait
    portee par main. Un corps trop petit l'est partout. */
-.text-\[9px\]  { font-size: 11px; }
-.text-\[10px\] { font-size: 11px; }
-.text-\[11px\] { font-size: 11.5px; }
-.text-\[12px\] { font-size: 12.5px; }
+/* Toute l'echelle monte de 15 %. Le plancher n'etait pas confortable, il etait
+   seulement legal : 11 px se lit, 12,5 px se lit sans effort. Les valeurs
+   ci-dessous sont les anciennes multipliees par 1,15 puis arrondies au demi
+   pixel, pour que le rapport entre les rangs soit conserve. */
+.text-\[9px\]  { font-size: 12.5px; }
+.text-\[10px\] { font-size: 12.5px; }
+.text-\[11px\] { font-size: 13px; }
+.text-\[12px\] { font-size: 14.5px; }
+.text-\[13px\], .text-\[13\.5px\] { font-size: 15px; }
+.text-\[15px\] { font-size: 17px; }
+
+/* Les rangs nommes de Tailwind suivent le meme facteur : sans eux, le corps
+   courant resterait en arriere de ses propres legendes. */
+:is(main, .reader) .text-xs   { font-size: 13.8px; line-height: 1.55; }
+:is(main, .reader) .text-sm   { font-size: 16px;   line-height: 1.6; }
+:is(main, .reader) .text-base { font-size: 18.4px; line-height: 1.6; }
 
 /* Sous 13 px, le gris sourd n'est plus assez dense : on passe a --label
    (7,5:1 environ) plutot que de laisser --muted a 5,5:1. */
@@ -1898,7 +1918,9 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 }
 .atlas-scene .atlas-carte svg {
   width: auto !important;
-  height: min(82vh, 52rem);
+  /* Un sixieme de plus : la carte est l'objet central de l'Atlas, elle
+     merite la hauteur qu'on lui accorderait sur le papier. */
+  height: min(88vh, 60.5rem);
   max-height: none !important;
   justify-self: center;
 }
@@ -1932,7 +1954,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 
 @media (max-width: 1023px) {
   .atlas-carte > div { grid-template-columns: 1fr !important; }
-  .atlas-scene .atlas-carte svg { width: 100% !important; height: auto; max-height: 62vh !important; }
+  .atlas-scene .atlas-carte svg { width: 100% !important; height: auto; max-height: 72vh !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   .atlas-carte svg path { transition: none; }
