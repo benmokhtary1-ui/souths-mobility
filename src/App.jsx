@@ -7282,8 +7282,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </h4>
                 <div className="space-y-4">
                   <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
-                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')} className="w-full text-start p-6 hover:bg-emerald-50 transition-colors">
-                      <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                    <button
+                      onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')}
+                      aria-expanded={expandedGovBody === 'stc'}
+                      className="w-full text-start px-6 pt-6 pb-2 hover:bg-emerald-50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4 flex-wrap">
                         <h5 className="font-bold text-emerald-900 text-base">
                           {tr({ fr: "Comité Technique Spécialisé Migration, Réfugiés & PDI (STC-MRIDPs)", en: "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)" }, lang)}
                         </h5>
@@ -7294,8 +7298,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ${expandedGovBody === 'stc' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
-                      <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Institué par l'article 5 de l'Acte constitutif de l'UA, ce Comité technique spécialisé est l'organe politique de tutelle du régime migratoire continental. Il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux.", en: "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime. It meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work." }, lang)}</Prose>
                     </button>
+                    {/* Le paragraphe reste hors du bouton : ses termes de glossaire
+                        sont eux-memes cliquables. */}
+                    <div className="px-6 pb-6"><Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Institué par l'article 5 de l'Acte constitutif de l'UA, ce Comité technique spécialisé est l'organe politique de tutelle du régime migratoire continental. Il se réunit au niveau ministériel et technique, prépare les projets et programmes de l'Union sur les mobilités, et en supervise le suivi auprès du Conseil exécutif. C'est devant ce circuit de reddition de comptes que l'Observatoire Africain des Migrations (OAM) rend compte de ses travaux.", en: "Established under Article 5 of the AU Constitutive Act, this Specialized Technical Committee is the political oversight organ of the continental migration regime. It meets at ministerial and technical level, prepares the Union's migration-related projects and programmes, and supervises their follow-up before the Executive Council. It is before this accountability circuit that the African Migration Observatory (AMO) reports on its work." }, lang)}</Prose>
+                    </div>
                     {expandedGovBody === 'stc' && (
                       <div className="px-6 pb-6 pt-2 border-t border-emerald-100 space-y-3 animate-in fade-in duration-300">
                         {stcSessions.map((s, idx) => (
@@ -7312,8 +7319,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     )}
                   </div>
                   <div className="bg-amber-50/50 rounded-lg border border-amber-100 overflow-hidden">
-                    <button onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')} className="w-full text-start p-6 hover:bg-amber-50 transition-colors">
-                      <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
+                    <button
+                      onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')}
+                      aria-expanded={expandedGovBody === 'pafom'}
+                      className="w-full text-start px-6 pt-6 pb-2 hover:bg-amber-50 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-4 flex-wrap">
                         <h5 className="font-bold text-amber-900 text-base">
                           {tr({ fr: "Forum Panafricain sur la Migration (PAFoM)", en: "Pan-African Forum on Migration (PAFoM)" }, lang)}
                         </h5>
@@ -7324,8 +7335,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${expandedGovBody === 'pafom' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
-                      <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Créé en 2006 par la décision EX.CL/276(IX) du Conseil exécutif, le PAFoM est le processus consultatif continental de référence. Il s'est réuni pour la première fois à Accra en 2015. Il rassemble les États membres de l'UA, les CER, les processus régionaux de Rabat et de Khartoum et les agences onusiennes, pour façonner les politiques migratoires africaines.", en: "Created by Executive Council Decision EX.CL/276(IX) in 2006, PAFoM is the continent's flagship consultative process; it first convened in Accra in 2015. It brings together AU member states, RECs, regional processes such as Rabat and Khartoum, and UN agencies to shape African migration policy." }, lang)}</Prose>
                     </button>
+                    {/* Le paragraphe reste hors du bouton : ses termes de glossaire
+                        sont eux-memes cliquables. */}
+                    <div className="px-6 pb-6"><Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Créé en 2006 par la décision EX.CL/276(IX) du Conseil exécutif, le PAFoM est le processus consultatif continental de référence. Il s'est réuni pour la première fois à Accra en 2015. Il rassemble les États membres de l'UA, les CER, les processus régionaux de Rabat et de Khartoum et les agences onusiennes, pour façonner les politiques migratoires africaines.", en: "Created by Executive Council Decision EX.CL/276(IX) in 2006, PAFoM is the continent's flagship consultative process; it first convened in Accra in 2015. It brings together AU member states, RECs, regional processes such as Rabat and Khartoum, and UN agencies to shape African migration policy." }, lang)}</Prose>
+                    </div>
                     {expandedGovBody === 'pafom' && (
                       <div className="px-6 pb-6 pt-2 border-t border-amber-100 space-y-3 animate-in fade-in duration-300">
                         {pafomSessions.map((s, idx) => (
