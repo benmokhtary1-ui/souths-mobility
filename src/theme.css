@@ -2026,6 +2026,17 @@ main[data-section] .couche-btn[data-actif='true'] {
   border-color: var(--accent-deep);
   color: #FFFFFF;
 }
+/* L'encre de la pastille active, posee sans ambiguite.
+   Le degrade sombre de la regle ci-dessus s'appliquait bien, mais la couleur
+   restait celle du repos : encre foncee sur indigo profond, mesure a 1,22:1.
+   Le lecteur voyait donc la region selectionnee moins bien que les autres,
+   exactement a l'envers de ce que l'etat actif doit faire.
+   La variante du bandeau garde son inversion : sur l'encre, l'actif passe au
+   clair, et c'est elle qui doit rester foncee. */
+main[data-section] .couche-btn[data-actif='true']:not(.couche-btn--sombre),
+main[data-section] .couche-btn[data-actif='true']:not(.couche-btn--sombre) * {
+  color: #FFFFFF !important;
+}
 /* Sur l'encre du bandeau, le rapport s'inverse : l'actif reste au clair. */
 .scene-flux .couche-btn--sombre[data-actif='true'] {
   background: #FFFFFF; border-color: #FFFFFF; color: #0E1116;

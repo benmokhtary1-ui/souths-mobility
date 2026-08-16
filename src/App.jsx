@@ -3706,7 +3706,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
         <div className="max-w-3xl">
           <span className="block text-[10px] font-semibold uppercase mb-3"
                 style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
-            Pl. I · {L('Atlas des mobilités africaines', 'Atlas of African mobilities', { ar: 'أطلس التنقلات الأفريقية' })}
+            Pl. I · {L('Huit questions posées au continent', 'Eight questions put to the continent', { ar: 'ثمانية أسئلة مطروحة على القارة' })}
           </span>
           <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
               style={{ color: '#FFFFFF' }}>
@@ -3717,8 +3717,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           </h1>
           <Prose className="mt-3 text-[13.5px] md:text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#D6DAE4' }} lang={lang}>{L(
-            "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir la fiche complète.",
-            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the full profile.',
+            "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir le pays à côté de la carte.",
+            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the country beside the map.',
             { ar: 'اختر سؤالاً. تجيب عنه القارة، بلداً بلداً. مرّر المؤشر لقراءة رقم، وانقر لفتح البطاقة الكاملة.' }
           )}</Prose>
 
@@ -3836,9 +3836,26 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
         )}
       </div>
 
-      {/* Ce que la couche montre, et par ou continuer. */}
+      {/* Ce que la couche montre, d'ou elle le tient, et par ou continuer.
+
+          La provenance manquait. Chaque couche portait pourtant la sienne —
+          « UN DESA, 2024 », « BAD/CUA, 2024 », « IDMC » — passee a la carte et
+          jamais affichee. La porte d'entree du site montrait donc un chiffre
+          par pays sans dire d'ou il venait ni de quand il datait, sur une
+          plateforme dont la premiere regle est qu'un chiffre sans annee ne se
+          lit pas. */}
       <div className="flex flex-wrap items-baseline justify-between gap-4 pt-1 border-t" style={{ borderColor: 'var(--rule)' }}>
-        <Prose className="text-[13px] leading-relaxed max-w-2xl mt-4" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
+        <div className="max-w-2xl mt-4">
+          <Prose className="text-[13px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
+          {hint && (
+            <p className="mt-2 text-[12px] leading-relaxed" style={{ color: 'var(--label)' }}>
+              <span className="font-bold uppercase tracking-widest text-[10px] me-1.5">
+                {L('Source', 'Source', { ar: 'المصدر' })}
+              </span>
+              {tr(hint, lang)}
+            </p>
+          )}
+        </div>
         {/* Une couche sans destination repond ici meme : le bouton ne s'affiche
             que s'il mene reellement quelque part. */}
         {couche.mene && (
@@ -3923,6 +3940,9 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
 
       <Reperes
         lang={lang}
+        /* Ici le bloc vient apres la carte, pas avant : « pour commencer » y
+           sonnait faux sur le dernier bloc de la page. */
+        chapo={{ fr: "Avant d'ouvrir un pays", en: 'Before opening a country', ar: 'قبل فتح بطاقة بلد' }}
         titre={{ fr: "Ce que contient une fiche pays, et d'où vient chaque ligne",
                  en: 'What a country profile holds, and where each line comes from',
                  ar: 'ما تحتويه بطاقة البلد، ومن أين يأتي كل سطر' }}
@@ -8703,7 +8723,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
 // Le bloc est generique : un chapeau, deux a quatre notions definies, et une
 // table de ce que chaque source mesure et de ce qu'elle rate. Il se replie une
 // fois lu — celui qui connait le sujet ne le traverse pas deux fois.
-const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes = [], pied = null }) => {
+const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes = [], pied = null, chapo = null }) => {
   const L = faireL(lang);
   const [ouvert, setOuvert] = useState(true);
   return (
@@ -8720,7 +8740,7 @@ const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes =
         </span>
         <span className="flex-1 min-w-0">
           <span className="block text-[10px] font-bold uppercase mb-1" style={{ letterSpacing: '.18em', color: 'var(--label)' }}>
-            {L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
+            {chapo ? tr(chapo, lang) : L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
           </span>
           <span id="reperes-titre" className="block font-serif font-bold text-lg md:text-xl text-slate-900 leading-snug">
             {tr(titre, lang)}
