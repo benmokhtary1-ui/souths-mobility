@@ -1024,21 +1024,24 @@ const ATLAS_CADRAGES = {
   'Pl. V':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
   // Facade ouest : le corridor CEDEAO d'un bout a l'autre.
   'Pl. VI':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  // Corridors : la largeur du continent d'ouest en est, ou passent les couples
+  // de pays les plus lourds. Les arcs sont ceux que le volet chiffre.
+  'Pl. VII':   { crop: [40, 120, 900, 620], arcs: [['ouaga','abidjan'], ['bamako','abidjan'], ['juba','kampala'], ['kinshasa','kampala']] },
   // Gouvernance : le continent en entier. L'Union africaine gouverne 54 Etats,
   // pas une region — un cadrage sur la Corne repetait celui du deplacement
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d'Addis-Abeba vers les quatre horizons.
-  'Pl. VII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  'Pl. VIII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
   'Pl. IV':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu'a Madagascar.
-  'Pl. VIII': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
+  'Pl. IX': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
   // Bassin centre-equatorial.
-  'Pl. IX':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
+  'Pl. X':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
   // Bande mediterraneenne et saharienne, d'un ocean a l'autre.
-  'Pl. X':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
+  'Pl. XI':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
   // Facade atlantique, du detroit au golfe de Guinee.
-  'Pl. XI':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
+  'Pl. XII':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
 };
 
 // Une trajectoire se courbe : la corde droite dit une ligne sur une carte, la
@@ -2119,6 +2122,13 @@ const t = {
         method_title: "Ingénierie & Source des Données" 
       },
       headers: {
+        corridors: {
+          badge: "Corridors intra-africains",
+          title: "Les routes que personne ne cartographie",
+          highlight: "et qui portent l'essentiel.",
+          desc: "Vingt-cinq millions d'Africains vivent dans un autre pays africain. Les corridors qui les portent sont les plus fréquentés du continent, et les moins documentés : on les déduit de tableaux de stocks, faute d'un instrument qui les suive.",
+          plain: "Un corridor, c'est un couple de pays entre lesquels beaucoup de gens circulent. Les plus gros d'Afrique relient des pays voisins, et non l'Afrique à l'Europe."
+        },
         evidence: {
           badge: "Observatoire des Narratifs",
           title: "Évaluation des affirmations",
@@ -2426,6 +2436,13 @@ const t = {
         method_title: "Engineering & Data Sourcing" 
       },
       headers: {
+        corridors: {
+          badge: "Intra-African corridors",
+          title: "The routes no one maps",
+          highlight: "and which carry the most.",
+          desc: "Twenty-five million Africans live in another African country. The corridors carrying them are the continent’s busiest and its least documented: they are inferred from stock tables, for want of an instrument that follows them.",
+          plain: "A corridor is a pair of countries between which many people move. Africa’s largest link neighbouring countries, rather than Africa to Europe."
+        },
         evidence: {
           badge: "Narratives Observatory",
           title: "Evidence Check",
@@ -5761,6 +5778,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   const volets = [
     { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility', ar: 'التنقلات القسرية' } },
     { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration', ar: 'هجرة العمل' } },
+    { cle: 'corridors', label: { fr: 'Corridors', en: 'Corridors', ar: 'الممرات' } },
   ];
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
@@ -5839,8 +5857,8 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {volet === 'travail'
-        ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
+      {volet === 'corridors' ? <TabCorridors text={text} lang={lang}>{entete}</TabCorridors>
+        : volet === 'travail' ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
         : <TabForced text={text} lang={lang}>{entete}</TabForced>}
     </div>
   );
@@ -6127,6 +6145,211 @@ const TabLabour = ({ text, lang, children }) => {
       </Reveal>
 
       <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Migration de travail', 'Labour migration')} />
+    </div>
+  );
+};
+
+// Les corridors intra-africains.
+//
+// Ils sont traces dans le bandeau de l'Atlas, mais un trait sur une carte ne
+// fait pas une lecture : il montre qu'un lien existe, sans dire ce qu'il pese,
+// d'ou vient le chiffre, ni pourquoi personne ne le suit. Ce volet le dit.
+//
+// Le fond du propos est une asymetrie de documentation. Les routes qui menent
+// en Europe sont cartographiees en continu, par point de passage et par mois.
+// Les corridors afro-africains, qui portent l'essentiel du mouvement, se
+// deduisent d'un tableau de stocks bilateraux publie tous les deux ans. Ce
+// n'est pas un manque de donnees : c'est un choix d'instrument.
+const TabCorridors = ({ text, lang, children }) => {
+  const L = faireL(lang);
+
+  // Les corridors documentes par la plateforme, du plus lourd au plus leger.
+  const rangs = useMemo(
+    () => CORRIDORS.filter(c => c.intra && c.poids).sort((a, b) => b.poids - a.poids),
+    []
+  );
+  const maxPoids = rangs[0]?.poids || 1;
+
+  const exporterCorridors = () => {
+    downloadCSV('souths_corridors_intra_africains.csv', toCSV(rangs.map(c => ({
+      corridor_fr: c.note?.fr, corridor_en: c.note?.en,
+      stock_bilateral: c.poids,
+      source: 'UN DESA, International Migrant Stock — repris par l\'OIM',
+    }))));
+  };
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <PageHeader
+        badge={text.headers.corridors.badge}
+        plate={"Pl. VII"}
+        plain={text.headers.corridors.plain}
+        lang={lang}
+        title={text.headers.corridors.title}
+        highlight={text.headers.corridors.highlight}
+        desc={text.headers.corridors.desc}
+        icon={ArrowRight}
+      />
+
+      <BarreSection lang={lang}>
+        <CsvButton onClick={exporterCorridors}
+                   label={L('Corridors documentés (CSV)', 'Documented corridors (CSV)', { ar: 'الممرات الموثقة (CSV)' })} />
+      </BarreSection>
+      {children}
+
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Un corridor, une route : deux objets qu'on confond",
+                 en: 'A corridor and a route: two objects that get confused',
+                 ar: 'الممر والمسار: شيئان يُخلط بينهما' }}
+        chapeau={{
+          fr: "Les deux mots désignent un mouvement entre deux points, et se mesurent de façons opposées. L'un se compte en personnes installées, l'autre en passages observés — et c'est la raison pour laquelle l'un est bien connu et l'autre presque pas.",
+          en: 'Both words name a movement between two points, and they are measured in opposite ways. One counts people settled, the other crossings observed — which is why one is well known and the other barely.'
+        }}
+        notions={[
+          { mot: { fr: 'Corridor', en: 'Corridor' },
+            sens: { fr: "Un couple de pays, mesuré par le nombre de personnes nées dans le premier et résidant dans le second. Une photographie de l'installation, tirée des recensements.",
+                    en: 'A pair of countries, measured by how many people born in the first reside in the second. A snapshot of settlement, drawn from censuses.' } },
+          { mot: { fr: 'Route', en: 'Route' },
+            sens: { fr: "Un tracé de passage, mesuré par des observations de terrain aux points de franchissement. Une mesure du mouvement, non de l'installation.",
+                    en: 'A path of transit, measured by field observation at crossing points. A measure of movement, not of settlement.' } },
+          { mot: { fr: 'Stock bilatéral', en: 'Bilateral stock' },
+            sens: { fr: "La case d'un tableau à double entrée pays d'origine × pays de résidence, publié par UN DESA tous les deux ans. C'est de là que sortent tous les chiffres de corridor.",
+                    en: 'The cell of a two-way table of origin country × country of residence, published by UN DESA every two years. Every corridor figure comes from there.' } },
+          { mot: { fr: 'Suivi de flux', en: 'Flow monitoring' },
+            sens: { fr: "Le comptage répété des passages en un point donné. L'OIM en opère sur les routes menant hors du continent ; il n'existe pas d'équivalent continental pour les corridors intérieurs.",
+                    en: 'Repeated counting of crossings at a given point. IOM runs it on routes leading off the continent; no continental equivalent exists for internal corridors.' } },
+        ]}
+        pied={{
+          fr: "Un corridor documenté par les stocks se met à jour tous les deux ans et ignore les allers-retours. Une route suivie sur le terrain se met à jour tous les mois et ignore ceux qui restent. Les deux mesures ne se remplacent pas.",
+          en: 'A corridor documented by stocks updates every two years and ignores round trips. A route monitored in the field updates monthly and ignores those who stay. Neither measure replaces the other.'
+        }}
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
+        {[
+          { v: '≈ 25', u: L('millions', 'million', { ar: 'مليون' }),
+            l: L("d'Africains vivent dans un autre pays africain", 'Africans live in another African country', { ar: 'أفريقي يعيشون في بلد أفريقي آخر' }),
+            s: L('UN DESA, mi-2024', 'UN DESA, mid-2024', { ar: 'الأمم المتحدة، منتصف 2024' }) },
+          { v: '+ 17', u: '%',
+            l: L('de plus qu\'en 2020, et près de 39 % de plus qu\'en 2015', 'more than in 2020, and nearly 39% more than in 2015', { ar: 'أكثر من 2020' }),
+            s: L('OIM, Rapport sur les migrations dans le monde 2026', 'IOM, World Migration Report 2026', { ar: 'المنظمة الدولية للهجرة، 2026' }) },
+          { v: '45,8', u: L('millions', 'million', { ar: 'مليون' }),
+            l: L("de migrants internationaux originaires d'Afrique, toutes destinations confondues", 'international migrants originating from Africa, all destinations', { ar: 'مهاجر دولي من أصل أفريقي' }),
+            s: L('UN DESA, mi-2024', 'UN DESA, mid-2024', { ar: 'الأمم المتحدة، منتصف 2024' }) },
+        ].map((k, i) => (
+          <div key={i} className="px-6 py-7">
+            <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
+              {k.v}{k.u && <span className="text-lg font-semibold ms-1.5" style={{ color: 'var(--label)' }}>{k.u}</span>}
+            </div>
+            <span className="block mt-3 text-[13px] leading-snug text-slate-700">{k.l}</span>
+            <span className="block mt-2 text-[11px]" style={{ color: 'var(--label)' }}>{k.s}</span>
+          </div>
+        ))}
+      </div>
+
+      <MovementOpener
+        n="01"
+        kicker={L('Ce qui est documenté', 'What is documented')}
+        thesis={L(
+          "Les corridors que la plateforme peut chiffrer relient tous des pays voisins. Aucun ne va vers l'Europe.",
+          'Every corridor the platform can quantify links neighbouring countries. None runs toward Europe.'
+        )}
+      />
+
+      <Reveal className="bg-white border border-slate-200 overflow-hidden">
+        <div className="px-6 md:px-8 pt-6 pb-4">
+          <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug mb-2">
+            {L('Les corridors intra-africains que la plateforme documente',
+               'The intra-African corridors the platform documents',
+               { ar: 'الممرات الأفريقية البينية الموثقة' })}
+          </h2>
+          <Prose className="text-[13px] leading-relaxed max-w-3xl" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
+            "Chaque barre est un stock bilatéral : le nombre de personnes nées dans le premier pays et résidant dans le second. Le corridor Burkina Faso — Côte d'Ivoire, à lui seul, dépasse la plupart des routes extracontinentales documentées.",
+            'Each bar is a bilateral stock: how many people born in the first country reside in the second. The Burkina Faso — Côte d’Ivoire corridor alone exceeds most documented extra-continental routes.'
+          )}</Prose>
+        </div>
+
+        <ul className="px-6 md:px-8 pb-6 space-y-3">
+          {rangs.map((c, i) => (
+            <li key={i} className="figure-row">
+              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <span className="text-[13px] font-semibold text-slate-900">{tr(c.note, lang)}</span>
+                <span className="text-[13px] tabular-nums" style={{ color: 'var(--ink-soft)' }}>
+                  <Num value={c.poids} lang={lang} />
+                </span>
+              </div>
+              <div className="h-2.5 w-full overflow-hidden" style={{ backgroundColor: 'var(--rule)', borderRadius: 999 }}>
+                <div style={{ width: `${(c.poids / maxPoids) * 100}%`, height: '100%',
+                              backgroundColor: 'var(--accent)', borderRadius: 999 }} />
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="px-6 md:px-8 py-4 border-t border-slate-100" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+          <Prose className="text-[12px] leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L(
+            "Cinq corridors seulement, quand le continent en compte des dizaines. Ce n'est pas une sélection éditoriale : ce sont ceux pour lesquels un chiffre bilatéral publié a pu être retrouvé et vérifié. Le reste existe sans être compté.",
+            'Five corridors only, where the continent holds dozens. This is not an editorial selection: they are the ones for which a published bilateral figure could be found and verified. The rest exist without being counted.'
+          )}</Prose>
+        </div>
+      </Reveal>
+
+      <MovementOpener
+        n="02"
+        kicker={L("L'asymétrie", 'The asymmetry')}
+        thesis={L(
+          "On ne documente pas les corridors afro-africains comme on cartographie ceux qui mènent en Europe.",
+          'Afro-African corridors are not documented the way the ones leading to Europe are mapped.'
+        )}
+      />
+
+      <AfricanCounterpoint
+        lang={lang}
+        kicker={L('Une téléologie de la mesure', 'A teleology of measurement')}
+        title={L("L'instrument regarde là où le récit attend quelque chose",
+                 'The instrument looks where the narrative expects something')}
+        /* Sans liste de sources ici : le bloc complet, avec ses liens et sa
+           réserve de millésime, suit immédiatement. Deux encadrés « Sources »
+           l'un sous l'autre ne sourcent pas deux fois, ils se répètent. */
+      >
+        <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
+          "Les routes menant hors du continent disposent d'un appareil de mesure dédié : points de passage suivis, effectifs mensuels, cartes actualisées trois fois par an. Les corridors intérieurs, qui portent un mouvement bien plus large, n'ont rien de tel. On les reconstitue à partir de tableaux de stocks publiés tous les deux ans, conçus pour d'autres usages.",
+          'Routes leading off the continent have a dedicated measuring apparatus: monitored crossing points, monthly counts, maps refreshed three times a year. Interior corridors, carrying a far larger movement, have nothing of the kind. They are reconstructed from stock tables published every two years, designed for other purposes.'
+        )}</Prose>
+        <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
+          "L'écart ne tient pas à la difficulté technique : compter les passages à Ouagadougou-Abidjan ne serait pas plus dur qu'à Agadez. Il tient à ce qu'on attend de la mesure. Un instrument se construit là où une question est posée, et la question posée aux migrations africaines est venue d'ailleurs — celle de savoir qui arrive en Europe. Le mouvement qui reste sur le continent ne déclenche aucune commande d'instrument, et devient donc invisible dans les termes mêmes où on prétend le décrire (Ben Mokhtar, 2026).",
+          'The gap is not technical: counting crossings between Ouagadougou and Abidjan would be no harder than at Agadez. It lies in what is expected of the measurement. An instrument gets built where a question is asked, and the question asked of African migration came from elsewhere — who arrives in Europe. Movement that stays on the continent triggers no commissioning of instruments, and so becomes invisible in the very terms used to describe it (Ben Mokhtar, 2026).'
+        )}</Prose>
+        <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
+          "La conséquence est mesurable sur cette page : cinq corridors chiffrés d'un côté, une vingtaine de segments de route de l'autre, pour un mouvement dix fois moindre. La carte de l'Atlas trace les deux à la même échelle, ce qui rend l'écart visible plutôt que de le reconduire.",
+          'The consequence is measurable on this page: five quantified corridors on one side, some twenty route segments on the other, for a movement ten times smaller. The Atlas map draws both at the same scale, making the gap visible rather than reproducing it.'
+        )}</Prose>
+      </AfricanCounterpoint>
+
+      <Sources
+        lang={lang}
+        items={[
+          { label: L('UN DESA — International Migrant Stock 2024, tableaux de stocks bilatéraux',
+                     'UN DESA — International Migrant Stock 2024, bilateral stock tables'),
+            url: 'https://www.un.org/development/desa/pd/content/international-migrant-stock' },
+          { label: L('OIM — Rapport sur les migrations dans le monde 2026, chapitre Afrique',
+                     'IOM — World Migration Report 2026, Africa chapter'),
+            url: 'https://worldmigrationreport.iom.int/' },
+          { label: L('OIM — Global Overview of Migration Routes, janvier-avril 2026',
+                     'IOM — Global Overview of Migration Routes, January-April 2026'),
+            url: 'https://dtm.iom.int/' },
+          { label: L('MIDEQ — Corridor Burkina Faso – Côte d\'Ivoire, programme de recherche',
+                     'MIDEQ — Burkina Faso – Côte d’Ivoire corridor, research programme'),
+            url: 'https://www.mideq.org/en/migration-corridors/burkina-faso-cote-divoire/' },
+        ]}
+        note={L(
+          "Les stocks bilatéraux sont datés de 2023 et 2024 selon le couple de pays : UN DESA publie par vagues, et tous les pays ne remontent pas leurs recensements au même rythme.",
+          'Bilateral stocks are dated 2023 or 2024 depending on the country pair: UN DESA publishes in waves, and not all countries report their censuses at the same rhythm.'
+        )}
+      />
+
+      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Corridors intra-africains', 'Intra-African corridors')} />
     </div>
   );
 };
@@ -7050,7 +7273,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.governance.badge}
-        plate={"Pl. VII"}
+        plate={"Pl. VIII"}
         plain={text.headers.governance.plain}
         lang={lang}
         title={text.headers.governance.title}
@@ -8212,7 +8435,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.library.badge}
-        plate={"Pl. VIII"}
+        plate={"Pl. IX"}
         plain={text.headers.library.plain}
         lang={lang}
         title={text.headers.library.title}
@@ -9033,7 +9256,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.glossary.badge}
-        plate={"Pl. IX"}
+        plate={"Pl. X"}
         plain={text.headers.glossary.plain}
         lang={lang}
         title={text.headers.glossary.title}
@@ -9196,7 +9419,7 @@ const TabMethodology = ({ text, lang, children }) => (
   <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
       badge={text.headers.methodology.badge}
-      plate={"Pl. X"}
+      plate={"Pl. XI"}
       plain={text.headers.methodology.plain}
       lang={lang}
       title={text.headers.methodology.title}
@@ -9493,7 +9716,7 @@ const TabAbout = ({ text, lang, children }) => {
     <section className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         badge={text.headers.about.badge}
-        plate={"Pl. XI"}
+        plate={"Pl. XII"}
         plain={text.headers.about.plain}
         lang={lang}
         title={text.headers.about.title}
