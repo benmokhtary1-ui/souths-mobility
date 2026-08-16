@@ -1626,6 +1626,21 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   outline-offset: 2px;
 }
 
+/* ---------- Le doigt n'est pas une souris ----------------------------------
+   Releve a 375 px : aucune section ne defile horizontalement, et les tables de
+   reperes defilent bien dans leur propre cadre. Restaient les commandes, entre
+   32 et 39 px de haut — sous les 44 px que demande un pointeur grossier. On les
+   remonte, et seulement la ou le pointeur est un doigt : au clavier et a la
+   souris, la mise en page reste exactement celle qui a ete reglee.          */
+@media (pointer: coarse) {
+  :is(main, .reader) :is(button, a[href], [role="button"]):not(.terme):not(.choro-pays) {
+    min-height: 44px;
+  }
+  /* Les commandes en ligne dans une phrase gardent leur hauteur de texte :
+     les etirer casserait l'interligne du paragraphe qui les contient. */
+  :is(main, .reader) p :is(button, a[href]) { min-height: 0; }
+}
+
 /* ---------- La carte, mise en systeme --------------------------------------
    Releve avant correction, sur les huit sections : un seul et meme objet — un
    bloc a fond et a filet — portait CINQ rayons (0, 7, 9, 10 et 12 px) et SEIZE
