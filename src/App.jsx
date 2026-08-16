@@ -4408,6 +4408,31 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
 
       <BarreSection lang={lang} />
 
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Comment se lit un verdict de robustesse",
+                 en: 'How to read a robustness verdict',
+                 ar: 'كيف يُقرأ حكم المتانة' }}
+        chapeau={{
+          fr: "Chaque fiche évalue une affirmation, jamais la personne qui la porte. La jauge à quatre crans dit ce que les meilleures sources disponibles permettent d'établir aujourd'hui : elle bougera si les données bougent.",
+          en: 'Each entry assesses a claim, never the person making it. The four-notch gauge states what the best available sources support today: it will move if the data moves.'
+        }}
+        notions={[
+          { mot: { fr: 'Étayé', en: 'Supported' },
+            sens: { fr: "Plusieurs sources indépendantes convergent, et la formulation courante leur correspond.", en: 'Several independent sources converge, and the common formulation matches them.' } },
+          { mot: { fr: 'À nuancer', en: 'Needs qualifying' },
+            sens: { fr: "Le fond tient, mais la formulation généralise, exagère ou omet une condition.", en: 'The substance holds, but the formulation generalises, overstates or drops a condition.' } },
+          { mot: { fr: 'Faiblement étayé', en: 'Weakly supported' },
+            sens: { fr: "Une seule source, ou des données trop lacunaires pour trancher dans un sens ou dans l'autre.", en: 'A single source, or data too patchy to settle the question either way.' } },
+          { mot: { fr: 'Non étayé', en: 'Unsupported' },
+            sens: { fr: "Les données disponibles disent autre chose que l'affirmation.", en: 'The available data says something other than the claim.' } },
+        ]}
+        pied={{
+          fr: "Une fiche ne se résume jamais à son verdict : elle donne aussi les limites de ce qu'on sait, et pourquoi l'idée persiste. Ces deux rubriques comptent autant que le cran de la jauge.",
+          en: 'An entry never reduces to its verdict: it also gives the limits of what is known, and why the idea persists. Those two sections matter as much as the notch on the gauge.'
+        }}
+      />
+
       {/* Note de provenance : les affirmations sont de l'auteur, les donnees ne le sont pas. */}
       <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
@@ -5503,11 +5528,67 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
     </nav>
   );
 
+  // La section a deux volets et un seul chapeau : les repères valent pour les
+  // deux, et voyagent donc avec la bascule, que chaque volet place sous son
+  // bandeau. Écrits une fois, affichés là où le lecteur arrive.
+  const entete = (
+    <>
+      {bascule}
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Déplacé, réfugié, apatride, travailleur migrant : quatre statuts distincts",
+                 en: 'Displaced, refugee, stateless, migrant worker: four distinct statuses',
+                 ar: 'نازح، لاجئ، عديم الجنسية، عامل مهاجر: أربع صفات متمايزة' }}
+        chapeau={{
+          fr: "Les quatre mots que cette section emploie ont chacun une définition juridique précise, et c'est la définition africaine qui fait référence ici. Deux personnes dans la même situation matérielle peuvent relever de régimes différents selon qu'elles ont franchi une frontière.",
+          en: 'The four words this section uses each carry a precise legal definition, and it is the African definition that governs here. Two people in the same material situation can fall under different regimes depending on whether they crossed a border.'
+        }}
+        notions={[
+          { mot: { fr: 'Déplacé interne', en: 'Internally displaced person' },
+            sens: { fr: "Chassé de chez lui, resté dans son pays. Convention de Kampala (2009), seul traité contraignant au monde sur cette situation. Aucune frontière franchie, donc aucune statistique d'entrée nulle part.",
+                    en: 'Driven from home, still inside their own country. Kampala Convention (2009), the world’s only binding treaty on this situation. No border crossed, therefore no entry statistic anywhere.' } },
+          { mot: { fr: 'Réfugié', en: 'Refugee' },
+            sens: { fr: "A franchi une frontière et ne peut rentrer. La Convention de l'OUA (1969) va plus loin que celle de Genève : elle couvre aussi l'agression extérieure, l'occupation, la domination étrangère et les événements troublant gravement l'ordre public.",
+                    en: 'Has crossed a border and cannot return. The OAU Convention (1969) reaches further than the Geneva one: it also covers external aggression, occupation, foreign domination and events seriously disturbing public order.' } },
+          { mot: { fr: 'Apatride', en: 'Stateless person' },
+            sens: { fr: "Aucun État ne le reconnaît comme son ressortissant. Sans nationalité, souvent sans papiers, il n'apparaît que là où un État accepte de le recenser.",
+                    en: 'No state recognises them as a national. Without nationality, often without papers, they appear only where a state agrees to count them.' } },
+          { mot: { fr: 'Travailleur migrant', en: 'Migrant worker' },
+            sens: { fr: "Exerce une activité rémunérée dans un État dont il n'a pas la nationalité. Le mot dit un statut d'emploi, pas une durée ni un motif de départ.",
+                    en: 'Holds paid work in a state of which they are not a national. The word states an employment status, not a duration or a reason for leaving.' } },
+        ]}
+        colonnes={[
+          { fr: 'Qui compte', en: 'Who counts' },
+          { fr: 'Ce qu’il compte', en: 'What it counts' },
+          { fr: 'Ce qui lui échappe', en: 'What escapes it' },
+        ]}
+        lignes={[
+          { source: { fr: 'HCR', en: 'UNHCR' },
+            mesure: { fr: "Réfugiés, demandeurs d'asile, apatrides recensés, et une part des déplacés internes.", en: 'Refugees, asylum seekers, recorded stateless people, and part of the internally displaced.' },
+            angle: { fr: "Ceux qui ne se présentent jamais à un guichet.", en: 'Those who never present themselves at a counter.' } },
+          { source: { fr: 'IDMC', en: 'IDMC' },
+            mesure: { fr: "Déplacés internes chaque année, par conflit et par catastrophe, séparément.", en: 'Internally displaced each year, by conflict and by disaster, separately.' },
+            angle: { fr: "Ce que devient un retour : le déplacé rentré sort du décompte sans qu'on sache ce qu'il a retrouvé.", en: 'What return amounts to: someone who goes home leaves the count with no record of what they found.' } },
+          { source: { fr: 'OIT', en: 'ILO' },
+            mesure: { fr: "Travailleurs migrants, par branche et par sexe.", en: 'Migrant workers, by sector and by sex.' },
+            angle: { fr: "Le travail informel, où se trouve l'essentiel de l'emploi africain.", en: 'Informal work, where most African employment sits.' } },
+          { source: { fr: 'Banque mondiale', en: 'World Bank' },
+            mesure: { fr: "Transferts de fonds passés par un canal déclaré.", en: 'Remittances sent through a declared channel.' },
+            angle: { fr: "Les envois de la main à la main, que personne n'enregistre.", en: 'Hand-to-hand transfers, which no one records.' } },
+        ]}
+        pied={{
+          fr: "Une même personne peut relever de plusieurs de ces catégories au cours d'un seul parcours, et en changer sans bouger. Les définitions africaines priment ici ; la définition onusienne est citée en comparaison.",
+          en: 'One person can fall under several of these categories across a single journey, and change category without moving. African definitions govern here; the UN definition is cited for comparison.'
+        }}
+      />
+    </>
+  );
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {volet === 'travail'
-        ? <TabLabour text={text} lang={lang}>{bascule}</TabLabour>
-        : <TabForced text={text} lang={lang}>{bascule}</TabForced>}
+        ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
+        : <TabForced text={text} lang={lang}>{entete}</TabForced>}
     </div>
   );
 };
@@ -6729,6 +6810,54 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         <CsvButton onClick={exportRecsCSV} label={tr({ fr: "CER (CSV)", en: "RECs (CSV)" }, lang)} />
         <CsvButton onClick={exportLegalMatrixCSV} label={tr({ fr: "Matrice juridique (CSV)", en: "Legal matrix (CSV)" }, lang)} />
       </BarreSection>
+
+      <Reperes
+        lang={lang}
+        titre={{ fr: "Signer, ratifier, déposer : ce qui engage réellement un État",
+                 en: 'Signing, ratifying, depositing: what actually binds a state',
+                 ar: 'التوقيع والتصديق والإيداع: ما يُلزم الدولة فعلاً' }}
+        chapeau={{
+          fr: "Cette section compte des ratifications. Le mot recouvre quatre actes distincts, et seul le dernier lie juridiquement — c'est pourquoi les totaux affichés ici sont parfois inférieurs à ceux qu'on lit ailleurs.",
+          en: 'This section counts ratifications. The word covers four distinct acts, and only the last one binds — which is why the totals shown here are sometimes lower than those read elsewhere.'
+        }}
+        notions={[
+          { mot: { fr: 'Signature', en: 'Signature' },
+            sens: { fr: "L'État marque son accord sur le texte. Elle l'oblige à ne rien entreprendre qui aille contre l'objet du traité, et rien de plus.",
+                    en: 'The state marks its agreement with the text. It obliges the state to do nothing that defeats the treaty’s object, and no more.' } },
+          { mot: { fr: 'Ratification', en: 'Ratification' },
+            sens: { fr: "L'organe interne compétent, le plus souvent le parlement, approuve le texte. L'acte reste national tant qu'il n'est pas notifié.",
+                    en: 'The competent domestic organ, usually parliament, approves the text. The act remains national until it is notified.' } },
+          { mot: { fr: "Dépôt de l'instrument", en: 'Deposit of the instrument' },
+            sens: { fr: "La notification à la Commission de l'Union africaine. C'est ce dépôt qui lie l'État, et c'est lui que cette plateforme compte.",
+                    en: 'Notification to the African Union Commission. This deposit is what binds the state, and it is what this platform counts.' } },
+          { mot: { fr: 'Entrée en vigueur', en: 'Entry into force' },
+            sens: { fr: "Le texte devient obligatoire quand un nombre-seuil d'États ont déposé. Pour les protocoles de l'UA, ce seuil est de quinze.",
+                    en: 'The text becomes binding once a threshold number of states have deposited. For AU protocols that threshold is fifteen.' } },
+        ]}
+        colonnes={[
+          { fr: 'Famille de norme', en: 'Family of norm' },
+          { fr: 'Qui elle lie', en: 'Whom it binds' },
+          { fr: 'Sa limite', en: 'Its limit' },
+        ]}
+        lignes={[
+          { source: { fr: 'Traité continental', en: 'Continental treaty' },
+            mesure: { fr: "Les États qui ont déposé leur instrument auprès de l'Union africaine.", en: 'States that have deposited their instrument with the African Union.' },
+            angle: { fr: "Demeure sans effet sur ceux qui ne l'ont pas fait, même signataires.", en: 'Has no effect on those that have not, signatories included.' } },
+          { source: { fr: 'Protocole de CER', en: 'REC protocol' },
+            mesure: { fr: "Les membres de la communauté économique régionale concernée.", en: 'Members of the regional economic community concerned.' },
+            angle: { fr: "S'arrête aux frontières de la région, et les appartenances se chevauchent.", en: 'Stops at the region’s borders, and memberships overlap.' } },
+          { source: { fr: "Cadre d'orientation", en: 'Policy framework' },
+            mesure: { fr: "Oriente les politiques nationales — MPFA, Agenda 2063.", en: 'Steers national policy — MPFA, Agenda 2063.' },
+            angle: { fr: "Engage la volonté politique, sans procédure de ratification ni effet juridique.", en: 'Engages political will, with no ratification procedure and no legal effect.' } },
+          { source: { fr: 'Pacte mondial', en: 'Global compact' },
+            mesure: { fr: "Organise la coopération entre États — Pactes sur les migrations et sur les réfugiés.", en: 'Organises cooperation between states — the compacts on migration and on refugees.' },
+            angle: { fr: "Adopté sans force obligatoire, et lu différemment d'un continent à l'autre.", en: 'Adopted without binding force, and read differently from one continent to the next.' } },
+        ]}
+        pied={{
+          fr: "Un État peut donc avoir signé sans ratifier, ratifié sans déposer, ou déposé sans appliquer. Les colonnes de la matrice distinguent ces situations plutôt que de les additionner.",
+          en: 'A state may therefore have signed without ratifying, ratified without depositing, or deposited without applying. The matrix columns separate these situations rather than adding them up.'
+        }}
+      />
 
       <section className="bg-slate-50 rounded-xl p-6 md:p-8 shadow-sm">
         
