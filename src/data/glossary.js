@@ -156,7 +156,7 @@ export const glossaryData = [
     ]
   },
   {
-    category: { fr: "Frontières, Droits & Protection", en: "Borders, Rights & Protection" },
+    category: { fr: "Frontières, droits & protection", en: "Borders, Rights & Protection" },
     icon: ShieldAlert,
     terms: [
       {
@@ -259,7 +259,7 @@ export const glossaryData = [
     ]
   },
   {
-    category: { fr: "Retour, Intégration & Résidence", en: "Return, Integration & Residence" },
+    category: { fr: "Retour, intégration & résidence", en: "Return, Integration & Residence" },
     icon: MapPin,
     terms: [
       {
@@ -336,7 +336,7 @@ export const glossaryData = [
     ]
   },
   {
-    category: { fr: "Économie, Compétences & Développement", en: "Economy, Skills & Development" },
+    category: { fr: "Économie, compétences & développement", en: "Economy, Skills & Development" },
     icon: Briefcase,
     terms: [
       {
@@ -404,7 +404,7 @@ export const glossaryData = [
     ]
   },
   {
-    category: { fr: "Gouvernance, Données & Concepts Théoriques", en: "Governance, Data & Theoretical Concepts" },
+    category: { fr: "Gouvernance, données & concepts théoriques", en: "Governance, Data & Theoretical Concepts" },
     icon: Brain,
     terms: [
       {
@@ -542,7 +542,7 @@ export const glossaryData = [
     ]
   },
   {
-    category: { fr: "Instruments & Institutions du Régime Africain", en: "Instruments & Institutions of the African Regime" },
+    category: { fr: "Instruments & institutions du régime africain", en: "Instruments & Institutions of the African Regime" },
     icon: Landmark,
     terms: [
       {
