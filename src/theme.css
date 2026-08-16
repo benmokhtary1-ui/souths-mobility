@@ -1417,6 +1417,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
    la question, pas le nom de l'indicateur. L'actif passe a l'encre — pas de
    pastille ombree, qui est la signature du diaporama.                       */
 .couche-btn {
+  /* En ligne et centre : le bouton accueille desormais une icone et un compte
+     a cote de son libelle, qui doivent s'aligner sur la ligne de base du mot. */
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
   padding: .5rem .85rem;
   font-size: 12.5px;
   font-weight: 600;

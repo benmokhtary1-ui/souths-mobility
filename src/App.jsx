@@ -7,7 +7,8 @@ import {
   Download, Printer, Map as MapIcon, Info, BookOpen, CheckCircle2, 
   PieChart, TableProperties, Landmark, Quote, Unlock, Target, ExternalLink, FileText,
   Copy, Check, Mail, AlertCircle, XCircle, AlertTriangle, HelpCircle, MinusCircle,
-  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic, Type
+  Briefcase, Brain, Lightbulb, Compass, Star, Clock, Sparkles, Calendar, Mic, Type,
+  PlayCircle
 } from 'lucide-react';
 import { evidenceCheckData } from './narrativesData';
 import { LANGUES, ACTIVES, LANGUE_DEFAUT, estRTL, tagDe } from './i18n/langues';
@@ -9570,6 +9571,9 @@ const mediaKindStyle = {
 
 const TabAbout = ({ text, lang, children }) => {
   const [isCopied, setIsCopied] = useState(false);
+  // Rien d'ouvert au depart : les travaux de l'auteur se consultent, ils ne
+  // s'exposent pas.
+  const [voletAuteur, setVoletAuteur] = useState(null);
 
   const handleCopyCitation = async () => {
     try {
@@ -9775,91 +9779,115 @@ const TabAbout = ({ text, lang, children }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-        {/* Publications */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100">
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-900 text-white shrink-0">
-              <FileText className="w-4 h-4" />
-            </span>
-            <div className="flex-1 min-w-0">
-              <h2 className="text-lg font-serif font-bold text-slate-900">{tr({ fr: "Publications", en: "Publications" }, lang)}</h2>
+      {/* Travaux de l'auteur : replies par defaut.
+
+          Les deux registres s'affichaient en grand, cote a cote, en
+          permanence. Sur la page qui explique d'ou vient la plateforme, un
+          palmares deploye passe avant la methode qu'on est venu lire. Ils
+          gardent leur place et tout leur contenu, mais ne s'ouvrent que si on
+          le demande — un volet a la fois. */}
+      <div className="bg-white border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex flex-wrap items-center gap-2 px-5 py-3">
+          <span className="text-[10px] font-bold uppercase tracking-widest" style={{ letterSpacing: '.16em', color: 'var(--label)' }}>
+            {tr({ fr: "Travaux de l'auteur", en: "Author's work", ar: 'أعمال المؤلف' }, lang)}
+          </span>
+          <span className="h-px flex-1 min-w-6" style={{ backgroundColor: 'var(--rule)' }} aria-hidden="true" />
+          {[
+            { cle: 'publications', Icone: FileText, n: authorPublications.length,
+              label: { fr: 'Publications', en: 'Publications', ar: 'المنشورات' } },
+            { cle: 'medias', Icone: Mic, n: authorMedia.length,
+              label: { fr: 'Interventions médiatiques', en: 'Media appearances', ar: 'المداخلات الإعلامية' } },
+          ].map(({ cle, Icone, n, label }) => (
+            <button
+              key={cle}
+              type="button"
+              onClick={() => setVoletAuteur(voletAuteur === cle ? null : cle)}
+              aria-expanded={voletAuteur === cle}
+              className="couche-btn"
+              data-actif={voletAuteur === cle ? 'true' : 'false'}
+            >
+              <Icone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              {tr(label, lang)}
+              <span className="tabular-nums opacity-55">{n}</span>
+              <ChevronDown className={`w-3 h-3 shrink-0 transition-transform ${voletAuteur === cle ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+
+        {voletAuteur === 'publications' && (
+          <div className="border-t border-slate-100 animate-in fade-in duration-300">
+            <div className="px-7 pt-4">
               <a href="https://shs.cairn.info/publications-de-yassine-ben-mokhtar--773358?lang=fr" target="_blank" rel="noopener noreferrer"
-                 className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline mt-0.5">
+                 className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline">
                 {tr({ fr: "Profil Cairn.info", en: "Cairn.info profile" }, lang)} <ExternalLink className="w-2.5 h-2.5" />
               </a>
             </div>
-            <span className="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-1 tabular-nums shrink-0">
-              {authorPublications.length}
-            </span>
-          </div>
-          <ol className="divide-y divide-slate-100">
+            <ol className="divide-y divide-slate-100">
             {[...authorPublications].sort((a, b) => b.year - a.year).map((pub, idx) => (
-              <li key={idx} className="group flex gap-4 px-7 py-4 hover:bg-slate-50/70 transition-colors">
-                <span className="shrink-0 w-10 pt-0.5 font-serif font-bold text-slate-300 text-sm tabular-nums group-hover:text-blue-500 transition-colors">
-                  {pub.year}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{tr(pub.kind, lang)}</span>
-                    {pub.url && (
-                      <a href={pub.url} target="_blank" rel="noopener noreferrer"
-                         className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline">
-                        DOI <ExternalLink className="w-2.5 h-2.5" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </li>
+            <li key={idx} className="group flex gap-4 px-7 py-4 hover:bg-slate-50/70 transition-colors">
+            <span className="shrink-0 w-10 pt-0.5 font-serif font-bold text-slate-300 text-sm tabular-nums group-hover:text-blue-500 transition-colors">
+            {pub.year}
+            </span>
+            <div className="min-w-0">
+            <p className="text-xs text-slate-700 leading-relaxed">{pub.ref}</p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{tr(pub.kind, lang)}</span>
+            {pub.url && (
+            <a href={pub.url} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-blue-700 hover:underline">
+            DOI <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+            )}
+            </div>
+            </div>
+            </li>
             ))}
-          </ol>
-        </div>
+            </ol>
+          </div>
+        )}
 
-        {/* Interventions médiatiques */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-3 px-7 py-5 border-b border-slate-100">
-            <span className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rose-600 text-white shrink-0">
-              <Mic className="w-4 h-4" />
-            </span>
-            <h2 className="text-lg font-serif font-bold text-slate-900 flex-1">{tr({ fr: "Interventions médiatiques", en: "Media Appearances" }, lang)}</h2>
-            <span className="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded-full px-2.5 py-1 tabular-nums">
-              {authorMedia.length}
-            </span>
-          </div>
-          <div className="px-7 py-5">
+        {voletAuteur === 'medias' && (
+          <div className="border-t border-slate-100 px-7 py-5 animate-in fade-in duration-300">
             {[...new Set(authorMedia.map(m => m.year))].map((yr) => (
-              <div key={yr} className="mb-5 last:mb-0">
-                <div className="flex items-center gap-3 mb-2.5">
-                  <span className="font-serif font-bold text-slate-800 text-sm tabular-nums">{yr}</span>
-                  <span className="h-px flex-1 bg-slate-100"></span>
-                </div>
-                <ul className="relative ps-4 border-s border-slate-200 space-y-3">
-                  {authorMedia.filter(m => m.year === yr).map((m, idx) => {
-                    const st = mediaKindStyle[m.kind] || mediaKindStyle.press;
-                    return (
-                      <li key={idx} className="relative group">
-                        <span className={`absolute -start-[1.3rem] top-1.5 w-2 h-2 rounded-full ring-2 ring-white transition-transform group-hover:scale-150 ${st.dot}`}></span>
-                        <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                          <span className={`text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-sm ${st.chip}`}>{m.outlet}</span>
-                          <span className="text-[10px] font-bold text-slate-400 tabular-nums">{tr(m.date, lang)}</span>
-                        </div>
-                        {m.url ? (
-                          <a href={m.url} target="_blank" rel="noopener noreferrer"
-                             className="text-xs text-slate-700 leading-relaxed italic hover:text-rose-800 hover:underline inline-flex items-start gap-1">
-                            {tr(m.title, lang)} <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />
-                          </a>
-                        ) : (
-                          <Prose className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors" lang={lang}>{tr(m.title, lang)}</Prose>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+            <div key={yr} className="mb-5 last:mb-0">
+            <div className="flex items-center gap-3 mb-2.5">
+            <span className="font-serif font-bold text-slate-800 text-sm tabular-nums">{yr}</span>
+            <span className="h-px flex-1 bg-slate-100"></span>
+            </div>
+            <ul className="relative ps-4 border-s border-slate-200 space-y-3">
+            {authorMedia.filter(m => m.year === yr).map((m, idx) => {
+            const st = mediaKindStyle[m.kind] || mediaKindStyle.press;
+            return (
+            <li key={idx} className="relative group">
+            <span className={`absolute -start-[1.3rem] top-1.5 w-2 h-2 rounded-full ring-2 ring-white transition-transform group-hover:scale-150 ${st.dot}`}></span>
+            <div className="flex flex-wrap items-center gap-2 mb-0.5">
+            <span className={`text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-sm ${st.chip}`}>{m.outlet}</span>
+            <span className="text-[10px] font-bold text-slate-400 tabular-nums">{tr(m.date, lang)}</span>
+            </div>
+            {m.url ? (
+            /* Une video ne se signale pas comme un article : quand le lien
+               mene a YouTube, le libelle le dit et l'icone change. */
+            <a href={m.url} target="_blank" rel="noopener noreferrer"
+            className="text-xs text-slate-700 leading-relaxed italic hover:text-rose-800 hover:underline inline-flex items-start gap-1.5">
+            {tr(m.title, lang)}
+            {/youtu\.?be/.test(m.url)
+              ? <span className="not-italic inline-flex items-center gap-1 shrink-0 text-[9px] font-bold uppercase tracking-widest mt-0.5" style={{ color: 'var(--accent-deep)' }}>
+                  <PlayCircle className="w-3 h-3" aria-hidden="true" />
+                  {tr({ fr: 'Voir', en: 'Watch', ar: 'شاهد' }, lang)}
+                </span>
+              : <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />}
+            </a>
+            ) : (
+            <Prose className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors" lang={lang}>{tr(m.title, lang)}</Prose>
+            )}
+            </li>
+            );
+            })}
+            </ul>
+            </div>
             ))}
           </div>
-        </div>
+        )}
       </div>
 
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm group hover:border-blue-300 transition-colors">
