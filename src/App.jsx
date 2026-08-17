@@ -3409,7 +3409,7 @@ const COUCHES_ATLAS = [
     question: { fr: 'Qui fuit sans franchir de frontière ?', en: 'Who flees without crossing a border?', ar: 'مَن يفرّ دون عبور حدود؟' } },
   // La mobilite climatique, deja mesuree : elle manquait a la carte alors que
   // la base la porte pays par pays.
-  { cle: 'climat', ind: () => mapIndicators.find(i => i.key === 'idp_disaster'), mene: 'mobilites', volet: 'contraintes',
+  { cle: 'climat', ind: () => mapIndicators.find(i => i.key === 'idp_disaster'), mene: 'mobilites', volet: 'climat',
     question: { fr: 'Qui est chassé par le climat ?', en: 'Who is driven out by the climate?', ar: 'مَن يطرده المناخ؟' } },
   // Qui porte la charge de la protection : la reponse dement le recit du
   // fardeau europeen mieux qu'un paragraphe.
@@ -6009,6 +6009,34 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   const entete = (
     <>
       {bascule}
+      {volet === 'climat' ? (
+        <Reperes
+          lang={lang}
+          titre={{ fr: "Climat, environnement, immobilité : trois mots que les politiques confondent",
+                   en: 'Climate, environment, immobility: three words policy conflates',
+                   ar: 'المناخ والبيئة والجمود: ثلاث كلمات تخلط بينها السياسات' }}
+          chapeau={{
+            fr: "Le climat n'est pas l'environnement, et rester n'est pas toujours choisir. Ces trois distinctions commandent la réponse publique : elles départagent ce qui se corrige localement de ce qui se négocie mondialement, et ce qui relève du départ de ce qui relève de l'impossibilité de partir.",
+            en: 'Climate is not the environment, and staying is not always choosing. These three distinctions drive the public response: they separate what can be corrected locally from what must be negotiated globally, and departure from the impossibility of departure.',
+          }}
+          notions={[
+            { mot: { fr: 'Climat', en: 'Climate' },
+              sens: { fr: "L'état atmosphérique moyen d'une région sur le long terme : températures, précipitations, humidité. Une sécheresse pluriannuelle en relève.",
+                      en: "A region's long-run average atmospheric state: temperature, rainfall, humidity. A multi-year drought belongs here." } },
+            { mot: { fr: 'Environnement', en: 'Environment' },
+              sens: { fr: "Plus large : écosystèmes, sols, eau, qualité de l'air. Une nappe épuisée par surexploitation en relève, et se corrige localement.",
+                      en: 'Broader: ecosystems, soil, water, air quality. A water table drained by over-extraction belongs here, and is corrected locally.' } },
+            { mot: { fr: 'Mobilité induite', en: 'Induced mobility' },
+              sens: { fr: "Le facteur environnemental est déterminant sans être seul : il agit à travers des conditions économiques, sociales et politiques. D'où « induite » plutôt que « causée ».",
+                      en: 'The environmental factor is decisive without being sole: it works through economic, social and political conditions. Hence "induced" rather than "caused".' } },
+            { mot: { fr: 'Populations immobilisées', en: 'Trapped populations' },
+              sens: { fr: "Exposées, et sans les ressources qu'exige un départ. Les plus pauvres restent là où le risque est le plus fort ; aucune statistique de mobilité ne les compte.",
+                      en: 'Exposed, and without the resources departure demands. The poorest stay where risk is greatest; no mobility statistic counts them.' } },
+          ]}
+          pied={{ fr: "Sources : Black et al. (2011) ; Foresight (2011) ; Ben Mokhtar, Y. (2024), projet Go Green.",
+                  en: 'Sources: Black et al. (2011); Foresight (2011); Ben Mokhtar, Y. (2024), Go Green project.' }}
+        />
+      ) : (
       <Reperes
         lang={lang}
         titre={{ fr: "Déplacé, réfugié, apatride, travailleur migrant : quatre statuts distincts",
@@ -6056,6 +6084,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
           en: 'One person can fall under several of these categories across a single journey, and change category without moving. African definitions govern here; the UN definition is cited for comparison.'
         }}
       />
+      )}
     </>
   );
 

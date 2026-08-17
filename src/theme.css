@@ -778,25 +778,25 @@ main { view-transition-name: page; }
    seulement legal : 11 px se lit, 12,5 px se lit sans effort. Les valeurs
    ci-dessous sont les anciennes multipliees par 1,15 puis arrondies au demi
    pixel, pour que le rapport entre les rangs soit conserve. */
-.text-\[9px\]  { font-size: 12.5px; }
-.text-\[10px\] { font-size: 12.5px; }
-.text-\[11px\] { font-size: 12.5px; }
-.text-\[12px\] { font-size: 14px; }
-.text-\[13px\], .text-\[13\.5px\] { font-size: 16px; }
-.text-\[15px\] { font-size: 18.5px; }
+.text-\[9px\]  { font-size: 12px; }
+.text-\[10px\] { font-size: 12px; }
+.text-\[11px\] { font-size: 12px; }
+.text-\[12px\] { font-size: 13px; }
+.text-\[13px\], .text-\[13\.5px\] { font-size: 15px; }
+.text-\[15px\] { font-size: 17px; }
 
 /* Les rangs nommes de Tailwind suivent le meme facteur : sans eux, le corps
    courant resterait en arriere de ses propres legendes. */
-:is(main, .reader) .text-xs   { font-size: 14px;   line-height: 1.55; }
-:is(main, .reader) .text-sm   { font-size: 16px;   line-height: 1.6; }
-:is(main, .reader) .text-base { font-size: 18.5px; line-height: 1.6; }
+:is(main, .reader) .text-xs   { font-size: 13px;   line-height: 1.55; }
+:is(main, .reader) .text-sm   { font-size: 15px;   line-height: 1.6; }
+:is(main, .reader) .text-base { font-size: 17px; line-height: 1.6; }
 /* Le haut de l'echelle. Sans ces trois regles, text-lg (18 px par defaut)
    rendait plus petit que text-base (18,5 px) : la classe « large » etait la
    plus etroite des deux. Progression : 18,5 / 21 / 24 / 28 / 34. */
-:is(main, .reader) .text-lg    { font-size: 21px;   line-height: 1.45; }
-:is(main, .reader) .text-xl    { font-size: 24px;   line-height: 1.35; }
-:is(main, .reader) .text-2xl   { font-size: 28px;   line-height: 1.25; }
-:is(main, .reader) .text-3xl   { font-size: 34px;   line-height: 1.15; }
+:is(main, .reader) .text-lg    { font-size: 19px;   line-height: 1.45; }
+:is(main, .reader) .text-xl    { font-size: 22px;   line-height: 1.35; }
+:is(main, .reader) .text-2xl   { font-size: 26px;   line-height: 1.25; }
+:is(main, .reader) .text-3xl   { font-size: 31px;   line-height: 1.15; }
 
 /* Sous 13 px, le gris sourd n'est plus assez dense : on passe a --label
    (7,5:1 environ) plutot que de laisser --muted a 5,5:1. */
@@ -930,7 +930,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .terme-pop-lbl {
   display: block;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -939,7 +939,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 }
 .terme-pop-txt {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.55;
   color: var(--ink-soft);
   text-align: left;
@@ -963,7 +963,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-lbl {
   flex: none;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -974,7 +974,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-txt {
   flex: 1 1 16rem;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--ink);
   text-align: start;   /* jamais justifie : c'est une phrase, pas un paragraphe */
@@ -995,7 +995,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
   padding: .6rem 1rem;
   background: var(--accent);
   color: #FBFBF8;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   border-radius: 0 0 3px 3px;
   transition: top .16s ease-out;
@@ -1181,9 +1181,9 @@ html[data-lecture-corps="grand"] { font-size: 112.5%; }
 /* Les micro-libelles sont, eux, cales en pixels par le plancher de lisibilite :
    on les remonte explicitement, sinon ils seraient les seuls a ne pas grandir. */
 html[data-lecture-corps="grand"] .text-\[9px\],
-html[data-lecture-corps="grand"] .text-\[10px\] { font-size: 12.5px; }
-html[data-lecture-corps="grand"] .text-\[11px\] { font-size: 14px; }
-html[data-lecture-corps="grand"] .text-\[12px\] { font-size: 14px; }
+html[data-lecture-corps="grand"] .text-\[10px\] { font-size: 12px; }
+html[data-lecture-corps="grand"] .text-\[11px\] { font-size: 13px; }
+html[data-lecture-corps="grand"] .text-\[12px\] { font-size: 13px; }
 
 /* Colonne resserree : moins de saccades oculaires par ligne. */
 html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
@@ -1200,7 +1200,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .prefs-btn {
   display: inline-flex; align-items: center; gap: .4rem;
   padding: .35rem .6rem;
-  font-size: 12.5px; font-weight: 600;
+  font-size: 12px; font-weight: 600;
   color: #D3D5DC;
   border: 1px solid rgba(255,253,249,.22);
   border-radius: 2px;
@@ -1211,7 +1211,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .prefs-pastille {
   min-width: 1.15rem; padding: 0 .22rem;
-  font-size: 12.5px; font-weight: 700; line-height: 1.15rem; text-align: center;
+  font-size: 12px; font-weight: 700; line-height: 1.15rem; text-align: center;
   color: var(--ink); background: #8FA0CE; border-radius: 999px;
 }
 
@@ -1227,16 +1227,16 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 }
 
 .prefs-intro {
-  margin: 0 0 .9rem; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft);
+  margin: 0 0 .9rem; font-size: 12px; line-height: 1.5; color: var(--ink-soft);
 }
 
 .prefs-champ { border: 0; margin: 0 0 .95rem; padding: 0; }
-.prefs-titre { padding: 0; margin-bottom: .35rem; font-size: 12.5px; font-weight: 700; color: var(--ink); }
+.prefs-titre { padding: 0; margin-bottom: .35rem; font-size: 12px; font-weight: 700; color: var(--ink); }
 
 .prefs-choix { display: flex; gap: .3rem; }
 .prefs-choix button {
   flex: 1 1 0; padding: .4rem .3rem;
-  font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
+  font-size: 12px; font-weight: 600; color: var(--ink-soft);
   background: var(--paper); border: 1px solid var(--rule); border-radius: 2px;
   cursor: pointer;
 }
@@ -1246,11 +1246,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: #FBFBF8; background: var(--accent); border-color: var(--accent);
 }
 
-.prefs-aide { margin: .35rem 0 0; font-size: 12.5px; line-height: 1.45; color: var(--label); }
+.prefs-aide { margin: .35rem 0 0; font-size: 12px; line-height: 1.45; color: var(--label); }
 
 .prefs-reset {
   width: 100%; padding: .45rem;
-  font-size: 12.5px; font-weight: 600; color: var(--accent-deep);
+  font-size: 12px; font-weight: 600; color: var(--accent-deep);
   background: none; border: 1px dashed var(--rule-strong); border-radius: 2px;
   cursor: pointer;
 }
@@ -1266,7 +1266,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .6rem;
   margin: 1rem 0 0; padding-top: .55rem;
   border-top: 1px solid var(--rule);
-  font-size: 12.5px; line-height: 1.5; color: var(--label);
+  font-size: 12px; line-height: 1.5; color: var(--label);
   max-width: none !important;   /* la mesure de lecture ne s'applique pas ici */
 }
 
@@ -1305,7 +1305,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 :is(h2, h3, h4, h5, h6).uppercase.tracking-widest {
   text-transform: none !important;
   letter-spacing: -0.005em !important;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--accent-deep);
 }
@@ -1360,14 +1360,14 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche-btn {
   display: inline-flex; align-items: center; gap: .45rem;
   padding: .35rem .6rem .35rem .55rem;
-  font-size: 12.5px; font-weight: 600; color: #D3D5DC;
+  font-size: 12px; font-weight: 600; color: #D3D5DC;
   border: 1px solid rgba(255,253,249,.22); border-radius: 2px; cursor: pointer;
 }
 .recherche-btn:hover { color: #FBFBF8; border-color: rgba(255,253,249,.45); }
 .recherche-btn:focus-visible { outline: 2px solid #8FA0CE; outline-offset: 2px; }
 
 .recherche-kbd {
-  padding: 0 .3rem; font-size: 12.5px; font-family: inherit; line-height: 1.15rem;
+  padding: 0 .3rem; font-size: 12px; font-family: inherit; line-height: 1.15rem;
   color: #9BA0AC; border: 1px solid rgba(255,253,249,.22); border-radius: 2px;
 }
 
@@ -1382,7 +1382,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .recherche-champ {
   width: 100%; padding: .8rem .9rem;
-  font: inherit; font-size: 14px; color: var(--ink);
+  font: inherit; font-size: 13px; color: var(--ink);
   background: transparent; border: 0; border-bottom: 1px solid var(--rule);
 }
 .recherche-champ:focus { outline: none; border-bottom-color: var(--accent); }
@@ -1390,11 +1390,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche-filtres { display: flex; flex-wrap: wrap; gap: .3rem; padding: .6rem .7rem; }
 .recherche-filtres button {
   display: inline-flex; align-items: baseline; gap: .3rem;
-  padding: .25rem .55rem; font-size: 12.5px; font-weight: 600;
+  padding: .25rem .55rem; font-size: 12px; font-weight: 600;
   color: var(--ink-soft); background: var(--paper);
   border: 1px solid var(--rule); border-radius: 999px; cursor: pointer;
 }
-.recherche-filtres button .num { font-size: 12.5px; color: var(--label); }
+.recherche-filtres button .num { font-size: 12px; color: var(--label); }
 .recherche-filtres button[aria-pressed="true"] {
   color: #FBFBF8; background: var(--accent); border-color: var(--accent);
 }
@@ -1412,19 +1412,19 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .recherche-type {
   grid-row: span 2; align-self: start;
-  font-size: 12.5px; font-weight: 700; color: var(--accent-deep);
+  font-size: 12px; font-weight: 700; color: var(--accent-deep);
 }
-.recherche-titre { font-size: 14px; line-height: 1.4; color: var(--ink); }
-.recherche-ctx { font-size: 12.5px; line-height: 1.4; color: var(--label); }
+.recherche-titre { font-size: 13px; line-height: 1.4; color: var(--ink); }
+.recherche-ctx { font-size: 12px; line-height: 1.4; color: var(--label); }
 
-.recherche-vide { margin: 0; padding: 1rem .9rem 1.2rem; font-size: 14px; color: var(--label); }
+.recherche-vide { margin: 0; padding: 1rem .9rem 1.2rem; font-size: 13px; color: var(--label); }
 
 /* La reference d'un terme emprunte, dans le panneau de definition. */
 .terme-pop-src {
   display: inline-flex; align-items: baseline; gap: .3em;
   margin-top: .6rem; padding-top: .5rem;
   border-top: 1px solid var(--rule);
-  font-size: 12.5px; line-height: 1.45; color: var(--accent-deep);
+  font-size: 12px; line-height: 1.45; color: var(--accent-deep);
   text-decoration: underline; text-decoration-color: var(--rule-strong);
 }
 .terme-pop-src:hover { text-decoration-color: currentColor; }
@@ -1450,7 +1450,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   align-items: center;
   gap: .45rem;
   padding: .5rem .85rem;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
   color: var(--ink-soft);
@@ -1472,7 +1472,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .couche-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 767px) {
-  .couche-btn { font-size: 12.5px; padding: .45rem .7rem; }
+  .couche-btn { font-size: 12px; padding: .45rem .7rem; }
   .atlas-scene svg { max-height: 52vh; }
 }
 
@@ -1630,9 +1630,9 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .classement-ligne:hover,
 .classement-ligne:focus-visible { background-color: var(--accent-lavis); outline: none; }
 .classement-ligne[aria-current='true'] { background-color: var(--accent-voile); }
-.classement-rang   { font-size: 12.5px; color: var(--label); font-variant-numeric: tabular-nums; }
-.classement-nom    { font-size: 14px; color: var(--ink); font-weight: 600; }
-.classement-valeur { font-size: 14px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.classement-rang   { font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
+.classement-nom    { font-size: 13px; color: var(--ink); font-weight: 600; }
+.classement-valeur { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .classement-jauge  { display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
 .classement-jauge > span {
   display: block; height: 100%; border-radius: 999px;
@@ -1869,7 +1869,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   border-radius: 999px;
   /* 11 px est le plancher de lecture du site : un sigle est deja dense,
      le reduire encore le rend illisible aux yeux fatigues. */
-  font-size: 12.5px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   color: var(--accent-deep);
   background: var(--accent-soft);
 }
@@ -1880,7 +1880,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   margin-top: 1.1rem;
   padding: .55rem .9rem;
   border-radius: 999px;
-  font-size: 12.5px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   letter-spacing: .06em; text-transform: uppercase;
   color: var(--paper-raised);
   background: var(--ink);
@@ -1930,7 +1930,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   margin-top: .85rem;
   padding: .45rem .95rem;
   border-radius: 999px;
-  font-size: 12.5px; font-weight: 700;
+  font-size: 12px; font-weight: 700;
   letter-spacing: .06em; text-transform: uppercase;
   color: var(--accent-deep);
   background: var(--paper-raised);
@@ -2194,7 +2194,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
   border: 1px solid var(--rule);
   background: var(--paper-raised);
   color: var(--ink-soft);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   padding: .5rem .95rem;
   box-shadow: none !important;
@@ -2299,7 +2299,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 /* La provenance des corridors, en pied de bandeau : discrete, jamais absente. */
 .scene-flux-source {
   margin-top: 1.15rem;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 1.45;
   color: #AEB6C6;
 }
@@ -2347,7 +2347,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    Ils variaient de 1,76 a 2,20 px d'interlettrage et du gras 600 au gras 700,
    pour dire exactement la meme chose : « voici de quoi parle ce bloc ». */
 :is(main, .reader) span[class*="uppercase"][class*="tracking"] {
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   letter-spacing: .18em !important;
   font-weight: 700 !important;
   line-height: 1.4;
