@@ -74,7 +74,25 @@ for (const { f, l, t } of chaines) {
     if (!commun(k)) continue;
     touches.push(w);
   }
-  if (touches.length >= 2) suspects.push({ f, l, t, touches });
+  if (touches.length >= 2) { suspects.push({ f, l, t, touches }); continue; }
+
+  // Angle mort de la calibration : un terme capitalise PARTOUT passe pour la
+  // norme du site, et rien ne le signale. C'etait le cas des noms des
+  // communautes economiques regionales — « Marche Commun de l'Afrique
+  // Orientale et Australe » n'apparaissait jamais autrement.
+  //
+  // On rattrape ces cas par la forme et non par l'usage : trois mots
+  // capitalises ou plus, relies par des mots-outils francais en bas de casse,
+  // c'est une denomination ecrite a l'anglaise. Les sigles et les noms propres
+  // isoles n'y tombent pas — il leur faudrait trois mots pleins capitalises.
+  const denomination = /(?:[A-ZÀ-Ö][a-zà-ÿ]{2,}\s+(?:de |du |des |la |le |les |et |pour |sur |aux |à )*){2,}[A-ZÀ-Ö][a-zà-ÿ]{2,}/g;
+  for (const m of t.matchAll(denomination)) {
+    const mots = m[0].match(/[A-ZÀ-Ö][a-zà-ÿ]{2,}/g) || [];
+    if (mots.length < 3) continue;
+    if (!/\b(de|du|des|la|le|les|et|pour|sur|aux|à)\b/.test(m[0])) continue;
+    suspects.push({ f, l, t, touches: mots, denomination: true });
+    break;
+  }
 }
 
 console.log('=== Capitales de titre a l\'anglaise dans des chaines francaises ===');

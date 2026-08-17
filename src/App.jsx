@@ -1252,30 +1252,30 @@ const AspirationGap = ({ lang }) => {
         </div>
 
         <div>
-          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Où ceux qui envisagent de partir voudraient aller', 'Where those considering leaving would go')}
-          </h4>
+          </p>
           {dest.map((d, i) => <Row key={d.l} {...d} color="var(--accent-2)" i={i} />)}
         </div>
 
         <div>
-          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Pourquoi', 'Why')}
-          </h4>
+          </p>
           {why.map((d, i) => <Row key={d.l} {...d} color="var(--accent)" i={i} />)}
         </div>
 
         <div>
-          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("L'écart entre pays est considérable", 'The gap between countries is considerable')}
-          </h4>
+          </p>
           {pays.map((d, i) => <Row key={d.l} {...d} color="var(--ok)" i={i} />)}
         </div>
 
         <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que l'écart démontre", 'What the gap demonstrates')}
-          </h4>
+          </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
               "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
               'Sixty per cent of those considering leaving name North America or Europe. Yet in fact more than seven in ten migrants of African origin stay on the continent. That gap is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
@@ -1317,9 +1317,9 @@ const ProportionGap = ({ lang }) => {
   return (
     <figure className="my-7 border border-slate-200 bg-white">
       <figcaption className="px-5 py-3 border-b border-slate-200" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-        <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
+        <p className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
           {L('Lecture proportionnelle', 'Reading it proportionally')}
-        </h4>
+        </p>
         <span className="block text-[13px] font-semibold text-slate-800 leading-snug">
           {L(
             "Le continent pèse le double de son poids migratoire",
@@ -1331,7 +1331,7 @@ const ProportionGap = ({ lang }) => {
       <div className="px-5 py-5 space-y-5">
         {groups.map((g, gi) => (
           <div key={gi} className={gi > 0 ? 'pt-5' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">{g.title}</h4>
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">{g.title}</p>
             <div className="space-y-2.5">
               {g.rows.map((r, ri) => (
                 <div key={ri}>
@@ -1516,9 +1516,9 @@ const CensusRhythm = ({ lang }) => {
           </div>
   
           <div>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
               {L('Combien d\'opérations datées par pays, depuis 1970', 'How many dated operations per country, since 1970')}
-            </h4>
+            </p>
             <div className="space-y-2">
               {Object.entries(data.byCount).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v], i) => (
                 <div key={k} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -1539,9 +1539,9 @@ const CensusRhythm = ({ lang }) => {
           </div>
   
           <div>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
               {L('Les plus longues interruptions', 'The longest interruptions')}
-            </h4>
+            </p>
             <div className="space-y-2">
               {data.longest.map((r, i) => (
                 <div key={r.name} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -1560,9 +1560,9 @@ const CensusRhythm = ({ lang }) => {
           </div>
   
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L('Pourquoi la moyenne trompe ici', 'Why the average misleads here')}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 `L'intervalle médian est de ${data.median} ans, contre une moyenne de ${fmt(data.mean.toFixed(1))} : l'écart entre les deux mesure exactement la déformation produite par une poignée de très longues interruptions. ${data.metronomes.length} États ont conduit six recensements sans jamais dépasser douze ans d'écart — un rythme conforme à la recommandation onusienne, tenu sur un demi-siècle. À l'autre extrémité, ${data.jamais.length} n'ont aucune ou qu'une seule opération comptabilisable sur la période — dont la République démocratique du Congo, dont le seul recensement national date de 1984. Parler d'un « rythme africain » unique revient donc à moyenner un métronome et une horloge arrêtée : le résultat ne décrit ni l'un ni l'autre, et il masque là où l'appui statistique serait réellement utile (Ben Mokhtar, 2026).`,
                 `The median interval is ${data.median} years against a mean of ${fmt(data.mean.toFixed(1))}: the gap between the two measures exactly the distortion produced by a handful of very long interruptions. ${data.metronomes.length} states have conducted six censuses without ever exceeding twelve years between them — a rhythm consistent with the UN recommendation, sustained over half a century. At the other end, ${data.jamais.length} have no countable operation at all, or only one, over the period — among them the Democratic Republic of the Congo, whose only national census dates from 1984. Speaking of a single "African rhythm" therefore means averaging a metronome and a stopped clock: the result describes neither, and it hides where statistical support would actually be useful (Ben Mokhtar, 2026).`
@@ -1624,9 +1624,9 @@ const LateRound = ({ lang }) => {
             )}</Prose>
   
           <div>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
               {L('Recensements achevés après la clôture du cycle 2020', 'Censuses completed after the 2020 round closed')}
-            </h4>
+            </p>
             <div className="space-y-2">
               {rows.map((r, i) => (
                 <div key={r.iso2} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -1647,9 +1647,9 @@ const LateRound = ({ lang }) => {
           </div>
   
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L('Ce que le décompte par cycle ne peut pas dire', 'What a round-by-round count cannot say')}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal sert la comparaison internationale ; il ne mesure pas l'effort statistique national. Il pénalise même mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
                 "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone, they count for zero and feed the deficit narrative. Read for what they are, they open the 2030 series. They also lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
@@ -2101,12 +2101,12 @@ const t = {
       comparative_view_desc: "Selon le 3e Rapport sur les statistiques migratoires de l'UA (2021) et UNDESA (2024), la dynamique démographique africaine alimente à 70% les marchés du travail régionaux internes. La part des migrants internationaux reste structurellement stable (~1,9% de la population continentale) depuis 1990.",
       modal: {
         close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie & Flux", econ: "Économie & Droits" },
-        south_view: "Perspective Analytique des Suds",
+        south_view: "Perspective analytique des Suds",
         evo_title: "La constante proportionnelle (1990-2024)", parity: "Féminisation des flux (UNDESA 2024)", retention_title: "Rétention Régionale Sud-Sud (UA 2021)",
         orig_dest_title: "Dynamiques de Transition & Proximité", econ_title: "Indépendance économique & transferts",
         causal_chain: "Chaîne de causes systémiques", trigger: "Déclencheur", response: "Réponse Migratoire", impact: "Impact Socio-économique",
         data_source: "Sources : UNDESA (2024) / Rapport UA-OIT-OIM-CEA (2021) / IDMC (2025) / UNHCR (2025) / OIT NORMLEX (2025)", export_csv: "Exporter (CSV)", export_pdf: "Rapport (PDF)",
-        raw_data_title: "Fiche de Données Brutes", infographic_title: "Infographie : Répartition des Flux",
+        raw_data_title: "Fiche de données brutes", infographic_title: "Infographie : Répartition des Flux",
         idp_title: "Protection & déplacements forcés (IDMC/UNHCR 2025)", idp_desc: "L'essentiel de la mobilité contrainte africaine est absorbé à l'intérieur des frontières nationales ou dans les pays limitrophes.",
         idp_conflict: "Déplacés internes, conflits (IDMC 2025)", idp_disaster: "Déplacés internes, climat (IDMC 2025)",
         hcr_hosted: "Réfugiés internationaux accueillis (UNHCR 2025)",
@@ -2114,7 +2114,7 @@ const t = {
         au_instruments: "Traités & conventions clés de l'Union africaine (État de ratification 2025)"
       },
       sections: { 
-        debunk: "Déconstruction Factuelle des Narratifs", 
+        debunk: "Déconstruction factuelle des narratifs", 
         global: "Perspective globale des stocks migratoires (UNDESA, 2024)", 
         data: "Cadre d'indicateurs recommandés", 
         sdg_gcm: "Alignement ODD (SDGs 2030) & Pactes Mondiaux (GCM / GCR 2018)",
@@ -2396,7 +2396,7 @@ const t = {
       },
       myth: "Postulat", reality: "Donnée Factuelle",
       footer: { tag: "L'ingénierie des données au service d'un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
-      analysis_title: "Tableau de Bord Détaillé", analysis_btn: "Accéder au rapport"
+      analysis_title: "Tableau de bord détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
       title: "South(s) Mobility", subtitle: "Knowledge & Data",
@@ -4163,7 +4163,7 @@ const CarteSection = ({ lang, indicateur, kicker, titre, plain, sources = [] }) 
         <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
           {kicker}
         </span>
-        <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{titre}</h3>
+        <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{titre}</h2>
       </div>
       <div className="px-6 md:px-8 py-6">
         <EnClair lang={lang} fr={plain.fr} en={plain.en} />
@@ -4522,7 +4522,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       </Reveal>
 
       <Reveal delay={60}>
-        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{tr({ fr: "Explorer le Knowledge Hub", en: "Explore the Knowledge Hub" }, lang)}</h2>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{tr({ fr: "Explorer le hub de connaissances", en: "Explore the Knowledge Hub" }, lang)}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
           {homeCards.map((card, i) => {
             const Icon = card.icon;
@@ -4590,7 +4590,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         </div>
         </Chapitre>
         <div className="mt-8 pt-6 border-t border-slate-100">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</h4>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">{text.home_editorial.refs_title}</p>
           <ul className="space-y-1.5">
             {text.home_editorial.refs.map((ref, idx) => (
               <li key={idx} className="text-xs text-slate-500 leading-relaxed">
@@ -4604,9 +4604,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       </Reveal>
 
       <Reveal delay={40} className="bg-white rounded-xl border border-slate-200 shadow-sm p-8 md:p-10">
-        <h4 className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
+        <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
           {tr({ fr: "Données croisées et vérifiées à partir des sources institutionnelles suivantes", en: "Data cross-checked and verified against the following institutional sources" }, lang)}
-        </h4>
+        </p>
         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
           {institutionLogos.map((inst) => (
             <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.full || inst.name}>
@@ -4715,20 +4715,20 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
       </header>
 
       <div className="px-6 md:px-8 py-6" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-        <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
+        <p className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent-deep)' }}>
           {L("Ce que montrent les donn\u00e9es", "What data shows")}
-        </h4>
+        </p>
         <Prose className="text-[15px] leading-relaxed text-slate-800" lang={lang}>{tr(fiche.reality, lang)}</Prose>
       </div>
 
       <div className="px-6 md:px-8 py-6 space-y-6">
         {fiche.why_persists && tr(fiche.why_persists, lang).length > 0 && (
           <section>
-            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {isSubstantiated
                 ? L("Pourquoi cette r\u00e9alit\u00e9 reste peu visible", "Why this reality is under-recognized")
                 : L("Pourquoi ce narratif persiste", "Why this narrative persists")}
-            </h4>
+            </p>
             <ul className="space-y-1.5">
               {tr(fiche.why_persists, lang).map((reason, i) => (
                 <li key={i} className="flex gap-2.5 text-[13px] text-slate-600 leading-relaxed">
@@ -4742,9 +4742,9 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <section>
-            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
               <BarChart3 className="w-3 h-3" /> {L("Indicateurs crois\u00e9s", "Crossed indicators")}
-            </h4>
+            </p>
             <ul className="space-y-1">
               {tr(fiche.indicators, lang).map((ind, i) => (
                 <li key={i} className="text-xs text-slate-700 py-1.5" style={{ borderBottom: '1px solid var(--rule)' }}>{ind}</li>
@@ -4752,9 +4752,9 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
             </ul>
           </section>
           <section>
-            <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5 flex items-center gap-1.5">
               <Landmark className="w-3 h-3" /> {L("Sources", "Sources")}
-            </h4>
+            </p>
             <ul className="space-y-1">
               {tr(fiche.sources, lang).map((src, i) => (
                 <li key={i} className="text-xs font-medium py-1.5" style={{ color: 'var(--accent-2)', borderBottom: '1px solid var(--rule)' }}>{src}</li>
@@ -4764,9 +4764,9 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
         </div>
 
         <section className="pt-4" style={{ borderTop: '1px solid var(--rule)' }}>
-          <h4 className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 flex items-center gap-1.5">
             <ShieldAlert className="w-3 h-3" /> {L("Limites m\u00e9thodologiques", "Methodological limits")}
-          </h4>
+          </p>
           <Prose className="text-xs text-slate-500 italic leading-relaxed" lang={lang}>{tr(fiche.limits, lang)}</Prose>
         </section>
       </div>
@@ -5148,7 +5148,7 @@ const pafomSessions = [
 const AuAgencyCard = ({ acronym, fullName, seat, founded, children, source, lang }) => (
   <article className="bg-white border border-slate-200 p-5 flex flex-col h-full lift">
     <div className="flex items-baseline justify-between gap-3 mb-1">
-      <h5 className="font-serif font-bold text-slate-900 text-base">{acronym}</h5>
+      <h4 className="font-serif font-bold text-slate-900 text-base">{acronym}</h4>
       <span className="text-[10px] font-bold tabular-nums shrink-0" style={{ color: 'var(--accent-deep)' }}>{founded}</span>
     </div>
     <span className="block text-[11px] text-slate-600 leading-snug mb-1">{fullName}</span>
@@ -5361,9 +5361,9 @@ const GovernanceCross = ({ lang }) => {
           </div>
   
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-            <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L('Ce que les trois coefficients disent ensemble', 'What the three coefficients say together')}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Les États qui ouvrent et ceux qui signent forment deux groupes distincts. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
                 `Governing better does go with opening more: the relationship exists, moderate but clear. Governance quality, however, says nothing about legal anchoring — and, the sharpest result, effective border openness says nothing about ratifications, nor the reverse. The states that open and the states that sign form two distinct groups. Rwanda alone does both fully. Seychelles opens completely while having ratified only four instruments out of six; Botswana and Lesotho are well governed and closed; Burundi and Mozambique open widely with poorly ranked governance. Openness is therefore neither a product of administrative capacity nor a consequence of legal commitment: it is a sovereign decision, taken instrument by instrument and border by border. That is precisely what the national in-between describes (Ben Mokhtar, 2026).`
@@ -5440,10 +5440,10 @@ const AnchoringMatrix = ({ lang }) => {
           <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-deep)' }}>
             {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
           </span>
-          <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+          <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
             {L("L'ancrage : ce que les États ont réellement ratifié",
                'Anchoring: what states have actually ratified')}
-          </h4>
+          </h3>
         </div>
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
@@ -5475,9 +5475,9 @@ const AnchoringMatrix = ({ lang }) => {
   
           {/* L'asymetrie de protection */}
           <div className="p-5" style={{ backgroundColor: 'var(--bad-soft)', borderLeft: '2px solid var(--bad)' }}>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--bad)' }}>
+            <p className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--bad)' }}>
               {L('Une asymétrie que personne ne compte', 'An asymmetry nobody counts')}
-            </h4>
+            </p>
             <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
                 `${asym.refOnly.length} États ont ratifié la Convention de l'OUA de 1969 — celle qui protège le réfugié venu d'ailleurs — sans ratifier la Convention de Kampala, celle qui protège leur propre population déplacée à l'intérieur des frontières. L'inverse ne se produit que dans ${asym.kampOnly.length} cas. La protection s'arrête donc plus souvent à la frontière qu'elle ne la franchit — alors que le déplacement interne est, en Afrique, la forme de mobilité forcée la plus massive (Ben Mokhtar, 2026).`,
                 `${asym.refOnly.length} states have ratified the 1969 OAU Convention — which protects the refugee arriving from elsewhere — without ratifying the Kampala Convention, which protects their own population displaced inside their borders. The reverse occurs in only ${asym.kampOnly.length} cases. Protection therefore stops at the border more often than it crosses it — while internal displacement is, in Africa, the most massive form of forced mobility (Ben Mokhtar, 2026).`
@@ -5551,9 +5551,9 @@ const AnchoringMatrix = ({ lang }) => {
         </div>
   
         <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-          <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L('Provenance et réserve', 'Provenance and caveat')}
-          </h4>
+          </p>
           <Prose className="text-[11px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
               "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 48 États ont déposé leur instrument. Les six qui manquent sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde avec les listes de l'UA, État par État.",
               "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 48 states have deposited their instrument. The six outstanding are Eritrea, not a signatory; Benin, Libya, Sudan and South Sudan, whose ratification is not approved; and Somalia, which approved without depositing. Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected. The matrix matches the AU lists state by state."
@@ -5579,7 +5579,7 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
       <span className="block text-[10px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: accent }}>
         {kicker}
       </span>
-      <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h4>
+      <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h2>
     </div>
     <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">
       {children}
@@ -5819,7 +5819,7 @@ const TabForced = ({ text, lang, children }) => {
                 </span>
               </div>
               <div className="px-4 py-4">
-                <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: p.accent }}>{p.inst}</h4>
+                <p className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: p.accent }}>{p.inst}</p>
                 <p className="text-xs text-slate-600 leading-relaxed text-justify">{p.d}</p>
               </div>
             </article>
@@ -5837,19 +5837,19 @@ const TabForced = ({ text, lang, children }) => {
             'Computed from the platform country base. Conflict-related internal displacement is extremely concentrated: a handful of states carries most of the continental total.'
           )}</Prose>
 
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--warn-ink)' }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--warn-ink)' }}>
           {L('Déplacés internes par un conflit', 'Internally displaced by conflict')}
-        </h3>
+        </p>
         <Ranking rows={data.conflict.slice(0, 10)} color="var(--warn-ink)" unitTotal={data.totalConflict} />
 
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--accent-2)' }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--accent-2)' }}>
           {L('Déplacés internes par une catastrophe', 'Internally displaced by disaster')}
-        </h3>
+        </p>
         <Ranking rows={data.disaster.slice(0, 8)} color="var(--accent-2)" unitTotal={data.totalDisaster} />
 
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--ok)' }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--ok)' }}>
           {L('Réfugiés accueillis (HCR, 2024)', 'Refugees hosted (UNHCR, 2024)')}
-        </h3>
+        </p>
         <Ranking
           rows={data.refugees.slice(0, 10)}
           color="var(--ok)"
@@ -5860,9 +5860,9 @@ const TabForced = ({ text, lang, children }) => {
           )}
         />
 
-        <h3 className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--bad)' }}>
+        <p className="text-[10px] font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--bad)' }}>
           {L('Apatrides recensés (HCR, 2024)', 'Recorded stateless persons (UNHCR, 2024)')}
-        </h3>
+        </p>
         <Ranking
           rows={data.stateless}
           color="var(--bad)"
@@ -5875,9 +5875,9 @@ const TabForced = ({ text, lang, children }) => {
 
         {/* Ce qu'un etat instantane masquait : la pente sur dix ans. */}
         <div className="mt-8 pt-6" style={{ borderTop: '1px solid var(--rule)' }}>
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">
             {L('Une décennie de bascule (HCR, 2014 → 2024)', 'A decade of shift (UNHCR, 2014 → 2024)')}
-          </h3>
+          </p>
           <Prose className="text-xs text-slate-500 mb-4" lang={lang}>{L('Périmètre : les pays africains couverts par la base du HCR.', 'Perimeter: the African countries covered by the UNHCR base.')}</Prose>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 stagger">
             {[
@@ -5890,7 +5890,7 @@ const TabForced = ({ text, lang, children }) => {
               const mult = a ? b / a : 0;
               return (
                 <div key={x.k} className="border border-slate-200 p-4 lift">
-                  <h4 className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--label)' }}>{x.l}</h4>
+                  <p className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--label)' }}>{x.l}</p>
                   <div className={`text-xl font-serif font-bold tabular-nums leading-none ${x.tone}`}>{fmt(b)}</div>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>{fmt(a)} <span className="opacity-70">(2014)</span></span>
@@ -6236,9 +6236,9 @@ const TabLabour = ({ text, lang, children }) => {
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L("Ce que la révision de la série nous apprend", "What the revision of the series tells us")}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Il s'agit d'une révision : méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
                 "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is a revision: refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
@@ -6246,9 +6246,9 @@ const TabLabour = ({ text, lang, children }) => {
           </div>
 
           <div>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L("Là où la donnée manque vraiment", "Where the data really runs out")}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
                 "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit therefore sits in the reporting and harmonisation chain rather than in producing raw data (Ben Mokhtar, 2026)."
@@ -6256,9 +6256,9 @@ const TabLabour = ({ text, lang, children }) => {
           </div>
 
           <div>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L("Le lien avec la libre circulation et la ZLECAf", "The link with free movement and the AfCFTA")}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
                 "La 4e édition établit elle-même le lien. L'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
                 "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
@@ -6270,9 +6270,9 @@ const TabLabour = ({ text, lang, children }) => {
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', border: '1px solid #E4CFA4' }}>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+            <p className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
               {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
-            </h4>
+            </p>
             <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }} lang={lang}>{L(
                 "La 4e édition rappelle que 19,1 % seulement de la population africaine bénéficie d'au moins une prestation de protection sociale (indicateur ODD 1.3.1). La moyenne mondiale est de 52,4 % — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
                 "The 4th edition recalls that only 19.1% of Africa's population is covered by at least one social protection benefit (SDG indicator 1.3.1), against 52.4% worldwide — the first time half of humanity is covered. A migrant worker compounds this continental deficit with the non-portability of entitlements across borders."
@@ -6289,10 +6289,10 @@ const TabLabour = ({ text, lang, children }) => {
               <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--warn-ink)' }}>
                 {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
               </span>
-              <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+              <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
                 {L("Les droits opposables : sept États sur cinquante-quatre ont le socle complet",
                    'Enforceable rights: seven states out of fifty-four have the full floor')}
-              </h4>
+              </h3>
             </div>
   
             <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
@@ -6302,9 +6302,9 @@ const TabLabour = ({ text, lang, children }) => {
                 )}</Prose>
   
               <div>
-                <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                   {L('Combien des 11 conventions fondamentales, et combien de pays', 'How many of the 11 fundamental conventions, and how many countries')}
-                </h4>
+                </p>
                 <div className="space-y-2">
                   {ilo.buckets.map((b, i) => (
                     <div key={b.k} className="flex items-center gap-3 figure-row px-1 py-1">
@@ -6329,9 +6329,9 @@ const TabLabour = ({ text, lang, children }) => {
               </div>
   
               <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', borderLeft: '2px solid var(--warn-ink)' }}>
-                <h4 className="block text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
+                <p className="block text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
                   {L('Le volume ne dit pas la protection', 'Volume does not equal protection')}
-                </h4>
+                </p>
                 <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
                     `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
                     `The total number of ratified conventions ranges from ${ilo.rows[ilo.rows.length - 1].total} to ${ilo.rows[0].total}, averaging ${fmt(ilo.moyenne)}. But a high total guarantees nothing: several states at the top of the overall ranking lack the complete fundamental floor, while Madagascar holds it in full with a far more modest total. It is the same pattern observed on continental instruments — broad accession precedes, and sometimes replaces, binding commitment (Ben Mokhtar, 2026).`
@@ -6368,7 +6368,7 @@ const TabLabour = ({ text, lang, children }) => {
             </div>
   
             <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-              <h4 className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</h4>
+              <p className="block text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-2">{L('Source', 'Source')}</p>
               <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
                 <span>{L(
@@ -6706,7 +6706,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       avoi: 0.376,
       founded: 1996,
       hq: { fr: 'Djibouti, Djibouti', en: 'Djibouti City, Djibouti' },
-      name: { fr: 'IGAD (Autorité Intergouvernementale pour le Développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
+      name: { fr: 'IGAD (Autorité intergouvernementale pour le développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
       tag: tr({ fr: 'Nexus sécurité-climat-mobilité', en: 'Security-climate-mobility nexus' }, lang),
       desc: {
         fr: "Dans une Corne de l'Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l'IGAD à l'articulation exacte entre sécurité régionale, transhumance de survie et développement.",
@@ -6756,7 +6756,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       avoi: 0.306,
       founded: 1989,
       hq: { fr: 'Rabat, Maroc (Secrétariat)', en: 'Rabat, Morocco (Secretariat)' },
-      name: { fr: 'UMA (Union du Maghreb Arabe)', en: 'AMU (Arab Maghreb Union)' },
+      name: { fr: 'UMA (Union du Maghreb arabe)', en: 'AMU (Arab Maghreb Union)' },
       tag: tr({ fr: 'Normativité d’horizon & gel institutionnel', en: 'Horizon normativity & institutional freeze' }, lang),
       desc: {
         fr: "La paralysie géopolitique structurelle gèle l'ambition fondatrice de 1989. L'intégration de la mobilité maghrébine se fait aujourd'hui par défaut, via l'externalisation sécuritaire européenne et des accords bilatéraux épars.",
@@ -6781,7 +6781,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       avoi: 0.519,
       founded: 1998,
       hq: { fr: 'Tripoli, Libye', en: 'Tripoli, Libya' },
-      name: { fr: 'CEN-SAD (Communauté des États Sahélo-Sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
+      name: { fr: 'CEN-SAD (Communauté des États sahélo-sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: tr({ fr: 'Coordination sécuritaire de surcouche transrégionale', en: 'Transregional security overlay coordination' }, lang),
       desc: {
         fr: "Avec 24 États membres, qui englobent plusieurs autres CER, la CEN-SAD tient davantage du forum politique et sécuritaire que du régime juridique autonome de libre circulation. Son traité fondateur inscrit pourtant la libre circulation des personnes parmi ses objectifs centraux.",
@@ -6850,10 +6850,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       title: { fr: "La ZLECAf & Le 'Mode 4' (2018)", en: "AfCFTA & 'Mode 4' (2018)" },
-      tag: { fr: "Le Cheval de Troie Économique", en: "Economic Trojan Horse" },
+      tag: { fr: "Le cheval de Troie économique", en: "Economic Trojan Horse" },
       stats: [{ value: 50, total: 54, threshold: 15, label: { fr: "États ayant ratifié (oct. 2025)", en: "States having ratified (Oct. 2025)" } }],
       desc: {
-        fr: "Face au blocage politique du Protocole de Kigali, l'Accord sur la Zone de Libre-Échange force la mobilité par le prisme économique (les services), obligeant les États à laisser circuler les travailleurs qualifiés liés au commerce.",
+        fr: "Face au blocage politique du Protocole de Kigali, l'Accord sur la zone de libre-échange force la mobilité par le prisme économique (les services), obligeant les États à laisser circuler les travailleurs qualifiés liés au commerce.",
         en: "Facing the political blockage of the Kigali Protocol, the Free Trade Area Agreement forces mobility through the economic prism (services), compelling States to allow trade-related skilled workers to circulate."
       },
       article: {
@@ -6892,7 +6892,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       title: { fr: "La Déclaration de Kampala sur la migration, l'environnement et le climat (2022)", en: "The Kampala Declaration on Migration, Environment and Climate Change (2022)" },
-      tag: { fr: "Mobilité Climatique", en: "Climate Mobility" },
+      tag: { fr: "Mobilité climatique", en: "Climate Mobility" },
       desc: {
         fr: "Adoptée en juillet 2022 par 11 États d'Afrique de l'Est et de la Corne de l'Afrique, puis étendue à 48 pays du continent. Elle énonce 12 engagements pour répondre aux effets du changement climatique sur les mobilités humaines, en amont de tout instrument contraignant équivalent à l'échelle mondiale.",
         en: "Adopted in July 2022 by 11 East African and Horn of Africa states, later expanded to 48 countries across the continent. It sets out 12 commitments to address the effects of climate change on human mobility, ahead of any equivalent binding instrument at the global level."
@@ -7123,7 +7123,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           name: { fr: "Togo", en: "Togo" },
           threshold: { fr: "90 Jours", en: "90 Days" },
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
-          instrument: { fr: "Loi sur la Police des Étrangers (1987, actualisée 2022).", en: "Law on the Policing of Foreigners (1987, updated 2022)." },
+          instrument: { fr: "Loi sur la police des étrangers (1987, actualisée 2022).", en: "Law on the Policing of Foreigners (1987, updated 2022)." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ».", en: "Tourist visas are valid for up to 90 days. \"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\"" } },
             { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La nouvelle loi de 2022 a renforcé les pénalités pour dépassement de séjour et rationalisé le processus de permis de résidence.", en: "The new 2022 law strengthened overstay penalties and streamlined the residence permit process." } }
@@ -7657,6 +7657,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+            <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+              {tr({ fr: "Les six cibles de l'Agenda 2030 qui engagent les mobilités",
+                    en: 'The six Agenda 2030 targets that bear on mobility' }, lang)}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {text.sdg_section.sdg_points.map((pt, idx) => (
                 <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm flex gap-4">
@@ -7665,7 +7669,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   )}
                   <div>
                     <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest block mb-1">{tr({ fr: "Cible ONU", en: "UN Target" }, lang)}</span>
-                    <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h4>
+                    <h3 className="font-serif font-bold text-slate-900 text-base mb-2">{pt.title}</h3>
                     <p className="text-xs text-slate-600 leading-relaxed">{pt.desc}</p>
                   </div>
                 </div>
@@ -7688,12 +7692,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <Prose className="text-justify" lang={lang}>{tr({ fr: "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares.", en: "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects." }, lang)}</Prose>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {tr({ fr: "Projet phare n° 4 sur 15", en: "Flagship project no. 4 of 15" }, lang)}
-                </h4>
-                <h5 className="font-serif font-bold text-slate-900 mb-2">
+                </p>
+                <h3 className="font-serif font-bold text-slate-900 mb-2">
                   {tr({ fr: "Le passeport africain et la libre circulation des personnes", en: "The African Passport and Free Movement of People" }, lang)}
-                </h5>
+                </h3>
                 <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)", en: "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)" }, lang)}</Prose>
               </div>
 
@@ -7733,17 +7737,17 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <Prose className="text-justify" lang={lang}>{tr({ fr: "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen ».", en: "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018. The UN General Assembly endorsed it on 19 December 2018 by resolution 73/195, on a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"." }, lang)}</Prose>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+                <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {tr({ fr: "Principe de souveraineté nationale (par. 15)", en: "National sovereignty principle (para. 15)" }, lang)}
-                </h4>
+                </p>
                 <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »", en: "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\"" }, lang)}</Prose>
                 <Prose className="text-xs text-slate-500 mt-3 leading-relaxed" lang={lang}>{tr({ fr: "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées.", en: "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike." }, lang)}</Prose>
               </div>
 
               <div>
-                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                   {tr({ fr: "Les dix principes directeurs, transversaux et interdépendants (par. 15)", en: "The ten cross-cutting and interdependent guiding principles (para. 15)" }, lang)}
-                </h4>
+                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                   {(tr({ fr: [
                     ["Centré sur les personnes", "traite les migrants comme des sujets de droit"],
@@ -7794,7 +7798,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               {text.sdg_section.gcm_objectives_list.map((obj, idx) => (
                 <div key={idx} className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 px-1.5 py-0.5 rounded-sm inline-block mb-1.5">{obj.num}</span>
-                  <h4 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h4>
+                  <h3 className="font-serif font-bold text-slate-900 text-sm mb-1.5">{obj.title}</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
                 </div>
               ))}
@@ -7820,9 +7824,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
 
               <div>
-                <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
                   {tr({ fr: "Les six domaines thématiques de la Position", en: "The six thematic areas of the Position" }, lang)}
-                </h4>
+                </p>
                 <ol className="space-y-2">
                   {(tr({ fr: [
                     "Agir sur les moteurs de la migration — effets du changement climatique, catastrophes naturelles, crises d'origine humaine, inégalités de genre et autres.",
@@ -7862,10 +7866,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <span>{text.sdg_section.link_text}</span><ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+            <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
+              {tr({ fr: "Les quatre objectifs du Pacte, et qui en porte la charge",
+                    en: 'The Compact\'s four objectives, and who carries the load' }, lang)}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {text.sdg_section.gcr_objectifs.map((obj, idx) => (
                 <div key={idx} className="p-5 bg-white rounded-lg border border-slate-200 shadow-sm">
-                  <h4 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h4>
+                  <h3 className="font-serif font-bold text-slate-900 text-base mb-2">{obj.title}</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">{obj.desc}</p>
                 </div>
               ))}
@@ -7921,9 +7929,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </span>
                   </div>
                 </div>
-                <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
+                <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                   {tr({ fr: "L'Union africaine et le régime panafricain des mobilités", en: "The African Union and the Pan-African Mobility Regime" }, lang)}
-                </h3>
+                </h2>
                 <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union africaine (UA). Cette architecture illustre la tension du « normer sans ancrer ». La densification normative est exceptionnelle — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
                 <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
                   <div className="flex items-center gap-2">
@@ -7941,10 +7949,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <div className="space-y-6">
               {/* Textes Fondateurs */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <FileText className="w-5 h-5 me-2 text-emerald-700" />
-                  {tr({ fr: "Textes Fondateurs & Cadres Politiques", en: "Foundational Texts & Policy Frameworks" }, lang)}
-                </h4>
+                  {tr({ fr: "Textes fondateurs & cadres politiques", en: "Foundational Texts & Policy Frameworks" }, lang)}
+                </h3>
                 <div className="space-y-4">
                   {auFrameworks.map((fw, idx) => (
                     <div key={idx} className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col md:flex-row gap-6">
@@ -7952,7 +7960,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/50 px-2 py-0.5 rounded border border-emerald-200 uppercase tracking-widest inline-block mb-2">
                           {tr(fw.tag, lang)}
                         </span>
-                        <h5 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{tr(fw.title, lang)}</h5>
+                        <h4 className="font-bold text-slate-900 text-lg mb-2 leading-tight">{tr(fw.title, lang)}</h4>
                         <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(fw.desc, lang)}</Prose>
                         {fw.stats && fw.stats.map((stat, sIdx) => {
                           const inForce = stat.value >= (stat.threshold || 15);
@@ -8016,10 +8024,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               {/* Organe de pilotage politique & forum consultatif */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Landmark className="w-5 h-5 me-2 text-emerald-700" />
                   {tr({ fr: "Pilotage politique & forum consultatif", en: "Political Steering & Consultative Forum" }, lang)}
-                </h4>
+                </h3>
                 <div className="space-y-4">
                   <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
                     <button
@@ -8028,9 +8036,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       className="w-full text-start px-6 pt-6 pb-2 hover:bg-emerald-50 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4 flex-wrap">
-                        <h5 className="font-bold text-emerald-900 text-base">
+                        <h4 className="font-bold text-emerald-900 text-base">
                           {tr({ fr: "Comité technique spécialisé sur la migration, les réfugiés et les personnes déplacées (STC-MRIDPs)", en: "Specialized Technical Committee on Migration, Refugees & IDPs (STC-MRIDPs)" }, lang)}
-                        </h5>
+                        </h4>
                         <span className="flex items-center gap-2 shrink-0">
                           <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
                             {tr({ fr: "5 sessions depuis 2015", en: "5 sessions since 2015" }, lang)}
@@ -8065,9 +8073,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       className="w-full text-start px-6 pt-6 pb-2 hover:bg-amber-50 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4 flex-wrap">
-                        <h5 className="font-bold text-amber-900 text-base">
+                        <h4 className="font-bold text-amber-900 text-base">
                           {tr({ fr: "Forum panafricain sur la migration (PAFoM)", en: "Pan-African Forum on Migration (PAFoM)" }, lang)}
-                        </h5>
+                        </h4>
                         <span className="flex items-center gap-2 shrink-0">
                           <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
                             {tr({ fr: "9 sessions depuis 2015", en: "9 sessions since 2015" }, lang)}
@@ -8102,7 +8110,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="flex items-start gap-4 mb-5">
                   <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                   <div>
-                    <h4 className="text-sm font-bold text-blue-900 mb-1.5">{tr({ fr: "Le Programme conjoint sur la migration de main-d'œuvre (JLMP)", en: "The Joint Labour Migration Programme (JLMP)" }, lang)}</h4>
+                    <h3 className="text-sm font-bold text-blue-900 mb-1.5">{tr({ fr: "Le Programme conjoint sur la migration de main-d'œuvre (JLMP)", en: "The Joint Labour Migration Programme (JLMP)" }, lang)}</h3>
                     <Prose className="text-xs text-blue-800 leading-relaxed" lang={lang}>{tr({ fr: "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants.", en: "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM and ECA, with UNDP, the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment. It targets skills portability, social security portability, fair recruitment and migrant worker protection." }, lang)}</Prose>
                   </div>
                 </div>
@@ -8117,7 +8125,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="flex items-start gap-4 mb-5">
                   <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
                   <div>
-                    <h4 className="text-sm font-bold text-teal-900 mb-1.5">{tr({ fr: "Partenariats de Compétences (Global Skills Partnerships) en Action", en: "Global Skills Partnerships in Action" }, lang)}</h4>
+                    <h3 className="text-sm font-bold text-teal-900 mb-1.5">{tr({ fr: "Partenariats de compétences en action", en: "Global Skills Partnerships in Action" }, lang)}</h3>
                     <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée.", en: "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure." }, lang)}</Prose>
                   </div>
                 </div>
@@ -8139,10 +8147,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
               {/* Agences et Infrastructures */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h4 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Database className="w-5 h-5 me-2 text-indigo-700" />
                   {tr({ fr: "Agences spécialisées & souveraineté épistémique", en: "Specialized Agencies & Epistemic Sovereignty" }, lang)}
-                </h4>
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
                   <AuAgencyCard
                     lang={lang}
@@ -8213,16 +8221,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block mb-2">
                 {tr({ fr: 'Les Blocs Régionalisés du Régime Continental', en: 'Regionalized Blocs of the Continental Regime' }, lang)}
               </span>
-              <h3 className="font-serif font-bold text-2xl mb-3">
+              <h2 className="font-serif font-bold text-2xl mb-3">
                 {tr({ fr: "Les communautés économiques régionales (CER)", en: "Regional Economic Communities (RECs)" }, lang)}
-              </h3>
+              </h2>
               <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires.", en: "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges." }, lang)}</Prose>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-              <h4 className="text-sm font-bold text-slate-800 mb-1">
+              <h3 className="text-sm font-bold text-slate-800 mb-1">
                 {tr({ fr: "Classement de l'ouverture visa (indice AVOI, 2024)", en: "Visa openness ranking (AVOI index, 2024)" }, lang)}
-              </h4>
+              </h3>
               <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score moyen par CER (BAD/UA). Le repère vertical marque la moyenne continentale des 8 CER (0,501).", en: "Average score per REC (AfDB/AU). The vertical marker shows the continental average across the 8 RECs (0.501)." }, lang)}</Prose>
               <div className="space-y-3">
                 {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
@@ -8251,7 +8259,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
                         </span>
                         <div className="min-w-0">
-                          <h4 className="font-serif font-bold text-slate-900 text-base md:text-lg">{tr(rec.name, lang)}</h4>
+                          <h3 className="font-serif font-bold text-slate-900 text-base md:text-lg">{tr(rec.name, lang)}</h3>
                           <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
                             {rec.tag}
                           </span>
@@ -8289,9 +8297,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             <AfricaRecMap recId={rec.id} lang={lang} />
                           </div>
                           <div className="lg:col-span-3 bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-3">
+                            <p className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-3">
                               <Users className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "États membres", en: "Member states" }, lang)}
-                            </h5>
+                            </p>
                             <div className="flex flex-wrap gap-1.5">
                               {Object.entries(countryRecAffiliations)
                                 .filter(([, recs]) => recs.includes(rec.id))
@@ -8317,20 +8325,20 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 me-1.5 text-blue-600" /> {tr({ fr: "Instruments Clés", en: "Key Instruments" }, lang)}</h5>
+                            <p className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><FileText className="w-3.5 h-3.5 me-1.5 text-blue-600" /> {tr({ fr: "Instruments clés", en: "Key Instruments" }, lang)}</p>
                             <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.instruments.fr, en: rec.instruments.en }, lang)}</Prose>
                           </div>
                           <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <h5 className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "Dynamique & Défis", en: "Dynamics & Challenges" }, lang)}</h5>
+                            <p className="flex items-center font-bold text-[11px] uppercase tracking-widest text-slate-500 mb-2"><Activity className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "Dynamique & défis", en: "Dynamics & Challenges" }, lang)}</p>
                             <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.dynamics.fr, en: rec.dynamics.en }, lang)}</Prose>
                           </div>
                         </div>
 
                         {rec.sources && (
                           <div className="pt-4 border-t border-slate-200">
-                            <h5 className="flex items-center font-bold text-[10px] uppercase tracking-widest text-slate-400 mb-2">
+                            <p className="flex items-center font-bold text-[10px] uppercase tracking-widest text-slate-400 mb-2">
                               <BookOpen className="w-3 h-3 me-1.5" /> {tr({ fr: "Sources", en: "Sources" }, lang)}
-                            </h5>
+                            </p>
                             <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
                               {rec.sources.map((s, si) => (
                                 <li key={si}>
@@ -8361,9 +8369,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest block mb-2">
                 {tr({ fr: "Cartographie Réglementaire Continentale", en: "Continental Regulatory Mapping" }, lang)}
               </span>
-              <h3 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
+              <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                 {tr({ fr: "Matrices de réciprocité des visas et profils d'entrée et de séjour (54 pays)", en: "Visa reciprocity matrices and entry/residence profiles (54 countries)" }, lang)}
-              </h3>
+              </h2>
               <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours.", en: "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border. On one side, \"visitor\" status, tolerated for short-term trade or tourism; on the other, \"immigrant\" status, subject to the State's discretionary power over settlement. The standard threshold across Africa is 90 days." }, lang)}</Prose>
             </div>
 
@@ -8372,7 +8380,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="flex items-start">
                 <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 me-3 shrink-0" />
                 <div>
-                  <h4 className="text-sm font-bold text-amber-900 mb-1">{tr({ fr: "À propos de ces données", en: "About this data" }, lang)}</h4>
+                  <h3 className="text-sm font-bold text-amber-900 mb-1">{tr({ fr: "À propos de ces données", en: "About this data" }, lang)}</h3>
                   <p className="text-xs text-amber-800 leading-relaxed">
                     {lang === 'fr' ? (
                       <>Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).</>
@@ -8414,9 +8422,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               const maxCount = Math.max(...counts.map((c) => c.count), 1);
               return (
                 <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <h4 className="text-sm font-bold text-slate-800 mb-1">
+                  <h3 className="text-sm font-bold text-slate-800 mb-1">
                     {tr({ fr: "Distribution des seuils légaux de visiteur (54 pays)", en: "Distribution of legal visitor thresholds (54 countries)" }, lang)}
-                  </h4>
+                  </h3>
                   <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Nombre de pays par palier de seuil, calculé en direct depuis la matrice ci-dessous.", en: "Number of countries per threshold band, computed live from the matrix below." }, lang)}</Prose>
                   <div className="space-y-3">
                     {counts.filter((b) => b.count > 0).map((b) => (
@@ -8434,9 +8442,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             {b.count} {tr({ fr: 'pays', en: 'countries' }, lang)}
                           </span>
                           <span className="pointer-events-none absolute end-0 bottom-full mb-2 z-20 hidden group-hover:block w-64 text-start bg-slate-900 text-white rounded-md shadow-lg p-3">
-                            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
+                            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1">
                               {tr({ fr: b.labelFr, en: b.labelEn }, lang)}
-                            </h4>
+                            </p>
                             <span className="block text-[11px] leading-relaxed">
                               {b.members.map((m) => tr(m.name, lang)).join(' · ')}
                             </span>
@@ -8542,20 +8550,20 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="space-y-8 animate-in fade-in">
                 {legalMatrixData.map((regionObj, rIdx) => (
                   <div key={rIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h4>
+                    <h3 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h3>
                     <Prose className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic" lang={lang}>{tr(regionObj.intro, lang)}</Prose>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {regionObj.countries.map((country, cIdx) => (
                         <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
                           <div className="flex justify-between items-start mb-3">
-                            <h5 className="font-bold text-slate-900 text-lg flex items-center gap-2">
+                            <h4 className="font-bold text-slate-900 text-lg flex items-center gap-2">
                               {tr(country.name, lang)}
                               {(() => {
                                 const o = opennessByName(country.name.fr);
                                 return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
                               })()}
-                            </h5>
+                            </h4>
                             <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{tr(country.threshold, lang)}</span>
                           </div>
                           <div className="text-xs text-slate-500 mb-4 pb-3 border-b border-slate-200">
@@ -8565,7 +8573,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <div className="space-y-3 flex-grow">
                             {country.details.map((detail, dIdx) => (
                               <div key={dIdx}>
-                                <h6 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{tr(detail.label, lang)}</h6>
+                                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{tr(detail.label, lang)}</p>
                                 <Prose className="text-xs text-slate-800 leading-relaxed" lang={lang}>{tr(detail.text, lang)}</Prose>
                               </div>
                             ))}
@@ -8580,10 +8588,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
             {/* Sources Légales */}
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-8">
-              <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center">
+              <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center">
                 <BookOpen className="w-4 h-4 me-2 text-slate-400" />
                 {tr({ fr: "Liste des instruments juridiques analysés (Sources)", en: "List of Legal Instruments Analyzed (Sources)" }, lang)}
-              </h4>
+              </h3>
               <div className="h-48 overflow-y-auto pe-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
                 {lang === 'fr' ? (
                   <>
@@ -8686,11 +8694,11 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
       {children}
 
       <div>
-        <h3 className="flex items-center text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">
+        <h2 className="flex items-center text-sm font-bold uppercase tracking-widest text-slate-500 mb-4">
           <Star className="w-4 h-4 me-2 text-amber-500 fill-amber-400" />
-          {tr({ fr: "Essentiels — Pour Commencer", en: "Essentials — Start Here" }, lang)}
+          {tr({ fr: "Essentiels — pour commencer", en: "Essentials — start here" }, lang)}
           <CsvButton onClick={exportLibraryCSV} label={tr({ fr: "Bibliographie (CSV)", en: "Bibliography (CSV)" }, lang)} className="ms-auto normal-case tracking-normal" />
-        </h3>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {essentials.map((item, idx) => <LibraryCard key={idx} item={item} lang={lang} essential />)}
         </div>
@@ -9229,9 +9237,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
               {L("Périodicité recommandée (§ 1.12 et 1.13)", "Recommended periodicity (§§ 1.12 and 1.13)")}
-            </h4>
+            </p>
             <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{L(
                 "« Il est recommandé qu'un recensement national soit conduit au moins tous les dix ans. » La norme ajoute que les pays devraient s'efforcer de recenser lors des années se terminant par « 0 », ou au plus près, afin que les résultats restent comparables d'un pays à l'autre.",
                 "\"It is recommended that a national census be taken at least every 10 years.\" The standard adds that countries should make all efforts to census in years ending in \"0\", or as close as possible, so that results remain comparable across countries."
@@ -9243,12 +9251,12 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           </div>
 
           <div>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
               {L(
                 "Les caractéristiques de migration internationale prévues par la norme",
                 "The international migration characteristics the standard provides for"
               )}
-            </h4>
+            </p>
             <ul className="space-y-1">
               {(tr({ fr: [
                 ["Pays de naissance", true],
@@ -9303,9 +9311,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           )}</Prose>
 
         <div className="mb-8">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
             {L("Couverture par cycle de recensement", "Coverage by census round")}
-          </h3>
+          </p>
           <div className="space-y-2.5">
             {censusRoundMeta.map((r) => {
               const pct = r.pct; // pourcentages tels que publies par l'auteur (troncature, non arrondi)
@@ -9341,9 +9349,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </div>
 
         <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
             {L("Profondeur des questions migratoires (cycle 2010)", "Depth of migration questions (2010 round)")}
-          </h3>
+          </p>
           <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold" style={{ color: 'var(--accent-2)' }}>
             <span className="inline-block w-2 h-2" style={{ backgroundColor: 'var(--accent-2)' }} />
             {L("Thème central de la norme UN DESA", "Core topic under the UN DESA standard")}
@@ -9370,9 +9378,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </div>
 
         <div className="mt-5 p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
-          <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+          <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
             {L("Ce que le croisement avec la norme révèle", "What the overlay with the standard reveals")}
-          </h4>
+          </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
               "La norme onusienne place trois caractéristiques sur le même plan, toutes « thèmes centraux » : pays de naissance, citoyenneté, année d'arrivée. Les deux premières sont presque universelles dans les recensements africains — 87 % et 91,5 %. La troisième tombe à 15 %. Ce n'est ni une question de moyens ni une question de capacité : les trois figurent dans le même questionnaire de référence, et deux sont posées. Ce qui décroche, c'est précisément la question qui permettrait de dater les trajectoires — donc de les analyser. Quant au motif du départ, posé par 6 États, il ne figure même pas parmi les caractéristiques prévues par la norme : l'interroger est un choix national, au-delà du standard (Ben Mokhtar, 2026).",
               "The UN standard places three characteristics on the same footing, all \"core topics\": country of birth, citizenship, year of arrival. The first two are near-universal in African censuses — 87% and 91.5%. The third falls to 15%. This is neither a resource nor a capacity issue: all three sit in the same reference questionnaire, and two are asked. What drops out is precisely the question that would let trajectories be dated — and therefore analysed. As for reason for departure, asked by 6 states, it is not even among the characteristics the standard provides for: asking it is a national choice, beyond the standard (Ben Mokhtar, 2026)."
@@ -9421,9 +9429,9 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             )}</Prose>
 
           <div>
-            <h4 className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">
               {L("Les quatre thèmes stratégiques", "The four strategic themes")}
-            </h4>
+            </p>
             <ol className="space-y-2">
               {(tr({ fr: [
                 "Produire des statistiques de qualité pour l'Afrique.",
@@ -9557,9 +9565,9 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
                       elle ouvre ou ferme des droits. */}
                   {t.stakes && (
                     <div className="mt-3 ps-3 py-1" style={{ borderLeft: '2px solid var(--accent)' }}>
-                      <h4 className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
+                      <p className="block text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--accent-deep)' }}>
                         {tr({ fr: "Ce que la définition change", en: "What the definition changes" }, lang)}
-                      </h4>
+                      </p>
                       <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(t.stakes, lang)}</Prose>
                     </div>
                   )}
@@ -9782,7 +9790,7 @@ const TabMethodology = ({ text, lang, children }) => (
       </div>
         
       <div className="mt-8 pt-6 border-t border-slate-100">
-        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</h4>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">{text.method.sources_title}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <a href="https://au.int/en/documents/20211118/report-labour-migration-statistics-africa-third-edition-2019" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
@@ -9820,10 +9828,10 @@ const TabMethodology = ({ text, lang, children }) => (
       </div>
 
       <div className="mt-8 pt-6 border-t border-slate-100">
-        <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
           <MapIcon className="w-3.5 h-3.5 me-1.5" />
           {tr({ fr: "Régionalisation : Union africaine (et non M49/ONU)", en: "Regionalization: African Union (not UN M49)" }, lang)}
-        </h4>
+        </p>
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. UN DESA publie les siens selon la nomenclature M49 des Nations unies : les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}</Prose>
         </div>
@@ -10082,9 +10090,9 @@ const TabAbout = ({ text, lang, children }) => {
           </div>
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
             <Prose lang={lang}>{text.about.evolution_p1}</Prose>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mt-5 mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 mt-5 mb-2">
               {tr({ fr: "Déjà disponible", en: "Already available" }, lang)}
-            </h3>
+            </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
               {text.about.evolution_done.map((item, idx) => (
                 <li key={idx} className="flex items-start">
@@ -10093,9 +10101,9 @@ const TabAbout = ({ text, lang, children }) => {
                 </li>
               ))}
             </ul>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-2">
               {tr({ fr: "Prochaines étapes", en: "Next steps" }, lang)}
-            </h3>
+            </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
               {text.about.evolution_next.map((item, idx) => (
                 <li key={idx} className="flex items-start">
@@ -11040,9 +11048,9 @@ export default function App() {
                     </div>
                   </div>
                   <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
-                    <h4 className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">
+                    <p className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">
                       {display.isRegion ? text.modal.evo_title : (tr({ fr: "Évolution du stock migratoire absolu (1990-2024)", en: "Absolute migrant stock evolution (1990-2024)" }, lang))}
-                    </h4>
+                    </p>
                     <HistoricalChart data={display.history} colorClass="bg-blue-700" />
                   </div>
                 </div>
