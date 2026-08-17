@@ -6,7 +6,7 @@ import { Database, Landmark, Scale, BookOpen } from 'lucide-react';
 
 export const libraryData = [
   {
-    section: { fr: "Rapports Institutionnels & Données", en: "Institutional Reports & Data" },
+    section: { fr: "Rapports institutionnels & données", en: "Institutional Reports & Data" },
     icon: Database,
     items: [
       { title: "UN DESA — International Migrant Stock (2024)", year: 2024, type: { fr: "Données", en: "Data" }, desc: { fr: "Stocks migratoires mondiaux par pays d'origine et de destination.", en: "Global migrant stocks by country of origin and destination." }, url: "https://www.un.org/development/desa/pd/data/international-migrant-stock" },
@@ -58,7 +58,7 @@ export const libraryData = [
     ]
   },
   {
-    section: { fr: "Cadres Juridiques & Instruments", en: "Legal Frameworks & Instruments" },
+    section: { fr: "Cadres juridiques & instruments", en: "Legal Frameworks & Instruments" },
     icon: Scale,
     items: [
       { title: "African Union — Treaties, Conventions & Protocols Database", year: 2025, essential: true, type: { fr: "Base de données", en: "Database" }, desc: { fr: "Textes et statuts de ratification des instruments de l'UA.", en: "Texts and ratification status of AU instruments." }, url: "https://au.int/en/treaties" },
@@ -75,10 +75,13 @@ export const libraryData = [
     ]
   },
   {
-    section: { fr: "Recherche & Références Académiques", en: "Research & Academic References" },
+    section: { fr: "Recherche & références académiques", en: "Research & Academic References" },
     icon: BookOpen,
     items: [
       { title: "Ben Mokhtar, Y. — Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national", year: 2026, essential: true, type: { fr: "Thèse doctorale", en: "Doctoral Thesis" }, desc: { fr: "Thèse doctorale (UIR, septembre 2026) sur le régime africain de gouvernance migratoire, à l'origine de cette plateforme.", en: "Doctoral thesis (UIR, September 2026) on the African migration governance regime, the origin of this platform." }, url: null },
+      { title: "Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean: Governance Approach to Environmental and Climate-Induced Mobility", year: 2024, type: { fr: "Papier de travail", en: "Working paper" }, desc: { fr: "Papier de travail du projet Go Green. Cadre analytique de la mobilité induite par l'environnement et le climat, et analyse de la gouvernance climatique en Méditerranée du Sud à partir du cas marocain.", en: "Go Green project working paper. Analytical framework for environmental and climate-induced mobility, and an analysis of climate governance in the Southern Mediterranean from the Moroccan case." }, url: null },
+      { title: "Foresight (2011) — Migration and Global Environmental Change", year: 2011, type: { fr: "Rapport", en: "Report" }, desc: { fr: "Revue de plus de 350 experts pour le Government Office for Science. Établit la distinction migration / déplacement et la notion de populations immobilisées.", en: "A review by over 350 experts for the UK Government Office for Science. Establishes the migration / displacement distinction and the notion of trapped populations." }, url: "https://www.gov.uk/government/collections/migration-and-global-environmental-change" },
+      { title: "Black, R. et al. (2011) — The effect of environmental change on human migration", year: 2011, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Distingue climat et environnement comme moteurs de mobilité, et montre que la dégradation environnementale peut empêcher le départ autant que le provoquer (Global Environmental Change).", en: "Distinguishes climate from environment as mobility drivers, and shows environmental degradation can prevent departure as much as cause it (Global Environmental Change)." }, url: "https://doi.org/10.1016/j.gloenvcha.2011.10.001" },
       { title: "de Haas, H. (2021) — A Theory of Migration: The Aspirations–Capabilities Framework", year: 2021, essential: true, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Cadre analytique des capabilités de mouvement (Comparative Migration Studies).", en: "Analytical framework of movement capabilities (Comparative Migration Studies)." }, url: "https://doi.org/10.1186/s40878-020-00210-4" },
       { title: "de Haas, H. (2023) — How Migration Really Works", year: 2023, type: { fr: "Ouvrage", en: "Book" }, desc: { fr: "Guide factuel contre les principaux mythes du débat migratoire contemporain.", en: "A factful guide against the major myths of the contemporary migration debate." }, url: null },
       { title: "Adamson, F. & Tsourapas, G. (2019) — Migration Diplomacy in World Politics", year: 2019, type: { fr: "Article académique", en: "Journal Article" }, desc: { fr: "Concept de diplomatie migratoire (International Studies Perspectives).", en: "The concept of migration diplomacy (International Studies Perspectives)." }, url: "https://doi.org/10.1093/isp/eky015" },

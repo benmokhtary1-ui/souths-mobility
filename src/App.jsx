@@ -9786,6 +9786,12 @@ const TabMethodology = ({ text, lang, children }) => (
 // Publications et interventions médiatiques de l'auteur (source : CV, août 2026).
 const authorPublications = [
   {
+    ref: "Ben Mokhtar, Y. « Charting New COURSES in the Southern Mediterranean: Governance Approach to Environmental and Climate-Induced Mobility ». Papier de travail, projet Go Green, septembre 2024.",
+    kind: { fr: "Papier de travail", en: "Working paper" },
+    year: 2024,
+    url: null
+  },
+  {
     ref: "Ben Mokhtar, Y. « Dynamiques migratoires africaines : enjeux, défis et perspectives de gouvernance ». Afrique(s) en mouvement 6, no 2 (2023) : 104-107.",
     kind: { fr: "Article de revue à comité de lecture", en: "Peer-reviewed journal article" },
     year: 2023,

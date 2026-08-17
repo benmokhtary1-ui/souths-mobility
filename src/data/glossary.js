@@ -6,7 +6,7 @@ import { Globe, Users, ShieldAlert, MapPin, Briefcase, Brain, Landmark } from 'l
 
 export const glossaryData = [
   {
-    category: { fr: "Typologie des Mobilités", en: "Mobility Typology" },
+    category: { fr: "Typologie des mobilités", en: "Mobility Typology" },
     icon: Globe,
     terms: [
       {
@@ -83,17 +83,41 @@ export const glossaryData = [
         source: "OIM — Glossaire de la migration (2019)"
       },
       { 
-        term: "Nomadisme & Pastoralisme", 
+        term: "Nomadisme & pastoralisme", 
         en_term: "Nomadism & Mobile Pastoralism", 
         fr: "Forme traditionnelle et adaptative de mobilité où les communautés se déplacent pour assurer leurs moyens de subsistance, étroitement liée à la gestion du bétail et aux variations climatiques. Le MPFA souligne la nécessité de sécuriser cette mobilité vitale, souvent menacée par le changement climatique et l'expansion agricole sédentaire.", 
         en: "Traditional and adaptive form of mobility where communities move to sustain their livelihoods, closely tied to livestock management and climatic variations. The MPFA highlights the need to secure this vital mobility, often threatened by climate change and sedentary agricultural expansion." 
       ,
         source: "Union africaine — Cadre de politique pour le pastoralisme en Afrique (2010)"
       },
+      {
+        term: "Mobilité induite par l'environnement et le climat",
+        en_term: "Environmental and Climate-Induced Mobility (ECIM)",
+        fr: "Ensemble des déplacements humains déclenchés par des changements environnementaux qui affectent les moyens de subsistance, les conditions de vie ou la sécurité. La notion couvre les deux bouts de trois échelles à la fois : du volontaire au contraint, du choc soudain (inondation, séisme) à la dégradation lente (désertification, salinisation), et du déplacement interne au franchissement de frontière. Le mot « induite » porte l'essentiel : le facteur environnemental est déterminant sans être seul, et s'exerce à travers des conditions économiques, sociales et politiques.",
+        en: "The range of human movements triggered by environmental changes that affect livelihoods, living conditions or safety. The notion spans both ends of three scales at once: voluntary to forced, sudden shock (flood, earthquake) to slow-onset degradation (desertification, salinisation), and internal displacement to border crossing. The word \"induced\" carries the weight: the environmental factor is decisive without being sole, and works through economic, social and political conditions."
+      ,
+        source: { fr: "Ben Mokhtar, Y. (2024), Charting New COURSES in the Southern Mediterranean — projet Go Green", en: "Ben Mokhtar, Y. (2024), Charting New COURSES in the Southern Mediterranean — Go Green project" }
+      },
+      {
+        term: "Climat et environnement",
+        en_term: "Climate and Environment",
+        fr: "Deux termes que les politiques publiques emploient l'un pour l'autre, et qui désignent des objets distincts. Le climat est l'état atmosphérique moyen d'une région sur le long terme — températures, précipitations, humidité. L'environnement est plus large : écosystèmes, sols, eau, qualité de l'air, l'ensemble des facteurs qui agissent sur le vivant. Une sécheresse pluriannuelle relève du climat ; l'épuisement d'une nappe par surexploitation relève de l'environnement. La distinction commande la réponse publique, puisqu'elle départage ce qui se corrige localement de ce qui se négocie mondialement.",
+        en: "Two terms public policy uses interchangeably for distinct things. Climate is a region's long-run average atmospheric state — temperature, rainfall, humidity. Environment is broader: ecosystems, soil, water, air quality, everything acting on living systems. A multi-year drought is climate; a water table drained by over-extraction is environment. The distinction drives the policy response, since it separates what can be corrected locally from what must be negotiated globally."
+      ,
+        source: { fr: "Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Black et al. (2011); Ben Mokhtar, Y. (2024)" }
+      },
+      {
+        term: "Populations immobilisées",
+        en_term: "Trapped Populations",
+        fr: "Populations exposées à une dégradation environnementale et qui ne peuvent pas partir, faute des ressources que le départ exige. Partir coûte : transport, logement d'arrivée, réseau à destination, mois sans revenu. Les plus pauvres restent donc là où le risque est le plus fort. L'immobilité contrainte est l'angle mort des statistiques de mobilité, qui comptent les personnes qui bougent et n'ont aucun instrument pour celles que la pauvreté cloue sur place.",
+        en: "Populations exposed to environmental degradation who cannot leave, lacking the resources departure demands. Leaving costs: transport, housing on arrival, a network at destination, months without income. The poorest therefore stay where the risk is greatest. Constrained immobility is the blind spot of mobility statistics, which count people who move and have no instrument for those poverty pins in place."
+      ,
+        source: { fr: "Foresight (2011) ; Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Foresight (2011); Black et al. (2011); Ben Mokhtar, Y. (2024)" }
+      },
     ]
   },
   {
-    category: { fr: "Personnes & Statuts Juridiques", en: "People & Legal Statuses" },
+    category: { fr: "Personnes & statuts juridiques", en: "People & Legal Statuses" },
     icon: Users,
     terms: [
       {
