@@ -38,23 +38,50 @@
    Aucune ne descend sous 5,1:1 ; le seuil AA est a 4,5.
    ========================================================================== */
 :root {
-  --paper:        #FBFBFC;   /* blanc froid, presque neutre — la carte respire dessus */
+  /* Le froid est parti. L'encre était un noir bleuté, le papier un blanc froid :
+     l'ensemble tirait vers le clinique là où ce site est un objet de lecture.
+     Tout passe au taupe — un gris chaud de faible chroma, teinte 68,6° en OKLCH,
+     ancré sur #6B5B4A. Les clartés ne sont pas choisies mais visées : chaque
+     valeur cherche le rapport de contraste qu'avait son équivalent froid, de
+     sorte que le changement porte sur la température et jamais sur la
+     hiérarchie de lisibilité. */
+  --paper:        #FCFAF8;   /* blanc à peine chaud — la carte respire dessus */
   --paper-raised: #FFFFFF;
-  --paper-sunk:   #F1F2F5;
-  --ink:          #0E1116;   /* 18,3:1 — l'encre du texte courant */
-  --ink-soft:     #2B303A;   /* 12,8:1 */
-  --ink-mute:     #565D6B;   /* 6,4:1 */
-  --muted:        #5F6674;   /* 5,6:1 sur le papier, 5,2:1 sur le papier creusé */
-  --label:        #464C58;   /* micro-libellés : 8,3:1, reste récessif */
-  --rule:         #E3E5E9;
-  --rule-strong:  #C8CCD3;
+  --paper-sunk:   #F4F1EE;
+  /* Le fond sombre revient au noir. Le taupe le réchauffait trop : un bandeau
+     d'atlas se tient sur du noir, et le dégradé de couleur n'a de force que
+     s'il monte de là. Les gris, eux, restent chauds — c'est là que la
+     température se voit et qu'elle sert la lecture. */
+  --ink:          #0C0E12;   /* 18,7:1 — l'encre du texte courant et des aplats */
+  --ink-soft:     #342F29;   /* 12,8:1 */
+  --ink-mute:     #615B55;   /* 6,5:1 */
+  --muted:        #6A645E;   /* 5,6:1 sur le papier */
+  --label:        #514B45;   /* micro-libellés : 8,3:1, reste récessif */
+  --rule:         #E3DFDA;
+  --rule-strong:  #C6C2BD;
 
-  /* Accent de structure : filets, onglet actif, liens, barres. Un bleu franc,
-     pas un indigo de couverture — il doit se lire comme un instrument. */
-  --accent:       #1F49C7;   /* 7,2:1 sur le papier */
-  --accent-deep:  #16358F;   /* 10,5:1 — petit corps et texte dense */
-  --accent-soft:  #E6EBFA;
-  --accent-light: #93A9F0;   /* en réserve sur l'encre : 8,3:1 */
+  /* Accent de structure : filets, onglet actif, liens, barres.
+     Le bleu franc est parti. Il tenait le contraste, mais il tombait à un cheveu
+     du bleu des Nations unies et de l'OIM : pour une plateforme africaine et
+     indépendante, c'était exactement la mauvaise ressemblance.
+     La teinte vient désormais de la marque — un vert kola, dérivé dans OKLCH
+     depuis #14653F (L 0,450 · C 0,098 · H 157,4°). Les quatre valeurs ne sont
+     pas choisies mais visées : on cherche la clarté qui atteint au plus juste la
+     cible de contraste, à teinte et chroma constantes. */
+  --accent:       #046345;   /* 7,1:1 sur le papier */
+  --accent-deep:  #004630;   /* 10,7:1 — petit corps et texte dense */
+  --accent-soft:  #D9F5E7;   /* l'encre y tient 16,1:1, --accent-deep 9,4:1 */
+  --accent-light: #85B79F;   /* recalculé sur l'encre taupe : 8,0:1 */
+
+  /* L'accent de lecture. Le vert tient tant qu'on regarde — la marque, le
+     bandeau, la barre — et devient bruyant dès qu'on lit. Les blocs de texte
+     reprennent donc la teinte du fond : même famille, mêmes rapports, aucune
+     couleur qui tire l'œil hors de la ligne. Les valeurs sont visées comme les
+     autres, sur l'ancre taupe. */
+  --lecture:       #645444;  /* 7,0:1 sur le papier */
+  --lecture-deep:  #483A2B;  /* 10,6:1 ; 9,3:1 sur --lecture-soft */
+  --lecture-soft:  #F1ECE6;  /* l'encre y tient 14,2:1 */
+  --lecture-light: #BDB3A9;  /* en réserve sur l'encre : 8,1:1 */
 
   /* Accent secondaire : un bleu-vert. Assez loin du premier pour separer deux
      familles de blocs, assez froid pour ne pas devenir une troisieme couleur. */
@@ -101,6 +128,18 @@
 
 html, body { background: var(--paper) !important; }
 
+/* La règle posée sur body ne suffisait pas, et le site tournait depuis en
+   police système sans que rien ne le signale : le conteneur racine porte la
+   classe Tailwind `font-sans`, qui redéclare `ui-sans-serif` un cran sous body
+   et hérite à toute la page. Mesuré sur l'Atlas : 84 éléments de texte sur 100
+   en police système, 16 en Fraunces, zéro en IBM Plex Sans — et comme une police
+   ne se télécharge que si elle est employée, Plex n'était même pas chargée.
+   `document.fonts.check` le confirmait : faux.
+   On reteinte donc l'utilitaire, comme on reteinte les gris et les rayons. */
+.font-sans {
+  font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif !important;
+}
+
 body {
   font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif !important;
   color: var(--ink);
@@ -131,6 +170,10 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .bg-white        { background-color: var(--paper-raised) !important; }
 .bg-slate-50     { background-color: var(--paper-sunk) !important; }
 .bg-slate-100    { background-color: var(--paper-sunk) !important; }
+/* slate-200 échappait à la retonte alors qu'il est l'aplat le plus employé du
+   site — deux cents occurrences. Le gris d'ardoise de Tailwind est bleuté par
+   construction : sur une page passée au taupe, il tranchait. */
+.bg-slate-200    { background-color: #EAE5E1 !important; }
 .bg-\[\#f8f9fa\] { background-color: var(--paper) !important; }
 
 .border-slate-100, .border-slate-200 { border-color: var(--rule) !important; }
@@ -142,6 +185,32 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .hover\:shadow-md:hover, .hover\:shadow-sm:hover, .hover\:shadow-lg:hover {
   box-shadow: none !important;
 }
+
+/* ---------- L'échelle d'espacement ---------------------------------------
+   Relevé sur le rendu : dix-huit écarts verticaux distincts entre blocs frères
+   — 12, 16, 20, 24, 35, 46, 51, 55, 56, 66, 124 — et neuf rembourrages de carte
+   pour un seul et même rôle : 12, 16, 24, 32, 40, 48, 64. Ce ne sont pas des
+   nuances voulues, ce sont des sédiments de trois refontes. L'œil ne lit pas la
+   différence entre 46 et 51 px, il lit un rythme qui boite.
+
+   Quatre pas, comme les rayons ont été ramenés à deux et les corps à onze. Les
+   valeurs voisines se rangent sur le pas le plus proche ; les micro-écarts d'une
+   ligne restent libres, c'est là que la densité se règle au cas par cas.      */
+:root {
+  --pas-1: .5rem;    /*  8 px — à l'intérieur d'une ligne */
+  --pas-2: 1rem;     /* 16 px — entre éléments d'un bloc */
+  --pas-3: 1.5rem;   /* 24 px — entre blocs d'une carte */
+  --pas-4: 2.5rem;   /* 40 px — entre cartes */
+}
+
+/* Le rembourrage des cartes de lecture : 32, 40, 48 et 64 px disaient la même
+   chose. Un seul le dit maintenant. */
+:is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12) { padding: 2rem !important; }
+
+/* Les piles verticales se rangent sur les quatre pas. */
+:is(main, .reader) :is(.space-y-10, .space-y-8) > * + * { margin-top: var(--pas-4) !important; }
+:is(main, .reader) :is(.space-y-6, .space-y-5) > * + * { margin-top: var(--pas-3) !important; }
+:is(main, .reader) :is(.gap-6, .gap-5) { gap: var(--pas-3) !important; }
 
 /* Les rayons : le papier se plie, mais pas au fil du rasoir. Deux ou trois
    pixels donnaient une interface taillée à l'équerre — juste sur une planche
@@ -161,7 +230,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .text-slate-900, .text-slate-800 { color: var(--ink) !important; }
 .text-slate-700, .text-slate-600 { color: var(--ink-soft) !important; }
 .text-slate-500 { color: var(--ink-mute) !important; }
-.text-slate-400, .text-slate-300 { color: var(--muted) !important; }
+.text-slate-400, .text-slate-300, .text-slate-200 { color: var(--muted) !important; }
 
 /* ---------- Fonds sombres : encre, pas bleu-nuit générique ---------------- */
 
@@ -176,8 +245,10 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
   border-color: color-mix(in oklab, var(--accent) 34%, var(--ink)) !important;
 }
 .border-slate-700, .border-slate-800, .border-emerald-800 { border-color: rgba(255,253,249,.14) !important; }
-.bg-\[\#0f172a\] .text-slate-300, .bg-slate-900 .text-slate-300 { color: #D3D5DC !important; }
-.bg-\[\#0f172a\] .text-slate-400, .bg-slate-900 .text-slate-400 { color: #9BA0AC !important; }
+/* Les deux gris de réserve, réchauffés à contraste égal : ils tenaient 12,9:1 et
+   7,2:1 sur l'ancienne encre, ils tiennent 13,0:1 et 7,2:1 sur la nouvelle. */
+.bg-\[\#0f172a\] .text-slate-300, .bg-slate-900 .text-slate-300 { color: #DFD9D3 !important; }
+.bg-\[\#0f172a\] .text-slate-400, .bg-slate-900 .text-slate-400 { color: #A8A39D !important; }
 
 /* Reserve : tout titre place sur un aplat sombre repasse au papier. */
 .bg-\[\#0f172a\] :is(h1,h2,h3,h4,h5,h6),
@@ -296,7 +367,7 @@ nav .border-b { border-color: rgba(255,253,249,.10) !important; }
   outline-offset: 2px;
   border-radius: 2px;
 }
-nav :focus-visible, footer :focus-visible { outline-color: #8FA0CE; }
+nav :focus-visible, footer :focus-visible { outline-color: var(--accent-light); }
 
 /* ---------- Barres de defilement au ton du papier ------------------------ */
 
@@ -1033,6 +1104,67 @@ main:focus { outline: none; }
    pour eviter tout decalage inattendu dans les mises en page a colonnes. */
 :is(main, .reader) :is(td, th, figcaption, .grid) p { max-width: none; }
 
+/* ---------- Les tons de la marque, dérivés de l'accent ---------------------
+   La marque était figée au vert de l'identité. Elle se dérive maintenant de
+   --accent, donc elle prend la teinte de la section où elle se trouve : le
+   bandeau change avec l'onglet, le pied de page — qui vit hors de toute
+   section — garde l'émeraude général.
+   Les mélanges se font en oklab. En sRGB, un vert mêlé de papier vire au
+   grisâtre à mi-chemin, et le voile du disque devenait sale.
+
+   Le sélecteur double n'est pas une précaution : une propriété personnalisée est
+   substituée au calcul, sur l'élément qui la déclare. Déclarée sur :root seul,
+   --mq-bas résolvait son var(--accent) contre l'émeraude général une fois pour
+   toutes, et la valeur descendait figée — la barre changeait d'accent, la marque
+   ne bougeait pas. Il faut la redéclarer là où l'accent change.           */
+/* La rampe des cartes suit elle aussi la section. Elle était figée en indigo :
+   la carte, objet même de la page, restait bleue quand tout autour virait au
+   grenat ou à l'olive. Cinq paliers de clarté décroissante, mélangés en oklab —
+   en sRGB les clairs s'écrasent et la marche du milieu disparaît. Le gris de
+   l'absence, lui, ne suit rien : il doit se lire comme « pas de donnée » et non
+   comme une valeur faible de la série.                                     */
+:root,
+:is(main, header, nav)[data-section],
+.chapitre,
+.marque-emeraude {
+  --choro-1:    color-mix(in oklab, var(--accent) 12%, var(--paper));
+  --choro-2:    color-mix(in oklab, var(--accent) 28%, var(--paper));
+  --choro-3:    color-mix(in oklab, var(--accent) 50%, var(--paper));
+  --choro-4:    color-mix(in oklab, var(--accent) 74%, var(--paper));
+  --choro-5:    var(--accent-deep);
+  --choro-vide: #D9D8D2;
+
+  --mq-voile:  color-mix(in oklab, var(--accent) 13%, var(--paper));
+  --mq-filet:  color-mix(in oklab, var(--accent) 52%, var(--paper));
+  --mq-bas:    var(--accent);
+  --mq-haut:   color-mix(in oklab, var(--accent) 58%, #FFFFFF);
+  --mq-point:  var(--accent-deep);
+  --mq-afr:    var(--ink);
+
+  --mqs-voile: color-mix(in oklab, var(--accent-light) 22%, var(--ink));
+  --mqs-filet: color-mix(in oklab, var(--accent-light) 55%, var(--ink));
+  --mqs-bas:   color-mix(in oklab, var(--accent-light) 72%, var(--ink));
+  --mqs-haut:  var(--accent-light);
+  --mqs-point: color-mix(in oklab, var(--accent-light) 82%, #FFFFFF);
+  --mqs-afr:   #FFFDF9;
+
+  /* Le gris des composantes dont on ne parle pas, dans l'emblème expliqué.
+     Une baisse d'opacité les laissait colorées et pâles : trois verts de trois
+     intensités, où l'œil cherche encore lequel est le sujet. */
+  --mq-eteint: color-mix(in oklab, var(--ink) 17%, var(--paper));
+}
+
+/* L'emblème se montre dans sa couleur, jamais dans celle de la section qui
+   l'héberge : il prenait le graphite d'À propos, et l'on expliquait une marque
+   grise. Ces quatre valeurs sont celles de la racine — l'émeraude du pied de
+   page, celle qui signe le site. */
+.marque-emeraude {
+  --accent:       #046345;
+  --accent-deep:  #004630;
+  --accent-soft:  #D9F5E7;
+  --accent-light: #85B79F;
+}
+
 /* ---------- Une teinte par section ---------------------------------------- */
 /* L'accent n'est plus unique : il est redefini sur <main> selon l'onglet, si
    bien que tout ce qui s'appuie sur --accent suit sans qu'aucun composant soit
@@ -1042,64 +1174,69 @@ main:focus { outline: none; }
    valeur d'une section a l'autre : c'est ce qui evite l'effet carnaval.    */
 
 /* indigo */
-main[data-section="home"] {
+:is(main, header, nav)[data-section="home"] {
   --accent:       #2B3A67;
   --accent-deep:  #293969;
   --accent-soft:  #E5E7ED;
   --accent-light: #8998C6;
 }
 /* prune */
-main[data-section="evidence"] {
+:is(main, header, nav)[data-section="evidence"] {
   --accent:       #5B3A6E;
   --accent-deep:  #5C3870;
   --accent-soft:  #EAE6EC;
   --accent-light: #AC8EBD;
 }
 /* bleu petrole */
-main[data-section="explorer"] {
+:is(main, header, nav)[data-section="explorer"] {
   --accent:       #2E5F6B;
   --accent-deep:  #295A66;
   --accent-soft:  #E2E9EB;
   --accent-light: #62A2B1;
 }
 /* grenat — les deux corpus de mobilité, réunis, partagent une teinte */
-main[data-section="mobilites"] {
+:is(main, header, nav)[data-section="mobilites"] {
   --accent:       #7A2E3E;
   --accent-deep:  #7D2B3C;
   --accent-soft:  #EEE5E7;
   --accent-light: #CA8795;
 }
 /* L'Atlas porte la couleur générale du site : c'est le point de départ, il
-   n'appartient à aucune section en particulier. */
-main[data-section="atlas"] {
-  --accent:       #1F49C7;
-  --accent-deep:  #16358F;
-  --accent-soft:  #E6EBFA;
-  --accent-light: #93A9F0;
+   n'appartient à aucune section en particulier. Il suit donc la marque. */
+:is(main, header, nav)[data-section="atlas"] {
+  --accent:       #046345;
+  --accent-deep:  #004630;
+  --accent-soft:  #D9F5E7;
+  --accent-light: #85B79F;
 }
 /* bleu-violet */
-main[data-section="governance"] {
+:is(main, header, nav)[data-section="governance"] {
   --accent:       #3D3A78;
   --accent-deep:  #3B387A;
   --accent-soft:  #E6E6ED;
   --accent-light: #9795C5;
 }
-/* vert profond */
-main[data-section="data"] {
-  --accent:       #2F5D46;
-  --accent-deep:  #2C5B43;
-  --accent-soft:  #E0E8E4;
-  --accent-light: #61A683;
+/* olive profond — Données portait un vert à 160° de teinte, soit trois degrés du
+   kola devenu couleur de marque : la section et l'identité se confondaient. Les
+   huit autres teintes occupent 10, 44, 157, 216, 264, 268, 283 et 312 ; la zone
+   la plus large qui reste va de 60 à 150, et l'on s'y pose à 108. Assez loin du
+   kola pour se distinguer, assez loin de la terre brûlée de Ressources, et
+   parent du taupe du fond. */
+:is(main, header, nav)[data-section="data"] {
+  --accent:       #5A581F;   /* 7,1:1 sur le papier */
+  --accent-deep:  #54531C;   /* 7,7:1 ; 6,6:1 sur l'aplat */
+  --accent-soft:  #EAEBDE;   /* l'encre y tient 15,1:1 */
+  --accent-light: #999A78;   /* en réserve sur l'encre : 6,3:1 */
 }
 /* terre brulee */
-main[data-section="resources"] {
+:is(main, header, nav)[data-section="resources"] {
   --accent:       #6B4230;
   --accent-deep:  #6D412E;
   --accent-soft:  #EBE5E3;
   --accent-light: #BB8D79;
 }
 /* graphite */
-main[data-section="about"] {
+:is(main, header, nav)[data-section="about"] {
   --accent:       #3F4654;
   --accent-deep:  #3E4655;
   --accent-soft:  #E5E6E8;
@@ -1207,12 +1344,12 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   cursor: pointer;
 }
 .prefs-btn:hover { color: #FBFBF8; border-color: rgba(255,253,249,.45); }
-.prefs-btn:focus-visible { outline: 2px solid #8FA0CE; outline-offset: 2px; }
+.prefs-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
 
 .prefs-pastille {
   min-width: 1.15rem; padding: 0 .22rem;
   font-size: 12px; font-weight: 700; line-height: 1.15rem; text-align: center;
-  color: var(--ink); background: #8FA0CE; border-radius: 999px;
+  color: var(--ink); background: var(--accent-light); border-radius: 999px;
 }
 
 .prefs-panneau {
@@ -1364,7 +1501,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   border: 1px solid rgba(255,253,249,.22); border-radius: 2px; cursor: pointer;
 }
 .recherche-btn:hover { color: #FBFBF8; border-color: rgba(255,253,249,.45); }
-.recherche-btn:focus-visible { outline: 2px solid #8FA0CE; outline-offset: 2px; }
+.recherche-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
 
 .recherche-kbd {
   padding: 0 .3rem; font-size: 12px; font-family: inherit; line-height: 1.15rem;
@@ -1495,10 +1632,19 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   display: flex;
   align-items: flex-end;
   border: 1px solid var(--rule);
+  /* Le halo suit la marque. Il portait l'ancien bleu écrit en dur —
+     rgba(31, 73, 199, .38) — donc le bandeau d'entrée restait bleu quand tout le
+     reste passait au vert. Les valeurs viennent de l'échelle kola : #5C9975 pour
+     le halo, #0F2A1B pour le relèvement du fond, qui était en #131A33, un noir
+     bleuté. La seconde nappe garde --accent-2, inchangé par ailleurs. */
+  /* Le dégradé remonte du noir, et sa couleur est celle de la section : les deux
+     nappes et le relèvement du fond se dérivent de --accent, si bien qu'un même
+     bandeau vire au grenat dans Mobilités et à l'olive dans Données sans qu'une
+     seule valeur soit écrite deux fois. */
   background:
-    radial-gradient(120% 90% at 78% 18%, rgba(31, 73, 199, .38), transparent 62%),
-    radial-gradient(90% 80% at 12% 92%, rgba(15, 110, 120, .30), transparent 58%),
-    linear-gradient(147deg, #070A12 0%, #0E1116 46%, #131A33 100%);
+    radial-gradient(120% 90% at 78% 18%, color-mix(in oklab, var(--accent-light) 34%, transparent), transparent 62%),
+    radial-gradient(90% 80% at 12% 92%, color-mix(in oklab, var(--accent-2) 26%, transparent), transparent 58%),
+    linear-gradient(147deg, #05070B 0%, #0C0E12 46%, color-mix(in oklab, var(--accent) 26%, #0C0E12) 100%);
 }
 
 /* Le continent tient entier, cale a droite : le titre occupe la gauche,
@@ -1510,6 +1656,64 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
    commence alors au tiers gauche, la ou le titre finit — les deux s'emboitent
    au lieu de se faire face de part et d'autre d'un vide.
    Un cadrage sagement contenu laissait sept cents pixels morts au milieu. */
+/* L'assise du bandeau : quatre nombres qui disent l'inventaire.
+   Ils montent l'un apres l'autre, avec un decalage court — la sequence se lit
+   comme un compte qui se fait, pas comme quatre elements qui apparaissent. Les
+   chasses des chiffres sont fixes, sans quoi le nombre sauterait a chaque
+   increment pendant la montee. */
+/* Le filet qui sépare l'identité de l'outil, dans le bandeau. Il porte son air
+   avec lui : c'est le seul endroit du bandeau où le rythme change de nature, et
+   il vaut mieux qu'un simple écart, qu'on lit comme une hésitation. */
+.scene-flux-coupure {
+  border: 0;
+  height: 1px;
+  margin: 1.6rem 0 1.35rem;
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--accent-light) 46%, transparent),
+    color-mix(in oklab, var(--accent-light) 10%, transparent) 62%,
+    transparent);
+}
+
+.assise {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 2rem;
+}
+/* Le mode d'emploi, contre les boutons qu'il decrit. */
+.scene-flux-mode {
+  margin: 0 0 .55rem;
+  font-size: .78rem;
+  line-height: 1.45;
+  color: var(--accent-light);
+}
+.assise li {
+  display: flex;
+  align-items: baseline;
+  gap: .38rem;
+  opacity: 0;
+  animation: assiseMonte .5s cubic-bezier(.22, .61, .36, 1) forwards;
+}
+.assise-n {
+  font: 600 1.375rem/1 Fraunces, Georgia, serif;
+  font-variant-numeric: tabular-nums;
+  color: #FFFFFF;
+}
+.assise-quoi {
+  font-size: .74rem;
+  letter-spacing: .04em;
+  color: var(--accent-light);
+}
+@keyframes assiseMonte {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .assise li { animation: none; opacity: 1; }
+}
+
 .scene-flux-carte {
   position: absolute;
   top: 50%;
@@ -1567,12 +1771,19 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   pointer-events: none;
 }
 
+/* La colonne du bandeau était bridée à 62ch — la mesure de lecture. Juste pour
+   la prose, faux pour le reste : les dix questions y disposaient de 175 px par
+   colonne et retombaient chacune sur deux lignes, la nav pesant 325 px à elle
+   seule. La colonne s'élargit donc, et c'est le chapô qui garde sa mesure, là où
+   elle se justifie. */
 .scene-flux-texte {
   position: relative; z-index: 2;
   width: 100%;
-  max-width: 62ch;
+  max-width: min(100%, 46rem);
   padding: clamp(1.5rem, 4vw, 3.25rem);
 }
+/* La prose, elle, reste à la mesure de lecture. */
+.scene-flux-texte > div > p { max-width: 56ch; }
 
 @media (max-width: 767px) {
   .scene-flux { min-height: 30rem; }
@@ -1593,7 +1804,10 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    papier, valeurs inversees. L'actif prend le clair, les autres restent en
    retrait sans jamais descendre sous le seuil de lecture. */
 .couche-btn--sombre {
-  color: #D6DAE4;
+  /* #D6DAE4 était un gris bleuté, resté du chrome froid : dix boutons de
+     question, en plein bandeau d'entrée, dans une teinte que plus rien
+     n'accompagnait. Il suit la réserve du reste. */
+  color: #DFD9D3;
   background: rgba(255, 255, 255, .07);
   border-color: rgba(255, 255, 255, .20);
   backdrop-filter: blur(6px);
@@ -1913,6 +2127,19 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    La hauteur est bornee, pas le contenu : le texte reste dans le document,
    donc selectionnable, imprimable et indexable. Seul son debordement est
    masque, et un degrade annonce qu'il y a une suite plutot que de couper net. */
+/* Vert tant qu'on regarde, taupe dès qu'on lit.
+   Le partage se fait ici : tout ce qui est enveloppé dans un chapitre est de la
+   lecture, et y reprend l'accent chaud. Ce qui reste dehors — la barre, le
+   bandeau, la marque, le pied de page — garde la teinte de la section. Une
+   redéfinition de variables suffit : aucun composant n'est touché, et revenir en
+   arrière consiste à supprimer ce bloc. */
+.chapitre {
+  --accent:       var(--lecture);
+  --accent-deep:  var(--lecture-deep);
+  --accent-soft:  var(--lecture-soft);
+  --accent-light: var(--lecture-light);
+}
+
 .chapitre { position: relative; }
 .chapitre-corps {
   overflow: hidden;
@@ -2301,7 +2528,8 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
   margin-top: 1.15rem;
   font-size: 12px;
   line-height: 1.45;
-  color: #AEB6C6;
+  /* dernier gris bleuté du bandeau ; il tient 7,4:1 sur le noir, comme avant */
+  color: #A8A39D;
 }
 
 /* Les corridors intra-africains portent le trait plein ; les routes qui
@@ -2395,9 +2623,25 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    regle de hauteur du bandeau, posee en !important pour la vue continentale,
    ecrasait toute tentative de reduire la carte : un cadre de sous-region n'a
    pas le format du continent, il devenait donc enorme. */
+/* La hauteur reste définie, et c'est tout le sujet. Elle était passée à `auto`
+   pour laisser le cadre de sous-région trouver sa taille — sauf que la règle du
+   dessus impose `width: auto !important`. Les deux axes en `auto` sur un SVG qui
+   ne porte ni attribut `width` ni attribut `height` : il ne reste rien d'où
+   dériver une dimension, et l'élément se repliait à 0 × 0. La carte disparaissait
+   purement et simplement dès qu'on choisissait une région.
+   Une hauteur définie suffit : le rapport du viewBox donne la largeur, et le
+   cadre de sous-région — large et bas, là où le continent est haut et étroit —
+   trouve alors son format sans écraser la page. */
+/* La hauteur vient du composant, qui la calcule pour que chaque sous-région
+   occupe la même aire : à format égal elle serait la même, mais les cadres vont
+   du large et bas au haut et étroit. Le repli sert si la variable manque.
+   `min(…, 54vh)` garde la carte dans l'écran sur les hauteurs modestes, et
+   `max-width: 100%` empêche une région haute de déborder latéralement quand la
+   colonne se resserre — la largeur étant `auto`, elle suit la hauteur. */
 .atlas-scene .atlas-carte svg[data-cadre='region'] {
-  height: auto !important;
-  max-height: 26rem !important;
+  height: min(var(--carte-h, 24rem), 54vh) !important;
+  max-height: none !important;
+  max-width: 100% !important;
 }
 .choro-hors {
   opacity: .28 !important;

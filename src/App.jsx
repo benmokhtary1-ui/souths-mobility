@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback, useId } from 'react';
 import { flushSync } from 'react-dom';
 import { 
   Globe, ShieldAlert, TrendingUp, MapPin, Database, 
@@ -724,6 +724,51 @@ const prefersReducedMotion = () =>
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ---------------------------------------------------------------------------
+// L'assise du hub, comptée et non annoncee.
+//
+// Le bandeau d'entree disait ce que fait la carte — « choisissez une question »
+// — et laissait le visiteur ignorer qu'il est sur un centre de ressources. Or ce
+// qui etablit une reference, ce n'est pas l'adjectif mais l'inventaire.
+//
+// Ces quatre nombres sont donc derives des donnees elles-memes. Ecrits en dur,
+// ils auraient derive au premier ajout et le bandeau aurait fini par mentir sur
+// le corpus qu'il annonce — l'exact contraire de ce qu'il cherche a etablir.
+const ASSISE = {
+  etats: Object.values(countryData).flat().length,
+  references: (libraryData || []).reduce((n, s) => n + (s.items || []).length, 0),
+  notions: (glossaryData || []).reduce((n, g) => n + (g.terms || []).length, 0),
+  enonces: (evidenceCheckData || []).length,
+};
+
+// Un nombre qui se pose au lieu d'apparaitre. La duree est courte et la course
+// ralentit a la fin : on doit lire le chiffre, pas regarder l'animation. Le
+// reglage systeme « reduire les animations » la supprime entierement — et le
+// nombre final est ecrit des le premier rendu, jamais un zero.
+const CompteurEntree = ({ valeur, duree = 850, className = '', style }) => {
+  const reduit = useMemo(prefersReducedMotion, []);
+  const [n, setN] = useState(reduit ? valeur : 0);
+  useEffect(() => {
+    if (reduit) { setN(valeur); return; }
+    let brut;
+    const debut = performance.now();
+    const pas = (t) => {
+      const u = Math.min(1, (t - debut) / duree);
+      setN(Math.round(valeur * (1 - Math.pow(1 - u, 3))));   // ralentissement cubique
+      if (u < 1) brut = requestAnimationFrame(pas);
+    };
+    brut = requestAnimationFrame(pas);
+    // Filet de securite. requestAnimationFrame ne se declenche pas quand la page
+    // ne compose pas de frames — onglet d'arriere-plan, fenetre masquee, economie
+    // d'energie. Sans ce recours, le bandeau annoncerait « 0 Etats documentes »,
+    // ce qui est pire que pas de compteur du tout. Le nombre vrai finit donc par
+    // se poser quoi qu'il arrive.
+    const secours = setTimeout(() => setN(valeur), duree + 400);
+    return () => { cancelAnimationFrame(brut); clearTimeout(secours); };
+  }, [valeur, duree, reduit]);
+  return <span className={className} style={style}>{n}</span>;
+};
+
 // Révèle un bloc à l'entrée dans le champ de vision (effet éditorial, pas de dépendance externe).
 const Reveal = ({ children, delay = 0, className = '' }) => {
   const ref = useRef(null);
@@ -855,7 +900,7 @@ const ScrollProgress = () => {
       ) : (
         <div
           className="h-full transition-[width] duration-150 ease-out"
-          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, #8FA0CE)' }}
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, var(--accent-light))' }}
         />
       )}
     </div>
@@ -964,18 +1009,168 @@ const navTabStyle = (isActive) => isActive
       boxShadow: 'inset 0 -1px 0 rgba(255,253,249,.06)' }
   : { backgroundColor: 'transparent', color: '#A79E92', borderTopColor: 'transparent' };
 
-// Marque : un disque d'encre traverse par un arc de trajectoire. Lisible a 20 px
-// comme a 200 px, fonctionne sur papier comme en reserve sur fond sombre.
-const BrandMark = ({ className = "w-8 h-8", tone = "paper", style }) => {
-  const ring = tone === "paper" ? "var(--ink)" : "#FFFDF9";
+// ---------------------------------------------------------------------------
+// La marque.
+//
+// Un anneau ouvert de 60 degres, deux pointes a base creuse aux abouts, un point
+// plein dans la breche, un filet exterieur en retrait, et l'Afrique pleine au
+// centre — la vraie geometrie du site, les 54 traces soudes en une seule masse.
+// Le pluribus unum, donc : cinquante-quatre etats, un continent.
+//
+// Trois choses ne se devinent pas a la lecture du trace.
+//
+// L'AFRIQUE EST CENTREE SUR SA MASSE, PAS SUR SA BOITE. La formule du lacet
+// donne son centre de masse a (520,8 ; 402,7) quand celui de la boite est a
+// (500 ; 563) : cent soixante unites d'ecart, soit 14 % de la hauteur, le Sahara
+// etant large et le sud effile. Le cadrage est pris a mi-chemin des deux.
+//
+// LE SOUDAGE. Remplir 54 traces adjacents laisse des cheveux d'anticrenelage aux
+// coutures. Un stroke de meme couleur que le fill les referme : le continent
+// devient une masse et non une mosaique.
+//
+// LE CADRE EST PLUS GRAND QUE CENT. L'encre va de -0,05 a 102,3 en x, le point
+// depassant a droite ; une vue de 0 a 100 le trancherait net. D'ou "-4 -5 110 110",
+// ou l'encre occupe 91,0 % de la hauteur et y est centree — proportion dont se
+// sert BrandLockup pour faire affleurer la marque au bloc du nom.
+//
+// Le degrade court en userSpaceOnUse : en boite d'objet, chaque pointe recevrait
+// sa propre echelle sur sa propre boite. Ses deux bouts sont bornes par le
+// contraste et non choisis a l'oeil — le clair tient 3,2:1 sur son fond.
+const MARQUE_VUE = '-4 -5 110 110';
+const MARQUE_ENCRE = { haut: 4.95 / 110, hauteur: 100.1 / 110, droite: 3.7 / 110 };
+
+// Les tons ne sont plus des valeurs mais des variables. La marque etait figee au
+// vert de l'identite ; elle se derive desormais de --accent, si bien qu'elle
+// prend la teinte de la section ou elle se trouve — et que le pied de page, qui
+// vit hors de toute section, garde l'emeraude general. Les melanges se font en
+// oklab : en sRGB, un vert melange a du papier vire au grisatre.
+const MARQUE_TONS = {
+  paper: { voile: 'var(--mq-voile)', filet: 'var(--mq-filet)', bas: 'var(--mq-bas)',
+           haut: 'var(--mq-haut)', point: 'var(--mq-point)', afrique: 'var(--mq-afr)' },
+  dark:  { voile: 'var(--mqs-voile)', filet: 'var(--mqs-filet)', bas: 'var(--mqs-bas)',
+           haut: 'var(--mqs-haut)', point: 'var(--mqs-point)', afrique: 'var(--mqs-afr)' },
+};
+
+// `isoler` eteint tout sauf une composante. Il sert a l'explication de la marque :
+// montrer l'element dont on parle, dans la figure entiere, vaut mieux qu'une
+// legende qui renvoie a un detail que le lecteur doit retrouver seul.
+const BrandMark = ({ className = "w-8 h-8", tone = "paper", style, isoler = null }) => {
+  const t = MARQUE_TONS[tone] || MARQUE_TONS.paper;
+  // La composante dont on parle garde sa couleur, les autres passent au gris.
+  // Une simple baisse d'opacite les laissait colorees et pales : trois verts de
+  // trois intensites, ou l'oeil cherche encore lequel est le sujet. Le gris
+  // tranche la question — ce qui est colore est ce dont on parle.
+  const teinte = (nom, couleur) => (isoler && isoler !== nom ? 'var(--mq-eteint)' : couleur);
+  // un identifiant par instance : deux degrades homonymes dans une meme page se
+  // recouvriraient, et la marque du pied de page prendrait les tons de l'en-tete
+  const dg = `mq${useId().replace(/:/g, '')}`;
   return (
-    <svg viewBox="0 0 40 40" className={className} style={style} role="img" aria-label="South(s) Mobility">
-      <circle cx="20" cy="20" r="15.5" fill="none" stroke={ring} strokeWidth="2" opacity=".92" />
-      {/* trajectoire : sort du disque, signe la mobilite plutot que la frontiere */}
-      <path d="M4 27 C 13 27, 17 8, 27 8 C 33 8, 36 12, 36 12"
-            fill="none" stroke="var(--accent)" strokeWidth="3.4" strokeLinecap="round" />
-      <circle cx="27" cy="8" r="3.4" fill="var(--accent)" />
+    <svg viewBox={MARQUE_VUE} className={className} style={style} role="img" aria-label="South(s) Mobility DataHub">
+      <defs>
+        <linearGradient id={dg} gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="0">
+          <stop offset="0" stopColor={t.bas} /><stop offset="1" stopColor={t.haut} />
+        </linearGradient>
+      </defs>
+      {/* le fond s'ouvre de la meme breche que l'anneau : elle traverse tout */}
+      <path d="M50 50 L83.77 69.5 A39 39 0 1 1 83.77 30.5 Z" fill={teinte('fond', t.voile)} />
+      <path d="M90.13 79.15 A49.6 49.6 0 1 1 90.13 20.85" fill="none" stroke={teinte('fond', t.filet)} strokeWidth="0.9" />
+      <path d="M89.84 73 A46 46 0 1 1 89.84 27" fill="none" stroke={teinte('anneau', `url(#${dg})`)} strokeWidth="3" />
+      <path d="M95.09 63.91 L94.34 75.6 L90.84 71.27 L85.33 70.4 Z" fill={teinte('pointes', `url(#${dg})`)} />
+      <path d="M95.09 36.09 L85.33 29.6 L90.84 28.73 L94.34 24.4 Z" fill={teinte('pointes', `url(#${dg})`)} />
+      <circle cx="96" cy="50" r="6.3" fill={teinte('point', t.point)} />
+      <g transform="translate(25.523 26.844) scale(0.04796)"
+         fill={teinte('afrique', t.afrique)} stroke={teinte('afrique', t.afrique)}
+         strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
+        {Object.entries(africaCountryPaths).map(([id, d]) => <path key={id} d={d} />)}
+      </g>
     </svg>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Le logotype : la marque et le nom en trois mots.
+//
+// Le nom commande, la marque suit. L'unite est C, le corps du mot ; tout le reste
+// en decoule, si bien qu'un seul nombre suffit a changer d'echelle.
+//
+// Deux calages qui se font par le calcul et non a l'oeil.
+//
+// LA MARQUE AFFLEURE LE BLOC. Son encre doit aller du haut de « South(s) » au bas
+// de « DataHub ». Comme l'encre n'occupe que 91,0 % de la vue et y est centree,
+// le SVG vaut 1/0,910 fois la hauteur du bloc, et centrer l'un sur l'autre suffit.
+//
+// « MOBILITY » TOMBE AU CENTRE DE L'ANNEAU. Le bloc porte quatre lignes — trois
+// mots et la nature — donc son milieu n'est pas le mot du milieu. Une cale de
+// meme hauteur et de meme marge, posee au-dessus, retablit la symetrie : les
+// onze pixels de decalage disparaissent sans sortir du flux.
+//
+// L'ecart annonce est d'encre a encre : 3,36 % de la hauteur separent le bord du
+// point du bord du SVG, et cet air est repris dans l'ecart.
+const LOGO_MOTS = ['South(s)', 'Mobility', 'DataHub'];
+
+// Les trois mots doivent tomber a la meme largeur, et l'egalisation ne se fait
+// pas a l'oeil : chaque mot est mesure une fois les polices chargees, puis son
+// interlettrage vaut (largeur visee - largeur naturelle) / (signes - 1).
+// L'interlettrage CSS ajoutant aussi une chasse apres le dernier signe, elle est
+// reprise par une marge negative de meme valeur — sans quoi les mots les plus
+// espaces depasseraient a droite de ce qu'on vient de leur accorder.
+// Il faut attendre document.fonts : mesure en Georgia, l'ecart calcule serait
+// faux des que Fraunces arrive.
+const useEgaliser = (refs, corps) => {
+  useLayoutEffect(() => {
+    let vivant = true;
+    const poser = () => {
+      if (!vivant) return;
+      const els = refs.current.filter(Boolean);
+      if (els.length < 3) return;
+      els.forEach(el => { el.style.letterSpacing = '0px'; el.style.marginRight = '0px'; });
+      const vise = Math.max(...els.slice(0, 3).map(el => el.getBoundingClientRect().width));
+      els.forEach(el => {
+        const n = (el.textContent || '').length - 1;
+        if (n < 1) return;
+        const e = (vise - el.getBoundingClientRect().width) / n;
+        el.style.letterSpacing = `${e.toFixed(4)}px`;
+        el.style.marginRight = `${(-e).toFixed(4)}px`;
+      });
+    };
+    poser();
+    if (typeof document !== 'undefined' && document.fonts) document.fonts.ready.then(poser);
+    return () => { vivant = false; };
+  }, [corps]);
+};
+
+const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "", nature: avecNature = true }) => {
+  const inter = 0.10 * corps;
+  const bloc = 3 * corps + 2 * inter;
+  const marque = bloc / MARQUE_ENCRE.hauteur;
+  const nature = avecNature ? 0.46 * corps : 0, air = avecNature ? 0.30 * corps : 0;
+  const sombre = tone === "dark";
+  const cNom = sombre ? '#FFFDF9' : 'var(--ink)';
+  const cNat = sombre ? '#9AA1AF' : 'var(--muted)';
+  const refs = useRef([]);
+  useEgaliser(refs, corps);
+  return (
+    <div className={`flex items-center ${className}`} style={{ gap: `${ecart * corps + marque * MARQUE_ENCRE.droite}px` }}>
+      <BrandMark tone={tone} className="shrink-0" style={{ width: `${marque}px`, height: `${marque}px` }} />
+      <span className="flex flex-col items-start" style={{ gap: `${inter}px` }}>
+        {/* la cale rend le bloc symetrique : sans elle, la ligne de nature ferait
+            de « Mobility » la deuxieme de quatre lignes, donc plus le milieu */}
+        <span aria-hidden="true" style={{ height: `${nature}px`, marginBottom: `${air}px` }} />
+        {LOGO_MOTS.map((mot, i) => (
+          <span key={mot} ref={(el) => { refs.current[i] = el; }} className="font-serif whitespace-nowrap"
+                style={{ font: `600 ${corps}px/1 Fraunces, Georgia, serif`, color: cNom }}>
+            {/* le pluriel se marque a l'italique : c'est la these du nom */}
+            {mot === 'South(s)' ? <>South(<em style={{ fontStyle: 'italic' }}>s</em>)</> : mot}
+          </span>
+        ))}
+        {avecNature && (
+          <span ref={(el) => { refs.current[3] = el; }} className="whitespace-nowrap"
+                style={{ font: `italic 400 ${nature}px/1 Fraunces, Georgia, serif`, color: cNat, marginTop: `${air}px` }}>
+            Knowledge &amp; Data
+          </span>
+        )}
+      </span>
+    </div>
   );
 };
 
@@ -2858,11 +3053,20 @@ const visaOpenTiers = {
 const countryById = {};
 Object.values(countryData).flat().forEach(c => { countryById[c.id] = c; });
 
-// Rampe sequentielle mono-teinte : un seul indigo, du plus clair au plus dense.
-// Les paliers sont cales sur la clarte (91, 82, 68, 48, 28 %) pour que l'ordre
-// se lise sans legende. Le gris neutre dit l'absence de donnee, pas une valeur.
-const CHORO_RAMP = ['#E5E8F1', '#C3CBE1', '#94A2C6', '#5A6C9C', '#2B3A67'];
-const CHORO_NODATA = '#D9D8D2';
+// Rampe sequentielle mono-teinte : une seule couleur, du plus clair au plus
+// dense. Les paliers sont cales sur la clarte pour que l'ordre se lise sans
+// legende, et le gris neutre dit l'absence de donnee, pas une valeur.
+//
+// L'indigo etait ecrit en dur : les cartes restaient bleues quand la section
+// virait au grenat ou a l'olive, et la carte — l'objet meme de la page —
+// devenait la seule chose qui n'appartenait pas a sa section. La rampe se
+// derive donc de --accent, en oklab pour que les paliers restent
+// perceptivement reguliers ; en sRGB, les melanges vers le papier s'ecrasent
+// dans les clairs et la marche du milieu disparait.
+const CHORO_RAMP = [
+  'var(--choro-1)', 'var(--choro-2)', 'var(--choro-3)', 'var(--choro-4)', 'var(--choro-5)',
+];
+const CHORO_NODATA = 'var(--choro-vide)';
 
 const mapIndicators = [
   {
@@ -2960,6 +3164,29 @@ const CADRES_REGIONS = {
   af_south:   [424, 562, 393, 586],
 };
 
+// Les cinq cadres n'ont pas le meme format — la bande mediterraneenne est large
+// et basse (701 x 357), l'Afrique centrale haute et etroite (339 x 551). Leur
+// imposer la meme hauteur donnait des cartes d'aires tres inegales : 90 600 px²
+// pour la centrale contre 289 500 pour la mediterraneenne, soit plus du triple.
+// Les regions hautes se retrouvaient minuscules, alors qu'elles portent autant
+// de pays que les autres.
+//
+// C'est donc l'aire dessinee qu'on egalise, et non la hauteur : a aire A et
+// rapport r = largeur/hauteur, la hauteur vaut racine de A/r. Chaque region
+// occupe alors la meme surface a l'ecran, ce qui est le seul reglage sous lequel
+// un pays se lit aussi bien d'une carte a l'autre.
+//
+// L'aire est choisie sous deux contraintes mesurees : la plus large ne doit pas
+// deborder la colonne (660 px), la plus haute doit rester sous 470 px pour que
+// la carte tienne dans un ecran avec son classement a cote.
+const AIRE_CARTE = 135000;
+const hauteurDuCadre = (region) => {
+  const c = CADRES_REGIONS[region];
+  if (!c) return null;
+  const r = c[2] / c[3];
+  return Math.round(Math.min(470, Math.max(250, Math.sqrt(AIRE_CARTE / r))));
+};
+
 const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = false, region = null }) => {
   const categoriel = Array.isArray(indicator.categories);
 
@@ -3043,6 +3270,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
       <svg viewBox={(region && CADRES_REGIONS[region]) ? CADRES_REGIONS[region].join(' ') : AFRICA_VIEWBOX}
            className="w-full h-auto block"
            data-cadre={region ? 'region' : 'continent'}
+           style={region ? { '--carte-h': `${hauteurDuCadre(region)}px` } : undefined}
            aria-label={L(`Carte de l'Afrique — ${indicator.label.fr}. Chaque pays est sélectionnable.`,
                          `Map of Africa — ${indicator.label.en}. Each country is selectable.`)}
            onMouseLeave={() => setSurvole(null)}>
@@ -3880,9 +4108,15 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           parcourus. On comprend le sujet avant d'avoir lu une ligne. */}
       <SceneFlux lang={lang}>
         <div className="max-w-3xl">
+          {/* L'oeil-de-boeuf nomme l'objet. Il annoncait la planche — « Pl. I,
+              huit questions posées au continent » — ce qui suppose de savoir
+              deja ou l'on est. Il dit desormais ce qu'est le lieu, et la planche
+              garde sa numerotation, qui court d'une section a l'autre. */}
           <span className="block text-[10px] font-semibold uppercase mb-3"
                 style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
-            Pl. I · {L('Huit questions posées au continent', 'Eight questions put to the continent', { ar: 'ثمانية أسئلة مطروحة على القارة' })}
+            Pl. I · {L('Centre de ressources — mobilités africaines et des Suds',
+                       'Knowledge hub — African and Global South mobility',
+                       { ar: 'مركز موارد — التنقلات الأفريقية وتنقلات الجنوب' })}
           </span>
           <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
               style={{ color: '#FFFFFF' }}>
@@ -3891,19 +4125,58 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
               {L('par les données africaines.', 'through African data.', { ar: 'من خلال البيانات الأفريقية.' })}
             </span>
           </h1>
-          <Prose className="mt-3 text-[13.5px] md:text-[15px] leading-relaxed max-w-xl"
-                 style={{ color: '#D6DAE4' }} lang={lang}>{L(
-            "Choisissez une question. Le continent y répond, pays par pays. Survolez pour lire un chiffre, cliquez pour ouvrir le pays à côté de la carte.",
-            'Pick a question. The continent answers it, country by country. Hover to read a figure, click to open the country beside the map.',
-            { ar: 'اختر سؤالاً. تجيب عنه القارة، بلداً بلداً. مرّر المؤشر لقراءة رقم، وانقر لفتح البطاقة الكاملة.' }
+          {/* Ce que la plateforme est, avant ce qu'elle permet de faire. */}
+          <Prose className="mt-3 text-[15px] leading-relaxed max-w-xl"
+                 style={{ color: '#DFD9D3' }} lang={lang}>{L(
+            "Plateforme indépendante de recherche et de données sur les mobilités humaines dans les Suds, construite depuis l'Afrique. Chaque chiffre porte sa source ; chaque jeu de données s'exporte.",
+            'An independent research and data platform on human mobility across the Global South, built from Africa. Every figure carries its source; every dataset can be exported.',
+            { ar: 'منصة مستقلة للبحث والبيانات حول التنقلات البشرية في الجنوب، مبنية انطلاقاً من أفريقيا. لكل رقم مصدره، ولكل مجموعة بيانات تصديرها.' }
           )}</Prose>
+
+          {/* L'assise, comptee sur les donnees. Ce qui etablit une reference
+              n'est pas l'adjectif mais l'inventaire — et il se verifie. */}
+          <ul className="assise" aria-label={L('Ce que contient la plateforme', 'What the platform holds', { ar: 'ما تحتويه المنصة' })}>
+            {[
+              [ASSISE.etats,      L('États documentés', 'states documented', { ar: 'دولة موثّقة' })],
+              [ASSISE.references, L('références sourcées', 'sourced references', { ar: 'مرجع موثّق' })],
+              [ASSISE.notions,    L('notions définies', 'defined terms', { ar: 'مفهوم مُعرَّف' })],
+              [ASSISE.enonces,    L('énoncés passés à l’épreuve', 'claims put to the test', { ar: 'ادعاء تم اختباره' })],
+            ].map(([n, quoi], i) => (
+              <li key={quoi} style={{ animationDelay: `${240 + i * 90}ms` }}>
+                <CompteurEntree valeur={n} duree={700 + i * 90} className="assise-n" />
+                <span className="assise-quoi">{quoi}</span>
+              </li>
+            ))}
+          </ul>
+
 
           {/* Les questions vivent dans le bandeau, pas en dessous. Elles y
               tiennent la colonne de gauche sur toute sa hauteur : le vide qui
               separait le titre du continent disparait parce qu'il est occupe,
               et l'entree du site devient utilisable des le premier ecran. */}
-          <nav aria-label={L('Couches de la carte', 'Map layers', { ar: 'طبقات الخريطة' })} className="mt-5">
-            <div className="flex flex-wrap gap-2">
+          {/* Le bandeau dit deux choses de nature differente : ce qu'est le lieu
+              — oeil-de-boeuf, titre, chapo, assise — puis ce qu'on peut y faire.
+              Elles se suivaient a seize pixels d'ecart, si bien que tout se
+              lisait comme un seul bloc compact. Un filet et de l'air separent
+              maintenant l'identite de l'outil. */}
+          <hr className="scene-flux-coupure" />
+          <nav aria-label={L('Couches de la carte', 'Map layers', { ar: 'طبقات الخريطة' })} className="mt-0">
+            {/* Le mode d'emploi tient sur une ligne et se place ou il sert :
+                contre les boutons, pas en tete de bandeau. Il y occupait un
+                paragraphe entier, et le bandeau montait a 778 px pour un plafond
+                de 384 — la carte, que le lecteur vient voir, s'en trouvait
+                repoussee sous la ligne de flottaison. */}
+            <p className="scene-flux-mode">
+              {L('Huit questions posées au continent — survolez pour un chiffre, cliquez pour le pays.',
+                 'Eight questions put to the continent — hover for a figure, click for the country.',
+                 { ar: 'ثمانية أسئلة مطروحة على القارة — مرّر لقراءة رقم، وانقر لفتح البلد.' })}
+            </p>
+            {/* Deux colonnes des que la place existe. En file simple, les dix
+                questions retombaient sur huit lignes — 360 px a elles seules,
+                soit la moitie du bandeau — et repoussaient la carte sous la
+                ligne de flottaison. Ce sont des phrases, pas des etiquettes :
+                elles ne se serrent pas, il faut donc les ranger. */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {COUCHES_ATLAS.map(c => {
                 const actif = c.cle === coucheCle;
                 return (
@@ -4507,6 +4780,32 @@ const TabHome = ({ text, lang, setActiveTab }) => {
       />
 
       <BarreSection lang={lang} />
+
+      {/* Sous le bloc-titre, comme partout : ce que la section apprend et
+          comment la lire, replie par defaut. */}
+      <Reperes
+        lang={lang}
+        chapo={{ fr: 'Comment lire ce hub', en: 'How to read this hub' }}
+        titre={{ fr: "Sept sections, un ordre de lecture", en: 'Seven sections, one reading order' }}
+        chapeau={{
+          fr: "L'ordre des onglets suit celui dans lequel on comprend : on entre par la carte, on éprouve une idée reçue, on regarde d'où vient le chiffre, on lit les analyses, puis on vérifie l'appareil. Rien n'oblige à le suivre, mais il explique pourquoi les sections sont rangées ainsi.",
+          en: 'The tab order follows the order in which one understands: enter through the map, test a received idea, look at where the figure comes from, read the analyses, then check the apparatus. Nothing forces you to follow it, but it explains why the sections are arranged this way.'
+        }}
+        notions={[
+          { mot: { fr: 'Entrer', en: 'Enter' },
+            sens: { fr: "L'Atlas pose huit questions au continent et y répond pays par pays. C'est la porte d'entrée.", en: 'The Atlas puts eight questions to the continent and answers them country by country. It is the way in.' } },
+          { mot: { fr: 'Éprouver', en: 'Test' },
+            sens: { fr: "Evidence Check confronte des énoncés courants aux meilleures sources disponibles, avec une jauge à quatre crans.", en: 'Evidence Check sets common claims against the best available sources, on a four-notch gauge.' } },
+          { mot: { fr: 'Comprendre', en: 'Understand' },
+            sens: { fr: "Données & statistiques dit comment un chiffre africain se fabrique — et ce qu'il ne compte pas.", en: 'Data & statistics explains how an African figure is produced — and what it does not count.' } },
+          { mot: { fr: 'Analyser', en: 'Analyse' },
+            sens: { fr: "Mobilités et Gouvernance portent les deux corpus : les mouvements d'un côté, les règles de l'autre.", en: 'Mobility and Governance carry the two corpora: movements on one side, rules on the other.' } },
+        ]}
+        pied={{
+          fr: "Chaque section porte ce même bloc sous son titre. Il se déplie si vous en avez besoin et reste fermé sinon.",
+          en: 'Every section carries this same block under its title. It opens if you need it and stays closed otherwise.'
+        }}
+      />
 
       {/* Releve de chiffres : une seule feuille divisee par des filets, plutot que
           quatre vignettes posees cote a cote. */}
@@ -8918,6 +9217,30 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
       />
 
       <BarreSection lang={lang} />
+
+      <Reperes
+        lang={lang}
+        chapo={{ fr: 'Comment lire cette bibliothèque', en: 'How to read this library' }}
+        titre={{ fr: "Soixante-sept références, quatre familles", en: 'Sixty-seven references, four families' }}
+        chapeau={{
+          fr: "La bibliothèque ne cherche pas l'exhaustivité : elle réunit ce sur quoi la plateforme s'appuie réellement. Toute source citée ailleurs sur le site doit s'y retrouver, et chaque entrée porte son année, son type et son lien d'origine.",
+          en: 'The library does not aim at exhaustiveness: it gathers what the platform actually rests on. Any source cited elsewhere on the site must appear here, and each entry carries its year, its type and its original link.'
+        }}
+        notions={[
+          { mot: { fr: 'Rapports institutionnels & données — 28', en: 'Institutional reports & data — 28' },
+            sens: { fr: "Les producteurs de chiffres : UN DESA, OIM, HCR, Banque mondiale, Afrobarometer.", en: 'The figure producers: UN DESA, IOM, UNHCR, World Bank, Afrobarometer.' } },
+          { mot: { fr: 'Union africaine, agences et CER — 12', en: 'African Union, agencies and RECs — 12' },
+            sens: { fr: "Les sources continentales, qui priment ici sur leurs équivalents onusiens.", en: 'The continental sources, which here take precedence over their UN equivalents.' } },
+          { mot: { fr: 'Cadres juridiques & instruments — 11', en: 'Legal frameworks & instruments — 11' },
+            sens: { fr: "Les textes eux-mêmes : Kampala, protocoles de libre circulation, Agenda 2063.", en: 'The texts themselves: Kampala, free movement protocols, Agenda 2063.' } },
+          { mot: { fr: 'Recherche académique — 16', en: 'Academic research — 16' },
+            sens: { fr: "Les travaux qui donnent aux chiffres leur cadre d'interprétation.", en: 'The work that gives the figures their interpretive frame.' } },
+        ]}
+        pied={{
+          fr: "Douze références sont marquées « essentielles » : ce sont celles par lesquelles commencer si vous découvrez le champ.",
+          en: 'Twelve references are marked “essential”: those are where to start if the field is new to you.'
+        }}
+      />
       {children}
 
       <div>
@@ -9184,11 +9507,24 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
 // Le bloc est generique : un chapeau, deux a quatre notions definies, et une
 // table de ce que chaque source mesure et de ce qu'elle rate. Il se replie une
 // fois lu — celui qui connait le sujet ne le traverse pas deux fois.
+// Deux defauts corriges d'un coup.
+//
+// L'IDENTIFIANT ETAIT EN DUR. `id="reperes-titre"` sur chaque instance : deux
+// blocs de reperes dans une meme page — le cas de Mobilites — et le document
+// portait deux fois le meme identifiant. L'aria-labelledby du second pointait
+// alors vers le titre du premier, et un lecteur d'ecran annoncait la mauvaise
+// section. useId en donne un par instance.
+//
+// LE BLOC S'OUVRAIT TOUT SEUL. Il etait deplie par defaut, ce qui impose sa
+// lecture a tout le monde. L'intention est l'inverse : celui qui veut lire
+// deroule, celui qui connait passe. Il demarre donc ferme, et son titre dit
+// assez ce qu'il contient pour qu'on decide sans l'ouvrir.
 const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes = [], pied = null, chapo = null }) => {
   const L = faireL(lang);
-  const [ouvert, setOuvert] = useState(true);
+  const [ouvert, setOuvert] = useState(false);
+  const idTitre = `reperes-${useId().replace(/:/g, '')}`;
   return (
-    <section className="bg-white border border-slate-200 overflow-hidden" aria-labelledby="reperes-titre">
+    <section className="bg-white border border-slate-200 overflow-hidden" aria-labelledby={idTitre}>
       <button
         type="button"
         onClick={() => setOuvert(v => !v)}
@@ -9203,7 +9539,7 @@ const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes =
           <span className="block text-[10px] font-bold uppercase mb-1" style={{ letterSpacing: '.18em', color: 'var(--label)' }}>
             {chapo ? tr(chapo, lang) : L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
           </span>
-          <span id="reperes-titre" className="block font-serif font-bold text-lg md:text-xl text-slate-900 leading-snug">
+          <span id={idTitre} className="block font-serif font-bold text-lg md:text-xl text-slate-900 leading-snug">
             {tr(titre, lang)}
           </span>
         </span>
@@ -9747,6 +10083,26 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       />
 
       <BarreSection lang={lang} />
+
+      <Reperes
+        lang={lang}
+        chapo={{ fr: 'Comment lire ce glossaire', en: 'How to read this glossary' }}
+        titre={{ fr: "Quand deux définitions s'opposent, l'africaine fait foi", en: 'Where two definitions clash, the African one prevails' }}
+        chapeau={{
+          fr: "Un même mot n'a pas le même sens selon qui le définit, et l'écart n'est jamais technique : il engage qui est protégé et qui ne l'est pas. Ce glossaire donne la définition africaine en premier, et signale l'écart quand il existe.",
+          en: 'The same word does not mean the same thing depending on who defines it, and the gap is never merely technical: it decides who is protected and who is not. This glossary gives the African definition first, and flags the gap where there is one.'
+        }}
+        notions={[
+          { mot: { fr: 'La règle', en: 'The rule' },
+            sens: { fr: "Quand l'Union africaine et une institution onusienne divergent, c'est la définition de l'UA qui fait foi ici.", en: 'Where the African Union and a UN body diverge, the AU definition prevails here.' } },
+          { mot: { fr: 'Un exemple', en: 'An example' },
+            sens: { fr: "La Convention de Kampala protège les personnes déplacées par les catastrophes et les projets de développement, là où le droit international des réfugiés ne les couvre pas.", en: 'The Kampala Convention protects people displaced by disasters and development projects, where international refugee law does not cover them.' } },
+          { mot: { fr: 'Chaque entrée est sourcée', en: 'Every entry is sourced' },
+            sens: { fr: "Le texte qui fonde la définition est cité — convention, protocole ou recommandation statistique.", en: 'The text grounding the definition is cited — convention, protocol or statistical recommendation.' } },
+          { mot: { fr: 'Les notions sont cliquables', en: 'Terms are clickable' },
+            sens: { fr: "Là où elles apparaissent dans le site, elles renvoient ici.", en: 'Wherever they appear across the site, they link back here.' } },
+        ]}
+      />
       {children}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
@@ -9910,6 +10266,26 @@ const TabMethodology = ({ text, lang, children }) => (
     />
 
     <BarreSection lang={lang} />
+
+    <Reperes
+      lang={lang}
+      chapo={{ fr: 'Comment lire cette méthode', en: 'How to read this method' }}
+      titre={{ fr: "Ce que la méthode garantit, et ce qu'elle ne garantit pas", en: 'What the method guarantees, and what it does not' }}
+      chapeau={{
+        fr: "Une plateforme de données se juge à ce qu'elle avoue autant qu'à ce qu'elle affiche. Cette section dit d'où viennent les chiffres, comment ils sont assemblés, et à quels endroits ils cessent d'être fiables.",
+        en: 'A data platform is judged as much by what it admits as by what it displays. This section states where the figures come from, how they are assembled, and where they stop being reliable.'
+      }}
+      notions={[
+        { mot: { fr: 'Ce qui est garanti', en: 'What is guaranteed' },
+          sens: { fr: "Chaque chiffre porte sa source et sa date ; chaque jeu de données s'exporte en CSV ; aucune valeur n'est estimée sans être signalée comme telle.", en: 'Every figure carries its source and date; every dataset exports to CSV; no value is estimated without being flagged as such.' } },
+        { mot: { fr: 'Ce qui ne l’est pas', en: 'What is not' },
+          sens: { fr: "La comparabilité entre États : les définitions, les années de collecte et les couvertures diffèrent, et aucune harmonisation ne l'efface.", en: 'Comparability between states: definitions, collection years and coverage differ, and no harmonisation erases that.' } },
+        { mot: { fr: 'La fraîcheur', en: 'Currency' },
+          sens: { fr: "Un chiffre de recensement peut avoir dix ans et rester le meilleur disponible. La date compte autant que la valeur.", en: 'A census figure may be ten years old and still be the best available. The date matters as much as the value.' } },
+        { mot: { fr: 'Les apports propres', en: 'Original contributions' },
+          sens: { fr: "Certaines analyses sont produites ici et non reprises d'ailleurs ; elles sont signalées et leur méthode est décrite.", en: 'Some analyses are produced here rather than taken from elsewhere; they are flagged and their method described.' } },
+      ]}
+    />
     {children}
 
     <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
@@ -10183,6 +10559,113 @@ const mediaKindStyle = {
   press: { dot: 'bg-slate-500', chip: 'bg-slate-100 text-slate-700 border-slate-300' },
 };
 
+// ---------------------------------------------------------------------------
+// La marque, expliquee.
+//
+// Un logotype qui a demande des decisions merite de les exposer : le lecteur d'un
+// hub de recherche est precisement celui qui voudra savoir pourquoi l'anneau ne
+// se referme pas et pourquoi le continent est cale ou il est.
+//
+// Chaque entree dit une forme et ce qu'elle porte. Aucune n'est decorative : si
+// une composante ne se laissait pas expliquer, c'est qu'elle serait a retirer.
+// L'Union africaine explique son embleme composante par composante, et chacune
+// tient en une phrase de sens : les palmes disent la paix, le cercle d'or la
+// richesse du continent, la carte sans frontieres l'unite, les anneaux rouges
+// entrelaces la solidarite et le sang verse pour la liberation. Rien sur la
+// geometrie, rien sur la fabrication.
+//
+// La premiere version de ce bloc faisait l'inverse pour moitie : elle expliquait
+// le centre de masse, l'interlettrage calcule, le soudage des traces. C'est le
+// journal de bord d'un dessinateur, pas le sens d'un embleme.
+//
+// Chaque entree porte donc le nom de sa composante et ce qu'elle signifie, en
+// une phrase. Et la composante s'allume sur la figure entiere plutot que d'etre
+// decrite a cote : le lecteur voit ce dont on parle sans avoir a le chercher.
+const MARQUE_SENS = [
+  { cle: 'afrique',
+    fr: ['Le continent d’un seul tenant',
+         'Les cinquante-quatre tracés forment une seule masse : le pluribus et l’unum tiennent dans la même image. Les frontières ne sont pas effacées, elles sont dessinées puis refermées — parce que l’unité africaine se construit entre des États qui demeurent souverains, et non en les dissolvant.'],
+    en: ['The continent as one body',
+         'The fifty-four outlines form a single mass: pluribus and unum hold within the same image. The borders are not erased, they are drawn and then closed — because African unity is built between states that remain sovereign, not by dissolving them.'] },
+  { cle: 'anneau',
+    fr: ['L’anneau ouvert',
+         'Un cercle qui ne se referme pas. La frontière existe et se trace, mais elle n’enferme pas : ce qu’elle borde reste traversable. C’est la brèche qui distingue une trajectoire d’un périmètre.'],
+    en: ['The open ring',
+         'A circle that does not close. The border exists and is drawn, but it does not enclose: what it bounds stays crossable. The gap is what tells a trajectory from a perimeter.'] },
+  { cle: 'pointes',
+    fr: ['Les deux pointes',
+         'Aux deux extrémités de l’anneau, jamais à une seule. La mobilité africaine est d’abord intra-africaine et elle va dans les deux sens : on part, on revient, on circule. Le départ sans retour est l’exception, pas la règle.'],
+    en: ['The two arrowheads',
+         'At both ends of the ring, never at one. African mobility is first of all intra-African and it runs both ways: people leave, return, circulate. Departure without return is the exception, not the rule.'] },
+  { cle: 'point',
+    fr: ['Le point — l’unum',
+         'Ce vers quoi le mouvement converge sans jamais le toucher. C’est ce que les cinquante-quatre font ensemble et qui n’appartient à aucun d’eux séparément : la destination reste distincte du chemin qui y mène.'],
+    en: ['The dot — the unum',
+         'What the movement converges on without ever touching it. It is what the fifty-four make together and what belongs to none of them alone: the destination stays distinct from the path that leads to it.'] },
+  { cle: 'fond',
+    fr: ['Le fond échancré',
+         'L’ouverture de l’Afrique au monde, et son agentivité : apte à se penser, à se décider, à se faire. L’échancrure est aussi la projection des cinquante-quatre souverainetés vers l’unum — le fond s’ouvre dans la même direction que l’anneau, si bien que le mouvement traverse la marque jusqu’à son socle.'],
+    en: ['The notched ground',
+         'Africa’s openness to the world, and its agency: able to think itself, decide itself, make itself. The notch is also the projection of the fifty-four sovereignties towards the unum — the ground opens in the same direction as the ring, so the movement runs through the mark down to its base.'] },
+];
+
+const MarqueExpliquee = ({ lang = 'fr' }) => {
+  const L = faireL(lang);
+  return (
+    // marque-emeraude : l'emblème se montre dans sa couleur propre, jamais dans
+    // celle de la section qui l'héberge. Il prenait le graphite d'À propos, et
+    // l'on expliquait donc une marque grise.
+    <section className="bg-white rounded-xl border border-slate-200 p-8 md:p-10 marque-emeraude"
+             aria-labelledby="marque-sens-titre">
+      <h2 id="marque-sens-titre" className="text-xl font-serif font-bold text-slate-900 mb-2">
+        {L('L’emblème et sa signification', 'The emblem and its meaning', { ar: 'الشعار ومعناه' })}
+      </h2>
+      {/* Le mot latin porte tout l'embleme : il faut donc le traduire avant de
+          s'en servir. Un lecteur qui ne le connait pas ne doit pas avoir a le
+          chercher ailleurs pour comprendre la figure. */}
+      <Prose className="text-sm text-slate-600 leading-relaxed mb-3 max-w-2xl" lang={lang}>{L(
+        "L’emblème repose sur une formule latine, e pluribus unum — « de plusieurs, un ». Elle dit comment une pluralité forme un ensemble sans cesser d’être plurielle : cinquante-quatre États souverains, un continent. Chacune des cinq composantes en décline un aspect.",
+        'The emblem rests on a Latin phrase, e pluribus unum — “out of many, one”. It states how a plurality forms a whole without ceasing to be plural: fifty-four sovereign states, one continent. Each of the five components works out one aspect of it.',
+        { ar: 'يقوم الشعار على عبارة لاتينية، e pluribus unum — «من الكثرة، واحد»: أربع وخمسون دولة ذات سيادة، قارة واحدة.' }
+      )}</Prose>
+      <Prose className="text-sm text-slate-600 leading-relaxed mb-8 max-w-2xl" lang={lang}>{L(
+        "Sous la marque, les trois mots du nom tombent à la même largeur, et le s de South(s) est en italique : il n’y a pas un Sud, il y en a plusieurs.",
+        'Beneath the mark, the three words of the name share one width, and the s of South(s) is italic: there is not one South but several.',
+        { ar: 'تحت العلامة، تتساوى الكلمات الثلاث في العرض.' }
+      )}</Prose>
+
+      <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
+        <div className="shrink-0 mx-auto lg:mx-0 flex flex-col items-center gap-5">
+          <BrandMark tone="paper" style={{ width: '188px', height: '188px' }} />
+          <BrandLockup corps={17} tone="paper" />
+        </div>
+
+        <ol className="flex-1 m-0 p-0 list-none w-full">
+          {MARQUE_SENS.map((e, i) => {
+            const [titre, dit] = lang === 'en' ? e.en : e.fr;
+            return (
+              <li key={e.cle}
+                  className="flex items-center gap-4 py-4 border-t border-slate-200 first:border-t-0 first:pt-0">
+                {/* la composante s'allume, le reste s'efface : on montre, on ne pointe pas */}
+                <BrandMark tone="paper" isoler={e.cle} style={{ width: '54px', height: '54px' }} />
+                <div className="min-w-0">
+                  <span className="flex items-baseline gap-2">
+                    <span className="font-mono text-[10px] text-slate-400 tabular-nums">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="font-semibold text-[14px] text-slate-900">{titre}</span>
+                  </span>
+                  <p className="m-0 mt-1 text-[13px] leading-relaxed text-slate-600">{dit}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+  );
+};
+
 const TabAbout = ({ text, lang, children }) => {
   const [isCopied, setIsCopied] = useState(false);
   // Rien d'ouvert au depart : les travaux de l'auteur se consultent, ils ne
@@ -10213,6 +10696,26 @@ const TabAbout = ({ text, lang, children }) => {
       />
 
       <BarreSection lang={lang} />
+
+      <Reperes
+        lang={lang}
+        chapo={{ fr: 'Comment lire cette section', en: 'How to read this section' }}
+        titre={{ fr: "Ce que la plateforme est, et ce qu'elle ne prétend pas être", en: 'What the platform is, and what it does not claim to be' }}
+        chapeau={{
+          fr: "Une plateforme indépendante, adossée à une recherche doctorale en cours, sur les mobilités humaines dans les Suds. Elle rassemble et met en forme des données publiques ; elle ne les produit pas, sauf là où elle le dit explicitement.",
+          en: 'An independent platform, backed by ongoing doctoral research, on human mobility across the Global South. It gathers and shapes public data; it does not produce it, except where it says so explicitly.'
+        }}
+        notions={[
+          { mot: { fr: 'Indépendante', en: 'Independent' },
+            sens: { fr: "Aucune commande, aucun financement institutionnel. Les choix éditoriaux n'engagent que leur auteur.", en: 'No commission, no institutional funding. The editorial choices commit no one but their author.' } },
+          { mot: { fr: 'Adossée, pas confondue', en: 'Backed by, not merged with' },
+            sens: { fr: "Le cadre conceptuel vient d'une thèse en cours ; la plateforme n'en est ni le résumé ni la publication.", en: 'The conceptual frame comes from an ongoing thesis; the platform is neither its summary nor its publication.' } },
+          { mot: { fr: 'Ce qu’elle n’est pas', en: 'What it is not' },
+            sens: { fr: "Ni un observatoire officiel, ni une source primaire, ni un service de veille en temps réel.", en: 'Not an official observatory, not a primary source, not a real-time monitoring service.' } },
+          { mot: { fr: 'En développement', en: 'In development' },
+            sens: { fr: "Les contenus s'enrichissent ; ce qui manque est signalé plutôt que masqué.", en: 'Content keeps growing; what is missing is flagged rather than hidden.' } },
+        ]}
+      />
       {children}
       
       {/* Ouverture editoriale : le bandeau sombre est desormais porte par le masthead,
@@ -10232,8 +10735,13 @@ const TabAbout = ({ text, lang, children }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
+      {/* Les deux blocs étaient côte à côte dans une grille de deux colonnes :
+          chacun s'y étirait en hauteur sur une demi-largeur, et la liste des
+          sources, coincée à deux colonnes dans une demi-page, tombait sur une
+          quinzaine de lignes. Ils passent en pleine largeur, l'un sous l'autre —
+          ce sont des blocs de lecture, ils se lisent en travers, pas en long. */}
+      <div className="space-y-6">
+
         <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
           <div className="flex items-center space-x-3 rtl:space-x-reverse mb-5">
             <div className="p-2 bg-blue-50 rounded-sm"><BookOpen className="w-5 h-5 text-blue-700" /></div>
@@ -10255,7 +10763,10 @@ const TabAbout = ({ text, lang, children }) => {
           <div className="space-y-4 text-sm text-slate-600 leading-relaxed text-justify">
             <Prose lang={lang}>{text.about.data_p1}</Prose>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-6">
+            {/* Le bloc occupant toute la largeur, la liste des sources tient
+                désormais quatre colonnes : elle faisait une quinzaine de lignes
+                dans une demi-page, elle en fait quatre. */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 my-6">
               {text.about.data_list.map((item, idx) => {
                 // Sans emblème disponible, on retombe sur l'icône générique : le repli
                 // textuel de InstitutionLogo doublonnerait le nom affiché juste à côté.
@@ -10343,6 +10854,8 @@ const TabAbout = ({ text, lang, children }) => {
           </div>
         </div>
       </div>
+
+      <MarqueExpliquee lang={lang} />
 
       <div className="bg-slate-50 p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-10">
         <div className="flex-1 space-y-4">
@@ -11064,21 +11577,27 @@ export default function App() {
         }
       `}</style>
 
-      <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden nav-chrome">
+      {/* data-section porte la teinte jusqu'a la barre. Elle vit hors de <main>,
+          donc sans cet attribut la marque de l'en-tete resterait a l'emeraude
+          general pendant que la page entiere change de couleur. Le pied de page,
+          lui, n'en porte pas : c'est voulu, il garde l'emeraude en toute
+          circonstance puisqu'il signe le site et non la section. */}
+      <nav data-section={activeTab}
+           className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden nav-chrome">
         <div className="border-b border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-[76px] items-center">
             {/* min-w-0 : sans lui, le bloc de marque refuse de se comprimer et
                 pousse la barre au-dela de l'ecran. A 375 px, elle debordait de
                 35 px sur toutes les pages — le selecteur de langue sortait du
                 cadre et le document entier glissait lateralement. */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse min-w-0">
-              <BrandMark className="h-8 w-8 shrink-0" tone="dark" />
-              <span className="text-base font-serif font-bold tracking-tight leading-none truncate">
-                <span style={{ color: '#FFFDF9' }}>{text.title}</span>{' '}
-                {/* Le sous-titre s'efface sur les petits ecrans : le nom suffit
-                    a dire ou l'on est, et c'est lui qu'il faut garder entier. */}
-                <span className="font-sans font-normal italic text-[13px] hidden sm:inline" style={{ color: '#93A3CF' }}>{text.subtitle}</span>
-              </span>
+              {/* Le logotype empile, ici aussi. La barre s'ouvre de 56 a 76 px
+                  pour l'accueillir : le nom sur une ligne rendait la marque
+                  differente de celle du pied de page, et une identite qui change
+                  de forme d'un bout a l'autre de la page n'en est plus une.
+                  La ligne de nature reste au pied de page — dans une barre de
+                  navigation, elle serait du remplissage. */}
+              <BrandLockup corps={12.5} tone="dark" nature={false} ecart={0.42} className="shrink-0" />
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {/* La recherche precede les reglages : c'est l'action, eux sont
@@ -11118,7 +11637,7 @@ export default function App() {
                   className="nav-tab flex items-center px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-t-2"
                   style={navTabStyle(isActive)}
                 >
-                  <Icon className="w-4 h-4 me-2" style={{ color: isActive ? '#8FA0CE' : '#7A7167' }} />
+                  <Icon className="w-4 h-4 me-2" style={{ color: isActive ? 'var(--accent-light)' : '#7A7167' }} />
                   {tr(item.label, lang)}
                 </button>
               );
@@ -11555,14 +12074,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
 
-            {/* Marque */}
+            {/* Marque : le pied de page a la hauteur qu'il faut au logotype
+                complet, ce que la barre de navigation n'a pas. */}
             <div className="md:col-span-5">
-              <div className="flex items-center gap-3 mb-4">
-                <BrandMark className="h-9 w-9 shrink-0" tone="dark" />
-                <span className="font-serif font-bold text-xl leading-none" style={{ color: '#FFFDF9' }}>
-                  South(s) Mobility
-                </span>
-              </div>
+              <BrandLockup corps={19} tone="dark" className="mb-5" />
               <Prose className="text-sm leading-relaxed max-w-sm" style={{ color: '#A79E92' }} lang={lang}>{text.footer.tag}</Prose>
             </div>
 
@@ -11576,7 +12091,7 @@ export default function App() {
                   <li key={item.id}>
                     <button
                       onClick={() => allerVers(item.id)}
-                      className="text-sm transition-colors hover:text-[#8FA0CE]"
+                      className="text-sm transition-colors hover:text-[var(--accent-light)]"
                       style={{ color: '#CFC6BA' }}
                     >
                       {tr(item.label, lang)}
@@ -11594,7 +12109,7 @@ export default function App() {
               <Prose className="text-xs leading-relaxed mb-4" style={{ color: '#A79E92' }} lang={lang}>{text.footer.sources}</Prose>
               <a
                 href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20-%20Contact"
-                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[#8FA0CE]"
+                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[var(--accent-light)]"
                 style={{ color: '#CFC6BA' }}
               >
                 <Mail className="w-3.5 h-3.5" /> benmokhtary1@gmail.com
