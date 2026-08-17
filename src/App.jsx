@@ -2297,13 +2297,13 @@ const t = {
         intro_p2: "La plateforme se tient à l'intersection des sciences sociales, de la science des données et des études sur les migrations. Elle rassemble, harmonise et met en valeur des données, indicateurs, cartes, publications, instruments juridiques et ressources documentaires d'institutions internationales, régionales et nationales.",
         intro_p3: "Son ambition est de rendre les données sur les mobilités humaines plus accessibles, plus comparables et plus intelligibles, afin de favoriser une compréhension empirique, nuancée et documentée des dynamiques migratoires contemporaines.",
         
-        research_title: "Une plateforme née de la recherche",
+        research_title: "D'où vient ce travail",
         research_p1: "Un projet de recherche doctorale sur la gouvernance des migrations africaines est à l'origine de ce travail.",
         research_p2: "Au cours de cette recherche, un constat s'est imposé. Une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources restent dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
         research_p3: "Le projet est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
         research_p4: "Il relève de la science ouverte : diffuser les connaissances et rendre la recherche utilisable.",
 
-        data_title: "Une approche fondée sur les données",
+        data_title: "Sur quelles données elle s'appuie",
         data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
         data_list: [
           { name: "Commission de l'Union africaine (CUA)", url: "https://au.int/fr", logo: "au" },
@@ -2327,8 +2327,8 @@ const t = {
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
         data_p3: "Aucune statistique officielle n'est produite ici : la plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
 
-        south_title: "Une perspective ancrée dans les Suds",
-        south_p1: "Le regard porte depuis les Suds, avec une attention particulière aux dynamiques souvent moins visibles dans les bases de données internationales. Cela inclut notamment :",
+        south_title: "Ce que les bases internationales voient mal",
+        south_p1: "Les grandes bases internationales couvrent inégalement le continent : ce qui relie l'Afrique au reste du monde y est mieux suivi que ce qui la relie à elle-même. La plateforme documente en priorité ce second versant :",
         south_list: [
           "Les migrations intra-africaines",
           "Les mobilités Sud-Sud",
@@ -2342,7 +2342,7 @@ const t = {
         ],
         south_p2: "À plus long terme, cette approche a vocation à être progressivement étendue à d'autres régions du monde, notamment l'Amérique latine, les Caraïbes et l'Asie.",
 
-        evolution_title: "Une plateforme en évolution permanente",
+        evolution_title: "Ce qui existe, ce qui reste à construire",
         evolution_p1: "Le projet évolue, enrichi au fil de la recherche. Plutôt que d'annoncer une feuille de route indistincte, la plateforme distingue ici ce qui est effectivement disponible de ce qui reste à construire.",
         evolution_done: [
           "Un observatoire des narratifs, confrontant les affirmations courantes aux données",
@@ -2362,13 +2362,13 @@ const t = {
         ],
         evolution_p2: "L'objectif est de construire progressivement une infrastructure de référence pour l'étude des mobilités humaines dans les Suds.",
 
-        founder_title: "À propos du fondateur",
+        founder_title: "Qui porte ce projet",
         founder_p1: "South(s) Mobility a été fondé par Yassine Ben Mokhtar, doctorant en relations internationales dont les recherches portent sur la gouvernance des migrations africaines, les dynamiques institutionnelles continentales et les politiques de mobilité.",
         founder_p2: "Le projet s'appuie sur plusieurs années de recherche académique, d'analyse documentaire et de terrain, ainsi que sur une expérience professionnelle auprès d'institutions travaillant sur les questions migratoires et de gouvernance en Afrique.",
         founder_p3: "La plateforme prolonge cette recherche et en assure la valorisation scientifique, destinée à rendre les connaissances, les données et les ressources plus accessibles au plus grand nombre.",
         founder_p4: "Les analyses, interprétations et éventuelles erreurs relèvent de la seule responsabilité de son auteur et n'engagent aucune institution avec laquelle il a collaboré.",
 
-        collab_title: "Collaborer & Contact",
+        collab_title: "Contribuer, signaler, écrire",
         collab_p1: "Les collaborations académiques, institutionnelles et techniques sont bienvenues, qu'il s'agisse de jeux de données, de publications, de visualisations, de corrections, de projets communs ou de partenariats.",
         contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
         disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
@@ -2611,13 +2611,13 @@ const t = {
         intro_p2: "At the intersection of social sciences, data science, and migration studies, the platform gathers, harmonizes, and leverages data, indicators, maps, publications, legal instruments, and documentary resources from international, regional, and national institutions.",
         intro_p3: "Its ambition is to make data on human mobility more accessible, comparable, and intelligible, in order to foster an empirical, nuanced, and documented understanding of contemporary migratory dynamics.",
         
-        research_title: "A platform born from research",
+        research_title: "Where this work comes from",
         research_p1: "A doctoral research project on the governance of African migration is where this work began.",
         research_p2: "During this research, a clear observation emerged: a vast amount of quality data is already produced by public and international institutions, but these resources remain widely scattered, heterogeneous, and sometimes difficult to access. Cross-referencing, contextualizing, or simply finding them often requires considerable effort.",
         research_p3: "The project was born from this observation. The project aims to gather these resources in a single, open, and scalable environment to facilitate their consultation, comparison, and reuse by researchers, students, journalists, public decision-makers, international organizations, and anyone interested in human mobility.",
         research_p4: "It follows an Open Science approach: disseminate knowledge and make research usable.",
 
-        data_title: "A data-driven approach",
+        data_title: "Which data it rests on",
         data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
         data_list: [
           { name: "African Union Commission (AUC)", url: "https://au.int/en", logo: "au" },
@@ -2641,8 +2641,8 @@ const t = {
         data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
         data_p3: "No official statistics are produced here: the platform acts as an infrastructure for consolidation, contextualization, and knowledge dissemination.",
 
-        south_title: "A perspective rooted in the Souths",
-        south_p1: "The vantage point is the Global South, with particular attention to dynamics that are often less visible in international databases. This includes:",
+        south_title: "What international databases see poorly",
+        south_p1: "The major international databases cover the continent unevenly: what links Africa to the rest of the world is better tracked than what links it to itself. The platform documents that second side first:",
         south_list: [
           "Intra-African migrations",
           "South-South mobilities",
@@ -2656,7 +2656,7 @@ const t = {
         ],
         south_p2: "In the longer term, this approach is intended to be progressively extended to other regions of the world, notably Latin America, the Caribbean, and Asia.",
 
-        evolution_title: "A constantly evolving platform",
+        evolution_title: "What exists, what remains to be built",
         evolution_p1: "The project evolves, enriched as the research advances. Rather than announcing an undifferentiated roadmap, the platform distinguishes here between what is actually available and what remains to be built.",
         evolution_done: [
           "A narratives observatory testing common claims against the data",
@@ -2676,13 +2676,13 @@ const t = {
         ],
         evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of human mobility in the Global South.",
 
-        founder_title: "About the founder",
+        founder_title: "Who carries this project",
         founder_p1: "South(s) Mobility was founded by Yassine Ben Mokhtar, a PhD candidate in international relations whose research focuses on African migration governance, continental institutional dynamics, and mobility policies.",
         founder_p2: "The project is built on several years of academic research, documentary and field analysis, as well as professional experience with institutions working on migration and governance issues in Africa.",
         founder_p3: "The platform extends this research and carries its scientific dissemination, designed to make knowledge, data, and resources more accessible to a wider audience.",
         founder_p4: "Analyses, interpretations, and any potential errors are the sole responsibility of the author and do not commit any institution with which he has collaborated.",
 
-        collab_title: "Collaborate & Contact",
+        collab_title: "Contribute, report, write",
         collab_p1: "Academic, institutional and technical collaborations are welcome — datasets, publications, visualizations, corrections, joint projects or partnerships alike.",
         contact_p: "For any questions, collaboration proposals, or contributions to the project:",
         disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",

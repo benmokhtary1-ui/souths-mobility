@@ -227,6 +227,41 @@ console.log('OUVERTURES REPETEES  (memes trois premiers mots)');
     if (DETAIL) v.slice(0, 6).forEach(p => console.log('         ' + p.rel + ':' + p.ligne + '  ' + p.t.slice(0, 92)));
   });
 
+// --- Les titres se ressemblent-ils entre eux ? -----------------------------
+//
+// Le controle des ouvertures repetees porte sur les phrases, et laissait donc
+// passer les titres. A propos alignait quatre titres de meme rang sur le meme
+// moule — « Une plateforme nee de la recherche », « Une approche fondee sur
+// les donnees », « Une perspective ancree dans les Suds », « Une plateforme en
+// evolution permanente » —, dont deux mots pour mot identiques sur deux mots.
+// A l'oeil, c'est le defaut le plus visible d'une page ; a la lecture ligne a
+// ligne du code, le moins reperable.
+const titres = [];
+for (const f of FICHIERS) {
+  let src;
+  try { src = readFileSync(join(RACINE, f), 'utf8'); } catch { continue; }
+  for (const m of src.matchAll(/(\w*title\w*|titre)\s*:\s*"((?:[^"\\]|\\.){6,})"/g)) {
+    const t = m[2].replace(/\\"/g, '"').trim();
+    if (/[<>{}]/.test(t)) continue;
+    titres.push(t);
+  }
+}
+const deuxMots = new Map();
+for (const t of titres) {
+  const k = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+             .split(/[^a-z0-9']+/).filter(Boolean).slice(0, 2).join(' ');
+  if (k.split(' ').length < 2) continue;
+  if (!deuxMots.has(k)) deuxMots.set(k, []);
+  deuxMots.get(k).push(t);
+}
+const moules = [...deuxMots.entries()].filter(([, v]) => v.length >= 3)
+  .sort((a, b) => b[1].length - a[1].length);
+console.log('\nTITRES SUR LE MEME MOULE  (memes deux premiers mots, 3 fois ou plus) : ' + moules.length);
+moules.slice(0, 8).forEach(([k, v]) => {
+  console.log('   ' + v.length + '  « ' + k + ' … »');
+  v.slice(0, 4).forEach(t => console.log('        ' + t.slice(0, 68)));
+});
+
 console.log('\nPHRASES JUMELLES  (Jaccard >= 0,55) : ' + jumelles.length);
 jumelles.slice(0, DETAIL ? 40 : 10).forEach(p => {
   console.log('\n   ' + p.sc.toFixed(2) + '  ' + p.a.rel + ':' + p.a.ligne + '  /  ' + p.b.rel + ':' + p.b.ligne);
