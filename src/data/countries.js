@@ -53,7 +53,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l'Espagne (env. 770 000) et l'Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
+      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l'Espagne (env. 770 000) et l'Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
     },
     {
       "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "iso2": "tn", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
@@ -359,7 +359,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc,
-      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens du continent : près de 450 000 rien qu'au Kenya. La majorité vit dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
+      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens du continent : près de 450 000 rien qu'au Kenya. La majorité vit dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
     },
     {
       "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
@@ -426,7 +426,7 @@ export const countryData = {
       "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "L'Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
+      "origDest": { "fr": "L'Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
     },
     {
       "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "iso2": "bw", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 

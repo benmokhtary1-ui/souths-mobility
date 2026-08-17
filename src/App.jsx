@@ -33,7 +33,7 @@ const toCSV = (rows) => {
   const cols = Object.keys(rows[0]);
   const cell = (v) => {
     const s = v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim();
-    return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n') + '\n';
 };
@@ -140,17 +140,17 @@ const PLAIN_TERMS = {
   },
   zlecaf: {
     label: { fr: 'ZLECAf', en: 'AfCFTA' },
-    fr: "La zone de libre-échange continentale africaine : le grand accord commercial qui doit permettre aux marchandises de circuler entre pays africains sans droits de douane.",
+    fr: "La zone de libre-échange continentale africaine : le grand accord commercial qui doit permettre aux marchandises de circuler entre pays africains sans droits de douane.",
     en: 'The African Continental Free Trade Area: the continent-wide trade agreement meant to let goods move between African countries without customs duties.',
   },
   ancrage: {
     label: { fr: "score d'ancrage", en: 'anchoring score' },
-    fr: "Un compte simple, de 0 à 6 : combien des six grands textes de l'Union africaine un pays a-t-il officiellement ratifiés. C'est une mesure construite pour cette plateforme.",
+    fr: "Un compte simple, de 0 à 6 : combien des six grands textes de l'Union africaine un pays a-t-il officiellement ratifiés. C'est une mesure construite pour cette plateforme.",
     en: 'A simple count from 0 to 6: how many of the African Union’s six major instruments a country has formally ratified. It is a measure built for this platform.',
   },
   iiag: {
     label: { fr: 'IIAG', en: 'IIAG' },
-    fr: "L'Indice Ibrahim de la gouvernance africaine : un classement annuel qui note la qualité de la gouvernance des 54 pays du continent. Rang 1 = le mieux classé.",
+    fr: "L'Indice Ibrahim de la gouvernance africaine : un classement annuel qui note la qualité de la gouvernance des 54 pays du continent. Rang 1 = le mieux classé.",
     en: 'The Ibrahim Index of African Governance: an annual ranking scoring the quality of governance in all 54 African countries. Rank 1 = best placed.',
   },
   kampala: {
@@ -165,7 +165,7 @@ const PLAIN_TERMS = {
   },
   capabilites: {
     label: { fr: 'capabilités de mouvement', en: 'movement capabilities' },
-    fr: "On ne part pas seulement parce qu'on le veut : il faut aussi le pouvoir — un passeport, un visa, de l'argent, un droit. Le cadre « aspirations et capabilités » de Hein de Haas (2021) va plus loin : la mobilité, c'est la capacité de choisir où vivre, y compris celle de rester.",
+    fr: "On ne part pas seulement parce qu'on le veut : il faut aussi le pouvoir — un passeport, un visa, de l'argent, un droit. Le cadre « aspirations et capabilités » de Hein de Haas (2021) va plus loin : la mobilité, c'est la capacité de choisir où vivre, y compris celle de rester.",
     en: 'People do not move only because they want to: they must also be able to — a passport, a visa, money, a legal right. Hein de Haas\'s aspirations–capabilities framework (2021) goes further: mobility is the capability to choose where to live, including the capability to stay.',
     source: { label: 'de Haas (2021), A theory of migration: the aspirations–capabilities framework',
               url: 'https://doi.org/10.1186/s40878-020-00210-4' },
@@ -177,17 +177,17 @@ const PLAIN_TERMS = {
   },
   gcm: {
     label: { fr: 'Pacte mondial (GCM)', en: 'Global Compact (GCM)' },
-    fr: "Le Pacte mondial des Nations unies sur les migrations, adopté en 2018. Il fixe des objectifs communs mais n'oblige juridiquement aucun État : un pays peut l'approuver sans rien changer chez lui.",
+    fr: "Le Pacte mondial des Nations unies sur les migrations, adopté en 2018. Il fixe des objectifs communs mais n'oblige juridiquement aucun État : un pays peut l'approuver sans rien changer chez lui.",
     en: 'The United Nations Global Compact for Migration, adopted in 2018. It sets shared objectives but legally binds no state: a country can endorse it and change nothing at home.',
   },
   stock: {
     label: { fr: 'stock de migrants', en: 'migrant stock' },
-    fr: "Le nombre de personnes nées à l'étranger qui vivent dans un pays à une date donnée. C'est une photo, pas un flux : ça ne dit pas combien sont arrivées cette année.",
+    fr: "Le nombre de personnes nées à l'étranger qui vivent dans un pays à une date donnée. C'est une photo, pas un flux : ça ne dit pas combien sont arrivées cette année.",
     en: 'The number of foreign-born people living in a country on a given date. It is a snapshot, not a flow: it does not say how many arrived this year.',
   },
   cer: {
     label: { fr: 'CER', en: 'REC' },
-    fr: "Les communautés économiques régionales : les blocs qui regroupent les pays africains par région, comme la CEDEAO en Afrique de l'Ouest. Ce sont elles qui décident la libre circulation dans les faits.",
+    fr: "Les communautés économiques régionales : les blocs qui regroupent les pays africains par région, comme la CEDEAO en Afrique de l'Ouest. Ce sont elles qui décident la libre circulation dans les faits.",
     en: 'Regional Economic Communities: the blocs grouping African countries by region, such as ECOWAS in West Africa. In practice, they are where free movement is decided.',
   },
   oam: {
@@ -197,7 +197,7 @@ const PLAIN_TERMS = {
   },
   spearman: {
     label: { fr: 'corrélation de rang', en: 'rank correlation' },
-    fr: "Une mesure qui dit si deux classements se ressemblent. 0 : aucun lien. 1 : les deux classements sont identiques. Un résultat proche de 0 signifie que les deux choses n'ont rien à voir.",
+    fr: "Une mesure qui dit si deux classements se ressemblent. 0 : aucun lien. 1 : les deux classements sont identiques. Un résultat proche de 0 signifie que les deux choses n'ont rien à voir.",
     en: 'A measure of whether two rankings resemble each other. 0: no link. 1: the two rankings are identical. A result near 0 means the two things are unrelated.',
   },
   cycle: {
@@ -212,7 +212,7 @@ const PLAIN_TERMS = {
   },
   refugie: {
     label: { fr: 'réfugié', en: 'refugee' },
-    fr: "Quelqu'un qui a franchi une frontière parce qu'il ne pouvait plus rester. Le texte africain de 1969 va plus loin que celui de Genève : il protège aussi ceux qui fuient une guerre, une occupation ou des troubles graves, sans avoir à prouver qu'ils étaient personnellement visés.",
+    fr: "Quelqu'un qui a franchi une frontière parce qu'il ne pouvait plus rester. Le texte africain de 1969 va plus loin que celui de Genève : il protège aussi ceux qui fuient une guerre, une occupation ou des troubles graves, sans avoir à prouver qu'ils étaient personnellement visés.",
     en: 'Someone who crossed a border because staying was no longer possible. The 1969 African instrument goes further than the Geneva one: it also protects those fleeing war, occupation or serious unrest, with no need to prove they were personally targeted.',
   },
   remises: {
@@ -222,7 +222,7 @@ const PLAIN_TERMS = {
   },
   ratification: {
     label: { fr: 'ratification', en: 'ratification' },
-    fr: "Signer un traité ne l'engage pas encore. Le ratifier, si : l'État le fait approuver chez lui, puis dépose l'instrument auprès de l'organisation. C'est cette dernière étape qui compte dans les décomptes de cette plateforme.",
+    fr: "Signer un traité ne l'engage pas encore. Le ratifier, si : l'État le fait approuver chez lui, puis dépose l'instrument auprès de l'organisation. C'est cette dernière étape qui compte dans les décomptes de cette plateforme.",
     en: 'Signing a treaty does not yet bind a state. Ratifying does: the state has it approved at home, then deposits the instrument with the organisation. It is that last step the counts on this platform record.',
   },
   entree_vigueur: {
@@ -232,7 +232,7 @@ const PLAIN_TERMS = {
   },
   libre_circulation: {
     label: { fr: 'libre circulation', en: 'free movement' },
-    fr: "Le droit d'entrer, de séjourner et de s'installer dans un autre pays du même ensemble régional sans visa. La CEDEAO l'applique depuis 1979 ; le protocole qui l'étendrait à tout le continent, adopté à Kigali en 2018, n'est pas encore en vigueur.",
+    fr: "Le droit d'entrer, de séjourner et de s'installer dans un autre pays du même ensemble régional sans visa. La CEDEAO l'applique depuis 1979 ; le protocole qui l'étendrait à tout le continent, adopté à Kigali en 2018, n'est pas encore en vigueur.",
     en: 'The right to enter, stay and settle in another country of the same regional bloc without a visa. ECOWAS has applied it since 1979; the protocol that would extend it to the whole continent, adopted in Kigali in 2018, is not yet in force.',
   },
   recensement: {
@@ -247,17 +247,17 @@ const PLAIN_TERMS = {
   },
   externalisation: {
     label: { fr: 'externalisation des frontières', en: 'border externalisation' },
-    fr: "Quand un État fait contrôler sa frontière loin de chez lui : en finançant et équipant les forces d'un pays tiers, en y postant des agents de liaison, ou en liant son aide à la coopération migratoire. La frontière se déplace ; le contrôle reste.",
+    fr: "Quand un État fait contrôler sa frontière loin de chez lui : en finançant et équipant les forces d'un pays tiers, en y postant des agents de liaison, ou en liant son aide à la coopération migratoire. La frontière se déplace ; le contrôle reste.",
     en: 'When a state has its border policed far from home: by funding and equipping a third country’s forces, posting liaison officers there, or tying its aid to migration cooperation. The border moves; the control stays.',
   },
   diaspora: {
     label: { fr: 'diaspora', en: 'diaspora' },
-    fr: "L'ensemble des personnes originaires d'un pays qui vivent ailleurs, et qui gardent un lien avec lui — famille, argent envoyé, allers-retours, parfois un droit de vote. L'Union africaine la considère comme sa « sixième région ».",
+    fr: "L'ensemble des personnes originaires d'un pays qui vivent ailleurs, et qui gardent un lien avec lui — famille, argent envoyé, allers-retours, parfois un droit de vote. L'Union africaine la considère comme sa « sixième région ».",
     en: 'Everyone originating from a country who lives elsewhere and keeps a link to it — family, money sent home, back-and-forth travel, sometimes a vote. The African Union treats it as its "sixth region".',
   },
   cedeao: {
     label: { fr: 'CEDEAO', en: 'ECOWAS' },
-    fr: "La Communauté économique des États de l'Afrique de l'Ouest. Son protocole de 1979 sur la libre circulation est le plus ancien du continent, et l'un des mieux appliqués : on y circule sans visa entre pays membres.",
+    fr: "La Communauté économique des États de l'Afrique de l'Ouest. Son protocole de 1979 sur la libre circulation est le plus ancien du continent, et l'un des mieux appliqués : on y circule sans visa entre pays membres.",
     en: 'The Economic Community of West African States. Its 1979 free-movement protocol is the continent’s oldest and among the best applied: nationals move between member states without a visa.',
   },
   protocole: {
@@ -267,17 +267,17 @@ const PLAIN_TERMS = {
   },
   mpfa: {
     label: { fr: 'MPFA', en: 'MPFA' },
-    fr: "Le Cadre de politique migratoire pour l'Afrique, adopté par l'Union africaine et révisé pour 2018-2030. Un texte d'orientation, adopté sans procédure de ratification : il propose aux États une trame commune pour écrire leurs propres politiques.",
+    fr: "Le Cadre de politique migratoire pour l'Afrique, adopté par l'Union africaine et révisé pour 2018-2030. Un texte d'orientation, adopté sans procédure de ratification : il propose aux États une trame commune pour écrire leurs propres politiques.",
     en: 'The Migration Policy Framework for Africa, adopted by the African Union and revised for 2018-2030. A policy orientation adopted without any ratification procedure: it offers states a shared template for writing their own policies.',
   },
   shasa: {
     label: { fr: 'SHaSA', en: 'SHaSA' },
-    fr: "La Stratégie d'harmonisation des statistiques en Afrique. Son objet : que deux pays africains comptent la même chose de la même façon, faute de quoi leurs chiffres ne peuvent pas être comparés.",
+    fr: "La Stratégie d'harmonisation des statistiques en Afrique. Son objet : que deux pays africains comptent la même chose de la même façon, faute de quoi leurs chiffres ne peuvent pas être comparés.",
     en: 'The Strategy for the Harmonisation of Statistics in Africa. Its purpose: that two African countries count the same thing the same way — otherwise their figures cannot be compared.',
   },
   statafric: {
     label: { fr: 'STATAFRIC', en: 'STATAFRIC' },
-    fr: "L'institut de statistique de l'Union africaine, installé à Tunis. Il ne collecte pas lui-même : il fait converger les méthodes des instituts nationaux pour que les chiffres du continent tiennent ensemble.",
+    fr: "L'institut de statistique de l'Union africaine, installé à Tunis. Il ne collecte pas lui-même : il fait converger les méthodes des instituts nationaux pour que les chiffres du continent tiennent ensemble.",
     en: 'The African Union’s statistics institute, based in Tunis. It does not collect data itself: it aligns the methods of national institutes so the continent’s figures hold together.',
   },
   apd: {
@@ -302,7 +302,7 @@ const PLAIN_TERMS = {
   },
   oit: {
     label: { fr: 'OIT', en: 'ILO' },
-    fr: "L'Organisation internationale du travail. Elle est tripartite : États, employeurs et syndicats y siègent ensemble. Ses conventions fixent le socle des droits des travailleurs, migrants compris.",
+    fr: "L'Organisation internationale du travail. Elle est tripartite : États, employeurs et syndicats y siègent ensemble. Ses conventions fixent le socle des droits des travailleurs, migrants compris.",
     en: 'The International Labour Organization. It is tripartite: states, employers and unions sit together. Its conventions set the floor of workers’ rights, migrant workers included.',
   },
   idmc: {
@@ -324,12 +324,12 @@ const PLAIN_TERMS = {
   // dans le texte, sa definition dans une autre section.
   visa: {
     label: { fr: "visa", en: "visa" },
-    fr: "L'autorisation qu'un pays demande avant de laisser entrer un étranger. Trois régimes coexistent en Afrique : le visa à obtenir avant de partir, le visa délivré à l'arrivée, ou aucun visa.",
+    fr: "L'autorisation qu'un pays demande avant de laisser entrer un étranger. Trois régimes coexistent en Afrique : le visa à obtenir avant de partir, le visa délivré à l'arrivée, ou aucun visa.",
     en: "The permission a country requires before letting a foreigner in. Three regimes coexist in Africa: a visa obtained before departure, a visa issued on arrival, or none at all.",
   },
   residence: {
     label: { fr: "droit de séjour", en: "right of residence" },
-    fr: "Le droit de vivre durablement dans un pays dont on n'a pas la nationalité, avec un titre qui le prouve. Il se distingue du droit d'entrer : on peut être admis sans pouvoir rester.",
+    fr: "Le droit de vivre durablement dans un pays dont on n'a pas la nationalité, avec un titre qui le prouve. Il se distingue du droit d'entrer : on peut être admis sans pouvoir rester.",
     en: "The right to live long-term in a country you are not a national of, with a document proving it. It differs from the right to enter: you can be admitted without being allowed to stay.",
   },
   regime: {
@@ -344,17 +344,17 @@ const PLAIN_TERMS = {
   },
   retour: {
     label: { fr: "retour volontaire ou forcé", en: "voluntary or forced return" },
-    fr: "Le fait de rentrer dans son pays d'origine. « Volontaire » et « forcé » séparent un départ décidé d'un éloignement imposé — la frontière entre les deux est souvent discutée.",
+    fr: "Le fait de rentrer dans son pays d'origine. « Volontaire » et « forcé » séparent un départ décidé d'un éloignement imposé — la frontière entre les deux est souvent discutée.",
     en: "Going back to one’s country of origin. “Voluntary” and “forced” separate a chosen departure from an imposed removal — the line between them is often contested.",
   },
   asile: {
     label: { fr: "asile", en: "asylum" },
-    fr: "La protection qu'un État accorde à qui fuit des persécutions. Demander l'asile est un droit ; l'obtenir dépend de l'examen de chaque situation.",
+    fr: "La protection qu'un État accorde à qui fuit des persécutions. Demander l'asile est un droit ; l'obtenir dépend de l'examen de chaque situation.",
     en: "The protection a state grants to someone fleeing persecution. Claiming asylum is a right; obtaining it depends on an examination of each case.",
   },
   pafom: {
     label: { fr: "PAFoM", en: "PAFoM" },
-    fr: "Le Forum panafricain sur la migration : la rencontre où les États africains, les communautés régionales et les agences discutent ensemble des politiques migratoires. Créé en 2006, il se réunit depuis 2015.",
+    fr: "Le Forum panafricain sur la migration : la rencontre où les États africains, les communautés régionales et les agences discutent ensemble des politiques migratoires. Créé en 2006, il se réunit depuis 2015.",
     en: "The Pan-African Forum on Migration: where African states, regional communities and agencies discuss migration policy together. Created in 2006, convening since 2015.",
   },
   jlmp: {
@@ -364,12 +364,12 @@ const PLAIN_TERMS = {
   },
   oua1969: {
     label: { fr: "Convention de l'OUA (1969)", en: "OAU Convention (1969)" },
-    fr: "Le traité africain de 1969 sur les réfugiés. Il va plus loin que la Convention de Genève : il protège aussi ceux qui fuient une agression extérieure, une occupation ou des troubles graves de l'ordre public.",
+    fr: "Le traité africain de 1969 sur les réfugiés. Il va plus loin que la Convention de Genève : il protège aussi ceux qui fuient une agression extérieure, une occupation ou des troubles graves de l'ordre public.",
     en: "The 1969 African refugee treaty. It reaches further than the Geneva Convention: it also protects those fleeing external aggression, occupation or serious disturbance of public order.",
   },
   reintegration: {
     label: { fr: "réintégration", en: "reintegration" },
-    fr: "Ce qui suit le retour : retrouver un logement, un travail, des papiers, une place. Un retour compté comme réussi ne dit rien de ce qui vient après.",
+    fr: "Ce qui suit le retour : retrouver un logement, un travail, des papiers, une place. Un retour compté comme réussi ne dit rien de ce qui vient après.",
     en: "What follows return: finding housing, work, papers, a place. A return counted as successful says nothing about what comes next.",
   },
   irreguliere: {
@@ -389,7 +389,7 @@ const PLAIN_TERMS = {
   },
   identite_legale: {
     label: { fr: "identité légale", en: "legal identity" },
-    fr: "Le fait d'être enregistré par un État : naissance déclarée, papiers délivrés. Sans elle, une personne existe sans pouvoir le prouver.",
+    fr: "Le fait d'être enregistré par un État : naissance déclarée, papiers délivrés. Sans elle, une personne existe sans pouvoir le prouver.",
     en: "Being registered by a state: birth declared, papers issued. Without it, a person exists without being able to prove it.",
   },
 };
@@ -492,7 +492,7 @@ const Prose = ({ children, lang = 'fr', className, ...reste }) => {
   let dernier = 0, m;
 
   // Deux notions au plus par paragraphe. Au-dela, le texte se constelle de
-  // mots soulignes et l'oeil ne sait plus ou se poser : l'aide devient une gene.
+  // mots soulignes et l'oeil ne sait plus ou se poser : l'aide devient une gene.
   const PLAFOND = 2;
 
   while ((m = re.exec(texte)) !== null) {
@@ -1013,10 +1013,10 @@ const LIEUX = {
 // deux tiers d'une dimension du continent, et les onze centres sont ecartes les
 // uns des autres — deux sections ne doivent pas ouvrir sur la meme region.
 const ATLAS_CADRAGES = {
-  // Pl. I — l'Atlas : le continent entier, sans cadrage. C'est la premiere
+  // Pl. I — l'Atlas : le continent entier, sans cadrage. C'est la premiere
   // feuille du recueil, celle par laquelle on entre.
   'Pl. I':     { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
-  // Pl. II — l'accueil : le meme continent entier, puisqu'on s'y oriente.
+  // Pl. II — l'accueil : le meme continent entier, puisqu'on s'y oriente.
   'Pl. II':    { crop: [0, 0, 1000, 1126], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
   // Quart nord-ouest : les traversees que le debat public imagine.
   'Pl. III':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
@@ -1107,7 +1107,7 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
 // ---------------------------------------------------------------------------
 // Rail de cartes : une lecture au doigt, a la molette ou au clavier.
 //
-// L'accrochage (scroll-snap) est natif : le rail s'arrete sur une carte, jamais
+// L'accrochage (scroll-snap) est natif : le rail s'arrete sur une carte, jamais
 // entre deux. La mise en avant de la carte centrale est pilotee par le
 // defilement du rail lui-meme — la ou le navigateur le sait faire, aucun
 // JavaScript n'intervient dans l'animation. Le composant ne garde en memoire
@@ -1223,7 +1223,7 @@ const AspirationGap = ({ lang }) => {
     <section className="bg-white my-7" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent-2)' }}>
       <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
         <span className="block text-[11px] font-bold uppercase mb-2" style={{ letterSpacing: '.18em', color: 'var(--accent-2)' }}>
-          {L("Ce que la plateforme ne mesurait pas : l'aspiration", 'What the platform was not measuring: aspiration')}
+          {L("Ce que la plateforme ne mesurait pas : l'aspiration", 'What the platform was not measuring: aspiration')}
         </span>
         <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
           {L("47 % des Africains ont envisagé de partir. Sept sur dix de ceux qui partent restent en Afrique.",
@@ -1233,14 +1233,14 @@ const AspirationGap = ({ lang }) => {
 
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
         <Prose className="text-justify" lang={lang}>{L(
-            "Cette plateforme s'appuie sur le cadre des « capabilités de mouvement » : la mobilité s'y comprend comme la rencontre entre une aspiration et une capacité effectivement exerçable. Jusqu'ici elle ne mesurait que le second terme — des stocks, des ratifications, des recensements. Afrobarometer, seule enquête menée à l'échelle continentale auprès des citoyens eux-mêmes, permet enfin de chiffrer le premier.",
+            "Cette plateforme s'appuie sur le cadre des « capabilités de mouvement » : la mobilité s'y comprend comme la rencontre entre une aspiration et une capacité effectivement exerçable. Jusqu'ici elle ne mesurait que le second terme — des stocks, des ratifications, des recensements. Afrobarometer, seule enquête menée à l'échelle continentale auprès des citoyens eux-mêmes, permet enfin de chiffrer le premier.",
             'This platform works from the "capabilities of movement" framework: mobility is understood as the meeting of an aspiration with a capability that can actually be exercised. Until now it measured only the second term — stocks, ratifications, censuses. Afrobarometer, the only continental survey of citizens themselves, finally makes the first one countable.'
           )}</Prose>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
           {[
             { v: '47 %', l: L("ont envisagé de partir", 'have considered leaving'), s: L('24 pays, enquête 2024', '24 countries, 2024 survey'), tone: 'figure-inkblue' },
-            { v: '27 %', l: L("y ont pensé « beaucoup »", 'have thought about it "a lot"'), s: L("l'intention, pas le rêve", 'intent, not daydream'), tone: 'figure-terra' },
+            { v: '27 %', l: L("y ont pensé « beaucoup »", 'have thought about it "a lot"'), s: L("l'intention, pas le rêve", 'intent, not daydream'), tone: 'figure-terra' },
             { v: '+9', l: L('points depuis 2016-2018', 'points since 2016-2018'), s: L('sur 22 pays comparables', 'across 22 comparable countries'), tone: 'figure-warn' },
           ].map((k, i) => (
             <div key={i} className="border border-slate-200 p-4 lift">
@@ -1277,7 +1277,7 @@ const AspirationGap = ({ lang }) => {
             {L("Ce que l'écart démontre", 'What the gap demonstrates')}
           </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
+              "Soixante pour cent de ceux qui envisagent de partir nomment l'Amérique du Nord ou l'Europe. Or, dans les faits, plus de sept migrants d'origine africaine sur dix restent sur le continent. Ce décalage est la définition même de la capabilité. L'aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c'est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l'aspiration sans mesurer la capacité produit le récit de l'invasion ; mesurer la capacité sans l'aspiration produit celui de l'immobilité. Il faut les deux (Ben Mokhtar, 2026).",
               'Sixty per cent of those considering leaving name North America or Europe. Yet in fact more than seven in ten migrants of African origin stay on the continent. That gap is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
             )}</Prose>
         </div>
@@ -1354,7 +1354,7 @@ const ProportionGap = ({ lang }) => {
 
       <div className="px-5 py-3 text-[11px] leading-relaxed text-slate-500" style={{ borderTop: '1px solid var(--rule)' }}>
         {L(
-          "Échelle commune de 0 à 20 %. Sources : UN DESA (2024) pour les stocks migratoires mondiaux et africains ; UA/OIT/OIM/CEA pour la part des migrants dans la population du continent. Les valeurs sont celles citées dans le texte ci-dessus.",
+          "Échelle commune de 0 à 20 %. Sources : UN DESA (2024) pour les stocks migratoires mondiaux et africains ; UA/OIT/OIM/CEA pour la part des migrants dans la population du continent. Les valeurs sont celles citées dans le texte ci-dessus.",
           'Common 0–20% scale. Sources: UN DESA (2024) for world and African migrant stocks; AU/ILO/IOM/ECA for the migrant share of the continent\'s population. The values are those cited in the text above.'
         )}
       </div>
@@ -1379,7 +1379,7 @@ const censusMark = (v) => {
   if (!s) return { raw: '', mark: '', year: null, counted: false, empty: true };
   const mark = (s.match(/\*+/) || [''])[0];
   const y = s.match(/(?:19|20)\d{2}/);
-  // *** ne porte pas sur l'independance : l'Etat existait, l'operation n'est pas datee ici.
+  // *** ne porte pas sur l'independance : l'Etat existait, l'operation n'est pas datee ici.
   const preIndep = mark === '*' || mark === '**';
   return {
     raw: s, mark, year: y ? Number(y[0]) : null,
@@ -1405,9 +1405,9 @@ const censusName = (iso2, fallback, lang) => {
 
 const markLegend = (mark, lang) => {
   const L = faireL(lang);
-  if (mark === '*') return L("Territoire non encore indépendant à cette date : opération indiquée, non comptabilisée.",
+  if (mark === '*') return L("Territoire non encore indépendant à cette date : opération indiquée, non comptabilisée.",
                              'Territory not yet independent at that date: shown, not counted.');
-  if (mark === '**') return L("Recensement conduit par un État tiers : opération indiquée, non comptabilisée.",
+  if (mark === '**') return L("Recensement conduit par un État tiers : opération indiquée, non comptabilisée.",
                               'Census conducted by a third state: shown, not counted.');
   if (mark === '***') return L("Opération de la période d'apartheid, non datée dans la compilation.",
                                'Operation from the apartheid period, undated in the compilation.');
@@ -1490,14 +1490,14 @@ const CensusRhythm = ({ lang }) => {
             {L('Calculé depuis la compilation de l\'auteur', "Computed from the author's compilation")}
           </span>
           <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-            {L("Ce que la moyenne de 11,1 ans cache : deux régimes de recensement, pas un",
+            {L("Ce que la moyenne de 11,1 ans cache : deux régimes de recensement, pas un",
                'What the 11.1-year average hides: two census regimes, not one')}
           </h3>
         </div>
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              `La compilation porte, pour chaque pays, la date de chaque recensement depuis le cycle 1970. On peut donc calculer ${data.total} intervalles réels au lieu de se contenter d'une moyenne. Et la distribution ne ressemble pas à la moyenne : elle superpose deux régimes que le chiffre unique fusionne.`,
+              `La compilation porte, pour chaque pays, la date de chaque recensement depuis le cycle 1970. On peut donc calculer ${data.total} intervalles réels au lieu de se contenter d'une moyenne. Et la distribution ne ressemble pas à la moyenne : elle superpose deux régimes que le chiffre unique fusionne.`,
               `The compilation carries, for each country, the date of every census since the 1970 round. That makes ${data.total} actual intervals computable instead of relying on an average. And the distribution does not look like the average: it superimposes two regimes that a single figure merges.`
             )}</Prose>
   
@@ -1564,11 +1564,11 @@ const CensusRhythm = ({ lang }) => {
               {L('Pourquoi la moyenne trompe ici', 'Why the average misleads here')}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                `L'intervalle médian est de ${data.median} ans, contre une moyenne de ${fmt(data.mean.toFixed(1))} : l'écart entre les deux mesure exactement la déformation produite par une poignée de très longues interruptions. ${data.metronomes.length} États ont conduit six recensements sans jamais dépasser douze ans d'écart — un rythme conforme à la recommandation onusienne, tenu sur un demi-siècle. À l'autre extrémité, ${data.jamais.length} n'ont aucune ou qu'une seule opération comptabilisable sur la période — dont la République démocratique du Congo, dont le seul recensement national date de 1984. Parler d'un « rythme africain » unique revient donc à moyenner un métronome et une horloge arrêtée : le résultat ne décrit ni l'un ni l'autre, et il masque là où l'appui statistique serait réellement utile (Ben Mokhtar, 2026).`,
+                `L'intervalle médian est de ${data.median} ans, contre une moyenne de ${fmt(data.mean.toFixed(1))} : l'écart entre les deux mesure exactement la déformation produite par une poignée de très longues interruptions. ${data.metronomes.length} États ont conduit six recensements sans jamais dépasser douze ans d'écart — un rythme conforme à la recommandation onusienne, tenu sur un demi-siècle. À l'autre extrémité, ${data.jamais.length} n'ont aucune ou qu'une seule opération comptabilisable sur la période — dont la République démocratique du Congo, dont le seul recensement national date de 1984. Parler d'un « rythme africain » unique revient donc à moyenner un métronome et une horloge arrêtée : le résultat ne décrit ni l'un ni l'autre, et il masque là où l'appui statistique serait réellement utile (Ben Mokhtar, 2026).`,
                 `The median interval is ${data.median} years against a mean of ${fmt(data.mean.toFixed(1))}: the gap between the two measures exactly the distortion produced by a handful of very long interruptions. ${data.metronomes.length} states have conducted six censuses without ever exceeding twelve years between them — a rhythm consistent with the UN recommendation, sustained over half a century. At the other end, ${data.jamais.length} have no countable operation at all, or only one, over the period — among them the Democratic Republic of the Congo, whose only national census dates from 1984. Speaking of a single "African rhythm" therefore means averaging a metronome and a stopped clock: the result describes neither, and it hides where statistical support would actually be useful (Ben Mokhtar, 2026).`
               )}</Prose>
             <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
-              <span className="font-bold uppercase tracking-widest">{L('Au rythme de métronome :', 'Metronomic:')}</span>{' '}
+              <span className="font-bold uppercase tracking-widest">{L('Au rythme de métronome :', 'Metronomic:')}</span>{' '}
               {data.metronomes.map(c => censusName(c.iso2, c.name, lang)).join(', ')}.
             </p>
           </div>
@@ -1576,7 +1576,7 @@ const CensusRhythm = ({ lang }) => {
   
         <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
           <Prose className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }} lang={lang}>{L(
-              `Calcul effectué sur la compilation de l'auteur (d'après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D'abord, une date annoncée n'est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s'ils avaient eu lieu, ont été retirés lors de l'audit d'août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n'est pas comptabilisée. Mesurer la régularité d'un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l'administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l'Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l'auteur et n'est pas recalculée ici. Les dénominateurs varient donc d'un pays à l'autre — c'est précisément ce que ce calcul rend visible.`,
+              `Calcul effectué sur la compilation de l'auteur (d'après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D'abord, une date annoncée n'est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s'ils avaient eu lieu, ont été retirés lors de l'audit d'août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n'est pas comptabilisée. Mesurer la régularité d'un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l'administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l'Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l'auteur et n'est pas recalculée ici. Les dénominateurs varient donc d'un pays à l'autre — c'est précisément ce que ce calcul rend visible.`,
               `Computed from the author's compilation (after UNSD / UN DESA), which records the date of every national operation from the 1970 to the 2030 round. Two rules remove an operation from the calculation. First, an announced date is not data: censuses scheduled and then postponed, long carried in the base as though they had happened, were removed in the August 2026 audit. Second, an operation conducted on a territory not yet independent, or by a third state, is flagged in that country's timeline but not counted. Measuring a state's regularity from a colonial enumeration would credit it with the rhythm of the power that administered it. Those ${data.exclus} pre-independence operations are therefore visible and uncounted — the timelines for Angola, Namibia and Mozambique carry them plainly. The coverage-by-round row above remains the author's published figure and is not recomputed here. Denominators therefore vary between countries — which is precisely what this calculation makes visible.`
             )}</Prose>
         </div>
@@ -1612,14 +1612,14 @@ const LateRound = ({ lang }) => {
             {L('Vérifié en août 2026', 'Verified August 2026')}
           </span>
           <h4 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-            {L("Le cycle 2020 n'a pas manqué en Afrique centrale : il a glissé",
+            {L("Le cycle 2020 n'a pas manqué en Afrique centrale : il a glissé",
                'The 2020 round did not fail in Central Africa: it slipped')}
           </h4>
         </div>
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, auprès des instituts nationaux, donne un résultat que la lecture par cycle rendait invisible. Six de ces opérations ont bien eu lieu. Mais ${rows.length} d'entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n'apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
+              `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, auprès des instituts nationaux, donne un résultat que la lecture par cycle rendait invisible. Six de ces opérations ont bien eu lieu. Mais ${rows.length} d'entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n'apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
               `Nine states still appeared on this platform as "census planned" or "under way", all for dates now past. Checking each against its national institute yields a result the round-by-round reading made invisible. Six of those operations did take place. But ${rows.length} of them were completed after the 2020 round closed on 31 December 2024. None therefore counts toward the round's coverage rate, even though the census exists, households were enumerated and results are being published.`
             )}</Prose>
   
@@ -1651,7 +1651,7 @@ const LateRound = ({ lang }) => {
               {L('Ce que le décompte par cycle ne peut pas dire', 'What a round-by-round count cannot say')}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal sert la comparaison internationale ; il ne mesure pas l'effort statistique national. Il pénalise même mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
+                "Ces quatre États sont voisins, et leur calendrier s'est resserré sur dix-huit mois : décembre 2025 pour la Centrafrique, avril-mai 2026 pour le Cameroun, mai 2026 pour le Gabon, juin-août 2026 pour le Tchad. Trois de ces opérations sont les premières entièrement numériques de leur pays, deux sont couplées à un recensement agricole. Lues à travers le seul cycle 2020, elles comptent pour zéro et alimentent le récit du déficit. Lues pour ce qu'elles sont, elles ouvrent la série 2030. Elles sortent aussi l'Afrique centrale d'une interruption qui durait, selon les pays, de treize à vingt-deux ans. Le découpage décennal sert la comparaison internationale ; il ne mesure pas l'effort statistique national. Il pénalise même mécaniquement les États dont l'opération a été retardée par un conflit ou par un financement tardif (Ben Mokhtar, 2026).",
                 "These four states are neighbours, and their calendars converged within eighteen months: December 2025 for the Central African Republic, April–May 2026 for Cameroon, May 2026 for Gabon, June–August 2026 for Chad. Three of these operations are their country's first fully digital census, two are coupled with an agricultural census. Read through the 2020 round alone, they count for zero and feed the deficit narrative. Read for what they are, they open the 2030 series. They also lift Central Africa out of an interruption lasting, depending on the country, thirteen to twenty-two years. The decennial cut is an instrument of international comparison, not a measure of national statistical effort — and it mechanically penalises states whose operation was delayed by conflict or by late financing (Ben Mokhtar, 2026)."
               )}</Prose>
           </div>
@@ -1659,7 +1659,7 @@ const LateRound = ({ lang }) => {
   
         <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
           <Prose className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }} lang={lang}>{L(
-              "Sources : ICASEES (Centrafrique, RGPH-4), BUCREP (Cameroun, RGPH-4), ministère de la Planification et de la Prospective (Gabon, RGPL), INSEED (Tchad, RGPH-3), GBoS (Gambie), INE São Tomé-et-Principe, INStaD (Bénin), Statistics Sierra Leone, SNBS et UNFPA (Somalie). Chaque date figure dans la fiche du pays concerné, dans l'Explorateur. Les deux opérations achevées dans la fenêtre du cycle — Gambie et São Tomé-et-Principe — ont été reversées au cycle 2020.",
+              "Sources : ICASEES (Centrafrique, RGPH-4), BUCREP (Cameroun, RGPH-4), ministère de la Planification et de la Prospective (Gabon, RGPL), INSEED (Tchad, RGPH-3), GBoS (Gambie), INE São Tomé-et-Principe, INStaD (Bénin), Statistics Sierra Leone, SNBS et UNFPA (Somalie). Chaque date figure dans la fiche du pays concerné, dans l'Explorateur. Les deux opérations achevées dans la fenêtre du cycle — Gambie et São Tomé-et-Principe — ont été reversées au cycle 2020.",
               "Sources: ICASEES (CAR, 4th census), BUCREP (Cameroon, 4th census), Ministry of Planning and Foresight (Gabon, RGPL), INSEED (Chad, 3rd census), GBoS (The Gambia), INE São Tomé and Príncipe, INStaD (Benin), Statistics Sierra Leone, SNBS and UNFPA (Somalia). Each date appears in the relevant country profile, in the Explorer. The two operations completed within the round's window — The Gambia and São Tomé and Príncipe — were moved into the 2020 round."
             )}</Prose>
         </div>
@@ -1700,7 +1700,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
        là que la couleur de section doit se voir. */
     className="page-bandeau relative overflow-hidden rounded-xl mb-8 px-6 lg:px-12 py-14 md:py-16"
   >
-    {/* Le trait d'ouverture de la section : il se trace a l'arrivee. */}
+    {/* Le trait d'ouverture de la section : il se trace a l'arrivee. */}
     <div className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
       {/* Le dégradé vient de la section, plus d'un indigo écrit en dur ici :
           c'est ce qui fait que le filet d'ouverture change de teinte d'une
@@ -1795,7 +1795,7 @@ const BarreSection = ({ lang, children = null }) => (
 );
 
 const PRINT_CITATION = {
-  fr: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Thèse doctorale). Université Internationale de Rabat (UIR).",
+  fr: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire : Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Thèse doctorale). Université Internationale de Rabat (UIR).",
   en: "Ben Mokhtar, Y. (2026). Dynamiques multiniveaux du régime africain de gouvernance migratoire: Principes, normes, règles et procédures à l'épreuve de l'entre-deux national (Doctoral thesis). International University of Rabat (UIR)."
 };
 
@@ -1991,7 +1991,7 @@ const PrintCitationFooter = ({ lang, sectionLabel, tab = null, detail = null }) 
       </div>
       <p className="text-[10px] text-slate-600">{siteUrl}</p>
       <p className="text-[10px] text-slate-600 mt-1.5 leading-relaxed">
-        {tr({ fr: 'Citation suggérée : ', en: 'Suggested citation: ' }, lang)}
+        {tr({ fr: 'Citation suggérée : ', en: 'Suggested citation: ' }, lang)}
         <span className="italic">{tr(PRINT_CITATION, lang)}</span>
       </p>
       <p className="text-[9px] text-slate-400 mt-1.5">
@@ -2009,7 +2009,7 @@ const institutionLogos = [
   { key: 'worldbank', name: "World Bank", src: "/logos/worldbank.svg" },
   { key: 'au', name: "African Union", src: "/logos/au.png" },
   { key: 'unhcr', name: "UNHCR", src: "/logos/unhcr.svg" },
-  { key: 'ilo', name: "OIT", full: "OIT / ILO — NORMLEX", src: null },   // embleme officiel a recuperer aupres de l'OIT : le fichier Commons portant ce sigle est celui d'un motoriste allemand
+  { key: 'ilo', name: "OIT", full: "OIT / ILO — NORMLEX", src: null },   // embleme officiel a recuperer aupres de l'OIT : le fichier Commons portant ce sigle est celui d'un motoriste allemand
   { key: 'iom', name: "IOM", src: "/logos/iom.png" },
   { key: 'afdb', name: "AfDB", src: "/logos/afdb.svg" },
   { key: 'oecd', name: "OECD", src: "/logos/oecd.svg" },
@@ -2097,7 +2097,7 @@ const t = {
         af_central: "Afrique Centrale"
       },
       metrics: { stock: "Stock Total (2024)", female: "Parité (Femmes % 2024)", evolution: "Part Pop. Nationale (2024)" },
-      comparative_view_title: "Analyse comparative : transition démographique & résilience Sud-Sud",
+      comparative_view_title: "Analyse comparative : transition démographique & résilience Sud-Sud",
       comparative_view_desc: "Selon le 3e Rapport sur les statistiques migratoires de l'UA (2021) et UNDESA (2024), la dynamique démographique africaine alimente à 70% les marchés du travail régionaux internes. La part des migrants internationaux reste structurellement stable (~1,9% de la population continentale) depuis 1990.",
       modal: {
         close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie & Flux", econ: "Économie & Droits" },
@@ -2105,8 +2105,8 @@ const t = {
         evo_title: "La constante proportionnelle (1990-2024)", parity: "Féminisation des flux (UNDESA 2024)", retention_title: "Rétention Régionale Sud-Sud (UA 2021)",
         orig_dest_title: "Dynamiques de Transition & Proximité", econ_title: "Indépendance économique & transferts",
         causal_chain: "Chaîne de causes systémiques", trigger: "Déclencheur", response: "Réponse Migratoire", impact: "Impact Socio-économique",
-        data_source: "Sources : UNDESA (2024) / Rapport UA-OIT-OIM-CEA (2021) / IDMC (2025) / UNHCR (2025) / OIT NORMLEX (2025)", export_csv: "Exporter (CSV)", export_pdf: "Rapport (PDF)",
-        raw_data_title: "Fiche de données brutes", infographic_title: "Infographie : Répartition des Flux",
+        data_source: "Sources : UNDESA (2024) / Rapport UA-OIT-OIM-CEA (2021) / IDMC (2025) / UNHCR (2025) / OIT NORMLEX (2025)", export_csv: "Exporter (CSV)", export_pdf: "Rapport (PDF)",
+        raw_data_title: "Fiche de données brutes", infographic_title: "Infographie : Répartition des Flux",
         idp_title: "Protection & déplacements forcés (IDMC/UNHCR 2025)", idp_desc: "L'essentiel de la mobilité contrainte africaine est absorbé à l'intérieur des frontières nationales ou dans les pays limitrophes.",
         idp_conflict: "Déplacés internes, conflits (IDMC 2025)", idp_disaster: "Déplacés internes, climat (IDMC 2025)",
         hcr_hosted: "Réfugiés internationaux accueillis (UNHCR 2025)",
@@ -2126,7 +2126,7 @@ const t = {
           badge: "Corridors intra-africains",
           title: "Les routes que personne ne cartographie",
           highlight: "et qui portent l'essentiel.",
-          desc: "Vingt-cinq millions d'Africains vivent dans un autre pays africain. Les corridors qui les portent sont les plus fréquentés du continent, et les moins documentés : on les déduit de tableaux de stocks, faute d'un instrument qui les suive.",
+          desc: "Vingt-cinq millions d'Africains vivent dans un autre pays africain. Les corridors qui les portent sont les plus fréquentés du continent, et les moins documentés : on les déduit de tableaux de stocks, faute d'un instrument qui les suive.",
           plain: "Un corridor, c'est un couple de pays entre lesquels beaucoup de gens circulent. Les plus gros d'Afrique relient des pays voisins, et non l'Afrique à l'Europe."
         },
         evidence: {
@@ -2140,7 +2140,7 @@ const t = {
           badge: "Production statistique africaine",
           title: "Données & statistiques",
           highlight: "où se situe réellement le déficit.",
-          desc: "Le récit d'une Afrique « sans données » est l'un des plus solidement installés — et l'un des moins vérifiés. Cette section confronte ce récit au volume réel de la production statistique du continent.",
+          desc: "Le récit d'une Afrique « sans données » est l'un des plus solidement installés — et l'un des moins vérifiés. Cette section confronte ce récit au volume réel de la production statistique du continent.",
           plain: "On répète souvent que l'Afrique manque de données. Cette section compte ce que le continent produit réellement, et regarde où le déficit se situe."
         },
         home: {
@@ -2155,7 +2155,7 @@ const t = {
           title: "Architecture panafricaine",
           highlight: "et cadres internationaux.",
           desc: "Explorez l'ancrage multiniveaux de la gouvernance des mobilités, de l'Union africaine et ses blocs régionalisés (CER) jusqu'aux pactes et objectifs mondiaux.",
-          plain: "Qui fixe les règles de circulation en Afrique — l'Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s'appliquent réellement."
+          plain: "Qui fixe les règles de circulation en Afrique — l'Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s'appliquent réellement."
         },
         library: {
           badge: "Centre Documentaire",
@@ -2175,21 +2175,21 @@ const t = {
           badge: "Déplacement forcé & protection",
           title: "La mobilité qui ne franchit aucune frontière",
           highlight: "et que personne ne compte comme migration.",
-          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux, là où l'écart entre la norme et l'ancrage se paie le plus cher.",
+          desc: "Déplacés internes, réfugiés, apatrides, déplacement lié aux catastrophes : les formes contraintes de mobilité sont, en Afrique, massivement internes. Elles relèvent d'instruments africains antérieurs et plus larges que les cadres mondiaux, là où l'écart entre la norme et l'ancrage se paie le plus cher.",
           plain: "En Afrique, la plupart des personnes qui fuient la guerre ou une catastrophe restent dans leur propre pays. Elles n'apparaissent donc dans aucune statistique migratoire. Cette section les compte."
         },
         glossary: {
           badge: "Lexique & Définitions",
           title: "Les mots du régime",
           highlight: "et leur définition africaine.",
-          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence : Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009). La définition opératoire d'UN DESA n'intervient que pour les agrégats statistiques. Le choix du mot n'est jamais neutre : il détermine ce qui est compté.",
+          desc: "Chaque notion est définie d'abord par l'instrument africain qui fait référence : Convention de l'OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009). La définition opératoire d'UN DESA n'intervient que pour les agrégats statistiques. Le choix du mot n'est jamais neutre : il détermine ce qui est compté.",
           plain: "Le sens exact des mots employés ici. Chaque définition part du texte africain qui fait référence, parce que la façon de nommer décide de ce qui sera compté."
         },
         about: {
           badge: "À propos de la plateforme",
           title: "Une initiative citoyenne",
           highlight: "adossée à une recherche doctorale.",
-          desc: "L'origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être.",
+          desc: "L'origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être.",
           plain: "Qui produit cette plateforme, pourquoi, et avec quels moyens. Elle est adossée à une thèse de doctorat et reste indépendante de toute institution."
         },
         methodology: {
@@ -2202,15 +2202,15 @@ const t = {
       },
       home_editorial: {
         badge: "Note de cadrage scientifique",
-        title: "Pourquoi ce Knowledge Hub ?",
-        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C'est loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L'attention s'y concentre de manière disproportionnée sur les traversées vers l'Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent se joue à l'intérieur des frontières nationales. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l'intérieur d'un pays. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
-        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Un cadre théorique plus large éclaire ce constat. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d'en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
+        title: "Pourquoi ce Knowledge Hub ?",
+        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s'élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l'Afrique n'accueille qu'environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C'est loin derrière l'Europe et l'Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s'agit ici du stock de migrants présents en Afrique, non de l'émigration africaine : plus de sept migrants d'origine africaine sur dix restent d'ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
+        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L'attention s'y concentre de manière disproportionnée sur les traversées vers l'Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l'essentiel de la mobilité forcée sur le continent se joue à l'intérieur des frontières nationales. L'Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C'est davantage que tous les migrants internationaux présents sur l'ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l'intérieur d'un pays. Elle ne produit ni image de traversée, ni statistique d'entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
+        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d'un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s'impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d'UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c'est l'instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l'OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
+        p2: "Un cadre théorique plus large éclaire ce constat. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s'écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d'en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l'asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d'en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l'anecdote. Elle place l'architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l'appui. L'Afrique a parfois devancé la norme internationale. Avec la Convention de Kampala (2009), elle a adopté le premier traité régional contraignant au monde sur les personnes déplacées internes — à ce jour, toujours le seul. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l'ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C'est donc l'ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
-        pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
-        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être. Elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l'on met en avant, et l'échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l'assume plutôt que de se présenter comme un simple reflet des données.",
+        pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s'ouvre un « entre-deux national » : l'espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
+        p4: "Cette exigence scientifique n'exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l'architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l'échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être. Elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l'on met en avant, et l'échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l'assume plutôt que de se présenter comme un simple reflet des données.",
         refs_title: "Pour aller plus loin",
         refs: [
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
@@ -2224,11 +2224,11 @@ const t = {
         ]
       },
       global_stats: {
-        world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
-        note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (28,5 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
+        world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
+        note: "Données UNDESA (2024) : L'Afrique ne représente que 9,5% du stock migratoire mondial (28,5 M), loin derrière l'Europe (94 M) et l'Asie (92 M)."
       },
       sdg_section: {
-        title: "Ancrage International : ODD (2030), GCM (2018) & GCR (2018)",
+        title: "Ancrage International : ODD (2030), GCM (2018) & GCR (2018)",
         subtitle: "L'Agenda 2030 de l'ONU, le Pacte de Marrakech pour les migrations (GCM) et le Pacte sur les Réfugiés (GCR).",
         tab_sdg: "Objectifs de développement durable (ODD)",
         tab_gcm: "Pacte mondial pour les migrations (GCM)",
@@ -2280,15 +2280,15 @@ const t = {
       indicator_desc: "Douze indicateurs proposés pour objectiver la gouvernance des mobilités et orienter la collecte de données ouvertes sur le terrain.",
       download_indicators: "Télécharger la matrice (CSV)",
       debunk_cards: [
-        { myth: "L'explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9% depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
-        { myth: "L'Afrique migre massivement vers l'Europe.", real: "Les migrations intra-africaines dominent à 70%.", stat_text: "70% (2021)", stat_val: 70, color: "bg-teal-700", desc: "Rapport UA/OIT (2021) : 70% des mobilités internationales africaines s'effectuent au sein du continent même (ex: Côte d'Ivoire, Afrique du Sud, Nigéria)." },
-        { myth: "Le Nord accueille l'écrasante majorité des réfugiés.", real: "76% des réfugiés restent dans les pays du Sud.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
-        { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45% à 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l'économie autonome du soin et du commerce transfrontalier." },
-        { myth: "L'Afrique dépend financièrement de l'Aide Publique.", real: "86,4 milliards $ d'envois de fonds dépassent l'APD.", stat_text: "86.4 Mrd $ (2019)", stat_val: 85, color: "bg-amber-600", desc: "Banque mondiale / UA (2021) : Les transferts de la diaspora (86,4 Mrd $ en 2019) dépassent largement l'aide publique au développement (APD) et constituent le premier capital de résilience." },
-        { myth: "Le changement climatique va vider l'Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90% des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
+        { myth: "L'explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9% depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
+        { myth: "L'Afrique migre massivement vers l'Europe.", real: "Les migrations intra-africaines dominent à 70%.", stat_text: "70% (2021)", stat_val: 70, color: "bg-teal-700", desc: "Rapport UA/OIT (2021) : 70% des mobilités internationales africaines s'effectuent au sein du continent même (ex: Côte d'Ivoire, Afrique du Sud, Nigéria)." },
+        { myth: "Le Nord accueille l'écrasante majorité des réfugiés.", real: "76% des réfugiés restent dans les pays du Sud.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
+        { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45% à 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l'économie autonome du soin et du commerce transfrontalier." },
+        { myth: "L'Afrique dépend financièrement de l'Aide Publique.", real: "86,4 milliards $ d'envois de fonds dépassent l'APD.", stat_text: "86.4 Mrd $ (2019)", stat_val: 85, color: "bg-amber-600", desc: "Banque mondiale / UA (2021) : Les transferts de la diaspora (86,4 Mrd $ en 2019) dépassent largement l'aide publique au développement (APD) et constituent le premier capital de résilience." },
+        { myth: "Le changement climatique va vider l'Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90% des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
         { myth: "Les pays d'Afrique côtière ne sont que de simples zones de transit.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation (2024)", stat_val: 65, color: "bg-indigo-700", desc: "Les données d'installation démontrent que les pays autrefois qualifiés de 'transit' deviennent des pôles d'ancrage économique durable pour la main-d'œuvre régionale." },
-        { myth: "Le développement économique stoppe mécaniquement les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur (2024)", stat_val: 80, color: "bg-rose-700", desc: "Démontré empiriquement : l'augmentation initiale des revenus fournit aux ménages le capital financier nécessaire pour financer un projet migratoire régulier." },
-        { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l'emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d'emploi, 27,5 % des migrants occupés travaillent dans l'agriculture, la sylviculture ou la pêche. Ils y comblent des pénuries de main-d'œuvre et dynamisent les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
+        { myth: "Le développement économique stoppe mécaniquement les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur (2024)", stat_val: 80, color: "bg-rose-700", desc: "Démontré empiriquement : l'augmentation initiale des revenus fournit aux ménages le capital financier nécessaire pour financer un projet migratoire régulier." },
+        { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l'emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d'emploi, 27,5 % des migrants occupés travaillent dans l'agriculture, la sylviculture ou la pêche. Ils y comblent des pénuries de main-d'œuvre et dynamisent les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
       ],
       about: {
         intro_title: "À propos de South(s) Mobility",
@@ -2301,10 +2301,10 @@ const t = {
         research_p1: "Un projet de recherche doctorale sur la gouvernance des migrations africaines est à l'origine de ce travail.",
         research_p2: "Au cours de cette recherche, un constat s'est imposé. Une grande quantité de données de qualité est déjà produite par des institutions publiques et internationales, mais ces ressources restent dispersées, hétérogènes et parfois difficiles d'accès. Les croiser, les contextualiser ou simplement les retrouver représente souvent un travail considérable.",
         research_p3: "Le projet est né de cette observation. Le projet rassemble ces ressources dans un environnement unique, ouvert et évolutif. Chercheurs, étudiants, journalistes, décideurs publics, organisations internationales — et quiconque s'intéresse aux mobilités humaines — peuvent ainsi les consulter, les comparer et les réutiliser.",
-        research_p4: "Il relève de la science ouverte : diffuser les connaissances et rendre la recherche utilisable.",
+        research_p4: "Il relève de la science ouverte : diffuser les connaissances et rendre la recherche utilisable.",
 
         data_title: "Sur quelles données elle s'appuie",
-        data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
+        data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
         data_list: [
           { name: "Commission de l'Union africaine (CUA)", url: "https://au.int/fr", logo: "au" },
           { name: "Nations Unies — UN DESA", url: "https://www.un.org/development/desa/pd/content/international-migrant-stock", logo: "un" },
@@ -2325,10 +2325,10 @@ const t = {
           { name: "Instituts nationaux de statistique", url: null, logo: null }
         ],
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
-        data_p3: "Aucune statistique officielle n'est produite ici : la plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
+        data_p3: "Aucune statistique officielle n'est produite ici : la plateforme agit comme une infrastructure de consolidation, de contextualisation et de diffusion des connaissances.",
 
         south_title: "Ce que les bases internationales voient mal",
-        south_p1: "Les grandes bases internationales couvrent inégalement le continent : ce qui relie l'Afrique au reste du monde y est mieux suivi que ce qui la relie à elle-même. La plateforme documente en priorité ce second versant :",
+        south_p1: "Les grandes bases internationales couvrent inégalement le continent : ce qui relie l'Afrique au reste du monde y est mieux suivi que ce qui la relie à elle-même. La plateforme documente en priorité ce second versant :",
         south_list: [
           "Les migrations intra-africaines",
           "Les mobilités Sud-Sud",
@@ -2370,21 +2370,21 @@ const t = {
 
         collab_title: "Contribuer, signaler, écrire",
         collab_p1: "Les collaborations académiques, institutionnelles et techniques sont bienvenues, qu'il s'agisse de jeux de données, de publications, de visualisations, de corrections, de projets communs ou de partenariats.",
-        contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
+        contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
         disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
         
-        citation_title: "Pour citer ce projet :",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://souths-mobility.vercel.app/"
+        citation_title: "Pour citer ce projet :",
+        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://souths-mobility.vercel.app/"
       },
       method: { 
-        summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
-        m1: "Traçabilité de la source. Chaque indicateur est rattaché à une institution productrice nommée (UN DESA, HCR, IDMC, OIT, Banque mondiale, BAD, CUA, OIM) et à une série publiquement consultable. Les {libraryCount} références mobilisées sont listées dans la Bibliothèque ; aucune valeur n'est retenue sans provenance identifiable.",
-        m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
-        m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d'observation. Aucune interpolation n'est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d'une réserve plutôt que lissé.",
+        summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
+        m1: "Traçabilité de la source. Chaque indicateur est rattaché à une institution productrice nommée (UN DESA, HCR, IDMC, OIT, Banque mondiale, BAD, CUA, OIM) et à une série publiquement consultable. Les {libraryCount} références mobilisées sont listées dans la Bibliothèque ; aucune valeur n'est retenue sans provenance identifiable.",
+        m2: "Harmonisation du périmètre. Les séries sont ramenées à 54 pays et au découpage régional de l'Union africaine — et non à la nomenclature M49 des Nations unies. Une table d'alias réconcilie les variantes de dénomination entre jeux de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde ») sans renommer les sources.",
+        m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d'observation. Aucune interpolation n'est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d'une réserve plutôt que lissé.",
         m4: "Proportion plutôt que valeur absolue. Les effectifs sont systématiquement rapportés à la population de référence. Les échelles ne sont jamais mélangées dans une même représentation (l'indice AVOI est stocké de 0 à 100 au niveau des pays, de 0 à 1 au niveau des CER). Les cartes choroplèthes utilisent un découpage par quantiles, robuste aux distributions très asymétriques comme celle des déplacés internes.",
-        m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur est stocké instrument par instrument : 15 États parties pour cette catégorie de protocoles. Il pilote directement l'affichage du statut, « en vigueur » ou « pas encore en vigueur ».",
+        m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d'entrée en vigueur est stocké instrument par instrument : 15 États parties pour cette catégorie de protocoles. Il pilote directement l'affichage du statut, « en vigueur » ou « pas encore en vigueur ».",
         m6: "Restitution reproductible. Les huit jeux de données affichés sont exportables en CSV conforme au format RFC 4180, et chaque dossier PDF embarque sa source, l'adresse de la plateforme et la référence de citation. Les fonds cartographiques dérivent de Natural Earth (50 m), en projection Mercator, simplifiés par l'algorithme de Douglas-Peucker.",
-        sources_title: "Accès aux jeux de données, rapports & cadres juridiques :",
+        sources_title: "Accès aux jeux de données, rapports & cadres juridiques :",
         s1: "Union africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires (2021)",
         s2: "UNDESA - Stock migratoire mondial (2024)",
         s3: "UNHCR - Global Trends Report (2025)",
@@ -2395,7 +2395,7 @@ const t = {
         s8: "Banque mondiale - Base de données des transferts de fonds (2024)"
       },
       myth: "Postulat", reality: "Donnée Factuelle",
-      footer: { tag: "L'ingénierie des données au service d'un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
+      footer: { tag: "L'ingénierie des données au service d'un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
       analysis_title: "Tableau de bord détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
@@ -2709,7 +2709,7 @@ const t = {
         s8: "World Bank - Migration and Remittances Data (2024)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Data engineering serving a new factual narrative on mobilities.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
+      footer: { tag: "Data engineering serving a new factual narrative on mobilities.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report"
     }
 };
@@ -2753,7 +2753,7 @@ const aggregates = {
 
 // Affiliation aux communautés économiques régionales (CER), pays par pays.
 // Sources : sites officiels de chaque CER (ECOWAS, ECCAS, EAC, IGAD, COMESA, SADC, CEN-SAD, UMA), consultés août 2026.
-// Ne reflète pas l'AES (Alliance des États du Sahel) : alliance politico-militaire hors des 8 CER reconnues par l'UA.
+// Ne reflète pas l'AES (Alliance des États du Sahel) : alliance politico-militaire hors des 8 CER reconnues par l'UA.
 const recNames = {
   cedeao: { fr: 'CEDEAO', en: 'ECOWAS' },
   cae: { fr: 'CAE', en: 'EAC' },
@@ -2812,9 +2812,9 @@ const visaOpenToAllAfrica = {
   bj: { tier: 'full', since: 2017, note: { fr: "Exemption de visa pour tous les ressortissants africains depuis 2017.", en: "Visa-free entry for all African nationals since 2017." } },
   gm: { tier: 'full', since: 2019, note: { fr: "Exemption de visa pour tous les ressortissants africains depuis 2019.", en: "Visa-free entry for all African nationals since 2019." } },
   rw: { tier: 'full', since: 2023, note: { fr: "Exemption de visa pour tous les ressortissants africains, annoncée en novembre 2023.", en: "Visa-free entry for all African nationals, announced November 2023." } },
-  sc: { tier: 'full', since: null, note: { fr: "Pionnier continental : aucune obligation de visa préalable, pour toutes les nationalités.", en: "Continental pioneer: no prior visa requirement, for all nationalities." } },
-  ke: { tier: 'partial', since: 2025, note: { fr: "Exemption d'autorisation électronique (eTA) étendue à tous les États africains sauf la Somalie et la Libye (Conseil des ministres, janvier 2025 ; mise en œuvre 2025). Séjour de 2 mois ; 6 mois pour les ressortissants de la CAE.", en: "Electronic travel authorisation (eTA) exemption extended to all African states except Somalia and Libya (Cabinet, January 2025; implemented 2025). Two-month stay; six months for EAC nationals." } },
-  gh: { tier: 'announced', since: 2026, note: { fr: "Visa gratuit — et non supprimé — pour tous les passeports africains à compter du 25 mai 2026 : la demande en ligne reste requise, seuls les frais sont levés.", en: "Free visa — not abolished — for all African passports from 25 May 2026: an online application is still required, only the fee is waived." } },
+  sc: { tier: 'full', since: null, note: { fr: "Pionnier continental : aucune obligation de visa préalable, pour toutes les nationalités.", en: "Continental pioneer: no prior visa requirement, for all nationalities." } },
+  ke: { tier: 'partial', since: 2025, note: { fr: "Exemption d'autorisation électronique (eTA) étendue à tous les États africains sauf la Somalie et la Libye (Conseil des ministres, janvier 2025 ; mise en œuvre 2025). Séjour de 2 mois ; 6 mois pour les ressortissants de la CAE.", en: "Electronic travel authorisation (eTA) exemption extended to all African states except Somalia and Libya (Cabinet, January 2025; implemented 2025). Two-month stay; six months for EAC nationals." } },
+  gh: { tier: 'announced', since: 2026, note: { fr: "Visa gratuit — et non supprimé — pour tous les passeports africains à compter du 25 mai 2026 : la demande en ligne reste requise, seuls les frais sont levés.", en: "Free visa — not abolished — for all African passports from 25 May 2026: an online application is still required, only the fee is waived." } },
   cg: { tier: 'announced', since: 2027, note: { fr: "Exemption de visa pour tous les ressortissants africains annoncée à compter de 2027 (non encore en vigueur).", en: "Visa-free entry for all African nationals announced from 2027 (not yet in force)." } },
 };
 
@@ -2838,7 +2838,7 @@ const visaOpenTiers = {
 
 // Carte d'appartenance : identifiant numérique (M49) -> { iso2, nom } pour les 54 pays.
 // ----------------------------------------------------------------------------
-// Carte choroplèthe de l'Explorateur : la carte devient la porte d'entrée, l'utilisateur
+// Carte choroplèthe de l'Explorateur : la carte devient la porte d'entrée, l'utilisateur
 // choisit l'indicateur affiché. Rampe séquentielle mono-teinte (magnitude), gris = sans donnée.
 // ----------------------------------------------------------------------------
 const countryById = {};
@@ -3215,7 +3215,7 @@ const construireIndex = (lang) => {
   // on tape volontiers « Tchad » en lisant l'anglais, ou l'inverse.
   const D = (o) => (typeof o === 'string' ? o : `${o?.fr || ''} ${o?.en || ''}`);
 
-  // La region n'est pas un champ du pays : c'est la cle qui les regroupe.
+  // La region n'est pas un champ du pays : c'est la cle qui les regroupe.
   const REGIONS = {
     af_med:     { fr: 'Afrique méditerranéenne', en: 'Mediterranean Africa' },
     af_west:    { fr: "Afrique de l'Ouest",      en: 'West Africa' },
@@ -3386,32 +3386,32 @@ const RechercheGlobale = ({ lang, aller }) => {
 const COUCHES_ATLAS = [
   // Sans `mene` : la carte, le panneau et la vue d'ensemble repondent ici meme.
   { cle: 'accueil', ind: () => mapIndicators.find(i => i.key === 'evolution'),
-    question: { fr: 'Qui accueille le plus ?', en: 'Who hosts the most?', ar: 'مَن يستقبل الأكثر؟' } },
+    question: { fr: 'Qui accueille le plus ?', en: 'Who hosts the most?', ar: 'مَن يستقبل الأكثر؟' } },
   { cle: 'reste', ind: () => mapIndicators.find(i => i.key === 'retention'), mene: 'mobilites', volet: 'travail',
-    question: { fr: "Qui part sans quitter l'Afrique ?", en: 'Who leaves without leaving Africa?', ar: 'مَن يهاجر دون مغادرة أفريقيا؟' } },
+    question: { fr: "Qui part sans quitter l'Afrique ?", en: 'Who leaves without leaving Africa?', ar: 'مَن يهاجر دون مغادرة أفريقيا؟' } },
   { cle: 'ouvre', ind: () => mapIndicators.find(i => i.key === 'avoi'), mene: 'governance', sousOnglet: 'recs',
-    question: { fr: 'Qui ouvre ses frontières aux Africains ?', en: 'Who opens its borders to Africans?', ar: 'مَن يفتح حدوده أمام الأفارقة؟' } },
+    question: { fr: 'Qui ouvre ses frontières aux Africains ?', en: 'Who opens its borders to Africans?', ar: 'مَن يفتح حدوده أمام الأفارقة؟' } },
   { cle: 'deplace', ind: () => mapIndicators.find(i => i.key === 'idp_conflict'), mene: 'mobilites', volet: 'contraintes',
-    question: { fr: 'Qui fuit sans franchir de frontière ?', en: 'Who flees without crossing a border?', ar: 'مَن يفرّ دون عبور حدود؟' } },
+    question: { fr: 'Qui fuit sans franchir de frontière ?', en: 'Who flees without crossing a border?', ar: 'مَن يفرّ دون عبور حدود؟' } },
   // La mobilite climatique, deja mesuree : elle manquait a la carte alors que
   // la base la porte pays par pays.
   { cle: 'climat', ind: () => mapIndicators.find(i => i.key === 'idp_disaster'), mene: 'mobilites', volet: 'contraintes',
-    question: { fr: 'Qui est chassé par le climat ?', en: 'Who is driven out by the climate?', ar: 'مَن يطرده المناخ؟' } },
+    question: { fr: 'Qui est chassé par le climat ?', en: 'Who is driven out by the climate?', ar: 'مَن يطرده المناخ؟' } },
   // Qui porte la charge de la protection : la reponse dement le recit du
   // fardeau europeen mieux qu'un paragraphe.
   { cle: 'refugies', ind: () => mapIndicators.find(i => i.key === 'refugees_hosted'), mene: 'mobilites', volet: 'contraintes',
-    question: { fr: 'Qui héberge les réfugiés ?', en: 'Who hosts the refugees?', ar: 'مَن يؤوي اللاجئين؟' } },
+    question: { fr: 'Qui héberge les réfugiés ?', en: 'Who hosts the refugees?', ar: 'مَن يؤوي اللاجئين؟' } },
   { cle: 'argent', ind: () => mapIndicators.find(i => i.key === 'remittances'), mene: 'mobilites', volet: 'travail',
-    question: { fr: "Où l'argent des diasporas revient-il ?", en: 'Where does diaspora money return?', ar: 'إلى أين تعود أموال المهجر؟' } },
+    question: { fr: "Où l'argent des diasporas revient-il ?", en: 'Where does diaspora money return?', ar: 'إلى أين تعود أموال المهجر؟' } },
   { cle: 'femmes', ind: () => mapIndicators.find(i => i.key === 'female'), mene: 'mobilites', volet: 'travail',
-    question: { fr: 'Où les femmes migrent-elles autant que les hommes ?', en: 'Where do women migrate as much as men?', ar: 'أين تهاجر النساء بقدر الرجال؟' } },
+    question: { fr: 'Où les femmes migrent-elles autant que les hommes ?', en: 'Where do women migrate as much as men?', ar: 'أين تهاجر النساء بقدر الرجال؟' } },
   { cle: 'ratifie', ind: () => CARTE_ANCRAGE, mene: 'governance', sousOnglet: 'au',
-    question: { fr: "Qui s'est vraiment engagé ?", en: 'Who has actually committed?', ar: 'مَن التزم فعلاً؟' },
-    plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
+    question: { fr: "Qui s'est vraiment engagé ?", en: 'Who has actually committed?', ar: 'مَن التزم فعلاً؟' },
+    plain: { fr: "Combien des six grands textes de l'Union africaine chaque pays a officiellement ratifiés. Six, c'est l'engagement complet ; zéro, aucun.",
              en: 'How many of the African Union’s six major instruments each country has formally ratified. Six is full commitment; zero is none.' },
     hint: { fr: "Décompte établi sur les listes officielles de statut de l'Union africaine.", en: 'Counted from the African Union’s official status lists.' } },
   { cle: 'compte', ind: () => CARTE_RECENSEMENT, mene: 'data',
-    question: { fr: 'Qui compte sa population ?', en: 'Who counts its people?', ar: 'مَن يُحصي سكانه؟' },
+    question: { fr: 'Qui compte sa population ?', en: 'Who counts its people?', ar: 'مَن يُحصي سكانه؟' },
     plain: { fr: "Où en est chaque pays de son recensement. Une date annoncée puis reportée ne compte pas comme un recensement réalisé.",
              en: 'Where each country stands on its census. A date announced then postponed does not count as a census held.' },
     hint: { fr: 'Compilation de l’auteur d’après UNSD et UN DESA, statuts vérifiés en 2026 sur les instituts nationaux.', en: 'Compiled by the author from UNSD and UN DESA, statuses verified in 2026 against national institutes.' } },
@@ -3897,7 +3897,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           {/* La provenance des traces. Un corridor dessine sur une carte est
               une affirmation : il se source comme un chiffre. */}
           <p className="scene-flux-source">
-            {L("Corridors intra-africains : stocks bilatéraux UN DESA, repris par l'OIM. Routes extracontinentales : OIM, Global Overview of Migration Routes, janvier-avril 2026. Le trait plein pèse ce que pèse le corridor.",
+            {L("Corridors intra-africains : stocks bilatéraux UN DESA, repris par l'OIM. Routes extracontinentales : OIM, Global Overview of Migration Routes, janvier-avril 2026. Le trait plein pèse ce que pèse le corridor.",
                "Intra-African corridors: UN DESA bilateral stocks, reported by IOM. Extra-continental routes: IOM, Global Overview of Migration Routes, January-April 2026. Line weight follows corridor size.",
                { ar: 'الممرات: المنظمة الدولية للهجرة — نظرة عامة عالمية على مسارات الهجرة، يناير-أبريل 2026' })}
           </p>
@@ -4111,7 +4111,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
                  en: 'What a country profile holds, and where each line comes from',
                  ar: 'ما تحتويه بطاقة البلد، ومن أين يأتي كل سطر' }}
         chapeau={{
-          fr: "Chaque profil rassemble des mesures produites par des institutions différentes, à des dates différentes. Aucune n'a été recalculée : elles sont présentées avec leur source et leur année d'observation.",
+          fr: "Chaque profil rassemble des mesures produites par des institutions différentes, à des dates différentes. Aucune n'a été recalculée : elles sont présentées avec leur source et leur année d'observation.",
           en: 'Each profile gathers measurements produced by different institutions, at different dates. None has been recomputed: each is shown with its source and its observation year.'
         }}
         notions={[
@@ -4119,7 +4119,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
             sens: { fr: "Personnes nées à l'étranger résidant dans le pays, d'après UN DESA. Une photographie à une date, jamais un flux d'arrivées.",
                     en: 'People born abroad and residing in the country, per UN DESA. A snapshot at a date, never a flow of arrivals.' } },
           { mot: { fr: 'Rétention Sud-Sud', en: 'South-South retention' },
-            sens: { fr: "Part des partants restés sur le continent. Agrégat régional (UA, OIT, OIM, CEA) appliqué au pays : une approximation, signalée comme telle.",
+            sens: { fr: "Part des partants restés sur le continent. Agrégat régional (UA, OIT, OIM, CEA) appliqué au pays : une approximation, signalée comme telle.",
                     en: 'Share of those who left who stayed on the continent. A regional aggregate (AU, ILO, IOM, ECA) applied to the country: an approximation, flagged as such.' } },
           { mot: { fr: 'Ouverture des visas', en: 'Visa openness' },
             sens: { fr: "Note sur 100 mesurant la facilité d'entrée pour les autres Africains, publiée par la BAD et la Commission de l'UA sous le nom d'indice AVOI.",
@@ -4136,10 +4136,10 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
         lignes={[
           { source: { fr: 'Démographie', en: 'Demography' },
             mesure: { fr: 'UN DESA, révision 2024.', en: 'UN DESA, 2024 revision.' },
-            angle: { fr: "Photographie à une date : additionner deux années ne donne pas un flux.", en: 'A snapshot at a date: adding two years does not produce a flow.' } },
+            angle: { fr: "Photographie à une date : additionner deux années ne donne pas un flux.", en: 'A snapshot at a date: adding two years does not produce a flow.' } },
           { source: { fr: 'Mobilité contrainte', en: 'Forced mobility' },
             mesure: { fr: 'IDMC et HCR.', en: 'IDMC and UNHCR.' },
-            angle: { fr: "Deux périmètres de suivi distincts : les deux séries sont affichées plutôt qu'harmonisées.", en: 'Two distinct monitoring perimeters: both series are shown rather than reconciled.' } },
+            angle: { fr: "Deux périmètres de suivi distincts : les deux séries sont affichées plutôt qu'harmonisées.", en: 'Two distinct monitoring perimeters: both series are shown rather than reconciled.' } },
           { source: { fr: 'Économie', en: 'Economy' },
             mesure: { fr: 'Banque mondiale.', en: 'World Bank.' },
             angle: { fr: "Transferts déclarés seulement, en pourcentage du PIB.", en: 'Declared remittances only, as a share of GDP.' } },
@@ -4148,7 +4148,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
             angle: { fr: "Le dépôt compte, pas la signature.", en: 'The deposit counts, not the signature.' } },
         ]}
         pied={{
-          fr: "Les années d'observation ne sont pas alignées entre les champs, et ne le seront pas : chaque champ porte la sienne. Une fiche se lit donc ligne par ligne, jamais comme un instantané unique.",
+          fr: "Les années d'observation ne sont pas alignées entre les champs, et ne le seront pas : chaque champ porte la sienne. Une fiche se lit donc ligne par ligne, jamais comme un instantané unique.",
           en: 'Observation years are not aligned across fields, and will not be: each field carries its own. A profile therefore reads line by line, never as a single snapshot.'
         }}
       />
@@ -4304,7 +4304,7 @@ const indicatorThemes = [
         id: "1.1", fr: "Taux d'effectivité des protocoles régionaux", en: "Effectiveness of regional free movement protocols", 
         desc_fr: "Mesure de l'application réelle des accords (CEDEAO, ZLECAf) sur le terrain.", desc_en: "Measurement of the actual implementation of agreements (e.g. ECOWAS, AfCFTA).",
         method_fr: "Ratio entre les postes frontières appliquant effectivement l'exemption de visa/passeport et le nombre total de postes.", method_en: "Ratio between border posts actually applying visa/passport exemptions and the total number of posts.",
-        contrast_fr: "Les tableaux de bord frontaliers comptent les appréhensions et les refoulements : ils mesurent la capacité d'un État à retenir. Celui-ci mesure sa capacité à laisser passer ce que ses propres traités autorisent.", contrast_en: "Border dashboards count apprehensions and pushbacks: they measure a state’s capacity to hold people back. This one measures its capacity to let through what its own treaties allow."
+        contrast_fr: "Les tableaux de bord frontaliers comptent les appréhensions et les refoulements : ils mesurent la capacité d'un État à retenir. Celui-ci mesure sa capacité à laisser passer ce que ses propres traités autorisent.", contrast_en: "Border dashboards count apprehensions and pushbacks: they measure a state’s capacity to hold people back. This one measures its capacity to let through what its own treaties allow."
       },
       { 
         id: "1.2", fr: "Volume du commerce informel transfrontalier", en: "Volume of cross-border informal trade", 
@@ -4321,7 +4321,7 @@ const indicatorThemes = [
         id: "2.1", fr: "Transferts alloués à l'investissement productif", en: "Remittances allocated to productive investment", 
         desc_fr: "Part des envois de fonds investie dans la création d'activité plutôt que dans la consommation courante.", desc_en: "Share of remittances invested in business creation vs. daily consumption.",
         method_fr: "Suivi bancaire des fonds d'investissement diasporiques et sondages auprès des récipiendaires.", method_en: "Banking tracking of diaspora investment funds and surveys of recipients.",
-        contrast_fr: "Les transferts sont comptés en volume reçu, ce qui les range du côté de l'assistance. En isoler la part investie les situe du côté du financement : la diaspora devient un bailleur, comparable à l'aide publique au développement.", contrast_en: "Remittances are counted by volume received, which files them under assistance. Isolating the invested share files them under financing: the diaspora becomes a funder, comparable to official development assistance."
+        contrast_fr: "Les transferts sont comptés en volume reçu, ce qui les range du côté de l'assistance. En isoler la part investie les situe du côté du financement : la diaspora devient un bailleur, comparable à l'aide publique au développement.", contrast_en: "Remittances are counted by volume received, which files them under assistance. Isolating the invested share files them under financing: the diaspora becomes a funder, comparable to official development assistance."
       },
       { 
         id: "2.2", fr: "Taux d'entrepreneuriat des migrants", en: "Migrant entrepreneurship rate", 
@@ -4338,7 +4338,7 @@ const indicatorThemes = [
         id: "3.1", fr: "Mobilité circulaire comme adaptation", en: "Circular mobility as adaptation", 
         desc_fr: "Déplacements saisonniers anticipés pour pallier les chocs écologiques locaux.", desc_en: "Anticipated seasonal movements to mitigate local ecological shocks.",
         method_fr: "Corrélation entre les flux de main-d'œuvre agricole et les calendriers de sécheresse/inondation.", method_en: "Correlation between agricultural labor flows and drought/flood calendars.",
-        contrast_fr: "La catégorie de réfugié climatique décrit un départ subi et définitif. Corréler les mobilités saisonnières aux calendriers de sécheresse fait apparaître un mouvement anticipé, répété et réversible : une stratégie d'adaptation avant d'être une conséquence.", contrast_en: "The climate-refugee category describes a departure that is suffered and final. Correlating seasonal mobility with drought calendars reveals an anticipated, repeated and reversible movement: an adaptation strategy before it is a consequence."
+        contrast_fr: "La catégorie de réfugié climatique décrit un départ subi et définitif. Corréler les mobilités saisonnières aux calendriers de sécheresse fait apparaître un mouvement anticipé, répété et réversible : une stratégie d'adaptation avant d'être une conséquence.", contrast_en: "The climate-refugee category describes a departure that is suffered and final. Correlating seasonal mobility with drought calendars reveals an anticipated, repeated and reversible movement: an adaptation strategy before it is a consequence."
       },
       { 
         id: "3.2", fr: "Fonds diasporiques pour la résilience", en: "Diaspora funds for resilience", 
@@ -4387,7 +4387,7 @@ const indicatorThemes = [
     items: [
       { 
         id: "6.1", fr: "Décriminalisation de l'irrégularité", en: "Decriminalization of irregularity", 
-        desc_fr: "Indicateur juridique : absence de sanction pénale pour le seul séjour irrégulier.", desc_en: "Legal indicator: absence of criminal sanctions for migratory offenses.",
+        desc_fr: "Indicateur juridique : absence de sanction pénale pour le seul séjour irrégulier.", desc_en: "Legal indicator: absence of criminal sanctions for migratory offenses.",
         method_fr: "Analyse des codes pénaux nationaux concernant l'entrée et le séjour irrégulier.", method_en: "Analysis of national penal codes regarding irregular entry and stay.",
         contrast_fr: "Les statistiques de séjour irrégulier sortent des appareils pénaux, ce qui range un manquement administratif avec la délinquance. La lecture des codes pénaux sépare les deux.", contrast_en: "Irregular-stay statistics come out of penal systems, which files an administrative lapse alongside crime. Reading the penal codes separates the two."
       },
@@ -4413,7 +4413,7 @@ const homeCards = [
     desc: { fr: "D'où viennent les chiffres, ce que chaque source mesure — et où se situe réellement le déficit africain.",
             en: "Where the figures come from, what each source measures — and where Africa's shortfall actually sits." } },
   { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities' },
-    desc: { fr: "Déplacement contraint et migration de travail : ce qui pousse au départ, et ce qui se gagne à l'arrivée.",
+    desc: { fr: "Déplacement contraint et migration de travail : ce qui pousse au départ, et ce qui se gagne à l'arrivée.",
             en: "Forced displacement and labour migration: what drives departure, and what is earned on arrival." } },
   { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance' },
     desc: { fr: "L'architecture juridique panafricaine, et ce que les États ont réellement ratifié.",
@@ -4532,7 +4532,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                 onClick={() => setActiveTab(card.id)}
                 className="hub-card lift text-start p-6 bg-white border border-slate-200 group flex flex-col h-full relative"
               >
-                {/* Numerotation d'entree : la rubrique se lit comme une section d'ouvrage. */}
+                {/* Numerotation d'entree : la rubrique se lit comme une section d'ouvrage. */}
                 <div className="flex items-baseline justify-between mb-5">
                   <span className="font-serif font-bold text-2xl leading-none tabular-nums" style={{ color: 'var(--accent-deep)' }}>
                     {String(i + 1).padStart(2, '0')}
@@ -4624,7 +4624,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
 // Evidence Check — registre + panneau de lecture.
 // La grille de 70 vignettes est remplacee par un index dense (une ligne par
 // affirmation) et un dossier de lecture a cote. Le verdict n'est plus un badge
-// d'angle : il devient l'axe de tri, encode par une jauge de robustesse a
+// d'angle : il devient l'axe de tri, encode par une jauge de robustesse a
 // quatre crans, lisible sans la couleur.
 // ---------------------------------------------------------------------------
 
@@ -4674,7 +4674,7 @@ const FilterChip = ({ active, onClick, children }) => (
   </button>
 );
 
-// Dossier d'une affirmation : citation, verdict, donnees, puis l'appareil critique.
+// Dossier d'une affirmation : citation, verdict, donnees, puis l'appareil critique.
 const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
   const t = tierOf(fiche.confidence_level);
   const VerdictIcon = t.Icon;
@@ -4873,7 +4873,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                  en: 'How to read a robustness verdict',
                  ar: 'كيف يُقرأ حكم المتانة' }}
         chapeau={{
-          fr: "Chaque fiche évalue une affirmation, jamais la personne qui la porte. La jauge à quatre crans dit ce que les meilleures sources disponibles permettent d'établir aujourd'hui : elle bougera si les données bougent.",
+          fr: "Chaque fiche évalue une affirmation, jamais la personne qui la porte. La jauge à quatre crans dit ce que les meilleures sources disponibles permettent d'établir aujourd'hui : elle bougera si les données bougent.",
           en: 'Each entry assesses a claim, never the person making it. The four-notch gauge states what the best available sources support today: it will move if the data moves.'
         }}
         notions={[
@@ -4887,7 +4887,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             sens: { fr: "Les données disponibles disent autre chose que l'affirmation.", en: 'The available data says something other than the claim.' } },
         ]}
         pied={{
-          fr: "Une fiche ne se résume jamais à son verdict : elle donne aussi les limites de ce qu'on sait, et pourquoi l'idée persiste. Ces deux rubriques comptent autant que le cran de la jauge.",
+          fr: "Une fiche ne se résume jamais à son verdict : elle donne aussi les limites de ce qu'on sait, et pourquoi l'idée persiste. Ces deux rubriques comptent autant que le cran de la jauge.",
           en: 'An entry never reduces to its verdict: it also gives the limits of what is known, and why the idea persists. Those two sections matter as much as the notch on the gauge.'
         }}
       />
@@ -4896,7 +4896,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <Prose className="text-xs text-amber-800 leading-relaxed" lang={lang}>{L(
-            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d'un m\u00e9dia ou d'une institution identifi\u00e9s ; seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d'institutions v\u00e9rifiables (voir Sources).",
+            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l'auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d'un m\u00e9dia ou d'une institution identifi\u00e9s ; seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d'institutions v\u00e9rifiables (voir Sources).",
             "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."
           )}</Prose>
       </div>
@@ -5120,15 +5120,15 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
 };
 
 const stcSessions = [
-  { num: { fr: "1re session", en: "1st session" }, date: { fr: "16-20 nov. 2015, Addis-Abeba", en: "16-20 Nov. 2015, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Installation du CTS, humanitaire, Convention de Kampala", en: "Establishing the STC, humanitarian affairs, Kampala Convention" }, outcome: { fr: "Mise en ordre procédurale : adoption du Règlement intérieur ; consolidation de la position africaine pour le Sommet humanitaire mondial et opérationnalisation du suivi de la Convention de Kampala.", en: "Procedural set-up: adoption of Rules of Procedure; consolidation of the African position for the World Humanitarian Summit and operationalization of Kampala Convention follow-up." } },
-  { num: { fr: "2e session", en: "2nd session" }, date: { fr: "16-21 oct. 2017, Kigali", en: "16-21 Oct. 2017, Kigali" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Libre circulation, MPFA, passeport africain", en: "Free movement, MPFA, African passport" }, outcome: { fr: "Tournant normatif : validation technique du Protocole sur la libre circulation des personnes, adoption du Cadre de politique migratoire révisé (MPFA 2018-2030) et de son plan d'action décennal.", en: "Normative turning point: technical validation of the Free Movement of Persons Protocol, adoption of the revised Migration Policy Framework (MPFA 2018-2030) and its ten-year action plan." } },
-  { num: { fr: "3e session", en: "3rd session" }, date: { fr: "5-8 nov. 2019, Addis-Abeba", en: "5-8 Nov. 2019, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Réfugiés (thème de l'année), architecture institutionnelle", en: "Refugees (theme of the year), institutional architecture" }, outcome: { fr: "Densification par outillage : adoption des projets de statuts de quatre agences clés (OAM, AIR, COC, Agence humanitaire africaine) ; validation de la position sur l'apatridie.", en: "Densification through institution-building: adoption of draft statutes for four key agencies (AMO, AIR, COC, African Humanitarian Agency); validation of the position on statelessness." } },
-  { num: { fr: "4e session", en: "4th session" }, date: { fr: "23-24 mai 2022, Malabo", en: "23-24 May 2022, Malabo" }, format: { fr: "Ministérielle (Sommet extraordinaire)", en: "Ministerial (Extraordinary Summit)" }, focus: { fr: "Urgence humanitaire, climat, nutrition", en: "Humanitarian emergency, climate, nutrition" }, outcome: { fr: "Traduction politique : préparation de la Déclaration de Malabo, conversion de l'agenda politique d'urgence en mandats techniques et mécanismes de suivi post-sommet.", en: "Political translation: preparation of the Malabo Declaration, converting the emergency political agenda into technical mandates and post-summit follow-up mechanisms." } },
+  { num: { fr: "1re session", en: "1st session" }, date: { fr: "16-20 nov. 2015, Addis-Abeba", en: "16-20 Nov. 2015, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Installation du CTS, humanitaire, Convention de Kampala", en: "Establishing the STC, humanitarian affairs, Kampala Convention" }, outcome: { fr: "Mise en ordre procédurale : adoption du Règlement intérieur ; consolidation de la position africaine pour le Sommet humanitaire mondial et opérationnalisation du suivi de la Convention de Kampala.", en: "Procedural set-up: adoption of Rules of Procedure; consolidation of the African position for the World Humanitarian Summit and operationalization of Kampala Convention follow-up." } },
+  { num: { fr: "2e session", en: "2nd session" }, date: { fr: "16-21 oct. 2017, Kigali", en: "16-21 Oct. 2017, Kigali" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Libre circulation, MPFA, passeport africain", en: "Free movement, MPFA, African passport" }, outcome: { fr: "Tournant normatif : validation technique du Protocole sur la libre circulation des personnes, adoption du Cadre de politique migratoire révisé (MPFA 2018-2030) et de son plan d'action décennal.", en: "Normative turning point: technical validation of the Free Movement of Persons Protocol, adoption of the revised Migration Policy Framework (MPFA 2018-2030) and its ten-year action plan." } },
+  { num: { fr: "3e session", en: "3rd session" }, date: { fr: "5-8 nov. 2019, Addis-Abeba", en: "5-8 Nov. 2019, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Réfugiés (thème de l'année), architecture institutionnelle", en: "Refugees (theme of the year), institutional architecture" }, outcome: { fr: "Densification par outillage : adoption des projets de statuts de quatre agences clés (OAM, AIR, COC, Agence humanitaire africaine) ; validation de la position sur l'apatridie.", en: "Densification through institution-building: adoption of draft statutes for four key agencies (AMO, AIR, COC, African Humanitarian Agency); validation of the position on statelessness." } },
+  { num: { fr: "4e session", en: "4th session" }, date: { fr: "23-24 mai 2022, Malabo", en: "23-24 May 2022, Malabo" }, format: { fr: "Ministérielle (Sommet extraordinaire)", en: "Ministerial (Extraordinary Summit)" }, focus: { fr: "Urgence humanitaire, climat, nutrition", en: "Humanitarian emergency, climate, nutrition" }, outcome: { fr: "Traduction politique : préparation de la Déclaration de Malabo, conversion de l'agenda politique d'urgence en mandats techniques et mécanismes de suivi post-sommet.", en: "Political translation: preparation of the Malabo Declaration, converting the emergency political agenda into technical mandates and post-summit follow-up mechanisms." } },
   { num: { fr: "5e session", en: "5th session" }, date: { fr: "10-14 nov. 2025, Addis-Abeba", en: "10-14 Nov. 2025, Addis Ababa" }, format: { fr: "Experts et Ministres", en: "Experts and Ministers" }, focus: { fr: "Retour/réadmission/réintégration, GCM, traite et trafic", en: "Return/readmission/reintegration, GCM, trafficking and smuggling" }, outcome: { fr: "Virage opérationnel. Adoption des lignes directrices continentales sur le retour et la réintégration durable, des plans d'action sur la traite et le trafic, et du plan d'action africain de mise en œuvre du GCM. Examen des rapports de l'OAM, du COC et de l'ACSRM.", en: "Operational shift: adoption of continental guidelines on return and sustainable reintegration, action plans on trafficking and smuggling, and the African action plan for implementing the GCM; review of AMO, COC, and ACSRM reports." } },
 ];
 
 const pafomSessions = [
-  { num: "PAFoM 1", date: { fr: "Accra, 16-18 sept. 2015", en: "Accra, 16-18 Sept. 2015" }, focus: { fr: "Mobilité intrarégionale, libre circulation, migration de travail", en: "Intra-regional mobility, free movement, labour migration" }, outcome: { fr: "Point de départ du forum comme scène continentale de coordination ; nourrit la préparation africaine du Sommet de La Valette.", en: "Starting point for the forum as a continental coordination venue; fed into African preparation for the Valletta Summit." } },
+  { num: "PAFoM 1", date: { fr: "Accra, 16-18 sept. 2015", en: "Accra, 16-18 Sept. 2015" }, focus: { fr: "Mobilité intrarégionale, libre circulation, migration de travail", en: "Intra-regional mobility, free movement, labour migration" }, outcome: { fr: "Point de départ du forum comme scène continentale de coordination ; nourrit la préparation africaine du Sommet de La Valette.", en: "Starting point for the forum as a continental coordination venue; fed into African preparation for the Valletta Summit." } },
   { num: "PAFoM 2", date: { fr: "Lusaka, 4-6 mai 2016", en: "Lusaka, 4-6 May 2016" }, focus: { fr: "Facilitation des mobilités, commerce, gestion intégrée des frontières", en: "Mobility facilitation, trade, integrated border management" }, outcome: { fr: "Prolonge la dynamique d'Accra en liant explicitement mobilité, commerce et intégration régionale.", en: "Extends the Accra momentum by explicitly linking mobility, trade, and regional integration." } },
   { num: "PAFoM 3", date: { fr: "Kampala, 15-17 mai 2017", en: "Kampala, 15-17 May 2017" }, focus: { fr: "Préparation de la position africaine sur le GCM", en: "Preparing the African position on the GCM" }, outcome: { fr: "Cadre initial de discussion et de consultation africaine sur le Pacte mondial pour les migrations.", en: "Initial framework for African discussion and consultation on the Global Compact for Migration." } },
   { num: "PAFoM 4", date: { fr: "Djibouti, 19-21 nov. 2018", en: "Djibouti, 19-21 Nov. 2018" }, focus: { fr: "Libre circulation et bénéfices du régime continental", en: "Free movement and benefits of the continental regime" }, outcome: { fr: "Recentre les échanges sur les bénéfices de la libre circulation après l'adoption du Protocole de Kigali.", en: "Refocuses discussion on the benefits of free movement following the Kigali Protocol's adoption." } },
@@ -5260,7 +5260,7 @@ const GovernanceCross = ({ lang }) => {
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l'Indice Ibrahim, l'ouverture effective des frontières mesurée par l'indice AVOI, et le nombre d'instruments continentaux ratifiés. On peut donc tester ce que l'on suppose souvent sans le vérifier : est-ce que mieux gouverner, c'est plus ouvrir ? Et est-ce que signer, c'est ouvrir ?",
+              "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l'Indice Ibrahim, l'ouverture effective des frontières mesurée par l'indice AVOI, et le nombre d'instruments continentaux ratifiés. On peut donc tester ce que l'on suppose souvent sans le vérifier : est-ce que mieux gouverner, c'est plus ouvrir ? Et est-ce que signer, c'est ouvrir ?",
               'The platform holds three independent measures for each of the 54 states: governance quality as measured by the Ibrahim Index, effective border openness as measured by the AVOI, and the number of continental instruments ratified. That makes it possible to test what is often assumed without checking: does governing better mean opening more? And does signing mean opening?'
             )}</Prose>
   
@@ -5315,7 +5315,7 @@ const GovernanceCross = ({ lang }) => {
                   </g>
                 ))}
                 <text x={PAD} y={H - 12} fontSize="9" fill="var(--label)">
-                  {L('gouvernance : rang 54 (moins bon)', 'governance: rank 54 (worst)')}
+                  {L('gouvernance : rang 54 (moins bon)', 'governance: rank 54 (worst)')}
                 </text>
                 <text x={W - 14} y={H - 12} textAnchor="end" fontSize="9" fill="var(--label)">
                   {L('rang 1 (meilleur)', 'rank 1 (best)')}
@@ -5365,7 +5365,7 @@ const GovernanceCross = ({ lang }) => {
               {L('Ce que les trois coefficients disent ensemble', 'What the three coefficients say together')}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Les États qui ouvrent et ceux qui signent forment deux groupes distincts. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
+                `Mieux gouverner va bien avec plus ouvrir : le lien existe, modéré mais net. En revanche, la qualité de gouvernance ne dit rien de l'ancrage juridique, et — résultat le plus net — l'ouverture effective des frontières ne dit rien des ratifications, ni l'inverse. Les États qui ouvrent et ceux qui signent forment deux groupes distincts. Le Rwanda est le seul à faire les deux pleinement. Les Seychelles ouvrent totalement tout en n'ayant ratifié que quatre instruments sur six ; le Botswana et le Lesotho sont bien gouvernés et fermés ; le Burundi et le Mozambique ouvrent largement avec une gouvernance mal classée. L'ouverture n'est donc ni un effet de la capacité administrative, ni la conséquence d'un engagement juridique : c'est une décision souveraine, prise instrument par instrument et frontière par frontière. C'est exactement ce que décrit l'entre-deux national (Ben Mokhtar, 2026).`,
                 `Governing better does go with opening more: the relationship exists, moderate but clear. Governance quality, however, says nothing about legal anchoring — and, the sharpest result, effective border openness says nothing about ratifications, nor the reverse. The states that open and the states that sign form two distinct groups. Rwanda alone does both fully. Seychelles opens completely while having ratified only four instruments out of six; Botswana and Lesotho are well governed and closed; Burundi and Mozambique open widely with poorly ranked governance. Openness is therefore neither a product of administrative capacity nor a consequence of legal commitment: it is a sovereign decision, taken instrument by instrument and border by border. That is precisely what the national in-between describes (Ben Mokhtar, 2026).`
               )}</Prose>
             <Prose className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L(
@@ -5441,14 +5441,14 @@ const AnchoringMatrix = ({ lang }) => {
             {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
           </span>
           <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-            {L("L'ancrage : ce que les États ont réellement ratifié",
+            {L("L'ancrage : ce que les États ont réellement ratifié",
                'Anchoring: what states have actually ratified')}
           </h3>
         </div>
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              "Adhérer à l'Union est une chose, s'engager sur la mobilité des personnes en est une autre. En rangeant les six instruments continentaux du plus consensuel au plus contraignant, on obtient une courbe de décrochage : l'appartenance est unanime, la libre circulation ne l'est presque pas.",
+              "Adhérer à l'Union est une chose, s'engager sur la mobilité des personnes en est une autre. En rangeant les six instruments continentaux du plus consensuel au plus contraignant, on obtient une courbe de décrochage : l'appartenance est unanime, la libre circulation ne l'est presque pas.",
               'Joining the Union is one thing; committing on the mobility of persons is another. Ordering the six continental instruments from the most consensual to the most binding produces a curve of attrition: membership is unanimous, free movement almost non-existent.'
             )}</Prose>
   
@@ -5483,7 +5483,7 @@ const AnchoringMatrix = ({ lang }) => {
                 `${asym.refOnly.length} states have ratified the 1969 OAU Convention — which protects the refugee arriving from elsewhere — without ratifying the Kampala Convention, which protects their own population displaced inside their borders. The reverse occurs in only ${asym.kampOnly.length} cases. Protection therefore stops at the border more often than it crosses it — while internal displacement is, in Africa, the most massive form of forced mobility (Ben Mokhtar, 2026).`
               )}</Prose>
             <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--ink-mute)' }}>
-              <span className="font-bold uppercase tracking-widest">{L('Concernés :', 'Concerned:')}</span>{' '}
+              <span className="font-bold uppercase tracking-widest">{L('Concernés :', 'Concerned:')}</span>{' '}
               {asym.refOnly.map(r => r.name).join(', ')}.
             </p>
           </div>
@@ -5555,7 +5555,7 @@ const AnchoringMatrix = ({ lang }) => {
             {L('Provenance et réserve', 'Provenance and caveat')}
           </p>
           <Prose className="text-[11px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
-              "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 48 États ont déposé leur instrument. Les six qui manquent sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde avec les listes de l'UA, État par État.",
+              "Matrice constituée par l'auteur d'après les listes de ratification de l'Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l'UA : 48 États ont déposé leur instrument. Les six qui manquent sont l'Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n'est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés. La colonne Kampala a été reprise sur la liste de statut officielle de l'UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé. La matrice concorde avec les listes de l'UA, État par État.",
               "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 48 states have deposited their instrument. The six outstanding are Eritrea, not a signatory; Benin, Libya, Sudan and South Sudan, whose ratification is not approved; and Somalia, which approved without depositing. Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected. The Kampala column was revised against the AU's official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected. The matrix matches the AU lists state by state."
             )}</Prose>
         </div>
@@ -5759,7 +5759,7 @@ const TabForced = ({ text, lang, children }) => {
         </div>
       </Reveal>
 
-      {/* Le continent d'abord : la masse du deplacement interne se voit d'un
+      {/* Le continent d'abord : la masse du deplacement interne se voit d'un
           coup d'oeil, la ou une liste de chiffres demande un effort. */}
       <Reveal delay={15}>
         <CarteSection
@@ -5785,7 +5785,7 @@ const TabForced = ({ text, lang, children }) => {
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
           <Prose className="lede" lang={lang}>{L(
-              "Parler de « migration » pour désigner l'ensemble des mobilités africaines efface la distinction qui compte le plus en droit. Celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu'une frontière internationale a été franchie. Cette frontière décide de tout : du statut, de l'institution compétente, du financement, et même de la visibilité statistique.",
+              "Parler de « migration » pour désigner l'ensemble des mobilités africaines efface la distinction qui compte le plus en droit. Celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu'une frontière internationale a été franchie. Cette frontière décide de tout : du statut, de l'institution compétente, du financement, et même de la visibilité statistique.",
               'Speaking of "migration" for all African mobility erases the distinction that matters most in law: between the person who chooses to leave and the person compelled to. And among the compelled, law still distinguishes according to whether an international border was crossed — and that border decides everything: status, competent institution, funding, and even statistical visibility.'
             )}</Prose>
         </div>
@@ -5795,17 +5795,17 @@ const TabForced = ({ text, lang, children }) => {
             {
               t: L('Réfugié', 'Refugee'), inst: L("Convention de l'OUA (1969)", 'OAU Convention (1969)'),
               accent: 'var(--ok)', wash: 'wash-ok',
-              d: L("A franchi une frontière internationale. La définition africaine, antérieure d'un demi-siècle au Pacte mondial, protège au-delà de la persécution individuelle : elle couvre quiconque fuit une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public.",
+              d: L("A franchi une frontière internationale. La définition africaine, antérieure d'un demi-siècle au Pacte mondial, protège au-delà de la persécution individuelle : elle couvre quiconque fuit une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public.",
                    'Has crossed an international border. The African definition, half a century older than the Global Compact, protects beyond individual persecution: it covers anyone fleeing external aggression, occupation, foreign domination or events seriously disturbing public order.'),
             },
             {
               t: L('Personne déplacée interne', 'Internally displaced person'), inst: L('Convention de Kampala (2009)', 'Kampala Convention (2009)'),
               accent: 'var(--warn-ink)', wash: 'wash-warn',
-              d: L("N'a franchi aucune frontière : elle relève entièrement de son propre État, celui-là même qui l'a souvent déplacée. Kampala est le premier — et toujours le seul — traité régional contraignant au monde sur cette population. C'est la forme de mobilité forcée la plus massive du continent, et la moins visible dans les statistiques migratoires.",
+              d: L("N'a franchi aucune frontière : elle relève entièrement de son propre État, celui-là même qui l'a souvent déplacée. Kampala est le premier — et toujours le seul — traité régional contraignant au monde sur cette population. C'est la forme de mobilité forcée la plus massive du continent, et la moins visible dans les statistiques migratoires.",
                    'Has crossed no border: they fall entirely under their own state — often the very state that displaced them. Kampala is the first, and still the only, binding regional treaty in the world on this population. It is the continent\'s most massive form of forced mobility, and the least visible in migration statistics.'),
             },
             {
-              t: L('Apatride', 'Stateless person'), inst: L('Convention de 1954 ; Déclaration d\'Abidjan (2015)', '1954 Convention; Abidjan Declaration (2015)'),
+              t: L('Apatride', 'Stateless person'), inst: L('Convention de 1954 ; Déclaration d\'Abidjan (2015)', '1954 Convention; Abidjan Declaration (2015)'),
               accent: 'var(--bad)', wash: 'wash-terra',
               d: L("N'est reconnu comme ressortissant par aucun État. L'apatridie est une condition, distincte du déplacement, qui prive de l'accès aux droits, aux documents de voyage et souvent à la mobilité régulière elle-même. Elle se transmet et se reproduit d'une génération à l'autre.",
                    'Recognised as a national by no state. Statelessness is a condition, distinct from displacement, that denies access to rights, travel documents and often regular mobility itself. It is transmitted and reproduced across generations.'),
@@ -5833,7 +5833,7 @@ const TabForced = ({ text, lang, children }) => {
           {L('Où se concentre le déplacement', 'Where displacement concentrates')}
         </h2>
         <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-6" lang={lang}>{L(
-            "Calculé sur la base pays de la plateforme. Le déplacement interne lié aux conflits est extrêmement concentré : une poignée d'États porte l'essentiel du total continental.",
+            "Calculé sur la base pays de la plateforme. Le déplacement interne lié aux conflits est extrêmement concentré : une poignée d'États porte l'essentiel du total continental.",
             'Computed from the platform country base. Conflict-related internal displacement is extremely concentrated: a handful of states carries most of the continental total.'
           )}</Prose>
 
@@ -5855,7 +5855,7 @@ const TabForced = ({ text, lang, children }) => {
           color="var(--ok)"
           unitTotal={data.totalRefugees}
           note={L(
-            `Couverture complète du HCR : ${data.refugees.length} pays du périmètre accueillent des réfugiés sous mandat, pour un total de ${fmt(data.totalRefugees)} personnes.`,
+            `Couverture complète du HCR : ${data.refugees.length} pays du périmètre accueillent des réfugiés sous mandat, pour un total de ${fmt(data.totalRefugees)} personnes.`,
             `Full UNHCR coverage: ${data.refugees.length} countries in the perimeter host refugees under mandate, totalling ${fmt(data.totalRefugees)} people.`
           )}
         />
@@ -5868,7 +5868,7 @@ const TabForced = ({ text, lang, children }) => {
           color="var(--bad)"
           unitTotal={data.totalStateless}
           note={L(
-            "L'apatridie recensée sur le continent est écrasée par un seul pays. Ce chiffre a une histoire : la Côte d'Ivoire concentre l'héritage des migrations de main-d'œuvre coloniales et post-coloniales dont les descendants n'ont jamais obtenu de nationalité. Ailleurs, l'apatridie est probablement sous-recensée plutôt qu'absente — elle ne se compte que là où un État accepte de la mesurer.",
+            "L'apatridie recensée sur le continent est écrasée par un seul pays. Ce chiffre a une histoire : la Côte d'Ivoire concentre l'héritage des migrations de main-d'œuvre coloniales et post-coloniales dont les descendants n'ont jamais obtenu de nationalité. Ailleurs, l'apatridie est probablement sous-recensée plutôt qu'absente — elle ne se compte que là où un État accepte de la mesurer.",
             "Recorded statelessness on the continent is dominated by a single country. That figure has a history: Côte d'Ivoire concentrates the legacy of colonial and post-colonial labour migrations whose descendants never obtained nationality. Elsewhere statelessness is likely under-recorded rather than absent — it is only counted where a state agrees to measure it."
           )}
         />
@@ -5878,7 +5878,7 @@ const TabForced = ({ text, lang, children }) => {
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">
             {L('Une décennie de bascule (HCR, 2014 → 2024)', 'A decade of shift (UNHCR, 2014 → 2024)')}
           </p>
-          <Prose className="text-xs text-slate-500 mb-4" lang={lang}>{L('Périmètre : les pays africains couverts par la base du HCR.', 'Perimeter: the African countries covered by the UNHCR base.')}</Prose>
+          <Prose className="text-xs text-slate-500 mb-4" lang={lang}>{L('Périmètre : les pays africains couverts par la base du HCR.', 'Perimeter: the African countries covered by the UNHCR base.')}</Prose>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 stagger">
             {[
               { k: 'idps', l: L('Déplacés internes suivis', 'IDPs monitored'), tone: 'figure-warn' },
@@ -5903,13 +5903,13 @@ const TabForced = ({ text, lang, children }) => {
             })}
           </div>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify mt-4" lang={lang}>{L(
-              "En dix ans, le nombre de personnes déplacées dans leur propre pays et suivies par le HCR a plus que triplé sur le continent. Les réfugiés, eux — ceux qui franchissent une frontière —, ont un peu plus que doublé. La mobilité forcée africaine ne s'internationalise donc pas : elle s'intensifie à l'intérieur des frontières. C'est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
+              "En dix ans, le nombre de personnes déplacées dans leur propre pays et suivies par le HCR a plus que triplé sur le continent. Les réfugiés, eux — ceux qui franchissent une frontière —, ont un peu plus que doublé. La mobilité forcée africaine ne s'internationalise donc pas : elle s'intensifie à l'intérieur des frontières. C'est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
               "In a decade, the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent. Refugees — those who cross a border — have a little more than doubled. African forced mobility is therefore not internationalising: it is intensifying within borders. That is precisely the population migration statistics do not count, and the one whose protecting treaty is still awaiting ratifications."
             )}</Prose>
         </div>
 
         <Prose className="text-[10px] italic mt-6 pt-3" style={{ color: 'var(--label)', borderTop: '1px solid var(--rule)' }} lang={lang}>{L(
-            "Sources : IDMC (Global Report on Internal Displacement) pour le déplacement interne par cause, intégré à la base pays ; HCR (Refugee Data Finder, API publique) pour les réfugiés, demandeurs d'asile, apatrides et déplacés internes suivis. Les totaux de déplacés internes des deux institutions diffèrent — périmètres de suivi et méthodes distincts. Les deux sont affichés plutôt qu'harmonisés.",
+            "Sources : IDMC (Global Report on Internal Displacement) pour le déplacement interne par cause, intégré à la base pays ; HCR (Refugee Data Finder, API publique) pour les réfugiés, demandeurs d'asile, apatrides et déplacés internes suivis. Les totaux de déplacés internes des deux institutions diffèrent — périmètres de suivi et méthodes distincts. Les deux sont affichés plutôt qu'harmonisés.",
             'Sources: IDMC (Global Report on Internal Displacement) for internal displacement by cause, integrated into the country base; UNHCR (Refugee Data Finder, public API) for refugees, asylum seekers, stateless persons and monitored IDPs. The two institutions\' IDP totals differ — distinct monitoring perimeters and methods. Both are shown rather than reconciled.'
           )}</Prose>
       </Reveal>
@@ -5923,7 +5923,7 @@ const TabForced = ({ text, lang, children }) => {
           title={L("L'engagement est continental, les instruments sont nationaux",
                    'The commitment is continental, the instruments are national')}
           sources={[
-            L("Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, projet Go Green : analyse documentaire des stratégies climatiques nationales, NDC, PNA et communications nationales.",
+            L("Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, projet Go Green : analyse documentaire des stratégies climatiques nationales, NDC, PNA et communications nationales.",
               'Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, Go Green project: document analysis of national climate strategies, NDCs, NAPs and national communications.'),
             L("Déclaration ministérielle de Kampala sur la migration, l'environnement et le changement climatique (KDMECC, 2022), étendue au continent en 2023.",
               'Kampala Ministerial Declaration on Migration, Environment and Climate Change (KDMECC, 2022), extended continent-wide in 2023.'),
@@ -5932,7 +5932,7 @@ const TabForced = ({ text, lang, children }) => {
           ]}
         >
           <Prose lang={lang}>{L(
-            "La Déclaration de Kampala engage ses signataires sur un point précis : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. L'engagement est pris à l'échelle du continent. Reste à savoir ce que les instruments nationaux en ont fait, et la réponse se lit dans les documents que les États déposent eux-mêmes auprès de la Convention-cadre des Nations unies sur les changements climatiques.",
+            "La Déclaration de Kampala engage ses signataires sur un point précis : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. L'engagement est pris à l'échelle du continent. Reste à savoir ce que les instruments nationaux en ont fait, et la réponse se lit dans les documents que les États déposent eux-mêmes auprès de la Convention-cadre des Nations unies sur les changements climatiques.",
             'The Kampala Declaration commits its signatories on one precise point: to mainstream climate-related mobility into national adaptation strategies. The commitment is made at continental scale. What the national instruments did with it is a separate question, and the answer is legible in the documents states themselves file with the UN Framework Convention on Climate Change.'
           )}</Prose>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
@@ -5941,10 +5941,10 @@ const TabForced = ({ text, lang, children }) => {
                 d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — ne traitent pas la mobilité induite par le climat. Le plan climat algérien, complet sur l'atténuation et l'adaptation, ne l'aborde pas davantage.",
                      "Morocco's two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — do not address climate-induced mobility. Algeria's climate plan, thorough on mitigation and adaptation, does not take it up either.") },
               { t: L("Les rapports d'étape", 'Progress reports'),
-                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d'origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
+                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d'origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
                      "Morocco's biennial update reports acknowledge internal migration of environmental origin, from countryside to cities. The observation is recorded; no mechanism follows from it.") },
               { t: L("Les instances de coordination", 'Coordinating bodies'),
-                d: L("Le Maroc dispose d'une commission interministérielle sur la migration et l'asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
+                d: L("Le Maroc dispose d'une commission interministérielle sur la migration et l'asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
                      'Morocco has an interministerial commission on migration and asylum. Climate mobility is not on its agenda: it falls to the environmental authorities, which do not handle mobility.') },
             ].map((x, i) => (
               <div key={i} className="border border-slate-200 p-5 lift">
@@ -5954,11 +5954,11 @@ const TabForced = ({ text, lang, children }) => {
             ))}
           </div>
           <Prose lang={lang}>{L(
-            "Le motif se répète : le phénomène est reconnu dans les documents d'observation et absent des documents d'action. Il tient à la façon dont l'État se répartit le sujet. La mobilité climatique traverse l'agriculture, l'eau, l'urbanisme, la prévention des risques et les affaires sociales, et chacun de ces secteurs la traite depuis son propre guichet. L'Égypte fait exception dans la région : sa stratégie nationale d'adaptation prévoit des mesures ciblées sur les zones côtières, y compris des relogements planifiés.",
+            "Le motif se répète : le phénomène est reconnu dans les documents d'observation et absent des documents d'action. Il tient à la façon dont l'État se répartit le sujet. La mobilité climatique traverse l'agriculture, l'eau, l'urbanisme, la prévention des risques et les affaires sociales, et chacun de ces secteurs la traite depuis son propre guichet. L'Égypte fait exception dans la région : sa stratégie nationale d'adaptation prévoit des mesures ciblées sur les zones côtières, y compris des relogements planifiés.",
             'The pattern repeats: the phenomenon is acknowledged in observation documents and absent from action documents. It follows from how the state divides the subject up. Climate mobility cuts across agriculture, water, urban planning, disaster risk reduction and social affairs, and each of those sectors handles it from its own desk. Egypt is the regional exception: its national adaptation strategy sets out targeted measures for coastal zones, including planned relocations.'
           )}</Prose>
           <p className="text-[11px] italic leading-snug" style={{ color: 'var(--label)' }}>
-            {L("Portée du relevé : les États d'Afrique du Nord couverts par l'analyse documentaire de 2024. L'extension aux 54 suppose un dépouillement complet de la base Climate Change Laws of the World, qui n'est pas encore fait.",
+            {L("Portée du relevé : les États d'Afrique du Nord couverts par l'analyse documentaire de 2024. L'extension aux 54 suppose un dépouillement complet de la base Climate Change Laws of the World, qui n'est pas encore fait.",
                'Scope: the North African states covered by the 2024 document analysis. Extending to all 54 requires a full pass over the Climate Change Laws of the World database, which has not yet been done.')}
           </p>
         </AfricanCounterpoint>
@@ -5966,13 +5966,13 @@ const TabForced = ({ text, lang, children }) => {
       {/* Solutions durables */}
       <Reveal delay={50} className="bg-white border border-slate-200 p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
-          {L('Sortir du déplacement : trois issues, rarement atteintes', 'Leaving displacement: three exits, rarely reached')}
+          {L('Sortir du déplacement : trois issues, rarement atteintes', 'Leaving displacement: three exits, rarely reached')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
           {[
             { t: L('Rapatriement volontaire', 'Voluntary repatriation'), d: L("Le retour au pays d'origine, librement consenti et dans la sécurité. Suppose que la cause du départ ait cessé — condition rarement réunie dans les situations prolongées.", 'Return to the country of origin, freely consented and in safety. Presupposes that the cause of flight has ceased — a condition rarely met in protracted situations.') },
             { t: L('Intégration locale', 'Local integration'), d: L("L'installation durable dans le pays d'asile, avec accès à un statut, au travail et aux services. Fréquente dans les faits, rarement consacrée par le droit.", 'Durable settlement in the country of asylum, with access to status, work and services. Common in fact, seldom enshrined in law.') },
-            { t: L('Réinstallation', 'Resettlement'), d: L("Le transfert vers un pays tiers. Les places offertes chaque année couvrent une fraction des besoins : un dispositif de protection ciblée.", 'Transfer to a third country. The places offered each year cover a fraction of the need: a targeted protection mechanism.') },
+            { t: L('Réinstallation', 'Resettlement'), d: L("Le transfert vers un pays tiers. Les places offertes chaque année couvrent une fraction des besoins : un dispositif de protection ciblée.", 'Transfer to a third country. The places offered each year cover a fraction of the need: a targeted protection mechanism.') },
           ].map((x, i) => (
             <div key={i} className="border border-slate-200 p-5 lift">
               <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
@@ -5981,7 +5981,7 @@ const TabForced = ({ text, lang, children }) => {
           ))}
         </div>
         <Prose className="text-sm text-slate-700 leading-relaxed text-justify max-w-4xl mt-6" lang={lang}>{L(
-            "Tant qu'aucune des trois n'aboutit, la situation devient un déplacement prolongé : non plus une urgence, mais un régime d'attente institutionnalisé. La nuance n'est pas sémantique — elle décide du type de financement mobilisable, humanitaire et court d'un côté, développement et long de l'autre. Nommer une situation « prolongée » suppose toutefois de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire. Voir le Glossaire.",
+            "Tant qu'aucune des trois n'aboutit, la situation devient un déplacement prolongé : non plus une urgence, mais un régime d'attente institutionnalisé. La nuance n'est pas sémantique — elle décide du type de financement mobilisable, humanitaire et court d'un côté, développement et long de l'autre. Nommer une situation « prolongée » suppose toutefois de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire. Voir le Glossaire.",
             'As long as none of the three is achieved, the situation becomes protracted displacement: no longer an emergency but an institutionalised regime of waiting. The nuance is not semantic — it decides what funding can be mobilised, humanitarian and short on one side, development and long on the other. Naming a situation "protracted" does, however, require acknowledging a lasting presence, which host states are often reluctant to do. See the Glossary.'
           )}</Prose>
       </Reveal>
@@ -6045,7 +6045,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
       {bascule}
       <Reperes
         lang={lang}
-        titre={{ fr: "Déplacé, réfugié, apatride, travailleur migrant : quatre statuts distincts",
+        titre={{ fr: "Déplacé, réfugié, apatride, travailleur migrant : quatre statuts distincts",
                  en: 'Displaced, refugee, stateless, migrant worker: four distinct statuses',
                  ar: 'نازح، لاجئ، عديم الجنسية، عامل مهاجر: أربع صفات متمايزة' }}
         chapeau={{
@@ -6057,7 +6057,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             sens: { fr: "Chassé de chez lui, resté dans son pays. Convention de Kampala (2009), seul traité contraignant au monde sur cette situation. Aucune frontière franchie, donc aucune statistique d'entrée nulle part.",
                     en: 'Driven from home, still inside their own country. Kampala Convention (2009), the world’s only binding treaty on this situation. No border crossed, therefore no entry statistic anywhere.' } },
           { mot: { fr: 'Réfugié', en: 'Refugee' },
-            sens: { fr: "A franchi une frontière et ne peut rentrer. La Convention de l'OUA (1969) va plus loin que celle de Genève : elle couvre aussi l'agression extérieure, l'occupation, la domination étrangère et les événements troublant gravement l'ordre public.",
+            sens: { fr: "A franchi une frontière et ne peut rentrer. La Convention de l'OUA (1969) va plus loin que celle de Genève : elle couvre aussi l'agression extérieure, l'occupation, la domination étrangère et les événements troublant gravement l'ordre public.",
                     en: 'Has crossed a border and cannot return. The OAU Convention (1969) reaches further than the Geneva one: it also covers external aggression, occupation, foreign domination and events seriously disturbing public order.' } },
           { mot: { fr: 'Apatride', en: 'Stateless person' },
             sens: { fr: "Aucun État ne le reconnaît comme son ressortissant. Sans nationalité, souvent sans papiers, il n'apparaît que là où un État accepte de le recenser.",
@@ -6077,7 +6077,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             angle: { fr: "Ceux qui ne se présentent jamais à un guichet.", en: 'Those who never present themselves at a counter.' } },
           { source: { fr: 'IDMC', en: 'IDMC' },
             mesure: { fr: "Déplacés internes chaque année, par conflit et par catastrophe, séparément.", en: 'Internally displaced each year, by conflict and by disaster, separately.' },
-            angle: { fr: "Ce que devient un retour : le déplacé rentré sort du décompte sans qu'on sache ce qu'il a retrouvé.", en: 'What return amounts to: someone who goes home leaves the count with no record of what they found.' } },
+            angle: { fr: "Ce que devient un retour : le déplacé rentré sort du décompte sans qu'on sache ce qu'il a retrouvé.", en: 'What return amounts to: someone who goes home leaves the count with no record of what they found.' } },
           { source: { fr: 'OIT', en: 'ILO' },
             mesure: { fr: "Travailleurs migrants, par branche et par sexe.", en: 'Migrant workers, by sector and by sex.' },
             angle: { fr: "Le travail informel, où se trouve l'essentiel de l'emploi africain.", en: 'Informal work, where most African employment sits.' } },
@@ -6086,7 +6086,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             angle: { fr: "Les envois de la main à la main, que personne n'enregistre.", en: 'Hand-to-hand transfers, which no one records.' } },
         ]}
         pied={{
-          fr: "Une même personne peut relever de plusieurs de ces catégories au cours d'un seul parcours, et en changer sans bouger. Les définitions africaines priment ici ; la définition onusienne est citée en comparaison.",
+          fr: "Une même personne peut relever de plusieurs de ces catégories au cours d'un seul parcours, et en changer sans bouger. Les définitions africaines priment ici ; la définition onusienne est citée en comparaison.",
           en: 'One person can fall under several of these categories across a single journey, and change category without moving. African definitions govern here; the UN definition is cited for comparison.'
         }}
       />
@@ -6185,11 +6185,11 @@ const TabLabour = ({ text, lang, children }) => {
           )}
           sources={[
             { label: L(
-                "Commission de l'UA, OIT, OIM & CEA — « Report on Labour Migration Statistics in Africa », 3e édition (données 2019), publiée le 18 novembre 2021",
+                "Commission de l'UA, OIT, OIM & CEA — « Report on Labour Migration Statistics in Africa », 3e édition (données 2019), publiée le 18 novembre 2021",
                 "AU Commission, ILO, IOM & ECA — \"Report on Labour Migration Statistics in Africa\", 3rd edition (2019 data), published 18 November 2021"
               ), url: "https://au.int/sites/default/files/documents/41182-doc-254_261-EN06.pdf" },
             { label: L(
-                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), publiée le 13 juillet 2026",
+                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), publiée le 13 juillet 2026",
                 "AU Commission, ILO & IOM (JLMP programme, technical support from Statistics Sweden) — \"Report on Labour Migration Statistics in Africa\", 4th edition (2022 data), published 13 July 2026"
               ), url: "https://au.int/sites/default/files/4th_Edi_LMSRA_EN_WEB_20260626.pdf" },
           ]}
@@ -6215,7 +6215,7 @@ const TabLabour = ({ text, lang, children }) => {
                   ["Migrants en âge de travailler", "20,2 M — 77 % des migrants", "20,4 M — au moins 78 %"],
                   ["Part dans la population active", "72 %", "64 %"],
                   ["Part des femmes parmi les travailleurs migrants", "38 % en moyenne", "37 % en moyenne"],
-                  ["Concentration régionale", "—", "Ouest, Est et Sud : 76 % des travailleurs migrants"],
+                  ["Concentration régionale", "—", "Ouest, Est et Sud : 76 % des travailleurs migrants"],
                   ["Envois de fonds — régions dominantes", "Nord 43 % + Ouest 39 % = 82 %", "Nord 45 % + Ouest 34 % = 79 %"],
                 ], en: [
                   ["International migrant workers", "14.5 M (9.5 M in 2010)", "13.1 M (9.3 M in 2010)"],
@@ -6240,7 +6240,7 @@ const TabLabour = ({ text, lang, children }) => {
               {L("Ce que la révision de la série nous apprend", "What the revision of the series tells us")}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Il s'agit d'une révision : méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
+                "Le point de départ lui-même a bougé : 9,5 millions de travailleurs migrants en 2010 selon la 3e édition, 9,3 millions selon la 4e. Il s'agit d'une révision : méthodologie affinée, davantage d'États déclarants, séries recalculées. La 4e édition documente d'ailleurs le décrochage de 2020 (croissance tombée à 0,67 %, effet de la pandémie sur la mobilité) que la précédente ne pouvait pas voir. Une plateforme de données doit montrer ces révisions plutôt que de retenir le chiffre le plus commode : c'est précisément l'objet de l'harmonisation que vise SHaSA.",
                 "The starting point itself moved: 9.5 million migrant workers in 2010 according to the 3rd edition, 9.3 million according to the 4th. This is a revision: refined methodology, more reporting states, recomputed series. The 4th edition also documents the 2020 break (growth down to 0.67%, the pandemic's effect on mobility) that the previous one could not see. A data platform should show such revisions rather than retain the most convenient figure: that is exactly what SHaSA's harmonisation is for."
               )}</Prose>
           </div>
@@ -6250,7 +6250,7 @@ const TabLabour = ({ text, lang, children }) => {
               {L("Là où la donnée manque vraiment", "Where the data really runs out")}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
+                "Pour établir les caractéristiques d'emploi des migrants, la 3e édition n'a pu s'appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles. C'est sur cette base que l'on sait que l'agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés. Le chiffre est solide pour ces dix pays ; il ne l'est pas pour le continent. Le déficit n'est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d'harmonisation (Ben Mokhtar, 2026).",
                 "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles. It is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded. The figure is sound for those ten countries; it is not sound for the continent. The deficit therefore sits in the reporting and harmonisation chain rather than in producing raw data (Ben Mokhtar, 2026)."
               )}</Prose>
           </div>
@@ -6260,18 +6260,18 @@ const TabLabour = ({ text, lang, children }) => {
               {L("Le lien avec la libre circulation et la ZLECAf", "The link with free movement and the AfCFTA")}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "La 4e édition établit elle-même le lien. L'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
+                "La 4e édition établit elle-même le lien. L'augmentation du nombre de travailleurs migrants « pourrait être liée à l'assouplissement des restrictions migratoires et à la mise en œuvre des dispositions de libre circulation entre pays africains ». Elle en donne un cas mesuré — au sein de la Communauté d'Afrique de l'Est, les travailleurs migrants passent de 1,14 million en 2008 à 2,69 millions en 2019. Et elle constate que l'Ouest, l'Est et le Sud, où les protocoles CEDEAO, CAE et SADC fonctionnent, concentrent 77,3 % des migrants internationaux du continent.",
                 "The 4th edition draws the link itself: the rise in migrant worker numbers \"might be linked to relaxed migration restrictions and to the implementation of free movement provisions between African countries\". It gives one measured case — within the East African Community, migrant workers rise from 1.14 million in 2008 to 2.69 million in 2019. And it notes that West, East and Southern Africa, where the ECOWAS, EAC and SADC protocols operate, concentrate 77.3% of the continent's international migrants."
               )}</Prose>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify mt-3" lang={lang}>{L(
-                "Le paradoxe documenté ailleurs sur cette plateforme prend ici sa mesure économique : la ZLECAf compte 48 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, elle a été conquise au niveau régional, et c'est à cette échelle que la mobilité de travail se mesure.",
+                "Le paradoxe documenté ailleurs sur cette plateforme prend ici sa mesure économique : la ZLECAf compte 48 ratifications sur 54, le Protocole sur la libre circulation des personnes 4 sur 54. Les marchandises ont obtenu leur cadre continental, les travailleurs qui les produisent ne l'ont pas. Là où la libre circulation existe malgré tout, elle a été conquise au niveau régional, et c'est à cette échelle que la mobilité de travail se mesure.",
                 "The paradox documented elsewhere on this platform takes its economic measure here: the AfCFTA has 48 ratifications out of 54, the Protocol on Free Movement of Persons 4 out of 54. Goods obtained their continental framework; the workers who produce them did not. Where free movement nonetheless exists, it was won at regional level, and that is the scale at which labour mobility can be measured."
               )}</Prose>
           </div>
 
           <div className="p-5" style={{ backgroundColor: 'var(--warn-soft)', border: '1px solid #E4CFA4' }}>
             <p className="block text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--warn-ink)' }}>
-              {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
+              {L("Protection sociale : l'angle mort", "Social protection: the blind spot")}
             </p>
             <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--warn-ink)' }} lang={lang}>{L(
                 "La 4e édition rappelle que 19,1 % seulement de la population africaine bénéficie d'au moins une prestation de protection sociale (indicateur ODD 1.3.1). La moyenne mondiale est de 52,4 % — la première fois que la moitié de l'humanité est couverte. Un travailleur migrant cumule ce déficit continental et la non-portabilité de ses droits d'un pays à l'autre.",
@@ -6281,7 +6281,7 @@ const TabLabour = ({ text, lang, children }) => {
         </AfricanCounterpoint>
       </Reveal>
 
-      {/* Les conventions de l'OIT : le meme motif que l'ancrage continental */}
+      {/* Les conventions de l'OIT : le meme motif que l'ancrage continental */}
       <Reveal delay={35}>
         <Chapitre lang={lang}>
           <section className="bg-white" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--warn-ink)' }}>
@@ -6290,7 +6290,7 @@ const TabLabour = ({ text, lang, children }) => {
                 {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
               </span>
               <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-                {L("Les droits opposables : sept États sur cinquante-quatre ont le socle complet",
+                {L("Les droits opposables : sept États sur cinquante-quatre ont le socle complet",
                    'Enforceable rights: seven states out of fifty-four have the full floor')}
               </h3>
             </div>
@@ -6323,7 +6323,7 @@ const TabLabour = ({ text, lang, children }) => {
                   ))}
                 </div>
                 <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
-                  <span className="font-bold uppercase tracking-widest">{L('Socle complet :', 'Full floor:')}</span>{' '}
+                  <span className="font-bold uppercase tracking-widest">{L('Socle complet :', 'Full floor:')}</span>{' '}
                   {ilo.complet.map(r => r.n).join(', ')}.
                 </p>
               </div>
@@ -6333,7 +6333,7 @@ const TabLabour = ({ text, lang, children }) => {
                   {L('Le volume ne dit pas la protection', 'Volume does not equal protection')}
                 </p>
                 <Prose className="text-[13px] leading-relaxed text-justify" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
-                    `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
+                    `Le nombre total de conventions ratifiées varie de ${ilo.rows[ilo.rows.length - 1].total} à ${ilo.rows[0].total}, pour une moyenne de ${fmt(ilo.moyenne)}. Mais un total élevé ne garantit rien : plusieurs États figurant en tête du classement général n'ont pas le socle complet, tandis que Madagascar l'a intégralement avec un total bien plus modeste. C'est le même motif que celui observé sur les instruments continentaux — l'adhésion large précède, et parfois remplace, l'engagement contraignant (Ben Mokhtar, 2026).`,
                     `The total number of ratified conventions ranges from ${ilo.rows[ilo.rows.length - 1].total} to ${ilo.rows[0].total}, averaging ${fmt(ilo.moyenne)}. But a high total guarantees nothing: several states at the top of the overall ranking lack the complete fundamental floor, while Madagascar holds it in full with a far more modest total. It is the same pattern observed on continental instruments — broad accession precedes, and sometimes replaces, binding commitment (Ben Mokhtar, 2026).`
                   )}</Prose>
               </div>
@@ -6372,7 +6372,7 @@ const TabLabour = ({ text, lang, children }) => {
               <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer"
                  className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
                 <span>{L(
-                  "OIT — base NORMLEX (ratifications par pays). Compilation integree a la base pays de la plateforme ; chaque fiche pays renvoie a la page NORMLEX de l'Etat concerne.",
+                  "OIT — base NORMLEX (ratifications par pays). Compilation integree a la base pays de la plateforme ; chaque fiche pays renvoie a la page NORMLEX de l'Etat concerne.",
                   'ILO — NORMLEX database (ratifications by country). Compiled into the platform country base; each country profile links to that state\'s NORMLEX page.'
                 )}</span>
                 <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
@@ -6397,7 +6397,7 @@ const TabLabour = ({ text, lang, children }) => {
 // en Europe sont cartographiees en continu, par point de passage et par mois.
 // Les corridors afro-africains, qui portent l'essentiel du mouvement, se
 // deduisent d'un tableau de stocks bilateraux publie tous les deux ans. Ce
-// n'est pas un manque de donnees : c'est un choix d'instrument.
+// n'est pas un manque de donnees : c'est un choix d'instrument.
 const TabCorridors = ({ text, lang, children }) => {
   const L = faireL(lang);
 
@@ -6437,7 +6437,7 @@ const TabCorridors = ({ text, lang, children }) => {
 
       <Reperes
         lang={lang}
-        titre={{ fr: "Un corridor, une route : deux objets qu'on confond",
+        titre={{ fr: "Un corridor, une route : deux objets qu'on confond",
                  en: 'A corridor and a route: two objects that get confused',
                  ar: 'الممر والمسار: شيئان يُخلط بينهما' }}
         chapeau={{
@@ -6455,7 +6455,7 @@ const TabCorridors = ({ text, lang, children }) => {
             sens: { fr: "La case d'un tableau à double entrée pays d'origine × pays de résidence, publié par UN DESA tous les deux ans. C'est de là que sortent tous les chiffres de corridor.",
                     en: 'The cell of a two-way table of origin country × country of residence, published by UN DESA every two years. Every corridor figure comes from there.' } },
           { mot: { fr: 'Suivi de flux', en: 'Flow monitoring' },
-            sens: { fr: "Le comptage répété des passages en un point donné. L'OIM en opère sur les routes menant hors du continent ; il n'existe pas d'équivalent continental pour les corridors intérieurs.",
+            sens: { fr: "Le comptage répété des passages en un point donné. L'OIM en opère sur les routes menant hors du continent ; il n'existe pas d'équivalent continental pour les corridors intérieurs.",
                     en: 'Repeated counting of crossings at a given point. IOM runs it on routes leading off the continent; no continental equivalent exists for internal corridors.' } },
         ]}
         pied={{
@@ -6503,7 +6503,7 @@ const TabCorridors = ({ text, lang, children }) => {
                { ar: 'الممرات الأفريقية البينية الموثقة' })}
           </h2>
           <Prose className="text-[13px] leading-relaxed max-w-3xl" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
-            "Chaque barre est un stock bilatéral : le nombre de personnes nées dans le premier pays et résidant dans le second. Le corridor Burkina Faso — Côte d'Ivoire, à lui seul, dépasse la plupart des routes extracontinentales documentées.",
+            "Chaque barre est un stock bilatéral : le nombre de personnes nées dans le premier pays et résidant dans le second. Le corridor Burkina Faso — Côte d'Ivoire, à lui seul, dépasse la plupart des routes extracontinentales documentées.",
             'Each bar is a bilateral stock: how many people born in the first country reside in the second. The Burkina Faso — Côte d’Ivoire corridor alone exceeds most documented extra-continental routes.'
           )}</Prose>
         </div>
@@ -6527,7 +6527,7 @@ const TabCorridors = ({ text, lang, children }) => {
 
         <div className="px-6 md:px-8 py-4 border-t border-slate-100" style={{ backgroundColor: 'var(--paper-sunk)' }}>
           <Prose className="text-[12px] leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L(
-            "Cinq corridors seulement, quand le continent en compte des dizaines. Ce n'est pas une sélection éditoriale : ce sont ceux pour lesquels un chiffre bilatéral publié a pu être retrouvé et vérifié. Le reste existe sans être compté.",
+            "Cinq corridors seulement, quand le continent en compte des dizaines. Ce n'est pas une sélection éditoriale : ce sont ceux pour lesquels un chiffre bilatéral publié a pu être retrouvé et vérifié. Le reste existe sans être compté.",
             'Five corridors only, where the continent holds dozens. This is not an editorial selection: they are the ones for which a published bilateral figure could be found and verified. The rest exist without being counted.'
           )}</Prose>
         </div>
@@ -6552,15 +6552,15 @@ const TabCorridors = ({ text, lang, children }) => {
            l'un sous l'autre ne sourcent pas deux fois, ils se répètent. */
       >
         <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
-          "Les routes menant hors du continent disposent d'un appareil de mesure dédié : points de passage suivis, effectifs mensuels, cartes actualisées trois fois par an. Les corridors intérieurs, qui portent un mouvement bien plus large, n'ont rien de tel. On les reconstitue à partir de tableaux de stocks publiés tous les deux ans, conçus pour d'autres usages.",
+          "Les routes menant hors du continent disposent d'un appareil de mesure dédié : points de passage suivis, effectifs mensuels, cartes actualisées trois fois par an. Les corridors intérieurs, qui portent un mouvement bien plus large, n'ont rien de tel. On les reconstitue à partir de tableaux de stocks publiés tous les deux ans, conçus pour d'autres usages.",
           'Routes leading off the continent have a dedicated measuring apparatus: monitored crossing points, monthly counts, maps refreshed three times a year. Interior corridors, carrying a far larger movement, have nothing of the kind. They are reconstructed from stock tables published every two years, designed for other purposes.'
         )}</Prose>
         <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
-          "L'écart ne tient pas à la difficulté technique : compter les passages à Ouagadougou-Abidjan ne serait pas plus dur qu'à Agadez. Il tient à ce qu'on attend de la mesure. Un instrument se construit là où une question est posée, et la question posée aux migrations africaines est venue d'ailleurs — celle de savoir qui arrive en Europe. Le mouvement qui reste sur le continent ne déclenche aucune commande d'instrument, et devient donc invisible dans les termes mêmes où on prétend le décrire (Ben Mokhtar, 2026).",
+          "L'écart ne tient pas à la difficulté technique : compter les passages à Ouagadougou-Abidjan ne serait pas plus dur qu'à Agadez. Il tient à ce qu'on attend de la mesure. Un instrument se construit là où une question est posée, et la question posée aux migrations africaines est venue d'ailleurs — celle de savoir qui arrive en Europe. Le mouvement qui reste sur le continent ne déclenche aucune commande d'instrument, et devient donc invisible dans les termes mêmes où on prétend le décrire (Ben Mokhtar, 2026).",
           'The gap is not technical: counting crossings between Ouagadougou and Abidjan would be no harder than at Agadez. It lies in what is expected of the measurement. An instrument gets built where a question is asked, and the question asked of African migration came from elsewhere — who arrives in Europe. Movement that stays on the continent triggers no commissioning of instruments, and so becomes invisible in the very terms used to describe it (Ben Mokhtar, 2026).'
         )}</Prose>
         <Prose className="text-sm leading-relaxed text-justify" lang={lang}>{L(
-          "La conséquence est mesurable sur cette page : cinq corridors chiffrés d'un côté, une vingtaine de segments de route de l'autre, pour un mouvement dix fois moindre. La carte de l'Atlas trace les deux à la même échelle, ce qui rend l'écart visible plutôt que de le reconduire.",
+          "La conséquence est mesurable sur cette page : cinq corridors chiffrés d'un côté, une vingtaine de segments de route de l'autre, pour un mouvement dix fois moindre. La carte de l'Atlas trace les deux à la même échelle, ce qui rend l'écart visible plutôt que de le reconduire.",
           'The consequence is measurable on this page: five quantified corridors on one side, some twenty route segments on the other, for a movement ten times smaller. The Atlas map draws both at the same scale, making the gap visible rather than reproducing it.'
         )}</Prose>
       </AfricanCounterpoint>
@@ -6582,7 +6582,7 @@ const TabCorridors = ({ text, lang, children }) => {
             url: 'https://www.mideq.org/en/migration-corridors/burkina-faso-cote-divoire/' },
         ]}
         note={L(
-          "Les stocks bilatéraux sont datés de 2023 et 2024 selon le couple de pays : UN DESA publie par vagues, et tous les pays ne remontent pas leurs recensements au même rythme.",
+          "Les stocks bilatéraux sont datés de 2023 et 2024 selon le couple de pays : UN DESA publie par vagues, et tous les pays ne remontent pas leurs recensements au même rythme.",
           'Bilateral stocks are dated 2023 or 2024 depending on the country pair: UN DESA publishes in waves, and not all countries report their censuses at the same rhythm.'
         )}
       />
@@ -6613,17 +6613,17 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "ECOWAS constitutes the reference bloc of the continental regime. Openness is a stabilized presumption in administrative practices, despite the 2024-2025 secession of the Alliance of Sahel States (AES - Mali, Burkina Faso, Niger) which fragments the historical 1979 acquis."
       },
       instruments: {
-        fr: "Protocole de 1979 et Actes additionnels de 2014 (suppression de la limite de 90 jours). Processus consultatif : MIDWA (Dialogue sur la migration en Afrique de l'Ouest).",
+        fr: "Protocole de 1979 et Actes additionnels de 2014 (suppression de la limite de 90 jours). Processus consultatif : MIDWA (Dialogue sur la migration en Afrique de l'Ouest).",
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
+        fr: "La région affiche l'indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d'identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
         en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
       },
       sources: [
         { label: "CEDEAO — Retrait du Burkina Faso, du Mali et du Niger (2025)", url: "https://www.ecowas.int/burkina-faso-mali-and-nigers-withdrawal-from-ecowas-is-now-a-reality/" },
         { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
-        { label: "Union africaine — Fiche CER : CEDEAO", url: "https://au.int/en/recs/ecowas" },
+        { label: "Union africaine — Fiche CER : CEDEAO", url: "https://au.int/en/recs/ecowas" },
       ]
     },
     {
@@ -6642,7 +6642,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d'intégration restent en négociation.",
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d'intégration restent en négociation.",
         en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
       },
       sources: [
@@ -6663,11 +6663,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Faced with sovereign reluctance (notably from South Africa), SADC deploys an asymmetric and selective integration, prioritizing logistics corridor management and talent attraction over universal openness."
       },
       instruments: {
-        fr: "Protocole de 2005, plan sur la migration de travail (2020-2025). Processus consultatif : MIDSA (Dialogue sur la migration pour l'Afrique Australe).",
+        fr: "Protocole de 2005, plan sur la migration de travail (2020-2025). Processus consultatif : MIDSA (Dialogue sur la migration pour l'Afrique Australe).",
         en: "2005 Protocol, Labour migration plan (2020-2025). Consultative process: MIDSA (Migration Dialogue for Southern Africa)."
       },
       dynamics: {
-        fr: "Deuxième CER la plus ouverte du continent, avec un score AVOI de 0,547 en 2024 et en progression continue. L'Angola y contribue fortement : le pays a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
+        fr: "Deuxième CER la plus ouverte du continent, avec un score AVOI de 0,547 en 2024 et en progression continue. L'Angola y contribue fortement : le pays a près de doublé le nombre de nationalités bénéficiant d'un accès sans visa fin 2023. L'espace reste néanmoins polarisé par Pretoria (réforme BMA et White Paper de 2024) ; l'innovation passe aussi par des accords bilatéraux (ex : carte d'identité commune Botswana-Namibie).",
         en: "The second-most open REC on the continent, with an AVOI score of 0.547 in 2024 and a continuing upward trend. Angola contributes strongly: it nearly doubled the number of nationalities granted visa-free access in late 2023. The space remains polarized by Pretoria (BMA reform and 2024 White Paper); innovation also comes through bilateral agreements (e.g. the joint Botswana-Namibia ID card)."
       },
       sources: [
@@ -6688,7 +6688,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Vast bloc of 21 States (from Tunisia to Eswatini) where human integration advances through technical accumulation (business visas) to reduce commercial transaction costs in a heterogeneous space."
       },
       instruments: {
-        fr: "Protocoles de 1984 et 1998 (application inégale). Processus consultatif : MIDCOM. Production massive d'outils de capacitation technique.",
+        fr: "Protocoles de 1984 et 1998 (application inégale). Processus consultatif : MIDCOM. Production massive d'outils de capacitation technique.",
         en: "1984 and 1998 Protocols (uneven application). Consultative process: MIDCOM. Massive production of technical capacity-building tools."
       },
       dynamics: {
@@ -6697,7 +6697,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       sources: [
         { label: "COMESA — États membres", url: "https://www.comesa.int/comesa-members-states/" },
-        { label: "Union africaine — Fiche CER : COMESA", url: "https://au.int/en/recs/comesa" },
+        { label: "Union africaine — Fiche CER : COMESA", url: "https://au.int/en/recs/comesa" },
         { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
       ]
     },
@@ -6713,7 +6713,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "In a Horn of Africa marked by conflicts and climate shocks, mobility is captured by IGAD at the exact articulation between regional security, survival transhumance, and development."
       },
       instruments: {
-        fr: "Deux protocoles pionniers en 2020 : Libre circulation des personnes ET Transhumance pastorale transfrontalière. Processus consultatif : MIDIGAD.",
+        fr: "Deux protocoles pionniers en 2020 : Libre circulation des personnes ET Transhumance pastorale transfrontalière. Processus consultatif : MIDIGAD.",
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
@@ -6723,7 +6723,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       sources: [
         { label: "IGAD — Communiqué sur le retrait de l'Érythrée (2025)", url: "https://igad.int/igad-regrets-eritreas-decision-to-withdraw-from-the-organisation/" },
         { label: "IGAD — Présentation et structure", url: "https://igad.int/about/" },
-        { label: "Union africaine — Fiche CER : IGAD", url: "https://au.int/en/recs/igad" },
+        { label: "Union africaine — Fiche CER : IGAD", url: "https://au.int/en/recs/igad" },
       ]
     },
     {
@@ -6742,12 +6742,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Revised ECCAS Treaty (2019). CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90 days and the community biometric passport."
       },
       dynamics: {
-        fr: "Score AVOI le plus bas du continent avec l'UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là. Le défi reste la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale). Le retrait du Rwanda, annoncé en juin 2025 à la suite d'un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
+        fr: "Score AVOI le plus bas du continent avec l'UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là. Le défi reste la conversion de l'acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale). Le retrait du Rwanda, annoncé en juin 2025 à la suite d'un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
         en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, continental average: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year. The challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea). Rwanda's announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
       },
       sources: [
         { label: "CEEAC — Présentation de la Communauté", url: "https://www.ceeac-eccas.org/2023/05/28/eccas-in-brief/" },
-        { label: "Union africaine — Fiche CER : CEEAC", url: "https://au.int/en/recs/eccas" },
+        { label: "Union africaine — Fiche CER : CEEAC", url: "https://au.int/en/recs/eccas" },
         { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
       ]
     },
@@ -6767,12 +6767,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Marrakech Treaty (1989) as a pure normative horizon."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d'État ne s'est tenu depuis des décennies : l'UMA subsiste comme coquille juridique plus que comme institution opérante.",
+        fr: "Le bloc affiche la moyenne d'ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L'Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l'intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d'État ne s'est tenu depuis des décennies : l'UMA subsiste comme coquille juridique plus que comme institution opérante.",
         en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, continental average: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
       },
       sources: [
         { label: "UMA — Historique et institutions", url: "https://maghrebarabe.org/en/historical/" },
-        { label: "Union africaine — Fiche CER : UMA", url: "https://au.int/en/recs/uma" },
+        { label: "Union africaine — Fiche CER : UMA", url: "https://au.int/en/recs/uma" },
         { label: "BAD / CUA — Africa Visa Openness Index", url: "https://www.visaopenness.org/" },
       ]
     },
@@ -6797,7 +6797,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       sources: [
         { label: "CEN-SAD — États membres et Secrétariat exécutif", url: "https://censad.int/en/who-are-we/member-states/" },
-        { label: "Union africaine — Fiche CER : CEN-SAD", url: "https://au.int/en/recs/censad" },
+        { label: "Union africaine — Fiche CER : CEN-SAD", url: "https://au.int/en/recs/censad" },
         { label: "Xinhua — Réouverture du siège de la CEN-SAD à Tripoli (2026)", url: "https://english.news.cn/20260412/160868c2d62b40ff917e3c2b511748a0/c.html" },
       ]
     }
@@ -6816,8 +6816,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "Aspiration N°2 (Agenda 2063)", en: "Aspiration N°2 (Agenda 2063)" },
-        textFr: "« Un continent intégré, politiquement uni, basé sur les idéaux du Panafricanisme et la vision de la Renaissance africaine. (...) L'introduction d'un passeport africain et l'abolition de l'obligation de visa pour tous les citoyens africains. »",
-        textEn: "« An integrated continent, politically united and based on the ideals of Pan-Africanism and the vision of Africa’s Renaissance. (...) The introduction of an African passport and the abolition of visa requirements for all African citizens. »"
+        textFr: "« Un continent intégré, politiquement uni, basé sur les idéaux du Panafricanisme et la vision de la Renaissance africaine. (...) L'introduction d'un passeport africain et l'abolition de l'obligation de visa pour tous les citoyens africains. »",
+        textEn: "« An integrated continent, politically united and based on the ideals of Pan-Africanism and the vision of Africa’s Renaissance. (...) The introduction of an African passport and the abolition of visa requirements for all African citizens. »"
       }
     },
     {
@@ -6830,22 +6830,22 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "Article 43 - Chapitre VI", en: "Article 43 - Chapter VI" },
-        textFr: "« Les États membres conviennent d’adopter, individuellement, à l’échelon bilatéral ou régional, les mesures nécessaires en vue de réaliser progressivement la libre circulation des personnes, et de garantir la jouissance du droit de résidence et d’établissement à leurs ressortissants. »",
-        textEn: "« Member States agree to adopt, individually, at bilateral or regional levels, the necessary measures, in order to achieve progressively the free movement of persons, and to ensure the enjoyment of the right of residence and the right of establishment by their nationals. »"
+        textFr: "« Les États membres conviennent d’adopter, individuellement, à l’échelon bilatéral ou régional, les mesures nécessaires en vue de réaliser progressivement la libre circulation des personnes, et de garantir la jouissance du droit de résidence et d’établissement à leurs ressortissants. »",
+        textEn: "« Member States agree to adopt, individually, at bilateral or regional levels, the necessary measures, in order to achieve progressively the free movement of persons, and to ensure the enjoyment of the right of residence and the right of establishment by their nationals. »"
       }
     },
     {
       title: { fr: "Le Protocole de Kigali (2018)", en: "The Kigali Protocol (2018)" },
       tag: { fr: "Le Droit Entravé", en: "Hindered Law" },
-      stats: [{ value: 4, total: 54, threshold: 15, label: { fr: "États ayant ratifié (seuil : 15)", en: "States having ratified (threshold: 15)" } }],
+      stats: [{ value: 4, total: 54, threshold: 15, label: { fr: "États ayant ratifié (seuil : 15)", en: "States having ratified (threshold: 15)" } }],
       desc: {
-        fr: "Le Protocole sur la libre circulation vise à opérationnaliser l'Art. 43 d'Abuja. Paradoxe : ratifié par 4 pays seulement (Rwanda, Sao Tomé, Mali, Niger - ces deux derniers ayant pourtant quitté la CEDEAO pour l'AES).",
+        fr: "Le Protocole sur la libre circulation vise à opérationnaliser l'Art. 43 d'Abuja. Paradoxe : ratifié par 4 pays seulement (Rwanda, Sao Tomé, Mali, Niger - ces deux derniers ayant pourtant quitté la CEDEAO pour l'AES).",
         en: "The Protocol on Free Movement aims to operationalize Art. 43 of Abuja. Paradox: ratified by only 4 countries (Rwanda, Sao Tome, Mali, Niger - the latter two having nevertheless left ECOWAS for the AES)."
       },
       article: {
         ref: { fr: "Article 4 - Réalisation progressive", en: "Article 4 - Progressive Realization" },
-        textFr: "« La libre circulation des personnes, le droit de résidence et le droit d'établissement sont réalisés en trois (3) phases : Première phase - Droit d'entrée; Deuxième phase - Droit de résidence; Troisième phase - Droit d'établissement. »",
-        textEn: "« The free movement of persons, right of residence and right of establishment shall be achieved in three (3) phases: Phase One - Right of Entry; Phase Two - Right of Residence; Phase Three - Right of Establishment. »"
+        textFr: "« La libre circulation des personnes, le droit de résidence et le droit d'établissement sont réalisés en trois (3) phases : Première phase - Droit d'entrée; Deuxième phase - Droit de résidence; Troisième phase - Droit d'établissement. »",
+        textEn: "« The free movement of persons, right of residence and right of establishment shall be achieved in three (3) phases: Phase One - Right of Entry; Phase Two - Right of Residence; Phase Three - Right of Establishment. »"
       }
     },
     {
@@ -6858,8 +6858,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "Protocole sur le commerce des services - Art. 1(p)", en: "Protocol on Trade in Services - Art. 1(p)" },
-        textFr: "« Fourniture d'un service par la présence de personnes physiques (Mode 4) d'un État partie sur le territoire d'un autre État partie. (...) Les États parties négocient des engagements spécifiques applicables au mouvement des personnes physiques. »",
-        textEn: "« Supply of a service by the presence of natural persons (Mode 4) of a State Party in the territory of any other State Party. (...) State Parties shall negotiate specific commitments applying to the movement of natural persons. »"
+        textFr: "« Fourniture d'un service par la présence de personnes physiques (Mode 4) d'un État partie sur le territoire d'un autre État partie. (...) Les États parties négocient des engagements spécifiques applicables au mouvement des personnes physiques. »",
+        textEn: "« Supply of a service by the presence of natural persons (Mode 4) of a State Party in the territory of any other State Party. (...) State Parties shall negotiate specific commitments applying to the movement of natural persons. »"
       }
     },
     {
@@ -6872,8 +6872,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "Article 1.2 - Convention OUA 1969", en: "Article 1.2 - 1969 OAU Convention" },
-        textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (...) est obligée de quitter sa résidence habituelle. »",
-        textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (...) is compelled to leave his place of habitual residence. »"
+        textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (...) est obligée de quitter sa résidence habituelle. »",
+        textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (...) is compelled to leave his place of habitual residence. »"
       }
     },
     {
@@ -6886,8 +6886,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       },
       article: {
         ref: { fr: "Article 1 - Convention de Kampala", en: "Article 1 - Kampala Convention" },
-        textFr: "« [Les personnes déplacées internes sont] des personnes ou groupes de personnes qui ont été forcés ou obligés de fuir ou de quitter leur foyer (...) notamment en raison d'un conflit armé, de situations de violence généralisée, de violations des droits de l'homme ou de catastrophes naturelles ou provoquées par l'homme, et qui n'ont pas franchi les frontières internationalement reconnues d'un État. »",
-        textEn: "« [Internally displaced persons are] persons or groups of persons who have been forced or obliged to flee or to leave their homes (...) in particular as a result of or in order to avoid the effects of armed conflict, situations of generalized violence, violations of human rights or natural or human-made disasters, and who have not crossed an internationally recognized state border. »"
+        textFr: "« [Les personnes déplacées internes sont] des personnes ou groupes de personnes qui ont été forcés ou obligés de fuir ou de quitter leur foyer (...) notamment en raison d'un conflit armé, de situations de violence généralisée, de violations des droits de l'homme ou de catastrophes naturelles ou provoquées par l'homme, et qui n'ont pas franchi les frontières internationalement reconnues d'un État. »",
+        textEn: "« [Internally displaced persons are] persons or groups of persons who have been forced or obliged to flee or to leave their homes (...) in particular as a result of or in order to avoid the effects of armed conflict, situations of generalized violence, violations of human rights or natural or human-made disasters, and who have not crossed an internationally recognized state border. »"
       }
     },
     {
@@ -6920,7 +6920,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 08-11 du 25 juin 2008 relative aux conditions d'entrée, de séjour et de circulation des étrangers.", en: "Law N° 08-11 of 25 June 2008 on the conditions of entry, stay and movement of foreigners." },
           details: [
             { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "La durée maximale de séjour autorisé à chaque entrée est de 90 jours. Cette durée peut être exceptionnellement prorogée de 90 jours supplémentaires, mais le séjour effectif cumulé ne peut excéder 180 jours par an.", en: "The maximum authorized stay per entry is 90 days. This may exceptionally be extended by a further 90 days, but the cumulative effective stay cannot exceed 180 days per year." } },
-            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner au-delà de la validité de son visa (ou de l'extension) doit solliciter une « Carte de résident ». La loi opère une distinction nette entre le « visa de court séjour » et le permis de résidence. Le défaut d'obtention de la carte de résident après l'expiration du visa constitue un séjour illégal passible de sanctions pénales et administratives.", en: "Any foreigner wishing to stay beyond the validity of their visa (or its extension) must apply for a \"Resident Card\". The law draws a clear distinction between the \"short-stay visa\" and the residence permit. Failure to obtain the resident card after visa expiry constitutes an unlawful stay liable to criminal and administrative sanctions." } }
+            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner au-delà de la validité de son visa (ou de l'extension) doit solliciter une « Carte de résident ». La loi opère une distinction nette entre le « visa de court séjour » et le permis de résidence. Le défaut d'obtention de la carte de résident après l'expiration du visa constitue un séjour illégal passible de sanctions pénales et administratives.", en: "Any foreigner wishing to stay beyond the validity of their visa (or its extension) must apply for a \"Resident Card\". The law draws a clear distinction between the \"short-stay visa\" and the residence permit. Failure to obtain the resident card after visa expiry constitutes an unlawful stay liable to criminal and administrative sanctions." } }
           ]
         },
         {
@@ -6929,7 +6929,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Enregistrement requis sous 7 jours. Permis après expiration visa.", en: "Registration required within 7 days. Permit after visa expiry." },
           instrument: { fr: "Loi N° 89 de 1960 sur l'entrée et le séjour des étrangers (amendée par Loi 88/2005 et Loi 173/2018).", en: "Law N° 89 of 1960 on the entry and residence of foreigners (amended by Law 88/2005 and Law 173/2018)." },
           details: [
-            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas touristiques standard sont généralement délivrés pour 30 jours. Toutefois, la loi catégorise la résidence en trois niveaux temporels distincts : « Spéciale », « Ordinaire » et « Temporaire ».", en: "Standard tourist visas are generally issued for 30 days. However, the law categorizes residence into three distinct time-based tiers: \"Special\", \"Ordinary\" and \"Temporary\"." } },
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas touristiques standard sont généralement délivrés pour 30 jours. Toutefois, la loi catégorise la résidence en trois niveaux temporels distincts : « Spéciale », « Ordinaire » et « Temporaire ».", en: "Standard tourist visas are generally issued for 30 days. However, the law categorizes residence into three distinct time-based tiers: \"Special\", \"Ordinary\" and \"Temporary\"." } },
             { label: { fr: "Mécanisme de Transition", en: "Transition Mechanism" }, text: { fr: "Un visiteur souhaitant rester doit demander un permis de résidence temporaire (souvent valide pour 6 mois à 1 an) avant l'expiration de son visa touristique. Récemment, des décrets ont instauré une période de grâce pour la régularisation des résidents illégaux moyennant le paiement d'amendes (env. 1 000 USD), soulignant la volonté de l'État d'imposer le permis de résidence.", en: "A visitor wishing to stay must apply for a temporary residence permit (often valid 6 months to 1 year) before their tourist visa expires. Recent decrees have introduced a grace period for regularizing unlawful residents against payment of fines (approx. USD 1,000), underlining the State's intent to enforce the residence permit." } }
           ]
         },
@@ -6939,8 +6939,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Visa de Résidence requis pour séjours > 3 mois.", en: "Residence Visa required for stays > 3 months." },
           instrument: { fr: "Loi N° 6 de 1987 organisant l'entrée, le séjour et la sortie des étrangers.", en: "Law N° 6 of 1987 organizing the entry, residence and exit of foreigners." },
           details: [
-            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas d'entrée autorisent un séjour maximal de trois mois. L'article 5 de la loi classifie explicitement les visas en : entrée, transit, sortie et résidence.", en: "Entry visas authorize a maximum stay of three months. Article 5 of the law explicitly classifies visas into: entry, transit, exit and residence." } },
-            { label: { fr: "Obligation d'Enregistrement", en: "Registration Obligation" }, text: { fr: "Pour séjourner au-delà de trois mois, un étranger doit obtenir un « Visa de résidence » puis un permis. La loi impose une exigence d'enregistrement stricte : tout étranger doit s'enregistrer auprès de l'autorité des passeports la plus proche dans les sept jours suivant son arrivée. C'est l'une des fenêtres de surveillance administrative les plus étroites du continent.", en: "To stay beyond three months, a foreigner must obtain a \"Residence Visa\" and then a permit. The law imposes a strict registration requirement: every foreigner must register with the nearest passport authority within seven days of arrival — one of the narrowest administrative surveillance windows on the continent." } }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas d'entrée autorisent un séjour maximal de trois mois. L'article 5 de la loi classifie explicitement les visas en : entrée, transit, sortie et résidence.", en: "Entry visas authorize a maximum stay of three months. Article 5 of the law explicitly classifies visas into: entry, transit, exit and residence." } },
+            { label: { fr: "Obligation d'Enregistrement", en: "Registration Obligation" }, text: { fr: "Pour séjourner au-delà de trois mois, un étranger doit obtenir un « Visa de résidence » puis un permis. La loi impose une exigence d'enregistrement stricte : tout étranger doit s'enregistrer auprès de l'autorité des passeports la plus proche dans les sept jours suivant son arrivée. C'est l'une des fenêtres de surveillance administrative les plus étroites du continent.", en: "To stay beyond three months, a foreigner must obtain a \"Residence Visa\" and then a permit. The law imposes a strict registration requirement: every foreigner must register with the nearest passport authority within seven days of arrival — one of the narrowest administrative surveillance windows on the continent." } }
           ]
         },
         {
@@ -6949,7 +6949,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Extension possible, mais carte d'immatriculation requise > 90 jours.", en: "Extension possible, but registration card required > 90 days." },
           instrument: { fr: "Loi N° 02-03 relative à l'entrée et au séjour des étrangers au Royaume du Maroc.", en: "Law N° 02-03 on the entry and residence of foreigners in the Kingdom of Morocco." },
           details: [
-            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "L'article 8 de la Loi 02-03 stipule explicitement que tout étranger souhaitant séjourner sur le territoire marocain pour une durée supérieure à 90 jours est tenu de demander une « Carte d'Immatriculation ».", en: "Article 8 of Law 02-03 explicitly states that any foreigner wishing to stay in Moroccan territory for longer than 90 days must apply for a \"Registration Card\"." } },
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "L'article 8 de la Loi 02-03 stipule explicitement que tout étranger souhaitant séjourner sur le territoire marocain pour une durée supérieure à 90 jours est tenu de demander une « Carte d'Immatriculation ».", en: "Article 8 of Law 02-03 explicitly states that any foreigner wishing to stay in Moroccan territory for longer than 90 days must apply for a \"Registration Card\"." } },
             { label: { fr: "Sanctions", en: "Sanctions" }, text: { fr: "Le dépassement de ce seuil de 90 jours sans dépôt de demande de carte constitue une infraction. Bien que des prolongations de visa soient possibles pour des motifs exceptionnels, la norme juridique fixe la fin du statut de simple visiteur au 90e jour.", en: "Exceeding this 90-day threshold without filing a card application constitutes an offence. While visa extensions are possible on exceptional grounds, the legal norm sets the end of simple visitor status at day 90." } }
           ]
         },
@@ -6959,8 +6959,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi N° 1965-046 et Décrets subséquents.", en: "Law N° 1965-046 and subsequent decrees." },
           details: [
-            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de séjour ».", en: "Visas are issued for 30 to 90 days. A foreigner wishing to stay beyond the visa's validity must apply for a \"Residence Card\"." } },
-            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La validité de la carte de séjour a été récemment étendue d'un an à cinq ans, ce qui facilite la vie des résidents de longue durée. Le seuil qui déclenche cette obligation reste l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence.", en: "The residence card's validity was recently extended from one year to five, easing life for long-term residents, but the triggering threshold remains the expiry of the short-stay visa. The \"e-visa\" system facilitates entry but confers no right of residence." } }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "Les visas sont délivrés pour des durées de 30 à 90 jours. Un étranger désirant rester au-delà de la durée du visa doit obligatoirement solliciter une « Carte de séjour ».", en: "Visas are issued for 30 to 90 days. A foreigner wishing to stay beyond the visa's validity must apply for a \"Residence Card\"." } },
+            { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La validité de la carte de séjour a été récemment étendue d'un an à cinq ans, ce qui facilite la vie des résidents de longue durée. Le seuil qui déclenche cette obligation reste l'expiration du visa court séjour. Le système « e-visa » facilite l'entrée mais ne confère aucun droit de résidence.", en: "The residence card's validity was recently extended from one year to five, easing life for long-term residents, but the triggering threshold remains the expiry of the short-stay visa. The \"e-visa\" system facilitates entry but confers no right of residence." } }
           ]
         },
         {
@@ -6970,14 +6970,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 68-7 du 8 mars 1968 relative à la condition des étrangers.", en: "Law N° 68-7 of 8 March 1968 on the status of foreigners." },
           details: [
             { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "L'article 7 précise que le visa d'entrée spécifie la durée de séjour autorisée, qui ne peut excéder trois mois.", en: "Article 7 specifies that the entry visa states the authorized length of stay, which cannot exceed three months." } },
-            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner plus de 3 mois consécutifs ou 6 mois au total par an doit demander une « Carte de séjour » et un « Visa de séjour ». La règle des 3 mois est appliquée rigoureusement, avec des pénalités hebdomadaires pour tout dépassement non régularisé à la sortie.", en: "Any foreigner wishing to stay more than 3 consecutive months, or 6 months total per year, must apply for a \"Residence Card\" and a \"Residence Visa\". The 3-month rule is strictly enforced, with weekly penalties for any overstay not regularized on exit." } }
+            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "Tout étranger souhaitant séjourner plus de 3 mois consécutifs ou 6 mois au total par an doit demander une « Carte de séjour » et un « Visa de séjour ». La règle des 3 mois est appliquée rigoureusement, avec des pénalités hebdomadaires pour tout dépassement non régularisé à la sortie.", en: "Any foreigner wishing to stay more than 3 consecutive months, or 6 months total per year, must apply for a \"Residence Card\" and a \"Residence Visa\". The 3-month rule is strictly enforced, with weekly penalties for any overstay not regularized on exit." } }
           ]
         }
       ]
     },
     {
       region: { fr: "Afrique de l'Ouest", en: "West Africa" },
-      intro: { fr: "L'Afrique de l'Ouest présente un régime d'immigration dual : l'un pour les citoyens de la CEDEAO et l'autre pour les ressortissants tiers. Le Protocole A/P.1/5/79 de la CEDEAO établit un privilège de 90 jours sans visa, qui est devenu le seuil de facto pour définir le « visiteur » dans toute la région. Reste la zone la plus intégrée avec 15 pays offrant une libre circulation totale.", en: "West Africa has a dual immigration regime: one for ECOWAS citizens, another for third-country nationals. ECOWAS Protocol A/P.1/5/79 establishes a 90-day visa-free privilege, which has become the de facto threshold defining a \"visitor\" across the region. It remains the most integrated zone, with 15 countries offering full free movement." },
+      intro: { fr: "L'Afrique de l'Ouest présente un régime d'immigration dual : l'un pour les citoyens de la CEDEAO et l'autre pour les ressortissants tiers. Le Protocole A/P.1/5/79 de la CEDEAO établit un privilège de 90 jours sans visa, qui est devenu le seuil de facto pour définir le « visiteur » dans toute la région. Reste la zone la plus intégrée avec 15 pays offrant une libre circulation totale.", en: "West Africa has a dual immigration regime: one for ECOWAS citizens, another for third-country nationals. ECOWAS Protocol A/P.1/5/79 establishes a 90-day visa-free privilege, which has become the de facto threshold defining a \"visitor\" across the region. It remains the most integrated zone, with 15 countries offering full free movement." },
       countries: [
         {
           name: { fr: "Bénin", en: "Benin" },
@@ -6986,7 +6986,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 2022-31 / Loi N° 2025-15 (Nouvelle).", en: "Law N° 2022-31 / Law N° 2025-15 (New)." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les e-visas de court séjour sont disponibles pour 30 ou 90 jours.", en: "Short-stay e-visas are available for 30 or 90 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ». La nouvelle Loi 2025-15 renforce ces conditions, maintenant le seuil de 90 jours comme la ligne de démarcation entre visiteur et résident.", en: "\"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\" The new Law 2025-15 reinforces these conditions, keeping the 90-day threshold as the dividing line between visitor and resident." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ». La nouvelle Loi 2025-15 renforce ces conditions, maintenant le seuil de 90 jours comme la ligne de démarcation entre visiteur et résident.", en: "\"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\" The new Law 2025-15 reinforces these conditions, keeping the 90-day threshold as the dividing line between visitor and resident." } }
           ]
         },
         {
@@ -6995,8 +6995,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
           instrument: { fr: "Loi 2024 (remplaçant l'Ordonnance n°84-049).", en: "2024 Law (replacing Ordinance n°84-049)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tout étranger souhaitant séjourner au Burkina Faso pour une période excédant quatre-vingt-dix (90) jours doit détenir soit un visa long séjour, soit un permis de résidence ».", en: "\"Any foreigner wishing to stay in Burkina Faso for a period exceeding ninety (90) days must hold either a long-stay visa or a residence permit.\"" } },
-            { label: { fr: "Transition", en: "Transition" }, text: { fr: "Le visa long séjour (valide 1 an) ou la « Carte de résident » est requis immédiatement après l'expiration de la période visiteur de 90 jours. La loi de 2024 a durci les contrôles aux frontières.", en: "The long-stay visa (valid 1 year) or the \"Resident Card\" is required immediately upon expiry of the 90-day visitor period. The 2024 law tightened border controls." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tout étranger souhaitant séjourner au Burkina Faso pour une période excédant quatre-vingt-dix (90) jours doit détenir soit un visa long séjour, soit un permis de résidence ».", en: "\"Any foreigner wishing to stay in Burkina Faso for a period exceeding ninety (90) days must hold either a long-stay visa or a residence permit.\"" } },
+            { label: { fr: "Transition", en: "Transition" }, text: { fr: "Le visa long séjour (valide 1 an) ou la « Carte de résident » est requis immédiatement après l'expiration de la période visiteur de 90 jours. La loi de 2024 a durci les contrôles aux frontières.", en: "The long-stay visa (valid 1 year) or the \"Resident Card\" is required immediately upon expiry of the 90-day visitor period. The 2024 law tightened border controls." } }
           ]
         },
         {
@@ -7006,7 +7006,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 66/VIII/2014.", en: "Law N° 66/VIII/2014." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques permettent un séjour jusqu'à 90 jours, prolongeable une fois. Pour les citoyens exemptés de visa, l'enregistrement EASE permet 30 jours.", en: "Tourist visas allow a stay of up to 90 days, extendable once. For visa-exempt citizens, EASE registration allows 30 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours dépassant la limite du visa (90 jours) nécessitent une « Autorização de Residência ». La loi distingue strictement le « Visa » de la « Résidence ». Des changements récents facilitent l'accès pour la CPLP.", en: "Stays exceeding the visa limit (90 days) require an \"Autorização de Residência\". The law strictly distinguishes the \"Visa\" from \"Residence\". Recent changes ease access for CPLP nationals." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours dépassant la limite du visa (90 jours) nécessitent une « Autorização de Residência ». La loi distingue strictement le « Visa » de la « Résidence ». Des changements récents facilitent l'accès pour la CPLP.", en: "Stays exceeding the visa limit (90 days) require an \"Autorização de Residência\". The law strictly distinguishes the \"Visa\" from \"Residence\". Recent changes ease access for CPLP nationals." } }
           ]
         },
         {
@@ -7015,8 +7015,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Titre de séjour obligatoire après 3 mois.", en: "Residence permit mandatory after 3 months." },
           instrument: { fr: "Loi N° 2004-303 (et Loi N° 2002-03).", en: "Law N° 2004-303 (and Law N° 2002-03)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un permis de résidence (« Titre de Séjour ») est obligatoire pour quiconque a l'intention de séjourner plus de trois mois.", en: "A residence permit (\"Titre de Séjour\") is mandatory for anyone intending to stay more than three months." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "S'applique aux travailleurs, étudiants et dépendants. La « Carte de résident » est valide 5 ans pour les nationaux CEDEAO et 1 an pour les autres. Le système est biométrique et exige une présence à l'Office National d'Identification.", en: "Applies to workers, students and dependents. The \"Resident Card\" is valid 5 years for ECOWAS nationals and 1 year for others. The system is biometric and requires an in-person appearance at the National Identification Office." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un permis de résidence (« Titre de Séjour ») est obligatoire pour quiconque a l'intention de séjourner plus de trois mois.", en: "A residence permit (\"Titre de Séjour\") is mandatory for anyone intending to stay more than three months." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "S'applique aux travailleurs, étudiants et dépendants. La « Carte de résident » est valide 5 ans pour les nationaux CEDEAO et 1 an pour les autres. Le système est biométrique et exige une présence à l'Office National d'Identification.", en: "Applies to workers, students and dependents. The \"Resident Card\" is valid 5 years for ECOWAS nationals and 1 year for others. The system is biometric and requires an in-person appearance at the National Identification Office." } }
           ]
         },
         {
@@ -7026,7 +7026,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Act (Cap 16:02).", en: "Immigration Act (Cap 16:02)." },
           details: [
             { label: { fr: "Entrée Standard", en: "Standard Entry" }, text: { fr: "Les visiteurs reçoivent généralement un tampon de 28 jours initialement, extensible.", en: "Visitors generally receive an initial 28-day stamp, extendable." } },
-            { label: { fr: "Nationaux non-CEDEAO", en: "Non-ECOWAS Nationals" }, text: { fr: "Un permis de résidence est exigé au-delà de 56 jours : « Alien Card » et « Residential Permit B ». En pratique, les extensions dépassent rarement 90 jours avant que la règle de résidence ne s'applique strictement.", en: "Required to obtain a residence permit (\"Alien Card\" + \"Residential Permit B\") if staying beyond 56 days, although 90 days is often the practical maximum for extensions before residence is strictly enforced." } }
+            { label: { fr: "Nationaux non-CEDEAO", en: "Non-ECOWAS Nationals" }, text: { fr: "Un permis de résidence est exigé au-delà de 56 jours : « Alien Card » et « Residential Permit B ». En pratique, les extensions dépassent rarement 90 jours avant que la règle de résidence ne s'applique strictement.", en: "Required to obtain a residence permit (\"Alien Card\" + \"Residential Permit B\") if staying beyond 56 days, although 90 days is often the practical maximum for extensions before residence is strictly enforced." } }
           ]
         },
         {
@@ -7045,8 +7045,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi L/94/019/CTRN (1994).", en: "Law L/94/019/CTRN (1994)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de court séjour » est valide jusqu'à 90 jours.", en: "The \"short-stay visa\" is valid for up to 90 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les étrangers ayant l'intention de rester plus longtemps doivent demander une « Carte de séjour ». La validité du visa permet l'entrée, mais la carte est le document de résidence requis sur le territoire.", en: "Foreigners intending to stay longer must apply for a \"Residence Card\". The visa's validity permits entry, but the card is the required residence document within the territory." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de court séjour » est valide jusqu'à 90 jours.", en: "The \"short-stay visa\" is valid for up to 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les étrangers ayant l'intention de rester plus longtemps doivent demander une « Carte de séjour ». La validité du visa permet l'entrée, mais la carte est le document de résidence requis sur le territoire.", en: "Foreigners intending to stay longer must apply for a \"Residence Card\". The visa's validity permits entry, but the card is the required residence document within the territory." } }
           ]
         },
         {
@@ -7056,7 +7056,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Loi N° 2/92 (Citoyenneté) et Décret-Loi sur les Étrangers.", en: "Law N° 2/92 (Citizenship) and Decree-Law on Foreigners." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas à l'arrivée sont valides pour un maximum de 90 jours.", en: "Visas on arrival are valid for a maximum of 90 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour les séjours dépassant cette période, une « Autorização de Residência » est requise. La loi mandate l'enregistrement pour tout séjour impliquant un établissement.", en: "For stays exceeding this period, an \"Autorização de Residência\" is required. The law mandates registration for any stay involving settlement." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour les séjours dépassant cette période, une « Autorização de Residência » est requise. La loi mandate l'enregistrement pour tout séjour impliquant un établissement.", en: "For stays exceeding this period, an \"Autorização de Residência\" is required. The law mandates registration for any stay involving settlement." } }
           ]
         },
         {
@@ -7065,8 +7065,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Séjour initial 60 jours. Permis résidence pour plus long.", en: "Initial 60-day stay. Residence permit for longer stays." },
           instrument: { fr: "Aliens and Nationality Law (Titre 4).", en: "Aliens and Nationality Law (Title 4)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La période pour laquelle un visiteur étranger est autorisé à entrer au Liberia sera fixée [...] pour une période de 60 jours ».", en: "\"The period for which an alien visitor is permitted to enter Liberia shall be fixed [...] for a period of 60 days.\"" } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Ce seuil est notablement plus court que la norme régionale de 90 jours. Pour tout séjour à long terme, un « Residence Permit » est requis immédiatement à l'expiration de l'admission visiteur de 60 jours.", en: "This threshold is notably shorter than the regional 90-day norm. For any long-term stay, a \"Residence Permit\" is required immediately upon expiry of the 60-day visitor admission." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La période pour laquelle un visiteur étranger est autorisé à entrer au Liberia sera fixée [...] pour une période de 60 jours ».", en: "\"The period for which an alien visitor is permitted to enter Liberia shall be fixed [...] for a period of 60 days.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Ce seuil est notablement plus court que la norme régionale de 90 jours. Pour tout séjour à long terme, un « Residence Permit » est requis immédiatement à l'expiration de l'admission visiteur de 60 jours.", en: "This threshold is notably shorter than the regional 90-day norm. For any long-term stay, a \"Residence Permit\" is required immediately upon expiry of the 60-day visitor admission." } }
           ]
         },
         {
@@ -7075,8 +7075,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi N° 04-058 (2004).", en: "Law N° 04-058 (2004)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa long séjour » est requis pour les séjours excédant 90 jours.", en: "The \"Long-Stay Visa\" is required for stays exceeding 90 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Dès l'arrivée avec un visa long séjour (ou après 90 jours sur un visa régulier), l'étranger doit solliciter une « Carte de séjour ». L'article 22 prévoit l'emprisonnement pour séjour sans permis.", en: "Upon arrival with a long-stay visa (or after 90 days on a regular visa), the foreigner must apply for a \"Residence Card\". Article 22 provides for imprisonment for staying without a permit." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa long séjour » est requis pour les séjours excédant 90 jours.", en: "The \"Long-Stay Visa\" is required for stays exceeding 90 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Dès l'arrivée avec un visa long séjour (ou après 90 jours sur un visa régulier), l'étranger doit solliciter une « Carte de séjour ». L'article 22 prévoit l'emprisonnement pour séjour sans permis.", en: "Upon arrival with a long-stay visa (or after 90 days on a regular visa), the foreigner must apply for a \"Residence Card\". Article 22 provides for imprisonment for staying without a permit." } }
           ]
         },
         {
@@ -7085,7 +7085,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Ordonnance N° 81-40 (1981).", en: "Ordinance N° 81-40 (1981)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les ressortissants étrangers ayant l'intention de séjourner plus de 90 jours doivent demander une « Carte de séjour » (permis de résidence temporaire).", en: "Foreign nationals intending to stay more than 90 days must apply for a \"Residence Card\" (Temporary Residence Permit)." } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les ressortissants étrangers ayant l'intention de séjourner plus de 90 jours doivent demander une « Carte de séjour » (permis de résidence temporaire).", en: "Foreign nationals intending to stay more than 90 days must apply for a \"Residence Card\" (Temporary Residence Permit)." } },
             { label: { fr: "Procédure", en: "Procedure" }, text: { fr: "Cette ordonnance reste le socle du droit de l'immigration au Niger. Les citoyens de la CEDEAO nécessitent également des cartes de séjour pour l'établissement, bien que la procédure soit simplifiée.", en: "This ordinance remains the foundation of Nigerien immigration law. ECOWAS citizens also require residence cards for settlement, though the procedure is simplified." } }
           ]
         },
@@ -7095,7 +7095,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "CERPAC requis pour emploi ou séjour > 90 jours (non-CEDEAO).", en: "CERPAC required for employment or stay > 90 days (non-ECOWAS)." },
           instrument: { fr: "Immigration Act 2015.", en: "Immigration Act 2015." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visas de court séjour permettent aux voyageurs de visiter le Nigeria pour une période n'excédant pas trois mois (90 jours) ».", en: "\"Short-Stay Visas allow travellers to visit Nigeria for a period not exceeding three months (90 days).\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visas de court séjour permettent aux voyageurs de visiter le Nigeria pour une période n'excédant pas trois mois (90 jours) ».", en: "\"Short-Stay Visas allow travellers to visit Nigeria for a period not exceeding three months (90 days).\"" } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour l'emploi ou la résidence au-delà de 90 jours, le CERPAC est obligatoire. Une mise à jour politique de 2025 a introduit des amendes journalières (15 USD) pour les dépassements de séjour, soulignant la rigueur de la limite.", en: "For employment or residence beyond 90 days, the CERPAC is mandatory. A 2025 policy update introduced daily fines (USD 15) for overstays, underlining the strictness of the limit." } }
           ]
         },
@@ -7105,7 +7105,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte d'identité d'étranger obligatoire après 90 jours.", en: "Foreigner's ID card mandatory after 90 days." },
           instrument: { fr: "Loi N° 71-10 (1971) et Décret 71-860.", en: "Law N° 71-10 (1971) and Decree 71-860." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Pour séjourner au Sénégal plus de 90 jours, vous devez obtenir une carte nationale d'identité étrangère (Carte d'Identité d'Étranger) ».", en: "\"To stay in Senegal beyond 90 days, you must obtain a foreigner's national identity card (Carte d'Identité d'Étranger).\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Pour séjourner au Sénégal plus de 90 jours, vous devez obtenir une carte nationale d'identité étrangère (Carte d'Identité d'Étranger) ».", en: "\"To stay in Senegal beyond 90 days, you must obtain a foreigner's national identity card (Carte d'Identité d'Étranger).\"" } },
             { label: { fr: "Note", en: "Note" }, text: { fr: "Ceci s'applique même aux ressortissants exemptés de visa (comme les Français ou citoyens CEDEAO). La marque des 90 jours est le déclencheur légal définitif.", en: "This applies even to visa-exempt nationals (such as French or ECOWAS citizens). The 90-day mark is the definitive legal trigger." } }
           ]
         },
@@ -7116,7 +7116,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965.", en: "Non-Citizens (Registration, Immigration and Expulsion) Act, 1965." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas à entrer unique sont valides 90 jours à l'émission pour des visites jusqu'à un maximum de 30 jours.", en: "Single-entry visas are valid for 90 days from issuance, for visits of up to a maximum of 30 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Un permis de travail et de résidence doit être obtenu dans les 30 jours suivant l'arrivée » pour ceux qui ont l'intention de rester. L'un des seuils les plus courts du continent.", en: "\"A Work & Residence Permit must be obtained within 30 days of arrival\" for those intending to stay. One of the shortest thresholds on the continent." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Un permis de travail et de résidence doit être obtenu dans les 30 jours suivant l'arrivée » pour ceux qui ont l'intention de rester. L'un des seuils les plus courts du continent.", en: "\"A Work & Residence Permit must be obtained within 30 days of arrival\" for those intending to stay. One of the shortest thresholds on the continent." } }
           ]
         },
         {
@@ -7125,7 +7125,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi sur la police des étrangers (1987, actualisée 2022).", en: "Law on the Policing of Foreigners (1987, updated 2022)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ».", en: "Tourist visas are valid for up to 90 days. \"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques sont valides jusqu'à 90 jours. « Tout étranger souhaitant séjourner [...] pour une période excédant 90 jours doit détenir une carte de séjour ».", en: "Tourist visas are valid for up to 90 days. \"Any foreigner wishing to stay [...] for a period exceeding 90 days must hold a residence card.\"" } },
             { label: { fr: "Réforme", en: "Reform" }, text: { fr: "La nouvelle loi de 2022 a renforcé les pénalités pour dépassement de séjour et rationalisé le processus de permis de résidence.", en: "The new 2022 law strengthened overstay penalties and streamlined the residence permit process." } }
           ]
         }
@@ -7141,8 +7141,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 3 mois.", en: "Residence card required after 3 months." },
           instrument: { fr: "Loi N° 97/012 (1997).", en: "Law N° 97/012 (1997)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "L'article 17 stipule : « Tout étranger [...] doit, dans un délai de trois (3) mois [...] se présenter aux autorités compétentes pour solliciter une carte de séjour ».", en: "Article 17 states: \"Any foreigner [...] must, within three (3) months [...] appear before the competent authorities to apply for a residence card.\"" } },
-            { label: { fr: "Mandat", en: "Mandate" }, text: { fr: "La marque des 3 mois est l'échéance statutaire pour demander une carte de séjour. Les visiteurs restant moins de ce délai sont des « visiteurs temporaires ».", en: "The 3-month mark is the statutory deadline to apply for a residence card. Visitors staying less than this period are \"temporary visitors\"." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "L'article 17 stipule : « Tout étranger [...] doit, dans un délai de trois (3) mois [...] se présenter aux autorités compétentes pour solliciter une carte de séjour ».", en: "Article 17 states: \"Any foreigner [...] must, within three (3) months [...] appear before the competent authorities to apply for a residence card.\"" } },
+            { label: { fr: "Mandat", en: "Mandate" }, text: { fr: "La marque des 3 mois est l'échéance statutaire pour demander une carte de séjour. Les visiteurs restant moins de ce délai sont des « visiteurs temporaires ».", en: "The 3-month mark is the statutory deadline to apply for a residence card. Visitors staying less than this period are \"temporary visitors\"." } }
           ]
         },
         {
@@ -7152,7 +7152,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Code de l'Immigration.", en: "Immigration Code." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les exemptions de visa (pour la CEMAC) vont jusqu'à 90 jours. Pour les autres, les visas court séjour couvrent la même période.", en: "Visa exemptions (for CEMAC nationals) run up to 90 days. For others, short-stay visas cover the same period." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« À l'arrivée, l'individu doit demander un permis de résidence (Titre de Séjour) pour tout séjour supérieur à trois mois ».", en: "\"Upon arrival, the individual must apply for a residence permit (Titre de Séjour) for any stay exceeding three months.\"" } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« À l'arrivée, l'individu doit demander un permis de résidence (Titre de Séjour) pour tout séjour supérieur à trois mois ».", en: "\"Upon arrival, the individual must apply for a residence permit (Titre de Séjour) for any stay exceeding three months.\"" } }
           ]
         },
         {
@@ -7161,7 +7161,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 3 mois.", en: "Residence card required after 3 months." },
           instrument: { fr: "Ordonnance N° 27-62.", en: "Ordinance N° 27-62." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Similaire aux autres États de la CEMAC, la période visiteur est plafonnée à 3 mois. « Une carte de séjour est requise pour les expatriés ».", en: "Similar to other CEMAC states, the visitor period is capped at 3 months. \"A residence card is required for expatriates.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Similaire aux autres États de la CEMAC, la période visiteur est plafonnée à 3 mois. « Une carte de séjour est requise pour les expatriés ».", en: "Similar to other CEMAC states, the visitor period is capped at 3 months. \"A residence card is required for expatriates.\"" } },
             { label: { fr: "Enregistrement", en: "Registration" }, text: { fr: "L'enregistrement auprès de l'immigration est requis dans les 72 heures suivant l'arrivée, une mesure de sécurité commune au Sahel.", en: "Registration with immigration authorities is required within 72 hours of arrival, a security measure common across the Sahel." } }
           ]
         },
@@ -7171,7 +7171,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 3 mois.", en: "Residence permit required after 3 months." },
           instrument: { fr: "Loi N° 23-96 (1996).", en: "Law N° 23-96 (1996)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers séjournant [...] devront dans les trois mois, se soumettre aux dispositions qui précèdent » (concernant la résidence).", en: "\"Foreigners staying [...] must, within three months, comply with the aforementioned provisions\" (regarding residence)." } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers séjournant [...] devront dans les trois mois, se soumettre aux dispositions qui précèdent » (concernant la résidence).", en: "\"Foreigners staying [...] must, within three months, comply with the aforementioned provisions\" (regarding residence)." } },
             { label: { fr: "Exigence", en: "Requirement" }, text: { fr: "Un permis de résidence est obligatoire après l'expiration de la fenêtre visiteur de 3 mois.", en: "A residence permit is mandatory upon expiry of the 3-month visitor window." } }
           ]
         },
@@ -7181,8 +7181,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Visa voyage max 6 mois. Visa établissement pour résidence.", en: "Travel visa max 6 months. Settlement visa for residence." },
           instrument: { fr: "Ordonnance-Loi 83-033 relative à la Police des Étrangers.", en: "Ordinance-Law 83-033 on the Policing of Foreigners." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de voyage » autorise un séjour jusqu'à 6 mois. C'est toutefois la limite supérieure pour un visiteur.", en: "The \"Travel Visa\" authorizes a stay of up to 6 months. This is nonetheless the upper limit for a visitor." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour l'« établissement » (résidence), un « Visa d'Établissement » spécifique est requis. La RDC permet une validité de visa visiteur jusqu'à 6 mois, mais l'intention de résidence doit être déclarée plus tôt.", en: "For \"settlement\" (residence), a specific \"Settlement Visa\" is required. The DRC allows a visitor visa validity of up to 6 months, but intent to reside must be declared earlier." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le « Visa de voyage » autorise un séjour jusqu'à 6 mois. C'est toutefois la limite supérieure pour un visiteur.", en: "The \"Travel Visa\" authorizes a stay of up to 6 months. This is nonetheless the upper limit for a visitor." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour l'« établissement » (résidence), un « Visa d'Établissement » spécifique est requis. La RDC permet une validité de visa visiteur jusqu'à 6 mois, mais l'intention de résidence doit être déclarée plus tôt.", en: "For \"settlement\" (residence), a specific \"Settlement Visa\" is required. The DRC allows a visitor visa validity of up to 6 months, but intent to reside must be declared earlier." } }
           ]
         },
         {
@@ -7191,7 +7191,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
           instrument: { fr: "Loi Organique N° 3/2010.", en: "Organic Law N° 3/2010." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visas de court terme sont valides pour 90 jours. Pour des séjours plus longs, vous devez vous adresser aux postes de police locaux ».", en: "\"Short-term visas are valid for 90 days. For longer stays, you must apply at local police stations.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visas de court terme sont valides pour 90 jours. Pour des séjours plus longs, vous devez vous adresser aux postes de police locaux ».", en: "\"Short-term visas are valid for 90 days. For longer stays, you must apply at local police stations.\"" } },
             { label: { fr: "Exigence", en: "Requirement" }, text: { fr: "Les permis de résidence sont requis pour tout séjour à long terme au-delà de la limite de 3 mois. Les nationaux CEMAC peuvent entrer avec une CNI, mais le seuil s'applique.", en: "Residence permits are required for any long-term stay beyond the 3-month limit. CEMAC nationals may enter with a national ID card, but the threshold still applies." } }
           ]
         },
@@ -7201,7 +7201,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi N° 5/86.", en: "Law N° 5/86." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs qui souhaitent rester dans le pays pour plus de 90 jours doivent obtenir un permis de résidence (carte de séjour) ».", en: "\"Visitors wishing to remain in the country for more than 90 days must obtain a residence permit (residence card).\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs qui souhaitent rester dans le pays pour plus de 90 jours doivent obtenir un permis de résidence (carte de séjour) ».", en: "\"Visitors wishing to remain in the country for more than 90 days must obtain a residence permit (residence card).\"" } },
             { label: { fr: "Application", en: "Enforcement" }, text: { fr: "Stricte. Les visas de sortie ne sont plus requis pour les résidents, mais la carte de séjour est obligatoire après 3 mois.", en: "Strict. Exit visas are no longer required for residents, but the residence card is mandatory after 3 months." } }
           ]
         },
@@ -7231,7 +7231,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence généralement requis après 3 mois.", en: "Residence permit generally required after 3 months." },
           instrument: { fr: "Loi N° 1/13 (2011).", en: "Law N° 1/13 (2011)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les voyageurs obtiennent un visa de 30 jours à l'arrivée. Ceci peut être étendu. « Ceux qui restent plus de 30 jours peuvent aussi demander un visa de trois mois [...] Permis de résidence requis pour plus longtemps ».", en: "Travellers obtain a 30-day visa on arrival. This can be extended. \"Those staying more than 30 days may also apply for a three-month visa [...] A residence permit is required for longer stays.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les voyageurs obtiennent un visa de 30 jours à l'arrivée. Ceci peut être étendu. « Ceux qui restent plus de 30 jours peuvent aussi demander un visa de trois mois [...] Permis de résidence requis pour plus longtemps ».", en: "Travellers obtain a 30-day visa on arrival. This can be extended. \"Those staying more than 30 days may also apply for a three-month visa [...] A residence permit is required for longer stays.\"" } },
             { label: { fr: "Limite", en: "Limit" }, text: { fr: "Le plafond visiteur est généralement fixé à 3 mois avant que le permis de résidence ne devienne nécessaire.", en: "The visitor cap is generally set at 3 months before a residence permit becomes necessary." } }
           ]
         },
@@ -7241,8 +7241,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis requis après 30/90 jours selon origine.", en: "Permit required after 30/90 days depending on origin." },
           instrument: { fr: "Loi N° 57/2018.", en: "Law N° 57/2018." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA).", en: "30 days for many nationals; 90 days under specific agreements (e.g. EAC, AU)." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa.", en: "\"Temporary residence permit [...] 15-day grace period upon arrival [...] to apply.\" Pure visitors may stay until their visa's validity expires." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "30 jours pour beaucoup de nationaux ; 90 jours pour les accords spécifiques (ex: CAE, UA).", en: "30 days for many nationals; 90 days under specific agreements (e.g. EAC, AU)." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Permis de résidence temporaire [...] période de grâce de 15 jours à l'arrivée [...] pour postuler ». Les visiteurs purs peuvent rester jusqu'à la validité de leur visa.", en: "\"Temporary residence permit [...] 15-day grace period upon arrival [...] to apply.\" Pure visitors may stay until their visa's validity expires." } }
           ]
         }
       ]
@@ -7267,8 +7267,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de séjour requise après 90 jours.", en: "Residence card required after 90 days." },
           instrument: { fr: "Loi N° 201/AN/07.", en: "Law N° 201/AN/07." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La loi sur l'immigration djiboutienne permet aux visiteurs d'entrer et de rester pour 90 jours avec un eVisa ».", en: "\"Djiboutian immigration law allows visitors to enter and stay for 90 days with an eVisa.\"" } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Ceux souhaitant rester plus de 90 jours doivent travailler avec les autorités pour ajuster leur statut » (Carte de séjour).", en: "\"Those wishing to stay longer than 90 days must work with the authorities to adjust their status\" (Residence Card)." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La loi sur l'immigration djiboutienne permet aux visiteurs d'entrer et de rester pour 90 jours avec un eVisa ».", en: "\"Djiboutian immigration law allows visitors to enter and stay for 90 days with an eVisa.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Ceux souhaitant rester plus de 90 jours doivent travailler avec les autorités pour ajuster leur statut » (Carte de séjour).", en: "\"Those wishing to stay longer than 90 days must work with the authorities to adjust their status\" (Residence Card)." } }
           ]
         },
         {
@@ -7277,8 +7277,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 3-6 mois.", en: "Residence permit required after 3-6 months." },
           instrument: { fr: "Proclamation N° 24/1992.", en: "Proclamation N° 24/1992." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un visa touristique [...] peut permettre au titulaire de rester en Érythrée pendant les trois mois ».", en: "\"A tourist visa [...] may allow the holder to stay in Eritrea for the three months.\"" } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a séjourné pour pas plus de six mois doit demander un permis de résidence ». Bien que le visa touristique soit de 3 mois, la date limite absolue pour la résidence semble être de 6 mois.", en: "\"Any foreigner who [...] has stayed for no more than six months must apply for a residence permit.\" While the tourist visa is 3 months, the absolute deadline for residence appears to be 6 months." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un visa touristique [...] peut permettre au titulaire de rester en Érythrée pendant les trois mois ».", en: "\"A tourist visa [...] may allow the holder to stay in Eritrea for the three months.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a séjourné pour pas plus de six mois doit demander un permis de résidence ». Bien que le visa touristique soit de 3 mois, la date limite absolue pour la résidence semble être de 6 mois.", en: "\"Any foreigner who [...] has stayed for no more than six months must apply for a residence permit.\" While the tourist visa is 3 months, the absolute deadline for residence appears to be 6 months." } }
           ]
         },
         {
@@ -7288,7 +7288,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Proclamation N° 354/2003.", en: "Immigration Proclamation N° 354/2003." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Lese-visas touristiques sont émis pour 30 ou 90 jours.", en: "Tourist e-visas are issued for 30 or 90 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a l'intention de rester pour plus de quatre-vingt-dix jours [...] doit s'enregistrer dans les trente jours suivant son arrivée ». La marque des 90 jours est le seuil critique.", en: "\"Any foreigner who [...] intends to stay for more than ninety days [...] must register within thirty days of arrival.\" The 90-day mark is the critical threshold." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Tout étranger qui [...] a l'intention de rester pour plus de quatre-vingt-dix jours [...] doit s'enregistrer dans les trente jours suivant son arrivée ». La marque des 90 jours est le seuil critique.", en: "\"Any foreigner who [...] intends to stay for more than ninety days [...] must register within thirty days of arrival.\" The 90-day mark is the critical threshold." } }
           ]
         },
         {
@@ -7307,8 +7307,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Carte de résident requise après 3 mois.", en: "Resident card required after 3 months." },
           instrument: { fr: "Loi N° 62-006 (1962).", en: "Law N° 62-006 (1962)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers entrant à Madagascar pour une période n'excédant pas trois mois sont des non-immigrants ».", en: "\"Foreigners entering Madagascar for a period not exceeding three months are non-immigrants.\"" } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les étrangers séjournant [...] durant une période supérieure à trois mois sont des immigrants ». Ainsi, le seuil de résidence est de 3 mois.", en: "\"Foreigners staying [...] for a period exceeding three months are immigrants.\" The residence threshold is thus 3 months." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les étrangers entrant à Madagascar pour une période n'excédant pas trois mois sont des non-immigrants ».", en: "\"Foreigners entering Madagascar for a period not exceeding three months are non-immigrants.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les étrangers séjournant [...] durant une période supérieure à trois mois sont des immigrants ». Ainsi, le seuil de résidence est de 3 mois.", en: "\"Foreigners staying [...] for a period exceeding three months are immigrants.\" The residence threshold is thus 3 months." } }
           ]
         },
         {
@@ -7318,7 +7318,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Act 2022.", en: "Immigration Act 2022." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Les visas touristiques permettent un séjour cumulatif de 180 jours par an. Toutefois, une visite unique est souvent plafonnée à 90 jours.", en: "Tourist visas allow a cumulative stay of 180 days per year. However, a single visit is often capped at 90 days." } },
-            { label: { fr: "Premium Visa", en: "Premium Visa" }, text: { fr: "Maurice a introduit un « Premium Visa » permettant un séjour d'1 an pour les nomades numériques. Les permis de résidence standards sont pour l'emploi/investissement.", en: "Mauritius introduced a \"Premium Visa\" allowing a 1-year stay for digital nomads. Standard residence permits are for employment/investment." } }
+            { label: { fr: "Premium Visa", en: "Premium Visa" }, text: { fr: "Maurice a introduit un « Premium Visa » permettant un séjour d'1 an pour les nomades numériques. Les permis de résidence standards sont pour l'emploi/investissement.", en: "Mauritius introduced a \"Premium Visa\" allowing a 1-year stay for digital nomads. Standard residence permits are for employment/investment." } }
           ]
         },
         {
@@ -7328,7 +7328,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Decree 1979.", en: "Immigration Decree 1979." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Un permis visiteur est valide pour 3 mois initialement.", en: "A visitor's permit is initially valid for 3 months." } },
-            { label: { fr: "Extension", en: "Extension" }, text: { fr: "Il peut être étendu par tranches de 3 mois jusqu'à un maximum de 12 mois. On peut rester « visiteur » jusqu'à un an, mais cela exige une extension active.", en: "It can be extended in 3-month increments up to a maximum of 12 months. One can remain a \"visitor\" for up to a year, but this requires active extension." } }
+            { label: { fr: "Extension", en: "Extension" }, text: { fr: "Il peut être étendu par tranches de 3 mois jusqu'à un maximum de 12 mois. On peut rester « visiteur » jusqu'à un an, mais cela exige une extension active.", en: "It can be extended in 3-month increments up to a maximum of 12 months. One can remain a \"visitor\" for up to a year, but this requires active extension." } }
           ]
         },
         {
@@ -7338,7 +7338,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Law 1966.", en: "Immigration Law 1966." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le visa à l'arrivée est valide pour 30 jours.", en: "The visa on arrival is valid for 30 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les visas long terme ont une durée qui excède 90 jours [...] les détenteurs de ces types de visas reçoivent la résidence ». La limite visiteur est très courte.", en: "\"Long-term visas have a duration exceeding 90 days [...] holders of these visa types receive residence.\" The visitor limit is very short." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Les visas long terme ont une durée qui excède 90 jours [...] les détenteurs de ces types de visas reçoivent la résidence ». La limite visiteur est très courte.", en: "\"Long-term visas have a duration exceeding 90 days [...] holders of these visa types receive residence.\" The visitor limit is very short." } }
           ]
         },
         {
@@ -7347,8 +7347,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Enregistrement étranger requis après 3 mois.", en: "Foreigner registration required after 3 months." },
           instrument: { fr: "Passports and Immigration Act de 1994.", en: "Passports and Immigration Act of 1994." },
           details: [
-            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "La loi dispose qu'« aucun visa n'est requis pour les visiteurs qui ne restent pas au Soudan plus de trois mois ».", en: "The law provides that \"no visa is required for visitors who do not remain in Sudan for more than three months.\"" } },
-            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "La section 25 impose que « tout étranger résidant au Soudan pour plus de trois mois doit s'adresser à l'officier d'enregistrement [...] pour se faire enregistrer ». De plus, les étrangers doivent signaler leur présence dans les 3 jours suivant l'arrivée.", en: "Section 25 requires that \"any foreigner residing in Sudan for more than three months must apply to the registration officer [...] to be registered.\" Foreigners must also report their presence within 3 days of arrival." } }
+            { label: { fr: "Analyse Juridique", en: "Legal Analysis" }, text: { fr: "La loi dispose qu'« aucun visa n'est requis pour les visiteurs qui ne restent pas au Soudan plus de trois mois ».", en: "The law provides that \"no visa is required for visitors who do not remain in Sudan for more than three months.\"" } },
+            { label: { fr: "Obligation de résidence", en: "Residence Obligation" }, text: { fr: "La section 25 impose que « tout étranger résidant au Soudan pour plus de trois mois doit s'adresser à l'officier d'enregistrement [...] pour se faire enregistrer ». De plus, les étrangers doivent signaler leur présence dans les 3 jours suivant l'arrivée.", en: "Section 25 requires that \"any foreigner residing in Sudan for more than three months must apply to the registration officer [...] to be registered.\" Foreigners must also report their presence within 3 days of arrival." } }
           ]
         },
         {
@@ -7357,7 +7357,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 3 mois.", en: "Residence permit required after 3 months." },
           instrument: { fr: "Passports and Immigration Act, 2011.", en: "Passports and Immigration Act, 2011." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les touristes séjournant pour une période n'excédant pas trois mois au Nouveau Soudan sont exemptés de prendre des permis de résidence ».", en: "\"Tourists staying for a period not exceeding three months in New Sudan are exempted from obtaining residence permits.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les touristes séjournant pour une période n'excédant pas trois mois au Nouveau Soudan sont exemptés de prendre des permis de résidence ».", en: "\"Tourists staying for a period not exceeding three months in New Sudan are exempted from obtaining residence permits.\"" } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Permis de résidence requis strictement après 3 mois.", en: "Residence permit strictly required after 3 months." } }
           ]
         },
@@ -7367,7 +7367,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de Résidence requis après 90 jours.", en: "Residence Permit required after 90 days." },
           instrument: { fr: "Immigration Act 1995 (Cap 54).", en: "Immigration Act 1995 (Cap 54)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La validité du Pass Visiteur n'excédera pas 90 jours ».", en: "\"The validity of the Visitor's Pass shall not exceed 90 days.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« La validité du Pass Visiteur n'excédera pas 90 jours ».", en: "\"The validity of the Visitor's Pass shall not exceed 90 days.\"" } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Tout séjour au-delà de 90 jours nécessite un permis de résidence (Classe A, B, ou C).", en: "Any stay beyond 90 days requires a Residence Permit (Class A, B, or C)." } }
           ]
         },
@@ -7377,7 +7377,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Special Pass ou Entry Permit requis après 90 jours.", en: "Special Pass or Entry Permit required after 90 days." },
           instrument: { fr: "Citizenship and Immigration Control Act (Cap 66).", en: "Citizenship and Immigration Control Act (Cap 66)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un étranger en possession d'un pass visiteur valide ou spécial dont la période de séjour n'excède pas quatre-vingt-dix jours » est exempté de l'enregistrement des étrangers.", en: "\"A foreigner in possession of a valid visitor's or special pass whose period of stay does not exceed ninety days\" is exempt from alien registration." } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un étranger en possession d'un pass visiteur valide ou spécial dont la période de séjour n'excède pas quatre-vingt-dix jours » est exempté de l'enregistrement des étrangers.", en: "\"A foreigner in possession of a valid visitor's or special pass whose period of stay does not exceed ninety days\" is exempt from alien registration." } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de 90 jours nécessitent généralement un Special Pass (pour courtes extensions) ou un Entry Permit (Travail/Résidence).", en: "Stays beyond 90 days generally require a Special Pass (for short extensions) or an Entry Permit (Work/Residence)." } }
           ]
         }
@@ -7385,7 +7385,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
     },
     {
       region: { fr: "Afrique Australe", en: "Southern Africa" },
-      intro: { fr: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Ailleurs, une sortie suivie d'une réentrée — le « border run » — remet le compteur de 90 jours à zéro. Plusieurs pays de la SADC, dont l'Afrique du Sud et le Botswana, appliquent au contraire une limite annuelle cumulée, pour empêcher la résidence de fait.", en: "The SADC region is characterized by a \"days per year\" calculation for visitors. Unlike other regions where an exit-and-re-entry (\"border run\") resets the 90-day counter, SADC countries such as South Africa and Botswana often apply an aggregate annual cap to prevent de facto residence." },
+      intro: { fr: "La région de la SADC se caractérise par un calcul « jours par an » pour les visiteurs. Ailleurs, une sortie suivie d'une réentrée — le « border run » — remet le compteur de 90 jours à zéro. Plusieurs pays de la SADC, dont l'Afrique du Sud et le Botswana, appliquent au contraire une limite annuelle cumulée, pour empêcher la résidence de fait.", en: "The SADC region is characterized by a \"days per year\" calculation for visitors. Unlike other regions where an exit-and-re-entry (\"border run\") resets the 90-day counter, SADC countries such as South Africa and Botswana often apply an aggregate annual cap to prevent de facto residence." },
       countries: [
         {
           name: { fr: "Botswana", en: "Botswana" },
@@ -7393,7 +7393,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Limite stricte de 90 jours par année civile.", en: "Strict 90-day limit per calendar year." },
           instrument: { fr: "Immigration Act 2011.", en: "Immigration Act 2011." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un non-citoyen [...] ne restera pas au Botswana pour plus de 90 jours au total dans une année quelconque ».", en: "\"A non-citizen [...] shall not remain in Botswana for more than 90 days in aggregate in any given year.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Un non-citoyen [...] ne restera pas au Botswana pour plus de 90 jours au total dans une année quelconque ».", en: "\"A non-citizen [...] shall not remain in Botswana for more than 90 days in aggregate in any given year.\"" } },
             { label: { fr: "Limite Stricte", en: "Strict Limit" }, text: { fr: "Rester au-delà de 90 jours dans une année civile est strictement interdit sans un permis de résidence ou une dérogation spéciale.", en: "Staying beyond 90 days in a calendar year is strictly prohibited without a residence permit or special exemption." } }
           ]
         },
@@ -7404,7 +7404,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Act 1982.", en: "Immigration Act 1982." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "L'entrée sans visa (ou visa à l'arrivée) est typiquement pour 30 jours. Elle peut être étendue pour 30 autres jours.", en: "Visa-free (or on-arrival visa) entry is typically for 30 days. It can be extended for a further 30 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Si vous voulez rester plus de 60 jours, vous devez demander un permis de résidence temporaire ». C'est plus serré que la norme de 90 jours.", en: "\"If you want to stay longer than 60 days, you must apply for a temporary residence permit.\" This is tighter than the 90-day norm." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Si vous voulez rester plus de 60 jours, vous devez demander un permis de résidence temporaire ». C'est plus serré que la norme de 90 jours.", en: "\"If you want to stay longer than 60 days, you must apply for a temporary residence permit.\" This is tighter than the 90-day norm." } }
           ]
         },
         {
@@ -7413,7 +7413,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Permis de résidence requis après 90 jours.", en: "Residence permit required after 90 days." },
           instrument: { fr: "Aliens Control Act 1966.", en: "Aliens Control Act 1966." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs avec un visa à entrer unique [...] peuvent rester pour une période maximale de 44 jours ». Des permis temporaires peuvent être émis jusqu'à 90 jours.", en: "\"Visitors with a single-entry visa [...] may stay for a maximum period of 44 days.\" Temporary permits may be issued for up to 90 days." } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les visiteurs avec un visa à entrer unique [...] peuvent rester pour une période maximale de 44 jours ». Des permis temporaires peuvent être émis jusqu'à 90 jours.", en: "\"Visitors with a single-entry visa [...] may stay for a maximum period of 44 days.\" Temporary permits may be issued for up to 90 days." } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de la limite du permis temporaire (90 jours) exigent un permis de résidence.", en: "Stays beyond the temporary permit limit (90 days) require a residence permit." } }
           ]
         },
@@ -7424,7 +7424,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           instrument: { fr: "Immigration Act (Cap 15:03).", en: "Immigration Act (Cap 15:03)." },
           details: [
             { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "Le permis visiteur est valide pour 30 jours, extensible pour 60 jours (Total 90).", en: "The visitor's permit is valid for 30 days, extendable for 60 days (total 90)." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Délivré à un visiteur [...] qui a résidé au Malawi pour le maximum de 90 jours [...] Un permis de résidence temporaire » est alors requis.", en: "\"Issued to a visitor [...] who has resided in Malawi for the maximum of 90 days [...] A Temporary Residence Permit\" is then required." } }
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Délivré à un visiteur [...] qui a résidé au Malawi pour le maximum de 90 jours [...] Un permis de résidence temporaire » est alors requis.", en: "\"Issued to a visitor [...] who has resided in Malawi for the maximum of 90 days [...] A Temporary Residence Permit\" is then required." } }
           ]
         },
         {
@@ -7433,8 +7433,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Nouvelle loi permet 90 jours. Résidence (DIRE) pour plus long.", en: "New law allows 90 days. Residence (DIRE) for longer stays." },
           instrument: { fr: "Loi N° 23/2022 (Nouvelle Loi Immigration).", en: "Law N° 23/2022 (New Immigration Law)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les citoyens étrangers avec un visa touristique peuvent maintenant rester dans le pays pour une période de 90 jours, continus ou interrompus durant 12 mois ».", en: "\"Foreign nationals with a tourist visa may now stay in the country for a period of 90 days, continuous or interrupted, within 12 months.\"" } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Le permis de résidence temporaire du Mozambique est requis pour les nationaux étrangers qui ont l'intention de rester [...] pour plus de trois mois ».", en: "\"Mozambique's Temporary Residence Permit is required for foreign nationals intending to stay [...] for more than three months.\"" } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Les citoyens étrangers avec un visa touristique peuvent maintenant rester dans le pays pour une période de 90 jours, continus ou interrompus durant 12 mois ».", en: "\"Foreign nationals with a tourist visa may now stay in the country for a period of 90 days, continuous or interrupted, within 12 months.\"" } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "« Le permis de résidence temporaire du Mozambique est requis pour les nationaux étrangers qui ont l'intention de rester [...] pour plus de trois mois ».", en: "\"Mozambique's Temporary Residence Permit is required for foreign nationals intending to stay [...] for more than three months.\"" } }
           ]
         },
         {
@@ -7443,7 +7443,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Limite stricte de 90 jours par année civile.", en: "Strict 90-day limit per calendar year." },
           instrument: { fr: "Immigration Control Act 7 of 1993.", en: "Immigration Control Act 7 of 1993." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Le maximum de quatre-vingt-dix (90) jours par an pour visite peut être pris en une fois ou en partie ».", en: "\"The maximum of ninety (90) days per year for a visit may be taken all at once or in parts.\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Le maximum de quatre-vingt-dix (90) jours par an pour visite peut être pris en une fois ou en partie ».", en: "\"The maximum of ninety (90) days per year for a visit may be taken all at once or in parts.\"" } },
             { label: { fr: "Limite Stricte", en: "Strict Limit" }, text: { fr: "Similaire au Botswana, la limite annuelle de 90 jours est strictement appliquée pour empêcher le tourisme perpétuel.", en: "Similar to Botswana, the 90-day annual limit is strictly enforced to prevent perpetual tourism." } }
           ]
         },
@@ -7463,8 +7463,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Visiting Permit pour > 90 jours.", en: "Visiting Permit for > 90 days." },
           instrument: { fr: "Immigration and Deportation Act 2010.", en: "Immigration and Deportation Act 2010." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tous les visiteurs ordinaires et touristes ont droit à une visite gratuite de quatre-vingt-dix (90) jours dans toute période de douze (12) mois ». Les visiteurs d'affaires sont limités à 30 jours.", en: "\"All ordinary visitors and tourists are entitled to a free ninety (90) day visit within any twelve (12) month period.\" Business visitors are limited to 30 days." } },
-            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour rester plus longtemps, il faut demander un « Visiting Permit » (valide 3 mois, jusqu'à 9 mois total) ou un permis de résidence.", en: "To stay longer, one must apply for a \"Visiting Permit\" (valid 3 months, up to 9 months total) or a Residence Permit." } }
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Tous les visiteurs ordinaires et touristes ont droit à une visite gratuite de quatre-vingt-dix (90) jours dans toute période de douze (12) mois ». Les visiteurs d'affaires sont limités à 30 jours.", en: "\"All ordinary visitors and tourists are entitled to a free ninety (90) day visit within any twelve (12) month period.\" Business visitors are limited to 30 days." } },
+            { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Pour rester plus longtemps, il faut demander un « Visiting Permit » (valide 3 mois, jusqu'à 9 mois total) ou un permis de résidence.", en: "To stay longer, one must apply for a \"Visiting Permit\" (valid 3 months, up to 9 months total) or a Residence Permit." } }
           ]
         },
         {
@@ -7473,7 +7473,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
           tableNotes: { fr: "Max 90 jours touriste. Permis requis ensuite.", en: "Max 90 tourist days. Permit required thereafter." },
           instrument: { fr: "Immigration Act (Chapitre 4:02).", en: "Immigration Act (Chapter 4:02)." },
           details: [
-            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Vous pouvez demander 2 extensions consécutives (pour un total de 90 jours) ».", en: "\"You may apply for 2 consecutive extensions (for a total of 90 days).\"" } },
+            { label: { fr: "Analyse", en: "Analysis" }, text: { fr: "« Vous pouvez demander 2 extensions consécutives (pour un total de 90 jours) ».", en: "\"You may apply for 2 consecutive extensions (for a total of 90 days).\"" } },
             { label: { fr: "Obligation", en: "Obligation" }, text: { fr: "Les séjours au-delà de 90 jours exigent un permis (étudiant, emploi ou résidence).", en: "Stays beyond 90 days require a permit (Student, Employment, or Residence)." } }
           ]
         }
@@ -7527,7 +7527,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
 
       <Reperes
         lang={lang}
-        titre={{ fr: "Signer, ratifier, déposer : ce qui engage réellement un État",
+        titre={{ fr: "Signer, ratifier, déposer : ce qui engage réellement un État",
                  en: 'Signing, ratifying, depositing: what actually binds a state',
                  ar: 'التوقيع والتصديق والإيداع: ما يُلزم الدولة فعلاً' }}
         chapeau={{
@@ -7578,7 +7578,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         {/* Sommaire : trois familles, six entrees, chacune annoncant son contenu.
             Les cadres africains ouvrent la section. La plateforme declare que
             l'instrument africain fait reference pour toute notion disposant
-            aussi d'une definition onusienne : ouvrir sur l'Agenda 2030 aurait
+            aussi d'une definition onusienne : ouvrir sur l'Agenda 2030 aurait
             dit l'inverse de ce que la methode annonce. */}
         <nav className="bg-white border border-slate-200 mb-8" aria-label={tr({ fr: "Sommaire de la section", en: "Section contents" }, lang)}>
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200">
@@ -7610,7 +7610,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 family: tr({ fr: "États juridiques", en: "Legal frameworks" }, lang),
                 items: [
                   { id: 'matrix', label: tr({ fr: "Entrées & séjours", en: "Entry & residence" }, lang),
-                    hint: tr({ fr: "Les 54 pays : seuils légaux, instruments, ouverture", en: "All 54 countries: legal thresholds, instruments, openness" }, lang)},
+                    hint: tr({ fr: "Les 54 pays : seuils légaux, instruments, ouverture", en: "All 54 countries: legal thresholds, instruments, openness" }, lang)},
                 ],
               },
             ].map((group, gi) => {
@@ -7679,17 +7679,17 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <AfricanCounterpoint
               lang={lang}
               kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
-              title={tr({ fr: "L'Agenda 2063 : l'Afrique s'est dotée de son propre horizon, et il est plus ancien que 2030", en: "Agenda 2063: Africa set its own horizon, and it predates 2030" }, lang)}
+              title={tr({ fr: "L'Agenda 2063 : l'Afrique s'est dotée de son propre horizon, et il est plus ancien que 2030", en: "Agenda 2063: Africa set its own horizon, and it predates 2030" }, lang)}
               sources={[
                 { label: tr({ fr: "Union africaine — Projets phares de l'Agenda 2063 (liste officielle des 15 projets)", en: "African Union — Agenda 2063 Flagship Projects (official list of the 15 projects)" }, lang),
                   url: "https://au.int/en/agenda2063/flagship-projects" },
-                { label: tr({ fr: "Union africaine — « African Union Passport Launched during Opening of 27th AU Summit in Kigali » (communiqué, 17 juillet 2016)", en: "African Union — \"African Union Passport Launched during Opening of 27th AU Summit in Kigali\" (press release, 17 July 2016)" }, lang),
+                { label: tr({ fr: "Union africaine — « African Union Passport Launched during Opening of 27th AU Summit in Kigali » (communiqué, 17 juillet 2016)", en: "African Union — \"African Union Passport Launched during Opening of 27th AU Summit in Kigali\" (press release, 17 July 2016)" }, lang),
                   url: "https://au.int/en/pressreleases/20160717/african-union-passport-launched-during-opening-27th-au-summit-kigali" },
                 { label: tr({ fr: "AUDA-NEPAD — agence de mise en œuvre de l'Agenda 2063", en: "AUDA-NEPAD — implementing agency for Agenda 2063" }, lang),
                   url: "https://www.nepad.org/" },
               ]}
             >
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares.", en: "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Adopté en 2015, l'Agenda 2063 suit son calendrier propre, sur cinquante ans, indépendamment de l'Agenda 2030. Sa deuxième aspiration vise « un continent intégré, politiquement uni, fondé sur les idéaux du panafricanisme et la vision de la renaissance africaine ». La mobilité n'y est pas un chapitre parmi d'autres — elle est l'un des quinze projets phares.", en: "Adopted in 2015, Agenda 2063 runs on its own fifty-year horizon, independently of Agenda 2030. Its second aspiration is \"an integrated continent, politically united, based on the ideals of Pan-Africanism and the vision of Africa's Renaissance\". Mobility is not one chapter among others there — it is one of the fifteen flagship projects." }, lang)}</Prose>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
                 <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
@@ -7698,7 +7698,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <h3 className="font-serif font-bold text-slate-900 mb-2">
                   {tr({ fr: "Le passeport africain et la libre circulation des personnes", en: "The African Passport and Free Movement of People" }, lang)}
                 </h3>
-                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)", en: "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)" }, lang)}</Prose>
+                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Lever les restrictions à la capacité des Africains de voyager, travailler et vivre sur leur propre continent. L'initiative vise à transformer les législations africaines, qui restent globalement restrictives sur la circulation des personnes malgré les engagements politiques d'abaisser les frontières. » (formulation officielle de l'UA)", en: "\"Remove restrictions on Africans ability to travel, work and live within their own continent. The initiative aims at transforming Africa's laws, which remain generally restrictive on movement of people despite political commitments to bring down borders.\" (official AU wording)" }, lang)}</Prose>
               </div>
 
               <CounterpointFacts items={[
@@ -7707,7 +7707,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 { when: "2018", what: tr({ fr: "Le Protocole sur la libre circulation des personnes est adopté à Kigali — c'est lui qui doit donner au passeport sa portée juridique.", en: "The Protocol on Free Movement of Persons is adopted in Kigali — it is what would give the passport its legal reach." }, lang)},
               ]} />
 
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "C'est ici que le geste symbolique et l'ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L'Agenda 2063 n'échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026).", en: "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "C'est ici que le geste symbolique et l'ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L'Agenda 2063 n'échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026).", en: "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)." }, lang)}</Prose>
             </AfricanCounterpoint>
           </div>
         )}
@@ -7734,14 +7734,14 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   url: "https://migrationnetwork.un.org/international-migration-review-forum-2026" },
               ]}
             >
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen ».", en: "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018. The UN General Assembly endorsed it on 19 December 2018 by resolution 73/195, on a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Le Pacte a été adopté à la conférence intergouvernementale de Marrakech le 10 décembre 2018. L'Assemblée générale des Nations unies l'a entériné le 19 décembre 2018 (résolution 73/195), par 152 voix pour, 5 contre et 12 abstentions. C'est un cadre de coopération juridiquement non contraignant : il ne crée aucune obligation opposable. Le texte le dit lui-même — « son autorité repose sur son caractère consensuel, sa crédibilité, l'appropriation collective, la mise en œuvre conjointe, le suivi et l'examen ».", en: "The Compact was adopted at the intergovernmental conference in Marrakech on 10 December 2018. The UN General Assembly endorsed it on 19 December 2018 by resolution 73/195, on a recorded vote of 152 in favour, 5 against and 12 abstentions. It is a non-legally binding cooperative framework: it creates no enforceable obligation, and the text itself states that \"its authority rests on its consensual nature, credibility, collective ownership, joint implementation, follow-up and review\"." }, lang)}</Prose>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent-2)' }}>
                 <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                   {tr({ fr: "Principe de souveraineté nationale (par. 15)", en: "National sovereignty principle (para. 15)" }, lang)}
                 </p>
-                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »", en: "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\"" }, lang)}</Prose>
-                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed" lang={lang}>{tr({ fr: "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées.", en: "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike." }, lang)}</Prose>
+                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« Le Pacte mondial réaffirme le droit souverain des États de définir leur politique migratoire nationale et leur prérogative de gouverner les migrations relevant de leur juridiction, en conformité avec le droit international. »", en: "\"The Global Compact reaffirms the sovereign right of States to determine their national migration policy and their prerogative to govern migration within their jurisdiction, in conformity with international law.\"" }, lang)}</Prose>
+                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed" lang={lang}>{tr({ fr: "Cette clause est ce qui a rendu le texte adoptable ; c'est aussi ce qui limite sa portée. Elle explique pourquoi un même objectif peut être invoqué pour ouvrir des voies régulières comme pour justifier un durcissement des entrées.", en: "This clause is what made the text adoptable; it is also what limits its reach. It explains why the same objective can be invoked to open regular pathways and to justify tightening entry alike." }, lang)}</Prose>
               </div>
 
               <div>
@@ -7783,12 +7783,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </div>
                   ))}
                 </div>
-                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes forment la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux : deux États peuvent appliquer le même texte et diverger sur ce seul point.", en: "These ten principles form the interpretive grid for the 23 objectives that follow. An objective is always read through them: two states can apply the same text and part company on this point alone." }, lang)}</Prose>
+                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes forment la grille d'interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux : deux États peuvent appliquer le même texte et diverger sur ce seul point.", en: "These ten principles form the interpretive grid for the 23 objectives that follow. An objective is always read through them: two states can apply the same text and part company on this point alone." }, lang)}</Prose>
               </div>
 
               <CounterpointFacts items={[
                 { when: tr({ fr: "10 déc. 2018", en: "10 Dec. 2018" }, lang), what: tr({ fr: "Adoption à la conférence intergouvernementale de Marrakech.", en: "Adoption at the intergovernmental conference in Marrakech." }, lang)},
-                { when: tr({ fr: "19 déc. 2018", en: "19 Dec. 2018" }, lang), what: tr({ fr: "Entérinement par l'Assemblée générale (résolution 73/195) : 152 pour, 5 contre, 12 abstentions.", en: "Endorsement by the General Assembly (resolution 73/195): 152 in favour, 5 against, 12 abstentions." }, lang)},
+                { when: tr({ fr: "19 déc. 2018", en: "19 Dec. 2018" }, lang), what: tr({ fr: "Entérinement par l'Assemblée générale (résolution 73/195) : 152 pour, 5 contre, 12 abstentions.", en: "Endorsement by the General Assembly (resolution 73/195): 152 in favour, 5 against, 12 abstentions." }, lang)},
                 { when: tr({ fr: "16-20 mai 2022", en: "16-20 May 2022" }, lang), what: tr({ fr: "Premier Forum d'examen des migrations internationales (FEMI), à New York. Prévu au paragraphe 49 du Pacte, il en est la principale plateforme intergouvernementale de suivi, réunie tous les quatre ans.", en: "First International Migration Review Forum (IMRF), New York. Provided for in paragraph 49 of the Compact, it is its primary intergovernmental follow-up platform, convened every four years." }, lang)},
                 { when: tr({ fr: "5-8 mai 2026", en: "5-8 May 2026" }, lang), what: tr({ fr: "Deuxième FEMI, à New York. Les examens régionaux l'alimentent — celui de l'Afrique a été conduit par l'UA en 2021.", en: "Second IMRF, New York. Regional reviews feed into it — Africa's was conducted by the AU in 2021." }, lang)},
               ]} />
@@ -7807,9 +7807,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <AfricanCounterpoint
               lang={lang}
               kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
-              title={tr({ fr: "La Position africaine commune : l'Afrique est arrivée à Marrakech avec un texte à elle", en: "The Common African Position: Africa came to Marrakech with a text of its own" }, lang)}
+              title={tr({ fr: "La Position africaine commune : l'Afrique est arrivée à Marrakech avec un texte à elle", en: "The Common African Position: Africa came to Marrakech with a text of its own" }, lang)}
               sources={[
-                { label: tr({ fr: "Union africaine — « Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration », octobre 2017 (document de travail, Addis-Abeba)", en: "African Union — \"Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration\", October 2017 (working document, Addis Ababa)" }, lang),
+                { label: tr({ fr: "Union africaine — « Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration », octobre 2017 (document de travail, Addis-Abeba)", en: "African Union — \"Draft Common African Position (CAP) on the Global Compact for Safe, Orderly and Regular Migration\", October 2017 (working document, Addis Ababa)" }, lang),
                   url: "https://au.int/sites/default/files/newsevents/workingdocuments/33023-wd-english_common_african_position_on_gcom.pdf" },
                 { label: tr({ fr: "Union africaine — Revue régionale africaine de la mise en œuvre du Pacte mondial sur les migrations (2021)", en: "African Union — Africa Regional Review of the Implementation of the Global Compact on Migration (2021)" }, lang),
                   url: "https://au.int/en/newsevents/20210826/africa-regional-review-implementation-global-compact-migration" },
@@ -7817,10 +7817,10 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   url: "https://au.int/en/pressreleases/20240828/senior-officers-validate-action-plan-gcm-implementation-africa" },
               ]}
             >
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune. Élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message », elle est portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État.", en: "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP). It was drafted in October 2017 under the motto \"One Africa, One Voice, One Message\", and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Un an avant l'adoption du Pacte de Marrakech, l'Union africaine se dote d'une Position africaine commune. Élaborée en octobre 2017 sous le mot d'ordre « One Africa, One Voice, One Message », elle est portée devant les sessions ordinaires de 2018 du Conseil exécutif et de la Conférence. Le geste compte autant que le contenu : il s'agit de négocier un instrument mondial en bloc, avec une doctrine préalable, plutôt que d'y réagir État par État.", en: "A year before the Marrakech Compact was adopted, the African Union produced a Common African Position (CAP). It was drafted in October 2017 under the motto \"One Africa, One Voice, One Message\", and brought before the 2018 ordinary sessions of the Executive Council and the Assembly. The gesture matters as much as the content: it means negotiating a global instrument as a bloc, with a doctrine agreed beforehand, rather than reacting to it state by state." }, lang)}</Prose>
 
               <div className="p-5" style={{ backgroundColor: 'var(--paper-sunk)', borderLeft: '2px solid var(--accent)' }}>
-                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)", en: "\"The adoption of a Common African Position on the Global Compact on Migration will be guided by the fact that human mobility and free movement of all persons within the continent constitute one of the pillars of an integrated Africa.\" (CAP, § 1.6)" }, lang)}</Prose>
+                <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{tr({ fr: "« L'adoption d'une Position africaine commune sur le Pacte mondial sur les migrations sera guidée par le fait que la mobilité humaine et la libre circulation de toutes les personnes à l'intérieur du continent constituent l'un des piliers d'une Afrique intégrée. » (PAC, § 1.6)", en: "\"The adoption of a Common African Position on the Global Compact on Migration will be guided by the fact that human mobility and free movement of all persons within the continent constitute one of the pillars of an integrated Africa.\" (CAP, § 1.6)" }, lang)}</Prose>
               </div>
 
               <div>
@@ -7884,24 +7884,24 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               kicker={tr({ fr: "Le pendant africain", en: "The African counterpart" }, lang)}
               title={tr({ fr: "L'Afrique avait déjà son instrument — et il est plus large que celui de Genève", en: "Africa already had its instrument — and it is broader than Geneva's" }, lang)}
               sources={[
-                { label: tr({ fr: "OUA — Convention régissant les aspects propres aux problèmes des réfugiés en Afrique (Addis-Abeba, 10 septembre 1969 ; entrée en vigueur le 20 juin 1974)", en: "OAU — Convention Governing the Specific Aspects of Refugee Problems in Africa (Addis Ababa, 10 September 1969; entered into force 20 June 1974)" }, lang),
+                { label: tr({ fr: "OUA — Convention régissant les aspects propres aux problèmes des réfugiés en Afrique (Addis-Abeba, 10 septembre 1969 ; entrée en vigueur le 20 juin 1974)", en: "OAU — Convention Governing the Specific Aspects of Refugee Problems in Africa (Addis Ababa, 10 September 1969; entered into force 20 June 1974)" }, lang),
                   url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
                 { label: tr({ fr: "UA — Convention de Kampala sur la protection et l'assistance aux personnes déplacées internes (2009)", en: "AU — Kampala Convention on the Protection and Assistance of Internally Displaced Persons (2009)" }, lang),
                   url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" },
-                { label: tr({ fr: "HCR — Global Trends : Forced Displacement (édition 2025)", en: "UNHCR — Global Trends: Forced Displacement (2025 edition)" }, lang),
+                { label: tr({ fr: "HCR — Global Trends : Forced Displacement (édition 2025)", en: "UNHCR — Global Trends: Forced Displacement (2025 edition)" }, lang),
                   url: "https://www.unhcr.org/global-trends" },
               ]}
             >
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Le Pacte mondial sur les réfugiés date de 2018. La Convention de l'OUA sur les réfugiés date de 1969 : un demi-siècle plus tôt, et avec une définition plus large que celle de Genève. La Convention de 1951 exige une crainte de persécution individualisée. L'article I(2) du texte africain protège aussi quiconque fuit « une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public ». C'est la définition que cette plateforme retient comme référence.", en: "The Global Compact on Refugees dates from 2018. The OAU Refugee Convention dates from 1969: half a century earlier, and with a broader definition than Geneva's. Where the 1951 Convention requires an individualised fear of persecution, Article I(2) of the African text also protects anyone fleeing \"external aggression, occupation, foreign domination or events seriously disturbing public order\". That is the definition this platform treats as its reference." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Le Pacte mondial sur les réfugiés date de 2018. La Convention de l'OUA sur les réfugiés date de 1969 : un demi-siècle plus tôt, et avec une définition plus large que celle de Genève. La Convention de 1951 exige une crainte de persécution individualisée. L'article I(2) du texte africain protège aussi quiconque fuit « une agression extérieure, une occupation, une domination étrangère ou des événements troublant gravement l'ordre public ». C'est la définition que cette plateforme retient comme référence.", en: "The Global Compact on Refugees dates from 2018. The OAU Refugee Convention dates from 1969: half a century earlier, and with a broader definition than Geneva's. Where the 1951 Convention requires an individualised fear of persecution, Article I(2) of the African text also protects anyone fleeing \"external aggression, occupation, foreign domination or events seriously disturbing public order\". That is the definition this platform treats as its reference." }, lang)}</Prose>
 
               <CounterpointFacts items={[
                 { when: "1969", what: tr({ fr: "Convention de l'OUA, adoptée à Addis-Abeba le 10 septembre — définition élargie du réfugié, en vigueur depuis le 20 juin 1974.", en: "OAU Convention, adopted in Addis Ababa on 10 September — broadened refugee definition, in force since 20 June 1974." }, lang)},
-                { when: "2009", what: tr({ fr: "Convention de Kampala : le continent se dote du seul traité régional contraignant au monde sur les déplacés internes.", en: "Kampala Convention: the continent adopts the world's only binding regional treaty on internally displaced persons." }, lang)},
-                { when: "2017", what: tr({ fr: "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017).", en: "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." }, lang)},
+                { when: "2009", what: tr({ fr: "Convention de Kampala : le continent se dote du seul traité régional contraignant au monde sur les déplacés internes.", en: "Kampala Convention: the continent adopts the world's only binding regional treaty on internally displaced persons." }, lang)},
+                { when: "2017", what: tr({ fr: "Déploiement du CRRF, le cadre d'action qui préfigure le Pacte mondial ; ses situations d'application initiales sont très majoritairement africaines (l'Éthiopie le lance le 28 novembre 2017).", en: "Roll-out of the CRRF, the framework that prefigured the Global Compact; its initial application situations are overwhelmingly African (Ethiopia launches it on 28 November 2017)." }, lang)},
                 { when: "2018", what: tr({ fr: "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà.", en: "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." }, lang)},
               ]} />
 
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir. D'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d'entre eux sont africains : l'Ouganda et le Tchad. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026).", en: "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims concerns a burden already borne. According to UNHCR, six countries alone host more than a third of the world's refugees. Two of them are African: Uganda and Chad. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu'il proclame ne décrit pas une charge à venir. D'après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d'entre eux sont africains : l'Ouganda et le Tchad. L'enjeu, pour le continent, n'est donc pas d'adhérer à une norme venue d'ailleurs, mais d'obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne (Ben Mokhtar, 2026).", en: "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims concerns a burden already borne. According to UNHCR, six countries alone host more than a third of the world's refugees. Two of them are African: Uganda and Chad. For the continent the stake is therefore not to sign up to a norm from elsewhere, but to get the global norm to recognise and fund a long-standing practice (Ben Mokhtar, 2026)." }, lang)}</Prose>
             </AfricanCounterpoint>
           </div>
         )}
@@ -7932,7 +7932,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                   {tr({ fr: "L'Union africaine et le régime panafricain des mobilités", en: "The African Union and the Pan-African Mobility Regime" }, lang)}
                 </h2>
-                <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union africaine (UA). Cette architecture illustre la tension du « normer sans ancrer ». La densification normative est exceptionnelle — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
+                <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s'enracine dans une architecture institutionnelle propre, structurée par l'Union africaine (UA). Cette architecture illustre la tension du « normer sans ancrer ». La densification normative est exceptionnelle — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026). Le régime continental repose sur la construction d'une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU). This architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026). The continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
                 <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-emerald-400" />
@@ -8111,12 +8111,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                   <div>
                     <h3 className="text-sm font-bold text-blue-900 mb-1.5">{tr({ fr: "Le Programme conjoint sur la migration de main-d'œuvre (JLMP)", en: "The Joint Labour Migration Programme (JLMP)" }, lang)}</h3>
-                    <Prose className="text-xs text-blue-800 leading-relaxed" lang={lang}>{tr({ fr: "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants.", en: "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM and ECA, with UNDP, the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment. It targets skills portability, social security portability, fair recruitment and migrant worker protection." }, lang)}</Prose>
+                    <Prose className="text-xs text-blue-800 leading-relaxed" lang={lang}>{tr({ fr: "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l'OIT, l'OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants.", en: "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM and ECA, with UNDP, the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment. It targets skills portability, social security portability, fair recruitment and migrant worker protection." }, lang)}</Prose>
                   </div>
                 </div>
                 <div className="bg-white/70 p-4 rounded-lg border border-blue-100">
                   <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{tr({ fr: "Phase actuelle — JLMP Action (jusqu'à déc. 2024)", en: "Current Phase — JLMP Action (through Dec. 2024)" }, lang)}</span>
-                  <Prose className="text-xs text-blue-900 leading-relaxed" lang={lang}>{tr({ fr: "Déploiement ciblé dans cinq États membres — Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc — et deux CER partenaires, la CEEAC et le COMESA. C'est un choix pilote, financé par la SIDA (Suède) depuis la phase « JLMP Priority » en 2018.", en: "Targeted rollout in five member states — Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco — and two partner RECs, ECCAS and COMESA. This is a pilot approach, funded by SIDA (Sweden) since the \"JLMP Priority\" phase in 2018." }, lang)}</Prose>
+                  <Prose className="text-xs text-blue-900 leading-relaxed" lang={lang}>{tr({ fr: "Déploiement ciblé dans cinq États membres — Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc — et deux CER partenaires, la CEEAC et le COMESA. C'est un choix pilote, financé par la SIDA (Suède) depuis la phase « JLMP Priority » en 2018.", en: "Targeted rollout in five member states — Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco — and two partner RECs, ECCAS and COMESA. This is a pilot approach, funded by SIDA (Sweden) since the \"JLMP Priority\" phase in 2018." }, lang)}</Prose>
                 </div>
               </div>
 
@@ -8126,13 +8126,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
                   <div>
                     <h3 className="text-sm font-bold text-teal-900 mb-1.5">{tr({ fr: "Partenariats de compétences en action", en: "Global Skills Partnerships in Action" }, lang)}</h3>
-                    <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée.", en: "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure." }, lang)}</Prose>
+                    <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c'est une alternative à la fuite des cerveaux, et elle est déjà testée.", en: "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure." }, lang)}</Prose>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
                     <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{tr({ fr: "PALIM — Maroc ↔ Belgique (depuis 2019)", en: "PALIM — Morocco ↔ Belgium (since 2019)" }, lang)}</span>
-                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche.", en: "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss." }, lang)}</Prose>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche.", en: "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss." }, lang)}</Prose>
                   </div>
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
                     <span className="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-2 block">{tr({ fr: "THAMM / THAMM Plus (2019-2027)", en: "THAMM / THAMM Plus (2019-2027)" }, lang)}</span>
@@ -8171,7 +8171,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     founded={tr({ fr: "décidé 2020 — lancé 2021", en: "decided 2020 — launched 2021" }, lang)}
                     source={{ url: "https://au.int/", label: tr({ fr: "Union africaine", en: "African Union" }, lang)}}
                   >
-                    {tr({ fr: "Bureau technique spécialisé de la Commission de l'UA, établi par décision de la 33e Conférence (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire de la connaissance sur les migrations africaines, à travers les « African Migration Policy Briefs ». Suivre la mise en œuvre des cadres de politique migratoire et renforcer les capacités des États et des CER.", en: "Specialized technical office of the AU Commission, established by decision of the 33rd Assembly (February 2020) and officially launched on 19 March 2021. Continental mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring implementation of migration policy frameworks, and building the capacity of States and RECs." }, lang)}
+                    {tr({ fr: "Bureau technique spécialisé de la Commission de l'UA, établi par décision de la 33e Conférence (février 2020) et officiellement lancé le 19 mars 2021. Mandat continental : produire de la connaissance sur les migrations africaines, à travers les « African Migration Policy Briefs ». Suivre la mise en œuvre des cadres de politique migratoire et renforcer les capacités des États et des CER.", en: "Specialized technical office of the AU Commission, established by decision of the 33rd Assembly (February 2020) and officially launched on 19 March 2021. Continental mandate: producing knowledge on African migration (\"African Migration Policy Briefs\"), monitoring implementation of migration policy frameworks, and building the capacity of States and RECs." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
@@ -8193,7 +8193,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     founded="2014"
                     source={{ url: "https://au.int/en/sa/air", label: tr({ fr: "Fiche AIR (UA)", en: "AIR page (AU)" }, lang)}}
                   >
-                    {tr({ fr: "Le Conseil exécutif ayant accepté l'offre d'accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l'accord de siège est signé et l'Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs. Abaisser le coût d'envoi d'argent vers l'Afrique et à l'intérieur du continent. Améliorer la mesure et la déclaration des transferts dans les États membres. Convertir ces flux en effet économique et social. L'AIR touche donc à la fois au droit bancaire et à la statistique migratoire.", en: "After the Executive Council accepted Kenya's offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics." }, lang)}
+                    {tr({ fr: "Le Conseil exécutif ayant accepté l'offre d'accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l'accord de siège est signé et l'Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs. Abaisser le coût d'envoi d'argent vers l'Afrique et à l'intérieur du continent. Améliorer la mesure et la déclaration des transferts dans les États membres. Convertir ces flux en effet économique et social. L'AIR touche donc à la fois au droit bancaire et à la statistique migratoire.", en: "After the Executive Council accepted Kenya's offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
@@ -8204,11 +8204,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     founded={tr({ fr: "créé 2013 — activités 2019", en: "created 2013 — activities 2019" }, lang)}
                     source={{ url: "https://statafric.au.int/en/mandate", label: tr({ fr: "Mandat de STATAFRIC", en: "STATAFRIC mandate" }, lang)}}
                   >
-                    {tr({ fr: "Créé en janvier 2013 par la Conférence de l'UA à Addis-Abeba, il est installé à Tunis. Ses activités ont été lancées en novembre 2019, en marge de la 13e session des directeurs généraux des instituts nationaux de statistique. Son mandat : conduire la production et la promotion d'une information statistique harmonisée et de qualité à l'appui de l'agenda africain d'intégration, en collectant et en agrégeant ce que publient les instituts nationaux. C'est l'infrastructure sur laquelle repose toute comparabilité continentale — y compris migratoire.", en: "Created in January 2013 by the AU Assembly in Addis Ababa, it is seated in Tunis. Its activities were launched in November 2019, alongside the 13th session of the Committee of Directors General of national statistics offices. Its mandate: to lead the provision and promotion of harmonised, quality statistical information in support of the African integration agenda, by collecting and aggregating what national statistics institutes publish. It is the infrastructure on which all continental comparability rests — migration included." }, lang)}
+                    {tr({ fr: "Créé en janvier 2013 par la Conférence de l'UA à Addis-Abeba, il est installé à Tunis. Ses activités ont été lancées en novembre 2019, en marge de la 13e session des directeurs généraux des instituts nationaux de statistique. Son mandat : conduire la production et la promotion d'une information statistique harmonisée et de qualité à l'appui de l'agenda africain d'intégration, en collectant et en agrégeant ce que publient les instituts nationaux. C'est l'infrastructure sur laquelle repose toute comparabilité continentale — y compris migratoire.", en: "Created in January 2013 by the AU Assembly in Addis Ababa, it is seated in Tunis. Its activities were launched in November 2019, alongside the 13th session of the Committee of Directors General of national statistics offices. Its mandate: to lead the provision and promotion of harmonised, quality statistical information in support of the African integration agenda, by collecting and aggregating what national statistics institutes publish. It is the infrastructure on which all continental comparability rests — migration included." }, lang)}
                   </AuAgencyCard>
                 </div>
 
-                <Prose className="text-xs text-slate-500 leading-relaxed mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }} lang={lang}>{tr({ fr: "AIR et STATAFRIC sont souvent cités ensemble, à tort : le premier est un institut sectoriel adossé à la régulation bancaire kényane, le second l'appareil statistique de l'Union tout entière. Les confondre revient à confondre une source de données avec le système qui les rend comparables (Ben Mokhtar, 2026).", en: "AIR and STATAFRIC are often cited together, wrongly: the first is a sectoral institute anchored in Kenyan banking regulation, the second the statistical apparatus of the Union as a whole. Conflating them means conflating a data source with the system that makes data comparable (Ben Mokhtar, 2026)." }, lang)}</Prose>
+                <Prose className="text-xs text-slate-500 leading-relaxed mt-5 pt-4" style={{ borderTop: '1px solid var(--rule)' }} lang={lang}>{tr({ fr: "AIR et STATAFRIC sont souvent cités ensemble, à tort : le premier est un institut sectoriel adossé à la régulation bancaire kényane, le second l'appareil statistique de l'Union tout entière. Les confondre revient à confondre une source de données avec le système qui les rend comparables (Ben Mokhtar, 2026).", en: "AIR and STATAFRIC are often cited together, wrongly: the first is a sectoral institute anchored in Kenyan banking regulation, the second the statistical apparatus of the Union as a whole. Conflating them means conflating a data source with the system that makes data comparable (Ben Mokhtar, 2026)." }, lang)}</Prose>
               </div>
 
             </div>
@@ -8224,7 +8224,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h2 className="font-serif font-bold text-2xl mb-3">
                 {tr({ fr: "Les communautés économiques régionales (CER)", en: "Regional Economic Communities (RECs)" }, lang)}
               </h2>
-              <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires.", en: "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges." }, lang)}</Prose>
+              <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L'architecture continentale repose sur 8 CER reconnues. L'analyse démontre que l'intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d'ouverture conditionnée par son histoire, son économie et ses défis sécuritaires.", en: "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges." }, lang)}</Prose>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -8319,7 +8319,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   );
                                 })}
                             </div>
-                            <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours.", en: "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal." }, lang)}</Prose>
+                            <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours.", en: "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal." }, lang)}</Prose>
                           </div>
                         </div>
 
@@ -8372,7 +8372,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                 {tr({ fr: "Matrices de réciprocité des visas et profils d'entrée et de séjour (54 pays)", en: "Visa reciprocity matrices and entry/residence profiles (54 countries)" }, lang)}
               </h2>
-              <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours.", en: "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border. On one side, \"visitor\" status, tolerated for short-term trade or tourism; on the other, \"immigrant\" status, subject to the State's discretionary power over settlement. The standard threshold across Africa is 90 days." }, lang)}</Prose>
+              <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "L'analyse des seuils d'entrée et de l'obligation de résidence montre qu'une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l'État pour s'établir. Le seuil standard en Afrique est de 90 jours.", en: "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border. On one side, \"visitor\" status, tolerated for short-term trade or tourism; on the other, \"immigrant\" status, subject to the State's discretionary power over settlement. The standard threshold across Africa is 90 days." }, lang)}</Prose>
             </div>
 
             {/* Disclaimer Methodologique */}
@@ -8540,7 +8540,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       </span>
                     ))}
                   </div>
-                  <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA, 2024). Même symbolique que dans l'Explorateur.", en: "Sources: official national announcements and the Africa Visa Openness Index (AfDB/AUC, 2024). Same symbols as in the Explorer." }, lang)}</Prose>
+                  <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Sources : annonces officielles nationales et Africa Visa Openness Index (BAD/CUA, 2024). Même symbolique que dans l'Explorateur.", en: "Sources: official national announcements and the Africa Visa Openness Index (AfDB/AUC, 2024). Same symbols as in the Explorer." }, lang)}</Prose>
                 </div>
               </div>
             )}
@@ -8567,7 +8567,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{tr(country.threshold, lang)}</span>
                           </div>
                           <div className="text-xs text-slate-500 mb-4 pb-3 border-b border-slate-200">
-                            <strong className="text-slate-700 uppercase tracking-widest">{tr({ fr: "Instrument : ", en: "Instrument: " }, lang)}</strong>
+                            <strong className="text-slate-700 uppercase tracking-widest">{tr({ fr: "Instrument : ", en: "Instrument: " }, lang)}</strong>
                             <span className="italic">{tr(country.instrument, lang)}</span>
                           </div>
                           <div className="space-y-3 flex-grow">
@@ -8595,16 +8595,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="h-48 overflow-y-auto pe-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
                 {lang === 'fr' ? (
                   <>
-                    <p><strong>Afrique méditerranéenne :</strong><br/>
-                    Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
-                    <p><strong>Afrique de l'Ouest :</strong><br/>
-                    Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
-                    <p><strong>Afrique Centrale :</strong><br/>
-                    Angola : Loi n° 13/19. Burundi : Loi n° 1/13. Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Rwanda : Loi n° 57/2018. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
-                    <p><strong>Afrique de l'Est :</strong><br/>
-                    Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
-                    <p><strong>Afrique Australe :</strong><br/>
-                    Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
+                    <p><strong>Afrique méditerranéenne :</strong><br/>
+                    Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
+                    <p><strong>Afrique de l'Ouest :</strong><br/>
+                    Bénin : Loi n° 2025-15. Burkina Faso : Loi de 2024. Cap-Vert : Loi n° 66/VIII/2014. Côte d'Ivoire : Loi n° 2004-303. Gambie : Immigration Act (Cap. 16:02). Ghana : Immigration Act (2000). Guinée : Loi L/94/019. Guinée-Bissau : Loi n° 2/92. Liberia : Aliens and Nationality Law. Mali : Loi n° 04-058. Niger : Ordonnance n° 81-40. Nigeria : Immigration Act 2015. Sénégal : Loi n° 71-10. Sierra Leone : Non-Citizens Act (1965). Togo : Loi sur la police des étrangers (2022).</p>
+                    <p><strong>Afrique centrale :</strong><br/>
+                    Angola : Loi n° 13/19. Burundi : Loi n° 1/13. Cameroun : Loi n° 97/012. Gabon : Loi n° 5/86. Guinée équat. : Loi org. n° 3/2010. RCA : Code de l'immigration. RDC : Ordonnance n° 83-033. Congo : Loi n° 23-96. Rwanda : Loi n° 57/2018. Sao Tomé : Loi n° 5/2008. Tchad : Ordonnance n° 27-62.</p>
+                    <p><strong>Afrique de l'Est :</strong><br/>
+                    Comores : Loi n° 88-025. Djibouti : Loi n° 201/AN/07. Érythrée : Proclamation n° 24/1992. Éthiopie : Proclamation n° 354/2003. Kenya : Citizenship and Immigration Act (2011). Madagascar : Loi n° 62-006. Maurice : Immigration Act 2022. Ouganda : Act (Cap. 66). Seychelles : Decree 1979. Somalie : Law 1966. Soudan du Sud : Act 2011. Tanzanie : Act 1995.</p>
+                    <p><strong>Afrique australe :</strong><br/>
+                    Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
                   </>
                 ) : (
                   <>
@@ -8799,7 +8799,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
   
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
             <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice est une proposition issue de la recherche doctorale à l'origine du projet (Ben Mokhtar, 2026). Elle avance douze indicateurs répartis en six axes, conçus en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Chacun vise une dimension des mobilités africaines qu'aucune mesure continentale ne couvre : effectivité réelle des protocoles de libre circulation, part investie des transferts, mobilité circulaire comme adaptation climatique, apport migrant aux systèmes de soins, circulation intra-africaine des compétences, portabilité des droits sociaux. Chaque fiche indique, sous « Le déplacement qu'il opère », le cadre de mesure auquel elle répond. C'est une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain, non un jeu de données déjà constitué.", en: "The other sections of this platform consolidate data already collected by international institutions. This matrix is a proposal stemming from the doctoral research behind the project (Ben Mokhtar, 2026). It advances twelve indicators across six axes, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. Each targets a dimension of African mobility no continental measure covers: actual effectiveness of free-movement protocols, invested share of remittances, circular mobility as climate adaptation, migrant contribution to care systems, intra-African circulation of skills, portability of social rights. Each card states, under \"The shift it makes\", the measurement framework it answers. This is a methodological recommendation aimed at national statistical institutes and field researchers, not an already-constituted dataset." }, lang)}</Prose>
+            <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice est une proposition issue de la recherche doctorale à l'origine du projet (Ben Mokhtar, 2026). Elle avance douze indicateurs répartis en six axes, conçus en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Chacun vise une dimension des mobilités africaines qu'aucune mesure continentale ne couvre : effectivité réelle des protocoles de libre circulation, part investie des transferts, mobilité circulaire comme adaptation climatique, apport migrant aux systèmes de soins, circulation intra-africaine des compétences, portabilité des droits sociaux. Chaque fiche indique, sous « Le déplacement qu'il opère », le cadre de mesure auquel elle répond. C'est une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain, non un jeu de données déjà constitué.", en: "The other sections of this platform consolidate data already collected by international institutions. This matrix is a proposal stemming from the doctoral research behind the project (Ben Mokhtar, 2026). It advances twelve indicators across six axes, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. Each targets a dimension of African mobility no continental measure covers: actual effectiveness of free-movement protocols, invested share of remittances, circular mobility as climate adaptation, migrant contribution to care systems, intra-African circulation of skills, portability of social rights. Each card states, under \"The shift it makes\", the measurement framework it answers. This is a methodological recommendation aimed at national statistical institutes and field researchers, not an already-constituted dataset." }, lang)}</Prose>
           </div>
   
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
@@ -8862,7 +8862,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
     </section>
 );
 
-// Frise des cycles de recensement d'un pays (base : compilation de l'auteur d'apres l'UNSD).
+// Frise des cycles de recensement d'un pays (base : compilation de l'auteur d'apres l'UNSD).
 const CensusTimeline = ({ iso2, lang, compact = false }) => {
   const rec = iso2 ? censusByCountry[iso2] : null;
   if (!rec) return null;
@@ -8912,7 +8912,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm border ${st.cls}`}>
           {rec.status2020 === 'late'
             ? tr(st, lang)
-            : `${L("Cycle 2020 : ", "2020 round: ")}${tr(st, lang)}`}
+            : `${L("Cycle 2020 : ", "2020 round: ")}${tr(st, lang)}`}
         </span>
         {rec.updated2026 && (
           <span className="text-[10px] font-medium" style={{ color: 'var(--label)' }}>
@@ -8941,7 +8941,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
         );
       })()}
       {!compact && (
-        <Prose className="text-[10px] text-slate-400 italic mt-3 pt-3 border-t border-slate-100" lang={lang}>{L("Source : compilation de l'auteur (Ben Mokhtar, 2024) d'après la Division de statistique des Nations unies (UNSD) et UN DESA.",
+        <Prose className="text-[10px] text-slate-400 italic mt-3 pt-3 border-t border-slate-100" lang={lang}>{L("Source : compilation de l'auteur (Ben Mokhtar, 2024) d'après la Division de statistique des Nations unies (UNSD) et UN DESA.",
              "Source: author's own compilation (Ben Mokhtar, 2024) from the United Nations Statistics Division (UNSD) and UN DESA.")}</Prose>
       )}
     </div>
@@ -9047,7 +9047,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
   const L = faireL(lang);
   const headline = [
     { val: "47/54", lbl: L("États ayant recensé (cycle 2010)", "States that censused (2010 round)"), sub: L("soit 87 % du continent, cycle 2005-2014", "i.e. 87% of the continent, 2005-2014 round") },
-    { val: "11,1", lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
+    { val: "11,1", lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
     { val: "1-5 €", lbl: L("Coût par habitant recensé", "Cost per inhabitant enumerated"), sub: L("charge logistique majeure", "a major logistical burden") },
     { val: "13,6 %", lbl: L("Recensements interrogeant le motif", "Censuses asking the reason"), sub: L("le déficit est là, pas dans la collecte", "the deficit sits here, not in collection") },
   ];
@@ -9084,13 +9084,13 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             sens: { fr: "Combien de personnes nées ailleurs vivent dans un pays à une date donnée. Une photographie. La quasi-totalité des chiffres cités dans le débat public sont des stocks.",
                     en: 'How many people born elsewhere live in a country on a given date. A photograph. Almost every figure quoted in public debate is a stock.' } },
           { mot: { fr: 'Flux', en: 'Flow' },
-            sens: { fr: "Combien de personnes ont franchi une frontière pendant une période. Un film. Beaucoup plus rare, et beaucoup plus difficile à établir — c'est pourtant ce que le mot « arrivées » laisse entendre.",
+            sens: { fr: "Combien de personnes ont franchi une frontière pendant une période. Un film. Beaucoup plus rare, et beaucoup plus difficile à établir — c'est pourtant ce que le mot « arrivées » laisse entendre.",
                     en: 'How many people crossed a border during a period. A film. Far rarer and far harder to establish — yet it is what the word “arrivals” suggests.' } },
           { mot: { fr: 'Millésime', en: 'Vintage' },
             sens: { fr: "L'année à laquelle la mesure se rapporte, qui n'est pas celle de la publication. Un rapport paru en 2024 peut porter des stocks de 2020. Un chiffre sans son année ne veut rien dire.",
                     en: 'The year the measurement refers to, which is not the year of publication. A 2024 report may carry 2020 stocks. A figure without its year says nothing.' } },
           { mot: { fr: 'Compilateur', en: 'Compiler' },
-            sens: { fr: "L'organisation qui rassemble et harmonise les mesures nationales — UN DESA, HCR, IDMC, OIT, Banque mondiale. Elle ne mesure pas : elle réunit ce que les États déclarent, avec leurs trous.",
+            sens: { fr: "L'organisation qui rassemble et harmonise les mesures nationales — UN DESA, HCR, IDMC, OIT, Banque mondiale. Elle ne mesure pas : elle réunit ce que les États déclarent, avec leurs trous.",
                     en: 'The body that gathers and harmonises national measurements — UN DESA, UNHCR, IDMC, ILO, World Bank. It does not measure: it assembles what states declare, holes included.' } },
         ]}
         colonnes={[
@@ -9107,13 +9107,13 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             angle: { fr: "Les personnes sans titre, qui existent sans figurer.", en: 'People without a permit, who exist without appearing.' } },
           { source: { fr: 'Enquêtes auprès des ménages', en: 'Household surveys' },
             mesure: { fr: "Les motifs, les conditions de vie, l'argent envoyé au pays.", en: 'Motives, living conditions, money sent home.' },
-            angle: { fr: "Le détail national fin : l'échantillon est trop mince pour descendre au pays d'origine.", en: 'Fine national detail: the sample is too thin to break down by country of origin.' } },
+            angle: { fr: "Le détail national fin : l'échantillon est trop mince pour descendre au pays d'origine.", en: 'Fine national detail: the sample is too thin to break down by country of origin.' } },
           { source: { fr: 'Registres de frontière', en: 'Border records' },
             mesure: { fr: "Les passages enregistrés à un poste officiel.", en: 'Crossings recorded at an official post.' },
             angle: { fr: "Les passages non enregistrés — et le même voyageur, compté à chaque aller-retour.", en: 'Unrecorded crossings — and the same traveller, counted at every round trip.' } },
         ]}
         pied={{
-          fr: "Trois pièges suivent de là. Un chiffre sans année ne se lit pas. Un pourcentage sans son dénominateur non plus. Et deux institutions peuvent publier deux chiffres justes du même phénomène, parce qu'elles ne comptent pas la même population : c'est le cas des déplacés internes chez l'IDMC et au HCR, et cette plateforme affiche alors les deux. Cadre de référence : Nations unies, Recommandations en matière de statistiques des migrations internationales, révision 1.",
+          fr: "Trois pièges suivent de là. Un chiffre sans année ne se lit pas. Un pourcentage sans son dénominateur non plus. Et deux institutions peuvent publier deux chiffres justes du même phénomène, parce qu'elles ne comptent pas la même population : c'est le cas des déplacés internes chez l'IDMC et au HCR, et cette plateforme affiche alors les deux. Cadre de référence : Nations unies, Recommandations en matière de statistiques des migrations internationales, révision 1.",
           en: 'Three traps follow. A figure without a year cannot be read. Neither can a percentage without its denominator. And two institutions can publish two correct figures for the same phenomenon, because they are not counting the same population — as with internally displaced people at IDMC and UNHCR, where this platform shows both. Reference framework: United Nations, Recommendations on Statistics of International Migration, Revision 1.'
         }}
       />
@@ -9144,7 +9144,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
           <Prose lang={lang}>{L(
-            "Sur le cycle de recensements de 2010, que les Nations unies bornent à 2005-2014, 47 États africains sur 54 ont conduit un recensement national, soit 87 % du continent. Deux d'entre eux, la Guinée équatoriale et la Sierra Leone, ont dénombré en 2015, au tuilage des deux cycles, et sont rattachés ici au cycle 2010. À l'échelle mondiale, 178 des 193 États membres de l'ONU ont recensé sur la même période : la participation africaine se situe dans la norme internationale.",
+            "Sur le cycle de recensements de 2010, que les Nations unies bornent à 2005-2014, 47 États africains sur 54 ont conduit un recensement national, soit 87 % du continent. Deux d'entre eux, la Guinée équatoriale et la Sierra Leone, ont dénombré en 2015, au tuilage des deux cycles, et sont rattachés ici au cycle 2010. À l'échelle mondiale, 178 des 193 États membres de l'ONU ont recensé sur la même période : la participation africaine se situe dans la norme internationale.",
             "Over the 2010 census round, which the United Nations bounds at 2005-2014, 47 of 54 African states conducted a national census, that is 87% of the continent. Two of them, Equatorial Guinea and Sierra Leone, enumerated in 2015, at the overlap of the two rounds, and are attached here to the 2010 round. Globally, 178 of the UN's 193 member states censused over the same period: African participation sits within the international norm."
           )}</Prose>
           <Prose lang={lang}>{L(
@@ -9166,7 +9166,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         <CensusRhythm lang={lang} />
       </Reveal>
 
-      {/* Le retard n'est pas une absence : ce que l'audit des statuts a fait apparaitre. */}
+      {/* Le retard n'est pas une absence : ce que l'audit des statuts a fait apparaitre. */}
       <Reveal delay={17}>
         <LateRound lang={lang} />
       </Reveal>
@@ -9180,7 +9180,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           kicker={L('Qui compte sa population', 'Who counts their population')}
           titre={L("Le recensement, pays par pays", 'The census, country by country')}
           plain={{
-            fr: "Chaque pays porte la couleur de son dernier recensement : abouti dans la fenêtre 2015-2024, abouti après elle, en cours, annoncé, ou aucun en vue. Cinq situations, sur une échelle qualitative.",
+            fr: "Chaque pays porte la couleur de son dernier recensement : abouti dans la fenêtre 2015-2024, abouti après elle, en cours, annoncé, ou aucun en vue. Cinq situations, sur une échelle qualitative.",
             en: 'Each country carries the colour of its latest census: completed within the 2015-2024 window, completed after it, under way, announced, or none in sight. Five situations, on a qualitative scale.',
           }}
           sources={[{ label: L("Compilation de l'auteur d'après UNSD et UN DESA, statuts vérifiés en août 2026 sur les instituts nationaux",
@@ -9195,12 +9195,12 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           accent="var(--accent-2)"
           kicker={L("La norme de référence", "The reference standard")}
           title={L(
-            "Ce qu'un recensement doit être : la règle que les États africains appliquent déjà",
+            "Ce qu'un recensement doit être : la règle que les États africains appliquent déjà",
             "What a census must be: the rule African states already apply"
           )}
           sources={[
             { label: L(
-                "Nations unies, Département des affaires économiques et sociales, Division de statistique — « Principles and Recommendations for Population and Housing Censuses », Revision 3, New York, 2017 (ST/ESA/STAT/SER.M/67/Rev.3)",
+                "Nations unies, Département des affaires économiques et sociales, Division de statistique — « Principles and Recommendations for Population and Housing Censuses », Revision 3, New York, 2017 (ST/ESA/STAT/SER.M/67/Rev.3)",
                 "United Nations, Department of Economic and Social Affairs, Statistics Division — \"Principles and Recommendations for Population and Housing Censuses\", Revision 3, New York, 2017 (ST/ESA/STAT/SER.M/67/Rev.3)"
               ), url: "https://unstats.un.org/unsd/demographic-social/Standards-and-Methods/files/Principles_and_Recommendations/Population-and-Housing-Censuses/Series_M67rev3-E.pdf" },
           ]}
@@ -9241,11 +9241,11 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               {L("Périodicité recommandée (§ 1.12 et 1.13)", "Recommended periodicity (§§ 1.12 and 1.13)")}
             </p>
             <Prose className="text-[13px] text-slate-600 italic leading-relaxed" lang={lang}>{L(
-                "« Il est recommandé qu'un recensement national soit conduit au moins tous les dix ans. » La norme ajoute que les pays devraient s'efforcer de recenser lors des années se terminant par « 0 », ou au plus près, afin que les résultats restent comparables d'un pays à l'autre.",
+                "« Il est recommandé qu'un recensement national soit conduit au moins tous les dix ans. » La norme ajoute que les pays devraient s'efforcer de recenser lors des années se terminant par « 0 », ou au plus près, afin que les résultats restent comparables d'un pays à l'autre.",
                 "\"It is recommended that a national census be taken at least every 10 years.\" The standard adds that countries should make all efforts to census in years ending in \"0\", or as close as possible, so that results remain comparable across countries."
               )}</Prose>
             <Prose className="text-xs text-slate-500 mt-3 leading-relaxed" lang={lang}>{L(
-                "C'est l'étalon utile : l'intervalle moyen observé en Afrique est de 11,1 ans. L'écart à la norme est d'un an, pas d'une génération.",
+                "C'est l'étalon utile : l'intervalle moyen observé en Afrique est de 11,1 ans. L'écart à la norme est d'un an, pas d'une génération.",
                 "This is the useful yardstick: the average interval observed in Africa is 11.1 years. The gap to the standard is one year, not a generation."
               )}</Prose>
           </div>
@@ -9279,7 +9279,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               ))}
             </ul>
             <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{L(
-                "Trois de ces quatre caractéristiques sont des « thèmes centraux » : la norme recommande que tout recensement les collecte. L'instrument de mesure des migrations est donc déjà à l'intérieur du standard que les États africains appliquent. L'outil est là ; ce qui se perd se perd en aval, au dépouillement et à la publication.",
+                "Trois de ces quatre caractéristiques sont des « thèmes centraux » : la norme recommande que tout recensement les collecte. L'instrument de mesure des migrations est donc déjà à l'intérieur du standard que les États africains appliquent. L'outil est là ; ce qui se perd se perd en aval, au dépouillement et à la publication.",
                 "Three of these four characteristics are \"core topics\": the standard recommends that every census collect them. The instrument for measuring migration is therefore already inside the standard African states apply. The tool is there; what gets lost is lost downstream, in tabulation and publication."
               )}</Prose>
           </div>
@@ -9291,7 +9291,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         accent="var(--bad)"
         kicker={L("Le décrochage", "Where it breaks")}
         thesis={L(
-          "Le déficit est en aval : dans ce qui remonte, dans ce qui est harmonisé, et dans la profondeur des questions posées.",
+          "Le déficit est en aval : dans ce qui remonte, dans ce qui est harmonisé, et dans la profondeur des questions posées.",
           "The deficit lies downstream: in what gets reported, in what gets harmonised, and in the depth of the questions asked."
         )}
       />
@@ -9306,7 +9306,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           <CsvButton onClick={exportCensusCSV} label={L("Profondeur des questions (CSV)", "Question depth (CSV)")} />
         </div>
         <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-6" lang={lang}>{L(
-            "Part des 47 recensements africains du cycle 2010 comportant chaque question migratoire. La citoyenneté et le pays de naissance sont presque systématiques ; le motif du départ et la date d'arrivée disparaissent presque entièrement.",
+            "Part des 47 recensements africains du cycle 2010 comportant chaque question migratoire. La citoyenneté et le pays de naissance sont presque systématiques ; le motif du départ et la date d'arrivée disparaissent presque entièrement.",
             "Share of the 47 African censuses in the 2010 round including each migration question. Citizenship and country of birth are near-systematic; reason for leaving and date of arrival almost entirely vanish."
           )}</Prose>
 
@@ -9341,10 +9341,10 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
             <span className="inline-block w-3 h-2 me-1.5 align-middle rounded-sm"
                   style={{ background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 3px, #FFF 3px 6px)', border: '1px solid var(--rule)' }} />
-            {L("Le cycle 2030 vient de s'ouvrir (fenêtre 2025-2034) : sa barre mesure une avance, pas un retard.",
+            {L("Le cycle 2030 vient de s'ouvrir (fenêtre 2025-2034) : sa barre mesure une avance, pas un retard.",
                "The 2030 round has only just opened (2025–2034 window): its bar measures progress, not shortfall.")}
           </p>
-          <Prose className="text-[10px] text-slate-500 italic mt-1.5 leading-relaxed text-justify" lang={lang}>{L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, puis actualisée en 2026 pour les recensements aboutis depuis : Angola, Maroc, Tunisie, Ouganda. Un audit des statuts encore ouverts, en août 2026, y a ajouté la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024). Le cycle 2020 passe ainsi de 29 à 35 États.",
+          <Prose className="text-[10px] text-slate-500 italic mt-1.5 leading-relaxed text-justify" lang={lang}>{L("Le dénominateur varie : il correspond au nombre d'États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, puis actualisée en 2026 pour les recensements aboutis depuis : Angola, Maroc, Tunisie, Ouganda. Un audit des statuts encore ouverts, en août 2026, y a ajouté la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024). Le cycle 2020 passe ainsi de 29 à 35 États.",
                "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, then updated in 2026 for censuses completed since: Angola, Morocco, Tunisia, Uganda. An audit of the statuses still open, in August 2026, added The Gambia (May 2024) and São Tomé and Príncipe (November 2024). The 2020 round thus moves from 29 to 35 states.")}</Prose>
         </div>
 
@@ -9382,12 +9382,12 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             {L("Ce que le croisement avec la norme révèle", "What the overlay with the standard reveals")}
           </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "La norme onusienne place trois caractéristiques sur le même plan, toutes « thèmes centraux » : pays de naissance, citoyenneté, année d'arrivée. Les deux premières sont presque universelles dans les recensements africains — 87 % et 91,5 %. La troisième tombe à 15 %. Ce n'est ni une question de moyens ni une question de capacité : les trois figurent dans le même questionnaire de référence, et deux sont posées. Ce qui décroche, c'est précisément la question qui permettrait de dater les trajectoires — donc de les analyser. Quant au motif du départ, posé par 6 États, il ne figure même pas parmi les caractéristiques prévues par la norme : l'interroger est un choix national, au-delà du standard (Ben Mokhtar, 2026).",
+              "La norme onusienne place trois caractéristiques sur le même plan, toutes « thèmes centraux » : pays de naissance, citoyenneté, année d'arrivée. Les deux premières sont presque universelles dans les recensements africains — 87 % et 91,5 %. La troisième tombe à 15 %. Ce n'est ni une question de moyens ni une question de capacité : les trois figurent dans le même questionnaire de référence, et deux sont posées. Ce qui décroche, c'est précisément la question qui permettrait de dater les trajectoires — donc de les analyser. Quant au motif du départ, posé par 6 États, il ne figure même pas parmi les caractéristiques prévues par la norme : l'interroger est un choix national, au-delà du standard (Ben Mokhtar, 2026).",
               "The UN standard places three characteristics on the same footing, all \"core topics\": country of birth, citizenship, year of arrival. The first two are near-universal in African censuses — 87% and 91.5%. The third falls to 15%. This is neither a resource nor a capacity issue: all three sit in the same reference questionnaire, and two are asked. What drops out is precisely the question that would let trajectories be dated — and therefore analysed. As for reason for departure, asked by 6 states, it is not even among the characteristics the standard provides for: asking it is a national choice, beyond the standard (Ben Mokhtar, 2026)."
             )}</Prose>
         </div>
         <Prose className="text-[10px] text-slate-400 italic mt-4 pt-3 border-t border-slate-100" lang={lang}>{L(
-            "Source : Division de statistique des Nations unies (UNSD) — compilation de l'auteur (Ben Mokhtar, 2024). Pourcentages rapportés aux 47 États ayant recensé.",
+            "Source : Division de statistique des Nations unies (UNSD) — compilation de l'auteur (Ben Mokhtar, 2024). Pourcentages rapportés aux 47 États ayant recensé.",
             "Source: United Nations Statistics Division (UNSD) — author's own compilation (Ben Mokhtar, 2024). Percentages relative to the 47 states that censused."
           )}</Prose>
       </Reveal>
@@ -9409,7 +9409,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           lang={lang}
           kicker={L("La stratégie africaine", "The African strategy")}
           title={L(
-            "SHaSA : l'Afrique s'est donné sa propre stratégie statistique, et elle porte d'abord sur les mots",
+            "SHaSA : l'Afrique s'est donné sa propre stratégie statistique, et elle porte d'abord sur les mots",
             "SHaSA: Africa gave itself its own statistical strategy, and it is about words first"
           )}
           sources={[
@@ -9424,7 +9424,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           ]}
         >
           <Prose className="text-justify" lang={lang}>{L(
-              "La Conférence des chefs d'État et de gouvernement de l'Union africaine adopte à Kampala, en juillet 2010, la Stratégie pour l'harmonisation des statistiques en Afrique. Elle porte sur ce qui précède le chiffre : les concepts et les définitions, l'adaptation des bonnes pratiques internationales, et l'usage de méthodologies communes de production et de diffusion. Elle est aujourd'hui dans sa deuxième phase, SHaSA 2, qui court de 2017 à 2026.",
+              "La Conférence des chefs d'État et de gouvernement de l'Union africaine adopte à Kampala, en juillet 2010, la Stratégie pour l'harmonisation des statistiques en Afrique. Elle porte sur ce qui précède le chiffre : les concepts et les définitions, l'adaptation des bonnes pratiques internationales, et l'usage de méthodologies communes de production et de diffusion. Elle est aujourd'hui dans sa deuxième phase, SHaSA 2, qui court de 2017 à 2026.",
               "The African Union Assembly of Heads of State and Government adopted the Strategy for the Harmonization of Statistics in Africa in Kampala, in July 2010. It addresses what comes before the figure: concepts and definitions, the adaptation of international good practice, and the use of common methodologies for producing and disseminating statistics. It is now in its second phase, SHaSA 2, running from 2017 to 2026."
             )}</Prose>
 
@@ -9467,15 +9467,15 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </h2>
         <div className="space-y-4 text-sm text-slate-300 leading-relaxed max-w-4xl text-justify">
           <Prose lang={lang}>{L(
-            "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : la donnée brute existe ; ce qui fait défaut, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
+            "Le goulot d'étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l'extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : la donnée brute existe ; ce qui fait défaut, c'est la maîtrise de sa mise en forme, de son interprétation et des catégories qu'elle mobilise.",
             "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: the raw data exists; what is missing is control over its shaping, its interpretation, and the categories it mobilises."
           )}</Prose>
           <Prose lang={lang}>{L(
-            "Or la catégorie n'est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
+            "Or la catégorie n'est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
             "Yet the category is never neutral. Enumerate usual residents (de jure population) or all persons present (de facto)? Retain citizenship or country of birth? Ask the reason for the move, or leave it out? Each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
           )}</Prose>
           <Prose className="text-white font-medium" lang={lang}>{L(
-            "C'est le sens de l'investissement continental dans ses propres instruments : l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique. Tous ont le même objet — reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
+            "C'est le sens de l'investissement continental dans ses propres instruments : l'Observatoire africain des migrations, STATAFRIC, la Stratégie d'harmonisation des statistiques en Afrique. Tous ont le même objet — reprendre la main sur le cadrage et l'analyse de ce qui est déjà collecté.",
             "This is the point of the continental investment in its own instruments: the African Migration Observatory, STATAFRIC, the Strategy for the Harmonization of Statistics in Africa. All have the same object — to regain control over the framing and the analysis of what is already collected."
           )}</Prose>
         </div>
@@ -9648,23 +9648,23 @@ const methodPipeline = [
 
 const methodLimits = [
   {
-    fr: "Sous-enregistrement structurel : une part importante des mobilités africaines est intra-régionale, terrestre et informelle. Elle échappe largement aux dispositifs statistiques nationaux, qui sont conçus autour des points de passage officiels.",
+    fr: "Sous-enregistrement structurel : une part importante des mobilités africaines est intra-régionale, terrestre et informelle. Elle échappe largement aux dispositifs statistiques nationaux, qui sont conçus autour des points de passage officiels.",
     en: "Structural under-registration: a large share of African mobility is intra-regional, overland, and informal. It largely escapes national statistical systems, which are built around official crossing points."
   },
   {
-    fr: "Millésimes hétérogènes : les séries n'ont pas toutes la même année de référence. Chaque champ concerné porte son année d'observation ; aucune interpolation n'est pratiquée pour aligner artificiellement les dates.",
+    fr: "Millésimes hétérogènes : les séries n'ont pas toutes la même année de référence. Chaque champ concerné porte son année d'observation ; aucune interpolation n'est pratiquée pour aligner artificiellement les dates.",
     en: "Heterogeneous vintages: series do not all share the same reference year. Each affected field carries its own observation year; no interpolation is applied to artificially align dates."
   },
   {
-    fr: "Stocks et non flux : la plupart des indicateurs démographiques mesurent un stock de personnes présentes à une date donnée. Ils ne rendent donc pas compte des mobilités circulaires, saisonnières ou temporaires, pourtant centrales sur le continent.",
+    fr: "Stocks et non flux : la plupart des indicateurs démographiques mesurent un stock de personnes présentes à une date donnée. Ils ne rendent donc pas compte des mobilités circulaires, saisonnières ou temporaires, pourtant centrales sur le continent.",
     en: "Stocks, not flows: most demographic indicators measure a stock of persons present at a given date. They therefore fail to capture circular, seasonal, or temporary mobility, which is nonetheless central on the continent."
   },
   {
-    fr: "Droit formel et pratique administrative : la matrice juridique décrit des textes en vigueur, non leur application effective aux guichets. L'écart entre la norme écrite et la pratique n'est pas mesuré ici.",
+    fr: "Droit formel et pratique administrative : la matrice juridique décrit des textes en vigueur, non leur application effective aux guichets. L'écart entre la norme écrite et la pratique n'est pas mesuré ici.",
     en: "Formal law versus administrative practice: the legal matrix describes texts in force, not their effective application at the counter. The gap between written norm and practice is not measured here."
   },
   {
-    fr: "Matrice d'indicateurs prospective : les 12 indicateurs alternatifs ci-dessous sont une proposition méthodologique, non un jeu de données déjà collecté à l'échelle continentale.",
+    fr: "Matrice d'indicateurs prospective : les 12 indicateurs alternatifs ci-dessous sont une proposition méthodologique, non un jeu de données déjà collecté à l'échelle continentale.",
     en: "Forward-looking indicator matrix: the 12 alternative indicators below are a methodological proposal, not a dataset already collected at continental scale."
   },
 ];
@@ -9704,7 +9704,7 @@ const TabMethodology = ({ text, lang, children }) => (
       <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
         {tr({ fr: "De la source à la page", en: "From source to page" }, lang)}
       </h2>
-      <Prose className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8" lang={lang}>{tr({ fr: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur.", en: "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator." }, lang)}</Prose>
+      <Prose className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8" lang={lang}>{tr({ fr: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur.", en: "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator." }, lang)}</Prose>
       <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {methodPipeline.map((step, i) => {
           const Icon = step.icon;
@@ -9830,10 +9830,10 @@ const TabMethodology = ({ text, lang, children }) => (
       <div className="mt-8 pt-6 border-t border-slate-100">
         <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3 flex items-center">
           <MapIcon className="w-3.5 h-3.5 me-1.5" />
-          {tr({ fr: "Régionalisation : Union africaine (et non M49/ONU)", en: "Regionalization: African Union (not UN M49)" }, lang)}
+          {tr({ fr: "Régionalisation : Union africaine (et non M49/ONU)", en: "Regionalization: African Union (not UN M49)" }, lang)}
         </p>
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-          <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. UN DESA publie les siens selon la nomenclature M49 des Nations unies : les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}</Prose>
+          <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: "Les sous-régions affichées dans l'Explorateur et dans la matrice « Entrées & séjours » suivent le découpage officiel de l'Union africaine, en cinq régions. UN DESA publie les siens selon la nomenclature M49 des Nations unies : les deux grilles divergent sur sept pays. La Mauritanie est en Afrique du Nord pour l'UA, en Afrique de l'Ouest pour l'ONU. Le Burundi et le Rwanda passent d'Afrique centrale à Afrique de l'Est. Le Malawi, le Mozambique, la Zambie et le Zimbabwe, d'Afrique australe à Afrique de l'Est. Les sous-totaux par région affichés ici ne coïncideront donc pas exactement avec les tableaux régionaux publiés directement par UNDESA pour ces pays. Ce choix aligne le site sur le cadrage institutionnel de l'Union africaine utilisé par ailleurs dans la section Gouvernance.", en: "The sub-regions shown in the Explorer and in the \"Entry & Residence\" matrix follow the African Union's official five-region breakdown — not the UN M49 classification UNDESA uses to publish its own migrant stock tables. The two groupings diverge on seven countries. Mauritania sits in North Africa under the AU, in West Africa under the UN. Burundi and Rwanda move from Central to East Africa. Malawi, Mozambique, Zambia and Zimbabwe, from Southern to East Africa. As a result, the regional subtotals shown here will not exactly match UNDESA's own published regional tables for these countries. This choice aligns the site with the African Union institutional framing used elsewhere in the Governance section." }, lang)}</Prose>
         </div>
       </div>
     </section>
@@ -9843,31 +9843,31 @@ const TabMethodology = ({ text, lang, children }) => (
 // Publications et interventions médiatiques de l'auteur (source : CV, août 2026).
 const authorPublications = [
   {
-    ref: "Ben Mokhtar, Y. « Charting New COURSES in the Southern Mediterranean: Governance Approach to Environmental and Climate-Induced Mobility ». Papier de travail, projet Go Green, septembre 2024.",
+    ref: "Ben Mokhtar, Y. « Charting New COURSES in the Southern Mediterranean: Governance Approach to Environmental and Climate-Induced Mobility ». Papier de travail, projet Go Green, septembre 2024.",
     kind: { fr: "Papier de travail", en: "Working paper" },
     year: 2024,
     url: null
   },
   {
-    ref: "Ben Mokhtar, Y. « Dynamiques migratoires africaines : enjeux, défis et perspectives de gouvernance ». Afrique(s) en mouvement 6, no 2 (2023) : 104-107.",
+    ref: "Ben Mokhtar, Y. « Dynamiques migratoires africaines : enjeux, défis et perspectives de gouvernance ». Afrique(s) en mouvement 6, no 2 (2023) : 104-107.",
     kind: { fr: "Article de revue à comité de lecture", en: "Peer-reviewed journal article" },
     year: 2023,
     url: "https://doi.org/10.3917/aem.006.0104"
   },
   {
-    ref: "Ben Mokhtar, Y. « Post-August 2022 shifts: Examining the evolution of governance for the Moroccans of the world ». In Transformation Issues in Current Arab Societies, dir. M. Younes et F. Bendridi, 29-72. AlphaDoc, 2025.",
+    ref: "Ben Mokhtar, Y. « Post-August 2022 shifts: Examining the evolution of governance for the Moroccans of the world ». In Transformation Issues in Current Arab Societies, dir. M. Younes et F. Bendridi, 29-72. AlphaDoc, 2025.",
     kind: { fr: "Chapitre d'ouvrage à comité de lecture", en: "Peer-reviewed book chapter" },
     year: 2025,
     url: null
   },
   {
-    ref: "Ben Mokhtar, Y. « Un “modèle” africain ? Gouverner les mobilités en Afrique, entre ambitions continentales et prises administratives ». In ouvrage collectif dir. Chadia Arab et Leila Bouasria. En Toutes Lettres, 2026.",
+    ref: "Ben Mokhtar, Y. « Un “modèle” africain ? Gouverner les mobilités en Afrique, entre ambitions continentales et prises administratives ». In ouvrage collectif dir. Chadia Arab et Leila Bouasria. En Toutes Lettres, 2026.",
     kind: { fr: "Chapitre d'ouvrage à comité de lecture", en: "Peer-reviewed book chapter" },
     year: 2026,
     url: null
   },
   {
-    ref: "Ben Mokhtar, Y. « Promises on Paper, Precarity in Practice: (Un)governing Undocumented Migrant Workers in Africa ». In Making Human Rights a Reality for Undocumented and Precarious Migrant Workers, dir. J. Dez et Y. Arbaoui. Amsterdam University Press, à paraître 2026.",
+    ref: "Ben Mokhtar, Y. « Promises on Paper, Precarity in Practice: (Un)governing Undocumented Migrant Workers in Africa ». In Making Human Rights a Reality for Undocumented and Precarious Migrant Workers, dir. J. Dez et Y. Arbaoui. Amsterdam University Press, à paraître 2026.",
     kind: { fr: "Chapitre d'ouvrage à comité de lecture (à paraître)", en: "Peer-reviewed book chapter (forthcoming)" },
     year: 2026,
     url: null
@@ -9895,7 +9895,7 @@ const authorMedia = [
   },
   {
     outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
-    title: { fr: "Vers une migration sélective en Europe ?", en: "Towards selective migration in Europe?" },
+    title: { fr: "Vers une migration sélective en Europe ?", en: "Towards selective migration in Europe?" },
     date: { fr: "22 nov. 2025", en: "22 Nov. 2025" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
@@ -9913,31 +9913,31 @@ const authorMedia = [
   },
   {
     outlet: "Medi1 Podcast — Destination Afrique", kind: 'podcast', year: 2025,
-    title: { fr: "Retour de Donald Trump : quel impact pour le Maroc et l'Afrique ?", en: "Trump's return: what impact for Morocco and Africa?" },
+    title: { fr: "Retour de Donald Trump : quel impact pour le Maroc et l'Afrique ?", en: "Trump's return: what impact for Morocco and Africa?" },
     date: { fr: "24 janv. 2025", en: "24 Jan. 2025" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
     outlet: "Medi1TV Afrique", kind: 'tv', year: 2025,
-    title: { fr: "USA : le bilan des politiques migratoires de Trump", en: "USA: assessing Trump's migration policies" },
+    title: { fr: "USA : le bilan des politiques migratoires de Trump", en: "USA: assessing Trump's migration policies" },
     date: { fr: "20 janv. 2025", en: "20 Jan. 2025" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
     outlet: "Medi1TV Afrique", kind: 'tv', year: 2024,
-    title: { fr: "Journée internationale des migrants : état des lieux", en: "International Migrants Day: state of play" },
+    title: { fr: "Journée internationale des migrants : état des lieux", en: "International Migrants Day: state of play" },
     date: { fr: "18 déc. 2024", en: "18 Dec. 2024" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
     outlet: "Medi1TV Afrique", kind: 'tv', year: 2024,
-    title: { fr: "Lutte contre les migrations clandestines : la visite de Sánchez en Afrique", en: "Countering irregular migration: Sánchez's Africa visit" },
+    title: { fr: "Lutte contre les migrations clandestines : la visite de Sánchez en Afrique", en: "Countering irregular migration: Sánchez's Africa visit" },
     date: { fr: "27 août 2024", en: "27 Aug. 2024" },
     role: { fr: "Expert invité", en: "Guest expert" }
   },
   {
     outlet: "TelQuel", kind: 'press', year: 2023,
-    title: { fr: "« Il ne s'agit pas d'un retour des MRE à proprement parler, plutôt d'un véritable départ vers l'étranger »", en: "\"This is not really a return of Moroccans abroad, but rather a genuine departure overseas\"" },
+    title: { fr: "« Il ne s'agit pas d'un retour des MRE à proprement parler, plutôt d'un véritable départ vers l'étranger »", en: "\"This is not really a return of Moroccans abroad, but rather a genuine departure overseas\"" },
     date: { fr: "22 déc. 2023", en: "22 Dec. 2023" },
     role: { fr: "Entretien de presse", en: "Press interview" },
     url: "https://telquel.ma/2023/12/22/yassine-ben-mokhtar-il-ne-sagit-pas-dun-retour-des-mre-a-proprement-parler-plutot-dun-veritable-depart-vers-letranger_1847681"
@@ -9958,7 +9958,7 @@ const mediaKindStyle = {
 
 const TabAbout = ({ text, lang, children }) => {
   const [isCopied, setIsCopied] = useState(false);
-  // Rien d'ouvert au depart : les travaux de l'auteur se consultent, ils ne
+  // Rien d'ouvert au depart : les travaux de l'auteur se consultent, ils ne
   // s'exposent pas.
   const [voletAuteur, setVoletAuteur] = useState(null);
 
@@ -9968,7 +9968,7 @@ const TabAbout = ({ text, lang, children }) => {
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
-      console.error("Erreur lors de la copie de la citation : ", err);
+      console.error("Erreur lors de la copie de la citation : ", err);
     }
   };
 
@@ -10057,7 +10057,7 @@ const TabAbout = ({ text, lang, children }) => {
                 );
               })}
             </div>
-            <Prose className="text-xs italic text-slate-400" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes ; leur présence ne constitue ni un partenariat ni un endossement du projet.", en: "These institutions are cited as sources of open public data; their presence does not constitute a partnership or endorsement of the project." }, lang)}</Prose>
+            <Prose className="text-xs italic text-slate-400" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes ; leur présence ne constitue ni un partenariat ni un endossement du projet.", en: "These institutions are cited as sources of open public data; their presence does not constitute a partnership or endorsement of the project." }, lang)}</Prose>
 
             <Prose lang={lang}>{text.about.data_p2}</Prose>
             <Prose className="italic" lang={lang}>{text.about.data_p3}</Prose>
@@ -10290,7 +10290,7 @@ const TabAbout = ({ text, lang, children }) => {
             ${isCopied ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'}`}
           >
             {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span>{isCopied ? (tr({ fr: 'Copié !', en: 'Copied!' }, lang)) : (tr({ fr: 'Copier', en: 'Copy' }, lang))}</span>
+            <span>{isCopied ? (tr({ fr: 'Copié !', en: 'Copied!' }, lang)) : (tr({ fr: 'Copier', en: 'Copy' }, lang))}</span>
           </button>
         </div>
         <Prose className="text-sm text-slate-600 font-serif italic border-s-2 border-blue-500 ps-4 leading-relaxed" lang={lang}>{text.about.citation_text}</Prose>
@@ -10475,7 +10475,7 @@ export default function App() {
   }, []);
 
   // --- Adressage : l'etat ecrit l'URL, l'URL relit l'etat -------------------
-  // Le pays selectionne fait partie de l'adresse : c'est lui qu'on partage ou
+  // Le pays selectionne fait partie de l'adresse : c'est lui qu'on partage ou
   // qu'on cite. Les autres reglages (vue carte/liste, indicateur) restent hors
   // URL — ce sont des preferences d'affichage, pas des objets a citer.
   // Le repere suit la langue de l'adresse : une URL anglaise dit « chad », pas
@@ -10623,7 +10623,7 @@ export default function App() {
     };
   }, [activeSubTab, activeSubRegion, lang, currentCountries, regionAggregate]);
 
-  // Titre et description suivent l'adresse : c'est ce qui apparait dans un
+  // Titre et description suivent l'adresse : c'est ce qui apparait dans un
   // resultat de recherche, un signet ou un partage. Le titre ne nommait le pays
   // que dans l'Explorateur ; ailleurs, huit pages portaient le meme.
   useEffect(() => {
@@ -10648,7 +10648,7 @@ export default function App() {
     appliquerLangue(lang);
 
     const desc = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
-      ? (tr({ fr: `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`, en: `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.` }, lang))
+      ? (tr({ fr: `${display.name} : migrants présents, départs, ouverture des visas et traités ratifiés. Données vérifiées et sourcées.`, en: `${display.name}: resident migrants, departures, visa openness and ratified treaties. Verified, sourced data.` }, lang))
       : (text.headers[activeTab]?.plain
          || (tr({ fr: "Données vérifiées et en accès libre sur les mobilités africaines.", en: 'Verified, openly accessible data on African mobility.' }, lang)));
     let m = document.querySelector('meta[name="description"]');
@@ -10756,7 +10756,7 @@ export default function App() {
   ];
 
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
-  // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
+  // colonne plus resserrée qu'un simple dashboard de données ; l'explorateur et la gouvernance,
   // denses en grilles/tableaux, conservent la pleine largeur.
   // Une seule largeur pour tout le site. Trois onglets tenaient dans 1152 px et
   // six dans 1271 px : la page changeait de laize a chaque changement d'onglet,
@@ -10915,7 +10915,7 @@ export default function App() {
             <Languages className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--accent-deep)' }} aria-hidden="true" />
             <span>
               {tr({
-                fr: "L'interface est traduite ; les analyses restent pour l'instant dans leur langue de rédaction. Elles s'affichent en français plutôt que de laisser un vide.",
+                fr: "L'interface est traduite ; les analyses restent pour l'instant dans leur langue de rédaction. Elles s'affichent en français plutôt que de laisser un vide.",
                 en: 'The interface is translated; the analyses remain for now in their language of writing. They display in French rather than leaving a gap.',
                 ar: 'الواجهة مترجمة؛ أما التحليلات فتبقى في الوقت الحالي بلغة تحريرها، وتُعرض بالفرنسية بدلاً من ترك فراغ.',
               }, lang)}
@@ -11167,7 +11167,7 @@ export default function App() {
                               )}
                             </div>
                             {continentalAvoiAvg !== null && (
-                              <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
+                              <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
                             )}
                             <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
                           </div>

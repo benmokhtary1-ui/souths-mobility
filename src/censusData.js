@@ -2,7 +2,7 @@
 // Compilation de l'auteur (Y. Ben Mokhtar) d'apres les donnees de la Division de
 // statistique des Nations unies (UNSD) et d'UN DESA. Transcrit depuis la base source.
 // Notes : * territoire non independant a la date du recensement ;
-//         ** recensement conduit par l'Ethiopie ; *** periode du regime d'apartheid.
+//         ** recensement conduit par l'Ethiopie ; *** periode du regime d'apartheid.
 // Statuts et dates du cycle 2020 audites en aout 2026 sur sources nationales :
 // six des neuf operations declarees « prevues » ou « en cours » ont eu lieu, mais
 // cinq apres la cloture du cycle (31/12/2024) — elles ouvrent la serie 2030.
@@ -56,7 +56,7 @@ export const censusByCountry = {
   "r2010": "10/05/2013",
   "r2020": "",
   "status2020": "started",
-  "updated2026": { "fr": "RGPH5 : cartographie censitaire engagée depuis 03/2024, dénombrement pilote en avril 2025 ; le dénombrement général n'est pas achevé (INStaD).", "en": "5th census: census mapping under way since 03/2024, pilot enumeration April 2025; the general enumeration is not complete (INStaD)." }
+  "updated2026": { "fr": "RGPH5 : cartographie censitaire engagée depuis 03/2024, dénombrement pilote en avril 2025 ; le dénombrement général n'est pas achevé (INStaD).", "en": "5th census: census mapping under way since 03/2024, pilot enumeration April 2025; the general enumeration is not complete (INStaD)." }
  },
  "bw": {
   "name": "Botswana",
@@ -98,7 +98,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "04/2026",
-  "updated2026": { "fr": "RGPH-4, dénombrement du 24/04 au 29/05/2026, couplé au recensement général de l'agriculture et de l'élevage (BUCREP). Recensement précédent : 2005.", "en": "4th census, enumeration 24/04–29/05/2026, coupled with the agriculture and livestock census (BUCREP). Previous census: 2005." }
+  "updated2026": { "fr": "RGPH-4, dénombrement du 24/04 au 29/05/2026, couplé au recensement général de l'agriculture et de l'élevage (BUCREP). Recensement précédent : 2005.", "en": "4th census, enumeration 24/04–29/05/2026, coupled with the agriculture and livestock census (BUCREP). Previous census: 2005." }
  },
  "cv": {
   "name": "Cape Verde",
@@ -120,7 +120,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "12/2025",
-  "updated2026": { "fr": "RGPH-4, dénombrement du 8 au 26 décembre 2025, activités post-dénombrement validées en février 2026 (ICASEES). Recensement précédent : 2003.", "en": "4th census, enumeration 8–26 December 2025, post-enumeration activities validated February 2026 (ICASEES). Previous census: 2003." }
+  "updated2026": { "fr": "RGPH-4, dénombrement du 8 au 26 décembre 2025, activités post-dénombrement validées en février 2026 (ICASEES). Recensement précédent : 2003.", "en": "4th census, enumeration 8–26 December 2025, post-enumeration activities validated February 2026 (ICASEES). Previous census: 2003." }
  },
  "td": {
   "name": "Chad",
@@ -132,7 +132,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "06/2026",
-  "updated2026": { "fr": "RGPH-3, dénombrement du 20/06 au 06/08/2026, 4 314 752 ménages recensés ; premier recensement entièrement numérique du pays (INSEED). Recensement précédent : 2009.", "en": "3rd census, enumeration 20/06–06/08/2026, 4,314,752 households enumerated; the country's first fully digital census (INSEED). Previous census: 2009." }
+  "updated2026": { "fr": "RGPH-3, dénombrement du 20/06 au 06/08/2026, 4 314 752 ménages recensés ; premier recensement entièrement numérique du pays (INSEED). Recensement précédent : 2009.", "en": "3rd census, enumeration 20/06–06/08/2026, 4,314,752 households enumerated; the country's first fully digital census (INSEED). Previous census: 2009." }
  },
  "km": {
   "name": "Comoros",
@@ -234,7 +234,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "05/2026",
-  "updated2026": { "fr": "RGPL, collecte achevée le 25/05/2026, résultats provisoires remis le 08/07/2026, couverture de 97 % ; homologation en cours devant la Cour constitutionnelle. Recensement précédent : 2013.", "en": "RGPL, collection completed 25/05/2026, provisional results delivered 08/07/2026, 97 % coverage; homologation pending before the Constitutional Court. Previous census: 2013." }
+  "updated2026": { "fr": "RGPL, collecte achevée le 25/05/2026, résultats provisoires remis le 08/07/2026, couverture de 97 % ; homologation en cours devant la Cour constitutionnelle. Recensement précédent : 2013.", "en": "RGPL, collection completed 25/05/2026, provisional results delivered 08/07/2026, 97 % coverage; homologation pending before the Constitutional Court. Previous census: 2013." }
  },
  "gm": {
   "name": "Gambia, The",
@@ -437,7 +437,7 @@ export const censusByCountry = {
   "r2010": "22/06/2012",
   "r2020": "15/11/2024",
   "status2020": "conducted",
-  "updated2026": { "fr": "V RGPH, dénombrement du 15/11 au 15/12/2024 ; résultats provisoires : 209 617 habitants (INE São Tomé-et-Principe)", "en": "5th census, enumeration 15/11–15/12/2024; provisional result: 209,617 inhabitants (INE São Tomé and Príncipe)" }
+  "updated2026": { "fr": "V RGPH, dénombrement du 15/11 au 15/12/2024 ; résultats provisoires : 209 617 habitants (INE São Tomé-et-Principe)", "en": "5th census, enumeration 15/11–15/12/2024; provisional result: 209,617 inhabitants (INE São Tomé and Príncipe)" }
  },
  "sn": {
   "name": "Senegal",
@@ -479,7 +479,7 @@ export const censusByCountry = {
   "r2010": "",
   "r2020": "",
   "status2020": "planned",
-  "updated2026": { "fr": "Recensement « 2024 » lancé le 02/05/2023 mais jamais exécuté ; le SNBS prépare désormais la participation à la série 2030 (SNBS / UNFPA).", "en": "The “2024” census was launched on 02/05/2023 but never carried out; SNBS is now preparing participation in the 2030 series (SNBS / UNFPA)." }
+  "updated2026": { "fr": "Recensement « 2024 » lancé le 02/05/2023 mais jamais exécuté ; le SNBS prépare désormais la participation à la série 2030 (SNBS / UNFPA).", "en": "The “2024” census was launched on 02/05/2023 but never carried out; SNBS is now preparing participation in the 2030 series (SNBS / UNFPA)." }
  },
  "za": {
   "name": "South Africa",

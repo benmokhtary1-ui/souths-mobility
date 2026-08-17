@@ -33,7 +33,7 @@ export const glossaryData = [
       {
         term: "Migration de travail",
         en_term: "Labor Migration",
-        fr: "Mouvement d'individus de leur pays d'origine vers un autre pays à des fins d'emploi. L'OIT et le MPFA (2018-2030) soulignent qu'elle peut générer un « triple gain » (pour le pays d'origine, de destination et le migrant) si elle est bien gouvernée.",
+        fr: "Mouvement d'individus de leur pays d'origine vers un autre pays à des fins d'emploi. L'OIT et le MPFA (2018-2030) soulignent qu'elle peut générer un « triple gain » (pour le pays d'origine, de destination et le migrant) si elle est bien gouvernée.",
         en: "Movement of individuals from their home country to another country for the purpose of employment. The ILO and MPFA (2018-2030) emphasize that it can create a 'triple win' scenario if well-governed."
       ,
         source: "OIM — Glossaire de la migration (2019)"
@@ -55,9 +55,9 @@ export const glossaryData = [
       {
         term: "Mobilité induite par le climat",
         en_term: "Climate-Induced Mobility",
-        fr: "Mouvement (interne ou transfrontalier, volontaire ou forcé) déclenché par des changements climatiques soudains (inondations) ou progressifs (sécheresse). Bien que le terme « réfugié climatique » n'ait pas d'existence légale sous la Convention de 1951, ces populations nécessitent une protection (HCR, Déclaration de Kampala 2022).",
+        fr: "Mouvement (interne ou transfrontalier, volontaire ou forcé) déclenché par des changements climatiques soudains (inondations) ou progressifs (sécheresse). Bien que le terme « réfugié climatique » n'ait pas d'existence légale sous la Convention de 1951, ces populations nécessitent une protection (HCR, Déclaration de Kampala 2022).",
         en: "Movement (internal or cross-border, voluntary or forced) driven by sudden (floods) or progressive (drought) climate changes. While the term 'climate refugee' has no legal standing under the 1951 Convention, these populations require protection (UNHCR, Kampala Declaration 2022).",
-        source: { fr: "HCR ; Déclaration ministérielle de Kampala sur migrations, environnement et changement climatique (2022)", en: "UNHCR; Kampala Ministerial Declaration on Migration, Environment and Climate Change (2022)", url: "https://au.int/" }
+        source: { fr: "HCR ; Déclaration ministérielle de Kampala sur migrations, environnement et changement climatique (2022)", en: "UNHCR; Kampala Ministerial Declaration on Migration, Environment and Climate Change (2022)", url: "https://au.int/" }
       },
       {
         term: "Migration régulière",
@@ -93,7 +93,7 @@ export const glossaryData = [
       {
         term: "Mobilité induite par l'environnement et le climat",
         en_term: "Environmental and Climate-Induced Mobility (ECIM)",
-        fr: "Ensemble des déplacements humains déclenchés par des changements environnementaux qui affectent les moyens de subsistance, les conditions de vie ou la sécurité. La notion couvre les deux bouts de trois échelles à la fois : du volontaire au contraint, du choc soudain (inondation, séisme) à la dégradation lente (désertification, salinisation), et du déplacement interne au franchissement de frontière. Le mot « induite » porte l'essentiel : le facteur environnemental est déterminant sans être seul, et s'exerce à travers des conditions économiques, sociales et politiques.",
+        fr: "Ensemble des déplacements humains déclenchés par des changements environnementaux qui affectent les moyens de subsistance, les conditions de vie ou la sécurité. La notion couvre les deux bouts de trois échelles à la fois : du volontaire au contraint, du choc soudain (inondation, séisme) à la dégradation lente (désertification, salinisation), et du déplacement interne au franchissement de frontière. Le mot « induite » porte l'essentiel : le facteur environnemental est déterminant sans être seul, et s'exerce à travers des conditions économiques, sociales et politiques.",
         en: "The range of human movements triggered by environmental changes that affect livelihoods, living conditions or safety. The notion spans both ends of three scales at once: voluntary to forced, sudden shock (flood, earthquake) to slow-onset degradation (desertification, salinisation), and internal displacement to border crossing. The word \"induced\" carries the weight: the environmental factor is decisive without being sole, and works through economic, social and political conditions."
       ,
         source: { fr: "Ben Mokhtar, Y. (2024), Charting New COURSES in the Southern Mediterranean — projet Go Green", en: "Ben Mokhtar, Y. (2024), Charting New COURSES in the Southern Mediterranean — Go Green project" }
@@ -101,18 +101,18 @@ export const glossaryData = [
       {
         term: "Climat et environnement",
         en_term: "Climate and Environment",
-        fr: "Deux termes que les politiques publiques emploient l'un pour l'autre, et qui désignent des objets distincts. Le climat est l'état atmosphérique moyen d'une région sur le long terme — températures, précipitations, humidité. L'environnement est plus large : écosystèmes, sols, eau, qualité de l'air, l'ensemble des facteurs qui agissent sur le vivant. Une sécheresse pluriannuelle relève du climat ; l'épuisement d'une nappe par surexploitation relève de l'environnement. La distinction commande la réponse publique, puisqu'elle départage ce qui se corrige localement de ce qui se négocie mondialement.",
+        fr: "Deux termes que les politiques publiques emploient l'un pour l'autre, et qui désignent des objets distincts. Le climat est l'état atmosphérique moyen d'une région sur le long terme — températures, précipitations, humidité. L'environnement est plus large : écosystèmes, sols, eau, qualité de l'air, l'ensemble des facteurs qui agissent sur le vivant. Une sécheresse pluriannuelle relève du climat ; l'épuisement d'une nappe par surexploitation relève de l'environnement. La distinction commande la réponse publique, puisqu'elle départage ce qui se corrige localement de ce qui se négocie mondialement.",
         en: "Two terms public policy uses interchangeably for distinct things. Climate is a region's long-run average atmospheric state — temperature, rainfall, humidity. Environment is broader: ecosystems, soil, water, air quality, everything acting on living systems. A multi-year drought is climate; a water table drained by over-extraction is environment. The distinction drives the policy response, since it separates what can be corrected locally from what must be negotiated globally."
       ,
-        source: { fr: "Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Black et al. (2011); Ben Mokhtar, Y. (2024)" }
+        source: { fr: "Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Black et al. (2011); Ben Mokhtar, Y. (2024)" }
       },
       {
         term: "Populations immobilisées",
         en_term: "Trapped Populations",
-        fr: "Populations exposées à une dégradation environnementale et qui ne peuvent pas partir, faute des ressources que le départ exige. Partir coûte : transport, logement d'arrivée, réseau à destination, mois sans revenu. Les plus pauvres restent donc là où le risque est le plus fort. L'immobilité contrainte est l'angle mort des statistiques de mobilité, qui comptent les personnes qui bougent et n'ont aucun instrument pour celles que la pauvreté cloue sur place.",
+        fr: "Populations exposées à une dégradation environnementale et qui ne peuvent pas partir, faute des ressources que le départ exige. Partir coûte : transport, logement d'arrivée, réseau à destination, mois sans revenu. Les plus pauvres restent donc là où le risque est le plus fort. L'immobilité contrainte est l'angle mort des statistiques de mobilité, qui comptent les personnes qui bougent et n'ont aucun instrument pour celles que la pauvreté cloue sur place.",
         en: "Populations exposed to environmental degradation who cannot leave, lacking the resources departure demands. Leaving costs: transport, housing on arrival, a network at destination, months without income. The poorest therefore stay where the risk is greatest. Constrained immobility is the blind spot of mobility statistics, which count people who move and have no instrument for those poverty pins in place."
       ,
-        source: { fr: "Foresight (2011) ; Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Foresight (2011); Black et al. (2011); Ben Mokhtar, Y. (2024)" }
+        source: { fr: "Foresight (2011) ; Black et al. (2011) ; Ben Mokhtar, Y. (2024)", en: "Foresight (2011); Black et al. (2011); Ben Mokhtar, Y. (2024)" }
       },
     ]
   },
@@ -144,7 +144,7 @@ export const glossaryData = [
       {
         term: "Personne déplacée interne (PDI)",
         en_term: "Internally Displaced Person (IDP)",
-        fr: "Selon la Convention de Kampala (2009, Art. 1) : personne ou groupe forcé de fuir son foyer (conflit, violences, catastrophes) sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale.",
+        fr: "Selon la Convention de Kampala (2009, Art. 1) : personne ou groupe forcé de fuir son foyer (conflit, violences, catastrophes) sans avoir franchi de frontière internationale. Ne relève donc pas des statistiques de migration internationale.",
         en: "Under the Kampala Convention (2009, Art. 1): persons or groups forced to flee their homes (conflict, violence, disasters) without crossing an internationally recognized State border. They are not counted in international migration statistics.",
         source: { fr: "Convention de Kampala (2009), art. 1", en: "Kampala Convention (2009), Art. 1", url: "https://au.int/en/treaties/african-union-convention-protection-and-assistance-internally-displaced-persons-africa" }
       },
@@ -158,9 +158,9 @@ export const glossaryData = [
       {
         term: "Mineur non accompagné",
         en_term: "Unaccompanied Migrant Minor",
-        fr: "Enfant (moins de 18 ans) séparé de ses parents ou de son tuteur légal lors d'un mouvement migratoire. L'approche juridique (Charte africaine des droits et du bien-être de l'enfant) exige que « l'intérêt supérieur de l'enfant » prime sur toute décision migratoire.",
+        fr: "Enfant (moins de 18 ans) séparé de ses parents ou de son tuteur légal lors d'un mouvement migratoire. L'approche juridique (Charte africaine des droits et du bien-être de l'enfant) exige que « l'intérêt supérieur de l'enfant » prime sur toute décision migratoire.",
         en: "A child (under 18) separated from both parents and legally responsible caregivers during a migratory movement. The legal approach (African Charter on the Rights and Welfare of the Child) requires that the 'best interests of the child' be the primary consideration.",
-        source: { fr: "Charte africaine des droits et du bien-être de l'enfant ; Convention relative aux droits de l'enfant", en: "African Charter on the Rights and Welfare of the Child; Convention on the Rights of the Child", url: "https://au.int/" }
+        source: { fr: "Charte africaine des droits et du bien-être de l'enfant ; Convention relative aux droits de l'enfant", en: "African Charter on the Rights and Welfare of the Child; Convention on the Rights of the Child", url: "https://au.int/" }
       },
       {
         term: "Travailleur transfrontalier",
@@ -172,7 +172,7 @@ export const glossaryData = [
       {
         term: "Survivant de la traite",
         en_term: "Survivor of Human Trafficking",
-        fr: "Personne ayant subi une exploitation (travail forcé, exploitation sexuelle) via le recrutement ou le transfert par la menace, la force ou la tromperie (Protocole de Palerme). Le terme « survivant » (plutôt que victime) reconnaît l'agentivité de l'individu dans sa reconstruction.",
+        fr: "Personne ayant subi une exploitation (travail forcé, exploitation sexuelle) via le recrutement ou le transfert par la menace, la force ou la tromperie (Protocole de Palerme). Le terme « survivant » (plutôt que victime) reconnaît l'agentivité de l'individu dans sa reconstruction.",
         en: "A person who has experienced exploitation (forced labor, sexual exploitation) through recruitment or transfer by means of threat, force, or deception (Palermo Protocol). The term 'survivor' (rather than victim) acknowledges the individual's agency in recovery."
       ,
         source: "Protocole de Palerme (2000), art. 3 — ONUDC"
@@ -186,10 +186,10 @@ export const glossaryData = [
       {
         term: "Asile (droit d')",
         en_term: "Asylum (right to)",
-        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin. Son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation. Il pose aussi l'octroi de l'asile comme un acte pacifique et humanitaire, qu'aucun État ne peut tenir pour inamical.",
+        fr: "Le droit de chercher asile et de bénéficier de l'asile en d'autres pays, énoncé à l'article 14 de la Déclaration universelle des droits de l'homme. En Afrique, la Convention de l'OUA de 1969 va plus loin. Son article II engage les États membres à faire « tout ce qui est en leur pouvoir » pour recevoir les réfugiés et assurer leur installation. Il pose aussi l'octroi de l'asile comme un acte pacifique et humanitaire, qu'aucun État ne peut tenir pour inamical.",
         en: "The right to seek and to enjoy asylum in other countries, set out in Article 14 of the Universal Declaration of Human Rights. In Africa the 1969 OAU Convention goes further than recognising a right to seek. Its Article II commits member states to use \"their best endeavours\" to receive refugees and secure their settlement. It also establishes that granting asylum is a peaceful and humanitarian act, which no other state may regard as unfriendly.",
-        source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
-        stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
+        source: { fr: "Convention de l'OUA (1969), art. II ; DUDH, art. 14", en: "OAU Convention (1969), Art. II; UDHR, Art. 14", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" },
+        stakes: { fr: "Qualifier l'asile d'acte « pacifique et humanitaire » désamorce l'argument diplomatique du pays d'origine qui reprocherait à son voisin d'accueillir ses opposants. C'est une clause de protection des États d'accueil autant que des personnes.", en: "Framing asylum as a \"peaceful and humanitarian act\" defuses the diplomatic argument of an origin state accusing its neighbour of harbouring its opponents. It protects host states as much as people." }
       },
       {
         term: "Reconnaissance prima facie",
@@ -204,36 +204,36 @@ export const glossaryData = [
         en_term: "Refugee Status Determination (RSD)",
         fr: "Procédure, administrative ou judiciaire, par laquelle un État ou le HCR établit si une personne relève de la définition du réfugié. En Afrique, elle est conduite tantôt par une commission nationale d'éligibilité, tantôt par le HCR agissant sous mandat lorsque l'État n'a pas encore d'appareil dédié. Cette configuration déplace vers une organisation internationale une décision de souveraineté.",
         en: "The administrative or judicial procedure by which a state or UNHCR establishes whether a person falls within the refugee definition. In Africa it is conducted sometimes by a national eligibility commission, sometimes by UNHCR acting under its mandate where the state has no dedicated apparatus. That configuration shifts a sovereign decision to an international organisation.",
-        source: { fr: "HCR ; Convention de l'OUA (1969)", en: "UNHCR; OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+        source: { fr: "HCR ; Convention de l'OUA (1969)", en: "UNHCR; OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Déplacement prolongé",
         en_term: "Protracted displacement",
-        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit un régime d'attente institutionnalisé, où provisoire veut dire des années.",
+        fr: "Situation dans laquelle des personnes déplacées se trouvent durablement sans solution — ni retour, ni intégration locale, ni réinstallation — souvent pendant des années voire des décennies. La notion déplace le regard de l'urgence vers la durée : elle décrit un régime d'attente institutionnalisé, où provisoire veut dire des années.",
         en: "A situation in which displaced people remain durably without a solution — no return, no local integration, no resettlement — often for years or decades. The notion shifts attention from emergency to duration: it describes an institutionalised regime of waiting, where temporary means years.",
         source: { fr: "HCR, Global Trends", en: "UNHCR, Global Trends", url: "https://www.unhcr.org/global-trends" },
-        stakes: { fr: "Tant qu'une situation est nommée « urgence », elle appelle des financements humanitaires courts et renouvelables. La nommer « prolongée » ouvre au contraire les instruments de développement — mais suppose de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire.", en: "As long as a situation is named an \"emergency\", it draws short, renewable humanitarian funding. Naming it \"protracted\" opens development instruments instead — but requires acknowledging a lasting presence, which host states are often reluctant to do." }
+        stakes: { fr: "Tant qu'une situation est nommée « urgence », elle appelle des financements humanitaires courts et renouvelables. La nommer « prolongée » ouvre au contraire les instruments de développement — mais suppose de reconnaître une présence durable, ce que les États d'accueil hésitent souvent à faire.", en: "As long as a situation is named an \"emergency\", it draws short, renewable humanitarian funding. Naming it \"protracted\" opens development instruments instead — but requires acknowledging a lasting presence, which host states are often reluctant to do." }
       },
       {
         term: "Externalisation des frontières",
         en_term: "Border externalisation",
         fr: "Ensemble des dispositifs par lesquels un État reporte le contrôle de ses frontières au-delà de son territoire. Financement et équipement de forces de sécurité tierces, agents de liaison, campagnes de dissuasion, conditionnement de l'aide à la coopération migratoire. Le contrôle s'exerce ainsi loin du lieu où le droit d'asile pourrait être invoqué.",
         en: "The set of arrangements by which a state pushes control of its borders beyond its own territory: funding and equipping third-country security forces, liaison officers, deterrence campaigns, tying aid to migration cooperation. Control is thereby exercised far from where a right to asylum could be invoked.",
-        source: { fr: "Notion analytique consolidée dans la littérature sur les régimes de mobilité ; voir Achiume (2019) et Bakewell (2008) en Bibliothèque", en: "Analytical notion consolidated in the mobility-regimes literature; see Achiume (2019) and Bakewell (2008) in the Library" },
-        stakes: { fr: "Le déplacement du contrôle déplace aussi la responsabilité juridique : une personne interceptée avant d'atteindre un territoire ne peut y demander l'asile, et l'État qui a financé l'interception n'est pas celui qui la refuse. La responsabilité se dilue exactement là où elle serait exigible (Ben Mokhtar, 2026).", en: "Displacing control also displaces legal responsibility: a person intercepted before reaching a territory cannot claim asylum there, and the state that funded the interception is not the one refusing it. Accountability dissolves precisely where it would be enforceable (Ben Mokhtar, 2026)." }
+        source: { fr: "Notion analytique consolidée dans la littérature sur les régimes de mobilité ; voir Achiume (2019) et Bakewell (2008) en Bibliothèque", en: "Analytical notion consolidated in the mobility-regimes literature; see Achiume (2019) and Bakewell (2008) in the Library" },
+        stakes: { fr: "Le déplacement du contrôle déplace aussi la responsabilité juridique : une personne interceptée avant d'atteindre un territoire ne peut y demander l'asile, et l'État qui a financé l'interception n'est pas celui qui la refuse. La responsabilité se dilue exactement là où elle serait exigible (Ben Mokhtar, 2026).", en: "Displacing control also displaces legal responsibility: a person intercepted before reaching a territory cannot claim asylum there, and the state that funded the interception is not the one refusing it. Accountability dissolves precisely where it would be enforceable (Ben Mokhtar, 2026)." }
       },
       {
         term: "Accord de réadmission",
         en_term: "Readmission agreement",
         fr: "Instrument bilatéral ou régional par lequel un État s'engage à reprendre ses ressortissants — et parfois des ressortissants de pays tiers ayant transité par son territoire — éloignés depuis un autre État. Souvent négocié en contrepartie de facilités de visa, d'aide au développement ou de coopération commerciale.",
         en: "A bilateral or regional instrument by which a state undertakes to take back its nationals — and sometimes third-country nationals who transited its territory — removed from another state. Often negotiated in exchange for visa facilitation, development aid or trade cooperation.",
-        source: { fr: "Pratique conventionnelle bilatérale ; voir Adamson & Tsourapas (2019) sur la diplomatie migratoire, en Bibliothèque", en: "Bilateral treaty practice; see Adamson & Tsourapas (2019) on migration diplomacy, in the Library" },
-        stakes: { fr: "La clause « ressortissants de pays tiers » transforme un État de transit en dépositaire de personnes qui n'en sont pas originaires. C'est le point où un accord technique produit des effets de séjour durables, sans qu'aucun droit de séjour n'ait été accordé.", en: "The \"third-country nationals\" clause turns a transit state into the custodian of people who are not from it. That is where a technical agreement produces lasting residence effects without any residence right having been granted." }
+        source: { fr: "Pratique conventionnelle bilatérale ; voir Adamson & Tsourapas (2019) sur la diplomatie migratoire, en Bibliothèque", en: "Bilateral treaty practice; see Adamson & Tsourapas (2019) on migration diplomacy, in the Library" },
+        stakes: { fr: "La clause « ressortissants de pays tiers » transforme un État de transit en dépositaire de personnes qui n'en sont pas originaires. C'est le point où un accord technique produit des effets de séjour durables, sans qu'aucun droit de séjour n'ait été accordé.", en: "The \"third-country nationals\" clause turns a transit state into the custodian of people who are not from it. That is where a technical agreement produces lasting residence effects without any residence right having been granted." }
       },
       {
         term: "Visa (régime de)",
         en_term: "Visa (regime)",
-        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction est de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
+        fr: "Autorisation préalable d'entrée délivrée par un État. Trois régimes structurent les mobilités intra-africaines : le visa requis avant le départ, le visa à l'arrivée (délivré au poste-frontière) et l'exemption. La distinction est de nature : le visa préalable transfère la décision au consulat du pays de départ, c'est-à-dire hors de portée d'un recours dans le pays de destination.",
         en: "A prior entry authorisation issued by a state. Three regimes structure intra-African mobility: visa required before departure, visa on arrival (issued at the border post), and exemption. The distinction is one of kind. A prior visa moves the decision to the consulate in the country of departure, beyond the reach of any appeal in the destination country.",
         source: { fr: "BAD & CUA, Africa Visa Openness Report", en: "AfDB & AUC, Africa Visa Openness Report", url: "https://www.visaopenness.org/" }
       },
@@ -247,9 +247,9 @@ export const glossaryData = [
       {
         term: "Principe de non-refoulement",
         en_term: "Non-Refoulement Principle",
-        fr: "Norme impérative (jus cogens) du droit international interdisant à un État d'expulser ou de renvoyer un individu vers un territoire où sa vie ou sa liberté seraient menacées (Art. 33 de la Convention de Genève 1951 ; Art. II(3) de la Convention de l'OUA 1969).",
+        fr: "Norme impérative (jus cogens) du droit international interdisant à un État d'expulser ou de renvoyer un individu vers un territoire où sa vie ou sa liberté seraient menacées (Art. 33 de la Convention de Genève 1951 ; Art. II(3) de la Convention de l'OUA 1969).",
         en: "Peremptory norm (jus cogens) of international law prohibiting a state from expelling or returning an individual to a territory where their life or freedom would be threatened (Art. 33 of the 1951 Geneva Convention; Art. II(3) of the 1969 OAU Convention).",
-        source: { fr: "Convention de Genève (1951), art. 33 ; Convention de l'OUA (1969), art. II(3)", en: "Geneva Convention (1951), Art. 33; OAU Convention (1969), Art. II(3)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+        source: { fr: "Convention de Genève (1951), art. 33 ; Convention de l'OUA (1969), art. II(3)", en: "Geneva Convention (1951), Art. 33; OAU Convention (1969), Art. II(3)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Trafic illicite de migrants",
@@ -289,9 +289,9 @@ export const glossaryData = [
       {
         term: "Solutions durables",
         en_term: "Durable solutions",
-        fr: "Les trois issues reconnues à une situation de déplacement : le rapatriement volontaire dans le pays d'origine, l'intégration locale dans le pays d'accueil, et la réinstallation dans un pays tiers. Une solution n'est dite durable que lorsqu'elle met fin au besoin de protection internationale — critère rarement rempli à l'échelle des effectifs déplacés.",
+        fr: "Les trois issues reconnues à une situation de déplacement : le rapatriement volontaire dans le pays d'origine, l'intégration locale dans le pays d'accueil, et la réinstallation dans un pays tiers. Une solution n'est dite durable que lorsqu'elle met fin au besoin de protection internationale — critère rarement rempli à l'échelle des effectifs déplacés.",
         en: "The three recognised outcomes of a displacement situation: voluntary repatriation to the country of origin, local integration in the host country, and resettlement in a third country. A solution counts as durable only when it ends the need for international protection — a threshold rarely met at the scale of displaced populations.",
-        source: { fr: "HCR ; Pacte mondial sur les réfugiés (2018)", en: "UNHCR; Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
+        source: { fr: "HCR ; Pacte mondial sur les réfugiés (2018)", en: "UNHCR; Global Compact on Refugees (2018)", url: "https://globalcompactrefugees.org/" }
       },
       {
         term: "Réinstallation",
@@ -312,12 +312,12 @@ export const glossaryData = [
         en_term: "Local integration",
         fr: "Processus par lequel un réfugié s'installe durablement dans son pays d'asile, avec une dimension juridique (accès à un statut stable, voire à la naturalisation), économique (droit au travail et aux moyens de subsistance) et sociale. C'est la solution durable la plus fréquente en Afrique de fait, et la moins reconnue en droit.",
         en: "The process by which a refugee settles durably in the country of asylum. It has a legal dimension (access to a stable status, possibly naturalisation), an economic one (the right to work and to livelihoods), and a social one. It is the most common durable solution in Africa in practice, and the least recognised in law.",
-        source: { fr: "HCR ; Convention de l'OUA (1969), art. II", en: "UNHCR; OAU Convention (1969), Art. II", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+        source: { fr: "HCR ; Convention de l'OUA (1969), art. II", en: "UNHCR; OAU Convention (1969), Art. II", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Retour (Volontaire vs Forcé)",
         en_term: "Return (Voluntary vs Forced)",
-        fr: "Processus par lequel un migrant regagne son pays d'origine. Le retour est « volontaire » lorsqu'il repose sur un consentement libre et éclairé. Il est « forcé » (expulsion, déportation) lorsqu'imposé par l'État hôte, devant toutefois respecter les droits humains et le non-refoulement (MPFA 2018-2030).",
+        fr: "Processus par lequel un migrant regagne son pays d'origine. Le retour est « volontaire » lorsqu'il repose sur un consentement libre et éclairé. Il est « forcé » (expulsion, déportation) lorsqu'imposé par l'État hôte, devant toutefois respecter les droits humains et le non-refoulement (MPFA 2018-2030).",
         en: "Process by which a migrant goes back to their country of origin. Return is 'voluntary' when based on free and informed consent. It is 'forced' (expulsion, deportation) when imposed by the host state, though it must respect human rights and non-refoulement (MPFA 2018-2030).",
         source: { fr: "Cadre de politique migratoire pour l'Afrique (MPFA 2018-2030)", en: "Migration Policy Framework for Africa (MPFA 2018-2030)", url: "https://au.int/" }
       },
@@ -326,7 +326,7 @@ export const glossaryData = [
         en_term: "Repatriation",
         fr: "Droit d'un réfugié ou d'une personne déplacée à retourner dans son pays d'origine dans des conditions de sécurité et de dignité, telles que définies par le droit international (Convention de Genève, Convention de l'OUA 1969).",
         en: "The right of a refugee or displaced person to return to their country of origin in safety and dignity, as defined by international law (Geneva Convention, 1969 OAU Convention).",
-        source: { fr: "Convention de Genève (1951) ; Convention de l'OUA (1969)", en: "Geneva Convention (1951); OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
+        source: { fr: "Convention de Genève (1951) ; Convention de l'OUA (1969)", en: "Geneva Convention (1951); OAU Convention (1969)", url: "https://au.int/en/treaties/oau-convention-governing-specific-aspects-refugee-problems-africa" }
       },
       {
         term: "Réintégration",
@@ -368,7 +368,7 @@ export const glossaryData = [
         en_term: "Remittances",
         fr: "Fonds ou biens transférés par les migrants vers leur pays d'origine. Les remises migratoires constituent souvent la première source de financement externe en Afrique, dépassant l'Aide publique au développement (OIM, 2019).",
         en: "Money or goods transferred by migrants to their country of origin. Remittances are often the leading source of external financing in Africa, exceeding Official Development Assistance (IOM, 2019).",
-        source: { fr: "OIM (2019) ; Banque mondiale — données sur les transferts", en: "IOM (2019); World Bank — remittances data" }
+        source: { fr: "OIM (2019) ; Banque mondiale — données sur les transferts", en: "IOM (2019); World Bank — remittances data" }
       },
       {
         term: "Fuite des cerveaux (Brain Drain)",
@@ -389,7 +389,7 @@ export const glossaryData = [
       {
         term: "Circulation des cerveaux (Brain Circulation)",
         en_term: "Brain Circulation",
-        fr: "Mouvement répété et bidirectionnel de professionnels qualifiés entre pays d'origine et de destination, par opposition à un départ ou un retour définitifs. Ce cadre déplace le débat de la « fuite » (perte nette et irréversible) vers un échange continu de compétences, de capitaux et de réseaux.",
+        fr: "Mouvement répété et bidirectionnel de professionnels qualifiés entre pays d'origine et de destination, par opposition à un départ ou un retour définitifs. Ce cadre déplace le débat de la « fuite » (perte nette et irréversible) vers un échange continu de compétences, de capitaux et de réseaux.",
         en: "Repeated, bidirectional movement of skilled professionals between origin and destination countries, as opposed to a one-way departure or permanent return. This framework shifts the debate from \"drain\" (a net, irreversible loss) toward a continuous exchange of skills, capital, and networks."
       ,
         source: "OIM — Glossaire de la migration (2019)"
@@ -413,7 +413,7 @@ export const glossaryData = [
       {
         term: "Investissement des diasporas",
         en_term: "Investment by Migrants",
-        fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs.",
+        fr: "Contributions économiques des migrants au-delà des simples transferts de fonds familiaux : entrepreneuriat, immobilier, « diaspora bonds », transfert de technologies et de capitaux vers les secteurs productifs.",
         en: "Economic contributions of migrants beyond basic family remittances: entrepreneurship, real estate, diaspora bonds, technology transfer, and capital investment in productive sectors."
       ,
         source: "OIM — Glossaire de la migration (2019)"
@@ -437,12 +437,12 @@ export const glossaryData = [
         fr: "Paire pays d'origine–pays de destination reliée par un flux ou un stock significatif de migrants. C'est l'unité d'analyse standard des statistiques bilatérales de migration (UN DESA, Banque mondiale). Elle fait apparaître, au-delà des agrégats nationaux, la géographie réelle des déplacements.",
         en: "An origin-destination country pair linked by a significant migrant flow or stock. It is the standard unit of analysis in bilateral migration statistics (UN DESA, World Bank), and it reveals the real geography of movement beyond national aggregates."
       ,
-        source: "UN DESA — International Migrant Stock ; Banque mondiale"
+        source: "UN DESA — International Migrant Stock ; Banque mondiale"
       },
       {
         term: "Régime (de gouvernance migratoire)",
         en_term: "Regime (of migration governance)",
-        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent, les pratiques effectives aux postes-frontières (Ben Mokhtar, 2026).",
+        fr: "Ensemble de principes, normes, règles et procédures de décision autour desquels les attentes des acteurs convergent dans un domaine donné. Appliquée au cas africain, la notion permet de tenir ensemble ce qu'une lecture par les seuls traités sépare : les textes adoptés, les bureaucraties qui les portent, les pratiques effectives aux postes-frontières (Ben Mokhtar, 2026).",
         en: "A set of principles, norms, rules and decision-making procedures around which actors' expectations converge in a given area. Applied to the African case, the notion holds together what a treaty-only reading separates: the texts adopted, the bureaucracies that carry them, and the actual practices of border posts (Ben Mokhtar, 2026).",
         source: { fr: "Cadre de la théorie des régimes internationaux, appliqué au cas africain par Ben Mokhtar (2026)", en: "International regime theory framework, applied to the African case by Ben Mokhtar (2026)" }
       },
@@ -451,21 +451,21 @@ export const glossaryData = [
         en_term: "Extraversion",
         fr: "Stratégie par laquelle des acteurs africains convertissent leur position de dépendance en ressource, en mobilisant la relation extérieure — financements, coopération, reconnaissance — comme instrument de pouvoir interne. Appliquée aux migrations, elle éclaire pourquoi certains États négocient activement une coopération qui semble d'abord servir l'agenda de leurs partenaires.",
         en: "A strategy by which African actors convert a position of dependence into a resource, mobilising the external relationship — funding, cooperation, recognition — as an instrument of domestic power. Applied to migration, it explains why some states actively negotiate cooperation that appears to serve their partners' agenda first.",
-        source: { fr: "Bayart (2000), « Africa in the World: A History of Extraversion » — voir Bibliothèque", en: "Bayart (2000), \"Africa in the World: A History of Extraversion\" — see Library" }
+        source: { fr: "Bayart (2000), « Africa in the World: A History of Extraversion » — voir Bibliothèque", en: "Bayart (2000), \"Africa in the World: A History of Extraversion\" — see Library" }
       },
       {
         term: "Gouvernementalité",
         en_term: "Governmentality",
-        fr: "Manière dont un pouvoir gouverne des populations non par la contrainte directe mais par des dispositifs de savoir : catégories, recensements, indicateurs, procédures. Dans le champ migratoire, la notion invite à examiner les instruments de mesure eux-mêmes — compter, classer, nommer — comme des actes de gouvernement plutôt que comme des descriptions neutres.",
+        fr: "Manière dont un pouvoir gouverne des populations non par la contrainte directe mais par des dispositifs de savoir : catégories, recensements, indicateurs, procédures. Dans le champ migratoire, la notion invite à examiner les instruments de mesure eux-mêmes — compter, classer, nommer — comme des actes de gouvernement plutôt que comme des descriptions neutres.",
         en: "The way a power governs populations not through direct coercion but through knowledge devices: categories, censuses, indicators, procedures. In the migration field, the notion invites examining measurement instruments themselves — counting, classifying, naming — as acts of government rather than neutral descriptions.",
         source: { fr: "Cadre foucaldien, mobilisé dans l'analyse du régime africain (Ben Mokhtar, 2026)", en: "Foucauldian framework, mobilised in the analysis of the African regime (Ben Mokhtar, 2026)" }
       },
       {
         term: "Lecture décoloniale",
         en_term: "Decolonial reading",
-        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : le droit de circuler se distribue selon des lignes héritées, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
+        fr: "Approche qui rapporte les asymétries contemporaines de mobilité à l'ordre colonial qui les a instituées : le droit de circuler se distribue selon des lignes héritées, et cette inégalité a une histoire. Appliquée au droit international des migrations, elle conteste que les régimes de mobilité mondiaux soient neutres quant à l'origine.",
         en: "An approach that relates contemporary asymmetries of mobility to the colonial order that instituted them: the right to move is distributed along inherited lines, and that inequality has a history. Applied to international migration law, it contests the claim that global mobility regimes are neutral as to origin.",
-        source: { fr: "Achiume (2019), « Migration as Decolonization » — voir Bibliothèque", en: "Achiume (2019), \"Migration as Decolonization\" — see Library", url: "https://ssrn.com/abstract=3330353" }
+        source: { fr: "Achiume (2019), « Migration as Decolonization » — voir Bibliothèque", en: "Achiume (2019), \"Migration as Decolonization\" — see Library", url: "https://ssrn.com/abstract=3330353" }
       },
       {
         term: "Communs migratoires vernaculaires",
@@ -477,9 +477,9 @@ export const glossaryData = [
       {
         term: "Souveraineté épistémique",
         en_term: "Epistemic sovereignty",
-        fr: "Capacité d'un ensemble politique à produire lui-même les catégories, les données et les diagnostics qui le décrivent, plutôt que de les recevoir. C'est la justification explicite des organes africains de données migratoires : sans appareil propre, le continent se lit dans les instruments de ceux qui l'observent.",
+        fr: "Capacité d'un ensemble politique à produire lui-même les catégories, les données et les diagnostics qui le décrivent, plutôt que de les recevoir. C'est la justification explicite des organes africains de données migratoires : sans appareil propre, le continent se lit dans les instruments de ceux qui l'observent.",
         en: "The capacity of a political entity to produce for itself the categories, data and diagnoses that describe it, rather than receiving them. It is the explicit rationale of Africa's migration-data bodies: without its own apparatus, the continent reads itself through the instruments of those who observe it.",
-        source: { fr: "Justification institutionnelle des organes de données de l'UA (OAM, STATAFRIC) ; lecture développée dans Ben Mokhtar (2026)", en: "Institutional rationale of the AU's data bodies (AMO, STATAFRIC); reading developed in Ben Mokhtar (2026)" }
+        source: { fr: "Justification institutionnelle des organes de données de l'UA (OAM, STATAFRIC) ; lecture développée dans Ben Mokhtar (2026)", en: "Institutional rationale of the AU's data bodies (AMO, STATAFRIC); reading developed in Ben Mokhtar (2026)" }
       },
       {
         term: "Conditionnalité migratoire",
@@ -500,14 +500,14 @@ export const glossaryData = [
         en_term: "Capabilities of Movement",
         fr: "Cadre théorique (de Haas, 2021) situant mobilité et immobilité sur un même continuum d'aspirations et de capacités effectivement exerçables, dépassant la dichotomie simpliste volontaire/forcé.",
         en: "Theoretical framework (de Haas, 2021) placing mobility and immobility on the same continuum of aspirations and actually exercisable capabilities, moving beyond the simplistic voluntary/forced dichotomy.",
-        source: { fr: "de Haas (2021), « A theory of migration: the aspirations–capabilities framework »", en: "de Haas (2021), 'A theory of migration: the aspirations-capabilities framework'", url: "https://doi.org/10.1186/s40878-020-00210-4" }
+        source: { fr: "de Haas (2021), « A theory of migration: the aspirations–capabilities framework »", en: "de Haas (2021), 'A theory of migration: the aspirations-capabilities framework'", url: "https://doi.org/10.1186/s40878-020-00210-4" }
       },
       {
         term: "Gouvernance des migrations",
         en_term: "Migration Governance",
-        fr: "Ensemble des normes juridiques, politiques, institutions et processus (du niveau local au niveau mondial) façonnant la gestion des mobilités, les droits des migrants et la coopération entre États (OIM, 2015 ; MPFA, 2018).",
+        fr: "Ensemble des normes juridiques, politiques, institutions et processus (du niveau local au niveau mondial) façonnant la gestion des mobilités, les droits des migrants et la coopération entre États (OIM, 2015 ; MPFA, 2018).",
         en: "The combined frameworks of legal norms, policies, institutions, and processes (from local to global levels) shaping the management of mobility, migrant rights, and inter-state cooperation (IOM, 2015; MPFA, 2018).",
-        source: { fr: "OIM (2015) ; Cadre de politique migratoire pour l'Afrique (MPFA, 2018)", en: "IOM (2015); Migration Policy Framework for Africa (MPFA, 2018)", url: "https://au.int/" }
+        source: { fr: "OIM (2015) ; Cadre de politique migratoire pour l'Afrique (MPFA, 2018)", en: "IOM (2015); Migration Policy Framework for Africa (MPFA, 2018)", url: "https://au.int/" }
       },
       {
         term: "Sécurisation (Securitization)",
@@ -527,7 +527,7 @@ export const glossaryData = [
       {
         term: "Facteurs Push & Pull (Causes profondes)",
         en_term: "Push & Pull Factors (Root Causes)",
-        fr: "Conditions structurelles motivant le départ d'une région (Push : pauvreté, chocs climatiques, conflits) ou l'attraction vers une autre (Pull : emploi, réseaux familiaux, stabilité). Le GCM et le MPFA appellent à traiter ces causes profondes pour faire de la migration un choix et non une nécessité vitale.",
+        fr: "Conditions structurelles motivant le départ d'une région (Push : pauvreté, chocs climatiques, conflits) ou l'attraction vers une autre (Pull : emploi, réseaux familiaux, stabilité). Le GCM et le MPFA appellent à traiter ces causes profondes pour faire de la migration un choix et non une nécessité vitale.",
         en: "Structural conditions motivating departure from a region (Push: poverty, climate shocks, conflict) or attraction to another (Pull: jobs, family networks, stability). The GCM and MPFA call for addressing these root causes to make migration a choice rather than a necessity."
       ,
         source: "OIM — Glossaire de la migration (2019)"
@@ -537,7 +537,7 @@ export const glossaryData = [
         en_term: "Migration Diplomacy",
         fr: "Utilisation stratégique de la coopération migratoire par les États dans l'arène internationale, s'en servant comme levier de négociation pour obtenir des financements, une reconnaissance politique ou des accords commerciaux (Adamson & Tsourapas, 2019).",
         en: "The strategic use of migration cooperation by states in the international arena, utilizing it as a bargaining lever to secure funding, political recognition, or trade agreements (Adamson & Tsourapas, 2019).",
-        source: { fr: "Adamson & Tsourapas (2019), « Migration Diplomacy in World Politics »", en: "Adamson & Tsourapas (2019), 'Migration Diplomacy in World Politics'", url: "https://doi.org/10.1093/isp/eky015" }
+        source: { fr: "Adamson & Tsourapas (2019), « Migration Diplomacy in World Politics »", en: "Adamson & Tsourapas (2019), 'Migration Diplomacy in World Politics'", url: "https://doi.org/10.1093/isp/eky015" }
       },
       { 
         term: "Nord Global & Sud Global", 
@@ -587,10 +587,10 @@ export const glossaryData = [
       {
         term: "Protocole sur la libre circulation (2018)",
         en_term: "Free Movement Protocol (2018)",
-        fr: "Protocole au Traité d'Abuja relatif à la libre circulation des personnes, au droit de résidence et au droit d'établissement, adopté à Kigali en 2018. Il organise l'ouverture en trois phases successives — entrée, résidence, établissement — chacune conditionnant la suivante. Son entrée en vigueur requiert 15 ratifications ; il en compte 4 sur 54.",
+        fr: "Protocole au Traité d'Abuja relatif à la libre circulation des personnes, au droit de résidence et au droit d'établissement, adopté à Kigali en 2018. Il organise l'ouverture en trois phases successives — entrée, résidence, établissement — chacune conditionnant la suivante. Son entrée en vigueur requiert 15 ratifications ; il en compte 4 sur 54.",
         en: "Protocol to the Abuja Treaty on Free Movement of Persons, Right of Residence and Right of Establishment, adopted in Kigali in 2018. It organises opening in three successive phases — entry, residence, establishment — each conditioning the next. Entry into force requires 15 ratifications; it stands at 4 of 54.",
         source: { fr: "Union africaine — texte du traité", en: "African Union — treaty text", url: "https://au.int/en/treaties/protocol-treaty-establishing-african-economic-community-relating-free-movement-persons" },
-        stakes: { fr: "Le découpage en phases est ce qui rend le texte signable : un État peut adhérer au principe d'entrée sans s'engager sur le droit d'établissement. C'est aussi ce qui permet de s'arrêter à la première phase indéfiniment.", en: "The phased design is what makes the text signable: a state can endorse entry without committing to establishment rights. It is also what allows stopping at phase one indefinitely." }
+        stakes: { fr: "Le découpage en phases est ce qui rend le texte signable : un État peut adhérer au principe d'entrée sans s'engager sur le droit d'établissement. C'est aussi ce qui permet de s'arrêter à la première phase indéfiniment.", en: "The phased design is what makes the text signable: a state can endorse entry without committing to establishment rights. It is also what allows stopping at phase one indefinitely." }
       },
       {
         term: "MPFA (2018-2030)",
@@ -609,7 +609,7 @@ export const glossaryData = [
       {
         term: "CER",
         en_term: "REC",
-        fr: "Communauté économique régionale. Huit CER sont reconnues par l'Union africaine comme les blocs constitutifs de l'intégration continentale. Elles sont, en matière de mobilité, l'échelon où la libre circulation s'exerce réellement : plusieurs ont ouvert leurs frontières intérieures bien avant que le protocole continental n'existe.",
+        fr: "Communauté économique régionale. Huit CER sont reconnues par l'Union africaine comme les blocs constitutifs de l'intégration continentale. Elles sont, en matière de mobilité, l'échelon où la libre circulation s'exerce réellement : plusieurs ont ouvert leurs frontières intérieures bien avant que le protocole continental n'existe.",
         en: "Regional Economic Community. Eight RECs are recognised by the African Union as the building blocs of continental integration. On mobility they are the level at which free movement actually operates: several opened their internal borders long before the continental protocol existed.",
         source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
       },
@@ -630,7 +630,7 @@ export const glossaryData = [
       {
         term: "CTS-MRIDP",
         en_term: "STC-MRIDPs",
-        fr: "Comité technique spécialisé sur la migration, les réfugiés et les personnes déplacées. Organe ministériel de l'Union africaine institué sur la base de l'article 5 de l'Acte constitutif ; il se réunit tous les deux ans et supervise la redevabilité des organes techniques du régime, dont l'OAM.",
+        fr: "Comité technique spécialisé sur la migration, les réfugiés et les personnes déplacées. Organe ministériel de l'Union africaine institué sur la base de l'article 5 de l'Acte constitutif ; il se réunit tous les deux ans et supervise la redevabilité des organes techniques du régime, dont l'OAM.",
         en: "Specialized Technical Committee on Migration, Refugees and Displaced Persons. An African Union ministerial organ established under Article 5 of the Constitutive Act; it meets every two years and oversees the accountability of the regime's technical bodies, including the AMO.",
         source: { fr: "Union africaine", en: "African Union", url: "https://au.int/" }
       },
@@ -644,7 +644,7 @@ export const glossaryData = [
       {
         term: "JLMP",
         en_term: "JLMP",
-        fr: "Programme conjoint sur la migration de travail (Joint Labour Migration Programme), porté par la Commission de l'UA avec l'OIT, l'OIM et la CEA. Il met en œuvre le cinquième domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015) autour de quatre axes : portabilité des compétences, portabilité de la protection sociale, recrutement équitable et protection des travailleurs.",
+        fr: "Programme conjoint sur la migration de travail (Joint Labour Migration Programme), porté par la Commission de l'UA avec l'OIT, l'OIM et la CEA. Il met en œuvre le cinquième domaine prioritaire de la Déclaration d'Addis-Abeba sur l'emploi (2015) autour de quatre axes : portabilité des compétences, portabilité de la protection sociale, recrutement équitable et protection des travailleurs.",
         en: "Joint Labour Migration Programme, led by the AU Commission with the ILO, IOM and ECA. It implements the fifth priority area of the 2015 Addis Ababa Declaration on Employment around four axes: skills portability, social-security portability, fair recruitment and worker protection.",
         source: { fr: "Union africaine / OIT / OIM / CEA", en: "African Union / ILO / IOM / ECA", url: "https://au.int/" }
       }

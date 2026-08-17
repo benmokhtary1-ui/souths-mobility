@@ -6,7 +6,7 @@ export const methodConventions = [
     label: { fr: "Périmètre et découpage", en: "Perimeter and breakdown" },
     value: { fr: "54 pays, 5 régions", en: "54 countries, 5 regions" },
     detail: {
-      fr: "La plateforme suit le découpage officiel de l'Union africaine, et non la nomenclature M49 des Nations unies. La Mauritanie est donc rattachée au Nord ; le Burundi et le Rwanda au Centre ; le Malawi, le Mozambique, la Zambie et le Zimbabwe au Sud.",
+      fr: "La plateforme suit le découpage officiel de l'Union africaine, et non la nomenclature M49 des Nations unies. La Mauritanie est donc rattachée au Nord ; le Burundi et le Rwanda au Centre ; le Malawi, le Mozambique, la Zambie et le Zimbabwe au Sud.",
       en: "The platform follows the African Union's official breakdown rather than the UN M49 nomenclature: Mauritania is attached to the North, Burundi and Rwanda to Central, and Malawi, Mozambique, Zambia, and Zimbabwe to the South."
     }
   },
@@ -14,7 +14,7 @@ export const methodConventions = [
     label: { fr: "Appartenance aux CER", en: "REC membership" },
     value: { fr: "Multiple assumée", en: "Multiple by design" },
     detail: {
-      fr: "L'appartenance simultanée à plusieurs CER est la règle et non l'exception : elle est représentée telle quelle. Les retraits récents ou en cours sont signalés et datés plutôt que silencieusement appliqués.",
+      fr: "L'appartenance simultanée à plusieurs CER est la règle et non l'exception : elle est représentée telle quelle. Les retraits récents ou en cours sont signalés et datés plutôt que silencieusement appliqués.",
       en: "Simultaneous membership in several RECs is the rule, not the exception: it is represented as such. Recent or ongoing withdrawals are flagged and dated rather than silently applied."
     }
   },
@@ -30,7 +30,7 @@ export const methodConventions = [
     label: { fr: "Priorité définitionnelle", en: "Definitional priority" },
     value: { fr: "Instrument africain", en: "African instrument" },
     detail: {
-      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence. Réfugié selon la Convention de l'OUA (1969) ; personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
+      fr: "Pour toute notion juridique disposant à la fois d'une définition onusienne et d'une définition africaine, c'est la seconde qui fait référence. Réfugié selon la Convention de l'OUA (1969) ; personne déplacée interne selon la Convention de Kampala (2009). La définition onusienne n'est citée qu'en comparaison. Les agrégats purement statistiques suivent en revanche UN DESA, condition de comparabilité internationale.",
       en: "For any legal concept holding both a UN and an African definition, the latter is the reference: refugee under the OAU Convention (1969), internally displaced person under the Kampala Convention (2009). The UN definition is cited only for comparison. Purely statistical aggregates, by contrast, follow UN DESA — a precondition for international comparability."
     }
   },
@@ -62,7 +62,7 @@ export const methodConventions = [
     label: { fr: "Dénomination des pays", en: "Country naming" },
     value: { fr: "Variantes réconciliées", en: "Reconciled variants" },
     detail: {
-      fr: "Un même État peut porter des libellés différents selon le jeu de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde »). Les deux formes restent affichées telles quelles ; la correspondance est assurée par une table d'alias, sans renommage des sources.",
+      fr: "Un même État peut porter des libellés différents selon le jeu de données (« RDC » / « R.D. Congo », « Cap-Vert » / « Cabo Verde »). Les deux formes restent affichées telles quelles ; la correspondance est assurée par une table d'alias, sans renommage des sources.",
       en: "A single state may carry different labels depending on the dataset (\"DRC\" / \"D.R. Congo\", \"Cape Verde\" / \"Cabo Verde\"). Both forms remain displayed as-is; matching is handled by an alias table, without renaming the sources."
     }
   },
@@ -70,7 +70,7 @@ export const methodConventions = [
     label: { fr: "Affirmations évaluées", en: "Assessed claims" },
     value: { fr: "Formulées par l'auteur", en: "Authored in-house" },
     detail: {
-      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes, sans reprendre les mots d'un média ou d'une institution identifiés. Seules les sections « ce que montrent les données » portent une source institutionnelle.",
+      fr: "Les affirmations examinées dans Evidence Check sont rédigées par l'auteur pour illustrer des perceptions courantes, sans reprendre les mots d'un média ou d'une institution identifiés. Seules les sections « ce que montrent les données » portent une source institutionnelle.",
       en: "The claims examined in Evidence Check are written by the author to illustrate common perceptions, without quoting any identified outlet or institution. Only the \"what the data shows\" sections carry institutional sourcing."
     }
   },
