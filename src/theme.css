@@ -2386,3 +2386,20 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 
 /* --- Les filets de separation : une seule epaisseur, une seule teinte ---- */
 :is(main, .reader) :is(hr, .border-t, .border-b) { border-color: var(--rule); }
+
+/* ---------- La carte cadree sur une sous-region --------------------------
+   Deux defauts se cumulaient. Le cadrage ne faisait que recadrer le viewBox :
+   les 54 pays restaient dessines et colories, si bien que les voisins tombant
+   dans le rectangle s'affichaient avec la meme intensite que ceux de la region
+   choisie — la carte repondait a une autre question que celle posee. Et la
+   regle de hauteur du bandeau, posee en !important pour la vue continentale,
+   ecrasait toute tentative de reduire la carte : un cadre de sous-region n'a
+   pas le format du continent, il devenait donc enorme. */
+.atlas-scene .atlas-carte svg[data-cadre='region'] {
+  height: auto !important;
+  max-height: 26rem !important;
+}
+.choro-hors {
+  opacity: .28 !important;
+  pointer-events: none;
+}

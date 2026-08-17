@@ -2975,6 +2975,16 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
     };
   }, [indicator, categoriel]);
 
+  // Les pays du cadre. Le cadrage par sous-region ne faisait que recadrer le
+  // viewBox : les 54 pays restaient dessines et colories, de sorte que les
+  // voisins tombant dans le rectangle s'affichaient avec la meme intensite que
+  // ceux de la region choisie. La carte disait donc autre chose que la
+  // question posee.
+  const dansLeCadre = useMemo(() => {
+    if (!region) return null;
+    return new Set((countryData[region] || []).map(c => String(c.id)));
+  }, [region]);
+
   const colorFor = (v) => {
     if (categoriel) return indicator.categories.find(c => c.key === v)?.color || CHORO_NODATA;
     if (!Number.isFinite(v)) return CHORO_NODATA;
@@ -3031,12 +3041,14 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
   return (
     <div className="grid lg:grid-cols-[1fr_15rem] gap-4 items-start">
       <svg viewBox={(region && CADRES_REGIONS[region]) ? CADRES_REGIONS[region].join(' ') : AFRICA_VIEWBOX}
-           className="w-full h-auto max-h-[40rem] block"
+           className="w-full h-auto block"
+           data-cadre={region ? 'region' : 'continent'}
            aria-label={L(`Carte de l'Afrique — ${indicator.label.fr}. Chaque pays est sélectionnable.`,
                          `Map of Africa — ${indicator.label.en}. Each country is selectable.`)}
            onMouseLeave={() => setSurvole(null)}>
         {Object.entries(africaCountryPaths).map(([id, d]) => {
           const v = valueOf(id);
+          const hors = dansLeCadre ? !dansLeCadre.has(String(id)) : false;
           const isSel = selectedId === id;
           const isLu = lu === id;
           const nom = tr(countryById[id]?.name, lang) || id;
@@ -3044,18 +3056,19 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
             <path
               key={id}
               d={d}
-              fill={colorFor(v)}
+              fill={hors ? CHORO_NODATA : colorFor(v)}
               stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#F7F6F2'}
               strokeWidth={isSel ? 2.6 : isLu ? 2 : 0.7}
-              className="cursor-pointer choro-pays"
-              tabIndex={0}
-              role="button"
-              aria-label={`${nom} — ${fmt(v)}`}
-              onMouseEnter={() => setSurvole(id)}
-              onFocus={() => setSurvole(id)}
-              onBlur={() => setSurvole(null)}
-              onClick={() => onSelect && onSelect(id)}
-              onKeyDown={(e) => {
+              className={hors ? 'choro-pays choro-hors' : 'cursor-pointer choro-pays'}
+              tabIndex={hors ? -1 : 0}
+              role={hors ? 'presentation' : 'button'}
+              aria-hidden={hors ? 'true' : undefined}
+              aria-label={hors ? undefined : `${nom} — ${fmt(v)}`}
+              onMouseEnter={hors ? undefined : () => setSurvole(id)}
+              onFocus={hors ? undefined : () => setSurvole(id)}
+              onBlur={hors ? undefined : () => setSurvole(null)}
+              onClick={hors ? undefined : () => onSelect && onSelect(id)}
+              onKeyDown={hors ? undefined : (e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect && onSelect(id); }
               }}
             />
@@ -5614,12 +5627,21 @@ const Sources = ({ items = [], lang = 'fr', note = null }) => {
   const [ouvert, setOuvert] = useState(false);
   if (!items.length && !note) return null;
   const L = faireL(lang);
-  const long = items.length > 2;
-  const vus = long && !ouvert ? items.slice(0, 1) : items;
+
+  // Le composant attendait des objets { label, url }. La moitie des appels lui
+  // passe une chaine — souvent le resultat direct de L(...), qui en est une.
+  // s.label valait alors undefined, et le bloc affichait ses puces sans aucun
+  // texte : une source annoncee, rien a lire. Plutot que de corriger onze
+  // appels et d'attendre du suivant qu'il devine, le composant accepte les
+  // deux formes.
+  const normalise = (s) => (typeof s === 'string' ? { label: s, url: null } : (s || { label: '', url: null }));
+  const liste = items.map(normalise).filter(s => s.label);
+  const long = liste.length > 2;
+  const vus = long && !ouvert ? liste.slice(0, 1) : liste;
 
   return (
     <p className="provenance">
-      <span className="provenance-lbl">{L(items.length > 1 ? 'Sources' : 'Source', items.length > 1 ? 'Sources' : 'Source')}</span>
+      <span className="provenance-lbl">{L(liste.length > 1 ? 'Sources' : 'Source', liste.length > 1 ? 'Sources' : 'Source')}</span>
       {vus.map((s, i) => (
         <span key={i} className="provenance-item">
           {s.url ? (
@@ -5632,7 +5654,7 @@ const Sources = ({ items = [], lang = 'fr', note = null }) => {
       {long && (
         <button type="button" className="provenance-plus" aria-expanded={ouvert}
                 onClick={() => setOuvert(o => !o)}>
-          {ouvert ? L('replier', 'collapse') : L(`+ ${items.length - 1} autres`, `+${items.length - 1} more`)}
+          {ouvert ? L('replier', 'collapse') : L(`+ ${liste.length - 1} autres`, `+${liste.length - 1} more`)}
         </button>
       )}
       {note && <span className="provenance-note">{note}</span>}
