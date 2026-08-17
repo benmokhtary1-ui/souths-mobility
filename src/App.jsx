@@ -2307,7 +2307,7 @@ const t = {
         data_p1: "Le projet privilégie une approche empirique, transparente et méthodologiquement rigoureuse. Les données et ressources présentées proviennent principalement d'organisations reconnues, notamment :",
         data_list: [
           { name: "Commission de l'Union africaine (CUA)", url: "https://au.int/fr", logo: "au" },
-          { name: "Nations Unies — UN DESA", url: "https://www.un.org/development/desa/pd/data/international-migrant-stock", logo: "un" },
+          { name: "Nations Unies — UN DESA", url: "https://www.un.org/development/desa/pd/content/international-migrant-stock", logo: "un" },
           { name: "HCR — Statistiques sur les réfugiés", url: "https://www.unhcr.org/refugee-statistics/", logo: "unhcr" },
           { name: "Organisation internationale pour les migrations (OIM)", url: "https://www.iom.int/", logo: "iom" },
           { name: "Organisation internationale du travail — NORMLEX", url: "https://normlex.ilo.org/", logo: "ilo" },
@@ -2321,7 +2321,7 @@ const t = {
           { name: "Afrobarometer", url: "https://www.afrobarometer.org/", logo: "afrobarometer" },
           { name: "OCDE", url: "https://data.oecd.org/", logo: "oecd" },
           { name: "Commission européenne — JRC / KCMD", url: "https://knowledge4policy.ec.europa.eu/migration-demography_en", logo: "ecjrc" },
-          { name: "Communautés économiques régionales africaines", url: "https://au.int/fr/organs/recs", logo: null },
+          { name: "Communautés économiques régionales africaines", url: "https://au.int/en/recs", logo: null },
           { name: "Instituts nationaux de statistique", url: null, logo: null }
         ],
         data_p2: "Chaque jeu de données conserve sa source d'origine. Lorsque plusieurs institutions proposent des estimations différentes, ces divergences sont signalées et replacées dans leur contexte méthodologique. Les limites des données sont indiquées autant que possible afin de favoriser une lecture critique et éclairée.",
@@ -2374,7 +2374,7 @@ const t = {
         disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d'améliorer la couverture, la qualité et l'accessibilité des informations disponibles.",
         
         citation_title: "Pour citer ce projet :",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://southsmobility.vercel.app/"
+        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://souths-mobility.vercel.app/"
       },
       method: { 
         summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
@@ -2621,7 +2621,7 @@ const t = {
         data_p1: "The project favors an empirical, transparent, and methodologically rigorous approach. The data and resources presented primarily come from recognized organizations, including:",
         data_list: [
           { name: "African Union Commission (AUC)", url: "https://au.int/en", logo: "au" },
-          { name: "United Nations — UN DESA", url: "https://www.un.org/development/desa/pd/data/international-migrant-stock", logo: "un" },
+          { name: "United Nations — UN DESA", url: "https://www.un.org/development/desa/pd/content/international-migrant-stock", logo: "un" },
           { name: "UNHCR — Refugee Statistics", url: "https://www.unhcr.org/refugee-statistics/", logo: "unhcr" },
           { name: "International Organization for Migration (IOM)", url: "https://www.iom.int/", logo: "iom" },
           { name: "International Labour Organization — NORMLEX", url: "https://normlex.ilo.org/", logo: "ilo" },
@@ -2635,7 +2635,7 @@ const t = {
           { name: "Afrobarometer", url: "https://www.afrobarometer.org/", logo: "afrobarometer" },
           { name: "OECD", url: "https://data.oecd.org/", logo: "oecd" },
           { name: "European Commission — JRC / KCMD", url: "https://knowledge4policy.ec.europa.eu/migration-demography_en", logo: "ecjrc" },
-          { name: "African Regional Economic Communities", url: "https://au.int/en/organs/recs", logo: null },
+          { name: "African Regional Economic Communities", url: "https://au.int/en/recs", logo: null },
           { name: "National Statistical Institutes", url: null, logo: null }
         ],
         data_p2: "Each dataset retains its original source. When multiple institutions provide different estimates, these divergences are noted and placed within their methodological context. Data limitations are indicated as much as possible to encourage critical and informed reading.",
@@ -2688,7 +2688,7 @@ const t = {
         disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
         
         citation_title: "To cite this project:",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://southsmobility.vercel.app/"
+        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://souths-mobility.vercel.app/"
       },
       method: { 
         summary: "The platform produces no primary data: it consolidates public series and documents every operation applied to them. Six principles govern that processing.",
@@ -7727,7 +7727,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               title={tr({ fr: "Ce que le Pacte est, et ce qu'il n'est pas", en: "What the Compact is, and what it is not" }, lang)}
               sources={[
                 { label: tr({ fr: "Pacte mondial pour des migrations sûres, ordonnées et régulières — document final (par. 15 et 49)", en: "Global Compact for Safe, Orderly and Regular Migration — final outcome document (paras. 15 and 49)" }, lang),
-                  url: "https://refugeesmigrants.un.org/sites/default/files/180713_agreed_outcome_global_compact_for_migration.pdf" },
+                  url: "https://documents.un.org/doc/undoc/gen/n18/451/98/pdf/n1845198.pdf" },
                 { label: tr({ fr: "Assemblée générale des Nations unies, résolution 73/195 (19 décembre 2018)", en: "United Nations General Assembly, resolution 73/195 (19 December 2018)" }, lang),
                   url: "https://www.iom.int/resources/global-compact-safe-orderly-and-regular-migration-res-73-195" },
                 { label: tr({ fr: "Réseau des Nations unies sur les migrations — Forum d'examen des migrations internationales 2026", en: "UN Network on Migration — International Migration Review Forum 2026" }, lang),
@@ -9796,7 +9796,7 @@ const TabMethodology = ({ text, lang, children }) => (
             <FileText className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s1}</span>
           </a>
-          <a href="https://www.un.org/development/desa/pd/data/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
+          <a href="https://www.un.org/development/desa/pd/content/international-migrant-stock" target="_blank" rel="noopener noreferrer" className="flex items-center p-3 rounded-md bg-white border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-colors group shadow-sm">
             <Database className="w-4 h-4 text-slate-400 group-hover:text-blue-600 me-3 shrink-0" />
             <span className="text-xs font-bold text-slate-700 group-hover:text-blue-900">{text.method.s2}</span>
           </a>
