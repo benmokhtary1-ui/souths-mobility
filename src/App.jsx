@@ -1551,7 +1551,7 @@ const CensusRhythm = ({ lang }) => {
                          style={{ width: `${(r.gap / data.longest[0].gap) * 100}%`, backgroundColor: 'var(--bad)' }} />
                   </div>
                   <span className="text-xs font-bold w-14 text-end shrink-0 tabular-nums text-slate-800">{r.gap} {L('ans', 'yrs')}</span>
-                  <span className="text-[11px] w-24 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+                  <span className="text-[11px] w-16 sm:w-24 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                     {r.from} → {r.to}
                   </span>
                 </div>
@@ -5708,9 +5708,9 @@ const TabForced = ({ text, lang, children }) => {
               <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                    style={{ width: `${(r.v / max) * 100}%`, backgroundColor: color }} />
             </div>
-            <span className="text-xs font-bold w-24 text-end shrink-0 tabular-nums text-slate-800">{fmt(r.v)}</span>
+            <span className="text-xs font-bold w-16 sm:w-24 text-end shrink-0 tabular-nums text-slate-800">{fmt(r.v)}</span>
             {unitTotal ? (
-              <span className="text-[10px] w-12 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
+              <span className="text-[10px] w-10 sm:w-12 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                 {Math.round((r.v / unitTotal) * 100)} %
               </span>
             ) : null}
@@ -6316,7 +6316,7 @@ const TabLabour = ({ text, lang, children }) => {
                              style={{ width: `${(b.v / maxFund) * 100}%`,
                                       backgroundColor: b.k >= 11 ? 'var(--ok)' : b.k >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }} />
                       </div>
-                      <span className="text-xs font-bold w-24 text-end shrink-0 tabular-nums text-slate-800">
+                      <span className="text-xs font-bold w-16 sm:w-24 text-end shrink-0 tabular-nums text-slate-800">
                         {b.v} {L(b.v > 1 ? 'pays' : 'pays', b.v > 1 ? 'countries' : 'country')}
                       </span>
                     </div>
@@ -8240,7 +8240,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                       <div className="h-full bg-blue-700 rounded-full bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
                       <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
                     </div>
-                    <span className="text-xs font-bold text-slate-700 w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
+                    <span className="text-xs font-bold text-slate-700 w-10 sm:w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
                   </div>
                 ))}
               </div>
@@ -9331,7 +9331,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                     <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
                          style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
                   </div>
-                  <span className="text-xs font-bold text-slate-700 w-24 text-end shrink-0 tabular-nums">
+                  <span className="text-xs font-bold text-slate-700 w-16 sm:w-24 text-end shrink-0 tabular-nums">
                     {r.conducted}/{r.base} · {pct} %
                   </span>
                 </div>
@@ -9370,7 +9370,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 <div className="h-full bar-fill"
                      style={{ width: `${q.pctRound}%`, backgroundColor: 'var(--accent)' }} />
               </div>
-              <span className="text-xs font-bold text-slate-700 w-24 text-end shrink-0 tabular-nums">
+              <span className="text-xs font-bold text-slate-700 w-16 sm:w-24 text-end shrink-0 tabular-nums">
                 {q.states}/47 · {String(q.pctRound).replace('.', ',')} %
               </span>
             </div>
@@ -10839,14 +10839,20 @@ export default function App() {
       <nav className="bg-[#0f172a] text-white sticky top-0 z-50 shadow-md print:hidden nav-chrome">
         <div className="border-b border-slate-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-14 items-center">
-            <div className="flex items-center space-x-3 rtl:space-x-reverse">
+            {/* min-w-0 : sans lui, le bloc de marque refuse de se comprimer et
+                pousse la barre au-dela de l'ecran. A 375 px, elle debordait de
+                35 px sur toutes les pages — le selecteur de langue sortait du
+                cadre et le document entier glissait lateralement. */}
+            <div className="flex items-center space-x-3 rtl:space-x-reverse min-w-0">
               <BrandMark className="h-8 w-8 shrink-0" tone="dark" />
-              <span className="text-base font-serif font-bold tracking-tight leading-none">
+              <span className="text-base font-serif font-bold tracking-tight leading-none truncate">
                 <span style={{ color: '#FFFDF9' }}>{text.title}</span>{' '}
-                <span className="font-sans font-normal italic text-[13px]" style={{ color: '#93A3CF' }}>{text.subtitle}</span>
+                {/* Le sous-titre s'efface sur les petits ecrans : le nom suffit
+                    a dire ou l'on est, et c'est lui qu'il faut garder entier. */}
+                <span className="font-sans font-normal italic text-[13px] hidden sm:inline" style={{ color: '#93A3CF' }}>{text.subtitle}</span>
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               {/* La recherche precede les reglages : c'est l'action, eux sont
                   le confort. Elle mene a une URL reelle, donc partageable. */}
               <RechercheGlobale
@@ -10954,15 +10960,15 @@ export default function App() {
                 <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg">
                   <button
                     onClick={() => setActiveResourceTab('library')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'library' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'library' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <BookOpen className="w-3.5 h-3.5" /> {tr({ fr: 'Bibliothèque', en: 'Library', ar: 'المكتبة' }, lang)}
+                    <BookOpen className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Bibliothèque', en: 'Library', ar: 'المكتبة' }, lang)}
                   </button>
                   <button
                     onClick={() => setActiveResourceTab('glossary')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                   >
-                    <Brain className="w-3.5 h-3.5" /> {tr({ fr: 'Glossaire', en: 'Glossary', ar: 'المعجم' }, lang)}
+                    <Brain className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Glossaire', en: 'Glossary', ar: 'المعجم' }, lang)}
                   </button>
                   {/* La methodologie rejoint les ressources : d'ou viennent les
                       chiffres, ce que veulent dire les mots et ou lire la suite
@@ -10970,9 +10976,9 @@ export default function App() {
                       part : ce n'est pas une ressource, c'est une signature. */}
                   <button
                     onClick={() => setActiveResourceTab('methodology')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
                   >
-                    <Database className="w-3.5 h-3.5" /> {tr({ fr: 'Méthodologie', en: 'Methodology', ar: 'المنهجية' }, lang)}
+                    <Database className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Méthodologie', en: 'Methodology', ar: 'المنهجية' }, lang)}
                   </button>
                 </div>
               );
