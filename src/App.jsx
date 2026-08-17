@@ -5914,6 +5914,55 @@ const TabForced = ({ text, lang, children }) => {
           )}</Prose>
       </Reveal>
 
+      {/* L'ecart entre l'engagement continental et les instruments nationaux. */}
+      <Reveal delay={50}>
+        <AfricanCounterpoint
+          lang={lang}
+          kicker={L("Ce que les politiques climatiques disent des personnes",
+                    'What climate policy says about people')}
+          title={L("L'engagement est continental, les instruments sont nationaux",
+                   'The commitment is continental, the instruments are national')}
+          sources={[
+            L("Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, projet Go Green : analyse documentaire des stratégies climatiques nationales, NDC, PNA et communications nationales.",
+              'Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, Go Green project: document analysis of national climate strategies, NDCs, NAPs and national communications.'),
+            L("Déclaration ministérielle de Kampala sur la migration, l'environnement et le changement climatique (KDMECC, 2022), étendue au continent en 2023.",
+              'Kampala Ministerial Declaration on Migration, Environment and Climate Change (KDMECC, 2022), extended continent-wide in 2023.'),
+            L("Climate Change Laws of the World — base de lois et politiques climatiques (Grantham Research Institute, LSE, et Climate Policy Radar).",
+              'Climate Change Laws of the World — database of climate laws and policies (Grantham Research Institute, LSE, and Climate Policy Radar).'),
+          ]}
+        >
+          <Prose lang={lang}>{L(
+            "La Déclaration de Kampala engage ses signataires sur un point précis : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. L'engagement est pris à l'échelle du continent. Reste à savoir ce que les instruments nationaux en ont fait, et la réponse se lit dans les documents que les États déposent eux-mêmes auprès de la Convention-cadre des Nations unies sur les changements climatiques.",
+            'The Kampala Declaration commits its signatories on one precise point: to mainstream climate-related mobility into national adaptation strategies. The commitment is made at continental scale. What the national instruments did with it is a separate question, and the answer is legible in the documents states themselves file with the UN Framework Convention on Climate Change.'
+          )}</Prose>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
+            {[
+              { t: L("Les stratégies climatiques", 'Climate strategies'),
+                d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — ne traitent pas la mobilité induite par le climat. Le plan climat algérien, complet sur l'atténuation et l'adaptation, ne l'aborde pas davantage.",
+                     "Morocco's two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — do not address climate-induced mobility. Algeria's climate plan, thorough on mitigation and adaptation, does not take it up either.") },
+              { t: L("Les rapports d'étape", 'Progress reports'),
+                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d'origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
+                     "Morocco's biennial update reports acknowledge internal migration of environmental origin, from countryside to cities. The observation is recorded; no mechanism follows from it.") },
+              { t: L("Les instances de coordination", 'Coordinating bodies'),
+                d: L("Le Maroc dispose d'une commission interministérielle sur la migration et l'asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
+                     'Morocco has an interministerial commission on migration and asylum. Climate mobility is not on its agenda: it falls to the environmental authorities, which do not handle mobility.') },
+            ].map((x, i) => (
+              <div key={i} className="border border-slate-200 p-5 lift">
+                <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
+                <p className="text-xs text-slate-600 leading-relaxed text-justify">{x.d}</p>
+              </div>
+            ))}
+          </div>
+          <Prose lang={lang}>{L(
+            "Le motif se répète : le phénomène est reconnu dans les documents d'observation et absent des documents d'action. Il tient à la façon dont l'État se répartit le sujet. La mobilité climatique traverse l'agriculture, l'eau, l'urbanisme, la prévention des risques et les affaires sociales, et chacun de ces secteurs la traite depuis son propre guichet. L'Égypte fait exception dans la région : sa stratégie nationale d'adaptation prévoit des mesures ciblées sur les zones côtières, y compris des relogements planifiés.",
+            'The pattern repeats: the phenomenon is acknowledged in observation documents and absent from action documents. It follows from how the state divides the subject up. Climate mobility cuts across agriculture, water, urban planning, disaster risk reduction and social affairs, and each of those sectors handles it from its own desk. Egypt is the regional exception: its national adaptation strategy sets out targeted measures for coastal zones, including planned relocations.'
+          )}</Prose>
+          <p className="text-[11px] italic leading-snug" style={{ color: 'var(--label)' }}>
+            {L("Portée du relevé : les États d'Afrique du Nord couverts par l'analyse documentaire de 2024. L'extension aux 54 suppose un dépouillement complet de la base Climate Change Laws of the World, qui n'est pas encore fait.",
+               'Scope: the North African states covered by the 2024 document analysis. Extending to all 54 requires a full pass over the Climate Change Laws of the World database, which has not yet been done.')}
+          </p>
+        </AfricanCounterpoint>
+      </Reveal>
       {/* Solutions durables */}
       <Reveal delay={50} className="bg-white border border-slate-200 p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">

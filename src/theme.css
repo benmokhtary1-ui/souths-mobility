@@ -2030,10 +2030,17 @@ main[data-section] {
   --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
   --accent-filet:   color-mix(in oklab, var(--accent) 34%, var(--rule));
 
+  /* La dernière borne était éclaircie à 45 % vers --accent-light. Sur le bleu
+     de l'Atlas, cela suffisait à faire tomber le blanc posé dessus à 4,22:1 —
+     sous le seuil AA — à l'extrémité droite de la pastille active, alors que
+     le début du dégradé tenait 7,4:1. Un même libellé lisible à gauche et
+     limite à droite : le défaut ne se voit pas, il se mesure.
+     À 25 %, le dégradé reste perceptible et le blanc tient sur toute sa
+     longueur, quelle que soit la teinte de section. */
   --degrade:        linear-gradient(135deg,
                       var(--accent-deep) 0%,
                       var(--accent) 52%,
-                      color-mix(in oklab, var(--accent) 55%, var(--accent-light)) 100%);
+                      color-mix(in oklab, var(--accent) 75%, var(--accent-light)) 100%);
   --degrade-doux:   linear-gradient(160deg,
                       var(--accent-soft) 0%,
                       color-mix(in oklab, var(--accent-soft) 45%, var(--paper)) 100%);
