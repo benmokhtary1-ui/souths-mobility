@@ -10274,6 +10274,45 @@ const ROUTES_ANCIENNES = {
   countries: 'atlas',
 };
 
+// Les volets adressables, section par section. La cle est celle de l'etat
+// React ; le libelle traduit est ce qui s'ecrit dans l'adresse. Le premier de
+// chaque liste est le volet par defaut : il ne s'ecrit pas.
+const SOUS_ROUTES = {
+  mobilites: {
+    contraintes: { fr: 'contraintes', en: 'forced' },
+    travail:     { fr: 'travail',     en: 'labour' },
+    corridors:   { fr: 'corridors',   en: 'corridors' },
+  },
+  governance: {
+    au:     { fr: 'union-africaine',  en: 'african-union' },
+    recs:   { fr: 'cer',              en: 'recs' },
+    matrix: { fr: 'matrice',          en: 'matrix' },
+    sdgs:   { fr: 'odd',              en: 'sdgs' },
+    gcm:    { fr: 'pacte-migrations', en: 'migration-compact' },
+    gcr:    { fr: 'pacte-refugies',   en: 'refugee-compact' },
+  },
+  resources: {
+    library:     { fr: 'bibliotheque', en: 'library' },
+    glossary:    { fr: 'glossaire',    en: 'glossary' },
+    methodology: { fr: 'methode',      en: 'method' },
+  },
+};
+
+// Cle d'etat -> segment d'adresse, et retour. La lecture accepte les deux
+// langues : un lien anglais partage a un lecteur francophone doit s'ouvrir.
+const defautDe = (tab) => Object.keys(SOUS_ROUTES[tab] || {})[0] || null;
+const segmentDuVolet = (tab, cle, lang) => {
+  const table = SOUS_ROUTES[tab];
+  if (!table || !cle || cle === defautDe(tab)) return null;
+  return tr(table[cle], lang) || table[cle]?.fr || null;
+};
+const voletDuSegment = (tab, seg) => {
+  const table = SOUS_ROUTES[tab];
+  if (!table || !seg) return null;
+  const trouve = Object.entries(table).find(([, v]) => Object.values(v).includes(seg));
+  return trouve ? trouve[0] : null;
+};
+
 const slugPays = (nom) => String(nom || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // on retire les diacritiques
   .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -10389,12 +10428,21 @@ export default function App() {
     return c ? slugPays(tr(c.name, lang) || c.name?.fr || c.name) : null;
   }, [activeTab, activeSubTab, showModal, lang]);
 
+  // Le troisieme segment : un pays dans l'Atlas, un volet partout ailleurs.
+  const segmentDetail = useMemo(() => {
+    if (activeTab === 'atlas') return paysSlug;
+    const cle = activeTab === 'mobilites' ? voletMobilites
+              : activeTab === 'governance' ? activeSdgzTab
+              : activeTab === 'resources' ? activeResourceTab : null;
+    return segmentDuVolet(activeTab, cle, lang);
+  }, [activeTab, paysSlug, voletMobilites, activeSdgzTab, activeResourceTab, lang]);
+
   const paysParSlug = (s) => Object.values(countryData).flat().find(x =>
     slugPays(x.name?.fr || x.name) === s || slugPays(x.name?.en || x.name) === s);
 
   useEffect(() => {
-    ecrireURL({ lang, tab: activeTab, detail: paysSlug });
-  }, [lang, activeTab, paysSlug]);
+    ecrireURL({ lang, tab: activeTab, detail: segmentDetail });
+  }, [lang, activeTab, segmentDetail]);
 
   // Precedent / suivant du navigateur.
   useEffect(() => {
@@ -10407,6 +10455,12 @@ export default function App() {
         const c = e.detail ? paysParSlug(e.detail) : null;
         setActiveSubTab(c ? c.id : 'perspective');
         setShowModal(Boolean(c));
+      } else {
+        // Ailleurs, le segment porte le volet — ou son absence, le defaut.
+        const cle = voletDuSegment(e.tab, e.detail) || defautDe(e.tab);
+        if (e.tab === 'mobilites' && cle) setVoletMobilites(cle);
+        if (e.tab === 'governance' && cle) setActiveSdgzTab(cle);
+        if (e.tab === 'resources' && cle) setActiveResourceTab(cle);
       }
     };
     window.addEventListener('popstate', surRetour);
@@ -10418,6 +10472,11 @@ export default function App() {
     if (depart.tab === 'atlas' && depart.detail) {
       const c = paysParSlug(depart.detail);
       if (c) { setActiveSubTab(c.id); setShowModal(true); }
+    } else if (depart.detail) {
+      const cle = voletDuSegment(depart.tab, depart.detail);
+      if (depart.tab === 'mobilites' && cle) setVoletMobilites(cle);
+      if (depart.tab === 'governance' && cle) setActiveSdgzTab(cle);
+      if (depart.tab === 'resources' && cle) setActiveResourceTab(cle);
     }
     ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail }, true);
   }, []);
