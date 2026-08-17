@@ -6454,7 +6454,7 @@ const TabClimat = ({ text, lang, children }) => {
           {L('Où la catastrophe déplace', 'Where disaster displaces')}
         </h2>
         <Prose className="text-sm text-slate-700 leading-relaxed text-justify max-w-4xl mb-5" lang={lang}>{L(
-          "Le déplacement par catastrophe pèse dix fois moins que le déplacement par conflit à l'échelle du continent. Le rapport s'inverse pourtant dans dix-neuf États, et dans quelques-uns le conflit ne déplace personne : la catastrophe y est la seule cause enregistrée.",
+          "Le déplacement par catastrophe pèse dix fois moins que le déplacement par conflit à l'échelle du continent. Le rapport s'inverse pourtant dans dix-neuf États, et dans quelques-uns le conflit ne déplace personne : la catastrophe y est la seule cause enregistrée.",
           'Disaster displacement weighs ten times less than conflict displacement continent-wide. The ratio inverts in nineteen states, and in a few the conflict displaces no one: disaster is the only recorded cause there.'
         )}</Prose>
 
@@ -6484,7 +6484,7 @@ const TabClimat = ({ text, lang, children }) => {
           ))}
         </ol>
         <Sources lang={lang} items={[
-          L("IDMC — Global Report on Internal Displacement : déplacements internes par cause, intégrés à la base pays de la plateforme.",
+          L("IDMC — Global Report on Internal Displacement : déplacements internes par cause, intégrés à la base pays de la plateforme.",
             'IDMC — Global Report on Internal Displacement: internal displacement by cause, integrated into the platform country base.'),
         ]} />
       </Reveal>
