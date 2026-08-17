@@ -2122,6 +2122,13 @@ const t = {
         method_title: "Ingénierie & source des données" 
       },
       headers: {
+        climat: {
+          badge: "Mobilité climatique",
+          title: "Le climat déplace peu, là où le conflit déplace",
+          highlight: "et beaucoup là où il ne déplace pas.",
+          desc: "Deux millions sept cent mille personnes déplacées par une catastrophe, contre vingt-neuf millions par un conflit : à l'échelle du continent, le climat pèse dix fois moins. Le rapport s'inverse dans dix-neuf États, et le déficit se déplace alors du constat vers la réponse — l'engagement continental existe, les instruments nationaux ne l'ont pas repris.",
+          plain: "Une catastrophe, ici, c'est une inondation, une sécheresse, un cyclone ou un séisme. On compte les gens qu'elle chasse de chez eux sans qu'ils quittent leur pays."
+        },
         corridors: {
           badge: "Corridors intra-africains",
           title: "Les routes que personne ne cartographie",
@@ -2436,6 +2443,13 @@ const t = {
         method_title: "Engineering & Data Sourcing" 
       },
       headers: {
+        climat: {
+          badge: "Climate mobility",
+          title: "Climate displaces little where conflict displaces",
+          highlight: "and a great deal where it does not.",
+          desc: "Two million seven hundred thousand people displaced by disaster, against twenty-nine million by conflict: continent-wide, climate weighs ten times less. The ratio inverts in nineteen states, and the gap then moves from the finding to the response — the continental commitment exists, the national instruments have not taken it up.",
+          plain: "A disaster here means a flood, a drought, a cyclone or an earthquake. The count is of people it drives from home without their leaving the country."
+        },
         corridors: {
           badge: "Intra-African corridors",
           title: "The routes no one maps",
@@ -5914,55 +5928,6 @@ const TabForced = ({ text, lang, children }) => {
           )}</Prose>
       </Reveal>
 
-      {/* L'ecart entre l'engagement continental et les instruments nationaux. */}
-      <Reveal delay={50}>
-        <AfricanCounterpoint
-          lang={lang}
-          kicker={L("Ce que les politiques climatiques disent des personnes",
-                    'What climate policy says about people')}
-          title={L("L'engagement est continental, les instruments sont nationaux",
-                   'The commitment is continental, the instruments are national')}
-          sources={[
-            L("Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, projet Go Green : analyse documentaire des stratégies climatiques nationales, NDC, PNA et communications nationales.",
-              'Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, Go Green project: document analysis of national climate strategies, NDCs, NAPs and national communications.'),
-            L("Déclaration ministérielle de Kampala sur la migration, l'environnement et le changement climatique (KDMECC, 2022), étendue au continent en 2023.",
-              'Kampala Ministerial Declaration on Migration, Environment and Climate Change (KDMECC, 2022), extended continent-wide in 2023.'),
-            L("Climate Change Laws of the World — base de lois et politiques climatiques (Grantham Research Institute, LSE, et Climate Policy Radar).",
-              'Climate Change Laws of the World — database of climate laws and policies (Grantham Research Institute, LSE, and Climate Policy Radar).'),
-          ]}
-        >
-          <Prose lang={lang}>{L(
-            "La Déclaration de Kampala engage ses signataires sur un point précis : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. L'engagement est pris à l'échelle du continent. Reste à savoir ce que les instruments nationaux en ont fait, et la réponse se lit dans les documents que les États déposent eux-mêmes auprès de la Convention-cadre des Nations unies sur les changements climatiques.",
-            'The Kampala Declaration commits its signatories on one precise point: to mainstream climate-related mobility into national adaptation strategies. The commitment is made at continental scale. What the national instruments did with it is a separate question, and the answer is legible in the documents states themselves file with the UN Framework Convention on Climate Change.'
-          )}</Prose>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
-            {[
-              { t: L("Les stratégies climatiques", 'Climate strategies'),
-                d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — ne traitent pas la mobilité induite par le climat. Le plan climat algérien, complet sur l'atténuation et l'adaptation, ne l'aborde pas davantage.",
-                     "Morocco's two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — do not address climate-induced mobility. Algeria's climate plan, thorough on mitigation and adaptation, does not take it up either.") },
-              { t: L("Les rapports d'étape", 'Progress reports'),
-                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d'origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
-                     "Morocco's biennial update reports acknowledge internal migration of environmental origin, from countryside to cities. The observation is recorded; no mechanism follows from it.") },
-              { t: L("Les instances de coordination", 'Coordinating bodies'),
-                d: L("Le Maroc dispose d'une commission interministérielle sur la migration et l'asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
-                     'Morocco has an interministerial commission on migration and asylum. Climate mobility is not on its agenda: it falls to the environmental authorities, which do not handle mobility.') },
-            ].map((x, i) => (
-              <div key={i} className="border border-slate-200 p-5 lift">
-                <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
-                <p className="text-xs text-slate-600 leading-relaxed text-justify">{x.d}</p>
-              </div>
-            ))}
-          </div>
-          <Prose lang={lang}>{L(
-            "Le motif se répète : le phénomène est reconnu dans les documents d'observation et absent des documents d'action. Il tient à la façon dont l'État se répartit le sujet. La mobilité climatique traverse l'agriculture, l'eau, l'urbanisme, la prévention des risques et les affaires sociales, et chacun de ces secteurs la traite depuis son propre guichet. L'Égypte fait exception dans la région : sa stratégie nationale d'adaptation prévoit des mesures ciblées sur les zones côtières, y compris des relogements planifiés.",
-            'The pattern repeats: the phenomenon is acknowledged in observation documents and absent from action documents. It follows from how the state divides the subject up. Climate mobility cuts across agriculture, water, urban planning, disaster risk reduction and social affairs, and each of those sectors handles it from its own desk. Egypt is the regional exception: its national adaptation strategy sets out targeted measures for coastal zones, including planned relocations.'
-          )}</Prose>
-          <p className="text-[11px] italic leading-snug" style={{ color: 'var(--label)' }}>
-            {L("Portée du relevé : les États d'Afrique du Nord couverts par l'analyse documentaire de 2024. L'extension aux 54 suppose un dépouillement complet de la base Climate Change Laws of the World, qui n'est pas encore fait.",
-               'Scope: the North African states covered by the 2024 document analysis. Extending to all 54 requires a full pass over the Climate Change Laws of the World database, which has not yet been done.')}
-          </p>
-        </AfricanCounterpoint>
-      </Reveal>
       {/* Solutions durables */}
       <Reveal delay={50} className="bg-white border border-slate-200 p-8 md:p-10">
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
@@ -6017,6 +5982,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
     { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility', ar: 'التنقلات القسرية' } },
     { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration', ar: 'هجرة العمل' } },
     { cle: 'corridors', label: { fr: 'Corridors', en: 'Corridors', ar: 'الممرات' } },
+    { cle: 'climat', label: { fr: 'Mobilité climatique', en: 'Climate mobility', ar: 'التنقل المناخي' } },
   ];
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
@@ -6095,7 +6061,8 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {volet === 'corridors' ? <TabCorridors text={text} lang={lang}>{entete}</TabCorridors>
+      {volet === 'climat' ? <TabClimat text={text} lang={lang}>{entete}</TabClimat>
+        : volet === 'corridors' ? <TabCorridors text={text} lang={lang}>{entete}</TabCorridors>
         : volet === 'travail' ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
         : <TabForced text={text} lang={lang}>{entete}</TabForced>}
     </div>
@@ -6398,6 +6365,183 @@ const TabLabour = ({ text, lang, children }) => {
 // Les corridors afro-africains, qui portent l'essentiel du mouvement, se
 // deduisent d'un tableau de stocks bilateraux publie tous les deux ans. Ce
 // n'est pas un manque de donnees : c'est un choix d'instrument.
+// ---------------------------------------------------------------------------
+// Mobilite climatique
+// ---------------------------------------------------------------------------
+// Le climat ne se range pas sous le deplacement force : il traverse aussi la
+// mobilite de travail, la mobilite saisonniere, et l'immobilite de ceux qui ne
+// peuvent pas partir. D'ou un volet a lui, au meme rang que les trois autres.
+const TabClimat = ({ text, lang, children }) => {
+  const L = faireL(lang);
+  const [filtre, setFiltre] = useState('tous');
+
+  const pays = useMemo(() => Object.values(countryData).flat()
+    .filter(c => c.idp_disaster != null)
+    .map(c => ({
+      id: c.id,
+      nom: tr(c.name, lang) || c.name?.fr || c.name,
+      cata: c.idp_disaster,
+      conflit: c.idp_conflict ?? 0,
+      domine: c.idp_disaster > (c.idp_conflict ?? 0),
+    })), [lang]);
+
+  const totalCata = useMemo(() => pays.reduce((s, c) => s + c.cata, 0), [pays]);
+  const totalConflit = useMemo(() => pays.reduce((s, c) => s + c.conflit, 0), [pays]);
+  const nbDomine = useMemo(() => pays.filter(c => c.domine).length, [pays]);
+
+  // Le filtre agit sur le classement sans rechargement : on coche, le compte
+  // et la liste se refont. C'est le seul mouvement de la page, et il sert.
+  const filtres = [
+    { cle: 'tous',    lbl: L('Tous les États', 'All states'),                    test: () => true },
+    { cle: 'domine',  lbl: L('La catastrophe devance le conflit', 'Disaster ahead of conflict'), test: (c) => c.domine },
+    { cle: 'sansConflit', lbl: L('Aucun déplacement par conflit', 'No conflict displacement'),   test: (c) => c.conflit === 0 },
+  ];
+  const actif = filtres.find(f => f.cle === filtre) || filtres[0];
+  const classement = useMemo(
+    () => pays.filter(actif.test).filter(c => c.cata > 0).sort((a, b) => b.cata - a.cata),
+    [pays, actif]
+  );
+  const maxCata = classement[0]?.cata || 1;
+
+  const exporter = () => {
+    downloadCSV('souths_mobilite_climatique.csv', toCSV(pays.map(c => ({
+      pays: c.nom,
+      deplaces_catastrophe: c.cata,
+      deplaces_conflit: c.conflit,
+      catastrophe_devance_conflit: c.domine ? 'oui' : 'non',
+      source: 'IDMC — Global Report on Internal Displacement',
+    }))));
+  };
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <PageHeader
+        badge={text.headers.climat.badge}
+        plate={"Pl. VIII"}
+        plain={text.headers.climat.plain}
+        lang={lang}
+        title={text.headers.climat.title}
+        highlight={text.headers.climat.highlight}
+        desc={text.headers.climat.desc}
+        icon={Leaf}
+      />
+      {children}
+      <BarreSection lang={lang}>
+        <CsvButton onClick={exporter} label={L('Mobilité climatique (CSV)', 'Climate mobility (CSV)')} />
+      </BarreSection>
+
+      {/* Les trois chiffres qui cadrent le volet. */}
+      <Reveal className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
+        {[
+          { v: formatNumber(totalCata, lang), l: L('Déplacés par une catastrophe', 'Displaced by disaster'),
+            s: L('sur le continent, IDMC', 'across the continent, IDMC') },
+          { v: formatNumber(totalConflit, lang), l: L('Déplacés par un conflit', 'Displaced by conflict'),
+            s: L('dix fois plus, à la même date', 'ten times more, at the same date') },
+          { v: nbDomine + '/54', l: L('États où la catastrophe devance', 'States where disaster leads'),
+            s: L('le rapport s\'inverse chez un tiers du continent', 'the ratio inverts for a third of the continent') },
+        ].map((k, i) => (
+          <div key={i} className="bg-white border border-slate-200 p-5 lift">
+            <span className="num block font-serif font-bold text-slate-900 text-2xl">{k.v}</span>
+            <span className="block text-xs font-bold text-slate-700 mt-1">{k.l}</span>
+            <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
+          </div>
+        ))}
+      </Reveal>
+
+      {/* Le classement, et son filtre en direct. */}
+      <Reveal className="bg-white border border-slate-200 p-8 md:p-10">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
+          {L('Où la catastrophe déplace', 'Where disaster displaces')}
+        </h2>
+        <Prose className="text-sm text-slate-700 leading-relaxed text-justify max-w-4xl mb-5" lang={lang}>{L(
+          "Le déplacement par catastrophe pèse dix fois moins que le déplacement par conflit à l'échelle du continent. Le rapport s'inverse pourtant dans dix-neuf États, et dans quelques-uns le conflit ne déplace personne : la catastrophe y est la seule cause enregistrée.",
+          'Disaster displacement weighs ten times less than conflict displacement continent-wide. The ratio inverts in nineteen states, and in a few the conflict displaces no one: disaster is the only recorded cause there.'
+        )}</Prose>
+
+        <nav className="flex flex-wrap gap-2 mb-5" aria-label={L('Filtrer le classement', 'Filter the ranking')}>
+          {filtres.map(f => (
+            <button key={f.cle} type="button" onClick={() => setFiltre(f.cle)}
+                    className="couche-btn" data-actif={filtre === f.cle ? 'true' : 'false'}
+                    aria-pressed={filtre === f.cle}>
+              {f.lbl}
+            </button>
+          ))}
+          <span className="text-xs self-center ms-1" style={{ color: 'var(--label)' }} aria-live="polite">
+            {classement.length}{' '}{L('États', 'states')}
+          </span>
+        </nav>
+
+        <ol className="space-y-1.5">
+          {classement.slice(0, 15).map((c, i) => (
+            <li key={c.id} className="flex items-center gap-3">
+              <span className="text-[11px] w-6 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>{i + 1}</span>
+              <span className="text-xs font-bold text-slate-800 w-40 shrink-0 truncate">{c.nom}</span>
+              <span className="flex-1 h-2.5 rounded-sm overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                <span className="block h-full bar-fill" style={{ width: (100 * c.cata / maxCata) + '%', backgroundColor: 'var(--accent)' }} />
+              </span>
+              <span className="text-xs font-bold text-slate-700 w-16 sm:w-24 text-end shrink-0 tabular-nums">{formatNumber(c.cata, lang)}</span>
+            </li>
+          ))}
+        </ol>
+        <Sources lang={lang} items={[
+          L("IDMC — Global Report on Internal Displacement : déplacements internes par cause, intégrés à la base pays de la plateforme.",
+            'IDMC — Global Report on Internal Displacement: internal displacement by cause, integrated into the platform country base.'),
+        ]} />
+      </Reveal>
+
+      {/* L'ecart entre l'engagement continental et les instruments nationaux. */}
+      <Reveal delay={50}>
+        <AfricanCounterpoint
+          lang={lang}
+          kicker={L("Ce que les politiques climatiques disent des personnes",
+                    'What climate policy says about people')}
+          title={L("L'engagement est continental, les instruments sont nationaux",
+                   'The commitment is continental, the instruments are national')}
+          sources={[
+            L("Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, projet Go Green : analyse documentaire des stratégies climatiques nationales, NDC, PNA et communications nationales.",
+              'Ben Mokhtar, Y. (2024) — Charting New COURSES in the Southern Mediterranean, Go Green project: document analysis of national climate strategies, NDCs, NAPs and national communications.'),
+            L("Déclaration ministérielle de Kampala sur la migration, l'environnement et le changement climatique (KDMECC, 2022), étendue au continent en 2023.",
+              'Kampala Ministerial Declaration on Migration, Environment and Climate Change (KDMECC, 2022), extended continent-wide in 2023.'),
+            L("Climate Change Laws of the World — base de lois et politiques climatiques (Grantham Research Institute, LSE, et Climate Policy Radar).",
+              'Climate Change Laws of the World — database of climate laws and policies (Grantham Research Institute, LSE, and Climate Policy Radar).'),
+          ]}
+        >
+          <Prose lang={lang}>{L(
+            "La Déclaration de Kampala engage ses signataires sur un point précis : intégrer la mobilité liée au climat dans les stratégies nationales d'adaptation. L'engagement est pris à l'échelle du continent. Reste à savoir ce que les instruments nationaux en ont fait, et la réponse se lit dans les documents que les États déposent eux-mêmes auprès de la Convention-cadre des Nations unies sur les changements climatiques.",
+            'The Kampala Declaration commits its signatories on one precise point: to mainstream climate-related mobility into national adaptation strategies. The commitment is made at continental scale. What the national instruments did with it is a separate question, and the answer is legible in the documents states themselves file with the UN Framework Convention on Climate Change.'
+          )}</Prose>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
+            {[
+              { t: L("Les stratégies climatiques", 'Climate strategies'),
+                d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — ne traitent pas la mobilité induite par le climat. Le plan climat algérien, complet sur l'atténuation et l'adaptation, ne l'aborde pas davantage.",
+                     "Morocco's two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — do not address climate-induced mobility. Algeria's climate plan, thorough on mitigation and adaptation, does not take it up either.") },
+              { t: L("Les rapports d'étape", 'Progress reports'),
+                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d'origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
+                     "Morocco's biennial update reports acknowledge internal migration of environmental origin, from countryside to cities. The observation is recorded; no mechanism follows from it.") },
+              { t: L("Les instances de coordination", 'Coordinating bodies'),
+                d: L("Le Maroc dispose d'une commission interministérielle sur la migration et l'asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
+                     'Morocco has an interministerial commission on migration and asylum. Climate mobility is not on its agenda: it falls to the environmental authorities, which do not handle mobility.') },
+            ].map((x, i) => (
+              <div key={i} className="border border-slate-200 p-5 lift">
+                <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
+                <p className="text-xs text-slate-600 leading-relaxed text-justify">{x.d}</p>
+              </div>
+            ))}
+          </div>
+          <Prose lang={lang}>{L(
+            "Le motif se répète : le phénomène est reconnu dans les documents d'observation et absent des documents d'action. Il tient à la façon dont l'État se répartit le sujet. La mobilité climatique traverse l'agriculture, l'eau, l'urbanisme, la prévention des risques et les affaires sociales, et chacun de ces secteurs la traite depuis son propre guichet. L'Égypte fait exception dans la région : sa stratégie nationale d'adaptation prévoit des mesures ciblées sur les zones côtières, y compris des relogements planifiés.",
+            'The pattern repeats: the phenomenon is acknowledged in observation documents and absent from action documents. It follows from how the state divides the subject up. Climate mobility cuts across agriculture, water, urban planning, disaster risk reduction and social affairs, and each of those sectors handles it from its own desk. Egypt is the regional exception: its national adaptation strategy sets out targeted measures for coastal zones, including planned relocations.'
+          )}</Prose>
+          <p className="text-[11px] italic leading-snug" style={{ color: 'var(--label)' }}>
+            {L("Portée du relevé : les États d'Afrique du Nord couverts par l'analyse documentaire de 2024. L'extension aux 54 suppose un dépouillement complet de la base Climate Change Laws of the World, qui n'est pas encore fait.",
+               'Scope: the North African states covered by the 2024 document analysis. Extending to all 54 requires a full pass over the Climate Change Laws of the World database, which has not yet been done.')}
+          </p>
+        </AfricanCounterpoint>
+      </Reveal>
+    </div>
+  );
+};
+
 const TabCorridors = ({ text, lang, children }) => {
   const L = faireL(lang);
 
@@ -10345,6 +10489,7 @@ const SOUS_ROUTES = {
     contraintes: { fr: 'contraintes', en: 'forced' },
     travail:     { fr: 'travail',     en: 'labour' },
     corridors:   { fr: 'corridors',   en: 'corridors' },
+    climat:      { fr: 'climat',      en: 'climate' },
   },
   governance: {
     au:     { fr: 'union-africaine',  en: 'african-union' },
