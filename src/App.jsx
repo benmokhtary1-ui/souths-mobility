@@ -6185,7 +6185,7 @@ const TabLabour = ({ text, lang, children }) => {
                 "AU Commission, ILO, IOM & ECA — \"Report on Labour Migration Statistics in Africa\", 3rd edition (2019 data), published 18 November 2021"
               ), url: "https://au.int/sites/default/files/documents/41182-doc-254_261-EN06.pdf" },
             { label: L(
-                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), publiée le 13 juillet 2026",
+                "Commission de l'UA, OIT & OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition (données 2022), lancée le 31 juillet 2026 au CTS développement social, travail et emploi, à Windhoek",
                 "AU Commission, ILO & IOM (JLMP programme, technical support from Statistics Sweden) — \"Report on Labour Migration Statistics in Africa\", 4th edition (2022 data), published 13 July 2026"
               ), url: "https://au.int/sites/default/files/4th_Edi_LMSRA_EN_WEB_20260626.pdf" },
           ]}
@@ -6376,6 +6376,38 @@ const TabLabour = ({ text, lang, children }) => {
             </div>
           </section>
         </Chapitre>
+      </Reveal>
+
+      {/* La jeunesse, que la 4e edition chiffre pour la premiere fois. */}
+      <Reveal delay={45} className="bg-white border border-slate-200 p-8 md:p-10">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
+          {L('Six millions de jeunes, et un déséquilibre qui ne bouge pas',
+             'Six million young workers, and an imbalance that does not move')}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger mb-6">
+          {[
+            { v: '6,1 M', l: L('Travailleurs migrants de 15 à 35 ans', 'Migrant workers aged 15 to 35'),
+              s: L('soit près d’un sur deux', 'close to one in two') },
+            { v: '20,4 M', l: L('Migrants en âge de travailler', 'Migrants of working age'),
+              s: L('sur 26 millions de migrants internationaux', 'out of 26 million international migrants') },
+            { v: '64 %', l: L('Part effectivement dans la population active', 'Share actually in the labour force'),
+              s: L('le reste étudie, élève, ou n’est pas compté', 'the rest study, raise children, or go uncounted') },
+          ].map((k, i) => (
+            <div key={i} className="border border-slate-200 p-5 lift">
+              <span className="num block font-serif font-bold text-slate-900 text-2xl">{k.v}</span>
+              <span className="block text-xs font-bold text-slate-700 mt-1">{k.l}</span>
+              <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
+            </div>
+          ))}
+        </div>
+        <Prose className="text-sm text-slate-700 leading-relaxed text-justify max-w-4xl" lang={lang}>{L(
+          "La quatrième édition chiffre pour la première fois la jeunesse de cette main-d'œuvre : 6,1 millions de travailleurs migrants ont entre 15 et 35 ans. Le déséquilibre entre les sexes y est le même que dans l'ensemble — environ six hommes pour quatre femmes — et il ne bouge pas d'une classe d'âge à l'autre. Ce n'est donc pas un effet de génération qui se corrigerait tout seul : la composition se reproduit.",
+          "The fourth edition puts a figure on how young this workforce is for the first time: 6.1 million migrant workers are aged 15 to 35. The gender imbalance there matches the whole — roughly six men to four women — and it does not shift from one age band to the next. So this is not a generational effect that would correct itself: the composition reproduces."
+        )}</Prose>
+        <Sources lang={lang} items={[
+          L("Union africaine, OIT, OIM (programme JLMP, appui technique de Statistics Sweden) — « Report on Labour Migration Statistics in Africa », 4e édition, lancée le 31 juillet 2026 à Windhoek.",
+            'African Union, ILO, IOM (JLMP programme, technical support from Statistics Sweden) — "Report on Labour Migration Statistics in Africa", 4th edition, launched 31 July 2026 in Windhoek.'),
+        ]} />
       </Reveal>
 
       <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Migration de travail', 'Labour migration')} />
@@ -8288,8 +8320,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </div>
                 </div>
                 <div className="bg-white/70 p-4 rounded-lg border border-blue-100">
-                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{tr({ fr: "Phase actuelle — JLMP Action (jusqu'à déc. 2024)", en: "Current Phase — JLMP Action (through Dec. 2024)" }, lang)}</span>
-                  <Prose className="text-xs text-blue-900 leading-relaxed" lang={lang}>{tr({ fr: "Déploiement ciblé dans cinq États membres — Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc — et deux CER partenaires, la CEEAC et le COMESA. C'est un choix pilote, financé par la SIDA (Suède) depuis la phase « JLMP Priority » en 2018.", en: "Targeted rollout in five member states — Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco — and two partner RECs, ECCAS and COMESA. This is a pilot approach, funded by SIDA (Sweden) since the \"JLMP Priority\" phase in 2018." }, lang)}</Prose>
+                  <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-2 block">{tr({ fr: "Trois phases, et une évaluation indépendante entre les deux dernières", en: "Three phases, and an independent evaluation between the last two" }, lang)}</span>
+                  <Prose className="text-xs text-blue-900 leading-relaxed" lang={lang}>{tr({ fr: "Déploiement ciblé dans cinq États membres — Cameroun, Côte d'Ivoire, Éthiopie, Malawi, Maroc — et deux CER partenaires, la CEEAC et le COMESA. JLMP Action s'est achevée en décembre 2024, JLMP Lead en juin 2025 ; les deux ont fait l'objet d'une évaluation indépendante conjointe portant sur juin 2021 – juin 2025. Le déploiement, lui, était un choix pilote, financé par la SIDA depuis la phase « JLMP Priority » en 2018. Une troisième phase a été lancée le 30 avril 2026 à Addis-Abeba, dotée de 16 millions de dollars et portée par la Commission de l'Union africaine avec l'OIM, l'OIT et la GIZ.", en: "Targeted rollout in five member states — Cameroon, Côte d'Ivoire, Ethiopia, Malawi, Morocco — and two partner RECs, ECCAS and COMESA. JLMP Action closed in December 2024, JLMP Lead in June 2025; both were covered by a joint independent evaluation running from June 2021 to June 2025. The rollout itself was a pilot approach, funded by SIDA since the \"JLMP Priority\" phase in 2018. A third phase was launched on 30 April 2026 in Addis Ababa, endowed with USD 16 million and carried by the African Union Commission with IOM, ILO and GIZ." }, lang)}</Prose>
                 </div>
               </div>
 
