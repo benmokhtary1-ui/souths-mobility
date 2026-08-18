@@ -237,10 +237,13 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
    imprimée, sèche à l'écran. On desserre, sans aller jusqu'à la pastille. */
 .rounded-xl { border-radius: 10px !important; }
 .rounded-lg { border-radius: 10px !important; }
-.rounded-md { border-radius: 5px !important; }
-.rounded-sm { border-radius: 5px !important; }
+/* Il n'y a plus de cinquième rayon. `md`, `sm` et `rounded` désignaient la même
+   chose que `lg` et `xl` — un objet qui porte un fond — avec cinq pixels au lieu
+   de dix, ce qui ne se lit pas comme une nuance mais comme une hésitation. */
+.rounded-md { border-radius: 10px !important; }
+.rounded-sm { border-radius: 10px !important; }
 .rounded-full { border-radius: 999px !important; }
-.rounded { border-radius: 5px !important; }
+.rounded { border-radius: 10px !important; }
 
 /* Une carte sans bordure explicite reçoit tout de même son filet.
 
@@ -612,7 +615,38 @@ button, a { transition: color var(--dur-fast) var(--ease), background-color var(
     animation-timeline: scroll(root block);
   }
 }
-@keyframes filProgression { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* Le fil s'arrête aux cinq sixièmes, comme l'anneau de la marque s'arrête aux
+   flèches. La marque ne referme pas son cercle — le régime africain de mobilité
+   n'est pas clos ; le fil de lecture ne se referme pas davantage. Ce n'est pas
+   un ornement : c'est la même phrase, dite deux fois. */
+@keyframes filProgression { from { transform: scaleX(0); } to { transform: scaleX(.83333); } }
+
+/* Le point de l'unum, en tête du fil. Il parcourt la même course et s'arrête au
+   même endroit ; animé séparément parce qu'une pastille posée sur un élément
+   étiré en scaleX se serait étirée avec lui. */
+.fil-point {
+  position: absolute; top: 50%; left: 0;
+  width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 999px;
+  background: var(--accent-light);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent-deep) 55%, transparent);
+  pointer-events: none;
+}
+@supports (animation-timeline: scroll()) {
+  .fil-point {
+    animation: filPoint linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@keyframes filPoint { from { left: 0; } to { left: 83.333%; } }
+/* En arabe la course s'inverse. Un @keyframes ne peut pas vivre dans un
+   sélecteur — il en faut donc un second, nommé, appliqué sous la règle RTL. */
+:root[dir='rtl'] .fil-point { left: auto; right: 0; }
+@keyframes filPointRtl { from { right: 0; } to { right: 83.333%; } }
+@supports (animation-timeline: scroll()) {
+  :root[dir='rtl'] .fil-point { animation-name: filPointRtl; }
+}
+@media (prefers-reduced-motion: reduce) { .fil-point { display: none; } }
 :root[dir='rtl'] .fil-lecture { transform-origin: right center; }
 @media (prefers-reduced-motion: reduce) { .fil-lecture { display: none; } }
 
@@ -2608,45 +2642,13 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 .scene-flux .bascule-groupe { border-color: rgba(255, 253, 249, .16); }
 
 /* La barre de volets de la fiche pays suit la même règle. */
-:is(main, .reader) .fiche-volets {
-  border-radius: 0;
-  border-color: var(--rule);
-  background: transparent;
-  padding: 0;
-  /* La barre partageait sa rangée avec le nom du pays et se trouvait brideée à
-     694 px pour 723 px de boutons : elle passait sur deux rangs et prenait
-     45 px sur les 500 que le volet a pour tenir. Elle occupe sa propre rangée. */
-  flex: 1 0 100%;
-  width: 100%;
-}
 
 /* La chaîne causale porte trois récits côte à côte : dans une demi-colonne ils
    s'empilent et le bloc passe de 288 à 658 px. Elle prend donc toute la largeur
    du volet, et garde ses trois colonnes. */
-.reader .fiche-panneau > [class*="bg-[#0f172a]"] { grid-column: 1 / -1; }
+/* La chaîne causale garde sa matière sombre ; la pile fait le reste. */
 
 
-:is(main, .reader) :is(.bascule, .couche-btn, .fiche-volet-btn) {
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  border-radius: 999px !important;
-  border: 1px solid var(--rule);
-  background: var(--paper-raised);
-  color: var(--ink-soft);
-  font: 600 13px/1.15 'IBM Plex Sans', system-ui, sans-serif;
-  letter-spacing: .012em;
-  padding: .58rem 1.05rem;
-  min-height: 40px;
-  box-shadow: none !important;
-  transition: color var(--dur-fast) var(--ease),
-              background-color var(--dur-fast) var(--ease),
-              border-color var(--dur-fast) var(--ease);
-}
-:is(main, .reader) :is(.bascule, .couche-btn, .fiche-volet-btn):is(:hover, :focus-visible) {
-  border-color: var(--accent);
-  color: var(--accent-deep);
-}
 
 /* L'actif porte la teinte de la section.
 
@@ -2656,19 +2658,55 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    boutons sur dix-neuf. Les contrôles qui n'annonçaient leur état que par une
    couleur écrite dans leur classe, ou par un style en ligne, portent désormais
    un attribut qui le dit ; c'est le seul signal que cette règle lit. */
-:is(main, .reader) :is(.bascule, .couche-btn, .fiche-volet-btn):is(
+:is(main, .reader) :is(.bascule, .couche-btn):is(
   [data-actif='true'], [aria-pressed='true'], [aria-selected='true']
 ) {
   background: var(--degrade) !important;
   border-color: var(--accent-deep);
   color: var(--reserve) !important;
 }
-:is(main, .reader) :is(.bascule, .couche-btn, .fiche-volet-btn):is(
+:is(main, .reader) :is(.bascule, .couche-btn):is(
   [data-actif='true'], [aria-pressed='true'], [aria-selected='true']
 ) * { color: var(--reserve) !important; }
 
 /* Le blanc pur pose par Tailwind rejoint la reserve chaude du site. */
 :is(main, .reader) .text-white { color: var(--reserve); }
+
+/* ---------- TROIS FORMES, ET PAS UNE DE PLUS ------------------------------
+
+   Relevé sur 649 blocs, huit sections : six rayons coexistaient — 10 px (319),
+   0 (239), 999 (62), 5 (27), plus un 16 et un 12 orphelins. À l'œil cela donne
+   ce qu'il décrit : « parfois des bords à quatre-vingt-dix degrés, parfois des
+   trucs ronds, parfois plus ronds que d'autres ».
+
+   Le partage se fait par RÔLE, pas par goût :
+
+     LA CARTE      10 px  — tout bloc qui porte un fond ou un filet et se lit
+                             comme un objet : carte, encadré, note, bandeau.
+     LE CONTRÔLE  999 px  — tout ce qui se clique pour choisir : la bascule et
+                             les pastilles. Déjà posé plus haut.
+     LA LIGNE        0 px  — une ligne DANS une carte : `li`, `tr`, rangée de
+                             tableau. Elle n'est pas un objet, elle en fait
+                             partie ; l'arrondir la détacherait à tort.
+
+   Les 78 `li` et 53 `tr` à angle droit étaient donc justes. Ce qui ne l'était
+   pas : les encadrés qui lisent comme des cartes et restaient carrés, les
+   boutons posés à 5 px, et les deux orphelins de l'Atlas.                    */
+
+/* Les deux orphelins : le bandeau à 16, la scène à 12. */
+.scene-flux  { border-radius: 10px; }
+.atlas-scene { border-radius: 10px; }
+
+/* Les encadrés qui portent un fond ou un filet sont des cartes : ils en
+   prennent le rayon. */
+:is(main, .reader) :is(.en-clair, .provenance, .encadre, .note-cadrage) { border-radius: 10px; }
+
+/* Les blocs pleine largeur qui se cliquent restent des blocs, pas des pastilles :
+   une pilule de 900 px de long ne dit plus qu'elle se clique, elle déforme. */
+:is(main, .reader) :is(.gov-subnav, .evidence-row) { border-radius: 10px !important; }
+
+/* Les contrôles en ligne, eux, rejoignent la pastille du site. */
+:is(main, .reader) .barre-section-pdf { border-radius: 999px !important; }
 
 /* --- Les rayons restes en arriere : plus rien sous 5 px ------------------- */
 :is(main, .reader) [class*="rounded-[1px]"],
@@ -2677,9 +2715,14 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 /* --- Les filtres : pilule fine, actif a l'encre --------------------------- */
 :is(main, .reader) button[aria-pressed] { border-radius: 999px; }
 
-/* --- Toute action garde le meme rayon ------------------------------------- */
-:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-bouton):not(.panneau-fiche):not(.terme) {
-  border-radius: 5px;
+/* --- Toute action prend la forme des contrôles ---------------------------- */
+/* Elle valait 5 px, un troisième rayon pour rien. Un bouton se clique : il porte
+   donc la pastille, comme la bascule. Les blocs pleine largeur qui se cliquent
+   — une rangée de sous-navigation, une ligne d'affirmation — gardent le rayon de
+   la carte, posé plus haut : une pilule de neuf cents pixels de long ne dit plus
+   qu'elle se clique, elle se déforme. */
+:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-bouton):not(.panneau-fiche):not(.terme):not(.gov-subnav):not(.evidence-row):not([class*="rounded-lg"]):not([class*="rounded-xl"]) {
+  border-radius: 999px;
 }
 
 /* --- Le focus, une seule fois pour tout le site --------------------------- */
@@ -2903,36 +2946,9 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    Le partage est net : le rangement se fait entre les volets, jamais à
    l'intérieur d'un volet. Ce qu'un volet porte tient d'un coup d'œil.        */
 
-.fiche-volets {
-  display: flex; flex-wrap: wrap; gap: .3rem;
-  padding: .3rem;
-  background: var(--accent-lavis);
-  border: 1px solid color-mix(in oklab, var(--accent) 16%, var(--rule));
-  border-radius: 999px;
-}
-.fiche-volet-btn {
-  display: inline-flex; align-items: center; gap: .4rem;
-  padding: .48rem .85rem;
-  border-radius: 999px;
-  font: 600 12.5px/1 'IBM Plex Sans', system-ui, sans-serif;
-  letter-spacing: .01em;
-  color: var(--label);
-  background: transparent;
-  border: 1px solid transparent;
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
-}
-.fiche-volet-btn:hover { color: var(--accent-deep); }
-.fiche-volet-btn[data-actif='true'] {
-  background: var(--paper-raised);
-  border-color: color-mix(in oklab, var(--accent) 24%, var(--rule));
-  color: var(--accent-deep);
-  box-shadow: 0 1px 2px rgba(14, 17, 22, .06);
-}
-.fiche-volet-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Les blocs d'un volet respirent au pas de la carte. Aucune règle d'impression
    ici : la fenêtre ne s'imprime pas, .pdf-doc s'en charge. */
-.fiche-panneau > * + * { margin-top: var(--pas-2); }
 
 /* ---------- La fenêtre de la fiche pays ----------------------------------
 
@@ -2949,30 +2965,59 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    celle du plus haut au lieu de leur somme, sans qu'un pixel de respiration soit
    retiré nulle part. Sous 320 px par colonne, la pile revient d'elle-même.   */
 
-.reader .fiche-panneau:not(.hidden) {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: var(--pas-3);
-  align-items: start;
-}
-.reader .fiche-panneau > * + * { margin-top: 0; }
+/* UN VOLET, UNE SEULE GRILLE.
+
+   Un volet réunit maintenant plusieurs panneaux — la présence et le déplacement
+   répondent à la même question, « qui est là ». Empilés, chacun ouvrait sa
+   propre grille et le volet cumulait leurs hauteurs : 1 562 px pour deux
+   panneaux qui, ensemble, n'ont que sept cartes.
+
+   `display: contents` les efface comme boîtes sans toucher à leur contenu : les
+   cartes des deux panneaux deviennent les éléments d'UNE grille, celle du
+   conteneur, et se rangent toutes ensemble. Le panneau ne sert plus qu'à dire
+   quel volet les porte. */
+/* Les cartes d'un volet se suivent, et rien de plus.
+
+   Deux essais ont été faits à l'aveugle, panneau du navigateur en panne, et tous
+   deux ont empiré les choses :
+
+     — le flux multicolonne. Une carte que le sélecteur `break-inside: avoid`
+       ne couvrait pas se retrouvait COUPÉE EN DEUX entre deux colonnes. C'est
+       le pire défaut possible sur une fiche de données.
+     — l'unification des habillages en `!important` : filet d'accent imposé à
+       toutes les cartes, y compris les listes de registres et les blocs
+       narratifs, et titres forcés en flex. Beaucoup trop brutal.
+
+   On revient donc à ce qui ne peut pas casser : une pile. Chaque carte prend la
+   largeur du volet, dans l'ordre, avec l'air d'une carte entre elles. Ça défile
+   sur les volets fournis, et c'est assumé — la clarté passe avant l'économie de
+   hauteur, il l'a dit deux fois.
+
+   Rien ne sera retouché ici avant d'avoir pu le REGARDER.                    */
+
+/* Et les deux grilles intermédiaires disparaissent de la même façon. Tant qu'elles
+   existaient comme boîtes, chacune ne prenait qu'UNE colonne du volet et ses
+   cartes s'y empilaient dedans — la grille des rubriques repassait à 348 px de
+   large et le volet à 1 192 px de haut.
+
+   Effacées, toutes les cartes d'un volet — rubriques, encadrés, registres —
+   deviennent les éléments d'une seule grille. C'est ce qu'il demande depuis le
+   début : des fiches nettes, côte à côte, de même poids. */
+
+/* La phrase d'entrée du volet. Un volet qui s'ouvre sur un tas de cartes
+   n'apprend rien : il faut d'abord dire à quelle question on répond. Elle prend
+   la largeur entière, avant les colonnes. */
 
 /* Les trois registres d'engagements portent déjà leurs propres colonnes. */
-.reader .fiche-panneau > .fiche-colonnes { grid-column: 1 / -1; }
+
 
 /* La chaîne causale porte trois récits côte à côte : dans une demi-colonne ils
    s'empilent. Elle a son volet, où elle prend la largeur entière. */
-.reader .fiche-panneau > [class*="bg-[#0f172a]"] { grid-column: 1 / -1; }
+/* La chaine causale porte trois recits : elle prend la largeur entiere. */
 
 /* Les trois registres d'engagements — instruments de l'UA, communautés
    régionales, conventions de l'OIT — sont de même nature et se lisent en
    colonnes. Sans cette règle ils s'empilent et le volet passe de 307 à 724 px. */
-.fiche-colonnes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--pas-3);
-  align-items: start;
-}
 
 /* Le seuil des rubriques, et rien d'autre.
 
@@ -2982,7 +3027,6 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    Économie 492 au lieu de 234. Ce n'est pas une question de densité mais de
    seuil : on baisse le seuil, on ne touche ni au corps, ni au rembourrage, ni à
    la matière des cartes. */
-.reader .fiche-grille { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 
 /* Le CHROME de la fenêtre, pas son contenu.
 
@@ -2999,93 +3043,26 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 /* Les colonnes d'engagements se serrent la main d'un cran plus près : chacune y
    gagne onze pixels de largeur, et la liste des traités — la plus haute des
    trois, celle qui fixe la hauteur du volet — y perd une ligne de repli. */
-.reader .fiche-colonnes { gap: var(--pas-2); }
 
 /* Les seuils `sm:` de Tailwind regardent la FENÊTRE, jamais le conteneur. Les
    lignes de traités les utilisaient pour se mettre à deux colonnes : dans une
    carte de 348 px, chaque ligne tombait à 160 px, et la pastille « Ratifié »
    sortait de sa ligne par-dessus la suivante. Dans une colonne, la question ne
    se pose pas : une ligne par ligne, sur toute la largeur disponible. */
-.reader .fiche-colonnes .grid { grid-template-columns: minmax(0, 1fr) !important; }
-.reader .fiche-colonnes .flex { flex-wrap: wrap; }
 
 
-.fiche-grille {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
-  gap: var(--pas-3);
-  margin-block: var(--pas-3);
-}
 
-.fiche-rubrique {
-  display: flex;
-  flex-direction: column;
-  background: var(--paper-raised);
-  border: 1px solid var(--rule);
-  border-top: 2px solid var(--accent);
-  border-radius: 10px;
-  padding: var(--pas-3);
-}
-.fiche-rubrique header {
-  display: flex; align-items: center; gap: .5rem;
-  margin-bottom: var(--pas-2);
-  color: var(--accent-deep);
-}
-.fiche-rubrique h3 {
-  font: 600 17px/1.3 Fraunces, Georgia, serif;
-  color: var(--ink); margin: 0;
-}
 
 /* Le chiffre d'abord, l'explication ensuite : on lit la mesure sans lire. */
-.fiche-mesures {
-  display: flex; flex-wrap: wrap;
-  gap: var(--pas-2) var(--pas-3);
-  margin-bottom: var(--pas-2);
-}
-.mesure-pays { display: flex; flex-direction: column; gap: .25rem; }
-.mesure-nombre { display: flex; align-items: baseline; gap: .18rem; }
 /* L'interligne à 1 sur un corps de 26 px enfermait le chiffre dans une boîte
    plus courte que ses jambages : la mesure débordait de trois pixels et venait
    toucher ce qui suit. Fraunces a des chiffres hauts ; 1,12 leur suffit. */
-.mesure-nombre b {
-  font: 600 26px/1.12 Fraunces, Georgia, serif;
-  font-variant-numeric: tabular-nums; color: var(--ink);
-}
-.mesure-nombre i { font-style: normal; font-size: 13px; color: var(--ink-mute); }
-.mesure-quoi { font-size: 12px; line-height: 1.4; color: var(--muted); max-width: 20ch; }
 
-.mesure-anneau {
-  width: 84px; height: 84px; border-radius: 999px;
-  display: flex; align-items: center; justify-content: center;
-}
-.mesure-anneau-creux {
-  width: 62px; height: 62px; border-radius: 999px;
-  background: var(--paper-raised);
-  display: flex; align-items: center; justify-content: center; gap: .06rem;
-}
-.mesure-anneau-creux b {
-  font: 600 20px/1.12 Fraunces, Georgia, serif;
-  font-variant-numeric: tabular-nums; color: var(--ink);
-}
-.mesure-anneau-creux i { font-style: normal; font-size: 11px; color: var(--ink-mute); }
 
-.fiche-dit {
-  font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
-  margin: 0 0 var(--pas-2);
-  flex: 1;
-}
 
 /* La ligne de source : elle se collait au texte et changeait de hauteur d'une
    fiche a l'autre selon la longueur de l'explication. Elle est pousse'e en pied
    par le flex, si bien que toutes les fiches l'alignent. */
-.fiche-source {
-  margin: auto 0 0;
-  padding-top: .6rem;
-  border-top: 1px solid var(--rule);
-  font: 10px/1.5 ui-monospace, monospace;
-  letter-spacing: .05em; text-transform: uppercase; color: var(--label);
-  word-break: break-word;
-}
 
 /* ==========================================================================
    La marque comme graine
@@ -3148,7 +3125,6 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    et jamais plus — la marque avance, elle ne saute pas. */
 @media (hover: hover) {
   :is(main, .reader) a.lift,
-  :is(main, .reader) .fiche-rubrique,
   :is(main, .reader) .bg-white.lift {
     transition: transform .22s cubic-bezier(.22, .61, .36, 1),
                 border-color .22s ease;
@@ -3248,21 +3224,11 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
      166 px, ce même corps poussait les questions de l'Atlas à trois lignes et le
      bouton à 80 px. La sélection reste à 44 px, plancher des cibles tactiles.
      La spécificité répond à celle de la règle générale, sinon elle ne passe pas. */
-  :is(main, .reader) :is(.bascule, .couche-btn, .fiche-volet-btn) {
-    padding-block: .42rem;
-    padding-inline: .72rem;
-    font-size: 12.5px;
-    line-height: 1.3;
-    min-height: 44px;
-    gap: .3rem;
-  }
 
   /* Les sept volets de la fiche pays tenaient sur quatre rangs — 192 px, un quart
      de l'écran avant le premier chiffre. Sur téléphone leurs icônes s'effacent :
      un mot suffit à nommer un volet, l'icône ne fait que répéter. Les libellés
      restent tous visibles, et le plancher de 44 px tient. */
-  .fiche-volets .fiche-volet-btn svg { display: none; }
-  .fiche-volets .fiche-volet-btn { padding-inline: .55rem; gap: 0; }
   /* Deux colonnes dès que la largeur utile le permet : à 375 px chaque colonne
      reçoit 166 px, dont 143 pour le texte — la plupart des questions y tiennent
      sur une ligne, les plus longues sur deux, et le bouton reste à son plancher. */

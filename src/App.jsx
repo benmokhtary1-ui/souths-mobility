@@ -894,9 +894,15 @@ const ScrollProgress = () => {
   }, [natif]);
 
   return (
-    <div className="h-0.5 w-full print:hidden" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
+    <div className="h-0.5 w-full print:hidden relative" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
       {natif ? (
-        <span className="fil-lecture" />
+        <>
+          <span className="fil-lecture" />
+          {/* Le point de l'unum voyage en tête du fil. C'est le centre de la
+              marque, celui vers lequel les deux flèches pointent ; il indique ici
+              où l'on en est de la lecture. */}
+          <span className="fil-point" aria-hidden="true" />
+        </>
       ) : (
         <div
           className="h-full transition-[width] duration-150 ease-out"
@@ -927,26 +933,46 @@ const LinkedInIcon = ({ className = "w-3.5 h-3.5" }) => (
   </svg>
 );
 
-const HistoricalChart = ({ data, colorClass }) => {
+// L'évolution du stock migrant, en barres. Trois défauts corrigés ici, tous
+// visibles à l'œil et tous dans ce composant :
+//
+//   1. L'échelle était gonflée de moitié (`* 1.5`). La barre la plus haute
+//      n'atteignait donc que les deux tiers du cadre, et un tiers du diagramme
+//      restait vide en permanence — ce qui le faisait paraître cassé. Une
+//      marge de 8 % suffit à laisser respirer l'étiquette au-dessus.
+//
+//   2. Les valeurs n'apparaissaient qu'au SURVOL. Une infographie qui ne se lit
+//      pas sans la souris n'informe personne, et sur un téléphone elle ne se lit
+//      jamais. Elles sont maintenant écrites en permanence.
+//
+//   3. Le format des nombres court-circuitait celui du site : « 2.6M » avec un
+//      point décimal anglais dans une page française. Il passe par formatNumber.
+const HistoricalChart = ({ data, colorClass, lang = 'fr' }) => {
   if (!data || data.length === 0) return null;
-  const maxVal = Math.max(...data.map(d => parseFloat(d.value))) * 1.5; 
+  const valeurs = data.map(d => parseFloat(d.value));
+  const maxVal = Math.max(...valeurs) * 1.08;
+  const enBref = (v) => {
+    if (v >= 1000000) return formatNumber(Math.round(v / 100000) / 10, lang) + ' M';
+    if (v > 100)      return formatNumber(Math.round(v / 1000), lang) + ' k';
+    return formatNumber(v, lang) + ' %';
+  };
   return (
-    <div className="flex items-end justify-between h-24 w-full gap-2 mt-4 pt-4 border-b-2 border-slate-100 pb-2">
+    <div className="flex items-end justify-between h-28 w-full gap-2 mt-5 pt-6 border-b-2 border-slate-100 pb-2">
       {data.map((point, i) => {
-        const heightPct = (parseFloat(point.value) / maxVal) * 100;
+        const v = parseFloat(point.value);
+        const heightPct = (v / maxVal) * 100;
+        const dernier = i === data.length - 1;
         return (
-          <div key={i} className="flex flex-col items-center flex-1 group relative h-full justify-end">
-            <div 
-              className={`w-full max-w-[32px] rounded-t-md transition-all duration-1000 ease-out cursor-pointer shadow-sm group-hover:shadow-md group-hover:opacity-80 ${colorClass} print:!bg-emerald-500`}
-              style={{ height: `${Math.max(5, heightPct)}%` }}
-            >
-              <span className="absolute -top-6 start-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
-                {parseFloat(point.value) > 100 
-                  ? (parseFloat(point.value) >= 1000000 ? (parseFloat(point.value)/1000000).toFixed(1) + 'M' : (parseFloat(point.value)/1000).toFixed(0) + 'k') 
-                  : point.value + '%'}
-              </span>
-            </div>
-            <span className="text-[9px] font-black text-slate-400 mt-2">{point.year}</span>
+          <div key={i} className="flex flex-col items-center flex-1 relative h-full justify-end">
+            <span className="absolute -top-5 start-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold tabular-nums"
+                  style={{ color: dernier ? 'var(--accent-deep)' : 'var(--label)' }}>
+              {enBref(v)}
+            </span>
+            <div
+              className={`w-full max-w-[32px] rounded-t-sm transition-all duration-1000 ease-out ${colorClass}`}
+              style={{ height: `${Math.max(4, heightPct)}%`, opacity: dernier ? 1 : .78 }}
+            />
+            <span className="text-[10px] font-bold tabular-nums mt-2" style={{ color: 'var(--label)' }}>{point.year}</span>
           </div>
         );
       })}
@@ -1921,6 +1947,11 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
       {/* Tete de planche : on sait ou l'on est avant meme de lire le titre. */}
       {plate && (
         <div className="flex items-center gap-3 mb-5">
+          {/* La marque n'existait qu'en tête et en pied de page — deux fois sur
+              quatre mille pixels. Elle ouvre désormais chaque planche, à la
+              taille du numéro qu'elle précède, et prend la teinte de la
+              section comme tout le reste. */}
+          <BrandMark className="w-7 h-7 shrink-0" tone="dark" aria-hidden="true" />
           <span className="text-[10px] font-semibold uppercase tabular-nums" style={{ letterSpacing: '.2em', color: 'var(--accent-light)' }}>
             {plate}
           </span>
@@ -2303,7 +2334,7 @@ const t = {
       comparative_view_title: "Analyse comparative : transition démographique & résilience Sud-Sud",
       comparative_view_desc: "Selon le 3e Rapport sur les statistiques migratoires de l'UA (2021) et UNDESA (2024), la dynamique démographique africaine alimente à 70% les marchés du travail régionaux internes. La part des migrants internationaux reste structurellement stable (~1,9% de la population continentale) depuis 1990.",
       modal: {
-        close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie & Flux", econ: "Économie & Droits" },
+        close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie & Flux", econ: "Économie", rights: "Droits & engagements" },
         south_view: "Perspective analytique des Suds",
         evo_title: "La constante proportionnelle (1990-2024)", parity: "Féminisation des flux (UNDESA 2024)", retention_title: "Rétention Régionale Sud-Sud (UA 2021)",
         orig_dest_title: "Dynamiques de Transition & Proximité", econ_title: "Indépendance économique & transferts",
@@ -2626,7 +2657,7 @@ const t = {
       comparative_view_title: "Comparative Analysis: Demographic Transition & South-South Resilience",
       comparative_view_desc: "According to the 3rd AU Labour Migration Report (2021) and UNDESA (2024), African demographic dynamics feed 70% into internal regional labor markets. The international migrant share remains structurally stable (~1.9% of total continental population) since 1990.",
       modal: { 
-        close: "Close", tabs: { demo: "Demography", geo: "Geography & Flows", econ: "Economy & Treaties" }, 
+        close: "Close", tabs: { demo: "Demography", geo: "Geography & Flows", econ: "Economy", rights: "Rights & commitments" }, 
         south_view: "Analytical Perspective", evo_title: "The Proportional Constant (1990-2024)", parity: "Feminization of flows (UNDESA 2024)", retention_title: "Regional South-South Retention (AU 2021)", orig_dest_title: "Transition & Proximity Dynamics", econ_title: "Economic Independence & Remittances", 
         causal_chain: "Systemic Causal Chain", trigger: "Trigger", response: "Migratory Response", impact: "Socio-economic Impact", 
         data_source: "Sources: UNDESA (2024) / AU-ILO-IOM-ECA Report (2021) / IDMC (2025) / UNHCR (2025) / ILO NORMLEX (2025)", export_csv: "Export (CSV)", export_pdf: "Report (PDF)", 
@@ -4086,221 +4117,24 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
   );
 };
 
-// ---------------------------------------------------------------------------
-// La fiche pays, refondue.
+// La refonte de la fiche pays a été retirée, à sa demande.
 //
-// L'ancienne tenait en trois vues — Demographie, Geographie & Flux, Economie &
-// Droits — et chacune entassait ce qu'elle pouvait : la premiere carte portait a
-// elle seule le stock migratoire, sa part, sa barre et son historique. Quatre
-// informations dans un objet cense en dire une.
+// Elle avait remplacé les trois vues du rapport par sept volets, puis quatre,
+// avec des cartes de rubrique, une barre de bascule et des amorces. Chaque
+// passe a été rejetée, et la dernière série de corrections a été faite à
+// l'aveugle — le panneau du navigateur ne répondait plus — ce qui n'a fait
+// qu'aggraver les choses : « c'était beaucoup mieux avant qu'on ne touche quoi
+// que ce soit, et j'avais demandé un truc simple, rien de plus ».
 //
-// Le principe vient du bloc demographie, dont l'organisation etait la bonne :
-// un indicateur, son chiffre, sa source, une phrase de contexte. Il devient la
-// regle. Huit rubriques au lieu de trois vues, chacune portant une ou deux
-// mesures, et le lecteur choisit celle qu'il ouvre.
+// La fenêtre du rapport est donc revenue à son état d'avant, reprise dans le
+// dépôt (commit f6e28f3) : trois vues, Démographie — Géographie & Flux —
+// Économie & Droits, pilotées par `modalView`.
 //
-// Une rubrique ne s'affiche pas si le pays n'a pas la donnee : mieux vaut une
-// entree absente qu'une case vide, et l'absence se dit ailleurs, dans la
-// rubrique elle-meme, avec sa raison.
-const RUBRIQUES = [
-  {
-    cle: 'presence', volet: 'presence', icone: Users,
-    nom: { fr: 'Présence', en: 'Presence' },
-    dit: { fr: 'Combien de personnes nées ailleurs vivent ici, et quelle part de la population elles font.',
-           en: 'How many people born elsewhere live here, and what share of the population they make up.' },
-    source: 'UN DESA · International Migrant Stock',
-    dispo: (d) => d.stock !== undefined && d.stock !== null,
-    mesures: (d, L) => [
-      { valeur: d.stock, unite: '', quoi: L('Personnes nées à l’étranger', 'People born abroad') },
-      { valeur: d.evolution, unite: '%', quoi: L('De la population totale', 'Of the total population') },
-    ],
-  },
-  {
-    cle: 'composition', volet: 'presence', icone: HeartPulse,
-    nom: { fr: 'Composition', en: 'Composition' },
-    dit: { fr: 'La part des femmes dans la population migrante. Une migration à parité se comporte autrement qu’une migration de travail masculine.',
-           en: 'The share of women among migrants. A migration at parity behaves differently from a male labour migration.' },
-    source: 'UN DESA',
-    dispo: (d) => d.female !== undefined && d.female !== null,
-    mesures: (d, L) => [{ valeur: d.female, unite: '%', quoi: L('De femmes', 'Women'), anneau: Number(d.female) }],
-  },
-  {
-    cle: 'travail', volet: 'economie', icone: Briefcase,
-    nom: { fr: 'Travail', en: 'Work' },
-    dit: { fr: 'La part des migrants en âge de travailler qui sont actifs — en emploi ou en recherche d’emploi.',
-           en: 'The share of working-age migrants who are economically active — employed or seeking work.' },
-    source: 'OIT · ILOSTAT',
-    dispo: (d) => d.labour_participation !== null && d.labour_participation !== undefined,
-    mesures: (d, L) => [{ valeur: d.labour_participation, unite: '%',
-      quoi: L('Taux d’activité', 'Activity rate') + (d.labour_participation_year ? ` (${d.labour_participation_year})` : '') }],
-  },
-  {
-    cle: 'deplacement', volet: 'deplacement', icone: ShieldAlert,
-    nom: { fr: 'Déplacement', en: 'Displacement' },
-    dit: { fr: 'Qui est déplacé à l’intérieur du pays, et qui y est accueilli. Deux périmètres de suivi distincts, affichés plutôt qu’harmonisés.',
-           en: 'Who is displaced within the country, and who is hosted there. Two distinct monitoring perimeters, shown rather than reconciled.' },
-    source: 'IDMC · HCR',
-    dispo: (d) => (d.idp_conflict > 0 || d.idp_disaster > 0),
-    mesures: (d, L) => [
-      { valeur: d.idp_conflict, quoi: L('Déplacés par un conflit', 'Displaced by conflict') },
-      { valeur: d.idp_disaster, quoi: L('Déplacés par une catastrophe', 'Displaced by disaster') },
-    ],
-  },
-  {
-    cle: 'accueil', volet: 'deplacement', icone: Users,
-    nom: { fr: 'Accueil', en: 'Hosting' },
-    dit: { fr: 'Le nombre de réfugiés hébergés. Subir un déplacement et héberger celui d’autrui sont deux faits distincts, et les confondre dans une même case en efface un.',
-           en: 'The number of refugees hosted. Undergoing displacement and hosting someone else’s are two distinct facts, and merging them into one box erases one of them.' },
-    source: 'HCR · Global Trends',
-    dispo: (d) => d.refugees_hosted > 0,
-    mesures: (d, L) => [{ valeur: d.refugees_hosted, quoi: L('Réfugiés accueillis', 'Refugees hosted') }],
-  },
-  {
-    cle: 'ouverture', volet: 'ouverture', icone: Unlock,
-    nom: { fr: 'Ouverture', en: 'Openness' },
-    dit: { fr: 'Le rang du pays à l’indice d’ouverture des visas de la BAD, et la part des mobilités qui restent dans la sous-région.',
-           en: 'The country’s rank on the AfDB visa openness index, and the share of mobility that stays within the sub-region.' },
-    source: 'BAD · AVOI',
-    dispo: (d) => d.avoi !== null && d.avoi !== undefined,
-    mesures: (d, L) => [
-      { valeur: d.avoi, quoi: L('Rang à l’indice d’ouverture', 'Rank on the openness index') },
-      { valeur: d.retention, unite: '%', quoi: L('Mobilité intra-régionale', 'Intra-regional mobility'), anneau: Number(d.retention) },
-    ],
-  },
-  {
-    cle: 'economie', volet: 'economie', icone: TrendingUp,
-    nom: { fr: 'Économie', en: 'Economy' },
-    dit: { fr: 'Les transferts de fonds déclarés, en part du produit intérieur brut. Les envois informels échappent à la mesure.',
-           en: 'Declared remittances, as a share of gross domestic product. Informal transfers escape measurement.' },
-    source: 'Banque mondiale',
-    dispo: (d) => d.remittances !== null && d.remittances !== undefined,
-    mesures: (d, L) => [{ valeur: d.remittances, unite: '% ' + L('du PIB', 'of GDP'),
-      quoi: L('Transferts de fonds', 'Remittances') + (d.remittances_year ? ` (${d.remittances_year})` : '') }],
-  },
-];
-
-// Le rendu d'une mesure : un chiffre, ce qu'il compte, rien d'autre. L'anneau
-// n'apparait que pour une part — un pourcentage se lit mieux en secteur qu'en
-// nombre, et un effectif ne se met pas en anneau.
-const MesurePays = ({ valeur, unite = '', quoi, anneau = null, lang }) => {
-  const vide = valeur === null || valeur === undefined || valeur === '';
-  return (
-    <div className="mesure-pays">
-      {anneau !== null && !Number.isNaN(anneau) ? (
-        <span className="mesure-anneau" role="img"
-              aria-label={`${anneau}${unite} — ${quoi}`}
-              style={{ background: `conic-gradient(var(--accent) ${anneau}%, var(--anneau-vide) 0)` }}>
-          <span className="mesure-anneau-creux">
-            {/* L'anneau court-circuitait le formatage : il affichait « 47.2 »
-                quand le reste de la fiche disait « 0,6 ». Un séparateur décimal
-                anglais dans une page française se remarque tout de suite. */}
-            <b>{vide ? '—' : formatNumber(Number(valeur), lang)}</b><i>{unite}</i>
-          </span>
-        </span>
-      ) : (
-        <span className="mesure-nombre">
-          <b>{vide ? '—' : formatNumber(Number(String(valeur).replace(/\s/g, '')), lang)}</b>
-          {unite && <i>{unite}</i>}
-        </span>
-      )}
-      <span className="mesure-quoi">{quoi}</span>
-    </div>
-  );
-};
-
-// La fiche : une barre de rubriques, puis la rubrique ouverte. Les rubriques
-// sans donnee ne sont pas propose'es — on ne fait pas cliquer vers du vide.
-// Les cinq volets de la fiche. La grille à plat montrait les sept rubriques
-// côte à côte : tout était là, mais rien n'était rangé, et la fenêtre ne disait
-// plus par où commencer. La fiche retrouve donc ses volets — combien de
-// personnes, qui est déplacé, par où l'on passe, ce que le droit ouvre, ce que
-// l'argent fait — chacun avec son bouton, comme avant.
-//
-// Un volet ne cache rien à l'intérieur de lui-même : ce qu'il porte tient d'un
-// coup d'œil, en fiches nettes, sans rien qui défile. Le rangement se fait à
-// l'étage au-dessus, pas dans la lecture.
-//
-// L'impression ne passe pas par ici : la fenêtre est `print:hidden` et c'est
-// <PdfCountryDossier> qui compose le papier, tous ensembles réunis. Le volet
-// ouvert à l'écran ne change donc rien à ce qu'on exporte.
-const VOLETS_FICHE = [
-  { cle: 'presence',    icone: Users,       nom: { fr: 'Présence',    en: 'Presence' } },
-  { cle: 'deplacement', icone: ShieldAlert, nom: { fr: 'Déplacement', en: 'Displacement' } },
-  { cle: 'trajets',     icone: GitMerge,    nom: { fr: 'Trajets',     en: 'Routes' } },
-  { cle: 'ressorts',    icone: ArrowRight,  nom: { fr: 'Ressorts',    en: 'Drivers' } },
-  { cle: 'ouverture',   icone: Unlock,      nom: { fr: 'Ouverture',   en: 'Openness' } },
-  { cle: 'engagements', icone: Scale,       nom: { fr: 'Engagements', en: 'Commitments' } },
-  { cle: 'economie',    icone: TrendingUp,  nom: { fr: 'Économie',    en: 'Economy' } },
-];
-
-// Un volet ne s'affiche que s'il a de quoi parler. Un bouton qui ouvre une page
-// vide coûte plus cher que le bouton qu'on n'a pas mis.
-const voletTientQuelqueChose = (cle, d) => {
-  if (!d) return false;
-  if (RUBRIQUES.some(r => r.volet === cle && r.dispo(d))) return true;
-  if (cle === 'presence')    return !!(d.iso2 && censusByCountry[d.iso2]);
-  if (cle === 'deplacement') return d.idp_conflict > 0 || d.idp_disaster > 0 || d.refugees_hosted > 0;
-  if (cle === 'trajets')     return !!d.origDest;
-  if (cle === 'ressorts')    return !!(d.trigger || d.response || d.impact);
-  // Ouverture ne garde que les visas ; ce qui relève de la signature a son volet.
-  if (cle === 'ouverture')   return d.avoi !== null && d.avoi !== undefined;
-  if (cle === 'engagements') return !!(d.au_treaties || d.normlex || (d.iso2 && countryRecAffiliations[d.iso2]));
-  if (cle === 'economie')    return d.aid !== null && d.aid !== undefined;
-  return false;
-};
-
-// La barre de volets, dans l'entête de la fenêtre. Sous deux volets disponibles
-// elle ne sert plus à rien et disparaît.
-const BarreVoletsFiche = ({ display, lang, volet, setVolet }) => {
-  const dispo = VOLETS_FICHE.filter(v => voletTientQuelqueChose(v.cle, display));
-  if (dispo.length < 2) return null;
-  return (
-    <div className="fiche-volets print:hidden" role="tablist"
-         aria-label={tr({ fr: 'Volets de la fiche', en: 'Profile panels' }, lang)}>
-      {dispo.map(v => {
-        const Icone = v.icone;
-        const actif = v.cle === volet;
-        return (
-          <button key={v.cle} type="button" role="tab" aria-selected={actif}
-                  onClick={() => setVolet(v.cle)}
-                  className="fiche-volet-btn" data-actif={actif ? 'true' : 'false'}>
-            <Icone className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>{tr(v.nom, lang)}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
-};
-
-const FichePaysRubriques = ({ display, lang, volet = null }) => {
-  const L = faireL(lang);
-  const dispo = useMemo(
-    () => RUBRIQUES.filter(r => (!volet || r.volet === volet) && r.dispo(display)),
-    [display, volet]
-  );
-  if (!dispo.length) return null;
-  return (
-    <div className="fiche-grille">
-      {dispo.map(r => {
-        const Icone = r.icone;
-        return (
-          <section key={r.cle} className="fiche-rubrique">
-            <header>
-              <Icone className="w-4 h-4" aria-hidden="true" />
-              <h3>{tr(r.nom, lang)}</h3>
-            </header>
-            <div className="fiche-mesures">
-              {r.mesures(display, L).map((m, i) => <MesurePays key={i} {...m} lang={lang} />)}
-            </div>
-            <Prose className="fiche-dit" lang={lang}>{tr(r.dit, lang)}</Prose>
-            <p className="fiche-source">{r.source}</p>
-          </section>
-        );
-      })}
-    </div>
-  );
-};
+// Ce qui a été gardé de la passe, parce que ce sont des corrections et non des
+// partis pris : le plancher d'interligne des grands chiffres (ils débordaient
+// de trois pixels), la frise des recensements en grille adaptative (les dates
+// débordaient de vingt-quatre pixels sur leur voisine), et --degrade rendu
+// disponible à :root pour que ce qui vit hors de <main> puisse s'y appuyer.
 
 
 const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSousOngletGouvernance,
@@ -11518,10 +11352,8 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const [showModal, setShowModal] = useState(false);
+  const [modalView, setModalView] = useState('demography');
 
-  // Le volet ouvert dans la fiche pays. On entre toujours par la présence —
-  // combien de personnes — parce que c'est la question qu'on se pose d'abord.
-  const [voletFiche, setVoletFiche] = useState('presence');
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   // La Gouvernance ouvre sur l'Union africaine, pas sur l'Agenda 2030.
   const [activeSdgzTab, setActiveSdgzTab] = useState('au');
@@ -11727,18 +11559,6 @@ export default function App() {
     };
   }, [activeSubTab, activeSubRegion, lang, currentCountries, regionAggregate]);
 
-  // Tous les pays ne portent pas les cinq volets : un État sans déplacés
-  // interne n'a pas de volet « Déplacement ». Plutôt qu'un effet qui corrige
-  // l'état après coup — et qui rendrait une image vide le temps d'un rendu —
-  // le volet effectif se calcule : celui qu'on a choisi s'il existe ici, le
-  // premier disponible sinon.
-  const voletsFicheDispo = useMemo(
-    () => VOLETS_FICHE.filter(v => voletTientQuelqueChose(v.cle, display)),
-    [display]
-  );
-  const voletFicheActif = voletsFicheDispo.some(v => v.cle === voletFiche)
-    ? voletFiche
-    : (voletsFicheDispo[0]?.cle || 'presence');
 
   // Titre et description suivent l'adresse : c'est ce qui apparait dans un
   // resultat de recherche, un signet ou un partage. Le titre ne nommait le pays
@@ -11973,7 +11793,7 @@ export default function App() {
                   de forme d'un bout a l'autre de la page n'en est plus une.
                   La ligne de nature reste au pied de page — dans une barre de
                   navigation, elle serait du remplissage. */}
-              <BrandLockup corps={12.5} tone="dark" nature={false} ecart={0.42} className="shrink-0" />
+              <BrandLockup corps={16} tone="dark" nature={false} ecart={0.42} className="shrink-0" />
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {/* La recherche precede les reglages : c'est l'action, eux sont
@@ -12133,18 +11953,14 @@ export default function App() {
       {showModal && (
         <div
           onClick={() => setShowModal(false)}
-          /* .reader : le rapport pays est monte hors de <main>. Sans cette classe,
+          /* .reader : le rapport pays est monte hors de <main>. Sans cette classe,
              il echappe a toute la couche de lisibilite de theme.css (plancher de
              corps, promotion des gris faibles, justification limitee aux paragraphes). */
           className="reader fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-5 bg-[#0f172a]/90 backdrop-blur-sm animate-in fade-in duration-300 print:hidden"
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
-            /* max-w-5xl valait 1024 px. Les trois volets les plus fournis débordaient en
-                 hauteur, et la seule façon de les faire tenir sans resserrer la
-                 typographie ni le rembourrage — ce qui avait abîmé le rendu — est de
-                 leur donner de la largeur : un bloc plus large est un bloc moins haut. */
-            className="bg-slate-50 rounded-xl w-full max-w-6xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
+            className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
               <div className="flex items-center space-x-5 rtl:space-x-reverse">
@@ -12161,158 +11977,161 @@ export default function App() {
                 </div>
               </div>
                 
-              {/* La barre de volets, comme avant : cinq entrées, cinq boutons.
-                  La grille à plat qui les remplaçait posait les sept rubriques
-                  côte à côte — tout était là, rien n'était rangé, et la fenêtre ne
-                  disait plus par où commencer. */}
-              <BarreVoletsFiche display={display} lang={lang}
-                                volet={voletFicheActif} setVolet={setVoletFiche} />
+              <div className="flex bg-slate-100 p-1 rounded-sm border border-slate-200 print:hidden">
+                <button onClick={() => setModalView('demography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'demography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.demo}</button>
+                <button onClick={() => setModalView('geography')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'geography' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.geo}</button>
+                <button onClick={() => setModalView('economy')} className={`px-3 py-1.5 rounded-sm text-xs font-bold transition-all ${modalView === 'economy' ? 'bg-white text-blue-800 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-800'}`}>{text.modal.tabs.econ}</button>
+              </div>
               <button onClick={() => setShowModal(false)} aria-label={tr({ fr: 'Fermer le rapport', en: 'Close the report' }, lang)} className="absolute top-6 end-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
-            <div /* Sans `h-full`, le corps prend la hauteur de son volet : la fenêtre grandit
-                     et rétrécit avec lui, dans la limite des 95 vh posée plus haut. Avec
-                     `h-full`, elle restait figée à la taille du premier volet ouvert, et
-                     tout volet plus haut défilait — y compris quand la place existait. */
-                  /* `space-y-10` posait 40 px au-dessus du volet ouvert : un écart entre frères
-                     alors qu’un seul est visible à la fois. Ce n’est pas de la respiration,
-                     c’est du vide. */
-                  className="p-6 md:p-10 overflow-y-auto print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white print:flex print:flex-col print:gap-6 print:space-y-0">
-
-              {/* Les cinq volets. Un seul est ouvert à la fois.
-
-                  Rien ici ne porte de variante d'impression : la fenêtre entière est
-                  `print:hidden`, et c'est <PdfCountryDossier> qui part au papier — un
-                  document composé pour la feuille, qui sort les sept ensembles de
-                  données quel que soit le volet ouvert à l'écran. Mettre `print:block`
-                  ici ne servirait à rien et laisserait croire le contraire. */}
-
-              {/* Combien de personnes, et depuis quand on sait les compter */}
-              <section className={`fiche-panneau ${voletFicheActif === 'presence' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'presence').nom, lang)}>
-                <FichePaysRubriques display={display} lang={lang} volet="presence" />
-                {display.iso2 && censusByCountry[display.iso2] && (
-                  <div className="print:break-inside-avoid">
-                    <CensusTimeline iso2={display.iso2} lang={lang} />
-                  </div>
-                )}
-              </section>
-
-              {/* Qui est déplacé ici, et qui y est accueilli */}
-              <section className={`fiche-panneau ${voletFicheActif === 'deplacement' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'deplacement').nom, lang)}>
-                <FichePaysRubriques display={display} lang={lang} volet="deplacement" />
-                {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
-                  <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                    <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
-                    <div className="space-y-4 print:space-y-2">
-                      {display.refugees_hosted > 0 && (
-                        <div>
-                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                            <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
-                            <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
-                        </div>
-                      )}
-                      {display.idp_conflict > 0 && (
-                        <div>
-                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                            <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
-                            <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
-                        </div>
-                      )}
-                      {display.idp_disaster > 0 && (
-                        <div>
-                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                            <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
-                            <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
-                          </div>
-                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
-                        </div>
-                      )}
+            <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
+              <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
+                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
+                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Le poids démographique réel", en: "The Real Demographic Weight" }, lang)}</h3>
+                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "La population migrante comparée à la population totale.", en: "Migrant population compared to total population." }, lang)}</Prose>
+                  <div className="relative pt-6 pb-3 print:pt-4">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-2xl font-serif font-bold text-blue-800 print:text-lg">{display.evolution}%</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{tr({ fr: "Population totale", en: "Total population" }, lang)}</span>
                     </div>
-                    <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
+                    <div className="h-10 w-full bg-slate-100 rounded-sm relative overflow-hidden flex items-center border border-slate-200 print:h-8 print:!bg-slate-100">
+                      <div className="h-full bg-blue-700 transition-all duration-1000 print:!bg-blue-700" style={{width: `${Math.max(5, parseFloat(display.evolution))}%`}}></div>
+                    </div>
                   </div>
-                )}
-              </section>
-
-              {/* Par où l'on passe, et ce qui met en mouvement */}
-              <section className={`fiche-panneau ${voletFicheActif === 'trajets' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'trajets').nom, lang)}>
-                <div className="bg-white rounded-lg border border-slate-200 p-7 shadow-sm print:p-4 print:break-inside-avoid">
-                <div>
-                  <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
-                  <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
-                  <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
-                    <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
+                  <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
+                    <p className="font-bold text-slate-800 text-[10px] mb-2 uppercase tracking-widest print:text-[9px]">
+                      {display.isRegion ? text.modal.evo_title : (tr({ fr: "Évolution du stock migratoire absolu (1990-2024)", en: "Absolute migrant stock evolution (1990-2024)" }, lang))}
+                    </p>
+                    <HistoricalChart data={display.history} colorClass="bg-blue-700" lang={lang} />
                   </div>
                 </div>
+                  
+                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-center items-center print:border print:p-4">
+                   <h3 className="font-serif font-bold text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
+                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-sm border border-slate-100 print:w-24 print:h-24" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
+                     <div className="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center border border-slate-50">
+                       <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">{display.female}%</span>
+                       <span className="text-[9px] font-bold text-blue-700 uppercase mt-0.5 tracking-widest">{tr({ fr: "Femmes", en: "Women" }, lang)}</span>
+                     </div>
+                   </div>
+                   <Prose className="text-center text-sm text-slate-600 mt-6 max-w-xs leading-relaxed print:mt-3 print:text-[10px]" lang={lang}>{tr({ fr: "La migration n'est pas qu'une affaire d'hommes fuyant la misère. Elle est structurellement féminisée.", en: "Migration is not just men fleeing poverty. It is structurally feminized." }, lang)}</Prose>
                 </div>
-              </section>
+              </div>
 
-              {/* Ce qui met en mouvement. Trois récits côte à côte — déclencheur,
-                  réponse, effet — qui tenaient dans Trajets et l'y faisaient défiler :
-                  dans une demi-colonne ils s'empilent et le bloc passe de 288 à 658 px.
-                  Seuls, en pleine largeur, ils gardent leurs trois colonnes. */}
-              <section className={`fiche-panneau ${voletFicheActif === 'ressorts' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'ressorts').nom, lang)}>
-                <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
-                  <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-amber-400 print:text-amber-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
+              <div className={`animate-in fade-in duration-500 ${modalView === 'demography' ? 'block' : 'hidden print:block'} print:mb-6`}>
+                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-6 print:p-4">
+                  <div className="flex items-center gap-4 shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center print:w-12 print:h-12">
+                      <Activity className="w-7 h-7 text-emerald-700 print:w-5 print:h-5" />
                     </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-blue-400 print:text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
-                    </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-emerald-400 print:text-emerald-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Ce que le droit ouvre : visas, traités, communautés, conventions */}
-              <section className={`fiche-panneau ${voletFicheActif === 'ouverture' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'ouverture').nom, lang)}>
-                <FichePaysRubriques display={display} lang={lang} volet="ouverture" />
-                {display.avoi !== null && (
-                  <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                    <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
                     <div>
-                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                        <span className="text-slate-600 print:!text-slate-600">Score</span>
-                        <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
-                        <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
-                        {continentalAvoiAvg !== null && (
-                          <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
-                        )}
-                      </div>
-                      {continentalAvoiAvg !== null && (
-                        <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
-                      )}
-                      <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
+                      <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
+                        {display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}
+                      </span>
+                      <span className="block text-[10px] font-bold text-emerald-700 uppercase tracking-widest mt-0.5">
+                        {tr({ fr: `Taux d'activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
+                      </span>
                     </div>
                   </div>
-                )}
-              </section>
+                  <Prose className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-s border-slate-100 sm:ps-6 pt-4 sm:pt-0" lang={lang}>{display.labour_participation !== null && display.labour_participation !== undefined
+                      ? (tr({ fr: "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d'emploi), estimation modélisée par l'OIT — un indicateur direct de l'insertion économique, distinct du volume migratoire lui-même.", en: "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself." }, lang))
+                      : (tr({ fr: "L'OIT ne publie pas d'estimation modélisée pour cette entité (échantillon insuffisant).", en: "The ILO does not publish a modelled estimate for this entity (insufficient sample)." }, lang))}</Prose>
+                </div>
+              </div>
 
-              {/* Ce que le pays a signé. Trois registres de même nature — les
-                  instruments de l'UA, l'appartenance aux communautés régionales,
-                  les conventions de l'OIT — qui tenaient dans deux volets déjà
-                  chargés et les faisaient défiler. Réunis, et posés côte à côte
-                  plutôt qu'empilés : trois colonnes valent la hauteur d'une. */}
-              <section className={`fiche-panneau ${voletFicheActif === 'engagements' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'engagements').nom, lang)}>
-                <div className="fiche-colonnes">
+              <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
+                <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
+                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
+                  <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
+                    <div className="absolute inset-4 bg-[#0f172a] print:bg-white rounded-full flex flex-col items-center justify-center border border-slate-800 print:border-slate-100">
+                      <span className="text-3xl font-serif font-bold text-white print:text-slate-900 print:text-xl">{display.retention}%</span>
+                      <span className="text-[9px] font-bold text-blue-400 uppercase mt-0.5 tracking-widest text-center px-2">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
+                    </div>
+                  </div>
+                </div>
+                  
+                <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
+                  <div>
+                    <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
+                    <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
+                    <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
+                      <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
+                    </div>
+                  </div>
+                    
+                  {!display.isRegion && (
+                    <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
+                      {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
+                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
+                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
+                          <div className="space-y-4 print:space-y-2">
+                            {display.refugees_hosted > 0 && (
+                              <div>
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                                  <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
+                                  <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
+                                </div>
+                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
+                              </div>
+                            )}
+                            {display.idp_conflict > 0 && (
+                              <div>
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                                  <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
+                                  <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
+                                </div>
+                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
+                              </div>
+                            )}
+                            {display.idp_disaster > 0 && (
+                              <div>
+                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                                  <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
+                                  <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
+                                </div>
+                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
+                              </div>
+                            )}
+                          </div>
+                          <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
+                        </div>
+                      )}
+
+                      {display.avoi !== null && (
+                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
+                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
+                          <div>
+                            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                              <span className="text-slate-600 print:!text-slate-600">Score</span>
+                              <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
+                            </div>
+                            <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
+                              <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
+                              {continentalAvoiAvg !== null && (
+                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
+                              )}
+                            </div>
+                            {continentalAvoiAvg !== null && (
+                              <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
+                            )}
+                            <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className={`space-y-8 animate-in fade-in duration-500 ${modalView === 'economy' ? 'block' : 'hidden print:block'} print:space-y-4 print:break-inside-avoid`}>
+                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
+                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
+                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L'apport des diasporas face à l'aide publique au développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
+                  <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
+                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale.", en: "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity." }, lang)}</Prose></div>
+                </div>
+
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
@@ -12342,6 +12161,13 @@ export default function App() {
                     </div>
                   </div>
                 )}
+
+                {display.iso2 && censusByCountry[display.iso2] && (
+                  <div className="print:break-inside-avoid">
+                    <CensusTimeline iso2={display.iso2} lang={lang} />
+                  </div>
+                )}
+
                 {display.iso2 && countryRecAffiliations[display.iso2] && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Affiliation aux communautés économiques régionales", en: "Regional Economic Community Affiliation" }, lang)}</h3>
@@ -12376,6 +12202,7 @@ export default function App() {
                     })()}
                   </div>
                 )}
+
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Évaluation juridique des droits (Base NORMLEX OIT)", en: "Legal Evaluation of Rights (ILO NORMLEX)" }, lang)}</h3>
@@ -12405,23 +12232,27 @@ export default function App() {
                     </div>
                   </div>
                 )}
+                  
+                <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
+                  <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-amber-400 print:text-amber-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-blue-400 print:text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-emerald-400 print:text-emerald-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
+                    </div>
+                  </div>
                 </div>
-              </section>
 
-              {/* Ce que l'argent des diasporas fait */}
-              <section className={`fiche-panneau ${voletFicheActif === 'economie' ? 'block' : 'hidden'}`}
-                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'economie').nom, lang)}>
-                <FichePaysRubriques display={display} lang={lang} volet="economie" />
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
-                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L'apport des diasporas face à l'aide publique au développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
-                  <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
-                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale.", en: "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity." }, lang)}</Prose></div>
-                </div>
-              </section>
-
-              {/* Le pied de citation sort avec chaque volet imprimé. */}
                 <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (tr({ fr: 'Profil Régional', en: 'Regional Profile' }, lang)) : (tr({ fr: 'Profil Pays', en: 'Country Profile' }, lang))} />
+              </div>
             </div>
 
             <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
@@ -12445,7 +12276,7 @@ export default function App() {
             {/* Marque : le pied de page a la hauteur qu'il faut au logotype
                 complet, ce que la barre de navigation n'a pas. */}
             <div className="md:col-span-5">
-              <BrandLockup corps={19} tone="dark" className="mb-5" />
+              <BrandLockup corps={24} tone="dark" className="mb-5" />
               <Prose className="text-sm leading-relaxed max-w-sm" style={{ color: '#A79E92' }} lang={lang}>{text.footer.tag}</Prose>
             </div>
 
