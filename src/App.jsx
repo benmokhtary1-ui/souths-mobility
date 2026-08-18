@@ -32,7 +32,7 @@ const toCSV = (rows) => {
   if (!rows.length) return '';
   const cols = Object.keys(rows[0]);
   const cell = (v) => {
-    const s = v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim();
+    const s = v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim();
     return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n') + '\n';
@@ -482,7 +482,7 @@ const cleDuFragment = (fragment, lang) => {
 // de chaque notion devient consultable. Une seule par bloc — un paragraphe
 // constelle de mots soulignes se lit plus mal, pas mieux.
 const Prose = ({ children, lang = 'fr', className, ...reste }) => {
-  const texte = typeof children === 'string' ? children : null;
+  const texte = typeof children === 'string' ? children : null;
   if (!texte) return <p className={className} {...reste}>{children}</p>;
 
   const { re } = motifGlobal(lang);
@@ -647,7 +647,7 @@ const PrefsLecture = ({ lang }) => {
     const base = Object.fromEntries(LECTURE_REGLAGES.map(r => [r.cle, r.defaut]));
     try {
       const brut = localStorage.getItem('lecture');
-      return brut ? { ...base, ...JSON.parse(brut) } : base;
+      return brut ? { ...base, ...JSON.parse(brut) } : base;
     } catch { return base; }
   });
   const ref = useRef(null);
@@ -747,7 +747,7 @@ const ASSISE = {
 // nombre final est ecrit des le premier rendu, jamais un zero.
 const CompteurEntree = ({ valeur, duree = 850, className = '', style }) => {
   const reduit = useMemo(prefersReducedMotion, []);
-  const [n, setN] = useState(reduit ? valeur : 0);
+  const [n, setN] = useState(reduit ? valeur : 0);
   useEffect(() => {
     if (reduit) { setN(valeur); return; }
     let brut;
@@ -805,8 +805,8 @@ const Reveal = ({ children, delay = 0, className = '' }) => {
       ref={ref}
       className={className}
       style={{
-        opacity: shown ? 1 : 0,
-        transform: shown ? 'none' : 'translateY(var(--reveal-shift))',
+        opacity: shown ? 1 : 0,
+        transform: shown ? 'none' : 'translateY(var(--reveal-shift))',
         transition: `opacity var(--dur-slow) var(--ease-entry) ${delay}ms, transform var(--dur-slow) var(--ease-entry) ${delay}ms`,
       }}
     >
@@ -818,7 +818,7 @@ const Reveal = ({ children, delay = 0, className = '' }) => {
 // Compteur animé : le chiffre monte lorsqu'il devient visible.
 const CountUp = ({ value, duration = 1100, className = '' }) => {
   const ref = useRef(null);
-  const [display, setDisplay] = useState(prefersReducedMotion() ? value : 0);
+  const [display, setDisplay] = useState(prefersReducedMotion() ? value : 0);
 
   useEffect(() => {
     if (prefersReducedMotion() || typeof IntersectionObserver === 'undefined') {
@@ -882,7 +882,7 @@ const ScrollProgress = () => {
     if (natif) return;
     const onScroll = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      setPct(h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0);
+      setPct(h > 0 ? Math.min(100, Math.max(0, (window.scrollY / h) * 100)) : 0);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -895,9 +895,9 @@ const ScrollProgress = () => {
 
   return (
     <div className="h-0.5 w-full print:hidden" style={{ backgroundColor: 'rgba(255,253,249,.10)' }} aria-hidden="true">
-      {natif ? (
+      {natif ? (
         <span className="fil-lecture" />
-      ) : (
+      ) : (
         <div
           className="h-full transition-[width] duration-150 ease-out"
           style={{ width: `${pct}%`, background: 'linear-gradient(90deg, var(--accent-deep), var(--accent) 60%, var(--accent-light))' }}
@@ -917,7 +917,7 @@ const CountryFlag = ({ iso2, emoji, size = "md", className = "" }) => {
   if (iso2) {
     return <img src={`/flags/${iso2}.svg`} alt="" className={`inline-block align-middle object-cover ${flagSizes[size] || flagSizes.md} ${className}`} />;
   }
-  const emojiTextSize = size === "sm" ? "text-base" : size === "lg" ? "text-4xl md:text-5xl" : "text-3xl";
+  const emojiTextSize = size === "sm" ? "text-base" : size === "lg" ? "text-4xl md:text-5xl" : "text-3xl";
   return <span className={`flag-emoji ${emojiTextSize} ${className}`}>{emoji}</span>;
 };
 
@@ -942,7 +942,7 @@ const HistoricalChart = ({ data, colorClass }) => {
             >
               <span className="absolute -top-6 start-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity print:opacity-100 whitespace-nowrap">
                 {parseFloat(point.value) > 100 
-                  ? (parseFloat(point.value) >= 1000000 ? (parseFloat(point.value)/1000000).toFixed(1) + 'M' : (parseFloat(point.value)/1000).toFixed(0) + 'k') 
+                  ? (parseFloat(point.value) >= 1000000 ? (parseFloat(point.value)/1000000).toFixed(1) + 'M' : (parseFloat(point.value)/1000).toFixed(0) + 'k') 
                   : point.value + '%'}
               </span>
             </div>
@@ -956,9 +956,9 @@ const HistoricalChart = ({ data, colorClass }) => {
 
 const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
   const hasRemittances = remittances !== null && remittances !== undefined;
-  const max = Math.max(hasRemittances ? remittances : 0, aid) * 1.1;
-  const remPct = (!hasRemittances || max === 0) ? 0 : (remittances / max) * 100;
-  const aidPct = max === 0 ? 0 : (aid / max) * 100;
+  const max = Math.max(hasRemittances ? remittances : 0, aid) * 1.1;
+  const remPct = (!hasRemittances || max === 0) ? 0 : (remittances / max) * 100;
+  const aidPct = max === 0 ? 0 : (aid / max) * 100;
   const remLabel = tr({ fr: `Transferts des diasporas (BM, ${remittancesYear || 's.d.'})`, en: `Remittances (World Bank, ${remittancesYear || 'n.d.'})` }, lang);
 
   return (
@@ -966,17 +966,17 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
       <div>
         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-1.5">
           <span className="text-amber-600 print:!text-amber-600">{remLabel}</span>
-          {hasRemittances ? (
+          {hasRemittances ? (
             <span className="text-amber-700 print:!text-amber-700">{remittances}% PIB</span>
-          ) : (
+          ) : (
             <span className="text-slate-400 italic normal-case tracking-normal print:!text-slate-400">{tr({ fr: "Donnée non disponible", en: "Data not available" }, lang)}</span>
           )}
         </div>
-        {hasRemittances ? (
+        {hasRemittances ? (
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
             <div className="h-full bg-amber-500 rounded-full transition-all duration-1000 print:!bg-amber-500" style={{width: `${remPct}%`}}></div>
           </div>
-        ) : (
+        ) : (
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-dashed border-slate-300 print:!bg-slate-200" title={tr({ fr: "La Banque mondiale ne publie plus de série récente pour ce pays", en: "The World Bank no longer publishes a recent series for this country" }, lang)}></div>
         )}
       </div>
@@ -1005,7 +1005,7 @@ const headerAccents = {
 // legerement relevee, libelle au papier. Un seul accent pour les huit rubriques :
 // la couleur signale la position, elle ne code plus la rubrique.
 const navTabStyle = (isActive) => isActive
-  ? { backgroundColor: '#241E1A', color: '#FFFDF9', borderTopColor: 'var(--accent)',
+  ? { backgroundColor: '#241E1A', color: 'var(--reserve)', borderTopColor: 'var(--accent)',
       boxShadow: 'inset 0 -1px 0 rgba(255,253,249,.06)' }
   : { backgroundColor: 'transparent', color: '#A79E92', borderTopColor: 'transparent' };
 
@@ -1060,7 +1060,7 @@ const BrandMark = ({ className = "w-8 h-8", tone = "paper", style, isoler = null
   // Une simple baisse d'opacite les laissait colorees et pales : trois verts de
   // trois intensites, ou l'oeil cherche encore lequel est le sujet. Le gris
   // tranche la question — ce qui est colore est ce dont on parle.
-  const teinte = (nom, couleur) => (isoler && isoler !== nom ? 'var(--mq-eteint)' : couleur);
+  const teinte = (nom, couleur) => (isoler && isoler !== nom ? 'var(--mq-eteint)' : couleur);
   // un identifiant par instance : deux degrades homonymes dans une meme page se
   // recouvriraient, et la marque du pied de page prendrait les tons de l'en-tete
   const dg = `mq${useId().replace(/:/g, '')}`;
@@ -1143,10 +1143,17 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
   const inter = 0.10 * corps;
   const bloc = 3 * corps + 2 * inter;
   const marque = bloc / MARQUE_ENCRE.hauteur;
-  const nature = avecNature ? 0.46 * corps : 0, air = avecNature ? 0.30 * corps : 0;
+  // La ligne de nature suit le corps du nom, mais jamais sous dix pixels. Le
+  // fichier de style pose ce plancher pour tout le site ; le logotype d'À propos,
+  // appelé à corps 17, y tombait à 7,8 px. Une marque illisible ne signe plus rien.
+  // Le calage reste juste : la cale posée au-dessus des trois mots reprend cette
+  // même hauteur, donc le bloc demeure symétrique et « Mobility » garde le centre
+  // de l'anneau.
+  const nature = avecNature ? Math.max(10, 0.46 * corps) : 0;
+  const air = avecNature ? 0.30 * corps : 0;
   const sombre = tone === "dark";
-  const cNom = sombre ? '#FFFDF9' : 'var(--ink)';
-  const cNat = sombre ? '#9AA1AF' : 'var(--muted)';
+  const cNom = sombre ? 'var(--reserve)' : 'var(--ink)';
+  const cNat = sombre ? '#9AA1AF' : 'var(--muted)';
   const refs = useRef([]);
   useEgaliser(refs, corps);
   return (
@@ -1160,7 +1167,7 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
           <span key={mot} ref={(el) => { refs.current[i] = el; }} className="font-serif whitespace-nowrap"
                 style={{ font: `600 ${corps}px/1 Fraunces, Georgia, serif`, color: cNom }}>
             {/* le pluriel se marque a l'italique : c'est la these du nom */}
-            {mot === 'South(s)' ? <>South(<em style={{ fontStyle: 'italic' }}>s</em>)</> : mot}
+            {mot === 'South(s)' ? <>South(<em style={{ fontStyle: 'italic' }}>s</em>)</> : mot}
           </span>
         ))}
         {avecNature && (
@@ -1273,7 +1280,7 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
           convient a un arc court comme a un arc qui traverse le continent. */}
       <g className="atlas-trajets" fill="none" stroke="#FFFDF9" strokeLinecap="round">
         {cadre.arcs.map(([a, b], i) => (
-          LIEUX[a] && LIEUX[b] ? (
+          LIEUX[a] && LIEUX[b] ? (
             <path
               key={a + b}
               d={arcTrajet(LIEUX[a], LIEUX[b])}
@@ -1281,10 +1288,10 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
               strokeWidth={trait * 1.6}
               style={{ animationDelay: `${240 + i * 200}ms` }}
             />
-          ) : null
+          ) : null
         ))}
         {[...new Set(cadre.arcs.flat())].map((k, i) => (
-          LIEUX[k] ? (
+          LIEUX[k] ? (
             <circle
               key={k}
               cx={LIEUX[k][0]} cy={LIEUX[k][1]} r={trait * 2.2}
@@ -1292,7 +1299,7 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
               className="atlas-escale"
               style={{ animationDelay: `${520 + i * 90}ms` }}
             />
-          ) : null
+          ) : null
         ))}
       </g>
     </svg>
@@ -1342,7 +1349,7 @@ const RailCartes = ({ children, lang = 'fr', etiquette, className = '' }) => {
     const el = ref.current;
     if (!el || !el.firstElementChild) return;
     const pas = el.firstElementChild.getBoundingClientRect().width + 16;
-    el.scrollBy({ left: sens * pas, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+    el.scrollBy({ left: sens * pas, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
     // Le compteur avance avec le geste, sans attendre l'evenement de
     // defilement : sur un defilement doux il arriverait une demi-seconde plus
     // tard, et les fleches resteraient grisees a contretemps.
@@ -1525,7 +1532,7 @@ const ProportionGap = ({ lang }) => {
 
       <div className="px-5 py-5 space-y-5">
         {groups.map((g, gi) => (
-          <div key={gi} className={gi > 0 ? 'pt-5' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
+          <div key={gi} className={gi > 0 ? 'pt-5' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
             <p className="block text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-3">{g.title}</p>
             <div className="space-y-2.5">
               {g.rows.map((r, ri) => (
@@ -1577,7 +1584,7 @@ const censusMark = (v) => {
   // *** ne porte pas sur l'independance : l'Etat existait, l'operation n'est pas datee ici.
   const preIndep = mark === '*' || mark === '**';
   return {
-    raw: s, mark, year: y ? Number(y[0]) : null,
+    raw: s, mark, year: y ? Number(y[0]) : null,
     counted: !!y && !preIndep,
     preIndep, empty: false,
   };
@@ -1595,7 +1602,7 @@ const censusName = (iso2, fallback, lang) => {
   }
   const n = _nameByIso[String(iso2 || '').toLowerCase()];
   if (!n) return fallback;
-  return typeof n === 'string' ? n : (tr(n, lang) || n.fr || fallback);
+  return typeof n === 'string' ? n : (tr(n, lang) || n.fr || fallback);
 };
 
 const markLegend = (mark, lang) => {
@@ -1629,15 +1636,15 @@ const CensusRhythm = ({ lang }) => {
       perCountry.push({
         iso2, name: rec.name, years, gaps,
         count: years.length,
-        maxGap: gaps.length ? Math.max(...gaps) : null,
-        span: years.length > 1 ? { from: years[0], to: years[years.length - 1] } : null,
+        maxGap: gaps.length ? Math.max(...gaps) : null,
+        span: years.length > 1 ? { from: years[0], to: years[years.length - 1] } : null,
       });
     });
 
     const allGaps = perCountry.flatMap(c => c.gaps);
     const sorted = [...allGaps].sort((a, b) => a - b);
-    const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
-    const mean = allGaps.length ? allGaps.reduce((a, b) => a + b, 0) / allGaps.length : 0;
+    const median = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 0;
+    const mean = allGaps.length ? allGaps.reduce((a, b) => a + b, 0) / allGaps.length : 0;
 
     // Repartition du nombre d'operations datees par pays
     const byCount = {};
@@ -1718,15 +1725,15 @@ const CensusRhythm = ({ lang }) => {
               {Object.entries(data.byCount).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v], i) => (
                 <div key={k} className="flex items-center gap-3 figure-row px-1 py-1">
                   <span className="text-[11px] font-semibold w-32 shrink-0 text-slate-700">
-                    {k} {L(Number(k) > 1 ? 'recensements' : 'recensement', Number(k) > 1 ? 'censuses' : 'census')}
+                    {k} {L(Number(k) > 1 ? 'recensements' : 'recensement', Number(k) > 1 ? 'censuses' : 'census')}
                   </span>
                   <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                     <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                          style={{ width: `${(v / maxBucket) * 100}%`,
-                                  backgroundColor: Number(k) >= 5 ? 'var(--ok)' : Number(k) >= 3 ? 'var(--warn-ink)' : 'var(--bad)' }} />
+                                  backgroundColor: Number(k) >= 5 ? 'var(--ok)' : Number(k) >= 3 ? 'var(--warn-ink)' : 'var(--bad)' }} />
                   </div>
                   <span className="text-xs font-bold w-20 text-end shrink-0 tabular-nums text-slate-800">
-                    {v} {L('pays', v > 1 ? 'countries' : 'country')}
+                    {v} {L('pays', v > 1 ? 'countries' : 'country')}
                   </span>
                 </div>
               ))}
@@ -1789,10 +1796,10 @@ const LateRound = ({ lang }) => {
   const rows = useMemo(() => Object.entries(censusByCountry)
     .filter(([, r]) => r.status2020 === 'late')
     .map(([iso2, r]) => {
-      const yr = (s) => { const m = String(s || '').match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : null; };
+      const yr = (s) => { const m = String(s || '').match(/(?:19|20)\d{2}/); return m ? Number(m[0]) : null; };
       const nouveau = yr(r.r2030);
       const precedent = ['r2010', 'r2000', 'r1990', 'r1980', 'r1970'].map(k => yr(r[k])).find(Boolean) || null;
-      return { iso2, name: r.name, nouveau, precedent, gap: nouveau && precedent ? nouveau - precedent : null };
+      return { iso2, name: r.name, nouveau, precedent, gap: nouveau && precedent ? nouveau - precedent : null };
     })
     .sort((a, b) => (b.gap || 0) - (a.gap || 0)), []);
 
@@ -1941,7 +1948,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
 
       <h1
         className="font-serif font-black text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.025em]"
-        style={{ color: '#FFFDF9' }}
+        style={{ color: 'var(--reserve)' }}
       >
         {title}{' '}
         <span className="italic font-normal" style={{ color: 'var(--accent-light)' }}>{highlight}</span>
@@ -1956,8 +1963,8 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
   {plain && (
     <EnClair
       lang={lang}
-      fr={typeof plain === 'string' ? plain : plain.fr}
-      en={typeof plain === 'string' ? plain : plain.en}
+      fr={typeof plain === 'string' ? plain : plain.fr}
+      en={typeof plain === 'string' ? plain : plain.en}
     />
   )}
   </>
@@ -2001,12 +2008,12 @@ const PRINT_CITATION = {
 const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
   if (!display) return null;
   const iso = display.iso2;
-  const openness = iso ? visaOpenToAllAfrica[iso] : null;
-  const recs = iso ? (countryRecAffiliations[iso] || []) : [];
+  const openness = iso ? visaOpenToAllAfrica[iso] : null;
+  const recs = iso ? (countryRecAffiliations[iso] || []) : [];
   const date = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-GB' }, lang), { day: '2-digit', month: 'long', year: 'numeric' });
-  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
   const L = faireL(lang);
-  const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
+  const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
 
   const kpis = [
     { lbl: L('Stock migrant (2024)', 'Migrant stock (2024)'), val: formatNumber(display.stock, lang) },
@@ -2014,7 +2021,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
     { lbl: L('Part des femmes', 'Female share'), val: nn(display.female, '%') },
     { lbl: L('Rétention Sud-Sud', 'South-South retention'), val: nn(display.retention, '%') },
     { lbl: L('Transferts (% PIB)', 'Remittances (% GDP)'), val: nn(display.remittances, '%') },
-    { lbl: L('Ouverture visa (AVOI)', 'Visa openness (AVOI)'), val: display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100` },
+    { lbl: L('Ouverture visa (AVOI)', 'Visa openness (AVOI)'), val: display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100` },
   ];
 
   return (
@@ -2033,7 +2040,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '13pt', lineHeight: 1.1 }}>{display.name}</div>
           <div style={{ fontSize: '6.4pt', letterSpacing: '.1em', textTransform: 'uppercase', color: '#64748b' }}>
-            {display.isRegion ? L('Profil régional', 'Regional profile') : L('Profil pays', 'Country profile')} · {date}
+            {display.isRegion ? L('Profil régional', 'Regional profile') : L('Profil pays', 'Country profile')} · {date}
           </div>
         </div>
       </div>
@@ -2123,6 +2130,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
           </div>
         )}
 
+
         {display.normlex && (
           <div className="pdf-block">
             <h2>{L('Conventions OIT (NORMLEX)', 'ILO conventions (NORMLEX)')}</h2>
@@ -2173,7 +2181,7 @@ const PrintCitationFooter = ({ lang, sectionLabel, tab = null, detail = null }) 
   // enfant s'executent avant ceux du parent : attendre ne reglait rien.
   const seg = tab ? tr(ROUTES[tab], lang) : null;
   const chemin = seg
-    ? `/${lang}/${seg}${detail ? `/${detail}` : ''}`
+    ? `/${lang}/${seg}${detail ? `/${detail}` : ''}`
     : (typeof window !== 'undefined' ? window.location.pathname : '');
   const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'South(s) Mobility DataHub';
   const printDate = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-US' }, lang), { year: 'numeric', month: 'long', day: 'numeric' });
@@ -3322,10 +3330,10 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
           return (
             <circle
               key={'amorce-' + id}
-              cx={cx} cy={cy} r={isSel || isLu ? 11 : 8.5}
+              cx={cx} cy={cy} r={isSel || isLu ? 11 : 8.5}
               fill={colorFor(v)}
-              stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#FFFFFF'}
-              strokeWidth={isSel ? 2.6 : isLu ? 2.2 : 1.6}
+              stroke={isSel ? '#14161C' : isLu ? 'var(--accent)' : '#FFFFFF'}
+              strokeWidth={isSel ? 2.6 : isLu ? 2.2 : 1.6}
               className="cursor-pointer choro-pays choro-amorce"
               tabIndex={0}
               role="button"
@@ -3345,7 +3353,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
       {/* Relevé : ce que la carte sait du pays pointé, sans attendre ni cliquer. */}
       <aside className="border p-4" style={{ borderColor: 'var(--rule)', backgroundColor: 'var(--paper-raised)' }}
              aria-live="polite">
-        {paysLu ? (
+        {paysLu ? (
           <>
             <h4 className="font-serif font-bold text-lg leading-tight text-slate-900">
               {tr(paysLu.name, lang) || ''}
@@ -3354,15 +3362,15 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
               {releve.map((r, i) => (
                 <div key={i}>
                   <dt className="text-[11px] leading-snug" style={{ color: 'var(--label)' }}>{r.l}</dt>
-                  <dd className={`font-serif font-bold tabular-nums leading-none ${r.fort ? 'text-xl' : 'text-[15px]'}`}
-                      style={{ color: r.fort ? 'var(--accent-deep)' : 'var(--ink)' }}>
+                  <dd className={`font-serif font-bold tabular-nums leading-none ${r.fort ? 'text-xl' : 'text-[15px]'}`}
+                      style={{ color: r.fort ? 'var(--accent-deep)' : 'var(--ink)' }}>
                     {r.v}
                   </dd>
                   {/* Le rang situe le chiffre. « 0,6 % » ne dit rien tant qu'on
                       ignore si c'est beaucoup ; « 51e sur 54 » le dit. */}
                   {r.rang && (
                     <span className="block mt-1 text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
-                      {r.rang}<sup>{r.rang === 1 ? (lang === 'en' ? 'st' : 'er') : (lang === 'en' ? 'e' : 'e')}</sup>
+                      {r.rang}<sup>{r.rang === 1 ? (lang === 'en' ? 'st' : 'er') : (lang === 'en' ? 'e' : 'e')}</sup>
                       {' '}{L('sur', 'of', { ar: 'من' })} {r.surTotal}
                     </span>
                   )}
@@ -3378,7 +3386,7 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
                       'Click the country to open its full profile.')}</Prose>
             )}
           </>
-        ) : (
+        ) : (
           <Prose className="text-[13px] leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L('Survolez un pays — ou parcourez la carte au clavier — pour lire ses chiffres ici.',
                'Hover a country — or move through the map with the keyboard — to read its figures here.')}</Prose>
         )}
@@ -3391,14 +3399,14 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
         <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--label)' }}>
           {tr(indicator.label, lang)}
         </span>
-        {categoriel ? (
+        {categoriel ? (
           indicator.categories.map(c => (
             <span key={c.key} className="flex items-center gap-1.5">
               <span className="w-3.5 h-2.5 rounded-[1px] shrink-0" style={{ background: c.color }} />
               <span className="text-[11px]" style={{ color: 'var(--ink-soft)' }}>{tr(c.label, lang)}</span>
             </span>
           ))
-        ) : (
+        ) : (
           <>
             <span className="flex items-center gap-0.5">
               {CHORO_RAMP.map((c, i) => (
@@ -3435,7 +3443,7 @@ const CARTE_ANCRAGE = {
     const t = c.au_treaties;
     if (!t) return NaN;
     return ['constitutive', 'abuja', 'refugees_1969', 'zlecaf', 'kampala', 'free_movement']
-      .reduce((n, k) => n + (t[k] ? 1 : 0), 0);
+      .reduce((n, k) => n + (t[k] ? 1 : 0), 0);
   },
 };
 
@@ -3465,10 +3473,10 @@ const sansAccents = (s) => String(s || '').normalize('NFD')
 
 const construireIndex = (lang) => {
   const fiches = [];
-  const L = (o) => (typeof o === 'string' ? o : (tr(o, lang) || o?.fr || ''));
+  const L = (o) => (typeof o === 'string' ? o : (tr(o, lang) || o?.fr || ''));
   // Les mots-cles sont TOUJOURS bilingues, quelle que soit la langue affichee :
   // on tape volontiers « Tchad » en lisant l'anglais, ou l'inverse.
-  const D = (o) => (typeof o === 'string' ? o : `${o?.fr || ''} ${o?.en || ''}`);
+  const D = (o) => (typeof o === 'string' ? o : `${o?.fr || ''} ${o?.en || ''}`);
 
   // La region n'est pas un champ du pays : c'est la cle qui les regroupe.
   const REGIONS = {
@@ -3481,7 +3489,7 @@ const construireIndex = (lang) => {
   Object.entries(countryData).forEach(([region, pays]) => pays.forEach(c => fiches.push({
     type: 'pays',
     titre: L(c.name),
-    contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${tr({ fr: 'migrants', en: 'migrants' }, lang)}` : null]
+    contexte: [L(REGIONS[region]), c.stock ? `${formatNumber(c.stock, lang)} ${tr({ fr: 'migrants', en: 'migrants' }, lang)}` : null]
       .filter(Boolean).join(' · '),
     aller: { tab: 'atlas', id: c.id },
     mots: `${D(c.name)} ${c.iso2 || ''} ${D(REGIONS[region])}`,
@@ -3506,7 +3514,7 @@ const construireIndex = (lang) => {
   (libraryData || []).forEach(s => (s.items || []).forEach(it => fiches.push({
     type: 'source',
     titre: it.title,
-    contexte: `${L(s.section)}${it.year ? ` · ${it.year}` : ''}`,
+    contexte: `${L(s.section)}${it.year ? ` · ${it.year}` : ''}`,
     aller: { tab: 'resources' },
     lien: it.url,
     mots: `${it.title} ${D(it.desc)} ${D(s.section)}`,
@@ -3540,7 +3548,7 @@ const RechercheGlobale = ({ lang, aller }) => {
       .filter(f => mots.every(m => f.cle.includes(m)))
       // Un titre qui commence par la recherche passe devant : c'est presque
       // toujours ce qu'on cherchait.
-      .map(f => ({ ...f, rang: sansAccents(f.titre).startsWith(mots[0]) ? 0 : 1 }))
+      .map(f => ({ ...f, rang: sansAccents(f.titre).startsWith(mots[0]) ? 0 : 1 }))
       .sort((a, b) => a.rang - b.rang || a.titre.length - b.titre.length)
       .slice(0, 40);
   }, [q, index]);
@@ -3551,7 +3559,7 @@ const RechercheGlobale = ({ lang, aller }) => {
     return n;
   }, [resultats]);
 
-  const vus = filtre ? resultats.filter(r => r.type === filtre) : resultats;
+  const vus = filtre ? resultats.filter(r => r.type === filtre) : resultats;
 
   useEffect(() => {
     const dehors = (e) => { if (!ref.current?.contains(e.target)) setOuvert(false); };
@@ -3601,10 +3609,10 @@ const RechercheGlobale = ({ lang, aller }) => {
                 ))}
               </div>
 
-              {vus.length === 0 ? (
+              {vus.length === 0 ? (
                 <Prose className="recherche-vide" lang={lang}>{L('Rien ne correspond. Essayez un mot plus court, ou le nom d’un pays.',
                      'Nothing matches. Try a shorter word, or a country name.')}</Prose>
-              ) : (
+              ) : (
                 <ul className="recherche-liste">
                   {vus.map((r, i) => (
                     <li key={i}>
@@ -3773,7 +3781,7 @@ const CORRIDORS = [
 const POINTS = { ...LIEUX, ...ESCALES_OIM };
 
 const traceCorridor = (c) => {
-  const a = POINTS[c.de], b = POINTS[c.vers], m = c.via ? POINTS[c.via] : null;
+  const a = POINTS[c.de], b = POINTS[c.vers], m = c.via ? POINTS[c.via] : null;
   if (!a || !b) return null;
   if (m) return `M${a[0]} ${a[1]} Q${m[0]} ${m[1]} ${b[0]} ${b[1]}`;
   const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
@@ -3809,16 +3817,16 @@ const SceneFlux = ({ lang, children }) => {
                un corridor d'1,4 million de personnes et à une route qui en
                compte quarante mille par an. */
             <path key={i} d={d} pathLength="1"
-                  className={CORRIDORS[i]?.intra ? 'flux-intra'
-                           : CORRIDORS[i]?.deplacement ? 'flux-deplace' : 'flux-hors'}
+                  className={CORRIDORS[i]?.intra ? 'flux-intra'
+                           : CORRIDORS[i]?.deplacement ? 'flux-deplace' : 'flux-hors'}
                   style={{ animationDelay: `${300 + i * 140}ms` }} />
           ))}
         </g>
         {/* Les escales : elles battent, faiblement, decalees les unes des autres. */}
         <g className="flux-escales">
           {[...new Set(CORRIDORS.flatMap(c => [c.de, c.vers]))].map((k, i) => (
-            POINTS[k] ? <circle key={k} cx={POINTS[k][0]} cy={POINTS[k][1]} r="4"
-                               style={{ animationDelay: `${i * 260}ms` }} /> : null
+            POINTS[k] ? <circle key={k} cx={POINTS[k][0]} cy={POINTS[k][1]} r="4"
+                               style={{ animationDelay: `${i * 260}ms` }} /> : null
           ))}
         </g>
         {/* Les grains voyagent DANS le dessin, portes par animateMotion.
@@ -3874,7 +3882,7 @@ const Chapitre = ({ children, lang = 'fr' }) => {
     // Le contenu bouge avec la largeur de la fenetre et le chargement des
     // polices : une mesure unique au montage se tromperait a la premiere
     // rotation d'ecran.
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(mesurer) : null;
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(mesurer) : null;
     ro?.observe(el);
     return () => ro?.disconnect();
   }, [children]);
@@ -3882,11 +3890,11 @@ const Chapitre = ({ children, lang = 'fr' }) => {
   const replie = long && !ouvert;
 
   return (
-    <div className="chapitre" data-replie={replie ? 'true' : 'false'}>
+    <div className="chapitre" data-replie={replie ? 'true' : 'false'}>
       <div ref={ref} className="chapitre-corps">{children}</div>
       {long && (
         <button type="button" className="chapitre-bouton" onClick={() => setOuvert(o => !o)} aria-expanded={ouvert}>
-          {ouvert ? L('Replier', 'Collapse', { ar: 'طيّ' }) : L('Lire la suite', 'Read on', { ar: 'تابع القراءة' })}
+          {ouvert ? L('Replier', 'Collapse', { ar: 'طيّ' }) : L('Lire la suite', 'Read on', { ar: 'تابع القراءة' })}
           <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
       )}
@@ -3916,19 +3924,19 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
   const cer = countryRecAffiliations[pays.iso2] || [];
   const ratifies = pays.au_treaties
     ? ['constitutive', 'abuja', 'refugees_1969', 'zlecaf', 'kampala', 'free_movement']
-        .reduce((n, k) => n + (pays.au_treaties[k] ? 1 : 0), 0)
+        .reduce((n, k) => n + (pays.au_treaties[k] ? 1 : 0), 0)
     : null;
   // La valeur de la couche en cours vient en tete : c'est la question posee.
-  const valeurCouche = indicateur?.get ? indicateur.get(pays) : null;
-  const lisible = (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : formatNumber(v, lang));
+  const valeurCouche = indicateur?.get ? indicateur.get(pays) : null;
+  const lisible = (v) => (v === null || v === undefined || Number.isNaN(v) ? '—' : formatNumber(v, lang));
 
   // Le releve ne repete pas la valeur mise en avant : lire deux fois le meme
   // chiffre a dix centimetres d'ecart fait douter qu'il s'agisse du meme.
   const releve = [
     { cle: 'stock', l: L('Migrants présents', 'Resident migrants'), v: formatNumber(pays.stock, lang) },
     { cle: 'evolution', l: L('Part de la population', 'Share of population'), v: `${formatNumber(pays.evolution, lang)} %` },
-    { cle: 'avoi', l: L('Ouverture des visas', 'Visa openness'), v: pays.avoi == null ? '—' : `${formatNumber(pays.avoi, lang)}/100` },
-    { cle: 'retention', l: L('Rétention Sud-Sud', 'South-South retention'), v: pays.retention == null ? '—' : `${formatNumber(pays.retention, lang)} %` },
+    { cle: 'avoi', l: L('Ouverture des visas', 'Visa openness'), v: pays.avoi == null ? '—' : `${formatNumber(pays.avoi, lang)}/100` },
+    { cle: 'retention', l: L('Rétention Sud-Sud', 'South-South retention'), v: pays.retention == null ? '—' : `${formatNumber(pays.retention, lang)} %` },
   ].filter(r => r.cle !== indicateur?.key);
 
   return (
@@ -3984,7 +3992,7 @@ const PanneauPays = ({ pays, lang, text, indicateur, onFermer, onFiche }) => {
         {cer.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[11px] me-1" style={{ color: 'var(--label)' }}>{L('CER', 'RECs')}</span>
-            {cer.map(k => <span key={k} className="panneau-cer">{recNames[k] ? tr(recNames[k], lang) : k}</span>)}
+            {cer.map(k => <span key={k} className="panneau-cer">{recNames[k] ? tr(recNames[k], lang) : k}</span>)}
           </div>
         )}
         {ouverture && (
@@ -4021,7 +4029,7 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
   // la cle sous laquelle il est range. On part donc du decoupage, pas du pays.
   const rangs = useMemo(() => {
     if (categoriel || !indicateur?.get) return null;
-    const pays = region ? (countryData[region] || []) : Object.values(countryData).flat();
+    const pays = region ? (countryData[region] || []) : Object.values(countryData).flat();
     return pays
       .map(c => ({ id: String(c.id), nom: tr(c.name, lang) || c.name?.fr, v: indicateur.get(c) }))
       .filter(x => Number.isFinite(x.v))
@@ -4033,17 +4041,17 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
   const tete = rangs.slice(0, 5);
   const queue = rangs.slice(-3);
   const max = tete[0].v || 1;
-  const fmt = (v) => (indicateur.unit === '' ? formatNumber(v, lang) : `${v}${indicateur.unit}`);
+  const fmt = (v) => (indicateur.unit === '' ? formatNumber(v, lang) : `${v}${indicateur.unit}`);
 
   const Ligne = ({ r, i, sourd }) => (
     <li>
       <button
         type="button"
         onClick={() => onChoisir?.(r.id)}
-        aria-current={selection === r.id ? 'true' : undefined}
+        aria-current={selection === r.id ? 'true' : undefined}
         className="classement-ligne w-full text-start"
       >
-        <span className="classement-rang tabular-nums">{sourd ? rangs.indexOf(r) + 1 : i + 1}</span>
+        <span className="classement-rang tabular-nums">{sourd ? rangs.indexOf(r) + 1 : i + 1}</span>
         <span className="classement-nom">{r.nom}</span>
         <span className="classement-jauge" aria-hidden="true">
           <span style={{ width: `${Math.max(2, (r.v / max) * 100)}%` }} />
@@ -4096,7 +4104,7 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
 // rubrique elle-meme, avec sa raison.
 const RUBRIQUES = [
   {
-    cle: 'presence', icone: Users,
+    cle: 'presence', volet: 'presence', icone: Users,
     nom: { fr: 'Présence', en: 'Presence' },
     dit: { fr: 'Combien de personnes nées ailleurs vivent ici, et quelle part de la population elles font.',
            en: 'How many people born elsewhere live here, and what share of the population they make up.' },
@@ -4108,7 +4116,7 @@ const RUBRIQUES = [
     ],
   },
   {
-    cle: 'composition', icone: HeartPulse,
+    cle: 'composition', volet: 'presence', icone: HeartPulse,
     nom: { fr: 'Composition', en: 'Composition' },
     dit: { fr: 'La part des femmes dans la population migrante. Une migration à parité se comporte autrement qu’une migration de travail masculine.',
            en: 'The share of women among migrants. A migration at parity behaves differently from a male labour migration.' },
@@ -4117,17 +4125,17 @@ const RUBRIQUES = [
     mesures: (d, L) => [{ valeur: d.female, unite: '%', quoi: L('De femmes', 'Women'), anneau: Number(d.female) }],
   },
   {
-    cle: 'travail', icone: Briefcase,
+    cle: 'travail', volet: 'economie', icone: Briefcase,
     nom: { fr: 'Travail', en: 'Work' },
     dit: { fr: 'La part des migrants en âge de travailler qui sont actifs — en emploi ou en recherche d’emploi.',
            en: 'The share of working-age migrants who are economically active — employed or seeking work.' },
     source: 'OIT · ILOSTAT',
     dispo: (d) => d.labour_participation !== null && d.labour_participation !== undefined,
     mesures: (d, L) => [{ valeur: d.labour_participation, unite: '%',
-      quoi: L('Taux d’activité', 'Activity rate') + (d.labour_participation_year ? ` (${d.labour_participation_year})` : '') }],
+      quoi: L('Taux d’activité', 'Activity rate') + (d.labour_participation_year ? ` (${d.labour_participation_year})` : '') }],
   },
   {
-    cle: 'deplacement', icone: ShieldAlert,
+    cle: 'deplacement', volet: 'deplacement', icone: ShieldAlert,
     nom: { fr: 'Déplacement', en: 'Displacement' },
     dit: { fr: 'Qui est déplacé à l’intérieur du pays, et qui y est accueilli. Deux périmètres de suivi distincts, affichés plutôt qu’harmonisés.',
            en: 'Who is displaced within the country, and who is hosted there. Two distinct monitoring perimeters, shown rather than reconciled.' },
@@ -4139,7 +4147,7 @@ const RUBRIQUES = [
     ],
   },
   {
-    cle: 'accueil', icone: Users,
+    cle: 'accueil', volet: 'deplacement', icone: Users,
     nom: { fr: 'Accueil', en: 'Hosting' },
     dit: { fr: 'Le nombre de réfugiés hébergés. Subir un déplacement et héberger celui d’autrui sont deux faits distincts, et les confondre dans une même case en efface un.',
            en: 'The number of refugees hosted. Undergoing displacement and hosting someone else’s are two distinct facts, and merging them into one box erases one of them.' },
@@ -4148,7 +4156,7 @@ const RUBRIQUES = [
     mesures: (d, L) => [{ valeur: d.refugees_hosted, quoi: L('Réfugiés accueillis', 'Refugees hosted') }],
   },
   {
-    cle: 'ouverture', icone: Unlock,
+    cle: 'ouverture', volet: 'ouverture', icone: Unlock,
     nom: { fr: 'Ouverture', en: 'Openness' },
     dit: { fr: 'Le rang du pays à l’indice d’ouverture des visas de la BAD, et la part des mobilités qui restent dans la sous-région.',
            en: 'The country’s rank on the AfDB visa openness index, and the share of mobility that stays within the sub-region.' },
@@ -4160,14 +4168,14 @@ const RUBRIQUES = [
     ],
   },
   {
-    cle: 'economie', icone: TrendingUp,
+    cle: 'economie', volet: 'economie', icone: TrendingUp,
     nom: { fr: 'Économie', en: 'Economy' },
     dit: { fr: 'Les transferts de fonds déclarés, en part du produit intérieur brut. Les envois informels échappent à la mesure.',
            en: 'Declared remittances, as a share of gross domestic product. Informal transfers escape measurement.' },
     source: 'Banque mondiale',
     dispo: (d) => d.remittances !== null && d.remittances !== undefined,
     mesures: (d, L) => [{ valeur: d.remittances, unite: '% ' + L('du PIB', 'of GDP'),
-      quoi: L('Transferts de fonds', 'Remittances') + (d.remittances_year ? ` (${d.remittances_year})` : '') }],
+      quoi: L('Transferts de fonds', 'Remittances') + (d.remittances_year ? ` (${d.remittances_year})` : '') }],
   },
 ];
 
@@ -4178,7 +4186,7 @@ const MesurePays = ({ valeur, unite = '', quoi, anneau = null, lang }) => {
   const vide = valeur === null || valeur === undefined || valeur === '';
   return (
     <div className="mesure-pays">
-      {anneau !== null && !Number.isNaN(anneau) ? (
+      {anneau !== null && !Number.isNaN(anneau) ? (
         <span className="mesure-anneau" role="img"
               aria-label={`${anneau}${unite} — ${quoi}`}
               style={{ background: `conic-gradient(var(--accent) ${anneau}%, var(--anneau-vide) 0)` }}>
@@ -4186,12 +4194,12 @@ const MesurePays = ({ valeur, unite = '', quoi, anneau = null, lang }) => {
             {/* L'anneau court-circuitait le formatage : il affichait « 47.2 »
                 quand le reste de la fiche disait « 0,6 ». Un séparateur décimal
                 anglais dans une page française se remarque tout de suite. */}
-            <b>{vide ? '—' : formatNumber(Number(valeur), lang)}</b><i>{unite}</i>
+            <b>{vide ? '—' : formatNumber(Number(valeur), lang)}</b><i>{unite}</i>
           </span>
         </span>
-      ) : (
+      ) : (
         <span className="mesure-nombre">
-          <b>{vide ? '—' : formatNumber(Number(String(valeur).replace(/\s/g, '')), lang)}</b>
+          <b>{vide ? '—' : formatNumber(Number(String(valeur).replace(/\s/g, '')), lang)}</b>
           {unite && <i>{unite}</i>}
         </span>
       )}
@@ -4202,9 +4210,75 @@ const MesurePays = ({ valeur, unite = '', quoi, anneau = null, lang }) => {
 
 // La fiche : une barre de rubriques, puis la rubrique ouverte. Les rubriques
 // sans donnee ne sont pas propose'es — on ne fait pas cliquer vers du vide.
-const FichePaysRubriques = ({ display, lang }) => {
+// Les cinq volets de la fiche. La grille à plat montrait les sept rubriques
+// côte à côte : tout était là, mais rien n'était rangé, et la fenêtre ne disait
+// plus par où commencer. La fiche retrouve donc ses volets — combien de
+// personnes, qui est déplacé, par où l'on passe, ce que le droit ouvre, ce que
+// l'argent fait — chacun avec son bouton, comme avant.
+//
+// Un volet ne cache rien à l'intérieur de lui-même : ce qu'il porte tient d'un
+// coup d'œil, en fiches nettes, sans rien qui défile. Le rangement se fait à
+// l'étage au-dessus, pas dans la lecture.
+//
+// L'impression ne passe pas par ici : la fenêtre est `print:hidden` et c'est
+// <PdfCountryDossier> qui compose le papier, tous ensembles réunis. Le volet
+// ouvert à l'écran ne change donc rien à ce qu'on exporte.
+const VOLETS_FICHE = [
+  { cle: 'presence',    icone: Users,       nom: { fr: 'Présence',    en: 'Presence' } },
+  { cle: 'deplacement', icone: ShieldAlert, nom: { fr: 'Déplacement', en: 'Displacement' } },
+  { cle: 'trajets',     icone: GitMerge,    nom: { fr: 'Trajets',     en: 'Routes' } },
+  { cle: 'ressorts',    icone: ArrowRight,  nom: { fr: 'Ressorts',    en: 'Drivers' } },
+  { cle: 'ouverture',   icone: Unlock,      nom: { fr: 'Ouverture',   en: 'Openness' } },
+  { cle: 'engagements', icone: Scale,       nom: { fr: 'Engagements', en: 'Commitments' } },
+  { cle: 'economie',    icone: TrendingUp,  nom: { fr: 'Économie',    en: 'Economy' } },
+];
+
+// Un volet ne s'affiche que s'il a de quoi parler. Un bouton qui ouvre une page
+// vide coûte plus cher que le bouton qu'on n'a pas mis.
+const voletTientQuelqueChose = (cle, d) => {
+  if (!d) return false;
+  if (RUBRIQUES.some(r => r.volet === cle && r.dispo(d))) return true;
+  if (cle === 'presence')    return !!(d.iso2 && censusByCountry[d.iso2]);
+  if (cle === 'deplacement') return d.idp_conflict > 0 || d.idp_disaster > 0 || d.refugees_hosted > 0;
+  if (cle === 'trajets')     return !!d.origDest;
+  if (cle === 'ressorts')    return !!(d.trigger || d.response || d.impact);
+  // Ouverture ne garde que les visas ; ce qui relève de la signature a son volet.
+  if (cle === 'ouverture')   return d.avoi !== null && d.avoi !== undefined;
+  if (cle === 'engagements') return !!(d.au_treaties || d.normlex || (d.iso2 && countryRecAffiliations[d.iso2]));
+  if (cle === 'economie')    return d.aid !== null && d.aid !== undefined;
+  return false;
+};
+
+// La barre de volets, dans l'entête de la fenêtre. Sous deux volets disponibles
+// elle ne sert plus à rien et disparaît.
+const BarreVoletsFiche = ({ display, lang, volet, setVolet }) => {
+  const dispo = VOLETS_FICHE.filter(v => voletTientQuelqueChose(v.cle, display));
+  if (dispo.length < 2) return null;
+  return (
+    <div className="fiche-volets print:hidden" role="tablist"
+         aria-label={tr({ fr: 'Volets de la fiche', en: 'Profile panels' }, lang)}>
+      {dispo.map(v => {
+        const Icone = v.icone;
+        const actif = v.cle === volet;
+        return (
+          <button key={v.cle} type="button" role="tab" aria-selected={actif}
+                  onClick={() => setVolet(v.cle)}
+                  className="fiche-volet-btn" data-actif={actif ? 'true' : 'false'}>
+            <Icone className="w-3.5 h-3.5" aria-hidden="true" />
+            <span>{tr(v.nom, lang)}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+const FichePaysRubriques = ({ display, lang, volet = null }) => {
   const L = faireL(lang);
-  const dispo = useMemo(() => RUBRIQUES.filter(r => r.dispo(display)), [display]);
+  const dispo = useMemo(
+    () => RUBRIQUES.filter(r => (!volet || r.volet === volet) && r.dispo(display)),
+    [display, volet]
+  );
   if (!dispo.length) return null;
   return (
     <div className="fiche-grille">
@@ -4243,13 +4317,13 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
   // Changer de sous-region recadre la planche : on ne regarde plus le continent
   // en entier avec cinq pays eclaires, on regarde la region seule.
   const regions = Object.keys(text.regions || {});
-  const cadre = activeSubRegion === 'all' ? null : activeSubRegion;
+  const cadre = activeSubRegion === 'all' ? null : activeSubRegion;
 
   // La recherche ne quitte pas la carte : elle designe un pays, la carte
   // l'ouvre. Une liste de resultats a cote du continent ferait un deuxieme
   // outil pour le meme geste.
   const suggestions = useMemo(
-    () => (searchTerm.trim().length < 2 ? [] : filteredCountries.slice(0, 6)),
+    () => (searchTerm.trim().length < 2 ? [] : filteredCountries.slice(0, 6)),
     [searchTerm, filteredCountries]
   );
 
@@ -4270,7 +4344,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
                        { ar: 'مركز موارد — التنقلات الأفريقية وتنقلات الجنوب' })}
           </span>
           <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
-              style={{ color: '#FFFFFF' }}>
+              style={{ color: 'var(--reserve)' }}>
             {L('Les mobilités africaines,', 'African mobility,', { ar: 'التنقلات الأفريقية،' })}{' '}
             <span style={{ color: 'var(--accent-light)' }}>
               {L('par les données africaines.', 'through African data.', { ar: 'من خلال البيانات الأفريقية.' })}
@@ -4327,7 +4401,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
                 soit la moitie du bandeau — et repoussaient la carte sous la
                 ligne de flottaison. Ce sont des phrases, pas des etiquettes :
                 elles ne se serrent pas, il faut donc les ranger. */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="bascule-groupe grid grid-cols-1 sm:grid-cols-2 gap-2">
               {COUCHES_ATLAS.map(c => {
                 const actif = c.cle === coucheCle;
                 return (
@@ -4337,7 +4411,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
                     onClick={() => setCoucheCle(c.cle)}
                     aria-pressed={actif}
                     className="couche-btn couche-btn--sombre"
-                    data-actif={actif ? 'true' : 'false'}
+                    data-actif={actif ? 'true' : 'false'}
                   >
                     {tr(c.question, lang)}
                   </button>
@@ -4447,7 +4521,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           )}
         </div>
 
-        <nav className="flex flex-wrap gap-1.5" aria-label={L('Cadrer une sous-région', 'Frame a sub-region', { ar: 'تأطير منطقة فرعية' })}>
+        <nav className="bascule-groupe flex flex-wrap gap-1.5" aria-label={L('Cadrer une sous-région', 'Frame a sub-region', { ar: 'تأطير منطقة فرعية' })}>
           {['all', ...regions].map(r => (
             <button
               key={r}
@@ -4455,9 +4529,9 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
               onClick={() => { setActiveSubRegion(r); setPaysOuvert(null); }}
               aria-pressed={activeSubRegion === r}
               className="couche-btn"
-              data-actif={activeSubRegion === r ? 'true' : 'false'}
+              data-actif={activeSubRegion === r ? 'true' : 'false'}
             >
-              {r === 'all' ? tr(text.all_regions, lang) : tr(text.regions[r], lang)}
+              {r === 'all' ? tr(text.all_regions, lang) : tr(text.regions[r], lang)}
             </button>
           ))}
         </nav>
@@ -4467,14 +4541,14 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           lieu de quitter l'ecran : le continent reste sous les yeux, le pays
           choisi reste eclaire, et la comparaison d'un pays a l'autre se fait
           sans aller-retour. */}
-      <div className="atlas-scene" data-panneau={paysOuvert ? 'ouvert' : 'ferme'}>
+      <div className="atlas-scene" data-panneau={paysOuvert ? 'ouvert' : 'ferme'}>
         <div className="atlas-carte">
           <AfricaChoropleth
             indicator={{ ...indicateur, plain, hint }}
             lang={lang}
             region={cadre}
             selectedId={paysOuvert}
-            onSelect={(id) => setPaysOuvert(id === paysOuvert ? null : id)}
+            onSelect={(id) => setPaysOuvert(id === paysOuvert ? null : id)}
           />
         </div>
         {paysOuvert && countryById[paysOuvert] && (
@@ -4560,7 +4634,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           </div>
           <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
             {filteredCountries.length}{' '}
-            {filteredCountries.length > 1 ? L('pays', 'countries', { ar: 'بلداً' }) : L('pays', 'country', { ar: 'بلد' })}
+            {filteredCountries.length > 1 ? L('pays', 'countries', { ar: 'بلداً' }) : L('pays', 'country', { ar: 'بلد' })}
           </span>
         </div>
 
@@ -4570,9 +4644,9 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
             { v: `${display.evolution}%`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
             { v: `${display.female}%`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
             { v: `${display.retention}%`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) },
-            { v: display.remittances != null ? `${display.remittances}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            { v: display.remittances != null ? `${display.remittances}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Transferts, en part du PIB', 'Remittances, share of GDP', { ar: 'التحويلات كنسبة من الناتج' }) },
-            { v: display.labour_participation != null ? `${display.labour_participation}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            { v: display.labour_participation != null ? `${display.labour_participation}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Migrants en activité', 'Migrants in work', { ar: 'المهاجرون العاملون' }) },
           ].map((k, i) => (
             <div key={i} className="px-5 py-5">
@@ -4654,7 +4728,7 @@ const countryNameAliases = {
 const opennessByName = (name) => {
   const key = String(name || '').toLowerCase();
   const iso = countryNameToIso[key] || countryNameAliases[key];
-  return iso ? visaOpenToAllAfrica[iso] : undefined;
+  return iso ? visaOpenToAllAfrica[iso] : undefined;
 };
 
 // Carte de l'Afrique mettant en évidence les membres d'une CER, avec survol interactif.
@@ -4669,8 +4743,8 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
     return set;
   }, [recId]);
 
-  const hoveredMeta = hovered ? countryIdIndex[hovered] : null;
-  const hoveredIsMember = hovered ? memberIds.has(hovered) : false;
+  const hoveredMeta = hovered ? countryIdIndex[hovered] : null;
+  const hoveredIsMember = hovered ? memberIds.has(hovered) : false;
 
   return (
     <div className="relative">
@@ -4683,27 +4757,27 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
             <path
               key={id}
               d={d}
-              fill={isMember ? accent : '#D9D8D2'}
+              fill={isMember ? accent : '#D9D8D2'}
               stroke="#F7F6F2"
-              strokeWidth={isHovered ? 2.2 : 0.8}
+              strokeWidth={isHovered ? 2.2 : 0.8}
               className="transition-all duration-200 cursor-default"
-              style={{ opacity: isHovered ? 1 : isMember ? 0.92 : 0.75, filter: isHovered ? 'brightness(1.12)' : 'none' }}
+              style={{ opacity: isHovered ? 1 : isMember ? 0.92 : 0.75, filter: isHovered ? 'brightness(1.12)' : 'none' }}
               onMouseEnter={() => setHovered(id)}
-              onMouseLeave={() => setHovered((h) => (h === id ? null : h))}
+              onMouseLeave={() => setHovered((h) => (h === id ? null : h))}
             />
           );
         })}
       </svg>
 
       <div className="absolute top-2 start-2 pointer-events-none">
-        {hoveredMeta ? (
+        {hoveredMeta ? (
           <div className="bg-white/95 backdrop-blur-sm border border-slate-200 shadow-md rounded-md px-3 py-2 animate-in fade-in duration-150">
             <span className="text-xs font-bold text-slate-900 block">{tr(hoveredMeta.name, lang) || hoveredMeta.name.fr}</span>
-            <span className={`text-[10px] font-bold uppercase tracking-widest ${hoveredIsMember ? 'text-emerald-700' : 'text-slate-400'}`}>
-              {hoveredIsMember ? (tr({ fr: 'État membre', en: 'Member state' }, lang)) : (tr({ fr: 'Non membre', en: 'Not a member' }, lang))}
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${hoveredIsMember ? 'text-emerald-700' : 'text-slate-400'}`}>
+              {hoveredIsMember ? (tr({ fr: 'État membre', en: 'Member state' }, lang)) : (tr({ fr: 'Non membre', en: 'Not a member' }, lang))}
             </span>
           </div>
-        ) : (
+        ) : (
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
             {tr({ fr: 'Survolez la carte', en: 'Hover the map' }, lang)}
           </span>
@@ -4720,7 +4794,7 @@ Object.entries(countryData).forEach(([regionKey, countries]) => {
 
 const continentalAvoiAvg = (() => {
   const scores = Object.values(countryData).flat().map(c => c.avoi).filter(v => v !== null && v !== undefined);
-  return scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : null;
+  return scores.length ? Math.round(scores.reduce((s, v) => s + v, 0) / scores.length) : null;
 })();
 
 const computeRegionAggregate = (countries) => {
@@ -4731,21 +4805,21 @@ const computeRegionAggregate = (countries) => {
   const aid = weightedAverage(countries, c => c.aid);
   const labourParticipation = weightedAverage(countries, c => c.labour_participation);
 
-  const remittanceYears = countries.map(c => c.remittances != null ? c.remittances_year : null).filter(Boolean);
+  const remittanceYears = countries.map(c => c.remittances != null ? c.remittances_year : null).filter(Boolean);
   let remittancesYearLabel = null;
   if (remittanceYears.length > 0) {
     const minY = Math.min(...remittanceYears), maxY = Math.max(...remittanceYears);
-    remittancesYearLabel = minY === maxY ? String(minY) : `${minY}-${maxY}`;
+    remittancesYearLabel = minY === maxY ? String(minY) : `${minY}-${maxY}`;
   }
 
   return {
     stock: totalStock,
-    female: female !== null ? female.toFixed(1) : null,
-    retention: retention !== null ? Math.round(retention) : null,
-    remittances: remittances !== null ? Math.round(remittances * 100) / 100 : null,
+    female: female !== null ? female.toFixed(1) : null,
+    retention: retention !== null ? Math.round(retention) : null,
+    remittances: remittances !== null ? Math.round(remittances * 100) / 100 : null,
     remittancesYearLabel,
-    aid: aid !== null ? Math.round(aid * 100) / 100 : null,
-    labourParticipation: labourParticipation !== null ? labourParticipation.toFixed(1) : null,
+    aid: aid !== null ? Math.round(aid * 100) / 100 : null,
+    labourParticipation: labourParticipation !== null ? labourParticipation.toFixed(1) : null,
     countryCount: countries.length
   };
 };
@@ -4969,7 +5043,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
             <button
               key={idx}
               onClick={() => setActiveTab(stat.tab)}
-              aria-label={`${stat.value} ${stat.unit ? tr(stat.unit, lang) + ' ' : ''}${tr(stat.label, lang)} — ${tr(stat.door, lang)}`}
+              aria-label={`${stat.value} ${stat.unit ? tr(stat.unit, lang) + ' ' : ''}${tr(stat.label, lang)} — ${tr(stat.door, lang)}`}
               className="relative overflow-hidden px-5 py-6 text-start group flex flex-col"
             >
               <span
@@ -5074,9 +5148,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           <ul className="space-y-1.5">
             {text.home_editorial.refs.map((ref, idx) => (
               <li key={idx} className="text-xs text-slate-500 leading-relaxed">
-                {ref.url ? (
+                {ref.url ? (
                   <a href={ref.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 hover:underline">{ref.text}</a>
-                ) : ref.text}
+                ) : ref.text}
               </li>
             ))}
           </ul>
@@ -5124,7 +5198,7 @@ const RobustnessMeter = ({ level, className = "" }) => {
     <span className={`inline-flex items-center gap-[2px] ${className}`} aria-hidden="true">
       {[0, 1, 2, 3].map(i => (
         <span key={i} className="block w-[7px] h-[3px]"
-              style={{ backgroundColor: i < fill ? color : 'var(--rule-strong)' }} />
+              style={{ backgroundColor: i < fill ? color : 'var(--rule-strong)' }} />
       ))}
     </span>
   );
@@ -5143,12 +5217,14 @@ const evidenceCategoryIcons = {
 
 // Pastille de filtre : filet fin sur papier, encre pleine lorsqu'elle est retenue.
 const FilterChip = ({ active, onClick, children }) => (
+  // L'etat passait par un style en ligne, qui bat toute feuille de style : la
+  // pastille restait a l'encre quand tout le reste du site prenait la teinte de
+  // sa section. Il devient un attribut, que .bascule sait lire.
   <button
     onClick={onClick}
-    className="inline-flex items-center px-2.5 py-1.5 text-[11px] font-semibold border transition-colors"
-    style={active
-      ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)', borderRadius: 999 }
-      : { backgroundColor: 'transparent', color: 'var(--ink-soft)', borderColor: 'var(--rule)', borderRadius: 999 }}
+    aria-pressed={active}
+    data-actif={active ? 'true' : 'false'}
+    className="bascule"
   >
     {children}
   </button>
@@ -5296,7 +5372,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const categories = useMemo(() => [...new Set(evidenceCheckData.map(i => i.category.fr))], []);
   const categoryLabel = (key) => {
     const found = evidenceCheckData.find(i => i.category.fr === key);
-    return found ? tr(found.category, lang) : key;
+    return found ? tr(found.category, lang) : key;
   };
 
   const results = useMemo(() => {
@@ -5328,7 +5404,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
   const tierFilters = ["🟢", "🟡", "🟠", "🔴"];
   const tierName = (level) => {
     const sample = evidenceCheckData.find(f => f.confidence_level === level);
-    return sample ? tr(sample.verdict, lang) : level;
+    return sample ? tr(sample.verdict, lang) : level;
   };
   const L = faireL(lang);
 
@@ -5410,6 +5486,8 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {L("Robustesse", "Robustness")}
             </span>
+            {/* Le cadre serre les pastilles, pas l’étiquette de la rangée. */}
+            <span className="bascule-groupe">
             <FilterChip active={activeTier === 'All'} onClick={() => setActiveTier('All')}>
               {L("Toutes", "All")}
             </FilterChip>
@@ -5418,6 +5496,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                 <RobustnessMeter level={lv} className="me-1.5" /> {tierName(lv)}
               </FilterChip>
             ))}
+            </span>
           </div>
 
           {/* Deux entrees dans le meme corpus : par robustesse ou par theme */}
@@ -5425,12 +5504,15 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {L("Classer par", "Sort by")}
             </span>
+            {/* Le cadre serre les boutons, pas l’étiquette de la rangée. */}
+            <span className="bascule-groupe">
             <FilterChip active={sortMode === 'robustness'} onClick={() => setSortMode('robustness')}>
               {L("Robustesse", "Robustness")}
             </FilterChip>
             <FilterChip active={sortMode === 'theme'} onClick={() => setSortMode('theme')}>
               {L("Th\u00e8me", "Theme")}
             </FilterChip>
+            </span>
           </div>
 
           {/* Theme : filtre secondaire */}
@@ -5451,12 +5533,12 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         </div>
       </div>
 
-      {results.length === 0 ? (
+      {results.length === 0 ? (
         <div className="bg-white border border-slate-200 p-12 text-center">
           <Search className="w-6 h-6 mx-auto mb-3 text-slate-300" />
           <Prose className="text-sm text-slate-500" lang={lang}>{L("Aucune affirmation ne correspond \u00e0 cette recherche.", "No claim matches this search.")}</Prose>
         </div>
-      ) : (
+      ) : (
         <>
         {/* ------- Parcours en cartes -------
             Le registre donne la vue d'ensemble, le dossier donne la lecture ;
@@ -5467,8 +5549,8 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             lang={lang}
             className="mb-8 print:hidden"
             etiquette={L(
-              `Feuilleter — ${results.length} affirmation${results.length > 1 ? 's' : ''}`,
-              `Browse — ${results.length} claim${results.length > 1 ? 's' : ''}`
+              `Feuilleter — ${results.length} affirmation${results.length > 1 ? 's' : ''}`,
+              `Browse — ${results.length} claim${results.length > 1 ? 's' : ''}`
             )}
           >
             {results.map((f) => {
@@ -5480,10 +5562,10 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                   key={f.id}
                   type="button"
                   onClick={() => setSelectedId(f.id)}
-                  aria-current={isSel ? 'true' : undefined}
+                  aria-current={isSel ? 'true' : undefined}
                   className="lift text-start bg-white border p-4 flex flex-col gap-3"
                   style={{
-                    borderColor: isSel ? 'var(--accent)' : 'var(--rule)',
+                    borderColor: isSel ? 'var(--accent)' : 'var(--rule)',
                     borderInlineStartWidth: '3px',
                     borderInlineStartColor: t.color,
                   }}
@@ -5512,7 +5594,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start print:hidden">
 
           {/* ------- Registre ------- */}
-          <div className={`lg:col-span-5 ${selected ? 'hidden lg:block' : 'block'}`}>
+          <div className={`lg:col-span-5 ${selected ? 'hidden lg:block' : 'block'}`}>
             <div className="bg-white border border-slate-200">
               <div className="px-4 py-2.5 border-b border-slate-200 flex items-baseline justify-between gap-3">
                 <span className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
@@ -5548,9 +5630,9 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
                       )}
                       <button
                         onClick={() => setSelectedId(f.id)}
-                        aria-current={isSel ? 'true' : undefined}
+                        aria-current={isSel ? 'true' : undefined}
                         className="evidence-row w-full text-start flex gap-3 px-4 py-3.5"
-                        style={isSel ? { backgroundColor: 'var(--paper-sunk)' } : undefined}
+                        style={isSel ? { backgroundColor: 'var(--paper-sunk)' } : undefined}
                       >
                         <span className="block w-[3px] shrink-0 self-stretch" style={{ backgroundColor: t.color }} />
                         <span className="min-w-0 flex-1">
@@ -5574,10 +5656,10 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
           </div>
 
           {/* ------- Dossier de lecture ------- */}
-          <div className={`lg:col-span-7 lg:sticky lg:top-28 ${selected ? 'block' : 'hidden lg:block'} mt-6 lg:mt-0`}>
-            {selected ? (
+          <div className={`lg:col-span-7 lg:sticky lg:top-28 ${selected ? 'block' : 'hidden lg:block'} mt-6 lg:mt-0`}>
+            {selected ? (
               <EvidenceDossier fiche={selected} lang={lang} onBack={() => setSelectedId(null)} showBack />
-            ) : (
+            ) : (
               <div className="bg-white border border-slate-200 p-12 text-center">
                 <BookOpen className="w-6 h-6 mx-auto mb-3 text-slate-300" />
                 <Prose className="text-sm text-slate-500" lang={lang}>{L("S\u00e9lectionnez une affirmation dans le registre.", "Select a claim from the register.")}</Prose>
@@ -5672,14 +5754,14 @@ const ANCHOR_INSTRUMENTS = [
 // base, le resultat suit.
 const GovernanceCross = ({ lang }) => {
   const L = faireL(lang);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
   const [showTable, setShowTable] = useState(false);
 
   const d = useMemo(() => {
     const pts = Object.values(countryData).flat().map(c => {
       const rank = iiagRank[(c.iso2 || '').toLowerCase()]?.iiag;
       if (!rank || c.avoi == null || !c.au_treaties) return null;
-      const anchor = ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0);
+      const anchor = ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0);
       return { n: nm(c), iso2: c.iso2, rank, gov: 55 - rank, avoi: Number(c.avoi), anchor };
     }).filter(Boolean);
 
@@ -5702,7 +5784,7 @@ const GovernanceCross = ({ lang }) => {
       const mx = rx.reduce((a, b) => a + b, 0) / n, my = ry.reduce((a, b) => a + b, 0) / n;
       let num = 0, dx = 0, dy = 0;
       for (let i = 0; i < n; i++) { num += (rx[i] - mx) * (ry[i] - my); dx += (rx[i] - mx) ** 2; dy += (ry[i] - my) ** 2; }
-      return dx && dy ? num / Math.sqrt(dx * dy) : 0;
+      return dx && dy ? num / Math.sqrt(dx * dy) : 0;
     };
     const gov = pts.map(p => p.gov), avoi = pts.map(p => p.avoi), anc = pts.map(p => p.anchor);
     const med = (v) => [...v].sort((a, b) => a - b)[Math.floor(v.length / 2)];
@@ -5718,13 +5800,13 @@ const GovernanceCross = ({ lang }) => {
   }, [lang]);
 
   const fmt = (v) => {
-    const t = (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2);
+    const t = (v >= 0 ? '+' : '\u2212') + Math.abs(v).toFixed(2);
     return tr({ fr: t.replace('.', ','), en: t }, lang);
   };
   const W = 560, H = 360, PAD = 44;
   const x = (g) => PAD + ((g - 1) / 53) * (W - PAD - 14);
   const y = (a) => H - PAD - (a / 100) * (H - PAD - 16);
-  const tone = (a) => (a >= 6 ? 'var(--ok)' : a >= 5 ? 'var(--warn-ink)' : a >= 4 ? 'var(--accent)' : 'var(--bad)');
+  const tone = (a) => (a >= 6 ? 'var(--ok)' : a >= 5 ? 'var(--warn-ink)' : a >= 4 ? 'var(--accent)' : 'var(--bad)');
 
   return (
     <Chapitre lang={lang}>
@@ -5780,7 +5862,19 @@ const GovernanceCross = ({ lang }) => {
               </span>
             </div>
             <div className="overflow-x-auto border border-slate-200 p-2" style={{ backgroundColor: 'var(--paper-raised)' }}>
-              <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ minWidth: 460 }} role="img"
+              {/* Le dessin est en unites de viewBox : tout ce qu'il contient, texte
+                  compris, est mis a l'echelle du rendu. Mesure : a 1280 px le nuage
+                  s'etirait sur 1059 px pour un viewBox de 560, soit x1,89 — les
+                  points faisaient 9,5 px et les libelles d'axe 17. A 375 px il
+                  tombait a x0,82, et les memes libelles a 7,4 px, sous le plancher
+                  de lisibilite du site. Un seul reglage produisait les deux fautes.
+
+                  On borne donc l'echelle des deux cotes : jamais moins que sa
+                  taille naturelle, jamais plus d'un quart au-dessus. Le cadre qui
+                  l'entoure defile deja horizontalement, et un nuage de 54 points
+                  avec ses deux axes ne tient pas dans 330 px sans mentir. */}
+              <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto"
+                   style={{ minWidth: W, maxWidth: Math.round(W * 1.25) }} role="img"
                    aria-label={L('Nuage de points croisant gouvernance et ouverture visa', 'Scatter plot crossing governance and visa openness')}>
                 {/* medianes */}
                 <line x1={x(d.medGov)} y1={16} x2={x(d.medGov)} y2={H - PAD} stroke="var(--rule-strong)" strokeDasharray="3 3" />
@@ -5790,17 +5884,17 @@ const GovernanceCross = ({ lang }) => {
                 <line x1={PAD} y1={16} x2={PAD} y2={H - PAD} stroke="var(--rule-strong)" />
                 {[0, 25, 50, 75, 100].map(v => (
                   <g key={v}>
-                    <text x={PAD - 6} y={y(v) + 3} textAnchor="end" fontSize="9" fill="var(--label)">{v}</text>
+                    <text x={PAD - 6} y={y(v) + 3} textAnchor="end" fontSize="11" fill="var(--label)">{v}</text>
                     <line x1={PAD - 3} y1={y(v)} x2={PAD} y2={y(v)} stroke="var(--rule-strong)" />
                   </g>
                 ))}
-                <text x={PAD} y={H - 12} fontSize="9" fill="var(--label)">
+                <text x={PAD} y={H - 12} fontSize="11" fill="var(--label)">
                   {L('gouvernance : rang 54 (moins bon)', 'governance: rank 54 (worst)')}
                 </text>
-                <text x={W - 14} y={H - 12} textAnchor="end" fontSize="9" fill="var(--label)">
+                <text x={W - 14} y={H - 12} textAnchor="end" fontSize="11" fill="var(--label)">
                   {L('rang 1 (meilleur)', 'rank 1 (best)')}
                 </text>
-                <text x={10} y={26} fontSize="9" fill="var(--label)">{L('AVOI', 'AVOI')}</text>
+                <text x={10} y={26} fontSize="11" fill="var(--label)">{L('AVOI', 'AVOI')}</text>
                 {d.pts.map(p => (
                   <circle key={p.iso2 || p.n} cx={x(p.gov)} cy={y(p.avoi)} r="5"
                           fill={tone(p.anchor)} fillOpacity=".75" stroke="var(--paper-raised)" strokeWidth="1.2">
@@ -5812,7 +5906,7 @@ const GovernanceCross = ({ lang }) => {
             <button onClick={() => setShowTable(v => !v)}
                     className="mt-2 text-[11px] font-bold uppercase tracking-widest px-2.5 py-1.5 border"
                     style={{ color: 'var(--ink-soft)', borderColor: 'var(--rule)' }}>
-              {showTable ? L('Masquer le tableau', 'Hide the table') : L('Voir les données en tableau', 'View the data as a table')}
+              {showTable ? L('Masquer le tableau', 'Hide the table') : L('Voir les données en tableau', 'View the data as a table')}
             </button>
             {showTable && (
               <div className="overflow-x-auto border border-slate-200 mt-2">
@@ -5875,10 +5969,10 @@ const AnchoringMatrix = ({ lang }) => {
     const all = Object.values(countryData).flat().filter(c => c.au_treaties);
     return all.map(c => ({
       // c.name est bilingue : on retient le libelle de la langue courante.
-      name: typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''),
+      name: typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''),
       iso2: c.iso2,
       t: c.au_treaties,
-      score: ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0),
+      score: ANCHOR_INSTRUMENTS.reduce((n, i) => n + (c.au_treaties[i.key] ? 1 : 0), 0),
     }));
   }, [lang]);
 
@@ -5907,7 +6001,7 @@ const AnchoringMatrix = ({ lang }) => {
   const exportMatrix = () => {
     downloadCSV('souths_ancrage_continental.csv', toCSV(rows.map(r => {
       const line = { pays: r.name, iso2: r.iso2 || '' };
-      ANCHOR_INSTRUMENTS.forEach(i => { line[i.key] = r.t[i.key] ? 1 : 0; });
+      ANCHOR_INSTRUMENTS.forEach(i => { line[i.key] = r.t[i.key] ? 1 : 0; });
       line.score_sur_6 = r.score;
       return line;
     })));
@@ -5942,7 +6036,7 @@ const AnchoringMatrix = ({ lang }) => {
                     className={`h-full bar-fill bar-fill--d${Math.min(5, idx + 1)}`}
                     style={{
                       width: `${(i.n / total) * 100}%`,
-                      backgroundColor: i.n >= 46 ? 'var(--ok)' : i.n >= 30 ? 'var(--warn)' : 'var(--bad)',
+                      backgroundColor: i.n >= 46 ? 'var(--ok)' : i.n >= 30 ? 'var(--warn)' : 'var(--bad)',
                     }}
                   />
                 </div>
@@ -5975,20 +6069,21 @@ const AnchoringMatrix = ({ lang }) => {
                 {L('Matrice des ratifications — 54 pays × 6 instruments', 'Ratification matrix — 54 countries × 6 instruments')}
               </span>
               <div className="flex items-center gap-2">
+                {/* Le cadre serre les deux tris ; l’export CSV est une action, pas une sélection. */}
+                <span className="bascule-groupe">
                 <button onClick={() => setSortBy('score')}
-                        className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 border"
-                        style={sortBy === 'score'
-                          ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)' }
-                          : { color: 'var(--ink-soft)', borderColor: 'var(--rule)' }}>
+                        aria-pressed={sortBy === 'score'}
+                        data-actif={sortBy === 'score' ? 'true' : 'false'}
+                        className="bascule">
                   {L('Par ancrage', 'By anchoring')}
                 </button>
                 <button onClick={() => setSortBy('name')}
-                        className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 border"
-                        style={sortBy === 'name'
-                          ? { backgroundColor: 'var(--ink)', color: '#FFFDF9', borderColor: 'var(--ink)' }
-                          : { color: 'var(--ink-soft)', borderColor: 'var(--rule)' }}>
+                        aria-pressed={sortBy === 'name'}
+                        data-actif={sortBy === 'name' ? 'true' : 'false'}
+                        className="bascule">
                   {L('A → Z', 'A → Z')}
                 </button>
+                </span>
                 <CsvButton onClick={exportMatrix} label={L('Matrice (CSV)', 'Matrix (CSV)')} />
               </div>
             </div>
@@ -6014,12 +6109,12 @@ const AnchoringMatrix = ({ lang }) => {
                       {ANCHOR_INSTRUMENTS.map(i => (
                         <td key={i.key} className="px-2 py-1.5 text-center">
                           <span className="dot mx-auto"
-                                style={{ backgroundColor: r.t[i.key] ? 'var(--ok)' : 'var(--rule-strong)' }}
-                                title={`${tr(i.full, lang)} — ${r.t[i.key] ? L('ratifié', 'ratified') : L('non ratifié', 'not ratified')}`} />
+                                style={{ backgroundColor: r.t[i.key] ? 'var(--ok)' : 'var(--rule-strong)' }}
+                                title={`${tr(i.full, lang)} — ${r.t[i.key] ? L('ratifié', 'ratified') : L('non ratifié', 'not ratified')}`} />
                         </td>
                       ))}
                       <td className="px-3 py-1.5 text-end font-bold tabular-nums"
-                          style={{ color: r.score >= 5 ? 'var(--ok)' : r.score >= 4 ? 'var(--warn-ink)' : 'var(--bad)' }}>
+                          style={{ color: r.score >= 5 ? 'var(--ok)' : r.score >= 4 ? 'var(--warn-ink)' : 'var(--bad)' }}>
                         {r.score}/6
                       </td>
                     </tr>
@@ -6087,27 +6182,27 @@ const Sources = ({ items = [], lang = 'fr', note = null }) => {
   // texte : une source annoncee, rien a lire. Plutot que de corriger onze
   // appels et d'attendre du suivant qu'il devine, le composant accepte les
   // deux formes.
-  const normalise = (s) => (typeof s === 'string' ? { label: s, url: null } : (s || { label: '', url: null }));
+  const normalise = (s) => (typeof s === 'string' ? { label: s, url: null } : (s || { label: '', url: null }));
   const liste = items.map(normalise).filter(s => s.label);
   const long = liste.length > 2;
-  const vus = long && !ouvert ? liste.slice(0, 1) : liste;
+  const vus = long && !ouvert ? liste.slice(0, 1) : liste;
 
   return (
     <p className="provenance">
-      <span className="provenance-lbl">{L(liste.length > 1 ? 'Sources' : 'Source', liste.length > 1 ? 'Sources' : 'Source')}</span>
+      <span className="provenance-lbl">{L(liste.length > 1 ? 'Sources' : 'Source', liste.length > 1 ? 'Sources' : 'Source')}</span>
       {vus.map((s, i) => (
         <span key={i} className="provenance-item">
-          {s.url ? (
+          {s.url ? (
             <a href={s.url} target="_blank" rel="noopener noreferrer">
               {s.label}<ExternalLink className="w-3 h-3 shrink-0" aria-hidden="true" />
             </a>
-          ) : <span>{s.label}</span>}
+          ) : <span>{s.label}</span>}
         </span>
       ))}
       {long && (
         <button type="button" className="provenance-plus" aria-expanded={ouvert}
                 onClick={() => setOuvert(o => !o)}>
-          {ouvert ? L('replier', 'collapse') : L(`+ ${liste.length - 1} autres`, `+${liste.length - 1} more`)}
+          {ouvert ? L('replier', 'collapse') : L(`+ ${liste.length - 1} autres`, `+${liste.length - 1} more`)}
         </button>
       )}
       {note && <span className="provenance-note">{note}</span>}
@@ -6135,7 +6230,7 @@ const CounterpointFacts = ({ items }) => (
 // ---------------------------------------------------------------------------
 const TabForced = ({ text, lang, children }) => {
   const L = faireL(lang);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
   const data = useMemo(() => {
     const all = Object.values(countryData).flat();
@@ -6180,8 +6275,8 @@ const TabForced = ({ text, lang, children }) => {
       hcr_demandeurs_asile_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.asylum || 0),
       hcr_apatrides_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.stateless || 0),
       hcr_deplaces_internes_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.idps || 0),
-      convention_oua_1969: c.au_treaties?.refugees_1969 ? 1 : 0,
-      convention_kampala_2009: c.au_treaties?.kampala ? 1 : 0,
+      convention_oua_1969: c.au_treaties?.refugees_1969 ? 1 : 0,
+      convention_kampala_2009: c.au_treaties?.kampala ? 1 : 0,
     }))));
   };
 
@@ -6198,11 +6293,11 @@ const TabForced = ({ text, lang, children }) => {
                    style={{ width: `${(r.v / max) * 100}%`, backgroundColor: color }} />
             </div>
             <span className="text-xs font-bold w-16 sm:w-24 text-end shrink-0 tabular-nums text-slate-800">{fmt(r.v)}</span>
-            {unitTotal ? (
+            {unitTotal ? (
               <span className="text-[10px] w-10 sm:w-12 text-end shrink-0 tabular-nums" style={{ color: 'var(--label)' }}>
                 {Math.round((r.v / unitTotal) * 100)} %
               </span>
-            ) : null}
+            ) : null}
           </div>
         ))}
         {note && <p className="text-[10px] italic mt-2" style={{ color: 'var(--label)' }}>{note}</p>}
@@ -6376,14 +6471,14 @@ const TabForced = ({ text, lang, children }) => {
               { k: 'stateless', l: L('Apatrides recensés', 'Recorded stateless'), tone: 'figure-terra' },
             ].map(x => {
               const a = unhcrTotals['2014'][x.k], b = unhcrTotals['2024'][x.k];
-              const mult = a ? b / a : 0;
+              const mult = a ? b / a : 0;
               return (
                 <div key={x.k} className="border border-slate-200 p-4 lift">
                   <p className="block text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--label)' }}>{x.l}</p>
                   <div className={`text-xl font-serif font-bold tabular-nums leading-none ${x.tone}`}>{fmt(b)}</div>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>{fmt(a)} <span className="opacity-70">(2014)</span></span>
-                    <span className="text-[11px] font-bold tabular-nums ms-auto" style={{ color: mult >= 2 ? 'var(--bad)' : 'var(--ink-soft)' }}>
+                    <span className="text-[11px] font-bold tabular-nums ms-auto" style={{ color: mult >= 2 ? 'var(--bad)' : 'var(--ink-soft)' }}>
                       ×{mult.toFixed(1).replace('.', tr({ fr: ',', en: '.' }, lang))}
                     </span>
                   </div>
@@ -6462,7 +6557,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
   const bascule = (
-    <nav className="flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes', { ar: 'أقسام الصفحة' })}>
+    <nav className="bascule-groupe flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes', { ar: 'أقسام الصفحة' })}>
         {volets.map(v => (
           <button
             key={v.cle}
@@ -6470,7 +6565,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             onClick={() => setVolet(v.cle)}
             aria-pressed={volet === v.cle}
             className="couche-btn"
-            data-actif={volet === v.cle ? 'true' : 'false'}
+            data-actif={volet === v.cle ? 'true' : 'false'}
           >
             {tr(v.label, lang)}
           </button>
@@ -6484,7 +6579,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   const entete = (
     <>
       {bascule}
-      {volet === 'climat' ? (
+      {volet === 'climat' ? (
         <Reperes
           lang={lang}
           titre={{ fr: "Climat, environnement, immobilité : trois mots que les politiques confondent",
@@ -6511,7 +6606,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
           pied={{ fr: "Sources : Black et al. (2011) ; Foresight (2011) ; Ben Mokhtar, Y. (2024), projet Go Green.",
                   en: 'Sources: Black et al. (2011); Foresight (2011); Ben Mokhtar, Y. (2024), Go Green project.' }}
         />
-      ) : (
+      ) : (
       <Reperes
         lang={lang}
         titre={{ fr: "Déplacé, réfugié, apatride, travailleur migrant : quatre statuts distincts",
@@ -6565,9 +6660,9 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {volet === 'climat' ? <TabClimat text={text} lang={lang}>{entete}</TabClimat>
-        : volet === 'corridors' ? <TabCorridors text={text} lang={lang}>{entete}</TabCorridors>
-        : volet === 'travail' ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
+      {volet === 'climat' ? <TabClimat text={text} lang={lang}>{entete}</TabClimat>
+        : volet === 'corridors' ? <TabCorridors text={text} lang={lang}>{entete}</TabCorridors>
+        : volet === 'travail' ? <TabLabour text={text} lang={lang}>{entete}</TabLabour>
         : <TabForced text={text} lang={lang}>{entete}</TabForced>}
     </div>
   );
@@ -6575,7 +6670,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
 
 const TabLabour = ({ text, lang, children }) => {
   const L = faireL(lang);
-  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
+  const nm = (c) => (typeof c.name === 'string' ? c.name : (tr(c.name, lang) || c.name?.fr || ''));
 
   const ilo = useMemo(() => {
     const all = Object.values(countryData).flat().filter(c => c.normlex);
@@ -6785,10 +6880,10 @@ const TabLabour = ({ text, lang, children }) => {
                       <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                         <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
                              style={{ width: `${(b.v / maxFund) * 100}%`,
-                                      backgroundColor: b.k >= 11 ? 'var(--ok)' : b.k >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }} />
+                                      backgroundColor: b.k >= 11 ? 'var(--ok)' : b.k >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }} />
                       </div>
                       <span className="text-xs font-bold w-16 sm:w-24 text-end shrink-0 tabular-nums text-slate-800">
-                        {b.v} {L(b.v > 1 ? 'pays' : 'pays', b.v > 1 ? 'countries' : 'country')}
+                        {b.v} {L(b.v > 1 ? 'pays' : 'pays', b.v > 1 ? 'countries' : 'country')}
                       </span>
                     </div>
                   ))}
@@ -6825,7 +6920,7 @@ const TabLabour = ({ text, lang, children }) => {
                       <tr key={r.n} className="figure-row">
                         <td className="px-3 py-1.5 text-slate-800 whitespace-nowrap">{r.n}</td>
                         <td className="px-2 py-1.5 text-end tabular-nums font-bold"
-                            style={{ color: r.fund >= 11 ? 'var(--ok)' : r.fund >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }}>
+                            style={{ color: r.fund >= 11 ? 'var(--ok)' : r.fund >= 9 ? 'var(--warn-ink)' : 'var(--bad)' }}>
                           {r.fund}/11
                         </td>
                         <td className="px-2 py-1.5 text-end tabular-nums text-slate-600">{r.gov}</td>
@@ -6944,7 +7039,7 @@ const TabClimat = ({ text, lang, children }) => {
       pays: c.nom,
       deplaces_catastrophe: c.cata,
       deplaces_conflit: c.conflit,
-      catastrophe_devance_conflit: c.domine ? 'oui' : 'non',
+      catastrophe_devance_conflit: c.domine ? 'oui' : 'non',
       source: 'IDMC — Global Report on Internal Displacement',
     }))));
   };
@@ -6997,7 +7092,7 @@ const TabClimat = ({ text, lang, children }) => {
         <nav className="flex flex-wrap gap-2 mb-5" aria-label={L('Filtrer le classement', 'Filter the ranking')}>
           {filtres.map(f => (
             <button key={f.cle} type="button" onClick={() => setFiltre(f.cle)}
-                    className="couche-btn" data-actif={filtre === f.cle ? 'true' : 'false'}
+                    className="couche-btn" data-actif={filtre === f.cle ? 'true' : 'false'}
                     aria-pressed={filtre === f.cle}>
               {f.lbl}
             </button>
@@ -8308,7 +8403,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <li key={item.id}>
                           <button
                             onClick={() => setActiveSdgzTab(item.id)}
-                            aria-current={isActive ? 'true' : undefined}
+                            aria-current={isActive ? 'true' : undefined}
                             className="gov-subnav w-full text-start px-3 py-2.5 border"
                           >
                             <span className="gov-subnav-label block text-xs font-semibold leading-snug">{item.label}</span>
@@ -8644,8 +8739,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                         <Prose className="text-xs text-slate-600 leading-relaxed" lang={lang}>{tr(fw.desc, lang)}</Prose>
                         {fw.stats && fw.stats.map((stat, sIdx) => {
                           const inForce = stat.value >= (stat.threshold || 15);
-                          const barColor = inForce ? 'bg-emerald-600' : 'bg-rose-600';
-                          const textColor = inForce ? 'text-emerald-700' : 'text-rose-700';
+                          const barColor = inForce ? 'bg-emerald-600' : 'bg-rose-600';
+                          const textColor = inForce ? 'text-emerald-700' : 'text-rose-700';
                           return (
                             <div key={sIdx} className="mt-4 pt-4 border-t border-slate-200">
                               <div className="flex items-baseline justify-between gap-2 mb-1.5 flex-wrap">
@@ -8653,13 +8748,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   <span className={`text-2xl font-serif font-bold ${textColor}`}>{stat.value}</span>
                                   <span className="text-xs font-bold text-slate-500">/ {stat.total} {tr(stat.label, lang)}</span>
                                 </div>
-                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border shrink-0 ${inForce ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-700'}`}>
-                                  {inForce ? (tr({ fr: 'En vigueur', en: 'In force' }, lang)) : (tr({ fr: 'Pas encore en vigueur', en: 'Not yet in force' }, lang))}
+                                <span className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border shrink-0 ${inForce ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-rose-50 border-rose-200 text-rose-700'}`}>
+                                  {inForce ? (tr({ fr: 'En vigueur', en: 'In force' }, lang)) : (tr({ fr: 'Pas encore en vigueur', en: 'Not yet in force' }, lang))}
                                 </span>
                               </div>
                               <div className="flex gap-1">
                                 {Array.from({ length: stat.total }).map((_, i) => (
-                                  <span key={i} className={`h-2 flex-1 rounded-sm ${i < stat.value ? barColor : 'bg-slate-200'}`}></span>
+                                  <span key={i} className={`h-2 flex-1 rounded-sm ${i < stat.value ? barColor : 'bg-slate-200'}`}></span>
                                 ))}
                               </div>
                             </div>
@@ -8711,7 +8806,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div className="space-y-4">
                   <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
                     <button
-                      onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')}
+                      onClick={() => setExpandedGovBody(expandedGovBody === 'stc' ? null : 'stc')}
                       aria-expanded={expandedGovBody === 'stc'}
                       className="w-full text-start px-6 pt-6 pb-2 hover:bg-emerald-50 transition-colors"
                     >
@@ -8723,7 +8818,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
                             {tr({ fr: "5 sessions depuis 2015", en: "5 sessions since 2015" }, lang)}
                           </span>
-                          <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ${expandedGovBody === 'stc' ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-4 h-4 text-emerald-600 transition-transform ${expandedGovBody === 'stc' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
                     </button>
@@ -8748,7 +8843,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </div>
                   <div className="bg-amber-50/50 rounded-lg border border-amber-100 overflow-hidden">
                     <button
-                      onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')}
+                      onClick={() => setExpandedGovBody(expandedGovBody === 'pafom' ? null : 'pafom')}
                       aria-expanded={expandedGovBody === 'pafom'}
                       className="w-full text-start px-6 pt-6 pb-2 hover:bg-amber-50 transition-colors"
                     >
@@ -8760,7 +8855,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <span className="text-[9px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-sm uppercase tracking-widest">
                             {tr({ fr: "9 sessions depuis 2015", en: "9 sessions since 2015" }, lang)}
                           </span>
-                          <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${expandedGovBody === 'pafom' ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`w-4 h-4 text-amber-600 transition-transform ${expandedGovBody === 'pafom' ? 'rotate-180' : ''}`} />
                         </span>
                       </div>
                     </button>
@@ -8920,7 +9015,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="space-y-3">
                 {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
                   <div key={rec.id} className="flex items-center gap-3" title={`${tr(rec.name, lang)}: ${rec.avoi.toFixed(3)}`}>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
                     <div className="flex-1 relative h-4 bg-slate-100 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-700 rounded-full bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
                       <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
@@ -8936,12 +9031,12 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 const isOpen = expandedRec === rec.id;
                 return (
                   <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
-                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-start flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
+                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-start flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
                       <div className="flex items-center gap-4 min-w-0">
                         <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-white border border-emerald-200 flex items-center justify-center overflow-hidden text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
                           {recLogos[rec.id]
                             ? <img src={recLogos[rec.id]} alt="" className="max-h-8 max-w-9 object-contain" />
-                            : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
+                            : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
                         </span>
                         <div className="min-w-0">
                           <h3 className="font-serif font-bold text-slate-900 text-base md:text-lg">{tr(rec.name, lang)}</h3>
@@ -8955,7 +9050,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <div className="text-sm font-serif font-bold text-slate-800 tabular-nums">{rec.avoi.toFixed(3)}</div>
                           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">AVOI</span>
                         </div>
-                        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
+                        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
                       </div>
                     </button>
 
@@ -8994,11 +9089,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   return (
                                     <span
                                       key={iso2}
-                                      title={note ? tr(note, lang) : undefined}
+                                      title={note ? tr(note, lang) : undefined}
                                       className="group/chip relative inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-default transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 hover:-translate-y-0.5 hover:shadow-sm"
                                     >
                                       <CountryFlag iso2={iso2} emoji="" size="sm" />
-                                      {meta ? (tr(meta.name, lang) || meta.name.fr) : iso2.toUpperCase()}
+                                      {meta ? (tr(meta.name, lang) || meta.name.fr) : iso2.toUpperCase()}
                                       {note && <AlertTriangle className="w-3 h-3 text-amber-500" />}
                                     </span>
                                   );
@@ -9067,7 +9162,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <div>
                   <h3 className="text-sm font-bold text-amber-900 mb-1">{tr({ fr: "À propos de ces données", en: "About this data" }, lang)}</h3>
                   <p className="text-xs text-amber-800 leading-relaxed">
-                    {lang === 'fr' ? (
+                    {lang === 'fr' ? (
                       <>Ce tableau de synthèse et les fiches détaillées par pays résultent d'une <strong>analyse comparative des instruments juridiques nationaux</strong> (Lois sur l'immigration et codes des étrangers) en vigueur sur le continent en 2025. Ces données contextualisent les indicateurs de l'Africa Visa Openness Index (BAD).</>
                     ) : (
                       <>This summary table and the detailed country sheets result from a <strong>comparative analysis of national legal instruments</strong> (immigration laws and codes on foreigners) in force across the continent in 2025. This data contextualizes the Africa Visa Openness Index (AfDB) indicators.</>
@@ -9147,13 +9242,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             <div className="flex bg-slate-200 p-1.5 rounded-lg w-fit mx-auto md:mx-0">
               <button
                 onClick={() => setMatrixView('table')}
-                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 <TableProperties className="w-3.5 h-3.5 me-2" /> {tr({ fr: "Vue Tableau (Synthèse)", en: "Table View (Summary)" }, lang)}
               </button>
               <button
                 onClick={() => setMatrixView('details')}
-                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'details' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`py-2 px-6 rounded-md text-xs font-bold transition-all flex items-center ${matrixView === 'details' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 <FileText className="w-3.5 h-3.5 me-2" /> {tr({ fr: "Fiches Détaillées", en: "Detailed Sheets" }, lang)}
               </button>
@@ -9187,7 +9282,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                                   {tr(country.name, lang)}
                                   {(() => {
                                     const o = opennessByName(country.name.fr);
-                                    return o ? <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
+                                    return o ? <Star className={`w-3 h-3 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
                                   })()}
                                 </span>
                               </td>
@@ -9246,7 +9341,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                               {tr(country.name, lang)}
                               {(() => {
                                 const o = opennessByName(country.name.fr);
-                                return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
+                                return o ? <Star className={`w-4 h-4 shrink-0 ${visaOpenTiers[o.tier].dot}`} title={`${tr(visaOpenTiers[o.tier].label, lang)} — ${tr(o.note, lang)}`} /> : null;
                               })()}
                             </h4>
                             <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">{tr(country.threshold, lang)}</span>
@@ -9278,7 +9373,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 {tr({ fr: "Liste des instruments juridiques analysés (Sources)", en: "List of Legal Instruments Analyzed (Sources)" }, lang)}
               </h3>
               <div className="h-48 overflow-y-auto pe-4 custom-scrollbar text-xs text-slate-600 leading-relaxed space-y-3">
-                {lang === 'fr' ? (
+                {lang === 'fr' ? (
                   <>
                     <p><strong>Afrique méditerranéenne :</strong><br/>
                     Algérie : Loi n° 08-11 (2008). Égypte : Loi n° 89 (1960, am. 2018). Libye : Loi n° 6 (1987). Maroc : Loi n° 02-03 (2003). Mauritanie : Loi n° 1965-046. Soudan : Passports and Immigration Act (1994). Tunisie : Loi n° 68-7 (1968).</p>
@@ -9291,7 +9386,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <p><strong>Afrique australe :</strong><br/>
                     Afrique du Sud : Act 13 (2002). Botswana : Act 2011. Eswatini : Act 1982. Lesotho : Act 1966. Malawi : Act (Cap. 15:03). Mozambique : Loi n° 23/2022. Namibie : Act 7 (1993). Zambie : Act 2010. Zimbabwe : Act (Chapter 4:02).</p>
                   </>
-                ) : (
+                ) : (
                   <>
                     <p><strong>Mediterranean Africa:</strong><br/>
                     Algeria: Law No. 08-11 (2008). Egypt: Law No. 89 (1960, am. 2018). Libya: Law No. 6 (1987). Morocco: Law No. 02-03 (2003). Mauritania: Law No. 1965-046. Sudan: Passports and Immigration Act (1994). Tunisia: Law No. 68-7 (1968).</p>
@@ -9458,10 +9553,11 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
             className="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg ps-10 pe-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-shadow"
           />
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="bascule-groupe flex flex-wrap gap-2">
           <button
             onClick={() => setActiveFilter('all')}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${activeFilter === 'all' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+            data-actif={activeFilter === 'all' ? 'true' : 'false'}
+            className="bascule transition-all border"
           >
             {tr({ fr: 'Tout voir', en: 'View All' }, lang)} ({totalDocs})
           </button>
@@ -9469,7 +9565,8 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
             <button
               key={idx}
               onClick={() => setActiveFilter(String(idx))}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all border ${activeFilter === String(idx) ? 'bg-amber-700 text-white border-amber-700' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}
+              data-actif={activeFilter === String(idx) ? 'true' : 'false'}
+              className="bascule transition-all border"
             >
               {tr(section.section, lang)} ({section.items.length})
             </button>
@@ -9485,34 +9582,39 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {tr({ fr: 'Type', en: 'Type' }, lang)}
             </span>
+            {/* Le cadre serre les boutons, pas l’étiquette de la rangée. */}
+            <span className="bascule-groupe">
             <button type="button" onClick={() => setFiltreType('tous')} aria-pressed={filtreType === 'tous'}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filtreType === 'tous' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>
+                    className="bascule border transition-all">
               {tr({ fr: 'Tous', en: 'All' }, lang)}
             </button>
             {Object.entries(FAMILLES_TYPE).map(([cle, f]) => (
               <button key={cle} type="button" onClick={() => setFiltreType(cle)} aria-pressed={filtreType === cle}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filtreType === cle ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>
+                      className="bascule border transition-all">
                 {tr(f, lang)}
               </button>
             ))}
+            </span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100">
             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 me-1">
               {tr({ fr: 'Période', en: 'Period' }, lang)}
             </span>
+            <span className="bascule-groupe">
             <button type="button" onClick={() => setFiltrePeriode('toutes')} aria-pressed={filtrePeriode === 'toutes'}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filtrePeriode === 'toutes' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>
+                    className="bascule border transition-all">
               {tr({ fr: 'Toutes', en: 'All' }, lang)}
             </button>
             {Object.entries(PERIODES).map(([cle, f]) => (
               <button key={cle} type="button" onClick={() => setFiltrePeriode(cle)} aria-pressed={filtrePeriode === cle}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filtrePeriode === cle ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>
+                      className="bascule border transition-all">
                 {tr(f, lang)}
               </button>
             ))}
+            </span>
             <button type="button" onClick={() => setSeulementEssentielles(v => !v)} aria-pressed={seulementEssentielles}
-                    className={`ms-auto px-3 py-1 rounded-full text-xs font-semibold border transition-all ${seulementEssentielles ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'}`}>
+                    className="bascule ms-auto border transition-all">
               {tr({ fr: 'Essentielles seulement', en: 'Essential only' }, lang)} ({essentials.length})
             </button>
           </div>
@@ -9526,12 +9628,12 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
           </p>
 
       <div className="space-y-8">
-        {noResults ? (
+        {noResults ? (
           <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
             <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
             <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucune source ne correspond à votre recherche.", en: "No source matches your search." }, lang)}</Prose>
           </div>
-        ) : (
+        ) : (
           filteredSections.map((section) => (
             <div key={section.idx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
@@ -9606,19 +9708,19 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                       role="button"
                       tabIndex={0}
                       aria-expanded={expandedIndicator === ind.id}
-                      onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
+                      onClick={() => setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id)}
                       onKeyDown={(e) => {
                         if (e.key !== 'Enter' && e.key !== ' ') return;
                         e.preventDefault();
-                        setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id);
+                        setExpandedIndicator(expandedIndicator === ind.id ? null : ind.id);
                       }}
-                      className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
+                      className={`p-4 border rounded-lg transition-all cursor-pointer group flex flex-col items-start relative overflow-hidden ${expandedIndicator === ind.id ? 'bg-slate-50 border-blue-300 shadow-md' : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'}`}
                     >
                       <div className="flex items-center justify-between w-full mb-2 relative z-10">
                         <span className="text-[9px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-sm tracking-widest shrink-0 uppercase">
                           Ind. {ind.id}
                         </span>
-                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
+                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${expandedIndicator === ind.id ? 'rotate-180 text-blue-600' : 'group-hover:text-slate-600'}`} />
                       </div>
                       <Prose className="text-sm font-bold text-slate-800 group-hover:text-slate-900 leading-snug relative z-10" lang={lang}>{tr({ fr: ind.fr, en: ind.en }, lang)}</Prose>
                       {(tr({ fr: ind.desc_fr, en: ind.desc_en }, lang)) && (
@@ -9628,8 +9730,8 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                       {/* depliable : la hauteur reelle est animee. L'ancien
                           max-h-96 imposait un plafond de 384 px — au-dela, la
                           fiche etait tronquee sans que rien ne le signale. */}
-                      <div data-ouvert={expandedIndicator === ind.id ? 'true' : 'false'}
-                           className={`depliable w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
+                      <div data-ouvert={expandedIndicator === ind.id ? 'true' : 'false'}
+                           className={`depliable w-full overflow-hidden transition-all duration-500 relative z-10 print:!max-h-none print:!opacity-100 print:mt-4 print:pt-4 print:border-t print:border-slate-200 print:break-inside-avoid ${expandedIndicator === ind.id ? 'max-h-96 opacity-100 mt-4 pt-4 border-t border-slate-200' : 'max-h-0 opacity-0'}`}>
                         <div className="space-y-4">
                           <div>
                             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mb-1 flex items-center gap-1"><Search className="w-3 h-3" />{tr({ fr: "Méthodologie et collecte", en: "Methodology and collection" }, lang)}</span>
@@ -9654,13 +9756,13 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
 
 // Frise des cycles de recensement d'un pays (base : compilation de l'auteur d'apres l'UNSD).
 const CensusTimeline = ({ iso2, lang, compact = false }) => {
-  const rec = iso2 ? censusByCountry[iso2] : null;
+  const rec = iso2 ? censusByCountry[iso2] : null;
   if (!rec) return null;
   const L = faireL(lang);
   const st = census2020Status[rec.status2020] || census2020Status.none;
 
   return (
-    <div className={compact ? '' : 'bg-white p-7 rounded-lg border border-slate-200 shadow-sm'}>
+    <div className={compact ? '' : 'bg-white p-7 rounded-lg border border-slate-200 shadow-sm'}>
       {!compact && (
         <>
           <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg">
@@ -9670,29 +9772,32 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
                "National census dates by decennial round. The census remains the most comprehensive source on migrants present in a territory.")}</Prose>
         </>
       )}
-      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+      {/* Sept cases fixes : dans la colonne étroite du rapport pays, chacune
+          tombait à 120 px et la date — 10/10/1996 — débordait de vingt-quatre
+          pixels sur sa voisine. La grille s’adapte désormais à la place qu’elle a. */}
+      <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(84px, 1fr))' }}>
         {censusRoundMeta.map((r) => {
           const c = censusMark(rec[r.key]);
           // Le statut ne teinte que la case du cycle qu'il decrit : 2020, ou 2030
           // pour les Etats qui ont recense apres la cloture du cycle precedent.
-          const carries = r.key === (rec.status2020 === 'late' ? 'r2030' : 'r2020');
-          const tone = carries ? st.cls
-            : c.counted ? 'bg-slate-50 border-slate-200 text-slate-800'
-            : c.empty ? 'bg-slate-50 border-slate-200 text-slate-300'
+          const carries = r.key === (rec.status2020 === 'late' ? 'r2030' : 'r2020');
+          const tone = carries ? st.cls
+            : c.counted ? 'bg-slate-50 border-slate-200 text-slate-800'
+            : c.empty ? 'bg-slate-50 border-slate-200 text-slate-300'
             : 'border-dashed';  // indiquee, non comptabilisee
           return (
             <div key={r.key} className={`rounded-md border px-2 py-2 text-center ${tone}`}
                  style={!carries && !c.counted && !c.empty
                    ? { backgroundColor: 'var(--paper-sunk)', borderColor: 'var(--rule-strong)', color: 'var(--label)' }
                    : undefined}
-                 title={!c.counted && !c.empty ? markLegend(c.mark, lang) : undefined}>
+                 title={!c.counted && !c.empty ? markLegend(c.mark, lang) : undefined}>
               <span className="block text-[9px] font-bold uppercase tracking-widest opacity-70">{tr(r.label, lang)}</span>
               <span className="block text-[11px] font-bold tabular-nums mt-0.5 leading-tight">
-                {c.year ? (
+                {c.year ? (
                   <>{c.raw.replace(/\*+/, '')}<sup className="font-normal">{c.mark}</sup></>
-                ) : c.mark ? (
+                ) : c.mark ? (
                   <>—<sup className="font-normal">{c.mark}</sup></>
-                ) : '—'}
+                ) : '—'}
               </span>
             </div>
           );
@@ -9709,7 +9814,7 @@ const CensusTimeline = ({ iso2, lang, compact = false }) => {
             <span className="font-bold" style={{ color: 'var(--accent-2)' }}>
               {L("Vérifié en août 2026 — ", "Verified August 2026 — ")}
             </span>
-            {typeof rec.updated2026 === 'string' ? rec.updated2026 : tr(rec.updated2026, lang)}
+            {typeof rec.updated2026 === 'string' ? rec.updated2026 : tr(rec.updated2026, lang)}
           </span>
         )}
       </div>
@@ -9777,13 +9882,13 @@ const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes =
         </span>
         <span className="flex-1 min-w-0">
           <span className="block text-[10px] font-bold uppercase mb-1" style={{ letterSpacing: '.18em', color: 'var(--label)' }}>
-            {chapo ? tr(chapo, lang) : L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
+            {chapo ? tr(chapo, lang) : L('Pour commencer', 'To begin with', { ar: 'للبدء' })}
           </span>
           <span id={idTitre} className="block font-serif font-bold text-lg md:text-xl text-slate-900 leading-snug">
             {tr(titre, lang)}
           </span>
         </span>
-        <ChevronDown className={`w-4 h-4 shrink-0 mt-1 transition-transform ${ouvert ? 'rotate-180' : ''}`}
+        <ChevronDown className={`w-4 h-4 shrink-0 mt-1 transition-transform ${ouvert ? 'rotate-180' : ''}`}
                      style={{ color: 'var(--rule-strong)' }} aria-hidden="true" />
       </button>
 
@@ -10075,8 +10180,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 <li key={i} className="flex items-baseline justify-between gap-3 py-1.5 text-[13px]" style={{ borderBottom: '1px solid var(--rule)' }}>
                   <span className="text-slate-700">{name}</span>
                   <span className="shrink-0 text-[9px] font-bold uppercase tracking-widest"
-                        style={{ color: core ? 'var(--accent-2)' : 'var(--muted)' }}>
-                    {core ? L("Thème central", "Core topic") : L("Thème additionnel", "Additional topic")}
+                        style={{ color: core ? 'var(--accent-2)' : 'var(--muted)' }}>
+                    {core ? L("Thème central", "Core topic") : L("Thème additionnel", "Additional topic")}
                   </span>
                 </li>
               ))}
@@ -10123,16 +10228,16 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               // Le cycle 2030 vient de s'ouvrir : sa barre mesure une avancee, pas un manque.
               return (
                 <div key={r.key} className="flex items-center gap-3">
-                  <span className={`text-[11px] font-bold w-32 shrink-0 ${r.inProgress ? '' : 'text-slate-600'}`}
-                        style={r.inProgress ? { color: 'var(--accent-2)' } : undefined}>
+                  <span className={`text-[11px] font-bold w-32 shrink-0 ${r.inProgress ? '' : 'text-slate-600'}`}
+                        style={r.inProgress ? { color: 'var(--accent-2)' } : undefined}>
                     {tr(r.label, lang)} <span className="text-slate-400 font-normal">({r.span})</span>
                   </span>
                   <div className="flex-1 h-4 rounded-full overflow-hidden relative"
                        style={r.inProgress
                          ? { background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 5px, #FFF 5px 10px)' }
                          : { backgroundColor: '#F1F5F9' }}>
-                    <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
-                         style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
+                    <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
+                         style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
                   </div>
                   <span className="text-xs font-bold text-slate-700 w-16 sm:w-24 text-end shrink-0 tabular-nums">
                     {r.conducted}/{r.base} · {pct} %
@@ -10164,7 +10269,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           {censusQuestionDepth.map((q) => (
             <div key={q.key} className="flex items-center gap-3">
               <span className="text-[11px] font-medium w-56 shrink-0 leading-snug flex items-start gap-1.5"
-                    style={{ color: q.core ? 'var(--accent-2)' : 'var(--ink-soft)' }}>
+                    style={{ color: q.core ? 'var(--accent-2)' : 'var(--ink-soft)' }}>
                 {q.core && <span className="inline-block w-2 h-2 mt-1 shrink-0" style={{ backgroundColor: 'var(--accent-2)' }} />}
                 {tr(q.label, lang)}
               </span>
@@ -10365,12 +10470,12 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
         </div>
       </div>
 
-      {noResults ? (
+      {noResults ? (
         <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
           <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
           <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucun terme ne correspond à votre recherche.", en: "No term matches your search." }, lang)}</Prose>
         </div>
-      ) : (
+      ) : (
         filteredCategories.map((cat, cIdx) => (
           <div key={cIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
             <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
@@ -10400,12 +10505,12 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
                       <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 me-1.5">
                         {tr({ fr: "Source", en: "Source" }, lang)}
                       </span>
-                      {t.source.url ? (
+                      {t.source.url ? (
                         <a href={t.source.url} target="_blank" rel="noopener noreferrer"
                            className="text-[11px] hover:underline inline-flex items-center gap-1" style={{ color: 'var(--accent-2)' }}>
                           {tr(t.source, lang)} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
                         </a>
-                      ) : (
+                      ) : (
                         <span className="text-[11px] text-slate-500">{tr(t.source, lang)}</span>
                       )}
                     </div>
@@ -10616,8 +10721,8 @@ const TabMethodology = ({ text, lang, children }) => (
               libraryData.reduce((n, sec) => n + sec.items.length, 0)
             );
             const split = raw.indexOf('.');
-            const head = split > 0 ? raw.slice(0, split + 1) : '';
-            const body = split > 0 ? raw.slice(split + 1).trim() : raw;
+            const head = split > 0 ? raw.slice(0, split + 1) : '';
+            const body = split > 0 ? raw.slice(split + 1).trim() : raw;
             return (
               <li key={k} className="flex items-start gap-3">
                 <span className="shrink-0 w-6 h-6 rounded-md bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center mt-0.5 tabular-nums">
@@ -10882,7 +10987,7 @@ const MarqueExpliquee = ({ lang = 'fr' }) => {
 
         <ol className="flex-1 m-0 p-0 list-none w-full">
           {MARQUE_SENS.map((e, i) => {
-            const [titre, dit] = lang === 'en' ? e.en : e.fr;
+            const [titre, dit] = lang === 'en' ? e.en : e.fr;
             return (
               <li key={e.cle}
                   className="flex items-center gap-4 py-4 border-t border-slate-200 first:border-t-0 first:pt-0">
@@ -11010,13 +11115,13 @@ const TabAbout = ({ text, lang, children }) => {
               {text.about.data_list.map((item, idx) => {
                 // Sans emblème disponible, on retombe sur l'icône générique : le repli
                 // textuel de InstitutionLogo doublonnerait le nom affiché juste à côté.
-                const logo = item.logo ? institutionLogos.find(i => i.key === item.logo) : null;
+                const logo = item.logo ? institutionLogos.find(i => i.key === item.logo) : null;
                 const logoBox = logo && logo.src && (
                   <span className="w-8 h-8 rounded-sm bg-white border border-slate-200 flex items-center justify-center p-1 me-2.5 shrink-0">
                     <InstitutionLogo name={logo.name} src={logo.src} className="max-h-5 max-w-full" />
                   </span>
                 );
-                return item.url ? (
+                return item.url ? (
                   <a
                     key={idx}
                     href={item.url}
@@ -11027,7 +11132,7 @@ const TabAbout = ({ text, lang, children }) => {
                     {logoBox || <ExternalLink className="w-4 h-4 text-emerald-600 me-2.5 shrink-0 group-hover:text-emerald-700" />}
                     <span className="text-xs font-semibold text-slate-700 group-hover:text-emerald-900">{item.name}</span>
                   </a>
-                ) : (
+                ) : (
                   <div key={idx} className="flex items-center p-3 rounded-md bg-slate-50 border border-slate-100">
                     {logoBox || <CheckCircle2 className="w-4 h-4 text-slate-400 me-2.5 shrink-0" />}
                     <span className="text-xs font-semibold text-slate-600">{item.name}</span>
@@ -11171,6 +11276,8 @@ const TabAbout = ({ text, lang, children }) => {
             {tr({ fr: "Travaux de l'auteur", en: "Author's work", ar: 'أعمال المؤلف' }, lang)}
           </span>
           <span className="h-px flex-1 min-w-6" style={{ backgroundColor: 'var(--rule)' }} aria-hidden="true" />
+          {/* Le cadre serre les boutons, pas l’étiquette de la rangée. */}
+          <span className="bascule-groupe">
           {[
             { cle: 'publications', Icone: FileText, n: authorPublications.length,
               label: { fr: 'Publications', en: 'Publications', ar: 'المنشورات' } },
@@ -11180,17 +11287,18 @@ const TabAbout = ({ text, lang, children }) => {
             <button
               key={cle}
               type="button"
-              onClick={() => setVoletAuteur(voletAuteur === cle ? null : cle)}
+              onClick={() => setVoletAuteur(voletAuteur === cle ? null : cle)}
               aria-expanded={voletAuteur === cle}
               className="couche-btn"
-              data-actif={voletAuteur === cle ? 'true' : 'false'}
+              data-actif={voletAuteur === cle ? 'true' : 'false'}
             >
               <Icone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               {tr(label, lang)}
               <span className="tabular-nums opacity-55">{n}</span>
-              <ChevronDown className={`w-3 h-3 shrink-0 transition-transform ${voletAuteur === cle ? 'rotate-180' : ''}`} aria-hidden="true" />
+              <ChevronDown className={`w-3 h-3 shrink-0 transition-transform ${voletAuteur === cle ? 'rotate-180' : ''}`} aria-hidden="true" />
             </button>
           ))}
+          </span>
         </div>
 
         {voletAuteur === 'publications' && (
@@ -11243,7 +11351,7 @@ const TabAbout = ({ text, lang, children }) => {
             <span className={`text-[9px] font-bold uppercase tracking-widest border px-1.5 py-0.5 rounded-sm ${st.chip}`}>{m.outlet}</span>
             <span className="text-[10px] font-bold text-slate-400 tabular-nums">{tr(m.date, lang)}</span>
             </div>
-            {m.url ? (
+            {m.url ? (
             /* Une video ne se signale pas comme un article : quand le lien
                mene a YouTube, le libelle le dit et l'icone change. */
             <a href={m.url} target="_blank" rel="noopener noreferrer"
@@ -11256,7 +11364,7 @@ const TabAbout = ({ text, lang, children }) => {
                 </span>
               : <ExternalLink className="w-2.5 h-2.5 shrink-0 mt-1" />}
             </a>
-            ) : (
+            ) : (
             <Prose className="text-xs text-slate-700 leading-relaxed italic group-hover:text-slate-900 transition-colors" lang={lang}>{tr(m.title, lang)}</Prose>
             )}
             </li>
@@ -11279,10 +11387,10 @@ const TabAbout = ({ text, lang, children }) => {
           <button 
             onClick={handleCopyCitation}
             className={`inline-flex items-center justify-center space-x-1.5 rtl:space-x-reverse px-4 py-2 rounded-sm text-xs font-bold transition-all border shadow-sm w-full sm:w-auto
-            ${isCopied ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'}`}
+            ${isCopied ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'}`}
           >
-            {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span>{isCopied ? (tr({ fr: 'Copié !', en: 'Copied!' }, lang)) : (tr({ fr: 'Copier', en: 'Copy' }, lang))}</span>
+            {isCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <span>{isCopied ? (tr({ fr: 'Copié !', en: 'Copied!' }, lang)) : (tr({ fr: 'Copier', en: 'Copy' }, lang))}</span>
           </button>
         </div>
         <Prose className="text-sm text-slate-600 font-serif italic border-s-2 border-blue-500 ps-4 leading-relaxed" lang={lang}>{text.about.citation_text}</Prose>
@@ -11366,7 +11474,7 @@ const voletDuSegment = (tab, seg) => {
   const table = SOUS_ROUTES[tab];
   if (!table || !seg) return null;
   const trouve = Object.entries(table).find(([, v]) => Object.values(v).includes(seg));
-  return trouve ? trouve[0] : null;
+  return trouve ? trouve[0] : null;
 };
 
 const slugPays = (nom) => String(nom || '')
@@ -11381,7 +11489,7 @@ const lireURL = () => {
   // premieres. Le selecteur ecrivait bien /ar/…, mais le lecteur d'URL ne
   // connaissait que « en » et renvoyait tout le reste au francais : un lien
   // arabe se partageait pour retomber en francais a l'ouverture.
-  const lang = ACTIVES.includes(bouts[0]) ? bouts[0] : LANGUE_DEFAUT;
+  const lang = ACTIVES.includes(bouts[0]) ? bouts[0] : LANGUE_DEFAUT;
   const seg = bouts[1];
   let tab = 'atlas';
   if (seg) {
@@ -11389,14 +11497,14 @@ const lireURL = () => {
     if (trouve) tab = trouve[0];
     else if (ROUTES_ANCIENNES[seg]) tab = ROUTES_ANCIENNES[seg];
   }
-  return { lang, tab, detail: bouts[2] ? decodeURIComponent(bouts[2]) : null };
+  return { lang, tab, detail: bouts[2] ? decodeURIComponent(bouts[2]) : null };
 };
 
 const ecrireURL = ({ lang, tab, detail }, remplacer = false) => {
   const seg = tr(ROUTES[tab], lang) || tr(ROUTES.atlas, lang);
-  const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
+  const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
   if (chemin === window.location.pathname) return;
-  window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
+  window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
 };
 
 export default function App() {
@@ -11410,6 +11518,10 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const [showModal, setShowModal] = useState(false);
+
+  // Le volet ouvert dans la fiche pays. On entre toujours par la présence —
+  // combien de personnes — parce que c'est la question qu'on se pose d'abord.
+  const [voletFiche, setVoletFiche] = useState('presence');
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   // La Gouvernance ouvre sur l'Union africaine, pas sur l'Agenda 2030.
   const [activeSdgzTab, setActiveSdgzTab] = useState('au');
@@ -11480,15 +11592,15 @@ export default function App() {
   const paysSlug = useMemo(() => {
     if (activeTab !== 'atlas' || !showModal || activeSubTab === 'perspective') return null;
     const c = Object.values(countryData).flat().find(x => x.id === activeSubTab);
-    return c ? slugPays(tr(c.name, lang) || c.name?.fr || c.name) : null;
+    return c ? slugPays(tr(c.name, lang) || c.name?.fr || c.name) : null;
   }, [activeTab, activeSubTab, showModal, lang]);
 
   // Le troisieme segment : un pays dans l'Atlas, un volet partout ailleurs.
   const segmentDetail = useMemo(() => {
     if (activeTab === 'atlas') return paysSlug;
-    const cle = activeTab === 'mobilites' ? voletMobilites
-              : activeTab === 'governance' ? activeSdgzTab
-              : activeTab === 'resources' ? activeResourceTab : null;
+    const cle = activeTab === 'mobilites' ? voletMobilites
+              : activeTab === 'governance' ? activeSdgzTab
+              : activeTab === 'resources' ? activeResourceTab : null;
     return segmentDuVolet(activeTab, cle, lang);
   }, [activeTab, paysSlug, voletMobilites, activeSdgzTab, activeResourceTab, lang]);
 
@@ -11507,8 +11619,8 @@ export default function App() {
       setActiveTab(e.tab);
       if (e.tab === 'atlas') {
         // Une adresse de pays rouvre son dossier ; l'Atlas seul le referme.
-        const c = e.detail ? paysParSlug(e.detail) : null;
-        setActiveSubTab(c ? c.id : 'perspective');
+        const c = e.detail ? paysParSlug(e.detail) : null;
+        setActiveSubTab(c ? c.id : 'perspective');
         setShowModal(Boolean(c));
       } else {
         // Ailleurs, le segment porte le volet — ou son absence, le defaut.
@@ -11584,12 +11696,12 @@ export default function App() {
       };
     }
 
-    const fallbackKey = activeSubRegion === 'all' ? 'africa_perspective' : `${activeSubRegion}_perspective`;
+    const fallbackKey = activeSubRegion === 'all' ? 'africa_perspective' : `${activeSubRegion}_perspective`;
     const fallback = aggregates[fallbackKey] || aggregates['africa_perspective'];
     const agg = regionAggregate;
 
     return {
-      name: typeof fallback.name === 'object' ? (tr(fallback.name, lang) || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
+      name: typeof fallback.name === 'object' ? (tr(fallback.name, lang) || fallback.name?.fr || 'Unknown') : String(fallback.name || 'Unknown'),
       flag: null,
       iso2: null,
       flagIcon: fallback.flagIcon,
@@ -11604,16 +11716,29 @@ export default function App() {
       labour_participation_year: null,
       aid: agg.aid ?? (fallback.aid || 0),
       history: fallback.history, distribution: fallback.distribution || null,
-      evo_desc: typeof fallback.evo_desc === 'object' ? (tr(fallback.evo_desc, lang) || fallback.evo_desc?.fr || "") : (fallback.evo_desc || ""),
-      origDest: typeof fallback.origDest === 'object' ? (tr(fallback.origDest, lang) || fallback.origDest?.fr || "") : (fallback.origDest || ""),
-      trigger: typeof fallback.trigger === 'object' ? (tr(fallback.trigger, lang) || fallback.trigger?.fr || "") : (fallback.trigger || ""),
-      response: typeof fallback.response === 'object' ? (tr(fallback.response, lang) || fallback.response?.fr || "") : (fallback.response || ""),
-      impact: typeof fallback.impact === 'object' ? (tr(fallback.impact, lang) || fallback.impact?.fr || "") : (fallback.impact || ""),
+      evo_desc: typeof fallback.evo_desc === 'object' ? (tr(fallback.evo_desc, lang) || fallback.evo_desc?.fr || "") : (fallback.evo_desc || ""),
+      origDest: typeof fallback.origDest === 'object' ? (tr(fallback.origDest, lang) || fallback.origDest?.fr || "") : (fallback.origDest || ""),
+      trigger: typeof fallback.trigger === 'object' ? (tr(fallback.trigger, lang) || fallback.trigger?.fr || "") : (fallback.trigger || ""),
+      response: typeof fallback.response === 'object' ? (tr(fallback.response, lang) || fallback.response?.fr || "") : (fallback.response || ""),
+      impact: typeof fallback.impact === 'object' ? (tr(fallback.impact, lang) || fallback.impact?.fr || "") : (fallback.impact || ""),
       idp_conflict: 0, idp_disaster: 0, refugees_hosted: 0, avoi: null, normlex: null, au_treaties: null,
       isRegion: true,
       countryCount: agg.countryCount
     };
   }, [activeSubTab, activeSubRegion, lang, currentCountries, regionAggregate]);
+
+  // Tous les pays ne portent pas les cinq volets : un État sans déplacés
+  // interne n'a pas de volet « Déplacement ». Plutôt qu'un effet qui corrige
+  // l'état après coup — et qui rendrait une image vide le temps d'un rendu —
+  // le volet effectif se calcule : celui qu'on a choisi s'il existe ici, le
+  // premier disponible sinon.
+  const voletsFicheDispo = useMemo(
+    () => VOLETS_FICHE.filter(v => voletTientQuelqueChose(v.cle, display)),
+    [display]
+  );
+  const voletFicheActif = voletsFicheDispo.some(v => v.cle === voletFiche)
+    ? voletFiche
+    : (voletsFicheDispo[0]?.cle || 'presence');
 
   // Titre et description suivent l'adresse : c'est ce qui apparait dans un
   // resultat de recherche, un signet ou un partage. Le titre ne nommait le pays
@@ -11636,7 +11761,7 @@ export default function App() {
     const partie = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
       ? display.name
       : nomSection;
-    document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
+    document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
     appliquerLangue(lang);
 
     const desc = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
@@ -11657,8 +11782,8 @@ export default function App() {
   };
 
   const exportCountryProfileCSV = () => {
-    const remitValue = display.remittances !== null && display.remittances !== undefined ? `${display.remittances} (${display.remittances_year || 's.d.'})` : 'N/A';
-    const labourValue = display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation} (${display.labour_participation_year || 's.d.'})` : 'N/A';
+    const remitValue = display.remittances !== null && display.remittances !== undefined ? `${display.remittances} (${display.remittances_year || 's.d.'})` : 'N/A';
+    const labourValue = display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation} (${display.labour_participation_year || 's.d.'})` : 'N/A';
     const csvContent = `Metric,Value\nProfile,"${display.name}"\nStock,"${display.stock}"\nFemale Share %,"${display.female}"\nEvolution,"${display.evolution}"\nRemittances % GDP (year),"${remitValue}"\nMigrant Labour Participation % (year),"${labourValue}"\nOrig/Dest,"${display.origDest}"\nTrigger,"${display.trigger}"\nResponse,"${display.response}"\nImpact,"${display.impact}"\nIDP Conflict,"${display.idp_conflict}"\nIDP Disaster,"${display.idp_disaster}"\n`;
     downloadCSV(`Profile_${display.name}.csv`, csvContent);
   };
@@ -11675,7 +11800,7 @@ export default function App() {
       recs: (countryRecAffiliations[c.iso2] || []).join(' | '),
       visa_open_to_all_africa: visaOpenToAllAfrica[c.iso2]?.tier || '',
       ilo_conventions_total: c.normlex?.total,
-      au_treaties_ratified: c.au_treaties ? Object.entries(c.au_treaties).filter(([, v]) => v).map(([k]) => k).join(' | ') : '',
+      au_treaties_ratified: c.au_treaties ? Object.entries(c.au_treaties).filter(([, v]) => v).map(([k]) => k).join(' | ') : '',
     })));
     downloadCSV('souths_country_indicators.csv', toCSV(rows));
   };
@@ -11719,7 +11844,7 @@ export default function App() {
       title: i.title, year: i.year,
       type_fr: i.type?.fr, type_en: i.type?.en,
       description_fr: i.desc?.fr, url: i.url || '',
-      essential: i.essential ? 'yes' : 'no',
+      essential: i.essential ? 'yes' : 'no',
     })));
     downloadCSV('souths_library.csv', toCSV(rows));
   };
@@ -11758,7 +11883,7 @@ export default function App() {
   const mainMaxWidth = 'max-w-7xl';
 
   return (
-    <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
+    <div className={`min-h-screen bg-[#f8f9fa] font-sans text-slate-800 text-sm transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} print:bg-white print:text-black`}>
       {/* Lien d'evitement : au clavier, la premiere tabulation saute les neuf
           onglets de navigation et mene directement au contenu. */}
       <a href="#contenu" className="skip-link">
@@ -11884,11 +12009,11 @@ export default function App() {
                 <button
                   key={item.id}
                   onClick={() => allerVers(item.id)}
-                  aria-current={isActive ? 'page' : undefined}
+                  aria-current={isActive ? 'page' : undefined}
                   className="nav-tab flex items-center px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-t-2"
                   style={navTabStyle(isActive)}
                 >
-                  <Icon className="w-4 h-4 me-2" style={{ color: isActive ? 'var(--accent-light)' : '#7A7167' }} />
+                  <Icon className="w-4 h-4 me-2" style={{ color: isActive ? 'var(--accent-light)' : '#7A7167' }} />
                   {tr(item.label, lang)}
                 </button>
               );
@@ -11924,7 +12049,7 @@ export default function App() {
 
       {/* data-section : c'est lui qui redefinit --accent pour toute la section.
           Aucun composant n'a besoin de connaitre la couleur de l'onglet. */}
-      <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
+      <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
         {activeTab === 'atlas' && (
           <TabAtlas
             lang={lang} text={text} allerVers={allerVers}
@@ -11955,16 +12080,18 @@ export default function App() {
           <div className="space-y-8">
             {(() => {
               const resourceSwitch = (
-                <div className="flex bg-slate-200 p-1.5 rounded-xl max-w-lg">
+                <div className="bascule-groupe flex max-w-lg">
                   <button
                     onClick={() => setActiveResourceTab('library')}
-                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'library' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    data-actif={activeResourceTab === 'library' ? 'true' : 'false'}
+                    className="bascule flex-1 justify-center transition-all"
                   >
                     <BookOpen className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Bibliothèque', en: 'Library', ar: 'المكتبة' }, lang)}
                   </button>
                   <button
                     onClick={() => setActiveResourceTab('glossary')}
-                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'glossary' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    data-actif={activeResourceTab === 'glossary' ? 'true' : 'false'}
+                    className="bascule flex-1 justify-center transition-all"
                   >
                     <Brain className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Glossaire', en: 'Glossary', ar: 'المعجم' }, lang)}
                   </button>
@@ -11974,7 +12101,8 @@ export default function App() {
                       part : ce n'est pas une ressource, c'est une signature. */}
                   <button
                     onClick={() => setActiveResourceTab('methodology')}
-                    className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 px-2 sm:px-4 rounded-lg text-xs font-bold transition-all ${activeResourceTab === 'methodology' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+                    data-actif={activeResourceTab === 'methodology' ? 'true' : 'false'}
+                    className="bascule flex-1 justify-center transition-all"
                   >
                     <Database className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'Méthodologie', en: 'Methodology', ar: 'المنهجية' }, lang)}
                   </button>
@@ -12012,121 +12140,179 @@ export default function App() {
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
-            className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
+            /* max-w-5xl valait 1024 px. Les trois volets les plus fournis débordaient en
+                 hauteur, et la seule façon de les faire tenir sans resserrer la
+                 typographie ni le rembourrage — ce qui avait abîmé le rendu — est de
+                 leur donner de la largeur : un bloc plus large est un bloc moins haut. */
+            className="bg-slate-50 rounded-xl w-full max-w-6xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
             <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
               <div className="flex items-center space-x-5 rtl:space-x-reverse">
-                {display.flagIcon ? (
+                {display.flagIcon ? (
                   <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2.5 shadow-sm print:border-none ${display.flagColor || 'text-blue-700'}`}>
                     <display.flagIcon className="w-8 h-8 md:w-9 md:h-9" />
                   </span>
-                ) : (
+                ) : (
                   <CountryFlag iso2={display.iso2} emoji={display.flag} size="lg" className="border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none" />
                 )}
                 <div>
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight">{display.name}</h2>
-                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
+                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
                 </div>
               </div>
                 
-              {/* Les trois onglets — Démographie, Géographie & Flux, Économie &
-                  Droits — entassaient ce qu'ils pouvaient : la première carte portait
-                  à elle seule le stock migratoire, sa part, sa barre et son historique.
-                  Quatre informations dans un objet censé en dire une.
-                  Le principe vient du bloc démographie, dont l'organisation était la
-                  bonne : un indicateur, son chiffre, sa source, une phrase. Il devient
-                  la règle — six rubriques au lieu de trois vues, une à deux mesures
-                  chacune, et le lecteur choisit celle qu'il ouvre. */}
-              <FichePaysRubriques display={display} lang={lang} />
+              {/* La barre de volets, comme avant : cinq entrées, cinq boutons.
+                  La grille à plat qui les remplaçait posait les sept rubriques
+                  côte à côte — tout était là, rien n'était rangé, et la fenêtre ne
+                  disait plus par où commencer. */}
+              <BarreVoletsFiche display={display} lang={lang}
+                                volet={voletFicheActif} setVolet={setVoletFiche} />
               <button onClick={() => setShowModal(false)} aria-label={tr({ fr: 'Fermer le rapport', en: 'Close the report' }, lang)} className="absolute top-6 end-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
-            <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
+            <div /* Sans `h-full`, le corps prend la hauteur de son volet : la fenêtre grandit
+                     et rétrécit avec lui, dans la limite des 95 vh posée plus haut. Avec
+                     `h-full`, elle restait figée à la taille du premier volet ouvert, et
+                     tout volet plus haut défilait — y compris quand la place existait. */
+                  /* `space-y-10` posait 40 px au-dessus du volet ouvert : un écart entre frères
+                     alors qu’un seul est visible à la fois. Ce n’est pas de la respiration,
+                     c’est du vide. */
+                  className="p-6 md:p-10 overflow-y-auto print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white print:flex print:flex-col print:gap-6 print:space-y-0">
 
+              {/* Les cinq volets. Un seul est ouvert à la fois.
 
-              <div className={`grid-cols-1 gap-8 animate-in fade-in duration-500 grid print:gap-4 print:mb-6`}>
-                  
-                <div className="bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
-                  <div>
-                    <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
-                    <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
-                    <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
-                      <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
+                  Rien ici ne porte de variante d'impression : la fenêtre entière est
+                  `print:hidden`, et c'est <PdfCountryDossier> qui part au papier — un
+                  document composé pour la feuille, qui sort les sept ensembles de
+                  données quel que soit le volet ouvert à l'écran. Mettre `print:block`
+                  ici ne servirait à rien et laisserait croire le contraire. */}
+
+              {/* Combien de personnes, et depuis quand on sait les compter */}
+              <section className={`fiche-panneau ${voletFicheActif === 'presence' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'presence').nom, lang)}>
+                <FichePaysRubriques display={display} lang={lang} volet="presence" />
+                {display.iso2 && censusByCountry[display.iso2] && (
+                  <div className="print:break-inside-avoid">
+                    <CensusTimeline iso2={display.iso2} lang={lang} />
+                  </div>
+                )}
+              </section>
+
+              {/* Qui est déplacé ici, et qui y est accueilli */}
+              <section className={`fiche-panneau ${voletFicheActif === 'deplacement' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'deplacement').nom, lang)}>
+                <FichePaysRubriques display={display} lang={lang} volet="deplacement" />
+                {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
+                  <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
+                    <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
+                    <div className="space-y-4 print:space-y-2">
+                      {display.refugees_hosted > 0 && (
+                        <div>
+                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                            <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
+                            <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
+                          </div>
+                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
+                        </div>
+                      )}
+                      {display.idp_conflict > 0 && (
+                        <div>
+                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                            <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
+                            <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
+                          </div>
+                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
+                        </div>
+                      )}
+                      {display.idp_disaster > 0 && (
+                        <div>
+                          <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                            <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
+                            <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
+                          </div>
+                          <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
+                        </div>
+                      )}
+                    </div>
+                    <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
+                  </div>
+                )}
+              </section>
+
+              {/* Par où l'on passe, et ce qui met en mouvement */}
+              <section className={`fiche-panneau ${voletFicheActif === 'trajets' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'trajets').nom, lang)}>
+                <div className="bg-white rounded-lg border border-slate-200 p-7 shadow-sm print:p-4 print:break-inside-avoid">
+                <div>
+                  <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
+                  <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
+                  <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
+                    <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d'accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
+                  </div>
+                </div>
+                </div>
+              </section>
+
+              {/* Ce qui met en mouvement. Trois récits côte à côte — déclencheur,
+                  réponse, effet — qui tenaient dans Trajets et l'y faisaient défiler :
+                  dans une demi-colonne ils s'empilent et le bloc passe de 288 à 658 px.
+                  Seuls, en pleine largeur, ils gardent leurs trois colonnes. */}
+              <section className={`fiche-panneau ${voletFicheActif === 'ressorts' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'ressorts').nom, lang)}>
+                <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
+                  <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-amber-400 print:text-amber-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-blue-400 print:text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
+                    </div>
+                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
+                      <span className="text-emerald-400 print:text-emerald-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
+                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
                     </div>
                   </div>
-                    
-                  {!display.isRegion && (
-                    <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
-                      {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
-                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
-                          <div className="space-y-4 print:space-y-2">
-                            {display.refugees_hosted > 0 && (
-                              <div>
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                                  <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
-                                  <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
-                              </div>
-                            )}
-                            {display.idp_conflict > 0 && (
-                              <div>
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                                  <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
-                                  <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
-                              </div>
-                            )}
-                            {display.idp_disaster > 0 && (
-                              <div>
-                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                                  <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
-                                  <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
-                              </div>
-                            )}
-                          </div>
-                          <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
-                        </div>
-                      )}
+                </div>
+              </section>
 
-                      {display.avoi !== null && (
-                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
-                          <div>
-                            <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
-                              <span className="text-slate-600 print:!text-slate-600">Score</span>
-                              <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
-                            </div>
-                            <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
-                              <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
-                              {continentalAvoiAvg !== null && (
-                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
-                              )}
-                            </div>
-                            {continentalAvoiAvg !== null && (
-                              <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
-                            )}
-                            <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
-                          </div>
-                        </div>
+              {/* Ce que le droit ouvre : visas, traités, communautés, conventions */}
+              <section className={`fiche-panneau ${voletFicheActif === 'ouverture' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'ouverture').nom, lang)}>
+                <FichePaysRubriques display={display} lang={lang} volet="ouverture" />
+                {display.avoi !== null && (
+                  <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
+                    <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
+                    <div>
+                      <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest mb-1.5 print:text-[8px]">
+                        <span className="text-slate-600 print:!text-slate-600">Score</span>
+                        <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
+                        <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
+                        {continentalAvoiAvg !== null && (
+                          <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
+                        )}
+                      </div>
+                      {continentalAvoiAvg !== null && (
+                        <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
                       )}
+                      <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
+                )}
+              </section>
 
-              <div className={`space-y-8 animate-in fade-in duration-500 block print:space-y-4 print:break-inside-avoid`}>
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
-                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L'apport des diasporas face à l'aide publique au développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
-                  <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
-                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale.", en: "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity." }, lang)}</Prose></div>
-                </div>
-
+              {/* Ce que le pays a signé. Trois registres de même nature — les
+                  instruments de l'UA, l'appartenance aux communautés régionales,
+                  les conventions de l'OIT — qui tenaient dans deux volets déjà
+                  chargés et les faisaient défiler. Réunis, et posés côte à côte
+                  plutôt qu'empilés : trois colonnes valent la hauteur d'une. */}
+              <section className={`fiche-panneau ${voletFicheActif === 'engagements' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'engagements').nom, lang)}>
+                <div className="fiche-colonnes">
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
@@ -12145,10 +12331,10 @@ export default function App() {
                       ].map((t) => {
                         const ratified = display.au_treaties[t.key];
                         return (
-                          <div key={t.key} className={`p-3 rounded-md border flex items-center justify-between ${ratified ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+                          <div key={t.key} className={`p-3 rounded-md border flex items-center justify-between ${ratified ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
                             <span className="text-xs font-bold">{tr({ fr: t.fr, en: t.en }, lang)}</span>
-                            <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${ratified ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>
-                              {ratified ? (tr({ fr: 'Ratifié', en: 'Ratified' }, lang)) : (tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang))}
+                            <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${ratified ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>
+                              {ratified ? (tr({ fr: 'Ratifié', en: 'Ratified' }, lang)) : (tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang))}
                             </span>
                           </div>
                         );
@@ -12156,13 +12342,6 @@ export default function App() {
                     </div>
                   </div>
                 )}
-
-                {display.iso2 && censusByCountry[display.iso2] && (
-                  <div className="print:break-inside-avoid">
-                    <CensusTimeline iso2={display.iso2} lang={lang} />
-                  </div>
-                )}
-
                 {display.iso2 && countryRecAffiliations[display.iso2] && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Affiliation aux communautés économiques régionales", en: "Regional Economic Community Affiliation" }, lang)}</h3>
@@ -12171,7 +12350,7 @@ export default function App() {
                       {countryRecAffiliations[display.iso2].map((recId) => (
                         <div key={recId} className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-full ps-1.5 pe-4 py-1.5 print:bg-white">
                           <span className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[9px] shrink-0">
-                            {recId === 'censad' ? 'CS' : recId.toUpperCase()}
+                            {recId === 'censad' ? 'CS' : recId.toUpperCase()}
                           </span>
                           <span className="text-xs font-bold text-emerald-900">{tr(recNames[recId], lang)}</span>
                         </div>
@@ -12197,7 +12376,6 @@ export default function App() {
                     })()}
                   </div>
                 )}
-
                 {display.normlex && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Évaluation juridique des droits (Base NORMLEX OIT)", en: "Legal Evaluation of Rights (ILO NORMLEX)" }, lang)}</h3>
@@ -12227,27 +12405,23 @@ export default function App() {
                     </div>
                   </div>
                 )}
-                  
-                <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
-                  <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-amber-400 print:text-amber-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
-                    </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-blue-400 print:text-blue-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
-                    </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="text-emerald-400 print:text-emerald-600 font-bold text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
-                    </div>
-                  </div>
                 </div>
+              </section>
 
-                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (tr({ fr: 'Profil Régional', en: 'Regional Profile' }, lang)) : (tr({ fr: 'Profil Pays', en: 'Country Profile' }, lang))} />
-              </div>
+              {/* Ce que l'argent des diasporas fait */}
+              <section className={`fiche-panneau ${voletFicheActif === 'economie' ? 'block' : 'hidden'}`}
+                       aria-label={tr(VOLETS_FICHE.find(v => v.cle === 'economie').nom, lang)}>
+                <FichePaysRubriques display={display} lang={lang} volet="economie" />
+                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
+                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
+                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L'apport des diasporas face à l'aide publique au développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
+                  <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
+                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les diasporas injectent massivement du capital directement dans l'économie réelle (familles, santé, éducation), rendant les Suds économiquement résilients sans dépendre exclusivement de la charité internationale.", en: "Diasporas inject massive capital directly into the real economy, making the Souths economically resilient without depending solely on international charity." }, lang)}</Prose></div>
+                </div>
+              </section>
+
+              {/* Le pied de citation sort avec chaque volet imprimé. */}
+                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (tr({ fr: 'Profil Régional', en: 'Regional Profile' }, lang)) : (tr({ fr: 'Profil Pays', en: 'Country Profile' }, lang))} />
             </div>
 
             <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
