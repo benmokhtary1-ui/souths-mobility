@@ -1,4 +1,4 @@
-// Bibliotheque : sources institutionnelles, juridiques et academiques, avec
+// Bibliotheque : sources institutionnelles, juridiques et academiques, avec
 // leur lien d'origine. Toute source citee ailleurs sur la plateforme doit y
 // figurer.
 

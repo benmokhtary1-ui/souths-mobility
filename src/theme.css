@@ -207,6 +207,17 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
    chose. Un seul le dit maintenant. */
 :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12) { padding: 2rem !important; }
 
+/* Les rembourrages internes commandent le bord gauche du texte, et ils étaient
+   cinq : 32, 28, 24, 20 et 16 px. Emboîtés, ils produisaient seize bords de
+   texte distincts sur une seule section, séparés de huit pixels — des
+   quasi-alignements, que l'œil lit comme une erreur et non comme une intention.
+   Deux suffisent : 24 pour un contenant de lecture, 16 pour un bloc compact.  */
+:is(main, .reader) :is(.p-7, .p-6, .p-5) { padding: var(--pas-3) !important; }
+:is(main, .reader) :is(.px-7, .px-6, .px-5) { padding-inline: var(--pas-3) !important; }
+:is(main, .reader) :is(.py-7, .py-6, .py-5) { padding-block: var(--pas-3) !important; }
+:is(main, .reader) :is(.p-4, .p-3\.5) { padding: var(--pas-2) !important; }
+:is(main, .reader) :is(.px-4, .px-3\.5) { padding-inline: var(--pas-2) !important; }
+
 /* Les piles verticales se rangent sur les quatre pas. */
 :is(main, .reader) :is(.space-y-10, .space-y-8) > * + * { margin-top: var(--pas-4) !important; }
 :is(main, .reader) :is(.space-y-6, .space-y-5) > * + * { margin-top: var(--pas-3) !important; }
@@ -222,7 +233,15 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .rounded-full { border-radius: 999px !important; }
 .rounded { border-radius: 5px !important; }
 
-/* Une carte sans bordure explicite reçoit tout de même son filet. */
+/* Une carte sans bordure explicite reçoit tout de même son filet.
+
+   Une passe avait retiré ce cadre à tous les blocs de lecture, pour casser
+   l'impression de grille : 86 boîtes cernées dans une seule section, c'était
+   mesuré et c'était vrai. Le remède était pire — sans cadre, sans fond et sans
+   rayon, la page prenait l'allure d'un document Word exporté en HTML : des
+   paragraphes qui se suivent, plus aucun objet. La carte reste donc la forme de
+   base. Ce qui allège, ce n'est pas de la supprimer, c'est de lui donner de
+   l'air et de réduire ce qu'elle contient.                                  */
 :is(main, .reader) .bg-white { border: 1px solid var(--rule); }
 
 /* ---------- Encre : échelle typographique -------------------------------- */
@@ -261,6 +280,44 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 .bg-slate-900 :is(.text-blue-300,.text-blue-400,.text-blue-500),
 .bg-slate-800 :is(.text-blue-300,.text-blue-400,.text-blue-500),
 .bg-emerald-900 :is(.text-blue-300,.text-blue-400,.text-blue-500) { color: var(--accent-light) !important; }
+
+/* ---------- Les aplats pastel ramenés à la teinte de la section ---------
+   Relevé : bleu 13 emplois, ambre 18, émeraude 13, rose 3, sarcelle 1, violet 1.
+   Cinq familles de pastel pour un site qui affiche par ailleurs une teinte par
+   section — dans Gouvernance, trois blocs consécutifs étaient blanc, bleu et
+   sarcelle, sans qu'aucune de ces couleurs ne veuille dire quoi que ce soit.
+
+   Les aplats neutres suivent donc l'accent de la section : ils appartiennent au
+   lieu au lieu de le contredire. Deux familles gardent leur sens propre et ne
+   sont pas touchées — l'ambre, réservé à l'attention, et le rose, réservé au
+   manque. Une couleur qui code une information n'est pas un pastel de mise en
+   page.                                                                      */
+/* Chaque famille garde son rang, mais dans la teinte de la section : ce n'est
+   plus la couleur qui distingue les blocs, c'est l'intensité d'une seule. Quatre
+   strates, de la plus discrète à la plus dense — assez pour hiérarchiser, trop
+   peu pour redevenir un carnaval. Dans Gouvernance, les trois blocs consécutifs
+   qui étaient blanc, bleu et sarcelle deviennent trois degrés du bleu-violet de
+   la section : ils appartiennent enfin au lieu qu'ils décrivent.            */
+:is(main, .reader) .bg-emerald-50 { background-color: color-mix(in oklab, var(--accent)  6%, var(--paper)) !important; }
+:is(main, .reader) .bg-blue-50    { background-color: color-mix(in oklab, var(--accent) 11%, var(--paper)) !important; }
+:is(main, .reader) .bg-teal-50    { background-color: color-mix(in oklab, var(--accent) 17%, var(--paper)) !important; }
+:is(main, .reader) .bg-purple-50  { background-color: color-mix(in oklab, var(--accent) 23%, var(--paper)) !important; }
+:is(main, .reader) :is(.border-blue-100, .border-blue-200, .border-teal-100, .border-teal-200,
+                       .border-purple-200, .border-emerald-100, .border-emerald-200) {
+  border-color: color-mix(in oklab, var(--accent) 26%, var(--paper)) !important;
+}
+/* Les textes posés sur ces aplats suivent le même accent, sinon un titre bleu
+   se retrouverait sur un aplat grenat. */
+:is(main, .reader) :is(.text-blue-700, .text-blue-800, .text-blue-900,
+                       .text-teal-700, .text-teal-800, .text-teal-900,
+                       .text-emerald-700, .text-emerald-800, .text-emerald-900,
+                       .text-purple-700, .text-purple-800, .text-purple-900) {
+  color: var(--accent-deep) !important;
+}
+:is(main, .reader) :is(.text-blue-400, .text-blue-500, .text-blue-600,
+                       .text-teal-600, .text-emerald-600, .text-purple-400) {
+  color: var(--accent) !important;
+}
 
 /* ---------- Accents : six teintes ramenées à deux ------------------------
    Indigo pour la structure, bleu d'ardoise pour la seconde famille de blocs.
@@ -858,6 +915,13 @@ main { view-transition-name: page; }
 
 /* Les rangs nommes de Tailwind suivent le meme facteur : sans eux, le corps
    courant resterait en arriere de ses propres legendes. */
+/* Le corps hérité : le conteneur racine porte `text-sm`, qui vaut 14 px chez
+   Tailwind. Comme il vit hors de <main>, la règle d'échelle ci-dessous ne
+   l'atteignait pas, et les 93 blocs qui ne déclarent pas leur corps héritaient
+   d'un 14 px absent de l'échelle — une taille fantôme, jamais choisie, tapie
+   entre le 13 et le 15. Le socle rejoint donc l'échelle.                    */
+body, body > div, .font-sans.text-sm { font-size: 15px; }
+
 :is(main, .reader) .text-xs   { font-size: 13px;   line-height: 1.55; }
 :is(main, .reader) .text-sm   { font-size: 15px;   line-height: 1.6; }
 :is(main, .reader) .text-base { font-size: 17px; line-height: 1.6; }
@@ -1151,7 +1215,11 @@ main:focus { outline: none; }
   /* Le gris des composantes dont on ne parle pas, dans l'emblème expliqué.
      Une baisse d'opacité les laissait colorées et pâles : trois verts de trois
      intensités, où l'œil cherche encore lequel est le sujet. */
-  --mq-eteint: color-mix(in oklab, var(--ink) 17%, var(--paper));
+  --mq-eteint: color-mix(in oklab, var(--ink) 17%, var(--paper));
+  /* Le creux des anneaux de la fiche pays. Il était écrit en dur — #f1f5f9 sur
+     fond clair, #1e293b sur fond sombre — et l'un des deux venait d'un ternaire
+     dont les deux branches donnaient la même valeur. */
+  --anneau-vide: color-mix(in oklab, var(--accent) 12%, var(--paper));
 }
 
 /* L'emblème se montre dans sa couleur, jamais dans celle de la section qui
@@ -1685,7 +1753,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 /* Le mode d'emploi, contre les boutons qu'il decrit. */
 .scene-flux-mode {
   margin: 0 0 .55rem;
-  font-size: .78rem;
+  font-size: 13px;
   line-height: 1.45;
   color: var(--accent-light);
 }
@@ -1702,7 +1770,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: #FFFFFF;
 }
 .assise-quoi {
-  font-size: .74rem;
+  font-size: 12px;
   letter-spacing: .04em;
   color: var(--accent-light);
 }
@@ -2646,4 +2714,264 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 .choro-hors {
   opacity: .28 !important;
   pointer-events: none;
+}
+
+/* ---------- La fiche pays refondue ---------------------------------------
+   Sept rubriques au lieu de trois vues, une a deux mesures chacune.
+
+   Un premier essai les mettait derriere un selecteur : on n'en voyait qu'une, et
+   six restaient cachees derriere un bouton. C'etait un recul deguise en
+   desencombrement — les trois vues d'avant montraient au moins leur contenu.
+   Elles s'affichent donc toutes, en fiches cote a cote, et rien ne defile a
+   l'interieur : ce qui est ecrit est visible.                                */
+.fiche-grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: var(--pas-3);
+  margin-block: var(--pas-3);
+}
+
+.fiche-rubrique {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--accent);
+  border-radius: 10px;
+  padding: var(--pas-3);
+}
+.fiche-rubrique header {
+  display: flex; align-items: center; gap: .5rem;
+  margin-bottom: var(--pas-2);
+  color: var(--accent-deep);
+}
+.fiche-rubrique h3 {
+  font: 600 17px/1.3 Fraunces, Georgia, serif;
+  color: var(--ink); margin: 0;
+}
+
+/* Le chiffre d'abord, l'explication ensuite : on lit la mesure sans lire. */
+.fiche-mesures {
+  display: flex; flex-wrap: wrap;
+  gap: var(--pas-2) var(--pas-3);
+  margin-bottom: var(--pas-2);
+}
+.mesure-pays { display: flex; flex-direction: column; gap: .25rem; }
+.mesure-nombre { display: flex; align-items: baseline; gap: .18rem; }
+.mesure-nombre b {
+  font: 600 26px/1 Fraunces, Georgia, serif;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.mesure-nombre i { font-style: normal; font-size: 13px; color: var(--ink-mute); }
+.mesure-quoi { font-size: 12px; line-height: 1.4; color: var(--muted); max-width: 20ch; }
+
+.mesure-anneau {
+  width: 84px; height: 84px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mesure-anneau-creux {
+  width: 62px; height: 62px; border-radius: 999px;
+  background: var(--paper-raised);
+  display: flex; align-items: center; justify-content: center; gap: .06rem;
+}
+.mesure-anneau-creux b {
+  font: 600 20px/1 Fraunces, Georgia, serif;
+  font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.mesure-anneau-creux i { font-style: normal; font-size: 11px; color: var(--ink-mute); }
+
+.fiche-dit {
+  font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
+  margin: 0 0 var(--pas-2);
+  flex: 1;
+}
+
+/* La ligne de source : elle se collait au texte et changeait de hauteur d'une
+   fiche a l'autre selon la longueur de l'explication. Elle est pousse'e en pied
+   par le flex, si bien que toutes les fiches l'alignent. */
+.fiche-source {
+  margin: auto 0 0;
+  padding-top: .6rem;
+  border-top: 1px solid var(--rule);
+  font: 10px/1.5 ui-monospace, monospace;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--label);
+  word-break: break-word;
+}
+
+/* ==========================================================================
+   La marque comme graine
+   --------------------------------------------------------------------------
+   L'emblème porte trois gestes, et chacun peut se prolonger dans le chrome sans
+   rien ajouter d'étranger. Le principe est l'épuration : on ne décore pas, on
+   fait dire au détail ce que la marque dit déjà.
+
+     LA BRÈCHE      L'anneau s'ouvre de 60° sur 360, soit un sixième. Les filets
+                    du site s'arrêtent donc à cinq sixièmes : ils ne se referment
+                    pas, comme lui. C'est la signature la plus discrète et la
+                    plus reconnaissable — on ne la remarque pas, on la sent.
+     LE POINT       L'unum : ce vers quoi le mouvement converge. Il devient la
+                    puce des listes et la marque de l'onglet actif.
+     LES POINTES    Le mouvement dans les deux sens. Il devient le déplacement
+                    au survol : d'un cran, jamais d'un bond.
+   ========================================================================== */
+
+/* La brèche : un filet qui ne se referme pas. Cinq sixièmes exactement — la
+   proportion de l'anneau, pas une valeur choisie pour faire joli. */
+:is(main, .reader) hr:not(.scene-flux-coupure),
+:is(main, .reader) .filet-marque {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    var(--rule) 0,
+    var(--rule) 83.333%,
+    transparent 83.333%);
+}
+:root[dir='rtl'] :is(main, .reader) hr,
+:root[dir='rtl'] :is(main, .reader) .filet-marque {
+  background: linear-gradient(270deg,
+    var(--rule) 0, var(--rule) 83.333%, transparent 83.333%);
+}
+
+/* Le point : la puce des listes de lecture. Son rapport au corps reprend celui
+   du point à l'anneau dans la marque — 6,3 sur 46, soit un septième. */
+/* Reserve a un emploi explicite : le site n'a pas de liste a puce native
+   — ses listes sont des piles `space-y-*` sans marqueur. La classe
+   `liste-point` est disponible pour celles qui en voudront une.  */
+:is(main, .reader) .prose-liste,
+:is(main, .reader) ul.liste-point {
+  list-style: none;
+  padding-inline-start: 1.15rem;
+}
+:is(main, .reader) :is(.prose-liste, ul.liste-point) > li {
+  position: relative;
+}
+:is(main, .reader) :is(.prose-liste, ul.liste-point) > li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -1.15rem;
+  top: .62em;
+  width: .32em; height: .32em;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+/* Les pointes : le mouvement au survol. D'un cran, dans le sens de la lecture,
+   et jamais plus — la marque avance, elle ne saute pas. */
+@media (hover: hover) {
+  :is(main, .reader) a.lift,
+  :is(main, .reader) .fiche-rubrique,
+  :is(main, .reader) .bg-white.lift {
+    transition: transform .22s cubic-bezier(.22, .61, .36, 1),
+                border-color .22s ease;
+  }
+  :is(main, .reader) a.lift:hover,
+  :is(main, .reader) .bg-white.lift:hover {
+    transform: translateY(-2px);
+    border-top-color: var(--accent);
+  }
+}
+
+/* L'anneau ouvert, en attente. Il tourne à la vitesse d'une lecture, pas d'un
+   chargement : deux secondes le tour, assez lent pour qu'on le reconnaisse. */
+.attente-marque {
+  width: 1.25rem; height: 1.25rem;
+  border-radius: 999px;
+  border: 2px solid color-mix(in oklab, var(--accent) 22%, transparent);
+  border-top-color: var(--accent);
+  border-inline-end-color: var(--accent);
+  animation: tourneMarque 2s linear infinite;
+}
+@keyframes tourneMarque { to { transform: rotate(360deg); } }
+
+/* La barre de défilement reprend la chasse de l'anneau — trois unités sur cent,
+   soit un filet, pas une glissière. */
+* { scrollbar-color: color-mix(in oklab, var(--accent) 34%, var(--rule)) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--accent) 30%, var(--rule));
+  border-radius: 999px;
+  border: 3px solid var(--paper);
+}
+::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--accent) 55%, var(--rule)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .attente-marque { animation: none; }
+  :is(main, .reader) :is(a.lift, .bg-white.lift):hover { transform: none; }
+}
+
+/* Le rembourrage emboîté, sur téléphone.
+
+   Mesuré dans Gouvernance à 375 px : la matrice d'ancrage tenait dans un cadre
+   de 213 px. Ce n'était pas la table qui débordait, c'était son conteneur qui
+   avait fondu. La chaîne le disait : page 375 → section 343 → carte 295 →
+   carte 261 → carte 213. Quatre boîtes à 24 px, empilées, plus les 16 px de la
+   page : 248 px mangés sur 375, deux tiers de l'écran dépensés en marges avant
+   qu'un mot ne s'écrive.
+
+   La cause est plus haut dans ce fichier. La normalisation de l'échelle a ramené
+   tous les rembourrages de carte à un seul pas — c'était juste, neuf valeurs
+   pour un même rôle ne se justifiaient pas — mais elle l'a fait à plat, sans
+   regarder la profondeur. Sur un grand écran cela ne se voit pas ; sur 375 px
+   la quatrième boîte n'a plus de quoi tenir une phrase.
+
+   Le rembourrage se gradue donc : la première boîte garde son air, celles
+   qu'elle contient en paient de moins en moins. C'est la règle du papier, où
+   une marge intérieure n'a jamais la taille de la marge de page. La carte reste
+   la forme de base — on ne dénude rien, on cesse seulement de payer cinq fois.
+
+   Seul l'axe horizontal cède ; le rythme vertical ne bouge pas. Le `!important`
+   et le préfixe `:is(main, .reader)` répondent aux règles de l'échelle, qui
+   portent les deux : à spécificité égale, c'est l'ordre du fichier qui tranche,
+   et ce bloc vient après. */
+@media (max-width: 767px) {
+  :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5)                             { padding-inline: 1rem !important; }
+  :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5)                      { padding-inline: .75rem !important; }
+  :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5)               { padding-inline: .55rem !important; }
+  :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5)        { padding-inline: .45rem !important; }
+  :is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12, .p-7, .p-6, .p-5, .p-4, .p-3\.5, .px-7, .px-6, .px-5, .px-4, .px-3\.5) { padding-inline: .4rem !important; }
+}
+
+/* Le bandeau de l'Atlas sur téléphone.
+   Mesuré à 375 × 812 : 1 185 px de haut, soit un écran et demi avant d'atteindre
+   la carte — et la carte est ce que le lecteur vient voir. La nav en portait 560
+   à elle seule : dix questions, une par ligne, à 44 px chacune.
+   Les questions restent toutes visibles — on ne cache rien, on ne fait rien
+   défiler. Ce qui cède, c'est le rangement, pas la taille : les boutons gardent
+   leurs 44 px, plancher des cibles tactiles, et ce sont de vraies cibles — pas
+   des mots dans une phrase, qui eux en sont exemptés. Les rapetisser aurait
+   échangé de l'accessibilité contre de la compacité. On les range donc en deux
+   colonnes : dix questions tiennent en cinq rangs au lieu de dix.
+   L'assise suit le même principe, deux colonnes plutôt qu'une pile. */
+@media (max-width: 767px) {
+  .scene-flux-texte { padding: 1.15rem 1.15rem 1.35rem; }
+
+  .couche-btn {
+    padding-block: .42rem;
+    padding-inline: .7rem;
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+  /* Deux colonnes dès que la largeur utile le permet : à 375 px chaque colonne
+     reçoit 166 px, dont 143 pour le texte — la plupart des questions y tiennent
+     sur une ligne, les plus longues sur deux, et le bouton reste à son plancher. */
+  .scene-flux-texte nav .grid {
+    gap: .35rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* L'assise passe en deux colonnes plutôt qu'en pile : quatre nombres sur
+     quatre lignes prenaient 124 px pour dire quatre chiffres. */
+  .assise { gap: .55rem 1.1rem; }
+  .assise li { flex: 0 0 calc(50% - .55rem); }
+  .assise-n { font-size: 1.2rem; }
+
+  .scene-flux-source { margin-top: .85rem; font-size: 11px; }
+  .scene-flux-coupure { margin: 1.1rem 0 .95rem; }
+}
+
+/* Sous 360 px, une colonne de 152 px ne laisse plus de quoi lire une question :
+   les questions reprennent la file simple. */
+@media (max-width: 359px) {
+  .scene-flux-texte nav .grid { grid-template-columns: minmax(0, 1fr); }
 }

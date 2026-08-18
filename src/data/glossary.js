@@ -1,5 +1,5 @@
-// Glossaire. Regle de definition : l'instrument africain fait reference pour
-// les notions juridiques ; la definition operatoire d'UN DESA n'intervient que
+// Glossaire. Regle de definition : l'instrument africain fait reference pour
+// les notions juridiques ; la definition operatoire d'UN DESA n'intervient que
 // pour les agregats statistiques.
 
 import { Globe, Users, ShieldAlert, MapPin, Briefcase, Brain, Landmark } from 'lucide-react';

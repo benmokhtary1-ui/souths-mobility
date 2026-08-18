@@ -78,9 +78,12 @@ const FAMILLES = [
   ['réfugié',     [/\bréfugiés?\b/gi, /\bpersonnes? réfugiées?\b/gi]],
   ['migrant',     [/\bmigrants?\b/gi, /\bpersonnes? migrantes?\b/gi]],
   ['déplacé',     [/\bdéplacés? internes?\b/gi, /\bpersonnes? déplacées? internes?\b/gi, /\bPDI\b/g]],
-  ['mobilité',    [/\bmobilités? humaines?\b/gi, /\bmobilités? africaines?\b/gi, /\bmigrations? humaines?\b/gi]],
+  // « mobilités humaines » et « mobilités africaines » sont deux notions, pas
+  // deux graphies : les surveiller produisait une fausse alerte a chaque passage.
   ['libre circ.', [/\blibre circulation\b/gi, /\blibre-circulation\b/gi, /\bfree movement\b/gi]],
-  ['UA',          [/\bUnion africaine\b/g, /\bUnion Africaine\b/g, /\bUA\b/g, /\bAfrican Union\b/g]],
+  // L'alternance entre un nom et son sigle est l'usage normal ; seule la casse
+  // du nom developpe merite d'etre surveillee.
+  ['UA',          [/Union africaine/g, /Union Africaine/g]],
   ['diaspora',    [/\bdiasporas?\b/gi, /\bcommunautés? de la diaspora\b/gi]],
 ];
 
