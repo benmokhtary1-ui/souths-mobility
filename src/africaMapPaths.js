@@ -1,5 +1,5 @@
 // Tracés SVG des 54 pays africains (source : world-atlas 50m, Natural Earth — domaine public).
-// Généré automatiquement. Le Maroc est rendu d'un seul tenant : les arcs internes hérités
+// Généré automatiquement. Le Maroc est rendu d’un seul tenant : les arcs internes hérités
 // du jeu source sont supprimés par union topologique avant projection.
 export const AFRICA_VIEWBOX = "0 0 1000 1126";
 

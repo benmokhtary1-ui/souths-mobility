@@ -1,7 +1,7 @@
 import { genericDesc } from './genericDesc.js';
 
 // Base pays de la plateforme : 54 États, cinq régions selon le découpage
-// officiel de l'Union africaine (et non la nomenclature M49 des Nations unies).
+// officiel de l’Union africaine (et non la nomenclature M49 des Nations unies).
 //
 // Provenance des champs — voir aussi src/data/SCHEMA.md :
 //   stock, female, evolution ......... UN DESA, International Migrant Stock 2024
@@ -11,7 +11,7 @@ import { genericDesc } from './genericDesc.js';
 //   idp_conflict, idp_disaster ....... IDMC
 //   refugees_hosted .................. HCR
 //   normlex .......................... OIT, base NORMLEX
-//   au_treaties ...................... listes officielles de statut de l'UA
+//   au_treaties ...................... listes officielles de statut de l’UA
 
 // Descriptifs communs a plusieurs pays : ils etaient repandus par diffusion
 // (...genericDesc) depuis App.jsx. Sortis avec la base, sinon la base ne peut
@@ -35,8 +35,8 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 3, "technical": 54, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103254"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "L'Égypte est structurellement un pays d'émigration de travail vers le Golfe. L'Arabie saoudite héberge à elle seule environ 1,5 million d'Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians. Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
-      "impact": { "fr": "L'Égypte reçoit 31% du total des transferts de fonds captés par l'ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
+      "origDest": { "fr": "L’Égypte est structurellement un pays d’émigration de travail vers le Golfe. L’Arabie saoudite héberge à elle seule environ 1,5 million d’Égyptiens. Les pays du Golfe fournissent plus de 40 % des 19,5 milliards de dollars de transferts reçus par le pays en 2023 (Banque mondiale).", "en": "Egypt is structurally a labour-emigration country toward the Gulf: Saudi Arabia alone hosts around 1.5 million Egyptians. Gulf countries provide over 40% of the $19.5 billion in remittances the country received in 2023 (World Bank)." },
+      "impact": { "fr": "L’Égypte reçoit 31% du total des transferts de fonds captés par l’ensemble du continent africain (Rapport UA 2021).", "en": "Egypt receives 31% of total diaspora remittances captured by the entire African continent (AU Report 2021)." }
     },
     { 
       "id": "434", "name": { "fr": "Libye", "en": "Libya" }, "flag": "🇱🇾", "iso2": "ly", "retention": 85, "aid": 2.1, "stock": "897751", "female": "28.2", 
@@ -53,7 +53,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 4, "technical": 53, "total": 65, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102993"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": false, "kampala": false, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l'Espagne (env. 770 000) et l'Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
+      "origDest": { "fr": "Environ 72% de la diaspora marocaine réside dans trois pays européens : la France (env. 1,1 million de personnes), l’Espagne (env. 770 000) et l’Italie (env. 490 000) — un corridor historique remontant aux migrations de travail des années 1960-1970.", "en": "About 72% of the Moroccan diaspora lives in three European countries: France (approx. 1.1 million people), Spain (approx. 770,000), and Italy (approx. 490,000) — a historic corridor dating back to the labour migrations of the 1960s-1970s." }
     },
     {
       "id": "788", "name": { "fr": "Tunisie", "en": "Tunisia" }, "flag": "🇹🇳", "iso2": "tn", "retention": 50, "aid": 1.8, "stock": "63201", "female": "47.7", 
@@ -98,7 +98,7 @@ export const countryData = {
       ...genericDesc 
     },
     { 
-      "id": "384", "name": { "fr": "Côte d'Ivoire", "en": "Côte d'Ivoire" }, "flag": "🇨🇮", "iso2": "ci", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
+      "id": "384", "name": { "fr": "Côte d’Ivoire", "en": "Côte d’Ivoire" }, "flag": "🇨🇮", "iso2": "ci", "retention": 95, "aid": 1.5, "stock": "2880839", "female": "40.0", 
       "history": [ { "year": 1990, "value": "1822374" }, { "year": 2024, "value": "2880839" } ], "remittances": 2.03, "labour_participation": "74.1", "remittances_year": 2024, "labour_participation_year": 2022, "evolution": "9.0", 
       "idp_conflict": 0, "idp_disaster": 0, "refugees_hosted": 0, "avoi": 42, 
       "normlex": {"fundamental": 11, "governance": 4, "technical": 33, "total": 48, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103023"},
@@ -169,7 +169,7 @@ export const countryData = {
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
       "origDest": { "fr": "Malgré une diaspora nombreuse au Royaume-Uni et aux États-Unis, les premières destinations réelles des Nigérians sont des pays voisins. Le Cameroun et le Niger accueillent à eux deux plus de 320 000 Nigérians — davantage que le Royaume-Uni (OIM, Rapport sur les migrations dans le monde 2024).", "en": "Despite a large diaspora in the UK and US, Nigerians' top real destinations are neighboring countries: Cameroon and Niger together host over 320,000 Nigerians, more than the UK (IOM, World Migration Report 2024)." },
-      "impact": { "fr": "Le Nigéria perçoit 28% de l'ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c'est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
+      "impact": { "fr": "Le Nigéria perçoit 28% de l’ensemble des envois de fonds diasporiques du continent (Rapport UA 2021). De plus, c’est le seul pays échantillonné où les femmes sont majoritaires parmi les travailleurs migrants occupés (52,8%).", "en": "Nigeria receives 28% of all continental diaspora remittances (AU Report 2021). Furthermore, it is the only sampled country where women represent the majority of employed migrant workers (52.8%)." }
     },
     { 
       "id": "686", "name": { "fr": "Sénégal", "en": "Senegal" }, "flag": "🇸🇳", "iso2": "sn", "retention": 75, "aid": 4.2, "stock": "281867", "female": "47.0", 
@@ -244,7 +244,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 2, "technical": 27, "total": 37, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:102981"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "Plus de 1,2 million de Congolais réfugiés sont hébergés en Afrique, près de la moitié en Ouganda seul (env. 560 000-575 000 personnes), avec le Burundi, la Tanzanie, le Rwanda et la Zambie comme autres pays d'accueil majeurs (HCR, 2025).", "en": "Over 1.2 million Congolese refugees are hosted across Africa, nearly half in Uganda alone (approx. 560,000-575,000 people), with Burundi, Tanzania, Rwanda, and Zambia as other major host countries (UNHCR, 2025)." }
+      "origDest": { "fr": "Plus de 1,2 million de Congolais réfugiés sont hébergés en Afrique, près de la moitié en Ouganda seul (env. 560 000-575 000 personnes), avec le Burundi, la Tanzanie, le Rwanda et la Zambie comme autres pays d’accueil majeurs (HCR, 2025).", "en": "Over 1.2 million Congolese refugees are hosted across Africa, nearly half in Uganda alone (approx. 560,000-575,000 people), with Burundi, Tanzania, Rwanda, and Zambia as other major host countries (UNHCR, 2025)." }
     },
     {
       "id": "226", "name": { "fr": "Guinée Équatoriale", "en": "Equatorial Guinea" }, "flag": "🇬🇶", "iso2": "gq", "retention": 98, "aid": 0.5, "stock": "248930", "female": "22.9", 
@@ -359,7 +359,7 @@ export const countryData = {
       "normlex": {"fundamental": 8, "governance": 1, "technical": 17, "total": 26, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103112"},
       "au_treaties": { "constitutive": true, "abuja": false, "refugees_1969": false, "kampala": true, "free_movement": false, "zlecaf": false },
       ...genericDesc,
-      "origDest": { "fr": "Le Kenya et l'Éthiopie hébergent l'essentiel des réfugiés somaliens du continent : près de 450 000 rien qu'au Kenya. La majorité vit dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
+      "origDest": { "fr": "Le Kenya et l’Éthiopie hébergent l’essentiel des réfugiés somaliens du continent : près de 450 000 rien qu’au Kenya. La majorité vit dans le seul complexe de camps de Dadaab, ouvert depuis plus de trois décennies (HCR, 2025).", "en": "Kenya and Ethiopia host the bulk of Somali refugees on the continent — nearly 450,000 in Kenya alone, most of them in the Dadaab camp complex, open for more than three decades (UNHCR, 2025)." }
     },
     {
       "id": "728", "name": { "fr": "Soudan du Sud", "en": "South Sudan" }, "flag": "🇸🇸", "iso2": "ss", "retention": 98, "aid": 20.5, "stock": "914001", "female": "49.7", 
@@ -426,7 +426,7 @@ export const countryData = {
       "normlex": {"fundamental": 10, "governance": 3, "technical": 14, "total": 27, "link": "https://www.ilo.org/dyn/normlex/en/f?p=NORMLEXPUB:11110:0::NO::P11110_COUNTRY_ID:103183"},
       "au_treaties": { "constitutive": true, "abuja": true, "refugees_1969": true, "kampala": true, "free_movement": false, "zlecaf": true },
       ...genericDesc,
-      "origDest": { "fr": "L'Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
+      "origDest": { "fr": "L’Afrique du Sud concentre à elle seule quatre diasporas zimbabwéennes sur cinq recensées officiellement (env. 773 000 personnes, Zimstat 2022) ; en juillet 2024, ce seul corridor représentait 92% de tous les mouvements frontaliers officiels du Zimbabwe (OIM).", "en": "South Africa alone accounts for four out of five officially recorded Zimbabwean diaspora members (approx. 773,000 people, Zimstat 2022); in July 2024, this single corridor accounted for 92% of all official cross-border movements out of Zimbabwe (IOM)." }
     },
     {
       "id": "72", "name": { "fr": "Botswana", "en": "Botswana" }, "flag": "🇧🇼", "iso2": "bw", "retention": 95, "aid": 0.8, "stock": "116402", "female": "43.0", 

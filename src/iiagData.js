@@ -1,6 +1,6 @@
 // Indice Ibrahim de la gouvernance africaine (IIAG), Mo Ibrahim Foundation.
-// Rang global 2023, extrait du rapport 2024 de l'indice (54 pays).
-// L'IIAG est biennal et agrege 96 indicateurs sous quatre categories ; on ne
+// Rang global 2023, extrait du rapport 2024 de l’indice (54 pays).
+// L’IIAG est biennal et agrege 96 indicateurs sous quatre categories ; on ne
 // retient ici que le rang global, seule grandeur necessaire au croisement.
 //
 // Reserve : deux pays partagent le rang 24 et deux le rang 26 dans la source.

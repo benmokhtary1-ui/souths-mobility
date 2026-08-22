@@ -1,18 +1,18 @@
 // Donnees du Haut Commissariat des Nations unies pour les refugies (HCR),
-// Refugee Data Finder — API publique api.unhcr.org, population par pays d'asile.
+// Refugee Data Finder — API publique api.unhcr.org, population par pays d’asile.
 // Recuperees pour les pays du perimetre de la plateforme, millesimes 2014 et 2024.
 //
-// Champs : refugees (refugies sous mandat), asylum (demandeurs d'asile),
+// Champs : refugees (refugies sous mandat), asylum (demandeurs d’asile),
 //          idps (deplaces internes suivis par le HCR), stateless (apatrides).
 //
 // Reserve : le HCR ne publie pas de ligne pour tous les pays chaque annee ;
-// l'absence d'un pays signifie « non rapporte », pas necessairement zero.
+// l’absence d’un pays signifie « non rapporte », pas necessairement zero.
 // Les Seychelles et Sao Tome-et-Principe ne figurent pas dans la reponse 2024.
 //
 // Note de comparabilite : le total des deplaces internes suivis par le HCR
-// differe de celui de l'IDMC utilise ailleurs sur la plateforme — les deux
-// institutions n'ont ni le meme perimetre de suivi ni la meme methode. Les
-// deux chiffres sont affiches plutot qu'harmonises.
+// differe de celui de l’IDMC utilise ailleurs sur la plateforme — les deux
+// institutions n’ont ni le meme perimetre de suivi ni la meme methode. Les
+// deux chiffres sont affiches plutot qu’harmonises.
 
 export const unhcrByCountry = {
  "ao": {
@@ -744,7 +744,7 @@ export const unhcrTotals = {
 
 export const UNHCR_SOURCE = {
   label: {
-    fr: "HCR — Refugee Data Finder (population par pays d'asile, 2014 et 2024)",
+    fr: "HCR — Refugee Data Finder (population par pays d’asile, 2014 et 2024)",
     en: 'UNHCR — Refugee Data Finder (population by country of asylum, 2014 and 2024)',
   },
   url: 'https://www.unhcr.org/refugee-statistics',

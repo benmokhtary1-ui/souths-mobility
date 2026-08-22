@@ -1,8 +1,8 @@
 // Recensements nationaux africains, cycles 1970 a 2030.
-// Compilation de l'auteur (Y. Ben Mokhtar) d'apres les donnees de la Division de
-// statistique des Nations unies (UNSD) et d'UN DESA. Transcrit depuis la base source.
+// Compilation de l’auteur (Y. Ben Mokhtar) d’apres les donnees de la Division de
+// statistique des Nations unies (UNSD) et d’UN DESA. Transcrit depuis la base source.
 // Notes : * territoire non independant a la date du recensement ;
-//         ** recensement conduit par l'Ethiopie ; *** periode du regime d'apartheid.
+//         ** recensement conduit par l’Ethiopie ; *** periode du regime d’apartheid.
 // Statuts et dates du cycle 2020 audites en aout 2026 sur sources nationales :
 // six des neuf operations declarees « prevues » ou « en cours » ont eu lieu, mais
 // cinq apres la cloture du cycle (31/12/2024) — elles ouvrent la serie 2030.
@@ -56,7 +56,7 @@ export const censusByCountry = {
   "r2010": "10/05/2013",
   "r2020": "",
   "status2020": "started",
-  "updated2026": { "fr": "RGPH5 : cartographie censitaire engagée depuis 03/2024, dénombrement pilote en avril 2025 ; le dénombrement général n'est pas achevé (INStaD).", "en": "5th census: census mapping under way since 03/2024, pilot enumeration April 2025; the general enumeration is not complete (INStaD)." }
+  "updated2026": { "fr": "RGPH5 : cartographie censitaire engagée depuis 03/2024, dénombrement pilote en avril 2025 ; le dénombrement général n’est pas achevé (INStaD).", "en": "5th census: census mapping under way since 03/2024, pilot enumeration April 2025; the general enumeration is not complete (INStaD)." }
  },
  "bw": {
   "name": "Botswana",
@@ -98,7 +98,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "04/2026",
-  "updated2026": { "fr": "RGPH-4, dénombrement du 24/04 au 29/05/2026, couplé au recensement général de l'agriculture et de l'élevage (BUCREP). Recensement précédent : 2005.", "en": "4th census, enumeration 24/04–29/05/2026, coupled with the agriculture and livestock census (BUCREP). Previous census: 2005." }
+  "updated2026": { "fr": "RGPH-4, dénombrement du 24/04 au 29/05/2026, couplé au recensement général de l’agriculture et de l’élevage (BUCREP). Recensement précédent : 2005.", "en": "4th census, enumeration 24/04–29/05/2026, coupled with the agriculture and livestock census (BUCREP). Previous census: 2005." }
  },
  "cv": {
   "name": "Cape Verde",
@@ -132,7 +132,7 @@ export const censusByCountry = {
   "r2020": "",
   "status2020": "late",
   "r2030": "06/2026",
-  "updated2026": { "fr": "RGPH-3, dénombrement du 20/06 au 06/08/2026, 4 314 752 ménages recensés ; premier recensement entièrement numérique du pays (INSEED). Recensement précédent : 2009.", "en": "3rd census, enumeration 20/06–06/08/2026, 4,314,752 households enumerated; the country's first fully digital census (INSEED). Previous census: 2009." }
+  "updated2026": { "fr": "RGPH-3, dénombrement du 20/06 au 06/08/2026, 4 314 752 ménages recensés ; premier recensement entièrement numérique du pays (INSEED). Recensement précédent : 2009.", "en": "3rd census, enumeration 20/06–06/08/2026, 4,314,752 households enumerated; the country’s first fully digital census (INSEED). Previous census: 2009." }
  },
  "km": {
   "name": "Comoros",
@@ -165,7 +165,7 @@ export const censusByCountry = {
   "status2020": "none"
  },
  "ci": {
-  "name": "Cote d'Ivoire",
+  "name": "Cote d’Ivoire",
   "r1970": "",
   "r1980": "30/04/1975",
   "r1990": "01/03/1988",

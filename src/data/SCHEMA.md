@@ -29,11 +29,11 @@ le Zimbabwe au Sud.
 | `female` | part des femmes parmi ces personnes, en % | UN DESA 2024 | |
 | `evolution` | part des migrants dans la population nationale, en % | UN DESA 2024 | |
 | `retention` | part des partants restés en Afrique, en % | UA / OIT / OIM / CEA (2021) | agrégat régional appliqué au pays |
-| `avoi` | ouverture des visas, note sur 100 | BAD & CUA, *Africa Visa Openness Index* | indice composite |
-| `remittances` | transferts de la diaspora, en % du PIB | Banque mondiale | |
-| `idp_conflict` | déplacés internes par conflit | IDMC | ne franchissent aucune frontière |
-| `idp_disaster` | déplacés internes par catastrophe | IDMC | |
-| `refugees_hosted` | réfugiés accueillis | HCR | |
+| `avoi` | ouverture des visas, note sur 100 | BAD & CUA, *Africa Visa Openness Report* 2024 | indice composite |
+| `remittances` | transferts de la diaspora, en % du PIB | Banque mondiale, *Remittances Data* 2024 | |
+| `idp_conflict` | déplacés internes par conflit | IDMC, *GRID* 2025 | ne franchissent aucune frontière |
+| `idp_disaster` | déplacés internes par catastrophe | IDMC, *GRID* 2025 | |
+| `refugees_hosted` | réfugiés accueillis | HCR, *Refugee Data Finder* 2024 | |
 | `normlex` | conventions OIT ratifiées, par catégorie | OIT, base NORMLEX | `total` inclut les conventions techniques |
 | `au_treaties` | six instruments de l'UA, ratifié ou non | listes officielles de statut de l'UA | base du score d'ancrage |
 | `history` | série `{ year, value }` | UN DESA | valeurs en % de la population |

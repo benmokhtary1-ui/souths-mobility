@@ -131,6 +131,18 @@
   --dur-story: 700ms;   /* ce qui raconte : barres qui poussent, chiffres qui montent */
 
   --reveal-shift: 14px;
+
+  /* Le facteur de l'échelle des corps. À 1, l'échelle est celle qui a été
+     réglée ; le panneau de lecture le pousse à 1,125. Il ne touche QUE le
+     texte — la mesure de la page, elle, ne bouge pas. */
+  --corps: 1;
+
+  /* LA MESURE. La largeur d'une colonne de texte, la même partout : c'est ce
+     qui fait qu'un paragraphe, un titre et une liste partagent leur bord
+     gauche d'un bout à l'autre du site. Elle suit le réglage de corps — un
+     texte agrandi a besoin d'une colonne plus large pour garder le même
+     nombre de signes par ligne — mais pas la taille locale du bloc. */
+  --mesure: calc(40rem * var(--corps));
 }
 
 /* ---------- Fondations ---------------------------------------------------- */
@@ -170,7 +182,7 @@ h1, h2, h3, h4, h5, h6, .font-serif {
    par exemple) reprend la main. Sans cela, un chiffre serif blanc pose sur
    l'encre redevenait encre — invisible. */
 :where(h1, h2, h3, h4, h5, h6, .font-serif) { color: var(--ink); }
-h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-height: 1.06; }
+h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-height: 1.15; }
 
 ::selection { background: var(--accent-soft); color: var(--accent-deep); }
 
@@ -210,27 +222,133 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
   --pas-2: 1rem;     /* 16 px — entre éléments d'un bloc */
   --pas-3: 1.5rem;   /* 24 px — entre blocs d'une carte */
   --pas-4: 2.5rem;   /* 40 px — entre cartes */
+  /* La gouttiere des boites de section : le pas 3 ouvert de 30 %. */
+  --pas-carte: 2rem; /* 32 px — dedans une boite de section */
 }
 
 /* Le rembourrage des cartes de lecture : 32, 40, 48 et 64 px disaient la même
    chose. Un seul le dit maintenant. */
-:is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12) { padding: 2rem !important; }
+:is(main, .reader) :is(.p-8, .p-10, .p-12, .md\:p-10, .md\:p-12) { padding: 24px!important; }
 
 /* Les rembourrages internes commandent le bord gauche du texte, et ils étaient
    cinq : 32, 28, 24, 20 et 16 px. Emboîtés, ils produisaient seize bords de
    texte distincts sur une seule section, séparés de huit pixels — des
    quasi-alignements, que l'œil lit comme une erreur et non comme une intention.
-   Deux suffisent : 24 pour un contenant de lecture, 16 pour un bloc compact.  */
-:is(main, .reader) :is(.p-7, .p-6, .p-5) { padding: var(--pas-3) !important; }
-:is(main, .reader) :is(.px-7, .px-6, .px-5) { padding-inline: var(--pas-3) !important; }
-:is(main, .reader) :is(.py-7, .py-6, .py-5) { padding-block: var(--pas-3) !important; }
-:is(main, .reader) :is(.p-4, .p-3\.5) { padding: var(--pas-2) !important; }
-:is(main, .reader) :is(.px-4, .px-3\.5) { padding-inline: var(--pas-2) !important; }
+   Deux suffisent : 24 pour un contenant de lecture, 16 pour un bloc compact.
+
+   Complétée après un second relevé : trois familles lui échappaient encore, et
+   c'étaient elles qu'on voyait. `p-8` posait 32 px — sur une carte de 1 200, ce
+   sont soixante-quatre pixels de mesure utile rendus au vide ; `p-3` en posait
+   12, où le texte frôle le filet ; et les variantes de point d'arrêt
+   (`md:p-8`, `md:p-10`, `md:p-12`) rouvraient 32 à 48 px dès 768 px de large,
+   c'est-à-dire sur tous les écrans où le site se lit vraiment.               */
+:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5) { padding: var(--pas-carte) !important; }
+:is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5) { padding-inline: var(--pas-carte) !important; }
+:is(main, .reader) :is(.py-7, .py-6, .py-5) { padding-block: var(--pas-carte) !important; }
+:is(main, .reader) :is(.p-4, .p-3\.5, .p-3) { padding: var(--pas-2) !important; }
+:is(main, .reader) :is(.p-2\.5, .p-2) { padding: var(--pas-1) !important; }
+:is(main, .reader) :is(.p-1\.5, .p-1) { padding: 4px !important; }
+/* Les gouttieres d'un seul cote manquaient : `pt-*`, `pb-*`, `ps-*`, `pe-*`
+   portent cent dix emplois dans le corpus et sept valeurs — 8, 12, 14, 16, 20,
+   24, 32 — quand `p-*` et `px-*` etaient deja ranges. Meme table qu'eux. */
+:is(main, .reader) :is(.pt-8, .pt-7, .pt-6, .pt-5) { padding-top: var(--pas-carte) !important; }
+:is(main, .reader) :is(.pb-8, .pb-7, .pb-6, .pb-5) { padding-bottom: var(--pas-carte) !important; }
+:is(main, .reader) :is(.pt-4, .pt-3\.5, .pt-3) { padding-top: var(--pas-2) !important; }
+:is(main, .reader) :is(.pb-4, .pb-3\.5, .pb-3) { padding-bottom: var(--pas-2) !important; }
+:is(main, .reader) :is(.pt-2\.5, .pt-2) { padding-top: var(--pas-1) !important; }
+:is(main, .reader) :is(.pb-2\.5, .pb-2) { padding-bottom: var(--pas-1) !important; }
+:is(main, .reader) :is(.pt-1\.5, .pt-1) { padding-top: 4px !important; }
+:is(main, .reader) :is(.pb-1\.5, .pb-1) { padding-bottom: 4px !important; }
+:is(main, .reader) :is(.ps-9, .ps-8, .ps-7, .ps-6, .ps-5) { padding-inline-start: var(--pas-3) !important; }
+:is(main, .reader) :is(.pe-8, .pe-7, .pe-6, .pe-5) { padding-inline-end: var(--pas-3) !important; }
+:is(main, .reader) :is(.ps-4, .ps-3\.5, .ps-3) { padding-inline-start: var(--pas-2) !important; }
+:is(main, .reader) :is(.pe-4, .pe-3\.5, .pe-3) { padding-inline-end: var(--pas-2) !important; }
+/* Et les deux cotes a la fois, sous le pas 3 deja couvert. */
+:is(main, .reader) :is(.py-4, .py-3\.5, .py-3) { padding-block: var(--pas-2) !important; }
+:is(main, .reader) :is(.py-2\.5, .py-2) { padding-block: var(--pas-1) !important; }
+:is(main, .reader) :is(.py-1\.5, .py-1) { padding-block: 4px !important; }
+:is(main, .reader) :is(.py-16, .py-14, .py-12, .py-10,
+                       .md\:py-16, .md\:py-14, .md\:py-12, .md\:py-10)
+  { padding-block: var(--pas-4) !important; }
+:is(main, .reader) .py-8 { padding-block: var(--pas-carte) !important; }
+:is(main, .reader) :is(.px-16, .px-12, .px-10) { padding-inline: var(--pas-3) !important; }
+:is(main, .reader) :is(.pt-16, .pt-12, .pt-10) { padding-top: var(--pas-4) !important; }
+:is(main, .reader) :is(.pb-16, .pb-12, .pb-10) { padding-bottom: var(--pas-4) !important; }
+:is(main, .reader) :is(.px-2\.5, .px-2) { padding-inline: var(--pas-1) !important; }
+:is(main, .reader) :is(.px-1\.5, .px-1) { padding-inline: 4px !important; }
+/* ---------- LES DERNIERS ECARTS -------------------------------------------
+   Relevé par scripts/verifier-l-echelle.mjs : vingt classes d'espacement
+   employées dans le corpus tombaient à côté du pas sans que l'étalon les
+   nomme — les variantes de rupture (`md:p-7`, `lg:px-8`), les marges d'axe
+   logique (`ms-*`, `me-*`), et `space-x-*` que personne n'avait rangé.
+   Même table que partout ailleurs. */
+:is(main, .reader) :is(.p-16) { padding: var(--pas-4) !important; }
+:is(main, .reader) :is(.mt-20, .mt-9) { margin-top: var(--pas-4) !important; }
+:is(main, .reader) :is(.md\:p-7, .md\:p-5, .sm\:p-5) { padding: var(--pas-carte) !important; }
+:is(main, .reader) :is(.lg\:px-12, .lg\:px-8) { padding-inline: var(--pas-3) !important; }
+:is(main, .reader) :is(.my-7) { margin-block: var(--pas-3) !important; }
+:is(main, .reader) :is(.space-x-5) > * + * { margin-inline-start: var(--pas-3) !important; }
+:is(main, .reader) :is(.my-5) { margin-block: var(--pas-2) !important; }
+:is(main, .reader) :is(.me-3) { margin-inline-end: var(--pas-2) !important; }
+:is(main, .reader) :is(.space-x-3) > * + * { margin-inline-start: var(--pas-2) !important; }
+:is(main, .reader) :is(.p-2\.5) { padding: var(--pas-1) !important; }
+:is(main, .reader) :is(.me-2\.5) { margin-inline-end: var(--pas-1) !important; }
+:is(main, .reader) :is(.ms-2\.5) { margin-inline-start: var(--pas-1) !important; }
+:is(main, .reader) :is(.me-1\.5) { margin-inline-end: 4px !important; }
+:is(main, .reader) :is(.ms-1\.5) { margin-inline-start: 4px !important; }
+:is(main, .reader) :is(.ps-1\.5) { padding-inline-start: 4px !important; }
+:is(main, .reader) :is(.space-x-1\.5) > * + * { margin-inline-start: 4px !important; }
+
+:is(main, .reader) :is(.px-4, .px-3\.5, .px-3) { padding-inline: var(--pas-2) !important; }
+@media (min-width: 768px) {
+  :is(main, .reader) :is(.md\:p-8, .md\:p-10, .md\:p-12) { padding: var(--pas-carte) !important; }
+  :is(main, .reader) :is(.md\:px-8, .md\:px-10, .md\:px-12) { padding-inline: var(--pas-carte) !important; }
+}
 
 /* Les piles verticales se rangent sur les quatre pas. */
-:is(main, .reader) :is(.space-y-10, .space-y-8) > * + * { margin-top: var(--pas-4) !important; }
+/* Les piles de premier rang portent leur rythme par le gap (voir plus bas) ;
+   cette regle ne vaut donc que pour les piles imbriquees. */
+:is(main, .reader) :is(.space-y-10, .space-y-8):not(main > *) > * + * { margin-top: var(--pas-4) !important; }
 :is(main, .reader) :is(.space-y-6, .space-y-5) > * + * { margin-top: var(--pas-3) !important; }
 :is(main, .reader) :is(.gap-6, .gap-5) { gap: var(--pas-3) !important; }
+
+/* Les trois premiers pas manquaient à l'appel.
+   Relevé sur le corpus : `space-y-*` porte ONZE valeurs (0, .5, 1, 1.5, 2, 2.5,
+   3, 4, 5, 6, 8, 10) pour quatre pas, et `gap-*` douze. L'étalon des marges
+   (plus bas) rangeait déjà `mt-*` et `mb-*` ; les piles et les gouttières y
+   avaient échappé, et ce sont elles qui font le rythme de haut en bas.
+   On reprend ici la MÊME table que `mt-*` : 3 et 4 au pas 2, 2 et 2,5 au pas 1,
+   et tout ce qui passe sous 8 px sur une seule valeur de collage — 4 px — au
+   lieu des trois qui coexistaient (2, 4 et 6).                              */
+:is(main, .reader) :is(.space-y-4, .space-y-3\.5, .space-y-3) > * + * { margin-top: var(--pas-2) !important; }
+:is(main, .reader) :is(.space-y-2\.5, .space-y-2) > * + * { margin-top: var(--pas-1) !important; }
+:is(main, .reader) :is(.space-y-1\.5, .space-y-1, .space-y-0\.5) > * + * { margin-top: 4px !important; }
+
+/* Les gouttières : on ne range QUE la verticale.
+   `gap` gouverne les deux axes, et la largeur des colonnes n'est pas ce qui
+   gêne — c'est le haut-bas. On écrit donc `row-gap` : la grille garde ses
+   colonnes, et ses lignes tombent sur le pas. */
+:is(main, .reader) :is(.gap-14, .gap-12, .gap-10, .lg\:gap-14, .lg\:gap-12, .lg\:gap-10) { gap: var(--pas-4) !important; }
+:is(main, .reader) :is(.gap-8, .gap-7, .gap-6, .md\:gap-8, .lg\:gap-8) { gap: var(--pas-3) !important; }
+:is(main, .reader) :is(.gap-4, .gap-3\.5, .gap-3) { gap: var(--pas-2) !important; }
+:is(main, .reader) :is(.gap-2\.5, .gap-2) { gap: var(--pas-1) !important; }
+:is(main, .reader) :is(.gap-1\.5, .gap-1, .gap-0\.5) { gap: 4px !important; }
+/* Et les gouttieres d'un seul axe, sur la meme table. */
+:is(main, .reader) :is(.gap-y-10, .gap-y-12) { row-gap: var(--pas-4) !important; }
+:is(main, .reader) :is(.gap-y-8, .gap-y-6) { row-gap: var(--pas-3) !important; }
+:is(main, .reader) :is(.gap-y-5, .gap-y-4, .gap-y-3) { row-gap: var(--pas-2) !important; }
+:is(main, .reader) :is(.gap-y-2\.5, .gap-y-2) { row-gap: var(--pas-1) !important; }
+:is(main, .reader) :is(.gap-y-1\.5, .gap-y-1, .gap-y-0\.5) { row-gap: 4px !important; }
+:is(main, .reader) .gap-x-12 { column-gap: var(--pas-4) !important; }
+:is(main, .reader) :is(.gap-x-8, .gap-x-6) { column-gap: var(--pas-3) !important; }
+:is(main, .reader) :is(.gap-x-5, .gap-x-4, .gap-x-3) { column-gap: var(--pas-2) !important; }
+:is(main, .reader) :is(.gap-x-2\.5, .gap-x-2) { column-gap: var(--pas-1) !important; }
+:is(main, .reader) :is(.gap-x-1\.5, .gap-x-1) { column-gap: 4px !important; }
+
+/* Le collage, une seule valeur. `mt-1.5` séparait un libellé de sa description
+   à 6 px, dix-sept fois sur la seule page Données, quand le reste collait à 4. */
+:is(main, .reader) :is(.mt-1\.5, .mt-1, .mt-0\.5) { margin-top: 4px; }
+:is(main, .reader) :is(.mb-1\.5, .mb-1, .mb-0\.5) { margin-bottom: 4px; }
 
 /* Les rayons : le papier se plie, mais pas au fil du rasoir. Deux ou trois
    pixels donnaient une interface taillée à l'équerre — juste sur une planche
@@ -265,14 +383,29 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 
 /* ---------- Fonds sombres : encre, pas bleu-nuit générique ---------------- */
 
-.bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800 { background-color: var(--ink) !important; }
+/* Le plan d'emphase : les blocs qui doivent se détacher de la carte ordinaire.
+   Il valait `var(--ink)` — juste de jour, où l'encre est sombre sur un papier
+   clair, faux de nuit où l'encre devient claire : la carte serait devenue le
+   bloc le plus lumineux de la page, avec son texte clair dessus. Un jeton, donc,
+   qui dit le RÔLE et non la valeur, et que la nuit redéfinit. */
+:root {
+  --plan-emphase: var(--ink);
+  /* Le plan encré : tout ce qui est PEINT avec l'encre — le bandeau, la barre,
+     le pied de page, un bouton actif. C'est un rôle de SURFACE, que --ink tenait
+     par accident : de jour l'encre est sombre, donc l'un valait l'autre. De nuit
+     l'encre devient claire, et la barre de navigation devenait un bandeau blanc
+     avec du texte blanc dessus — cinquante-quatre échecs de contraste, tous de
+     cette seule cause. */
+  --plan-encre:   var(--ink);
+}
+.bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800 { background-color: var(--plan-encre) !important; }
 /* Une seule encre sur le site. Ce bloc tenait un vert-bleu mi-teinte quand son
    voisin de « Donnees » tenait le noir : deux fonds sombres differents pour le
    meme role. Et la regle qui donne aux termes de glossaire leur variante claire
    suppose l'encre — sur la mi-teinte, « entre-deux national » tombait a 2,4:1.
    Le filet, lui, garde la teinte de la section. */
 .bg-emerald-900 {
-  background-color: var(--ink) !important;
+  background-color: var(--plan-encre) !important;
   border-color: color-mix(in oklab, var(--accent) 34%, var(--ink)) !important;
 }
 .border-slate-700, .border-slate-800, .border-emerald-800 { border-color: rgba(255,253,249,.14) !important; }
@@ -377,7 +510,12 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* Les ambres clairs ne servent qu'en reserve sur l'encre : on les garde clairs. */
 .text-amber-300, .text-amber-400, .text-amber-500 { color: #E3B061 !important; }
 .bg-amber-50, .bg-amber-100 { background-color: var(--warn-soft) !important; }
-.border-amber-100, .border-amber-200, .border-amber-500 { border-color: #E6D2AA !important; }
+/* Le filet de l'ambre était la dernière couleur écrite en dur du système : elle
+   ne pouvait pas suivre l'édition de nuit. Elle se compose maintenant, comme
+   les autres, depuis la teinte d'attention et le filet courant. */
+.border-amber-100, .border-amber-200, .border-amber-500 {
+  border-color: color-mix(in oklab, var(--warn) 34%, var(--rule)) !important;
+}
 .bg-amber-300, .bg-amber-400, .bg-amber-500, .bg-amber-600 { background-color: var(--warn) !important; }
 
 .text-rose-500, .text-rose-600, .text-rose-700, .text-rose-800, .text-rose-900 { color: var(--bad) !important; }
@@ -398,7 +536,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 
 /* ---------- Navigation : bandeau d'encre, onglet actif souligné ---------- */
 
-nav.bg-\[\#0f172a\] { background-color: var(--ink) !important; border-bottom: 1px solid rgba(255,253,249,.12); }
+nav.bg-\[\#0f172a\] { background-color: var(--plan-encre) !important; border-bottom: 1px solid rgba(255,253,249,.12); }
 nav .border-b { border-color: rgba(255,253,249,.10) !important; }
 
 /* ---------- Chiffres : tabulaires partout ------------------------------- */
@@ -413,7 +551,10 @@ nav .border-b { border-color: rgba(255,253,249,.10) !important; }
    la couleur de base ; seul !important peut les relayer au survol.           */
 
 .nav-tab {
-  border-radius: 2px 2px 0 0;
+  /* L'onglet reste attache a son rail — un onglet detache n'est plus un
+     onglet — mais ses coins libres prennent le rayon de la carte. Le 2 px
+     etait le dernier reste d'avant le partage par role. */
+  border-radius: 10px 10px 0 0;
   letter-spacing: .012em;
   transition: color .18s ease, background-color .18s ease, border-color .18s ease;
 }
@@ -434,7 +575,7 @@ nav .border-b { border-color: rgba(255,253,249,.10) !important; }
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 999px;
 }
 nav :focus-visible, footer :focus-visible { outline-color: var(--accent-light); }
 
@@ -750,7 +891,7 @@ main { view-transition-name: page; }
 .bg-slate-200.p-1\.5, .bg-slate-100.p-1 {
   background-color: transparent !important;
   border: 1px solid var(--rule) !important;
-  border-radius: 2px !important;
+  border-radius: 999px !important;
   padding: 3px !important;
   gap: 2px;
 }
@@ -759,7 +900,7 @@ main { view-transition-name: page; }
   letter-spacing: .012em;
 }
 .bg-slate-200.p-1\.5 > button.bg-white, .bg-slate-100.p-1 > button.bg-white {
-  background-color: var(--ink) !important;
+  background-color: var(--plan-encre) !important;
   color: var(--reserve) !important;
   border-color: var(--ink) !important;
   box-shadow: inset 0 -2px 0 var(--accent) !important;
@@ -787,7 +928,7 @@ main { view-transition-name: page; }
    un style en ligne : rendu et accessibilite ne peuvent pas se desynchroniser. */
 
 .gov-subnav {
-  border-radius: 2px;
+  border-radius: 999px;
   background-color: transparent;
   border-color: var(--rule);
   transition: background-color .16s ease, border-color .16s ease, color .16s ease;
@@ -796,8 +937,8 @@ main { view-transition-name: page; }
 .gov-subnav .gov-subnav-hint  { color: var(--ink-mute); }   /*  5,81:1 sur le papier */
 
 .gov-subnav[aria-current="true"] {
-  background-color: var(--ink);
-  border-color: var(--ink);
+  background-color: var(--plan-encre);
+  border-color: var(--plan-encre);
   box-shadow: inset 2px 0 0 var(--accent);
 }
 .gov-subnav[aria-current="true"] .gov-subnav-label { color: var(--reserve); }   /* 18,51:1 sur l'encre */
@@ -877,7 +1018,7 @@ main { view-transition-name: page; }
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: .25rem;
-  padding-block: .35rem .75rem;
+  padding-block: 4px 8px;
   padding-inline: .25rem;
 }
 .rail > * {
@@ -904,7 +1045,9 @@ main { view-transition-name: page; }
 
 .rail-fleche {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 1.75rem; height: 1.75rem;
+  /* 1,75 rem valait 28 px : sous le plancher des cibles, et les deux seules du
+     site à y être. Une flèche de rail se vise comme un bouton. */
+  width: 2.5rem; height: 2.5rem;
   border: 1px solid var(--rule-strong);
   color: var(--accent-deep);
   background: var(--paper-raised);
@@ -949,13 +1092,27 @@ main { view-transition-name: page; }
    seulement legal : 11 px se lit, 12,5 px se lit sans effort. Les valeurs
    ci-dessous sont les anciennes multipliees par 1,15 puis arrondies au demi
    pixel, pour que le rapport entre les rangs soit conserve. */
-.text-\[9px\]  { font-size: 12px; }
-.text-\[10px\] { font-size: 12px; }
-.text-\[11px\] { font-size: 12px; }
-.text-\[12px\] { font-size: 13px; }
-.text-\[13px\], .text-\[13\.5px\] { font-size: 15px; }
-.text-\[14px\] { font-size: 15px; }   /* seul corps hors echelle : cinq emplois */
-.text-\[15px\] { font-size: 17px; }
+/* L'ÉCHELLE PASSE PAR UN FACTEUR.
+   « Taille du texte → Grande » posait `font-size: 112,5 %` sur la racine, en
+   comptant sur des tailles exprimées en `rem`. La passe d'unification des corps
+   les a toutes passées en pixels : le réglage ne touchait plus rien, sauf la
+   mesure de <main> — le texte restait à 17 px et c'est la PAGE qui s'élargissait,
+   1 280 → 1 440. Un réglage qui fait le contraire de ce qu'il annonce est pire
+   que pas de réglage.
+   Chaque rang porte donc `var(--corps)`. Un seul nombre commande l'échelle
+   entière, et la mesure de la page n'en dépend plus.                        */
+/* L'interligne suit la taille. Sans lui, ces micro-libellés héritaient d'une
+   hauteur de ligne exprimée en PIXELS par leur parent : le rapport dérivait à
+   chaque emboîtement, et trente-huit éléments se retrouvaient à 1,67 quand le
+   palier dit 1,62. Un interligne appartient à son corps, pas à son ancêtre. */
+.text-\[8px\]  { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[9px\]  { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[10px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[11px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[12px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[13px\], .text-\[13\.5px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }
+.text-\[14px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }   /* seul corps hors echelle : cinq emplois */
+.text-\[15px\] { font-size: calc(15px * var(--corps)); line-height: 1.62; }
 
 /* Les rangs nommes de Tailwind suivent le meme facteur : sans eux, le corps
    courant resterait en arriere de ses propres legendes. */
@@ -964,11 +1121,16 @@ main { view-transition-name: page; }
    l'atteignait pas, et les 93 blocs qui ne déclarent pas leur corps héritaient
    d'un 14 px absent de l'échelle — une taille fantôme, jamais choisie, tapie
    entre le 13 et le 15. Le socle rejoint donc l'échelle.                    */
-body, body > div, .font-sans.text-sm { font-size: 15px; }
+body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
 
-:is(main, .reader) .text-xs   { font-size: 13px;   line-height: 1.55; }
-:is(main, .reader) .text-sm   { font-size: 15px;   line-height: 1.6; }
-:is(main, .reader) .text-base { font-size: 17px; line-height: 1.6; }
+/* La portee des rangs est le SITE, pas seulement <main>. Portes par
+   `:is(main, .reader)` seuls, la barre et le pied retombaient sur les
+   valeurs de Tailwind : `text-sm` valait 15 px dans une carte et 14 dans
+   le pied, `text-lg` 19 et 18. Une classe qui rend deux tailles selon
+   l'endroit n'est plus une echelle. */
+:is(main, .reader, header, nav, footer) .text-xs   { font-size: calc(12px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
+:is(main, .reader, header, nav, footer) .text-base { font-size: calc(15px * var(--corps)); line-height: 1.62; }
 /* Le haut de l'echelle. Sans ces trois regles, text-lg (18 px par defaut)
    rendait plus petit que text-base (18,5 px) : la classe « large » etait la
    plus etroite des deux.
@@ -976,10 +1138,78 @@ body, body > div, .font-sans.text-sm { font-size: 15px; }
    L'echelle complete, huit rangs, rapport constant d'environ 1,15 :
    12 / 13 / 15 / 17 / 19 / 22 / 26 / 31. Au-dessus, deux corps d'affichage
    derives du rem pour les titres de bandeau (41,6 et 57,6). Rien entre. */
-:is(main, .reader) .text-lg    { font-size: 19px;   line-height: 1.45; }
-:is(main, .reader) .text-xl    { font-size: 22px;   line-height: 1.35; }
-:is(main, .reader) .text-2xl   { font-size: 26px;   line-height: 1.25; }
-:is(main, .reader) .text-3xl   { font-size: 31px;   line-height: 1.15; }
+:is(main, .reader, header, nav, footer) .text-lg    { font-size: calc(17px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .text-xl    { font-size: calc(19px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .text-2xl   { font-size: calc(22px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .text-3xl   { font-size: calc(26px * var(--corps));   line-height: 1.4; }
+/* Au-dessus du 31 viennent les deux corps d'affichage. `text-4xl` (36 px
+   chez Tailwind) et `text-5xl` (48) tombaient entre les rangs : cinq
+   chiffres de l'accueil rendaient a 36, une taille qui n'existe nulle part
+   ailleurs. */
+:is(main, .reader, header, nav, footer) .text-4xl   { font-size: calc(31px * var(--corps)); line-height: 1.15; }
+:is(main, .reader, header, nav, footer) .text-5xl   { font-size: calc(41.6px * var(--corps)); line-height: 1.15; }
+
+/* Les variantes de rupture rejoignent les memes rangs. Sans elles,
+   `md:text-3xl` rendait le 30 de Tailwind au lieu du 31 du rang -- et la
+   ou une classe de base accompagnait la variante, c'est la base qui
+   gagnait, ce qui annulait purement la typographie responsive. */
+@media (min-width: 768px) {
+:is(main, .reader, header, nav, footer) .md\:text-xs   { font-size: calc(12px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .md\:text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
+:is(main, .reader, header, nav, footer) .md\:text-base { font-size: calc(15px * var(--corps));   line-height: 1.62; }
+:is(main, .reader, header, nav, footer) .md\:text-lg   { font-size: calc(17px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .md\:text-xl   { font-size: calc(19px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .md\:text-2xl  { font-size: calc(22px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .md\:text-3xl  { font-size: calc(26px * var(--corps));   line-height: 1.4; }
+:is(main, .reader, header, nav, footer) .md\:text-4xl  { font-size: calc(31px * var(--corps)); line-height: 1.15; }
+:is(main, .reader, header, nav, footer) .md\:text-5xl  { font-size: calc(41.6px * var(--corps)); line-height: 1.15; }
+}
+
+/* ---------- DEUX CORPS POUR LA PROSE, ET PAS CINQ ------------------------
+
+   Relevé sur Données : quarante-trois paragraphes de texte suivi — plus de cent
+   vingt signes — répartis sur CINQ corps : 12 (7 fois), 13 (16), 15 (18), 17, 19.
+   Le même genre de contenu se lisait donc à trois tailles selon l'endroit, et
+   sept paragraphes tombaient à 12 px, où l'on ne lit plus, on déchiffre.
+
+   La prose ne connaît que deux voix :
+
+     LE CORPS DE LECTURE  17 px — tout paragraphe de texte suivi. C'est un cran
+                                   au-dessus du 15 précédent : sur un site qu'on
+                                   lit longtemps, 15 est une taille d'étiquette.
+     LA PETITE LIGNE      13 px — la note, la source, la mention de méthode.
+                                   Délibérément en retrait, jamais en dessous.
+
+   Les paragraphes qui ne déclarent rien prennent la lecture ; ceux qui portent
+   `text-xs` gardent la petite ligne ; ceux qui étaient tombés sous 13 y remontent.
+   Les étiquettes et les intitulés ne sont pas visés : la règle ne parle qu'aux
+   <p>, et un intitulé n'en est pas un.                                        */
+/* Le sélecteur nomme les classes de TAILLE, une par une. Écrit `:not([class*="text-"])`,
+   il écartait aussi `text-white` et `text-slate-500` — des couleurs, pas des corps —
+   et laissait donc de la prose à 15 px dans les cartes d'emphase. */
+:is(main, .reader) p:not(.text-xs):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not([class*="text-["]):not([class*="scene-flux-"]):not(.provenance),
+:is(main, .reader) p.text-sm,
+:is(main, .reader) p.text-\[13px\],
+:is(main, .reader) p.text-\[13\.5px\],
+:is(main, .reader) p.text-\[14px\] {
+  font-size: calc(15px * var(--corps));
+  line-height: 1.62;
+}
+:is(main, .reader) p.text-\[9px\],
+:is(main, .reader) p.text-\[10px\],
+:is(main, .reader) p.text-\[11px\],
+:is(main, .reader) p.text-\[12px\] {
+  font-size: calc(12px * var(--corps));
+  line-height: 1.45;
+}
+
+/* ---------- DEUX GRAISSES ORPHELINES -------------------------------------
+   Le système tient sur 400 / 600 / 700. Un 500 traînait sur dix-sept lignes de
+   tableau et un 900 sur quatre chiffres de bandeau : deux graisses pour deux
+   endroits, que personne ne reconnaît comme un niveau puisqu'elles n'existent
+   nulle part ailleurs. */
+:is(main, .reader) .font-medium { font-weight: 600; }
+:is(main, .reader) .font-black  { font-weight: 700; }
 
 /* Sous 13 px, le gris sourd n'est plus assez dense : on passe a --label
    (7,5:1 environ) plutot que de laisser --muted a 5,5:1. */
@@ -1126,8 +1356,14 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
    claire de la meme teinte tient entre 6,2 et 6,4:1 dans les neuf sections,
    et conserve la couleur qui identifie la section.                         */
 :is(.bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800, .bg-emerald-900) .terme {
-  color: var(--accent-light);
+  color: var(--accent-sur-plan);
 }
+/* De jour, le plan encré est presque noir et la variante claire de la teinte y
+   tient 6,6 à 8,5:1. De nuit, ce plan devient un aplat teinté — bien plus clair
+   que l'encre — et la même variante tombe à 3,0:1. C'est l'accent creusé qui y
+   prend le relais, puisque de nuit « creusé » veut dire plus lumineux : 6,9 à
+   7,2:1 dans les neuf sections. Vérifié par node scripts/verifier-la-nuit.mjs */
+:root { --accent-sur-plan: var(--accent-light); }
 :is(.bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800, .bg-emerald-900) .terme:hover { color: var(--reserve); }
 :is(.bg-\[\#0f172a\], .bg-slate-900, .bg-slate-800, .bg-emerald-900) .terme[aria-expanded="true"] {
   background: rgba(255, 253, 249, .14); box-shadow: 0 0 0 2px rgba(255, 253, 249, .14);
@@ -1138,7 +1374,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
   position: fixed;
   z-index: 80;
   display: block;
-  padding: .75rem .85rem;
+  padding: 8px 1rem;
   background: var(--paper-raised);
   border: 1px solid var(--accent);
   border-top: 2px solid var(--accent);
@@ -1150,17 +1386,17 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .terme-pop-lbl {
   display: block;
-  font-size: 12px;
+  font-size: calc(12px * var(--corps));
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: .3rem;
+  margin-bottom: 4px;
 }
 .terme-pop-txt {
   display: block;
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: calc(12px * var(--corps));
+  line-height: 1.62;
   color: var(--ink-soft);
   text-align: left;
 }
@@ -1171,9 +1407,11 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: .55rem;
-  margin: 0 0 1.15rem;
-  padding: .7rem .9rem;
+  gap: var(--pas-1);
+  /* 1,15rem valait 18,4 px : un cinquième pas pour une seule boîte. */
+  margin: 0 0 var(--pas-2);
+  /* .9rem valait 14,4 px : une troisième gouttière pour une seule boîte. */
+  padding: var(--pas-1) var(--pas-2);
   background: var(--accent-soft);
   border-inline-start: 3px solid var(--accent);
   text-align: start;
@@ -1183,7 +1421,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-lbl {
   flex: none;
-  font-size: 12px;
+  font-size: calc(12px * var(--corps));
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -1194,8 +1432,8 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-txt {
   flex: 1 1 16rem;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: calc(12px * var(--corps));
+  line-height: 1.62;
   color: var(--ink);
   text-align: start;   /* jamais justifie : c'est une phrase, pas un paragraphe */
 }
@@ -1212,12 +1450,12 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
   inset-inline-start: 1rem;
   top: -3.5rem;
   z-index: 200;
-  padding: .6rem 1rem;
+  padding: 8px 1rem;
   background: var(--accent);
   color: var(--reserve);
-  font-size: 13px;
+  font-size: calc(12px * var(--corps));
   font-weight: 700;
-  border-radius: 0 0 3px 3px;
+  border-radius: 0 0 10px 10px;
   transition: top .16s ease-out;
 }
 .skip-link:focus { top: 0; outline: 2px solid var(--paper); outline-offset: -4px; }
@@ -1479,13 +1717,24 @@ html[data-lecture-air="ample"] :is(main, .reader) p + p { margin-top: 1.15em; }
 /* Corps agrandi. Le pourcentage doit se poser sur la RACINE : les utilitaires
    Tailwind expriment leurs tailles en rem, donc ils suivent. Pose sur le
    conteneur, il ne faisait rien — les enfants portent une taille explicite.  */
-html[data-lecture-corps="grand"] { font-size: 112.5%; }
-/* Les micro-libelles sont, eux, cales en pixels par le plancher de lisibilite :
-   on les remonte explicitement, sinon ils seraient les seuls a ne pas grandir. */
-html[data-lecture-corps="grand"] .text-\[9px\],
-html[data-lecture-corps="grand"] .text-\[10px\] { font-size: 12px; }
-html[data-lecture-corps="grand"] .text-\[11px\] { font-size: 13px; }
-html[data-lecture-corps="grand"] .text-\[12px\] { font-size: 13px; }
+/* Un seul nombre, et toute l'échelle suit — micro-libellés compris, qui n'ont
+   plus besoin d'être remontés un par un. La racine ne bouge pas : `font-size`
+   sur <html> aurait aussi élargi la page, ce qui n'est pas ce qu'on demande à
+   un réglage de taille de texte. */
+html[data-lecture-corps="grand"] { --corps: 1.125; }
+
+/* Les cinq corps d'affichage sont posés en `rem` dans le JSX — les titres de
+   bandeau, le chiffre du hero. Ils ne suivaient donc rien depuis que la racine
+   ne bouge plus. On les branche ici, une fois, plutôt que de les convertir un
+   par un dans les appels. */
+/* Trois des cinq tombaient ENTRE deux rangs : 16,8 et 17,6 quand le rang
+   dit 17, et 38,4 quand les deux corps de bandeau valent 41,6 et 57,6.
+   Un corps entre deux rangs ne se lit pas comme une nuance, il se lit
+   comme un titre qui n'a pas la bonne taille. */
+.text-\[1\.05rem\], .text-\[1\.1rem\] { font-size: calc(15px * var(--corps)); }
+.text-\[2\.4rem\]  { font-size: calc(31px * var(--corps)); }
+.text-\[2\.6rem\]  { font-size: calc(31px * var(--corps)); }
+.text-\[3\.6rem\]  { font-size: calc(41.6px * var(--corps)); }
 
 /* Colonne resserree : moins de saccades oculaires par ligne. */
 html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
@@ -1493,67 +1742,104 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   margin-inline: auto;   /* choisie volontairement : la colonne se centre */
 }
 
-/* ---------- Le panneau de preferences de lecture -------------------------- */
-/* C'est le premier endroit ou arrivera un lecteur en difficulte : il doit etre
-   plus simple que le reste du site, pas plus savant.                         */
+/* ---------- LE PANNEAU DE LECTURE ----------------------------------------
+
+   C'est le premier endroit où arrivera un lecteur en difficulté : il doit être
+   plus simple que le reste du site, pas plus savant.
+
+   Sa FORME, elle, était restée à l'écart du système. Le site a été ramené à
+   trois formes — la carte à 10 px, le contrôle en pastille, la ligne à l'équerre
+   — et ce panneau gardait un rayon de 2 px pour lui seul, cinquième forme du
+   site. Il gardait aussi une ombre portée, alors qu'elles ont toutes été
+   supprimées ailleurs (« ce qui fait diaporama »), et trois couleurs écrites en
+   dur qui ne suivaient pas l'édition de nuit.
+
+   Et son texte tenait sur un seul corps : le chapô, le nom du réglage, les
+   options et l'aide se lisaient tous à 12 px. Un panneau destiné à qui lit mal
+   ne peut pas être le seul endroit du site sans hiérarchie.                 */
 
 .prefs { position: relative; }
 
+/* Le bouton vit sur le plan encré de la barre : ses valeurs se composent depuis
+   la réserve, et suivent donc les deux tirages. */
 .prefs-btn {
-  display: inline-flex; align-items: center; gap: .4rem;
-  padding: .35rem .6rem;
-  font-size: 12px; font-weight: 600;
-  color: #D3D5DC;
-  border: 1px solid rgba(255,253,249,.22);
-  border-radius: 2px;
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 32px;
+  padding: 4px 1rem;
+  font-size: calc(12px * var(--corps)); font-weight: 600;
+  color: color-mix(in oklab, var(--reserve) 82%, transparent);
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--reserve) 24%, transparent);
+  border-radius: 999px;
   cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
-.prefs-btn:hover { color: var(--reserve); border-color: rgba(255,253,249,.45); }
+.prefs-btn:hover { color: var(--reserve); border-color: color-mix(in oklab, var(--reserve) 48%, transparent); }
 .prefs-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+.prefs-btn[aria-expanded="true"] {
+  color: var(--reserve);
+  border-color: var(--reserve);
+}
 
 .prefs-pastille {
-  min-width: 1.15rem; padding: 0 .22rem;
-  font-size: 12px; font-weight: 700; line-height: 1.15rem; text-align: center;
+  min-width: 1.25rem; padding: 0 4px;
+  font-size: calc(12px * var(--corps)); font-weight: 700; line-height: 1.25rem; text-align: center;
+  font-variant-numeric: tabular-nums;
   color: var(--ink); background: var(--accent-light); border-radius: 999px;
 }
 
+/* Le panneau est une carte : même rayon, même filet, même papier que les autres.
+   Il n'a pas besoin d'ombre pour se détacher — il se pose sur le papier de la
+   page, et le filet suffit, comme pour la fiche pays. */
 .prefs-panneau {
   position: absolute; inset-inline-end: 0; top: calc(100% + .5rem);
-  z-index: 90; width: min(20rem, 88vw);
-  padding: 1rem;
+  z-index: 90; width: min(21rem, 90vw);
+  padding: var(--pas-3);
   background: var(--paper-raised);
   border: 1px solid var(--rule-strong);
   border-top: 2px solid var(--accent);
-  box-shadow: 0 12px 30px rgba(20,22,28,.18);
+  border-radius: 10px;
   text-align: start;
 }
 
+/* Quatre voix, quatre corps. */
 .prefs-intro {
-  margin: 0 0 .9rem; font-size: 12px; line-height: 1.5; color: var(--ink-soft);
+  margin: 0 0 var(--pas-3);
+  font-size: calc(12px * var(--corps)); line-height: 1.62; color: var(--ink-soft);
 }
 
-.prefs-champ { border: 0; margin: 0 0 .95rem; padding: 0; }
-.prefs-titre { padding: 0; margin-bottom: .35rem; font-size: 12px; font-weight: 700; color: var(--ink); }
+.prefs-champ { border: 0; margin: 0 0 var(--pas-3); padding: 0; }
+.prefs-champ:last-of-type { margin-bottom: var(--pas-2); }
+.prefs-titre {
+  padding: 0; margin-bottom: 8px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: calc(13px * var(--corps)); font-weight: 700; color: var(--ink);
+}
 
-.prefs-choix { display: flex; gap: .3rem; }
+.prefs-choix { display: flex; gap: 4px; }
 .prefs-choix button {
-  flex: 1 1 0; padding: .4rem .3rem;
-  font-size: 12px; font-weight: 600; color: var(--ink-soft);
-  background: var(--paper); border: 1px solid var(--rule); border-radius: 2px;
+  flex: 1 1 0; min-height: 32px; padding: 8px .5rem;
+  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--ink-soft);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 999px;
   cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
 }
-.prefs-choix button:hover { border-color: var(--rule-strong); }
+.prefs-choix button:hover { border-color: var(--rule-strong); background: var(--paper-sunk); }
 .prefs-choix button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .prefs-choix button[aria-pressed="true"] {
   color: var(--reserve); background: var(--accent); border-color: var(--accent);
 }
 
-.prefs-aide { margin: .35rem 0 0; font-size: 12px; line-height: 1.45; color: var(--label); }
+.prefs-aide {
+  margin: 8px 0 0;
+  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label);
+}
 
 .prefs-reset {
-  width: 100%; padding: .45rem;
-  font-size: 12px; font-weight: 600; color: var(--accent-deep);
-  background: none; border: 1px dashed var(--rule-strong); border-radius: 2px;
+  width: 100%; min-height: 32px; padding: 8px;
+  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--accent-deep);
+  background: none; border: 1px dashed var(--rule-strong); border-radius: 999px;
   cursor: pointer;
 }
 .prefs-reset:hover { background: var(--accent-soft); }
@@ -1565,10 +1851,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
    comme une legende de figure : un filet fin, une ligne, du gris.            */
 
 .provenance {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .6rem;
-  margin: 1rem 0 0; padding-top: .55rem;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 8px;
+  margin: 1rem 0 0; padding-top: 8px;
   border-top: 1px solid var(--rule);
-  font-size: 12px; line-height: 1.5; color: var(--label);
+  /* La petite ligne, comme toute note du site : 13 / 1,45. */
+  font-size: calc(12px * var(--corps)); line-height: 1.45; color: var(--label);
   max-width: none !important;   /* la mesure de lecture ne s'applique pas ici */
 }
 
@@ -1577,7 +1864,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: var(--accent-deep);
 }
 
-.provenance-item::after { content: '·'; margin-inline-start: .6rem; color: var(--rule-strong); }
+.provenance-item::after { content: '·'; margin-inline-start: 8px; color: var(--rule-strong); }
 .provenance-item:last-of-type::after { content: none; }
 
 .provenance a {
@@ -1607,24 +1894,32 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 :is(h2, h3, h4, h5, h6).uppercase.tracking-widest {
   text-transform: none !important;
   letter-spacing: -0.005em !important;
-  font-size: 13px;
+  font-size: calc(12px * var(--corps));
   font-weight: 700;
   color: var(--accent-deep);
 }
 /* Ces intertitres ne sont plus des micro-libelles : ils reprennent l'air qui
    leur revient au-dessus du texte qu'ils annoncent. */
-:is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-bottom: .55rem; }
-:is(main, .reader) * + :is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-top: 1.6rem; }
+:is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-bottom: 8px; }
+:is(main, .reader) * + :is(h2, h3, h4, h5, h6).uppercase.tracking-widest { margin-top: 24px; }
 
 /* ---------- Respiration : les blocs cessent de se toucher ----------------- */
 /* Ecart median mesure entre blocs de premier niveau : 24 px pour une laize de
    1271 px. Beaucoup trop serre — les blocs se lisaient comme un seul mur.    */
 
-/* Le !important est necessaire : la regle de Tailwind (.space-y-6 > :not([hidden])
-   ~ :not([hidden])) pese trois classes, la notre deux — sans lui, elle gagne. */
-:is(main, .reader) > .space-y-6 > * + *,
-:is(main, .reader) > .space-y-8 > * + *,
-:is(main, .reader) > .space-y-10 > * + * { margin-top: 3.5rem !important; }
+/* UN SEUL RYTHME, PORTE PAR LA PILE.
+
+   Quatre regles se disputaient l'ecart entre blocs de premier rang : celle de
+   Tailwind (2 rem), une premiere normalisation (--pas-4, 40 px), celle-ci
+   (3,5 rem, 56 px) et une quatrieme propre a la seule section Atlas (1,75 rem).
+   Depuis que la pile est passee en colonne flexible, la marge gagnante
+   S'AJOUTAIT au gap : 96 px entre chaque bloc, partout. Mesure sur Donnees :
+   quinze intervalles a 96 px, plus de huit cents pixels de vide.
+
+   La marge tombe donc a zero et le gap porte seul le rythme, au pas de
+   l'echelle. Une regle, pas quatre, et surtout pas une par section — c'est
+   exactement le sous-theme par section qu'il refuse. */
+:is(main, .reader) > div[class*="space-y-"] > * + * { margin-top: 0 !important; }
 
 /* ---------- Moins de boites : le filet n'est pas un reflexe --------------- */
 /* 58 conteneurs bordes sur une page : des boites dans des boites. Une feuille
@@ -1660,17 +1955,17 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche { position: relative; }
 
 .recherche-btn {
-  display: inline-flex; align-items: center; gap: .45rem;
-  padding: .35rem .6rem .35rem .55rem;
-  font-size: 12px; font-weight: 600; color: #D3D5DC;
-  border: 1px solid rgba(255,253,249,.22); border-radius: 2px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 4px 8px 4px 8px;
+  font-size: calc(12px * var(--corps)); font-weight: 600; color: #D3D5DC;
+  border: 1px solid rgba(255,253,249,.22); border-radius: 999px; cursor: pointer;
 }
 .recherche-btn:hover { color: var(--reserve); border-color: rgba(255,253,249,.45); }
 .recherche-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
 
 .recherche-kbd {
-  padding: 0 .3rem; font-size: 12px; font-family: inherit; line-height: 1.15rem;
-  color: #9BA0AC; border: 1px solid rgba(255,253,249,.22); border-radius: 2px;
+  padding: 0 4px; font-size: calc(12px * var(--corps)); font-family: inherit; line-height: 1.15rem;
+  color: #9BA0AC; border: 1px solid rgba(255,253,249,.22); border-radius: 999px;
 }
 
 .recherche-panneau {
@@ -1683,30 +1978,30 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 }
 
 .recherche-champ {
-  width: 100%; padding: .8rem .9rem;
-  font: inherit; font-size: 13px; color: var(--ink);
+  width: 100%; padding: 1rem 1rem;
+  font: inherit; font-size: calc(12px * var(--corps)); color: var(--ink);
   background: transparent; border: 0; border-bottom: 1px solid var(--rule);
 }
 .recherche-champ:focus { outline: none; border-bottom-color: var(--accent); }
 
-.recherche-filtres { display: flex; flex-wrap: wrap; gap: .3rem; padding: .6rem .7rem; }
+.recherche-filtres { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 8px; }
 .recherche-filtres button {
-  display: inline-flex; align-items: baseline; gap: .3rem;
-  padding: .25rem .55rem; font-size: 12px; font-weight: 600;
+  display: inline-flex; align-items: baseline; gap: 4px;
+  padding: .25rem 8px; font-size: calc(12px * var(--corps)); font-weight: 600;
   color: var(--ink-soft); background: var(--paper);
   border: 1px solid var(--rule); border-radius: 999px; cursor: pointer;
 }
-.recherche-filtres button .num { font-size: 12px; color: var(--label); }
+.recherche-filtres button .num { font-size: calc(12px * var(--corps)); color: var(--label); }
 .recherche-filtres button[aria-pressed="true"] {
   color: var(--reserve); background: var(--accent); border-color: var(--accent);
 }
 .recherche-filtres button[aria-pressed="true"] .num { color: rgba(255,253,249,.75); }
 .recherche-filtres button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
-.recherche-liste { list-style: none; margin: 0; padding: 0 .35rem .35rem; max-height: 26rem; overflow-y: auto; }
+.recherche-liste { list-style: none; margin: 0; padding: 0 4px 4px; max-height: 26rem; overflow-y: auto; }
 .recherche-liste button {
-  display: grid; grid-template-columns: 5.5rem 1fr; gap: .1rem .7rem;
-  width: 100%; padding: .55rem .6rem; text-align: start;
+  display: grid; grid-template-columns: 5.5rem 1fr; gap: .1rem 8px;
+  width: 100%; padding: 8px 8px; text-align: start;
   border-inline-start: 2px solid transparent; cursor: pointer;
 }
 .recherche-liste button:hover { background: var(--paper-sunk); border-inline-start-color: var(--accent); }
@@ -1714,19 +2009,19 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .recherche-type {
   grid-row: span 2; align-self: start;
-  font-size: 12px; font-weight: 700; color: var(--accent-deep);
+  font-size: calc(12px * var(--corps)); font-weight: 700; color: var(--accent-deep);
 }
-.recherche-titre { font-size: 13px; line-height: 1.4; color: var(--ink); }
-.recherche-ctx { font-size: 12px; line-height: 1.4; color: var(--label); }
+.recherche-titre { font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--ink); }
+.recherche-ctx { font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label); }
 
-.recherche-vide { margin: 0; padding: 1rem .9rem 1.2rem; font-size: 13px; color: var(--label); }
+.recherche-vide { margin: 0; padding: 1rem 1rem 1rem; font-size: calc(12px * var(--corps)); color: var(--label); }
 
 /* La reference d'un terme emprunte, dans le panneau de definition. */
 .terme-pop-src {
   display: inline-flex; align-items: baseline; gap: .3em;
-  margin-top: .6rem; padding-top: .5rem;
+  margin-top: 8px; padding-top: .5rem;
   border-top: 1px solid var(--rule);
-  font-size: 12px; line-height: 1.45; color: var(--accent-deep);
+  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--accent-deep);
   text-decoration: underline; text-decoration-color: var(--rule-strong);
 }
 .terme-pop-src:hover { text-decoration-color: currentColor; }
@@ -1750,11 +2045,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
      a cote de son libelle, qui doivent s'aligner sur la ligne de base du mot. */
   display: inline-flex;
   align-items: center;
-  gap: .45rem;
-  padding: .5rem .85rem;
-  font-size: 12px;
+  gap: 8px;
+  padding: .5rem 1rem;
+  font-size: calc(12px * var(--corps));
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.15;
   color: var(--ink-soft);
   background: var(--paper-raised);
   border: 1px solid var(--rule);
@@ -1767,14 +2062,14 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: var(--accent-deep);
 }
 .couche-btn[data-actif='true'] {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--plan-encre);
+  border-color: var(--plan-encre);
   color: var(--paper-raised);
 }
 .couche-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 767px) {
-  .couche-btn { font-size: 12px; padding: .45rem .7rem; }
+  .couche-btn { font-size: calc(12px * var(--corps)); padding: 8px 8px; }
   .atlas-scene svg { max-height: 52vh; }
 }
 
@@ -1832,7 +2127,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .scene-flux-coupure {
   border: 0;
   height: 1px;
-  margin: 1.6rem 0 1.35rem;
+  margin: 24px 0 24px;
   background: linear-gradient(90deg,
     color-mix(in oklab, var(--accent-light) 46%, transparent),
     color-mix(in oklab, var(--accent-light) 10%, transparent) 62%,
@@ -1841,23 +2136,22 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .assise {
   list-style: none;
-  margin: 1.25rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem 2rem;
+  gap: .5rem 24px;
 }
 /* Le mode d'emploi, contre les boutons qu'il decrit. */
 .scene-flux-mode {
-  margin: 0 0 .55rem;
-  font-size: 13px;
-  line-height: 1.45;
+  margin: 0 0 8px;
+  font-size: calc(12px * var(--corps));
   color: var(--accent-light);
 }
 .assise li {
   display: flex;
   align-items: baseline;
-  gap: .38rem;
+  gap: 8px;
   opacity: 0;
   animation: assiseMonte .5s cubic-bezier(.22, .61, .36, 1) forwards;
 }
@@ -1867,7 +2161,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: #FFFFFF;
 }
 .assise-quoi {
-  font-size: 12px;
+  font-size: calc(12px * var(--corps));
   letter-spacing: .04em;
   color: var(--accent-light);
 }
@@ -1991,7 +2285,10 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 
 /* Le bandeau cale son contenu en bas : titre, phrase et questions forment un
    bloc qui pousse depuis le pied plutot que de flotter au centre. */
-.scene-flux-texte { padding-block-end: clamp(1.25rem, 3vh, 2rem); padding-block-start: clamp(1.25rem, 3vh, 2rem); }
+/* La gouttiere horizontale reste fluide : c'est elle qui tient le texte au
+   milieu de la scene, quelle que soit la largeur. La VERTICALE tombe sur le
+   pas, comme partout - c'est le haut-bas qui rallonge les pages. */
+.scene-flux-texte { padding-block: var(--pas-3); }
 
 /* ---------- Le classement de la couche -------------------------------------
    Chaque ligne est une porte vers le pays. La jauge se redessine quand la
@@ -2001,17 +2298,17 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   display: grid;
   grid-template-columns: 1.6rem minmax(6rem, 11rem) 1fr auto;
   align-items: center;
-  gap: .75rem;
-  padding: .4rem .5rem;
+  gap: 8px;
+  padding: 8px .5rem;
   border-radius: 5px;
   transition: background-color .16s var(--ease, ease);
 }
 .classement-ligne:hover,
 .classement-ligne:focus-visible { background-color: var(--accent-lavis); outline: none; }
 .classement-ligne[aria-current='true'] { background-color: var(--accent-voile); }
-.classement-rang   { font-size: 12px; color: var(--label); font-variant-numeric: tabular-nums; }
-.classement-nom    { font-size: 13px; color: var(--ink); font-weight: 600; }
-.classement-valeur { font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.classement-rang   { font-size: calc(12px * var(--corps)); color: var(--label); font-variant-numeric: tabular-nums; }
+.classement-nom    { font-size: calc(12px * var(--corps)); color: var(--ink); font-weight: 600; }
+.classement-valeur { font-size: calc(12px * var(--corps)); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .classement-jauge  { display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
 .classement-jauge > span {
   display: block; height: 100%; border-radius: 999px;
@@ -2022,6 +2319,166 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 @media (max-width: 767px) {
   .classement-ligne { grid-template-columns: 1.4rem 1fr auto; }
   .classement-jauge { display: none; }
+}
+
+
+/* ---------- La comparaison avec les autres regions --------------------------
+   Une mesure africaine ne dit rien seule. « 64 % des partants restent dans la
+   region » ne se lit qu'a cote des 45 % du monde et des 74 % de l'Europe.
+
+   Le rang de comparaison reprend la langue visuelle du classement de la couche
+   — nom, jauge, valeur — avec deux ajouts qui font tout le travail :
+
+     LE REPERE. Un filet vertical traverse toutes les jauges a la valeur
+     mondiale. On voit d'un coup qui est au-dessus et qui est en dessous, sans
+     lire un seul chiffre. Il est pose DANS chaque jauge plutot qu'en travers
+     de la liste : une grille ne laisse pas positionner un trait absolu sur une
+     colonne dont la largeur varie.
+
+     LE RELIEF. La ligne africaine est encree, les autres restent en gris. Le
+     but n'est pas de la flatter — elle tombe parfois du mauvais cote — mais de
+     la retrouver sans la chercher.                                          */
+.compare-ligne {
+  display: grid;
+  grid-template-columns: minmax(8rem, 13rem) 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.compare-nom {
+  font-size: calc(12px * var(--corps));
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.compare-valeur {
+  font-size: calc(12px * var(--corps));
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  min-width: 3.5rem;
+  text-align: end;
+}
+.compare-jauge {
+  position: relative;
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--paper-sunk);
+}
+.compare-jauge > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  /* --rule-strong est une couleur de filet : mesuree, elle ne donnait que
+     1,57:1 de jour et 2,11:1 de nuit contre sa piste, sous les 3:1 exiges
+     d'un objet graphique porteur d'information. La barre EST la donnee.
+     Elle prend donc une encre. */
+  background: var(--label);
+}
+/* Le repere mondial, pose dans chaque jauge a la meme abscisse. */
+.compare-jauge::after {
+  content: '';
+  position: absolute;
+  inset-block: -3px;
+  inset-inline-start: var(--repere, 50%);
+  width: 1px;
+  background: var(--ink-soft);
+  opacity: .45;
+}
+.compare-ligne[data-relief='true'] .compare-nom,
+.compare-ligne[data-relief='true'] .compare-valeur { color: var(--ink); font-weight: 600; }
+.compare-ligne[data-relief='true'] .compare-jauge > span { background: var(--accent); }
+/* La ligne mondiale n'est pas une region de plus : c'est l'etalon. Elle porte
+   le filet, pas une barre pleine, sinon on la compare a elle-meme. */
+.compare-ligne[data-etalon='true'] .compare-nom,
+.compare-ligne[data-etalon='true'] .compare-valeur { color: var(--label); font-style: italic; }
+.compare-ligne[data-etalon='true'] .compare-jauge > span { background: transparent; }
+
+.compare-legende {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font-size: calc(12px * var(--corps));
+  line-height: 1.45;
+  color: var(--label);
+}
+.compare-legende b { font-weight: 600; color: var(--ink-soft); }
+
+/* La reserve de perimetre : elle ne se replie pas et elle precede les chiffres.
+   Un lecteur qui additionnerait ces pourcentages a ceux des 54 Etats de l'UA
+   ferait une faute que la mise en page doit lui epargner. */
+.compare-reserve {
+  margin: 0 0 16px;
+  padding: 8px 16px;
+  border-inline-start: 3px solid var(--warn);
+  background: var(--warn-soft);
+  font-size: calc(12px * var(--corps));
+  line-height: 1.45;
+  color: var(--warn-ink);
+}
+
+
+/* ==========================================================================
+   LA MESURE DE LECTURE : LA LOGIQUE DE LA NOTE DE CADRAGE, PARTOUT
+   --------------------------------------------------------------------------
+   La note de cadrage a été réglée d'abord : une seule colonne, titre compris,
+   centrée dans sa carte, à 49,25 rem. C'est ce réglage qui vaut désormais pour
+   tout bloc de texte du site.
+
+   POURQUOI EN REM ET NON EN `ch`. Deux passes précédentes ont échoué sur ce
+   point : `74ch` posé sur un titre de 22 px et sur un texte de 15 px donne deux
+   largeurs différentes, parce que `ch` se calcule sur le corps de CHAQUE
+   élément. Dix-neuf paragraphes se retrouvaient décalés de 89 px. Une longueur
+   absolue règle ce défaut par construction.
+
+   POURQUOI SUR L'ÉLÉMENT ET NON SUR LE BLOC. Poser la colonne sur la pile de
+   paragraphes laisse le titre, qui en est le frère et non l'enfant, courir sur
+   toute la carte — c'est exactement le décalage signalé dans la note de
+   cadrage : bord gauche du titre à 25 px, bord gauche du texte à 297. La
+   mesure porte donc sur chaque élément de texte, titres inclus, et tous
+   tombent sur le même axe.
+
+   CE QUI EST ÉCARTÉ, ET POURQUOI. Une largeur maximale ne rétrécit que ce qui
+   est plus large qu'elle : un paragraphe dans une colonne de grille n'est pas
+   touché. Restent les objets dont la largeur EST le sens — un tableau, une
+   carte, une bande d'emphase, une ligne de provenance, un rang de comparaison.
+   Ceux-là gardent la largeur de leur carte.
+
+   LE BANDEAU DE SECTION EST HORS JEU. Il porte déjà sa propre mesure —
+   `max-w-4xl`, 896 px — et son titre la remplit. Lui appliquer les 49 rem
+   n'aurait touché que le descriptif, qui se serait recentré à 54 px du
+   titre : le décalage même qu'on vient de corriger dans la note.        */
+:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *) {
+  max-width: var(--mesure-lecture);
+  margin-inline: auto;
+}
+/* La prose suivie se justifie, comme dans la note. Les titres, les listes de
+   navigation et les micro-libellés gardent le fer à gauche : justifier une
+   ligne de trois mots creuse des blancs au lieu d'aligner un bord. */
+/* Les enveloppes qui portent deja une mesure — `max-w-3xl`, `max-w-4xl` —
+   n'etaient pas centrees : la colonne se collait au bord gauche de sa carte
+   et le texte qu'elle contient heritait de ce decalage. Un paragraphe se
+   retrouvait a 87 px du bord quand ses voisins tombaient a 209. Elles se
+   centrent, et tout le bloc revient sur l'axe. */
+:is(main, .reader) div[class*="max-w-"]:not(.page-bandeau *):not([class*="grid"]):not([class*="flex"]) { margin-inline: auto; }
+/* Mais PAS dans une rangee. Sur un enfant de conteneur flex ou grille, une
+   marge automatique ne centre pas dans la carte : elle centre dans l'espace
+   libre de la rangee, apres l'icone ou le libelle qui precede. Quatre blocs
+   de la section Donnees se retrouvaient ainsi a 70/38, 184/435, 305/527.
+   La colonne leur reste acquise ; le centrage, non.
+
+   SEULE LA RANGEE EST VISEE. Une pile en colonne — `flex-col`, et toutes
+   celles que la regle de rythme a converties — centre correctement ses
+   enfants : les ecarter aussi faisait passer les desequilibres de 5 a 22
+   sur la seule section Donnees. */
+:is(main, .reader) [class*="flex"]:not([class*="flex-col"]) > :is(p, h2, h3, h4, ul, ol, dl, blockquote)
+  { margin-inline: 0 !important; }
+
+:is(main, .reader) p:not(.provenance):not(.en-clair):not([class*="text-center"]):not([class*="text-end"]) {
+  text-align: justify;
+  text-align-last: start;
+  hyphens: auto;
 }
 
 /* ---------- Barre d'outils de section --------------------------------------
@@ -2206,7 +2663,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   min-width: 0;
   overflow: hidden;
   align-self: start;
-  padding: 1.15rem 1.25rem 1.35rem;
+  padding: 1rem 1rem 24px;
   border: 1px solid var(--rule);
   border-radius: 10px;
   background: var(--paper-raised);
@@ -2226,7 +2683,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .panneau-pays:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .panneau-vedette {
-  padding: .7rem .85rem;
+  padding: 8px 1rem;
   border-radius: 8px;
   background: var(--accent-soft);
 }
@@ -2248,22 +2705,22 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   border-radius: 999px;
   /* 11 px est le plancher de lecture du site : un sigle est deja dense,
      le reduire encore le rend illisible aux yeux fatigues. */
-  font-size: 12px; font-weight: 700;
+  font-size: calc(12px * var(--corps)); font-weight: 700;
   color: var(--accent-deep);
   background: var(--accent-soft);
 }
 
 .panneau-fiche {
-  display: inline-flex; align-items: center; gap: .4rem;
+  display: inline-flex; align-items: center; gap: 4px;
   width: 100%; justify-content: center;
-  margin-top: 1.1rem;
-  padding: .55rem .9rem;
+  margin-top: 1rem;
+  padding: 8px 1rem;
   border-radius: 999px;
-  font-size: 12px; font-weight: 700;
+  font-size: calc(12px * var(--corps)); font-weight: 700;
   letter-spacing: .06em; text-transform: uppercase;
-  color: var(--paper-raised);
-  background: var(--ink);
-  border: 1px solid var(--ink);
+  color: var(--reserve);
+  background: var(--plan-encre);
+  border: 1px solid var(--plan-encre);
   transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 .panneau-fiche:is(:hover, :focus-visible) { background: var(--accent-deep); border-color: var(--accent-deep); }
@@ -2289,9 +2746,14 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 }
 
 /* ---------- Le chapitre repliable ----------------------------------------
-   La hauteur est bornee, pas le contenu : le texte reste dans le document,
-   donc selectionnable, imprimable et indexable. Seul son debordement est
-   masque, et un degrade annonce qu'il y a une suite plutot que de couper net. */
+   La hauteur est bornée, pas le contenu : le texte reste dans le document,
+   donc sélectionnable, imprimable et indexable.
+
+   LE FLOU EST PARTI. Il masquait une coupe arbitraire — 620 px pile, au hasard
+   du paragraphe ou de la ligne de tableau. Maintenant que la coupe tombe sur la
+   fin d'un bloc entier (voir `Chapitre` dans App.jsx), il n'y a plus de plaie à
+   cacher : une pliure nette, un filet, le bouton posé dessus, et le compte de ce
+   qui reste à lire. */
 /* Vert tant qu'on regarde, taupe dès qu'on lit.
    Le partage se fait ici : tout ce qui est enveloppé dans un chapitre est de la
    lecture, et y reprend l'accent chaud. Ce qui reste dehors — la barre, le
@@ -2311,38 +2773,43 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   transition: max-height var(--dur-slow) var(--ease-both);
 }
 .chapitre[data-replie='true'] .chapitre-corps {
+  /* La hauteur exacte de la pliure est posée par le composant, qui seul sait où
+     finit le dernier bloc entier. Cette valeur ne sert que de filet. */
   max-height: 620px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 74%, transparent 100%);
 }
 .chapitre[data-replie='false'] .chapitre-corps { max-height: none; }
 
-.chapitre-bouton {
-  display: inline-flex; align-items: center; gap: .4rem;
-  margin-top: .85rem;
-  padding: .45rem .95rem;
-  border-radius: 999px;
-  font-size: 12px; font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase;
+/* La pliure : une barre pleine largeur, posée sur un filet, avec le mot à gauche
+   et le chevron à l'autre bout. Elle occupe toute la mesure du bloc plutôt que de
+   flotter en pastille sous un texte estompé — on voit où l'analyse s'arrête, et
+   qu'elle s'ouvre. La cible fait la largeur du bloc, ce qu'aucune pastille de
+   quatre-vingts pixels ne donnait. */
+.chapitre-pliure {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--pas-1);
+  width: 100%;
+  margin-top: var(--pas-2);
+  padding: 8px 0 .1rem;
+  border-top: 1px solid var(--rule);
+  background: transparent;
   color: var(--accent-deep);
-  background: var(--paper-raised);
-  border: 1px solid var(--rule-strong);
-  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
-              background-color var(--dur-fast) var(--ease);
+  text-align: start;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
-.chapitre-bouton:is(:hover, :focus-visible) {
-  color: var(--paper-raised); background: var(--accent-deep); border-color: var(--accent-deep);
+.chapitre-pliure-mot {
+  font-size: calc(12px * var(--corps)); font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
 }
-.chapitre-bouton:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.chapitre-bouton svg { transition: transform var(--dur) var(--ease); }
-.chapitre-bouton[aria-expanded='true'] svg { transform: rotate(180deg); }
+.chapitre-pliure:is(:hover, :focus-visible) { color: var(--accent); border-top-color: var(--accent); }
+.chapitre-pliure:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* Le sceau ne tourne pas. Un chevron retourné dit « c'est ouvert » ; un anneau
+   retourné ne dit rien — sa brèche change de côté, et l'œil lit un défaut de
+   rendu. L'état est portée par le mot, qui passe de « Lire la suite » à
+   « Replier » : c'est plus clair qu'une rotation, et cela se lit à voix haute. */
 
 /* A l'impression, tout est deplie : un PDF ne se replie pas. */
 @media print {
-  .chapitre[data-replie='true'] .chapitre-corps {
-    max-height: none !important; -webkit-mask-image: none !important; mask-image: none !important;
-  }
-  .chapitre-bouton { display: none; }
+  .chapitre[data-replie='true'] .chapitre-corps { max-height: none !important; }
+  .chapitre-pliure { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .chapitre-corps { transition: none; } }
 
@@ -2354,20 +2821,482 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    La colonne prend donc la largeur du dessin — plus d'etirement, plus de vide —
    et la carte monte a la hauteur d'un ecran. Le releve occupe tout le reste au
    lieu d'une bande de 240 px.                                              */
-/* La grille du choropleth est descendue d'un niveau depuis l'ajout du
-   conteneur .atlas-carte : c'est lui, desormais, qui porte les colonnes. */
-.atlas-carte > div {
+/* UNE SEULE MESURE DE CARTE, CELLE DE L'ATLAS.
+   Ce traitement ne valait que pour l'Atlas. Ailleurs, le dessin restait en
+   `w-full` dans une colonne `1fr` : il s'étirait à la largeur de la carte qui
+   l'héberge, et comme le continent est en portrait, le vide dormait à
+   l'intérieur même du SVG. Trois tailles pour un même objet — 703 px dans
+   l'Atlas, 820 dans Gouvernance, 868 dans Données — sans qu'aucune ne soit
+   voulue : c'était la largeur du contenant qui décidait.
+
+   Le sélecteur vise donc `.carte-continent`, la grille que rend le choroplèthe,
+   où qu'elle se trouve. La hauteur commande, la largeur suit le dessin, et la
+   légende occupe le reste au lieu d'une bande de 240 px.                   */
+:is(main, .reader) .carte-continent {
   grid-template-columns: auto minmax(16rem, 1fr) !important;
-  gap: clamp(1rem, 2.5vw, 2.25rem) !important;
+  /* La colonne garde sa gouttiere fluide — c'est elle qui laisse respirer la
+     carte et sa legende cote a cote. La LIGNE, qui ne sert que lorsque les
+     deux se superposent, tombe sur le pas comme partout ailleurs. */
+  column-gap: clamp(1rem, 2.5vw, 2.25rem) !important;
+  row-gap: var(--pas-3) !important;
   align-items: center !important;
 }
-.atlas-scene .atlas-carte svg {
+:is(main, .reader) .carte-continent > svg {
   width: auto !important;
-  /* Un sixieme de plus : la carte est l'objet central de l'Atlas, elle
-     merite la hauteur qu'on lui accorderait sur le papier. */
+  /* Un sixieme de plus : la carte est l'objet central du site, elle merite la
+     hauteur qu'on lui accorderait sur le papier. */
   height: min(88vh, 60.5rem);
   max-height: none !important;
   justify-self: center;
+}
+
+/* Sur un écran étroit, c'est la LARGEUR qui commande. Le continent est en
+   portrait : une hauteur de 88 vh lui donnerait 0,89 vh de large — 634 px sur un
+   téléphone de 375. On rend donc la main à la largeur et la hauteur suit,
+   l'inverse exact de ce qui vaut sur un grand écran.
+
+   Ce bloc vient APRÈS celui du dessus, et non dans la règle de média plus haut
+   dans le fichier : à spécificité égale, c'est l'ordre qui tranche, et posé
+   avant il perdait. */
+@media (max-width: 767px) {
+  :is(main, .reader) .carte-continent {
+    grid-template-columns: 1fr !important;
+  }
+  :is(main, .reader) .carte-continent > svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 52vh;
+    justify-self: stretch;
+  }
+}
+
+/* ==========================================================================
+   L'ÉTALON
+   --------------------------------------------------------------------------
+   Les rayons, les gouttières, les corps, les graisses et le rythme vertical ont
+   été ramenés à une mesure, chacun à son tour. Six familles ne l'avaient jamais
+   été, et ce sont elles qu'on voit encore : « parfois des éléments trop gros,
+   parfois trop petits ».
+
+   Relevé sur Données, une seule section :
+
+     ICÔNES          6 tailles   12 · 14 · 16 · 20 · 24 · 36
+     PASTILLES       5 hauteurs  14 · 16 · 22 · 28 · 38
+     INTERLIGNES    10 valeurs   1,18 → 1,67, sans palier
+     INTERLETTRAGES 10 valeurs   dont SIX négatifs différents sur les titres
+     MARGES         12 valeurs   2 · 4 · 6 · 8 · 10 · 12 · 16 · 18,4 · 20 · 24 · 32 · 40
+
+   Aucune de ces valeurs n'a été choisie : ce sont des sédiments. L'œil ne lit pas
+   la différence entre 1,60 et 1,62, ni entre 10 et 12 px — il lit une interface
+   qui hésite. On pose donc un étalon par famille, dérivé du rôle et non du goût.
+   ========================================================================== */
+
+/* ---------- LES ICÔNES : DEUX TAILLES ------------------------------------
+   Une icône accompagne un mot, ou elle ouvre un bloc. Rien entre les deux.
+   Sous 16 px, un pictogramme perd ses traits fins avant de perdre sa taille :
+   les 12 et 14 px remontent. Au-dessus de 20, il concurrence le titre. */
+:is(main, .reader) svg:is(.w-3, .w-3\.5, .w-4, .h-3, .h-3\.5, .h-4),
+:is(main, .reader) svg.w-3.h-3,
+:is(main, .reader) svg.w-3\.5.h-3\.5 { width: 16px; height: 16px; }
+:is(main, .reader) svg:is(.w-5, .w-6, .h-5, .h-6) { width: 20px; height: 20px; }
+
+/* ---------- LES PASTILLES : LA PUCE ET L'ÉTIQUETTE ------------------------
+   La puce est un point de couleur qui ne porte rien ; l'étiquette porte un
+   compte ou un mot. Les contrôles, eux, ont déjà leur mesure (32 et 40 px). */
+:is(main, .reader) .dot { width: 10px !important; height: 10px !important; }
+/* Les pastilles de couleur posées en utilitaires : `w-3 h-3`, `w-2 h-2`,
+   `w-3.5 h-2.5`. Cinq hauteurs pour un seul objet — un point qui ne porte
+   rien. Il en garde une. */
+:is(main, .reader) span[class*="rounded-full"]:empty,
+:is(main, .reader) span[class*="rounded-"]:empty:not([class*="h-1"]):not([class*="h-full"]) {
+  width: 10px; height: 10px;
+}
+
+/* ---------- LES INTERLIGNES : QUATRE PALIERS -----------------------------
+   Ce qui se lit, ce qui se note, ce qui se titre, ce qui se compte.
+     1,62  la prose de lecture, 17 px
+     1,45  la petite ligne, 13 px : une note serree se lit mieux qu'une note
+           aeree, et c'est autant de hauteur rendue a la page
+     1,40  les titres
+     1,15  les chiffres
+   Le quatrieme palier existait deja sous `.text-xs` ; il manquait au titre
+   de ce bloc, qui en annoncait trois et en servait quatre. */
+:is(main, .reader) :is(p, li, dd, dt, blockquote) { line-height: 1.62; }
+:is(main, .reader) :is(p, li, dd, dt, blockquote):is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .provenance) { line-height: 1.45; }
+:is(main, .reader) :is(h1, h2, h3, h4) { line-height: 1.4; }
+:is(main, .reader) .tabular-nums,
+:is(main, .reader) [class*="font-serif"][class*="font-bold"][class*="text-2xl"],
+:is(main, .reader) [class*="font-serif"][class*="font-bold"][class*="text-3xl"] { line-height: 1.15; }
+
+/* Les utilitaires de Tailwind rejoignent les trois paliers. `leading-relaxed`
+   et `leading-loose` disaient 1,625 et 2 ; entre eux et le 1,62 du rang, l'œil
+   ne lit rien — il lit seulement que rien n'est aligné. */
+:is(main, .reader) :is(.leading-none, .leading-tight) { line-height: 1.4; }
+:is(main, .reader) :is(.leading-snug, .leading-normal) { line-height: 1.4; }
+:is(main, .reader) :is(.leading-relaxed, .leading-loose) { line-height: 1.62; }
+
+/* ---------- LES INTERLETTRAGES : DEUX, ET DE SIGNE OPPOSÉ ----------------
+   Le titre se resserre parce qu'il est grand ; le micro-libellé s'écarte parce
+   qu'il est petit et en capitales. Six valeurs négatives différentes traînaient
+   sur les titres — des arrondis de Tailwind, jamais un choix. */
+:is(main, .reader) :is(h1, h2, h3, h4) { letter-spacing: -0.01em; }
+:is(main, .reader) [class*="uppercase"] { letter-spacing: 0.16em; }
+
+/* ---------- LES MARGES : L'ÉCHELLE, ET RIEN QU'ELLE ----------------------
+   Douze valeurs pour quatre pas. On ne supprime pas les micro-écarts d'une
+   ligne — c'est là que la densité se règle — mais tout ce qui sépare deux
+   éléments tombe sur un pas. */
+/* Sous 8 px, on ne range plus : on colle. Ces écarts séparent un libellé de son
+   chiffre, pas deux blocs — les monter au pas doublait la hauteur de chaque
+   ligne de donnée pour rien. Ils restent libres, comme l'échelle le disait. */
+:is(main, .reader) :is(.mt-2, .mt-2\.5) { margin-top: var(--pas-1); }
+:is(main, .reader) :is(.mb-2, .mb-2\.5) { margin-bottom: var(--pas-1); }
+:is(main, .reader) :is(.mt-3, .mt-3\.5, .mt-4, .mt-5) { margin-top: var(--pas-2); }
+:is(main, .reader) :is(.mb-3, .mb-3\.5, .mb-4, .mb-5) { margin-bottom: var(--pas-2); }
+:is(main, .reader) :is(.mt-6, .mt-7, .mt-8) { margin-top: var(--pas-3); }
+:is(main, .reader) :is(.mb-6, .mb-7, .mb-8) { margin-bottom: var(--pas-3); }
+:is(main, .reader) :is(.mt-10, .mt-12, .mt-16) { margin-top: var(--pas-4); }
+:is(main, .reader) :is(.mb-10, .mb-12, .mb-16) { margin-bottom: var(--pas-4); }
+
+/* ---------- L'ITALIQUE : UN SEUL EMPLOI ---------------------------------
+   Elle servait à trois choses à trois corps : la note, l'insistance dans la
+   prose, et un mot de bandeau. Une italique qui veut tout dire ne dit plus rien.
+   Elle reste à la NOTE — ce qui commente le texte sans en faire partie — et la
+   prose reprend le romain, qui a déjà le gras pour insister. */
+:is(main, .reader) .italic:not(.text-xs):not([class*="text-[1"]):not(blockquote) { font-style: normal; }
+
+/* ==========================================================================
+   LA MESURE : UNE COLONNE, DEUX MARGES ÉGALES
+   --------------------------------------------------------------------------
+   Relévé sur Données : 32 blocs de texte sur 97 ont deux marges différentes, et
+   toujours dans le même sens — 25 px à gauche, 286, 415, 470, jusqu'à 776 à
+   droite. Ce sont des blocs qui portent une mesure de lecture (`max-w-3xl`,
+   `max-w-2xl`…) SANS être centrés : la colonne se colle au bord gauche de sa
+   carte et tout le reste devient du vide.
+
+   C'est ce qu'il décrit depuis le début — « trop d'espace à droite », « ce n'est
+   pas centré » — et c'est une seule cause, pas une impression.
+
+   LA RÈGLE. Un bloc de texte se lit dans une colonne, et cette colonne est la
+   même pour tous les blocs d'une carte. Deux conséquences :
+
+     1. Les mesures posées élément par élément tombent. Elles créaient autant de
+        colonnes que de blocs, et aucune ne s'alignait sur les autres.
+     2. La carte porte UNE mesure, centrée. Tous ses textes partagent alors la
+        même gouttière des deux côtés.
+
+   Ce qui n'est pas du texte — une carte, une table, une grille, un rail — garde
+   la pleine largeur : une mesure de lecture n'a rien à dire à un dessin.        */
+
+/* 1. Les mesures individuelles tombent. */
+:is(main, .reader) :is(p, h2, h3, h4, dl, blockquote):is([class*="max-w-"]) {
+  max-width: none;
+}
+
+/* 2. PAS DE COLONNE ÉTROITE IMPOSÉE.
+      Deux essais, deux erreurs, dites ici pour qu'on ne les refasse pas.
+
+      `74ch` d'abord : le `ch` se calcule sur la taille de CHAQUE élément, donc un
+      paragraphe de 13 px obtenait une colonne plus étroite qu'un de 17 et, centrés,
+      deux paragraphes qui se suivent ne partageaient plus leur bord gauche.
+
+      Une longueur fixe ensuite : les bords s'alignaient, mais la section gagnait
+      559 px — une colonne étroite fait passer le texte à la ligne plus souvent. On
+      réglait la largeur en aggravant la hauteur, qui est l'axe qui gêne.
+
+      Le texte prend donc la largeur de sa carte, et ce sont les gouttières de la
+      carte — 16 ou 24 px, les mêmes des deux côtés — qui font la marge. Qui veut
+      une colonne plus courte l'obtient dans le panneau de lecture, où c'est un
+      choix et non une contrainte.                                              */
+
+/* Ce qui doit tenir toute la largeur le dit : une légende de source, une ligne de
+   méta, un intitulé de colonne, un titre de section — ils accompagnent un objet
+   large et se caleraient au milieu de rien. */
+:is(main, .reader) :is(.provenance, .en-clair, .duo-ligne dt, .table-titre, caption,
+                       thead th, tbody th, td, .choro-brosse-dit, figcaption) {
+  max-width: none;
+  margin-inline: 0;
+}
+/* Dans une colonne étroite — une légende de carte, un panneau, une cellule — la
+   mesure est déjà celle du contenant : `auto` ne décentre rien, mais `74ch` y
+   serait plus large que la colonne et n'aurait aucun effet. On le dit quand même,
+   pour que la règle se lise sans avoir à la simuler. */
+
+/* ---------- LA COMPARAISON À DEUX ----------------------------------------
+   Deux colonnes dans la bande du relevé, les mêmes quatre lignes, et l'écart. Le
+   plus fort des deux prend l'encre pleine : c'est la seule chose qu'on cherche
+   du regard, elle n'a pas à se calculer. */
+.duo-tete {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .5rem;
+  padding-bottom: 8px; border-bottom: 1px solid var(--rule);
+}
+.duo-nom {
+  font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+  font-size: calc(13px * var(--corps)); line-height: 1.28;
+  color: var(--ink);
+}
+.duo-corps { margin-top: 8px; }
+.duo-ligne + .duo-ligne { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--rule); }
+.duo-ligne dt {
+  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label);
+  margin-bottom: 4px;
+}
+.duo-ligne dd { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: 0; }
+.duo-ligne dd b {
+  font-family: 'Fraunces', Georgia, serif; font-weight: 700;
+  font-size: calc(13px * var(--corps)); line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-mute);
+}
+.duo-ligne dd b.duo-fort { color: var(--accent-deep); }
+.duo-ecart {
+  display: block; margin-top: .18rem;
+  font-size: calc(12px * var(--corps)); line-height: 1.4;
+  font-variant-numeric: tabular-nums; color: var(--label);
+}
+.duo-fermer {
+  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--ink-mute);
+  background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: .18em;
+}
+.duo-fermer:is(:hover, :focus-visible) { color: var(--accent-deep); }
+
+.duo-appel {
+  display: flex; align-items: baseline; justify-content: space-between; gap: .5rem;
+  width: 100%; min-height: 32px; margin-top: 8px; padding: 8px 8px;
+  font-size: calc(12px * var(--corps)); font-weight: 600; line-height: 1.4;
+  color: var(--accent-deep); text-align: start;
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 999px;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.duo-appel:is(:hover, :focus-visible) { background: var(--accent-soft); border-color: var(--accent); }
+.duo-appel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Le pays déjà retenu, rappelé dans le bouton : sans lui, on ne sait plus avec
+   QUOI on s'apprête à comparer. */
+.duo-attente { font-style: normal; font-weight: 700; color: var(--ink-mute); }
+
+/* ---------- LA TABLE QUI SE TRIE -----------------------------------------
+
+   Douze tables sur le site, aucune légende, deux `scope` en tout. Une table sans
+   `scope` n'est pas une table pour qui l'écoute : c'est une grille de valeurs
+   dont on ne sait pas de quoi chacune est la valeur.
+
+   La légende n'est pas décorative non plus — c'est le seul endroit où une table
+   peut dire ce qu'elle est à qui ne la voit pas. On la montre donc plutôt que de
+   la cacher : ce qu'on écrit pour un lecteur d'écran vaut aussi pour l'œil.   */
+
+.table-titre {
+  caption-side: top;
+  text-align: start;
+  padding: 0 0 var(--pas-2);
+  font-size: calc(12px * var(--corps));
+  line-height: 1.4;
+  color: var(--ink-mute);
+}
+
+/* L'en-tête qui commande un tri est un bouton : il s'annonce comme tel, il se
+   prend au clavier, et il porte le compte de sa colonne. */
+.tri-col {
+  display: inline-flex; align-items: baseline; gap: 4px;
+  width: 100%;
+  padding: 0;
+  font: inherit; color: inherit;
+  background: none; border: 0;
+  cursor: pointer;
+  justify-content: inherit;
+}
+th[aria-sort] .tri-col { justify-content: center; }
+th[aria-sort]:first-child .tri-col { justify-content: flex-start; }
+th[aria-sort]:last-child .tri-col { justify-content: flex-end; }
+.tri-col:is(:hover, :focus-visible) { color: var(--accent-deep); }
+.tri-col:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Le libellé fait 21 px de haut. L'épaissir monterait l'en-tête de la matrice à
+   cinquante-quatre lignes ; on étend donc la cible à TOUTE la cellule, ce qui est
+   aussi le geste attendu — on clique l'en-tête, pas le mot. */
+:is(main, .reader) th[aria-sort] { position: relative; }
+.tri-col::after { content: ''; position: absolute; inset: 0; }
+
+.tri-compte {
+  font-style: normal; font-weight: 700;
+  font-size: calc(12px * var(--corps));
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-mute);
+}
+
+/* La colonne qui trie se signale par un filet sous son en-tête, pas par une
+   flèche : la matrice porte déjà cinquante-quatre lignes de points, un signe de
+   plus dans l'en-tête s'y perdrait. */
+:is(main, .reader) table thead th[aria-sort="descending"] {
+  box-shadow: inset 0 -2px 0 var(--accent) !important;
+}
+th[aria-sort="descending"] .tri-col,
+th[aria-sort="descending"] .tri-compte { color: var(--accent-deep); }
+
+/* ---------- L'ANCRE DE CITATION -------------------------------------------
+
+   Un pied-de-mouche au bout du titre. Il reste VISIBLE, simplement discret — il
+   n'apparaît pas au survol.
+
+   C'était pourtant la première idée, et elle était mauvaise : sur un écran
+   tactile, il n'y a pas de survol. Une affordance qui ne se révèle qu'au passage
+   de la souris n'existe tout simplement pas pour une bonne part des lecteurs, et
+   sur un site qu'on cite, c'est la fonction même qui disparaît. Un signe posé à
+   38 % se lit quand on le cherche et se tait quand on lit.
+
+   Au clic, le lien passe dans le presse-papiers et le signe devient une coche —
+   une confirmation qui vit dans le geste, sans boîte de dialogue.           */
+:is(main, .reader) :is(h2, h3):has(> .ancre) { position: relative; }
+
+.ancre {
+  margin-inline-start: .4em;
+  padding: 0 .18em;
+  /* Fixe, et non `.72em` : cale sur son titre, le signe rendait 13,7 px
+     dans un h3 et 22,3 px dans un h1 -- deux tailles pour un seul signe. */
+  font: 700 calc(12px * var(--corps))/1 'IBM Plex Sans', system-ui, sans-serif;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: .38;
+  vertical-align: baseline;
+  /* Le signe vit dans le titre : sans cela il part avec lui à la copie, et un
+     lecteur qui cite l'analyse colle « ¶ » au bout de son titre. */
+  user-select: none;
+  transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+:is(main, .reader) :is(h2, h3):hover > .ancre,
+:is(main, .reader) .ancre:hover,
+:is(main, .reader) .ancre:focus-visible { opacity: 1; }
+.ancre:hover { color: var(--accent-deep); }
+.ancre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* La cible fait 23 x 22 px : le signe est petit par nature, et l'agrandir
+   écarterait les titres. On étend donc l'AIRE DE CLIC sans toucher à la mise en
+   page — un pseudo-élément débordant, qui ne prend pas de place. */
+.ancre { position: relative; }
+.ancre::before {
+  content: '';
+  position: absolute;
+  inset: -6px -6px;
+  min-width: 32px; min-height: 32px;
+  transform: translate(-50%, -50%);
+  inset-inline-start: 50%; top: 50%;
+}
+:is(main, .reader) .ancre[data-copie="true"] { opacity: 1; color: var(--ok); }
+.ancre[data-copie="true"]::after { content: " ✓"; }
+/* Presse-papiers refusé : le lien est passé dans la barre d'adresse, et on le dit.
+   Un geste qui ne répond rien laisse croire qu'il n'a pas fonctionné. */
+:is(main, .reader) .ancre[data-copie="barre"] { opacity: 1; color: var(--warn-ink); }
+.ancre[data-copie="barre"]::after { content: " ↑"; }
+
+/* Le titre visé par l'ancre reçoit une marque le temps qu'on le trouve : arriver
+   par un lien profond au milieu d'une page longue, sans rien qui dise « c'est
+   ici », revient à chercher deux fois. */
+:is(main, .reader) :target {
+  scroll-margin-block-start: 6rem;
+}
+:is(main, .reader) :is(h2, h3):target {
+  animation: ancreTrouvee 2.4s var(--ease-both) both;
+}
+@keyframes ancreTrouvee {
+  0%, 62% { background: var(--accent-soft); box-shadow: -.35em 0 0 var(--accent-soft), .35em 0 0 var(--accent-soft); }
+  100%    { background: transparent; box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(main, .reader) :is(h2, h3):target { animation: none; background: var(--accent-soft); }
+  .ancre { transition: none; }
+}
+@media print { .ancre { display: none; } }
+
+/* ---------- LE BROSSAGE ET LA SONDE ---------------------------------------
+
+   Deux gestes ajoutés à la carte, tous deux pour répondre à une question qu'elle
+   posait sans y répondre.
+
+   LE BROSSAGE. La légende disait à quoi correspond chaque teinte et s'arrêtait là.
+   « Qui est dans cette bande ? » restait sans réponse : on balayait le continent
+   des yeux, teinte par teinte, et l'on se trompait. Chaque cran devient un
+   bouton — le survol éteint le reste, le clic épingle pour qu'on puisse lâcher la
+   souris et lire. Le cran porte son NOMBRE de pays, que la carte ne donne pas.
+
+   LA SONDE. Le relevé latéral oblige l'œil à l'aller-retour. Une étiquette au
+   curseur garde la main et le regard ensemble ; elle ne dit que le nom et la
+   valeur, le panneau garde le détail.                                        */
+
+.carte-continent { position: relative; }
+
+.carte-sonde {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  transform: translate(.9rem, -50%);
+  display: flex; align-items: baseline; gap: var(--pas-1);
+  padding: 4px 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 10px;
+  background: var(--paper-raised);
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(12, 14, 18, .13);
+}
+.carte-sonde b { font: 700 calc(12px * var(--corps))/1.1 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink); }
+.carte-sonde i {
+  font: 700 calc(12px * var(--corps))/1.1 'Fraunces', Georgia, serif;
+  font-style: normal; font-variant-numeric: tabular-nums;
+  color: var(--accent-deep);
+}
+/* En arabe la carte se lit à droite : l'étiquette passe de l'autre côté du
+   curseur, sinon elle recouvre ce qu'on pointe. */
+[dir="rtl"] .carte-sonde { transform: translate(-.9rem, -50%); }
+
+/* Le cran de légende : un bouton qui ne se déguise pas en pastille. */
+.choro-cran {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.choro-cran:is(:hover, :focus-visible) { border-color: var(--rule-strong); background: var(--paper-sunk); }
+.choro-cran[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.choro-compte {
+  font: 700 calc(12px * var(--corps))/1 'IBM Plex Sans', system-ui, sans-serif;
+  font-style: normal; font-variant-numeric: tabular-nums;
+  color: var(--label);
+}
+.choro-cran[aria-pressed="true"] .choro-compte { color: var(--accent-deep); }
+
+/* Ce que le brossage vient de répondre, écrit : sans cela la carte s'éteint et
+   l'on ne sait plus ce qu'on a demandé. */
+.choro-brosse-dit {
+  display: inline-flex; align-items: center; gap: var(--pas-1);
+  font: 600 calc(12px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
+  color: var(--accent-deep);
+}
+.choro-liberer {
+  font: 600 calc(12px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
+  color: var(--ink-mute);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.choro-liberer:is(:hover, :focus-visible) { color: var(--accent-deep); }
+
+/* Le pays hors classe s'efface sans disparaître : on doit continuer à lire le
+   dessin du continent, sinon la carte se troue et l'on perd la géographie. */
+.choro-eteint { opacity: .22; }
+/* Le pays de la classe brassée gagne son contour. On écarte `.choro-hors` : sur
+   une carte de sous-région, les voisins qui tombent dans le cadre ne sont pas
+   éteints — ils sont hors sujet, et les allumer les ferait entrer dans une
+   classe à laquelle ils n'appartiennent pas. */
+.carte-continent[data-brossage="true"] .choro-pays:not(.choro-eteint):not(.choro-hors) {
+  stroke: var(--accent-deep);
+  stroke-width: 1.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .carte-sonde { transition: none; }
 }
 
 /* ---------- Le mouvement de la carte -------------------------------------
@@ -2419,8 +3348,14 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    section a laquelle se rattacher. Sans cela, `var(--accent-lavis)` n'y resout
    rien, le fond disparait et le texte se retrouve sur du transparent. */
 :root {
-  --accent-lavis:   color-mix(in oklab, var(--accent) 7%,  var(--paper));
-  --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
+  /* Le lavis et le voile disaient la même chose que l'aplat. Relevé sur le rendu :
+     trois plans pâles de la même teinte, séparés de 3 à 5 en OKLab — sous le seuil
+     de 4 que ce fichier se fixe partout ailleurs. À l'œil, un seul fond ; dans le
+     code, trois. Ils se rejoignent sur l'aplat, qui est la valeur CHOISIE et
+     vérifiée en contraste, là où les deux autres n'étaient que des mélanges.
+     Les noms restent : ils disent le rôle à leurs points d'appel. */
+  --accent-lavis:   var(--accent-soft);
+  --accent-voile:   var(--accent-soft);
   --accent-filet:   color-mix(in oklab, var(--accent) 34%, var(--rule));
 
   /* Les dégradés aussi. Le rapport pays est monté hors de <main>, donc
@@ -2443,8 +3378,14 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 }
 
 main[data-section] {
-  --accent-lavis:   color-mix(in oklab, var(--accent) 7%,  var(--paper));
-  --accent-voile:   color-mix(in oklab, var(--accent) 15%, var(--paper));
+  /* Le lavis et le voile disaient la même chose que l'aplat. Relevé sur le rendu :
+     trois plans pâles de la même teinte, séparés de 3 à 5 en OKLab — sous le seuil
+     de 4 que ce fichier se fixe partout ailleurs. À l'œil, un seul fond ; dans le
+     code, trois. Ils se rejoignent sur l'aplat, qui est la valeur CHOISIE et
+     vérifiée en contraste, là où les deux autres n'étaient que des mélanges.
+     Les noms restent : ils disent le rôle à leurs points d'appel. */
+  --accent-lavis:   var(--accent-soft);
+  --accent-voile:   var(--accent-soft);
   --accent-filet:   color-mix(in oklab, var(--accent) 34%, var(--rule));
 
   /* La dernière borne était éclaircie à 45 % vers --accent-light. Sur le bleu
@@ -2536,7 +3477,7 @@ main[data-section] .en-clair { background: var(--accent-lavis); border-color: va
 /* --- Le geste : un bouton s'enfonce quand on le presse -------------------- */
 :is(main, .reader) button:active:not(:disabled),
 .couche-btn:active:not(:disabled),
-.chapitre-bouton:active,
+.chapitre-pliure:active,
 .panneau-fiche:active { transform: translateY(1px) scale(.994); }
 @media (prefers-reduced-motion: reduce) {
   :is(main, .reader) button:active { transform: none; }
@@ -2567,7 +3508,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    Le fond reste l'encre : c'est ce qui garantit le contraste du titre quelle
    que soit la teinte, y compris les plus claires.                          */
 .page-bandeau {
-  background-color: var(--ink);
+  background-color: var(--plan-encre);
   background-image:
     radial-gradient(circle at 10% 15%, color-mix(in oklab, var(--accent) 62%, transparent), transparent 46%),
     radial-gradient(circle at 88% 88%, color-mix(in oklab, var(--accent-light) 34%, transparent), transparent 52%),
@@ -2641,13 +3582,42 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 /* Sur l'encre du bandeau, le filet se lit en réserve et non en gris de papier. */
 .scene-flux .bascule-groupe { border-color: rgba(255, 253, 249, .16); }
 
-/* La barre de volets de la fiche pays suit la même règle. */
+/* LA PASTILLE ELLE-MÊME.
 
-/* La chaîne causale porte trois récits côte à côte : dans une demi-colonne ils
-   s'empilent et le bloc passe de 288 à 658 px. Elle prend donc toute la largeur
-   du volet, et garde ses trois colonnes. */
-/* La chaîne causale garde sa matière sombre ; la pile fait le reste. */
+   Cette règle avait disparu. En retirant le CSS mort de la fiche pays, mon
+   script supprimait toute règle dont le sélecteur contenait un nom de classe
+   mort ; celui-ci s'écrivait `:is(.bascule, .couche-btn, .fiche-volet-btn)` et
+   il est tombé avec les autres. Résultat mesuré : les neuf filtres d'Evidence
+   Check retombaient à 20 px de haut, sans rembourrage ni filet — « trop petit
+   pour être agréable ». Tous les contrôles du site étaient dans cet état.
 
+   Un sélecteur ne doit jamais être supprimé parce qu'UNE de ses classes est
+   morte : il faut retirer la classe, et garder la règle. */
+:is(main, .reader) :is(.bascule, .couche-btn) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px !important;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  font: 600 13px/1.15 'IBM Plex Sans', system-ui, sans-serif;
+  letter-spacing: .012em;
+  padding: 8px 1rem;
+  min-height: 40px;
+  box-shadow: none !important;
+  transition: color var(--dur-fast) var(--ease),
+              background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+:is(main, .reader) :is(.bascule, .couche-btn):is(:hover, :focus-visible) {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+
+/* Le groupe range ses pastilles en ligne. Sans cela le cadre existe mais les
+   boutons s'empilent, et le rectangle serre une colonne au lieu d'une rangée. */
+:is(main, .reader) .bascule-groupe:not(.grid) { display: flex; align-items: center; }
 
 
 /* L'actif porte la teinte de la section.
@@ -2671,6 +3641,64 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 
 /* Le blanc pur pose par Tailwind rejoint la reserve chaude du site. */
 :is(main, .reader) .text-white { color: var(--reserve); }
+
+/* ---------- PAS D'ENVELOPPE NUE DANS LA PILE D'UNE SECTION ----------------
+
+   À propos rangeait trois de ses cartes dans un `space-y-6` : une enveloppe
+   sans fond ni filet, qui n'existe que pour grouper. Elle imposait 24 px de
+   rythme à ses trois cartes quand la section en tient 40 — deux rythmes dans la
+   même colonne, et 2 347 px qui se lisaient comme un seul pavé alors qu'ils
+   portent trois titres.
+
+   `display: contents` l'efface comme boîte sans toucher à son contenu : les
+   trois cartes deviennent des blocs de la section, au même rythme que les
+   autres. La règle ne vise que les enveloppes NUES — celles qui portent un fond
+   ou un filet sont des cartes, et gardent leur boîte. */
+main > [class*="space-y-"] > [class^="space-y-"]:not([class*="bg-"]):not([class*="border"]):not([class*="rounded"]) {
+  display: contents;
+}
+/* Effacée comme boîte, l'enveloppe doit aussi rendre son rythme : sa marge de
+   24 px s'ajoutait au gap de la pile et rouvrait deux écarts à 64. */
+main > [class*="space-y-"] > [class^="space-y-"]:not([class*="bg-"]):not([class*="border"]):not([class*="rounded"]) > * {
+  margin-top: 0 !important;
+}
+
+/* ---------- LES FICHES D'UNE GRILLE FINISSENT À LA MÊME LIGNE -----------
+
+   Une grille égalise la hauteur de chaque rangée : la fiche la plus haute
+   impose sa taille aux autres. Le vide tombait donc au bas des fiches courtes,
+   sous la description — mesuré dans la bibliothèque : 95 px pendants sur onze
+   fiches, jusqu'à 144 sur 257 dans Gouvernance.
+
+   Le vide n'est pas le défaut ; sa place l'est. La ligne de nature (le type et
+   l'année) descend en pied de fiche : elle s'aligne d'une fiche à l'autre, et
+   l'espace se range entre le texte et elle. Une grille dont toutes les fiches
+   finissent à la même ligne se lit comme une intention, pas comme un reste. */
+:is(main, .reader) .fiche-nature { order: 9; margin-top: auto; padding-top: var(--pas-1); }
+
+/* ---------- LES EXPORTS, TOUJOURS EN PIED DE SECTION ----------------------
+
+   Les boutons « Exporter (PDF) » et « … (CSV) » étaient appelés juste sous le
+   bandeau, donc en HAUT de chaque section : on proposait d'emporter la section
+   avant de l'avoir lue. Ils descendent en pied, et au même endroit partout.
+
+   Le déplacement se fait ici plutôt que dans les treize composants qui appellent
+   la barre : une règle unique ne peut pas dériver d'une section à l'autre, là où
+   treize déplacements finiraient par diverger. La pile de section passe en
+   colonne flexible pour que l'ordre soit réglable, et les marges que `space-y`
+   posait entre frères cèdent la place à un `gap` équivalent.
+
+   Le sélecteur ne nomme pas la balise. Huit sections bâtissent leur pile sur un
+   `div`, À propos sur un `section` : écrite `main > div`, la règle laissait cette
+   seule section à son rythme Tailwind. Un sous-thème par section, né d'un choix
+   de balise. La pile se reconnaît à son rôle, pas à son étiquette.            */
+main > [class*="space-y-"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pas-4);
+}
+main > [class*="space-y-"] > * { margin-top: 0 !important; }
+main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 
 /* ---------- TROIS FORMES, ET PAS UNE DE PLUS ------------------------------
 
@@ -2708,9 +3736,14 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 /* Les contrôles en ligne, eux, rejoignent la pastille du site. */
 :is(main, .reader) .barre-section-pdf { border-radius: 999px !important; }
 
-/* --- Les rayons restes en arriere : plus rien sous 5 px ------------------- */
+/* --- Le quatrième rayon n'existe plus ------------------------------------
+   Cette règle remontait les rayons minæux à 5 px — et réintroduisait ainsi la
+   quatrième forme que le partage par rôle venait de supprimer. Les six éléments
+   concernés sont des pastilles d'échantillon de 14 × 10 px : à cette taille, un
+   rayon de 10 en ferait des lentilles et un rayon de 5 une hésitation. Un
+   échantillon de couleur est un carré. */
 :is(main, .reader) [class*="rounded-[1px]"],
-:is(main, .reader) [class*="rounded-[2px]"] { border-radius: 5px !important; }
+:is(main, .reader) [class*="rounded-[2px]"] { border-radius: 0 !important; }
 
 /* --- Les filtres : pilule fine, actif a l'encre --------------------------- */
 :is(main, .reader) button[aria-pressed] { border-radius: 999px; }
@@ -2721,7 +3754,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    — une rangée de sous-navigation, une ligne d'affirmation — gardent le rayon de
    la carte, posé plus haut : une pilule de neuf cents pixels de long ne dit plus
    qu'elle se clique, elle se déforme. */
-:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-bouton):not(.panneau-fiche):not(.terme):not(.gov-subnav):not(.evidence-row):not([class*="rounded-lg"]):not([class*="rounded-xl"]) {
+:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-pliure):not(.panneau-fiche):not(.terme):not(.gov-subnav):not(.evidence-row):not([class*="rounded-lg"]):not([class*="rounded-xl"]) {
   border-radius: 999px;
 }
 
@@ -2749,10 +3782,30 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 :root[dir='rtl'] .note-cadrage-filet { transform-origin: right center; }
 @media (prefers-reduced-motion: reduce) { .note-cadrage-filet { animation: none; transform: none; } }
 
-/* La mesure : 68 caracteres, la largeur ou l'oeil retrouve le debut de la
-   ligne suivante sans effort. Centree, pas alignee au bord. */
+/* La mesure de la note : 38 rem, soit les 68 caracteres ou l'oeil retrouve
+   le debut de la ligne suivante sans effort. En REM et non en `ch` : `ch`
+   se calcule sur le corps de chaque element, si bien qu'un titre et son
+   texte n'obtenaient pas la meme largeur. */
+/* La colonne s’elargit : la marge laterale de la note tombe de 299 a 209 px
+   sur une carte de 1 207 — les 30 % demandes. La contrepartie est connue et
+   assumee : la ligne passe d’environ 68 signes a 87, au-dela de la mesure de
+   confort habituelle. */
+:root {
+  /* La mesure de lecture du site entier, et non de la seule note de
+     cadrage : c’est le modèle demandé, colonne unique, titre compris. */
+  --mesure-lecture: 49.25rem;
+  --mesure-note: var(--mesure-lecture);
+}
+/* TOUT ce que la note porte tient sur cette colonne, titre compris : le
+   titre courait sur toute la carte quand le texte tenait au milieu, et le
+   decalage entre les deux bords gauches se lisait comme une marge d'un
+   seul cote. Le filet decoratif est hors jeu, il double le bord. */
+.note-cadrage > *:not(.note-cadrage-filet) {
+  max-width: var(--mesure-note);
+  margin-inline: auto;
+}
 .note-cadrage-corps {
-  max-width: 68ch;
+  max-width: var(--mesure-note);
   margin-inline: auto;
 }
 
@@ -2772,15 +3825,15 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 
 /* La citation en exergue : elle sort de la colonne et respire. */
 .note-cadrage-corps blockquote {
-  margin-block: 1.75rem;
-  padding-inline-start: 1.1rem;
+  margin-block: 24px;
+  padding-inline-start: 1rem;
   border-inline-start: 3px solid var(--accent);
-  font-size: 1.06em;
+  font-size: calc(17px * var(--corps));
   text-align: start;
 }
 
 /* Les references de fin, centrees avec le reste. */
-.note-cadrage > div:last-child { max-width: 68ch; margin-inline: auto; }
+/* Les references de fin suivent la regle generale ci-dessus. */
 
 @media (max-width: 640px) {
   .note-cadrage-corps > .lede::first-letter { font-size: 2.5em; }
@@ -2798,9 +3851,8 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 
 /* La provenance des corridors, en pied de bandeau : discrete, jamais absente. */
 .scene-flux-source {
-  margin-top: 1.15rem;
-  font-size: 12px;
-  line-height: 1.45;
+  margin-top: 1rem;
+  font-size: calc(12px * var(--corps));
   /* dernier gris bleuté du bandeau ; il tient 7,4:1 sur le noir, comme avant */
   color: #A8A39D;
 }
@@ -2848,7 +3900,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    Ils variaient de 1,76 a 2,20 px d'interlettrage et du gras 600 au gras 700,
    pour dire exactement la meme chose : « voici de quoi parle ce bloc ». */
 :is(main, .reader) span[class*="uppercase"][class*="tracking"] {
-  font-size: 12px !important;
+  font-size: calc(12px * var(--corps)) !important;
   letter-spacing: .18em !important;
   font-weight: 700 !important;
   line-height: 1.4;
@@ -2866,10 +3918,10 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    ailleurs, un `text-xl` a 28 px ici et a 22 px la. Les titres rejoignent
    l'echelle unique. */
 :is(main, .reader) h2.font-serif,
-:is(main, .reader) h2:not([class*="text-"]) { font-size: 26px; line-height: 1.18; }
-:is(main, .reader) h3.font-serif { font-size: 19px; line-height: 1.28; }
+:is(main, .reader) h2:not([class*="text-"]) { font-size: calc(22px * var(--corps)); line-height: 1.15; }
+:is(main, .reader) h3.font-serif { font-size: calc(17px * var(--corps)); line-height: 1.4; }
 @media (min-width: 768px) {
-  :is(main, .reader) h2.font-serif { font-size: 31px; }
+  :is(main, .reader) h2.font-serif { font-size: calc(26px * var(--corps)); }
 }
 
 /* --- Le rembourrage des cartes : trois tailles de bloc, trois valeurs -----
@@ -2880,17 +3932,27 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    declarent pas leur propre rembourrage. */
 :is(main, .reader) .bg-white:not([class*="p-"]):not(.rail > *):not(.panneau-pays) { padding: 1rem; }
 :is(main, .reader) .bg-white[class~="p-4"] { padding: 1rem; }
-:is(main, .reader) .bg-white[class~="p-5"] { padding: 1.25rem; }
+:is(main, .reader) .bg-white[class~="p-5"] { padding: 1rem; }
 :is(main, .reader) .bg-white[class~="p-6"] { padding: 1.5rem; }
-:is(main, .reader) .bg-white[class~="p-8"] { padding: 2rem; }
+:is(main, .reader) .bg-white[class~="p-8"] { padding: 24px; }
 @media (min-width: 768px) {
-  :is(main, .reader) .bg-white[class~="md:p-8"]  { padding: 2rem; }
+  :is(main, .reader) .bg-white[class~="md:p-8"]  { padding: 24px; }
   :is(main, .reader) .bg-white[class~="md:p-10"] { padding: 2.5rem; }
-  :is(main, .reader) .bg-white[class~="md:p-12"] { padding: 3rem; }
+  :is(main, .reader) .bg-white[class~="md:p-12"] { padding: 40px; }
 }
 
-/* --- Le rythme vertical : un seul ecart entre blocs de premier rang ------ */
-:is(main, .reader) > div > * + * { margin-block-start: 3.5rem; }
+/* --- Le rythme vertical : un seul ecart entre blocs de premier rang ------
+
+   Cette regle posait 3,5 rem, soit 56 px — une valeur qui n'a jamais figure sur
+   l'echelle du site (8 / 16 / 24 / 40). Et depuis que la pile de section est
+   passee en colonne flexible pour renvoyer les exports en pied, ces 56 px
+   S'AJOUTAIENT aux 40 px d'ecart de la pile : 96 px entre chaque bloc, partout.
+   Mesure sur Donnees : quinze intervalles a 96 px, soit plus de huit cents
+   pixels de vide sur une seule section.
+
+   L'ecart revient donc au pas de l'echelle, et une seule fois : la pile
+   flexible porte le sien, les autres conteneurs gardent la marge.          */
+:is(main, .reader) > *:not([class*="space-y-8"]) > * + * { margin-block-start: var(--pas-4); }
 
 /* --- Les filets de separation : une seule epaisseur, une seule teinte ---- */
 :is(main, .reader) :is(hr, .border-t, .border-b) { border-color: var(--rule); }
@@ -3106,7 +4168,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
 :is(main, .reader) .prose-liste,
 :is(main, .reader) ul.liste-point {
   list-style: none;
-  padding-inline-start: 1.15rem;
+  padding-inline-start: 1rem;
 }
 :is(main, .reader) :is(.prose-liste, ul.liste-point) > li {
   position: relative;
@@ -3195,14 +4257,14 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
     { padding-inline: 1rem !important; }
   /* une carte dans une carte */
   :is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4)
-    { padding-inline: .75rem !important; }
+    { padding-inline: 8px!important; }
   /* et ainsi de suite */
   :is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4)
-    { padding-inline: .55rem !important; }
+    { padding-inline: 8px!important; }
   :is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4)
-    { padding-inline: .45rem !important; }
+    { padding-inline: 8px!important; }
   :is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4) :is(.p-8, .p-7, .p-6, .p-5, .p-4, .px-7, .px-6, .px-5, .px-4)
-    { padding-inline: .4rem !important; }
+    { padding-inline: 8px!important; }
 }
 
 /* Le bandeau de l'Atlas sur téléphone.
@@ -3217,7 +4279,7 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    colonnes : dix questions tiennent en cinq rangs au lieu de dix.
    L'assise suit le même principe, deux colonnes plutôt qu'une pile. */
 @media (max-width: 767px) {
-  .scene-flux-texte { padding: 1.15rem 1.15rem 1.35rem; }
+  .scene-flux-texte { padding: 1rem 1rem 24px; }
 
   /* La bascule se resserre d'un cran sur téléphone. Elle vaut 13 px et 40 px de
      haut sur grand écran, où la place existe ; à 375 px, dans une colonne de
@@ -3233,22 +4295,193 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
      reçoit 166 px, dont 143 pour le texte — la plupart des questions y tiennent
      sur une ligne, les plus longues sur deux, et le bouton reste à son plancher. */
   .scene-flux-texte nav .grid {
-    gap: .35rem;
+    gap: 4px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   /* L'assise passe en deux colonnes plutôt qu'en pile : quatre nombres sur
      quatre lignes prenaient 124 px pour dire quatre chiffres. */
-  .assise { gap: .55rem 1.1rem; }
+  .assise { gap: 8px 1rem; }
   .assise li { flex: 0 0 calc(50% - .55rem); }
-  .assise-n { font-size: 1.2rem; }
+  .assise-n { font-size: calc(17px * var(--corps)); }
 
-  .scene-flux-source { margin-top: .85rem; font-size: 11px; }
-  .scene-flux-coupure { margin: 1.1rem 0 .95rem; }
+  .scene-flux-source { margin-top: 1rem; }
+  .scene-flux-coupure { margin: 1rem 0 1rem; }
 }
 
 /* Sous 360 px, une colonne de 152 px ne laisse plus de quoi lire une question :
    les questions reprennent la file simple. */
 @media (max-width: 359px) {
   .scene-flux-texte nav .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- L'ÉDITION DE NUIT --------------------------------------------
+
+   Dérivée de l'édition de jour par le calcul, jamais à l'œil, et vérifiée sur
+   les mêmes cibles de contraste : voir scripts/composer-la-nuit.mjs. On ne
+   renverse pas une palette — inverser la luminosité donne des couleurs qui
+   passent le contraste et sonnent faux. On dérive PAR RÔLE, à teinte tenue.
+
+   Le fond garde la teinte du papier de jour (68°) : deux tirages de la
+   même famille, pas un site clair et un site froid.
+
+   DEUX ÉTATS, ET LE JOUR PAR DÉFAUT. Il y avait un troisième réglage, « système »,
+   qui suivait `prefers-color-scheme` — et comme la plupart des appareils sont en
+   sombre, presque tout le monde arrivait de nuit sur un site conçu pour le
+   papier. Le défaut est donc le jour, franchement, et la nuit se choisit.
+   Conséquence : plus une seule règle de média ici. L'absence d'attribut vaut
+   jour ; `data-theme="nuit"` vaut nuit. Rien d'autre à arbitrer.            */
+
+:root[data-theme="nuit"] {
+  --paper:        #15120F;
+    --paper-raised: #211D1A;
+    --paper-sunk:   #0C0A07;
+    /* --reserve ne bascule pas. Son rôle, écrit dans sa propre note, est « le
+       blanc du texte posé sur un fond sombre » — et des fonds sombres existent
+       dans les deux tirages : le bandeau, la barre, le pied de page, les cartes
+       d'emphase. L'assombrir de nuit aurait posé du texte sombre sur eux. */
+    --reserve:      #FFFDF9;
+  
+    --ink:          #E9E7E5;
+    --ink-soft:     #C9C3BB;
+    --ink-mute:     #9C938A;
+    --muted:        #9C938A;
+    --label:        #A59D93;
+    --rule:         #34312D;
+    --rule-strong:  #494642;
+  
+    /* La carte d'emphase : de jour elle est sombre sur du clair, de nuit elle
+       devient l'aplat teinté de la section — sinon elle se confondrait avec la
+       carte ordinaire, ou creuserait un trou plus noir que la page. On pointe sur
+       --accent-soft plutôt que d'en recopier neuf valeurs : la section redéfinit
+       déjà cet aplat, et le plan la suit sans qu'on ait à le répéter. */
+    --plan-emphase: var(--accent-soft);
+    /* Le plan encré : bandeau, barre de navigation, pied de page, boutons actifs.
+       De jour c'est l'encre elle-même ; de nuit l'encre devient claire, et un plan
+       peint avec elle deviendrait le bloc le plus lumineux de la page. */
+    /* Valeur de repli seulement. Une propriété personnalisée se substitue là où
+     elle est DÉCLARÉE, pas là où elle est employée : écrite ici, `var(--accent-soft)`
+     se résout contre l'aplat de la racine, et le bandeau — la plus grande surface
+     du site — devenait neutre dans les neuf sections. Chacune repose donc la
+     sienne, plus bas. */
+  --plan-encre:   var(--accent-soft);
+    /* Sur ce plan, « creusé » veut dire plus lumineux : la variante claire y
+       tomberait à 3,0:1, l'accent creusé y tient 6,9 à 7,2:1. */
+    --accent-sur-plan: var(--accent-deep);
+  
+    /* L'accent par défaut recule. De jour, la racine porte le kola de la marque ;
+       de nuit, il se lisait à chaque page sans section — le pied, la barre, la
+       marque — et c'est lui qui donnait au site son air d'organisation. Il cède la
+       place à un graphite à peine teinté de la chaleur du papier : ce sont les neuf
+       teintes de section qui portent seules l'identité. */
+    --accent:        #98938F;
+    --accent-deep:   #B8B3AF;
+    --accent-soft:   #2C2824;
+    --accent-light:  #77726E;
+  
+    --lecture:       #A39180;
+    --lecture-deep:  #C3B19F;
+    --lecture-soft:  #332619;
+    --lecture-light: #81705F;
+  
+    --accent-2:       #4EA0AA;
+    --accent-2-soft:  #152D30;
+    --accent-2-light: #277E88;
+  
+    --ok:        #53A47B;
+    --ok-soft:   #1B2D23;
+    --warn:      #C78829;
+    --warn-ink:  #DC9C42;
+    --warn-soft: #322618;
+    --bad:       #EF6B61;
+    --bad-soft:  #362321;
+  
+    --tier-4: #57A87E;
+    --tier-3: #AC9753;
+    --tier-2: #D38658;
+    --tier-1: #F46F65;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="home"] {
+  --accent:       #8A94AC;
+  --accent-deep:  #AAB4CD;
+  --accent-soft:  #222838;
+  --accent-light: #6A738A;
+  --plan-encre:   #222838;
+  --plan-emphase: #222838;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="evidence"] {
+  --accent:       #9D8FA7;
+  --accent-deep:  #BDAEC7;
+  --accent-soft:  #2E2433;
+  --accent-light: #7B6E84;
+  --plan-encre:   #2E2433;
+  --plan-emphase: #2E2433;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="explorer"] {
+  --accent:       #799AA2;
+  --accent-deep:  #98B9C2;
+  --accent-soft:  #162C32;
+  --accent-light: #587880;
+  --plan-encre:   #162C32;
+  --plan-emphase: #162C32;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="mobilites"] {
+  --accent:       #AC8D90;
+  --accent-deep:  #CCACB0;
+  --accent-soft:  #362325;
+  --accent-light: #896B6F;
+  --plan-encre:   #362325;
+  --plan-emphase: #362325;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="atlas"] {
+  --accent:       #7E9B8C;
+  --accent-deep:  #9DBAAB;
+  --accent-soft:  #1A2D25;
+  --accent-light: #5D796C;
+  --plan-encre:   #1A2D25;
+  --plan-emphase: #1A2D25;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="governance"] {
+  --accent:       #9192AC;
+  --accent-deep:  #B0B2CC;
+  --accent-soft:  #262737;
+  --accent-light: #707189;
+  --plan-encre:   #262737;
+  --plan-emphase: #262737;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="data"] {
+  --accent:       #96967B;
+  --accent-deep:  #B6B69A;
+  --accent-soft:  #2A2A18;
+  --accent-light: #75755B;
+  --plan-encre:   #2A2A18;
+  --plan-emphase: #2A2A18;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="resources"] {
+  --accent:       #AB8F83;
+  --accent-deep:  #CBAEA1;
+  --accent-soft:  #35241C;
+  --accent-light: #886D62;
+  --plan-encre:   #35241C;
+  --plan-emphase: #35241C;
+}
+:root[data-theme="nuit"] :is(main, header, nav)[data-section="about"] {
+  --accent:       #8D95A5;
+  --accent-deep:  #ABB4C4;
+  --accent-soft:  #222936;
+  --accent-light: #6B7382;
+  --plan-encre:   #222936;
+  --plan-emphase: #222936;
+}
+
+/* L'emblème garde sa couleur propre — c'est tout l'objet de `.marque-emeraude` :
+   ne jamais prendre la teinte de la section qui l'héberge. Mais ses quatre
+   valeurs sont celles du jour, écrites en dur, et de nuit son aplat clair
+   (#D9F5E7) porterait de l'encre claire. On lui donne donc ses pas de nuit, dans
+   sa propre teinte : la marque reste verte, elle cesse d'être lumineuse. */
+:root[data-theme="nuit"] .marque-emeraude {
+  --accent:       #7E9B8C;
+  --accent-deep:  #9DBAAB;
+  --accent-soft:  #1A2D25;
+  --accent-light: #5F7B6D;
 }
