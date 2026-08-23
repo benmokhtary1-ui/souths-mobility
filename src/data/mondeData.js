@@ -142,3 +142,40 @@ export const PREMIERES_DESTINATIONS = [
   { pays: { fr: 'Türkiye', en: 'Türkiye' }, migrants: 7_100_000 },
   { pays: { fr: 'Italie', en: 'Italy' }, migrants: 6_600_000 },
 ];
+
+// --- 7. La part intra-africaine, sur le périmètre de l'Union africaine ------
+//
+// Les parts publiées ne portent jamais sur les 54 États : UN DESA raisonne sur
+// l'Afrique subsaharienne (51 pays), le rapport UA/OIT de 2021 sur un ensemble
+// dont l'Afrique méditerranéenne est absente. Cette ligne-ci est calculée sur
+// la matrice bilatérale d'UN DESA par `scripts/calculer-l-intra-africain.mjs`,
+// exactement sur le périmètre que la plateforme rend — Sahara occidental versé
+// au Maroc, comme partout ailleurs sur ce site.
+//
+// La méthode est contrôlée dans le script : appliquée à l'agrégat « Afrique
+// subsaharienne », elle retrouve les 64 % publiés (63,8 %, soit 0,19 point
+// d'arrondi). Relancer le script après toute mise à jour de la matrice.
+export const INTRA_AFRICAIN_UA = {
+  perimetre: { fr: 'les 54 États de l’Union africaine', en: 'the 54 African Union member states' },
+  annee: 2024,
+  partants: 45_740_765,          // nés dans un État de l'UA, vivant hors de leur pays
+  dansUnAutreEtatUA: 24_895_606,
+  horsDuContinent: 20_845_159,
+  part: 54.4,                    // %
+  partHorsContinent: 45.6,
+  // Ce que la même méthode donne sur le périmètre d'UN DESA, pour comparaison.
+  partAfriqueSubsaharienne: 63.8,
+  calculePar: 'scripts/calculer-l-intra-africain.mjs',
+  // La même mesure aux trois derniers millésimes. Elle établit une chose que le
+  // site ne disait pas : la part intra-africaine MONTE. Le mouvement est lent
+  // et régulier, un point et demi en neuf ans, et il va dans le sens inverse du
+  // récit d'un continent qui se viderait vers le Nord.
+  serie: [
+    { annee: 2015, partants: 34_650_195, intra: 17_984_139, part: 51.9 },
+    { annee: 2020, partants: 39_997_124, intra: 21_195_139, part: 53.0 },
+    { annee: 2024, partants: 45_740_765, intra: 24_895_606, part: 54.4 },
+  ],
+  // Ces deux évolutions étaient déjà annoncées par le site, d'après l'OIM ; le
+  // calcul sur la matrice les confirme à un dixième près.
+  croissanceIntra: { de2020: 17.5, de2015: 38.4 },
+};

@@ -44,7 +44,7 @@ const toCSV = (rows) => {
 const CsvButton = ({ onClick, label, className = '' }) => (
   <button
     onClick={onClick}
-    className={`inline-flex items-center gap-2 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-4 py-2 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0 print:hidden ${className}`}
+    className={`barre-section-csv inline-flex items-center gap-2 px-4 py-2 rounded-sm font-bold text-xs shrink-0 print:hidden ${className}`}
   >
     <Download className="w-3.5 h-3.5" /> <span>{label}</span>
   </button>
@@ -289,8 +289,8 @@ const PLAIN_TERMS = {
   },
   intraafricain: {
     label: { fr: 'intra-africain', en: 'intra-African' },
-    fr: "Qui se passe à l’intérieur du continent, d’un pays africain à un autre. C’est le cas de 64 % des personnes nées en Afrique subsaharienne et installées hors de leur pays, contre 45 % pour l’ensemble du monde.",
-    en: 'Happening inside the continent, from one African country to another. That is the case for 64 per cent of people born in Sub-Saharan Africa and settled outside their country, against 45 per cent worldwide.',
+    fr: "Qui se passe à l’intérieur du continent, d’un pays africain à un autre. C’est le cas de 54,4 % des personnes nées dans un État de l’Union africaine et installées hors de leur pays — un partant sur deux, et non sept sur dix.",
+    en: 'Happening inside the continent, from one African country to another. That is the case for 54.4 per cent of people born in an African Union member state and settled outside their country — one departure in two, not seven in ten.',
   },
   hcr: {
     label: { fr: 'HCR', en: 'UNHCR' },
@@ -1764,8 +1764,8 @@ const AspirationGap = ({ lang }) => {
             {L("Ce que l’écart démontre", 'What the gap demonstrates')}
           </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "Soixante pour cent de ceux qui envisagent de partir nomment l’Amérique du Nord ou l’Europe. Or, dans les faits, plus de sept migrants d’origine africaine sur dix restent sur le continent. Ce décalage est la définition même de la capabilité. L’aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c’est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l’aspiration sans mesurer la capacité produit le récit de l’invasion ; mesurer la capacité sans l’aspiration produit celui de l’immobilité. Il faut les deux (Ben Mokhtar, 2026).",
-              'Sixty per cent of those considering leaving name North America or Europe. Yet in fact more than seven in ten migrants of African origin stay on the continent. That gap is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
+              "Soixante pour cent de ceux qui envisagent de partir nomment l’Amérique du Nord ou l’Europe. Dans les faits, 54,4 % des partants africains restent sur le continent. Ce décalage est la définition même de la capabilité. L’aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c’est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri. Mesurer l’aspiration sans mesurer la capacité produit le récit de l’invasion ; mesurer la capacité sans l’aspiration produit celui de l’immobilité. Il faut les deux (Ben Mokhtar, 2026).",
+              'Sixty per cent of those considering leaving name North America or Europe. In fact 54.4 per cent of African migrants stay on the continent. That gap is the very definition of capability. Aspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting. Measuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
             )}</Prose>
         </div>
       </div>
@@ -1796,8 +1796,11 @@ const ProportionGap = ({ lang }) => {
     {
       title: L('Les migrants dans la population', 'Migrants within the population'),
       rows: [
-        { label: L('Migrants dans la population mondiale', 'Migrants in the world population'), value: 3.6, note: '3,6 %' },
-        { label: L('Migrants dans la population africaine', 'Migrants in Africa’s population'), value: 2, note: '~2 %' },
+        // 3,7 % est la valeur publiee pour 2024 ; 1,9 % est le rapport calcule
+        // sur la base pays — 28,9 millions de migrants presents pour 1,485
+        // milliard d'habitants. Les deux etaient arrondis a la louche.
+        { label: L('Migrants dans la population mondiale', 'Migrants in the world population'), value: 3.7, note: '3,7 %' },
+        { label: L('Migrants dans la population africaine', 'Migrants in Africa’s population'), value: 1.9, note: '1,9 %' },
       ],
     },
   ];
@@ -2746,7 +2749,7 @@ const t = {
       home_editorial: {
         badge: "Note de cadrage scientifique",
         title: "Pourquoi ce hub de connaissances ?",
-        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s’élève à environ 304 millions de personnes en 2024, soit 3,6 % de la population mondiale — une proportion restée remarquablement stable depuis 1990 (UN DESA, 2024). Sur ce total, l’Afrique n’accueille qu’environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial. C’est loin derrière l’Europe et l’Asie, et bien en deçà du poids démographique du continent — près de 18 % de la population mondiale. Il s’agit ici du stock de migrants présents en Afrique, non de l’émigration africaine : plus de sept migrants d’origine africaine sur dix restent d’ailleurs sur le continent (UA/OIT/OIM/CEA, 2021).",
+        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s’élève à 304 millions de personnes en 2024, soit 3,7 % de la population mondiale — une part qui n’a que modestement augmenté depuis 1990, où elle valait 2,9 % (UN DESA, 2024). Sur ce total, l’Afrique accueille environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial : loin derrière l’Europe et l’Asie, et en deçà du poids démographique du continent, proche de 18 % de la population mondiale. Il s’agit ici du stock de migrants présents en Afrique, et non de l’émigration africaine : sur ce second plan, 54,4 % des personnes nées dans un État de l’Union africaine et parties de leur pays résident dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L’attention s’y concentre de manière disproportionnée sur les traversées vers l’Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l’essentiel de la mobilité forcée sur le continent se joue à l’intérieur des frontières nationales. L’Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C’est davantage que tous les migrants internationaux présents sur l’ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l’intérieur d’un pays. Elle ne produit ni image de traversée, ni statistique d’entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d’un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s’impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d’UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c’est l’instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l’OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
         p2: "Un cadre théorique plus large éclaire ce constat. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s’écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d’en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l’asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
@@ -2824,7 +2827,7 @@ const t = {
       download_indicators: "Télécharger la matrice (CSV)",
       debunk_cards: [
         { myth: "L’explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9% depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
-        { myth: "L’Afrique migre massivement vers l’Europe.", real: "Les migrations intra-africaines dominent à 70%.", stat_text: "70% (2021)", stat_val: 70, color: "bg-teal-700", desc: "Rapport UA/OIT (2021) : 70% des mobilités internationales africaines s’effectuent au sein du continent même (ex: Côte d’Ivoire, Afrique du Sud, Nigéria)." },
+        { myth: "L’Afrique migre massivement vers l’Europe.", real: "Un partant sur deux reste sur le continent.", stat_text: "54,4 % (2024)", stat_val: 54.4, color: "bg-teal-700", desc: "Calcul sur la matrice bilatérale d’UN DESA (2024), 54 États de l’Union africaine : sur 45,7 millions de personnes nées dans un État africain et vivant hors de leur pays, 24,9 millions résident dans un autre État africain." },
         { myth: "Le Nord accueille l’écrasante majorité des réfugiés.", real: "76% des réfugiés restent dans les pays du Sud.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
         { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45% à 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l’économie autonome du soin et du commerce transfrontalier." },
         { myth: "L’Afrique dépend financièrement de l’Aide Publique.", real: "86,4 milliards $ d’envois de fonds dépassent l’APD.", stat_text: "86.4 Mrd $ (2019)", stat_val: 85, color: "bg-amber-600", desc: "Banque mondiale / UA (2021) : Les transferts de la diaspora (86,4 Mrd $ en 2019) dépassent largement l’aide publique au développement (APD) et constituent le premier capital de résilience." },
@@ -3067,7 +3070,7 @@ const t = {
       home_editorial: {
         badge: "Scientific Framing Note",
         title: "Why this Knowledge Hub?",
-        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world’s international migrant stock stands at roughly 304 million people in 2024, or 3.6% of the world’s population — a share that has remained remarkably stable since 1990 (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil — 9.5% of the world stock. That is far behind Europe and Asia, and well below the continent’s demographic weight, close to 18% of the world’s population. This is the stock of migrants present in Africa, not African emigration: more than seven in ten migrants of African origin in fact remain on the continent (AU/ILO/IOM/ECA, 2021).",
+        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world’s international migrant stock stands at 304 million people in 2024, or 3.7 per cent of the world’s population — a share that has risen only modestly since 1990, when it stood at 2.9 per cent (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil, or 9.5 per cent of the world stock: far behind Europe and Asia, and below the continent’s demographic weight, close to 18 per cent of the world’s population. This is the stock of migrants present in Africa, not African emigration: on that second count, 54.4 per cent of people born in an African Union member state who left their country reside in another African state (computed from UN DESA’s bilateral matrix, 2024).",
         p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). Africa’s largest form of mobility therefore unfolds entirely inside a single country: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA’s operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
         p2: "A broader theoretical framework lights this observation. Research on \"capabilities of movement\" places mobility and immobility on a single continuum: that of aspirations and of the capabilities people can actually exercise. It thereby departs from the usual split between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
@@ -3145,7 +3148,7 @@ const t = {
       download_indicators: "Download Matrix (CSV)",
       debunk_cards: [
         { myth: "Unstoppable African migration explosion.", real: "Continental proportion remains stable (~1.9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024): The proportion of international African migrants relative to the continent’s population has hovered around 1.9% since 1990. Absolute volume increases reflect total population growth." },
-        { myth: "Africa is massively invading Europe.", real: "Intra-African migrations dominate at 70%.", stat_text: "70% (2021)", stat_val: 70, color: "bg-teal-700", desc: "AU/ILO Report (2021): 70% of international African mobilities take place within the continent itself (e.g. Côte d’Ivoire, South Africa, Nigeria)." },
+        { myth: "Africa is massively invading Europe.", real: "One departure in two stays on the continent.", stat_text: "54.4% (2024)", stat_val: 54.4, color: "bg-teal-700", desc: "Computed from UN DESA’s bilateral matrix (2024) across the 54 African Union member states: of 45.7 million people born in an African state and living outside their country, 24.9 million reside in another African state." },
         { myth: "The North hosts the vast majority of refugees.", real: "76% of world refugees remain in Southern countries.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025): Over three-quarters of people fleeing armed conflicts find safety in neighboring developing nations (e.g. Uganda, Chad, Ethiopia)." },
         { myth: "African migration is almost exclusively male.", real: "Structural feminization of flows (45% to 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / AU (2021): Women account for nearly half of international migrants in Africa, reshaping autonomous care and cross-border trade economies." },
         { myth: "Africa financially depends on Official Aid.", real: "$86.4 billion in remittances far exceed ODA.", stat_text: "$86.4B (2019)", stat_val: 85, color: "bg-amber-600", desc: "World Bank / AU (2021): Diaspora remittances ($86.4B in 2019) far surpass Official Development Assistance (ODA), serving as primary resilience capital." },
@@ -6327,6 +6330,10 @@ const GovernanceCross = ({ lang }) => {
             {showTable && (
               <div className="overflow-x-auto border border-slate-200 mt-2">
                 <table className="w-full text-[12px]">
+                  <caption className="table-titre">
+                    {L("Les États du bloc, par rang de gouvernance : classement IIAG sur 54, ouverture des visas et score d’ancrage continental.",
+                       "The bloc’s member states, ranked by governance: IIAG rank out of 54, visa openness and continental anchoring score.")}
+                  </caption>
                   <thead>
                     <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
                       <th scope="col" className="text-start font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
@@ -6677,6 +6684,34 @@ const ReservePerimetre = ({ lang }) => {
   );
 };
 
+
+// La bande de chiffres qui ouvre une section : trois grandeurs au plus, chacune
+// avec son unité, ce qu'elle compte, et d'où elle vient.
+//
+// Deux bandes existaient dans la seule section Mobilités, à deux corps, deux
+// traitements de libellé et deux jeux d'écarts. La forme est désormais dans la
+// feuille de style (`.bande-chiffres`) et le composant ne fait que la remplir.
+//
+// `source` n'est pas facultative : un chiffre sans provenance n'est pas une
+// donnée sur cette plateforme. Le composant l'accepte vide, mais le relevé de
+// provenance la cherchera.
+const BandeChiffres = ({ chiffres, lang, className = '' }) => (
+  <div className={`bande-chiffres ${className}`}>
+    {chiffres.map((c, i) => (
+      <div key={i}>
+        <span className="bande-chiffre-n">
+          {c.valeur}
+          {/* L'espace est dans le texte, pas seulement dans la marge : sans lui,
+              un copier-coller donne « 29millions ». */}
+          {c.unite && <span className="bande-chiffre-u"> {tr(c.unite, lang)}</span>}
+        </span>
+        <span className="bande-chiffre-l">{tr(c.quoi, lang)}</span>
+        {c.source && <span className="bande-chiffre-s">{tr(c.source, lang)}</span>}
+      </div>
+    ))}
+  </div>
+);
+
 // Provenance
 // ---------------------------------------------------------------------------
 // Huit blocs de sources ecrits a la main, chacun en bande teintee de 80 a 145 px,
@@ -6840,20 +6875,20 @@ const TabForced = ({ text, lang, children }) => {
 
       {/* Releve de tete */}
       <Reveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200 stagger">
-          {[
-            { v: fmt(data.totalConflict), l: L('Déplacés par un conflit', 'Displaced by conflict'), s: L(`dans ${data.conflict.length} pays`, `across ${data.conflict.length} countries`), tone: 'figure-warn' },
-            { v: fmt(data.totalDisaster), l: L('Déplacés par une catastrophe', 'Displaced by disaster'), s: L(`dans ${data.disaster.length} pays`, `across ${data.disaster.length} countries`), tone: 'figure-inkblue' },
-            { v: `${data.kampalaRatified}/${data.total}`, l: L('Ont ratifié Kampala', 'Have ratified Kampala'), s: L('le seul traité contraignant au monde', 'the world’s only binding treaty'), tone: 'figure-ok' },
-            { v: `${data.refOnly.length}`, l: L('Protègent le réfugié, pas le déplacé', 'Protect the refugee, not the displaced'), s: L('ratifient 1969 sans Kampala', 'ratify 1969 without Kampala'), tone: 'figure-terra' },
-          ].map((k, i) => (
-            <div key={i} className="px-5 py-6">
-              <div className={`text-2xl md:text-3xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
-              <span className="block text-[10px] font-bold uppercase tracking-widest mt-2.5 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
-              <span className="block text-[10px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
-            </div>
-          ))}
-        </div>
+        <BandeChiffres lang={lang} className="stagger" chiffres={[
+          { valeur: fmt(data.totalConflict),
+            quoi: { fr: 'personnes déplacées par un conflit à l’intérieur de leur pays', en: 'people displaced by conflict inside their own country' },
+            source: L(`IDMC, GRID 2025 — dans ${data.conflict.length} pays`, `IDMC, GRID 2025 — across ${data.conflict.length} countries`) },
+          { valeur: fmt(data.totalDisaster),
+            quoi: { fr: 'personnes déplacées par une catastrophe, sans quitter leur pays', en: 'people displaced by disaster, without leaving their country' },
+            source: L(`IDMC, GRID 2025 — dans ${data.disaster.length} pays`, `IDMC, GRID 2025 — across ${data.disaster.length} countries`) },
+          { valeur: `${data.kampalaRatified}/${data.total}`,
+            quoi: { fr: 'États ont ratifié la Convention de Kampala', en: 'states have ratified the Kampala Convention' },
+            source: { fr: 'le seul traité contraignant au monde sur le déplacement interne', en: 'the world’s only binding treaty on internal displacement' } },
+          { valeur: `${data.refOnly.length}`,
+            quoi: { fr: 'États protègent le réfugié mais pas le déplacé interne', en: 'states protect the refugee but not the internally displaced' },
+            source: { fr: 'ils ratifient la Convention de 1969 sans Kampala', en: 'they ratify the 1969 Convention without Kampala' } },
+        ]} />
       </Reveal>
 
       {/* Le continent d’abord : la masse du deplacement interne se voit d’un
@@ -7034,7 +7069,6 @@ const TabForced = ({ text, lang, children }) => {
           )}</Prose>
       </Reveal>
 
-      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Mobilités contraintes', 'Forced mobility')} />
     </div>
   );
 };
@@ -7059,14 +7093,18 @@ const TabForced = ({ text, lang, children }) => {
 // leurs sources different — mais ils se lisent sous un meme toit, et l’on passe
 // de l’un a l’autre sans revenir au menu. Aucun contenu n’a ete deplace : ce
 // sont les memes composants, sous une entree commune.
+// Les libellés des volets vivent hors du composant : la bascule les affiche,
+// le pied de citation les imprime, et les deux doivent dire la même chose.
+const VOLETS_MOBILITES = {
+  contraintes: { fr: 'Mobilités contraintes', en: 'Forced mobility', ar: 'التنقلات القسرية' },
+  travail:     { fr: 'Migration de travail', en: 'Labour migration', ar: 'هجرة العمل' },
+  corridors:   { fr: 'Corridors', en: 'Corridors', ar: 'الممرات' },
+  climat:      { fr: 'Mobilité climatique', en: 'Climate mobility', ar: 'التنقل المناخي' },
+};
+
 const TabMobilites = ({ text, lang, volet, setVolet }) => {
   const L = faireL(lang);
-  const volets = [
-    { cle: 'contraintes', label: { fr: 'Mobilités contraintes', en: 'Forced mobility', ar: 'التنقلات القسرية' } },
-    { cle: 'travail', label: { fr: 'Migration de travail', en: 'Labour migration', ar: 'هجرة العمل' } },
-    { cle: 'corridors', label: { fr: 'Corridors', en: 'Corridors', ar: 'الممرات' } },
-    { cle: 'climat', label: { fr: 'Mobilité climatique', en: 'Climate mobility', ar: 'التنقل المناخي' } },
-  ];
+  const volets = Object.entries(VOLETS_MOBILITES).map(([cle, label]) => ({ cle, label }));
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
   const bascule = (
@@ -7267,20 +7305,21 @@ const TabLabour = ({ text, lang, children }) => {
       </div>
 
       <Reveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200 stagger">
-          {[
-            { v: '13,1 M', l: L('Travailleurs migrants', 'Migrant workers'), s: L('en 2022, contre 9,3 M en 2010', 'in 2022, against 9.3M in 2010'), tone: 'figure-terra' },
-            { v: '64 %', l: L('Des migrants en âge de travailler sont actifs', 'Of working-age migrants are in the labour force'), s: L('sur 20,4 M', 'of 20.4M'), tone: 'figure-inkblue' },
-            { v: `${ilo.complet.length}/${ilo.total}`, l: L('Ont ratifié les 11 conventions fondamentales', 'Have ratified all 11 fundamental conventions'), s: L("le socle des droits au travail", 'the floor of labour rights'), tone: 'figure-warn' },
-            { v: '19,1 %', l: L('De la population couverte par une protection sociale', 'Of the population covered by social protection'), s: L('contre 52,4 % dans le monde', 'against 52.4% worldwide'), tone: 'figure-ok' },
-          ].map((k, i) => (
-            <div key={i} className="px-5 py-6">
-              <div className={`text-2xl md:text-3xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
-              <span className="block text-[11px] font-bold uppercase tracking-widest mt-2.5 leading-snug" style={{ color: 'var(--label)' }}>{k.l}</span>
-              <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
-            </div>
-          ))}
-        </div>
+        <BandeChiffres lang={lang} className="stagger" chiffres={[
+          { valeur: '13,1', unite: { fr: 'millions', en: 'million' },
+            quoi: { fr: 'travailleurs migrants en Afrique', en: 'migrant workers in Africa' },
+            source: { fr: 'UA/OIT/OIM, 4e édition, données 2022 — contre 9,3 millions en 2010',
+                      en: 'AU/ILO/IOM, 4th edition, 2022 data — against 9.3 million in 2010' } },
+          { valeur: '64', unite: { fr: '%', en: '%' },
+            quoi: { fr: 'des migrants en âge de travailler sont dans la population active', en: 'of working-age migrants are in the labour force' },
+            source: { fr: 'sur 20,4 millions de migrants en âge de travailler', en: 'of 20.4 million working-age migrants' } },
+          { valeur: `${ilo.complet.length}/${ilo.total}`,
+            quoi: { fr: 'États ont ratifié les onze conventions fondamentales de l’OIT', en: 'states have ratified all eleven fundamental ILO conventions' },
+            source: { fr: 'OIT, base NORMLEX', en: 'ILO, NORMLEX database' } },
+          { valeur: '19,1', unite: { fr: '%', en: '%' },
+            quoi: { fr: 'de la population africaine couverte par une protection sociale', en: 'of the African population covered by social protection' },
+            source: { fr: 'contre 52,4 % dans le monde — OIT', en: 'against 52.4% worldwide — ILO' } },
+        ]} />
       </Reveal>
 
       {/* Migration de travail : exploitation directe des deux dernieres editions. */}
@@ -7311,6 +7350,10 @@ const TabLabour = ({ text, lang, children }) => {
           {/* Releve comparatif : uniquement les points effectivement publies. */}
           <div className="bg-white border border-slate-200 overflow-x-auto">
             <table className="w-full text-[13px]">
+              <caption className="table-titre">
+                {L("Relevé comparatif des deux dernières éditions du rapport continental sur les statistiques de migration de travail.",
+                   "Comparative reading of the last two editions of the continental report on labour migration statistics.")}
+              </caption>
               <thead>
                 <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
                   <th scope="col" className="text-start font-semibold px-4 py-2.5 text-slate-700">{L("Indicateur", "Indicator")}</th>
@@ -7449,6 +7492,10 @@ const TabLabour = ({ text, lang, children }) => {
   
               <div className="overflow-x-auto border border-slate-200">
                 <table className="w-full text-[12px]">
+                  <caption className="table-titre">
+                    {L("Conventions de l’OIT ratifiées par pays, réparties entre conventions fondamentales, de gouvernance et techniques.",
+                       "ILO conventions ratified by country, split between fundamental, governance and technical conventions.")}
+                  </caption>
                   <thead>
                     <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
                       <th scope="col" className="text-start font-semibold px-3 py-2 text-slate-700">{L('Pays', 'Country')}</th>
@@ -7523,7 +7570,6 @@ const TabLabour = ({ text, lang, children }) => {
         ]} />
       </Reveal>
 
-      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Migration de travail', 'Labour migration')} />
     </div>
   );
 };
@@ -7782,27 +7828,18 @@ const TabCorridors = ({ text, lang, children }) => {
         }}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
-        {[
-          { v: '≈ 25', u: L('millions', 'million', { ar: 'مليون' }),
-            l: L("d’Africains vivent dans un autre pays africain", 'Africans live in another African country', { ar: 'أفريقي يعيشون في بلد أفريقي آخر' }),
-            s: L('UN DESA, mi-2024', 'UN DESA, mid-2024', { ar: 'الأمم المتحدة، منتصف 2024' }) },
-          { v: '+ 17', u: '%',
-            l: L('de plus qu’en 2020, et près de 39 % de plus qu’en 2015', 'more than in 2020, and nearly 39% more than in 2015', { ar: 'أكثر من 2020' }),
-            s: L('OIM, Rapport sur les migrations dans le monde 2026', 'IOM, World Migration Report 2026', { ar: 'المنظمة الدولية للهجرة، 2026' }) },
-          { v: '45,8', u: L('millions', 'million', { ar: 'مليون' }),
-            l: L("de migrants internationaux originaires d’Afrique, toutes destinations confondues", 'international migrants originating from Africa, all destinations', { ar: 'مهاجر دولي من أصل أفريقي' }),
-            s: L('UN DESA, mi-2024', 'UN DESA, mid-2024', { ar: 'الأمم المتحدة، منتصف 2024' }) },
-        ].map((k, i) => (
-          <div key={i} className="px-6 py-7">
-            <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
-              {k.v}{k.u && <span className="text-lg font-semibold ms-1.5" style={{ color: 'var(--label)' }}>{k.u}</span>}
-            </div>
-            <span className="block mt-3 text-[13px] leading-snug text-slate-700">{k.l}</span>
-            <span className="block mt-2 text-[11px]" style={{ color: 'var(--label)' }}>{k.s}</span>
-          </div>
-        ))}
-      </div>
+      <BandeChiffres lang={lang} chiffres={[
+        { valeur: '≈ 25', unite: { fr: 'millions', en: 'million', ar: 'مليون' },
+          quoi: { fr: 'd’Africains vivent dans un autre pays africain', en: 'Africans live in another African country' },
+          source: { fr: 'UN DESA, mi-2024', en: 'UN DESA, mid-2024' } },
+        { valeur: '+ 17', unite: { fr: '%', en: '%' },
+          quoi: { fr: 'de plus qu’en 2020 — et la part intra-africaine monte : 51,9 % en 2015, 53,0 % en 2020, 54,4 % en 2024',
+                  en: 'more than in 2020 — and the intra-African share is rising: 51.9% in 2015, 53.0% in 2020, 54.4% in 2024' },
+          source: { fr: 'Calcul sur la matrice bilatérale d’UN DESA, 2024', en: 'Computed from UN DESA’s bilateral matrix, 2024' } },
+        { valeur: '45,7', unite: { fr: 'millions', en: 'million' },
+          quoi: { fr: 'de migrants internationaux originaires d’Afrique, toutes destinations confondues', en: 'international migrants originating from Africa, all destinations' },
+          source: { fr: 'UN DESA, mi-2024', en: 'UN DESA, mid-2024' } },
+      ]} />
 
       <MovementOpener
         n="01"
@@ -7930,8 +7967,8 @@ const TabCorridors = ({ text, lang, children }) => {
         />
 
         <Prose className="text-sm text-slate-600 mt-5" lang={lang}>{L(
-          "L’Afrique subsaharienne est à 64 %, au-dessus de la moyenne mondiale et derrière l’Europe, dont 74 % des natifs partis vivent dans un autre pays européen. À l’autre bout, trois régions envoient l’essentiel de leur diaspora au-delà de leurs frontières régionales : l’Asie centrale et du Sud (75 % hors région), l’Amérique du Nord (73 %) et l’Amérique latine et les Caraïbes (71 %).",
-          "Sub-Saharan Africa stands at 64 per cent, above the world average and behind Europe, 74 per cent of whose emigrants live in another European country. At the other end, three regions send most of their diaspora beyond their regional borders: Central and Southern Asia (75 per cent outside the region), Northern America (73 per cent) and Latin America and the Caribbean (71 per cent)."
+          "L’Afrique subsaharienne est à 64 %, au-dessus de la moyenne mondiale et derrière l’Europe, dont 74 % des natifs partis vivent dans un autre pays européen. Ce 64 % ne décrit toutefois pas le périmètre de cette plateforme : recalculée sur les 54 États de l’Union africaine, Afrique méditerranéenne comprise, la part intra-africaine tombe à 54,4 %. À l’autre bout, trois régions envoient l’essentiel de leur diaspora au-delà de leurs frontières régionales : l’Asie centrale et du Sud (75 % hors région), l’Amérique du Nord (73 %) et l’Amérique latine et les Caraïbes (71 %).",
+          "Sub-Saharan Africa stands at 64 per cent, above the world average and behind Europe, 74 per cent of whose emigrants live in another European country. That 64 per cent does not describe this platform’s perimeter, however: recomputed across the 54 African Union member states, Mediterranean Africa included, the intra-African share falls to 54.4 per cent. At the other end, three regions send most of their diaspora beyond their regional borders: Central and Southern Asia (75 per cent outside the region), Northern America (73 per cent) and Latin America and the Caribbean (71 per cent)."
         )}</Prose>
 
         <Prose className="text-sm text-slate-600 mt-4" lang={lang}>{L(
@@ -7944,7 +7981,6 @@ const TabCorridors = ({ text, lang, children }) => {
                          "The 7-million threshold is the one the publication gives for all corridors it does not itemise; it does not report a value for the Sub-Saharan Africa – Europe corridor.")} />
       </Reveal>
 
-      <PrintCitationFooter lang={lang} tab="mobilites" sectionLabel={L('Corridors intra-africains', 'Intra-African corridors')} />
     </div>
   );
 };
@@ -9840,7 +9876,16 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
             {matrixView === 'table' && (
               <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden animate-in fade-in">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-start border-collapse text-sm">
+                  <table className="w-full text-start">
+                    {/* La légende nomme ce que le tableau montre. Elle est aussi son
+                        nom accessible : sans elle, un lecteur d’écran annonce « tableau,
+                        cinq colonnes » et rien d’autre. */}
+                    <caption className="table-titre">
+                      {/* TabGovernance compose avec `tr`, pas avec `L` : ce composant
+                          ne définit pas le raccourci. */}
+                      {tr({ fr: "Seuil de séjour légal sans visa et obligation de retour, pour les 54 États. Les valeurs viennent des textes nationaux en vigueur.",
+                            en: "Legal visa-free stay threshold and return obligation, for the 54 states. Values are drawn from the national instruments in force." }, lang)}
+                    </caption>
                     <thead>
                       <tr className="bg-slate-100 border-b border-slate-200 text-slate-600">
                         <th scope="col" className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest">{tr({ fr: "Région", en: "Region" }, lang)}</th>
@@ -10217,8 +10262,8 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
       <div className="space-y-8">
         {noResults ? (
-          <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
-            <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+          <div className="etat-vide">
+            <Search aria-hidden="true" />
             <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucune source ne correspond à votre recherche.", en: "No source matches your search." }, lang)}</Prose>
           </div>
         ) : (
@@ -10272,9 +10317,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                 <Prose className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl" lang={lang}>{text.indicator_desc}</Prose>
               </div>
             </div>
-            <button onClick={exportIndicatorsCSV} className="flex items-center space-x-2 rtl:space-x-reverse bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 px-5 py-2.5 rounded-sm font-bold text-xs transition-all border border-slate-300 shadow-sm shrink-0">
-              <Download className="w-4 h-4" /> <span>{text.download_indicators}</span>
-            </button>
+            <CsvButton onClick={exportIndicatorsCSV} label={text.download_indicators} className="shrink-0" />
           </div>
   
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
@@ -10512,7 +10555,7 @@ const Reperes = ({ lang, titre, chapeau, notions = [], colonnes = null, lignes =
                 <thead>
                   <tr style={{ backgroundColor: 'var(--paper-sunk)' }}>
                     {colonnes.map((c, i) => (
-                      <th scope="col" key={i} scope="col"
+                      <th scope="col" key={i}
                           className="text-start font-bold uppercase text-[9px] px-4 py-2.5 border-b border-slate-200"
                           style={{ letterSpacing: '.14em', color: 'var(--label)' }}>
                         {tr(c, lang)}
@@ -10621,15 +10664,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         }}
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
-        {headline.map((h, i) => (
-          <div key={i} className="px-5 py-6">
-            <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{h.val}</div>
-            <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block leading-snug">{h.lbl}</span>
-            <span className="text-[10px] text-slate-400 mt-1.5 block">{h.sub}</span>
-          </div>
-        ))}
-      </div>
+      <BandeChiffres lang={lang}
+        chiffres={headline.map(h => ({ valeur: h.val, quoi: h.lbl, source: h.sub }))} />
 
       <MovementOpener
         n="01"
@@ -11103,8 +11139,8 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
       </div>
 
       {noResults ? (
-        <div className="p-16 text-center bg-white border-2 border-dashed border-slate-300 rounded-xl">
-          <Search className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+        <div className="etat-vide">
+          <Search aria-hidden="true" />
           <Prose className="text-slate-500 text-sm" lang={lang}>{tr({ fr: "Aucun terme ne correspond à votre recherche.", en: "No term matches your search." }, lang)}</Prose>
         </div>
       ) : (
@@ -11265,19 +11301,15 @@ const TabMethodology = ({ text, lang, children }) => (
     />
     {children}
 
-    <div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 divide-x divide-y md:divide-y-0 divide-slate-200">
-      {[
-        { v: indicatorThemes.length, l: tr({ fr: "Axes thématiques", en: "Thematic axes" }, lang)},
-        { v: indicatorThemes.reduce((sum, th) => sum + th.items.length, 0), l: tr({ fr: "Indicateurs originaux", en: "Original indicators" }, lang)},
-        { v: Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length, l: tr({ fr: "Sources primaires", en: "Primary sources" }, lang)},
-        { v: Object.values(countryData).flat().length, l: tr({ fr: "Pays couverts (UA)", en: "Countries covered (AU)" }, lang)},
-      ].map((k, i) => (
-        <div key={i} className="px-5 py-6">
-          <div className="text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{k.v}</div>
-          <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-2.5 block">{k.l}</span>
-        </div>
-      ))}
-    </div>
+    <BandeChiffres lang={lang} chiffres={[
+      { valeur: indicatorThemes.length, quoi: { fr: 'axes thématiques', en: 'thematic axes' } },
+      { valeur: indicatorThemes.reduce((sum, th) => sum + th.items.length, 0),
+        quoi: { fr: 'indicateurs construits pour la plateforme', en: 'indicators built for the platform' } },
+      { valeur: Object.keys(text.method).filter(k => /^s\d+$/.test(k)).length,
+        quoi: { fr: 'sources primaires mobilisées', en: 'primary sources drawn upon' } },
+      { valeur: Object.values(countryData).flat().length,
+        quoi: { fr: 'États couverts, soit tous les membres de l’Union africaine', en: 'states covered — every African Union member' } },
+    ]} />
 
     {/* Chaîne de traitement */}
     <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
@@ -11845,8 +11877,8 @@ const TabAbout = ({ text, lang, children }) => {
             <h3 className="flex items-center text-xs font-bold uppercase tracking-widest text-slate-500 mb-4">
               <Sparkles className="w-4 h-4 me-2 text-amber-500" /> {tr({ fr: "Récemment enrichi", en: "Recently Enriched" }, lang)}
             </h3>
-            <div className="border border-dashed border-slate-300 rounded-lg py-8 px-6 flex flex-col items-center justify-center text-center bg-slate-50/50">
-              <Clock className="w-5 h-5 text-slate-300 mb-3" />
+            <div className="etat-vide">
+              <Clock aria-hidden="true" />
               <Prose className="text-sm font-serif font-bold text-slate-500" lang={lang}>{tr({ fr: "À venir", en: "Coming soon" }, lang)}</Prose>
               <Prose className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed" lang={lang}>{tr({ fr: "Cet espace signalera les enrichissements récents de la plateforme au fil de leur publication.", en: "This space will flag the platform’s recent additions as they are published." }, lang)}</Prose>
             </div>
@@ -12748,7 +12780,20 @@ export default function App() {
           />
         )}
         {activeTab === 'about' && <TabAbout text={text} lang={lang} />}
-        <PrintCitationFooter lang={lang} tab={activeTab} detail={paysSlug} sectionLabel={tr(navigation.find(i => i.id === activeTab)?.label, lang)} />
+        {/* Un seul pied de citation pour toute la page. Il nomme le volet quand la
+            section en a un : sans cela, un tirage des « Corridors » se citait
+            « Mobilités », et l’on ne retrouvait pas ce qu’on avait imprimé. */}
+        <PrintCitationFooter
+          lang={lang} tab={activeTab} detail={paysSlug}
+          sectionLabel={(() => {
+            const section = tr(navigation.find(i => i.id === activeTab)?.label, lang);
+            const volet = activeTab === 'mobilites' ? tr(VOLETS_MOBILITES[voletMobilites], lang) : null;
+            // « Mobilités — Mobilités contraintes » bégaie : quand le volet porte
+            // déjà le nom de la section, il se suffit.
+            if (!volet) return section;
+            return volet.startsWith(section) ? volet : section + ' — ' + volet;
+          })()}
+        />
       </main>
 
       {/* Dossier PDF dédié : seul élément imprimé quand la fiche pays est ouverte. */}
@@ -13117,7 +13162,7 @@ export default function App() {
             <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
               <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest hidden md:block">{text.modal.data_source}</span>
               <div className="flex items-center space-x-2 rtl:space-x-reverse w-full sm:w-auto justify-end">
-                <button onClick={exportCountryProfileCSV} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-white border border-slate-300 text-slate-700 hover:text-blue-700 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Download className="w-3.5 h-3.5" /> <span>{text.modal.export_csv}</span></button>
+                <CsvButton onClick={exportCountryProfileCSV} label={text.modal.export_csv} className="flex-1 sm:flex-none justify-center" />
                 <button onClick={() => window.print()} className="flex-1 sm:flex-none flex items-center justify-center space-x-1.5 rtl:space-x-reverse bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-sm text-[11px] font-bold transition-colors shadow-sm"><Printer className="w-3.5 h-3.5" /> <span>{text.modal.export_pdf}</span></button>
               </div>
             </div>
