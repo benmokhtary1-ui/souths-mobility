@@ -650,7 +650,7 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
    Ces règles ne passent que parce que l'étalon des boîtes écarte désormais
    `th` et `td` : les cellules portent des classes `py-3 px-4` comme n'importe
    quel bloc, et l'étalon les forçait à 16 px avec `!important`.          */
-:is(main, .reader) table { border-collapse: collapse; font-size: calc(12px * var(--corps)); }
+:is(main, .reader) table { border-collapse: collapse; font-size: calc(13px * var(--corps)); }
 /* Seul l’en-tête de colonne porte la gouttière large. Un `th` de LIGNE — le
    nom du pays en tête de rang — est une cellule comme les autres : lui donner
    les 8 px de l’en-tête faisait des lignes de 34 px au lieu de 26, soit
@@ -1153,11 +1153,11 @@ main { view-transition-name: page; }
    hauteur de ligne exprimée en PIXELS par leur parent : le rapport dérivait à
    chaque emboîtement, et trente-huit éléments se retrouvaient à 1,67 quand le
    palier dit 1,62. Un interligne appartient à son corps, pas à son ancêtre. */
-.text-\[8px\]  { font-size: calc(12px * var(--corps)); line-height: 1.45; }
-.text-\[9px\]  { font-size: calc(12px * var(--corps)); line-height: 1.45; }
-.text-\[10px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
-.text-\[11px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
-.text-\[12px\] { font-size: calc(12px * var(--corps)); line-height: 1.45; }
+.text-\[8px\]  { font-size: calc(13px * var(--corps)); line-height: 1.45; }
+.text-\[9px\]  { font-size: calc(13px * var(--corps)); line-height: 1.45; }
+.text-\[10px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
+.text-\[11px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
+.text-\[12px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
 .text-\[13px\], .text-\[13\.5px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }
 .text-\[14px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }   /* seul corps hors echelle : cinq emplois */
 .text-\[15px\] { font-size: calc(15px * var(--corps)); line-height: 1.62; }
@@ -1176,7 +1176,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
    valeurs de Tailwind : `text-sm` valait 15 px dans une carte et 14 dans
    le pied, `text-lg` 19 et 18. Une classe qui rend deux tailles selon
    l'endroit n'est plus une echelle. */
-:is(main, .reader, header, nav, footer) .text-xs   { font-size: calc(12px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.45; }
 :is(main, .reader, header, nav, footer) .text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .text-base { font-size: calc(15px * var(--corps)); line-height: 1.62; }
 /* Le haut de l'echelle. Sans ces trois regles, text-lg (18 px par defaut)
@@ -1202,7 +1202,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
    ou une classe de base accompagnait la variante, c'est la base qui
    gagnait, ce qui annulait purement la typographie responsive. */
 @media (min-width: 768px) {
-:is(main, .reader, header, nav, footer) .md\:text-xs   { font-size: calc(12px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .md\:text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.45; }
 :is(main, .reader, header, nav, footer) .md\:text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .md\:text-base { font-size: calc(15px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .md\:text-lg   { font-size: calc(17px * var(--corps));   line-height: 1.4; }
@@ -1235,7 +1235,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
 /* Le sélecteur nomme les classes de TAILLE, une par une. Écrit `:not([class*="text-"])`,
    il écartait aussi `text-white` et `text-slate-500` — des couleurs, pas des corps —
    et laissait donc de la prose à 15 px dans les cartes d'emphase. */
-:is(main, .reader) p:not(.text-xs):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not([class*="text-["]):not([class*="scene-flux-"]):not(.provenance),
+:is(main, .reader) p:not(.note-source):not(.text-xs):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not([class*="text-["]):not([class*="scene-flux-"]):not(.provenance):not(.note-source):not(.surtitre),
 :is(main, .reader) p.text-sm,
 :is(main, .reader) p.text-\[13px\],
 :is(main, .reader) p.text-\[13\.5px\],
@@ -1247,7 +1247,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
 :is(main, .reader) p.text-\[10px\],
 :is(main, .reader) p.text-\[11px\],
 :is(main, .reader) p.text-\[12px\] {
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.45;
 }
 
@@ -1434,7 +1434,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .terme-pop-lbl {
   display: block;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -1443,7 +1443,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 }
 .terme-pop-txt {
   display: block;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.62;
   color: var(--ink-soft);
   text-align: left;
@@ -1469,8 +1469,8 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-lbl {
   flex: none;
-  font-size: calc(12px * var(--corps));
-  font-weight: 700;
+  font-size: calc(13px * var(--corps));
+  font-weight: 600;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--accent-deep);
@@ -1480,7 +1480,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
 
 .en-clair-txt {
   flex: 1 1 16rem;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.62;
   color: var(--ink);
   text-align: start;   /* jamais justifie : c'est une phrase, pas un paragraphe */
@@ -1501,7 +1501,7 @@ input[type="search"]:focus, select:focus { border-color: var(--rule-strong) !imp
   padding: 8px 1rem;
   background: var(--accent);
   color: var(--reserve);
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   font-weight: 700;
   border-radius: 0 0 10px 10px;
   transition: top .16s ease-out;
@@ -1586,7 +1586,7 @@ main:focus { outline: none; }
   /* Le gris des composantes dont on ne parle pas, dans l'emblème expliqué.
      Une baisse d'opacité les laissait colorées et pâles : trois verts de trois
      intensités, où l'œil cherche encore lequel est le sujet. */
-  --mq-eteint: color-mix(in oklab, var(--ink) 17%, var(--paper));
+  --mq-eteint: color-mix(in oklab, var(--ink) 17%, var(--paper));
   /* Le creux des anneaux de la fiche pays. Il était écrit en dur — #f1f5f9 sur
      fond clair, #1e293b sur fond sombre — et l'un des deux venait d'un ternaire
      dont les deux branches donnaient la même valeur. */
@@ -1814,7 +1814,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   display: inline-flex; align-items: center; gap: 8px;
   min-height: 32px;
   padding: 4px 1rem;
-  font-size: calc(12px * var(--corps)); font-weight: 600;
+  font-size: calc(13px * var(--corps)); font-weight: 600;
   color: color-mix(in oklab, var(--reserve) 82%, transparent);
   background: transparent;
   border: 1px solid color-mix(in oklab, var(--reserve) 24%, transparent);
@@ -1831,7 +1831,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .prefs-pastille {
   min-width: 1.25rem; padding: 0 4px;
-  font-size: calc(12px * var(--corps)); font-weight: 700; line-height: 1.25rem; text-align: center;
+  font-size: calc(13px * var(--corps)); font-weight: 700; line-height: 1.25rem; text-align: center;
   font-variant-numeric: tabular-nums;
   color: var(--ink); background: var(--accent-light); border-radius: 999px;
 }
@@ -1853,7 +1853,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 /* Quatre voix, quatre corps. */
 .prefs-intro {
   margin: 0 0 var(--pas-3);
-  font-size: calc(12px * var(--corps)); line-height: 1.62; color: var(--ink-soft);
+  font-size: calc(13px * var(--corps)); line-height: 1.62; color: var(--ink-soft);
 }
 
 .prefs-champ { border: 0; margin: 0 0 var(--pas-3); padding: 0; }
@@ -1867,7 +1867,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .prefs-choix { display: flex; gap: 4px; }
 .prefs-choix button {
   flex: 1 1 0; min-height: 32px; padding: 8px .5rem;
-  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--ink-soft);
+  font-size: calc(13px * var(--corps)); font-weight: 600; color: var(--ink-soft);
   background: var(--paper); border: 1px solid var(--rule); border-radius: 999px;
   cursor: pointer;
   transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease),
@@ -1881,12 +1881,12 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .prefs-aide {
   margin: 8px 0 0;
-  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label);
+  font-size: calc(13px * var(--corps)); line-height: 1.4; color: var(--label);
 }
 
 .prefs-reset {
   width: 100%; min-height: 32px; padding: 8px;
-  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--accent-deep);
+  font-size: calc(13px * var(--corps)); font-weight: 600; color: var(--accent-deep);
   background: none; border: 1px dashed var(--rule-strong); border-radius: 999px;
   cursor: pointer;
 }
@@ -1903,12 +1903,12 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   margin: 1rem 0 0; padding-top: 8px;
   border-top: 1px solid var(--rule);
   /* La petite ligne, comme toute note du site : 13 / 1,45. */
-  font-size: calc(12px * var(--corps)); line-height: 1.45; color: var(--label);
+  font-size: calc(13px * var(--corps)); line-height: 1.45; color: var(--label);
   max-width: none !important;   /* la mesure de lecture ne s'applique pas ici */
 }
 
 .provenance-lbl {
-  flex: none; font-weight: 700; text-transform: uppercase; letter-spacing: .14em;
+  flex: none; font-weight: 600; text-transform: uppercase; letter-spacing: .16em;
   color: var(--accent-deep);
 }
 
@@ -1942,7 +1942,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 :is(h2, h3, h4, h5, h6).uppercase.tracking-widest {
   text-transform: none !important;
   letter-spacing: -0.005em !important;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   font-weight: 700;
   color: var(--accent-deep);
 }
@@ -2005,14 +2005,14 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 4px 8px 4px 8px;
-  font-size: calc(12px * var(--corps)); font-weight: 600; color: #D3D5DC;
+  font-size: calc(13px * var(--corps)); font-weight: 600; color: #D3D5DC;
   border: 1px solid rgba(255,253,249,.22); border-radius: 999px; cursor: pointer;
 }
 .recherche-btn:hover { color: var(--reserve); border-color: rgba(255,253,249,.45); }
 .recherche-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
 
 .recherche-kbd {
-  padding: 0 4px; font-size: calc(12px * var(--corps)); font-family: inherit; line-height: 1.15rem;
+  padding: 0 4px; font-size: calc(13px * var(--corps)); font-family: inherit; line-height: 1.15rem;
   color: #9BA0AC; border: 1px solid rgba(255,253,249,.22); border-radius: 999px;
 }
 
@@ -2027,7 +2027,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .recherche-champ {
   width: 100%; padding: 1rem 1rem;
-  font: inherit; font-size: calc(12px * var(--corps)); color: var(--ink);
+  font: inherit; font-size: calc(13px * var(--corps)); color: var(--ink);
   background: transparent; border: 0; border-bottom: 1px solid var(--rule);
 }
 .recherche-champ:focus { outline: none; border-bottom-color: var(--accent); }
@@ -2035,11 +2035,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .recherche-filtres { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 8px; }
 .recherche-filtres button {
   display: inline-flex; align-items: baseline; gap: 4px;
-  padding: .25rem 8px; font-size: calc(12px * var(--corps)); font-weight: 600;
+  padding: .25rem 8px; font-size: calc(13px * var(--corps)); font-weight: 600;
   color: var(--ink-soft); background: var(--paper);
   border: 1px solid var(--rule); border-radius: 999px; cursor: pointer;
 }
-.recherche-filtres button .num { font-size: calc(12px * var(--corps)); color: var(--label); }
+.recherche-filtres button .num { font-size: calc(13px * var(--corps)); color: var(--label); }
 .recherche-filtres button[aria-pressed="true"] {
   color: var(--reserve); background: var(--accent); border-color: var(--accent);
 }
@@ -2057,23 +2057,23 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 
 .recherche-type {
   grid-row: span 2; align-self: start;
-  font-size: calc(12px * var(--corps)); font-weight: 700; color: var(--accent-deep);
+  font-size: calc(13px * var(--corps)); font-weight: 700; color: var(--accent-deep);
 }
-.recherche-titre { font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--ink); }
-.recherche-ctx { font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label); }
+.recherche-titre { font-size: calc(13px * var(--corps)); line-height: 1.4; color: var(--ink); }
+.recherche-ctx { font-size: calc(13px * var(--corps)); line-height: 1.4; color: var(--label); }
 
 /* Le vide de la recherche n'est PAS un `.etat-vide` : il paraît dans un menu
    déroulant, qui porte déjà son cadre. Lui en donner un second — tireté, à
    32 px — encadrerait une phrase dans une boîte dans une boîte. C'est une
    ligne de message, et elle se règle comme telle. */
-.recherche-vide { margin: 0; padding: var(--pas-2); font-size: calc(12px * var(--corps)); color: var(--label); }
+.recherche-vide { margin: 0; padding: var(--pas-2); font-size: calc(13px * var(--corps)); color: var(--label); }
 
 /* La reference d'un terme emprunte, dans le panneau de definition. */
 .terme-pop-src {
   display: inline-flex; align-items: baseline; gap: .3em;
   margin-top: 8px; padding-top: .5rem;
   border-top: 1px solid var(--rule);
-  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--accent-deep);
+  font-size: calc(13px * var(--corps)); line-height: 1.4; color: var(--accent-deep);
   text-decoration: underline; text-decoration-color: var(--rule-strong);
 }
 .terme-pop-src:hover { text-decoration-color: currentColor; }
@@ -2085,7 +2085,11 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .atlas-scene {
   background: var(--paper-raised);
   border: 1px solid var(--rule);
-  padding: clamp(.75rem, 2vw, 1.5rem);
+  /* La meme marge intérieure que toutes les cartes du site. Elle valait
+     ici de 12 à 24 px selon la largeur, quand les autres en posent 32 :
+     la planche de l’Atlas ne partait pas du même bord que les planches
+     des autres sections. */
+  padding: var(--pas-carte);
 }
 .atlas-scene svg { max-height: min(62vh, 40rem); }
 
@@ -2099,7 +2103,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   align-items: center;
   gap: 8px;
   padding: .5rem 1rem;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   font-weight: 600;
   line-height: 1.15;
   color: var(--ink-soft);
@@ -2121,7 +2125,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 .couche-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 767px) {
-  .couche-btn { font-size: calc(12px * var(--corps)); padding: 8px 8px; }
+  .couche-btn { font-size: calc(13px * var(--corps)); padding: 8px 8px; }
   .atlas-scene svg { max-height: 52vh; }
 }
 
@@ -2197,7 +2201,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
 /* Le mode d'emploi, contre les boutons qu'il decrit. */
 .scene-flux-mode {
   margin: 0 0 8px;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   color: var(--accent-light);
 }
 .assise li {
@@ -2213,7 +2217,7 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   color: #FFFFFF;
 }
 .assise-quoi {
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   letter-spacing: .04em;
   color: var(--accent-light);
 }
@@ -2358,9 +2362,9 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .classement-ligne:hover,
 .classement-ligne:focus-visible { background-color: var(--accent-lavis); outline: none; }
 .classement-ligne[aria-current='true'] { background-color: var(--accent-voile); }
-.classement-rang   { font-size: calc(12px * var(--corps)); color: var(--label); font-variant-numeric: tabular-nums; }
-.classement-nom    { font-size: calc(12px * var(--corps)); color: var(--ink); font-weight: 600; }
-.classement-valeur { font-size: calc(12px * var(--corps)); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.classement-rang   { font-size: calc(13px * var(--corps)); color: var(--label); font-variant-numeric: tabular-nums; }
+.classement-nom    { font-size: calc(13px * var(--corps)); color: var(--ink); font-weight: 600; }
+.classement-valeur { font-size: calc(13px * var(--corps)); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .classement-jauge  { display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
 .classement-jauge > span {
   display: block; height: 100%; border-radius: 999px;
@@ -2398,12 +2402,12 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   padding: 4px 0;
 }
 .compare-nom {
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.45;
   color: var(--ink-soft);
 }
 .compare-valeur {
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
   min-width: 3.5rem;
@@ -2451,7 +2455,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   align-items: center;
   gap: 4px 16px;
   margin-top: 8px;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.45;
   color: var(--label);
 }
@@ -2465,7 +2469,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   padding: 8px 16px;
   border-inline-start: 3px solid var(--warn);
   background: var(--warn-soft);
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.45;
   color: var(--warn-ink);
 }
@@ -2501,9 +2505,11 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    `max-w-4xl`, 896 px — et son titre la remplit. Lui appliquer les 49 rem
    n'aurait touché que le descriptif, qui se serait recentré à 54 px du
    titre : le décalage même qu'on vient de corriger dans la note.        */
-:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *) {
-  max-width: var(--mesure-lecture);
-  margin-inline: auto;
+:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.note-source):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *) {
+  /* La largeur est désormais décidée par la CARTE (voir « un seul bloc
+     descendant » plus haut). L'élément n'impose plus la sienne : deux
+     règles de largeur, c'étaient deux axes. */
+  max-width: none;
 }
 /* La prose suivie se justifie, comme dans la note. Les titres, les listes de
    navigation et les micro-libellés gardent le fer à gauche : justifier une
@@ -2527,7 +2533,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 :is(main, .reader) [class*="flex"]:not([class*="flex-col"]) > :is(p, h2, h3, h4, ul, ol, dl, blockquote)
   { margin-inline: 0 !important; }
 
-:is(main, .reader) p:not(.provenance):not(.en-clair):not([class*="text-center"]):not([class*="text-end"]) {
+:is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not([class*="text-center"]):not([class*="text-end"]) {
   text-align: justify;
   text-align-last: start;
   hyphens: auto;
@@ -2765,7 +2771,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   border-radius: 999px;
   /* 11 px est le plancher de lecture du site : un sigle est deja dense,
      le reduire encore le rend illisible aux yeux fatigues. */
-  font-size: calc(12px * var(--corps)); font-weight: 700;
+  font-size: calc(13px * var(--corps)); font-weight: 700;
   color: var(--accent-deep);
   background: var(--accent-soft);
 }
@@ -2776,8 +2782,8 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   margin-top: 1rem;
   padding: 8px 1rem;
   border-radius: 999px;
-  font-size: calc(12px * var(--corps)); font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase;
+  font-size: calc(13px * var(--corps)); font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase;
   color: var(--reserve);
   background: var(--plan-encre);
   border: 1px solid var(--plan-encre);
@@ -2856,8 +2862,8 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 .chapitre-pliure-mot {
-  font-size: calc(12px * var(--corps)); font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase;
+  font-size: calc(13px * var(--corps)); font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase;
 }
 .chapitre-pliure:is(:hover, :focus-visible) { color: var(--accent); border-top-color: var(--accent); }
 .chapitre-pliure:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -2892,41 +2898,51 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    Le sélecteur vise donc `.carte-continent`, la grille que rend le choroplèthe,
    où qu'elle se trouve. La hauteur commande, la largeur suit le dessin, et la
    légende occupe le reste au lieu d'une bande de 240 px.                   */
+/* La légende passait à droite du dessin. Une légende posée à droite pousse
+   mécaniquement le dessin à gauche : le continent avait son centre à 342 px
+   quand l'axe de la page est à 640, et aucun réglage de centrage ne rattrape
+   cela tant que les deux partagent la ligne.
+
+   Elle passe donc dessous, à toutes les largeurs. Le dessin se centre sur
+   l'axe, la carte tient dans la colonne comme le reste du site, et le
+   téléphone lit exactement la même disposition que l'écran large. */
 :is(main, .reader) .carte-continent {
-  grid-template-columns: auto minmax(16rem, 1fr) !important;
-  /* La colonne garde sa gouttiere fluide — c'est elle qui laisse respirer la
-     carte et sa legende cote a cote. La LIGNE, qui ne sert que lorsque les
-     deux se superposent, tombe sur le pas comme partout ailleurs. */
-  column-gap: clamp(1rem, 2.5vw, 2.25rem) !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center !important;
+  column-gap: 0 !important;
   row-gap: var(--pas-3) !important;
-  align-items: center !important;
+  align-items: start !important;
 }
 :is(main, .reader) .carte-continent > svg {
+  /* La hauteur commande — sans quoi la carte changeait de taille d'une section
+     à l'autre au gré de son contenant : 703 px dans l'Atlas, 820 dans
+     Gouvernance, 868 dans Données. La largeur suit le dessin, et ne dépasse
+     jamais la colonne. */
   width: auto !important;
-  /* Un sixieme de plus : la carte est l'objet central du site, elle merite la
-     hauteur qu'on lui accorderait sur le papier. */
-  height: min(88vh, 60.5rem);
+  height: min(78vh, 52rem);
+  max-width: 100% !important;
   max-height: none !important;
-  justify-self: center;
+  justify-self: center !important;
+}
+/* La ligne de provenance porte `col-span-2`, hérité de la disposition à
+   deux colonnes. Une colonne demandée au-delà du gabarit en CRÉE une :
+   la grille repassait donc à deux pistes malgré le gabarit à une seule,
+   et la légende remontait à côté du dessin. Les trois enfants tiennent
+   la colonne unique, quoi que dise leur classe. */
+:is(main, .reader) .carte-continent > * { grid-column: 1 / -1 !important; }
+:is(main, .reader) .carte-continent > :not(svg) {
+  width: 100%;
+  justify-self: stretch !important;
 }
 
 /* Sur un écran étroit, c'est la LARGEUR qui commande. Le continent est en
-   portrait : une hauteur de 88 vh lui donnerait 0,89 vh de large — 634 px sur un
-   téléphone de 375. On rend donc la main à la largeur et la hauteur suit,
-   l'inverse exact de ce qui vaut sur un grand écran.
-
-   Ce bloc vient APRÈS celui du dessus, et non dans la règle de média plus haut
-   dans le fichier : à spécificité égale, c'est l'ordre qui tranche, et posé
-   avant il perdait. */
+   portrait : une hauteur de 78 vh lui donnerait 0,79 vh de large — 296 px sur
+   un téléphone de 375, alors que la colonne en offre 311. */
 @media (max-width: 767px) {
-  :is(main, .reader) .carte-continent {
-    grid-template-columns: 1fr !important;
-  }
   :is(main, .reader) .carte-continent > svg {
     width: 100% !important;
     height: auto !important;
     max-height: 52vh;
-    justify-self: stretch;
   }
 }
 
@@ -2995,10 +3011,137 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .bande-chiffre-s {
   display: block;
   margin-top: 4px;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.45;
   color: var(--label);
 }
+
+/* La citation examinée : l'affirmation qu'on met à l'épreuve. Même filet que
+   l'exergue de la note de cadrage — trois pixels à l'accent — parce que c'est
+   le même geste : sortir une phrase du fil pour la regarder. */
+.citation-examinee {
+  margin: 0;
+  padding-inline-start: var(--pas-2);
+  border-inline-start: 3px solid var(--accent);
+}
+
+/* ==========================================================================
+   UN SEUL BLOC DESCENDANT
+   --------------------------------------------------------------------------
+   La page avait deux axes : une carte de texte centrait sa colonne de lecture
+   à l'intérieur d'une boîte de 1 206 px — le texte commençait à 209 — quand une
+   carte de données commençait à 33. D'une carte à l'autre, le bord gauche
+   sautait de 176 pixels.
+
+   La colonne n'est plus posée DANS la carte : c'est la carte qui la prend.
+   Toutes les boîtes de premier rang ont la même largeur, la mesure de lecture
+   plus ses deux gouttières, et se centrent. Un seul bord gauche du haut en bas.
+
+   Ce qui n'y tient pas en sort : voir `.pleine-largeur` plus bas.          */
+/* La colonne vaut la mesure de lecture plus ses deux gouttières, ouverte
+   d'un cinquième : 852 px devenaient étroits pour une carte qui porte
+   autre chose que du texte suivi. La mesure de lecture, elle, ne bouge
+   pas — c'est la colonne des CARTES qui s'élargit, pas la ligne. */
+:root { --colonne: calc((var(--mesure-lecture) + 2 * var(--pas-carte)) * 1.2); }
+
+/* Le bandeau de section reste large : c'est la planche qui ouvre la page,
+   et la rétrécir en ferait une carte parmi les autres. Il est donc écarté,
+   comme tout ce qui porte `.pleine-largeur`. */
+:is(main, .reader) > [class*="space-y-"] > *:not(.page-bandeau):not(.scene-flux):not(.bande-chiffres):not(.pleine-largeur),
+:is(main, .reader) > [class*="space-y-"] > [class*="space-y-"] > *:not(.page-bandeau):not(.scene-flux):not(.bande-chiffres):not(.pleine-largeur) {
+  /* `width: 100%` avec la marge automatique : dans une pile en colonne, une
+     marge `auto` fait rétrécir l'élément sur son contenu au lieu de le
+     centrer — quatre cartes tombaient à 620 px quand la colonne en fait
+     1 022. La largeur est donc posée, et la marge ne fait que centrer. */
+  width: 100%;
+  max-width: var(--colonne);
+  margin-inline: auto;
+}
+
+/* La figure sort de la colonne, des deux côtés à parts égales : l'axe de la
+   page tient, et la carte du continent garde la largeur qu'il lui faut. */
+/* Deux objets sortent de la colonne parce que leur largeur EST leur sens :
+   la carte du continent, qu'on lit d'un regard, et la bande de chiffres,
+   qui aligne trois ou quatre grandeurs de front. Le débordement est
+   symétrique — l'axe de la page tient. */
+:is(main, .reader) .bande-chiffres,
+:is(main, .reader) .page-bandeau,
+:is(main, .reader) .scene-flux,
+.pleine-largeur {
+  width: min(100vw - 2 * var(--pas-carte), 78rem);
+  max-width: none;
+  margin-inline: calc(50% - min(50vw - var(--pas-carte), 39rem));
+}
+
+/* ---------- LES DEUX FAMILLES, CÔTE À CÔTE -------------------------------
+   Le site n'a que deux polices : Fraunces, une serif à contrastes marqués, et
+   IBM Plex Sans, une linéale moderne. Elles ne se rencontraient nulle part —
+   le titre de section et sa reprise en italique étaient toutes deux en
+   Fraunces, si bien que le contraste reposait sur la seule italique.
+
+   Elles se rencontrent ici, et ici seulement : le constat dans la graphique,
+   sa reprise dans la moderne. Le dessin fait le contraste ; le corps plus
+   petit et la graisse légère l'empêchent de crier — c'est un contrepoint,
+   pas une seconde voix.                                                    */
+.titre-reprise {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-weight: 300;
+  /* Le rang 22, pas une fraction : .72em de 31 donnait 22,32. */
+  font-size: calc(22px * var(--corps));
+  letter-spacing: -0.005em;
+}
+
+/* ---------- LE SURTITRE : CE QU'ON LIT AVANT LE TITRE ---------------------
+   Une ligne de capitales qui annonce la nature de ce qui suit — « Le constat »,
+   « Le volet travail », « Ce que la définition change ». Il était écrit à la
+   main treize fois, avec trois interlettrages, deux corps, deux graisses et
+   cinq couleurs, alors qu'il ne fait qu'une chose.
+
+   L'interlettrage est celui de l'étalon des capitales, 0,16em, et non les
+   0,18 ou 0,2 posés en ligne — un style en ligne battait la feuille à chaque
+   fois, si bien que la règle d'étalon ne s'appliquait nulle part.
+
+   La couleur dit le registre, et rien d'autre :
+     .surtitre           l'encre sourde — le cas courant
+     .surtitre--accent   l'accent creusé — le surtitre d'une carte de section
+     .surtitre--clair    l'accent clair — sur un plan encré
+     .surtitre--reserve  l'ambre — ce qui suit limite ce qui précède        */
+.surtitre {
+  display: block;
+  margin-bottom: var(--pas-1);
+  font-size: calc(13px * var(--corps));
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+.surtitre--accent  { color: var(--accent-deep); }
+.surtitre--clair   { color: var(--accent-light); }
+.surtitre--reserve { color: var(--warn-ink); }
+
+/* ---------- L'APARTÉ : CE QUE LA MESURE NE DIT PAS ------------------------
+   Le fil principal avance ; l'aparté s'écarte d'un pas pour dire ce que le
+   chiffre qu'on vient de lire ne recouvre pas, puis le fil reprend. C'est le
+   dispositif le plus employé du site — quatorze occurrences — et c'était le
+   seul sans nom : il vivait en style en ligne, avec cinq couleurs de filet
+   pour trois rôles.
+
+   Le filet fait trois pixels, comme tout ce que le site met à part. Ce qui
+   change d'un registre à l'autre, c'est la COULEUR, et elle veut dire quelque
+   chose :
+
+     .aparte            l'accent de la section — une précision de méthode
+     .aparte--reserve   l'ambre — ce qui limite la portée de ce qui précède
+     .aparte--contre    l'oxblood — ce qui contredit ce qui précède          */
+.aparte {
+  padding: var(--pas-2) var(--pas-3);
+  border-radius: 0 10px 10px 0;
+  border-inline-start: 3px solid var(--accent);
+  background: var(--paper-sunk);
+}
+.aparte--reserve { border-inline-start-color: var(--warn); background: var(--warn-soft); }
+.aparte--contre  { border-inline-start-color: var(--bad);  background: var(--bad-soft); }
 
 /* ---------- L'ÉTAT VIDE : UNE SEULE FORME ---------------------------------
    Trois écrans disaient « il n'y a rien ici » de trois façons : filet de 2 px
@@ -3060,7 +3203,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    Le quatrieme palier existait deja sous `.text-xs` ; il manquait au titre
    de ce bloc, qui en annoncait trois et en servait quatre. */
 :is(main, .reader) :is(p, li, dd, dt, blockquote) { line-height: 1.62; }
-:is(main, .reader) :is(p, li, dd, dt, blockquote):is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .provenance) { line-height: 1.45; }
+:is(main, .reader) :is(p, li, dd, dt, blockquote):is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .provenance, .note-source, .scene-flux-source) { line-height: 1.45; }
 :is(main, .reader) :is(h1, h2, h3, h4) { line-height: 1.4; }
 :is(main, .reader) .tabular-nums,
 :is(main, .reader) [class*="font-serif"][class*="font-bold"][class*="text-2xl"],
@@ -3077,7 +3220,11 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    Le titre se resserre parce qu'il est grand ; le micro-libellé s'écarte parce
    qu'il est petit et en capitales. Six valeurs négatives différentes traînaient
    sur les titres — des arrondis de Tailwind, jamais un choix. */
-:is(main, .reader) :is(h1, h2, h3, h4) { letter-spacing: -0.01em; }
+/* Le resserrement vaut pour les titres, pas pour les libellés : un h4 marqué
+   `.surtitre` est une étiquette en petites capitales, et une capitale a besoin
+   d'air. Sans cette exception, la règle de titre — plus spécifique — annulait
+   l'interlettrage de l'étiquette, qui sortait à -0,01em au lieu de .16em. */
+:is(main, .reader) :is(h1, h2, h3, h4):not(.surtitre) { letter-spacing: -0.01em; }
 :is(main, .reader) [class*="uppercase"] { letter-spacing: 0.16em; }
 
 /* ---------- LES MARGES : L'ÉCHELLE, ET RIEN QU'ELLE ----------------------
@@ -3176,7 +3323,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .duo-corps { margin-top: 8px; }
 .duo-ligne + .duo-ligne { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--rule); }
 .duo-ligne dt {
-  font-size: calc(12px * var(--corps)); line-height: 1.4; color: var(--label);
+  font-size: calc(13px * var(--corps)); line-height: 1.4; color: var(--label);
   margin-bottom: 4px;
 }
 .duo-ligne dd { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin: 0; }
@@ -3189,11 +3336,11 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .duo-ligne dd b.duo-fort { color: var(--accent-deep); }
 .duo-ecart {
   display: block; margin-top: .18rem;
-  font-size: calc(12px * var(--corps)); line-height: 1.4;
+  font-size: calc(13px * var(--corps)); line-height: 1.4;
   font-variant-numeric: tabular-nums; color: var(--label);
 }
 .duo-fermer {
-  font-size: calc(12px * var(--corps)); font-weight: 600; color: var(--ink-mute);
+  font-size: calc(13px * var(--corps)); font-weight: 600; color: var(--ink-mute);
   background: none; border: 0; padding: 0; cursor: pointer;
   text-decoration: underline; text-underline-offset: .18em;
 }
@@ -3202,7 +3349,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .duo-appel {
   display: flex; align-items: baseline; justify-content: space-between; gap: .5rem;
   width: 100%; min-height: 32px; margin-top: 8px; padding: 8px 8px;
-  font-size: calc(12px * var(--corps)); font-weight: 600; line-height: 1.4;
+  font-size: calc(13px * var(--corps)); font-weight: 600; line-height: 1.4;
   color: var(--accent-deep); text-align: start;
   background: var(--paper); border: 1px solid var(--rule); border-radius: 999px;
   cursor: pointer;
@@ -3228,7 +3375,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   caption-side: top;
   text-align: start;
   padding: 0 0 var(--pas-2);
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   line-height: 1.4;
   color: var(--ink-mute);
 }
@@ -3257,7 +3404,7 @@ th[aria-sort]:last-child .tri-col { justify-content: flex-end; }
 
 .tri-compte {
   font-style: normal; font-weight: 700;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
   font-variant-numeric: tabular-nums;
   color: var(--ink-mute);
 }
@@ -3286,66 +3433,8 @@ th[aria-sort="descending"] .tri-compte { color: var(--accent-deep); }
    une confirmation qui vit dans le geste, sans boîte de dialogue.           */
 :is(main, .reader) :is(h2, h3):has(> .ancre) { position: relative; }
 
-.ancre {
-  margin-inline-start: .4em;
-  padding: 0 .18em;
-  /* Fixe, et non `.72em` : cale sur son titre, le signe rendait 13,7 px
-     dans un h3 et 22,3 px dans un h1 -- deux tailles pour un seul signe. */
-  font: 700 calc(12px * var(--corps))/1 'IBM Plex Sans', system-ui, sans-serif;
-  color: var(--accent);
-  background: none;
-  border: 0;
-  border-radius: 999px;
-  cursor: pointer;
-  opacity: .38;
-  vertical-align: baseline;
-  /* Le signe vit dans le titre : sans cela il part avec lui à la copie, et un
-     lecteur qui cite l'analyse colle « ¶ » au bout de son titre. */
-  user-select: none;
-  transition: opacity var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-}
-:is(main, .reader) :is(h2, h3):hover > .ancre,
-:is(main, .reader) .ancre:hover,
-:is(main, .reader) .ancre:focus-visible { opacity: 1; }
-.ancre:hover { color: var(--accent-deep); }
-.ancre:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* La cible fait 23 x 22 px : le signe est petit par nature, et l'agrandir
-   écarterait les titres. On étend donc l'AIRE DE CLIC sans toucher à la mise en
-   page — un pseudo-élément débordant, qui ne prend pas de place. */
-.ancre { position: relative; }
-.ancre::before {
-  content: '';
-  position: absolute;
-  inset: -6px -6px;
-  min-width: 32px; min-height: 32px;
-  transform: translate(-50%, -50%);
-  inset-inline-start: 50%; top: 50%;
-}
-:is(main, .reader) .ancre[data-copie="true"] { opacity: 1; color: var(--ok); }
-.ancre[data-copie="true"]::after { content: " ✓"; }
-/* Presse-papiers refusé : le lien est passé dans la barre d'adresse, et on le dit.
-   Un geste qui ne répond rien laisse croire qu'il n'a pas fonctionné. */
-:is(main, .reader) .ancre[data-copie="barre"] { opacity: 1; color: var(--warn-ink); }
-.ancre[data-copie="barre"]::after { content: " ↑"; }
-
-/* Le titre visé par l'ancre reçoit une marque le temps qu'on le trouve : arriver
-   par un lien profond au milieu d'une page longue, sans rien qui dise « c'est
-   ici », revient à chercher deux fois. */
-:is(main, .reader) :target {
-  scroll-margin-block-start: 6rem;
-}
-:is(main, .reader) :is(h2, h3):target {
-  animation: ancreTrouvee 2.4s var(--ease-both) both;
-}
-@keyframes ancreTrouvee {
-  0%, 62% { background: var(--accent-soft); box-shadow: -.35em 0 0 var(--accent-soft), .35em 0 0 var(--accent-soft); }
-  100%    { background: transparent; box-shadow: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  :is(main, .reader) :is(h2, h3):target { animation: none; background: var(--accent-soft); }
-  .ancre { transition: none; }
-}
-@media print { .ancre { display: none; } }
+/* Le pied-de-mouche a été retiré des titres : son style n'a plus d'objet.
+   L'ancrage profond reste, porté par l'identifiant du titre. */
 
 /* ---------- LE BROSSAGE ET LA SONDE ---------------------------------------
 
@@ -3377,9 +3466,9 @@ th[aria-sort="descending"] .tri-compte { color: var(--accent-deep); }
   white-space: nowrap;
   box-shadow: 0 2px 10px rgba(12, 14, 18, .13);
 }
-.carte-sonde b { font: 700 calc(12px * var(--corps))/1.1 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink); }
+.carte-sonde b { font: 700 calc(13px * var(--corps))/1.1 'IBM Plex Sans', system-ui, sans-serif; color: var(--ink); }
 .carte-sonde i {
-  font: 700 calc(12px * var(--corps))/1.1 'Fraunces', Georgia, serif;
+  font: 700 calc(13px * var(--corps))/1.1 'Fraunces', Georgia, serif;
   font-style: normal; font-variant-numeric: tabular-nums;
   color: var(--accent-deep);
 }
@@ -3400,7 +3489,7 @@ th[aria-sort="descending"] .tri-compte { color: var(--accent-deep); }
 .choro-cran:is(:hover, :focus-visible) { border-color: var(--rule-strong); background: var(--paper-sunk); }
 .choro-cran[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .choro-compte {
-  font: 700 calc(12px * var(--corps))/1 'IBM Plex Sans', system-ui, sans-serif;
+  font: 700 calc(13px * var(--corps))/1 'IBM Plex Sans', system-ui, sans-serif;
   font-style: normal; font-variant-numeric: tabular-nums;
   color: var(--label);
 }
@@ -3410,11 +3499,11 @@ th[aria-sort="descending"] .tri-compte { color: var(--accent-deep); }
    l'on ne sait plus ce qu'on a demandé. */
 .choro-brosse-dit {
   display: inline-flex; align-items: center; gap: var(--pas-1);
-  font: 600 calc(12px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
+  font: 600 calc(13px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
   color: var(--accent-deep);
 }
 .choro-liberer {
-  font: 600 calc(12px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
+  font: 600 calc(13px * var(--corps))/1.2 'IBM Plex Sans', system-ui, sans-serif;
   color: var(--ink-mute);
   text-decoration: underline;
   text-underline-offset: .18em;
@@ -3993,7 +4082,8 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 /* La provenance des corridors, en pied de bandeau : discrete, jamais absente. */
 .scene-flux-source {
   margin-top: 1rem;
-  font-size: calc(12px * var(--corps));
+  font-size: calc(13px * var(--corps));
+  line-height: 1.45;
   /* dernier gris bleuté du bandeau ; il tient 7,4:1 sur le noir, comme avant */
   color: #A8A39D;
 }
@@ -4041,7 +4131,7 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    Ils variaient de 1,76 a 2,20 px d'interlettrage et du gras 600 au gras 700,
    pour dire exactement la meme chose : « voici de quoi parle ce bloc ». */
 :is(main, .reader) span[class*="uppercase"][class*="tracking"] {
-  font-size: calc(12px * var(--corps)) !important;
+  font-size: calc(13px * var(--corps)) !important;
   letter-spacing: .18em !important;
   font-weight: 700 !important;
   line-height: 1.4;
@@ -4059,11 +4149,21 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    ailleurs, un `text-xl` a 28 px ici et a 22 px la. Les titres rejoignent
    l'echelle unique. */
 :is(main, .reader) h2.font-serif,
-:is(main, .reader) h2:not([class*="text-"]) { font-size: calc(22px * var(--corps)); line-height: 1.15; }
-:is(main, .reader) h3.font-serif { font-size: calc(17px * var(--corps)); line-height: 1.4; }
+:is(main, .reader) h2:not(.text-xs):not(.text-sm):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not(.text-4xl):not(.surtitre):not([class*="text-\["]) { font-size: calc(22px * var(--corps)); line-height: 1.15; }
+:is(main, .reader) h3.font-serif,
+:is(main, .reader) h3:not(.text-xs):not(.text-sm):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not(.text-4xl):not(.surtitre):not([class*="text-\["]) { font-size: calc(19px * var(--corps)); line-height: 1.4; }
+/* Le quatrième cran passait à 22, au-dessus du troisième : la hiérarchie
+   s'inversait. Il descend sous lui. */
+:is(main, .reader) :is(h4.font-serif, h4:not(.text-xs):not(.text-sm):not(.text-base):not(.text-lg):not(.text-xl):not(.text-2xl):not(.text-3xl):not(.text-4xl):not(.surtitre):not([class*="text-\["]))
+  { font-size: calc(17px * var(--corps)) !important; line-height: 1.4; }
 @media (min-width: 768px) {
   :is(main, .reader) h2.font-serif { font-size: calc(26px * var(--corps)); }
 }
+
+/* Et une seule distance entre un titre et ce qu’il annonce. Elle valait 0,
+   16 ou 24 px selon l’endroit — cinq h2 sans marge et trois à 16 sur la
+   seule page Données. */
+:is(main, .reader) :is(h2, h3, h4) { margin-bottom: var(--pas-2) !important; }
 
 /* --- Le rembourrage des cartes -------------------------------------------
    Il n'y en a plus qu'un, et il est écrit une fois, dans l'étalon : les boîtes
@@ -4624,4 +4724,192 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
   --accent-deep:  #9DBAAB;
   --accent-soft:  #1A2D25;
   --accent-light: #5F7B6D;
+}
+
+/* Une idée par alinéa
+   -------------------------------------------------------------------------
+   Une chaîne de traduction qui porte une ligne vide se rend en plusieurs
+   paragraphes. Le conteneur remplace le <p> : il hérite donc de la taille, de
+   la couleur et de la justification qu'on lui a données, et n'ajoute que le
+   blanc qui sépare deux idées. */
+.suite-alineas > p + p { margin-top: var(--pas-2); }
+
+/* La pliure, plus franche
+   -------------------------------------------------------------------------
+   « Lire la suite doit être beaucoup plus clair et apparent. » Deux manques :
+   rien ne disait que le texte était coupé, et la barre ressemblait à une
+   légende plutôt qu'à un bouton.
+
+   1. Le pli se voit. Le dernier tiers de ligne s'efface au bas du bloc replié :
+      c'est le signe universel qu'il y a une suite. Le masque ne s'applique
+      qu'au bloc replié — déplié, il fondrait le vrai dernier paragraphe.
+   2. La barre est un bouton. Encre pleine, fond teinté, cadre net, hauteur de
+      cible franche. Au survol, elle s'inverse : on sait qu'on peut cliquer. */
+.chapitre[data-replie='true'] .chapitre-corps {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 4.5rem), transparent);
+          mask-image: linear-gradient(to bottom, #000 calc(100% - 4.5rem), transparent);
+}
+.chapitre-pliure {
+  justify-content: center;
+  gap: var(--pas-1);
+  margin-top: var(--pas-2);
+  padding: 10px var(--pas-2);
+  border: 1px solid var(--accent-filet, var(--rule));
+  border-radius: 2px;
+  background: var(--accent-voile);
+  color: var(--accent-deep);
+  text-align: center;
+}
+.chapitre-pliure:is(:hover, :focus-visible) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.chapitre-pliure-mot { letter-spacing: .16em; }
+
+/* Le bloc de repères annonce ce qu'il fait. Un chevron seul se lit comme un
+   ornement ; le mot dit l'action, et change avec l'état. */
+.pliure-mot {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: calc(13px * var(--corps)); font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+/* La barre haute sur téléphone
+   -------------------------------------------------------------------------
+   « Sur le téléphone, les icônes recherche, lecture et langue se confondent
+   avec le logo. » À 375 px la marque était écrasée sur 45 px — trois lignes
+   d'un mot chacune — et le premier bouton commençait exactement où elle
+   finissait : aucun blanc entre l'identité du site et ses outils.
+
+   Sous 640 px les trois contrôles tombent en icônes seules. Le mot disparaît,
+   l'action reste : chaque bouton garde son aria-label, sa cible fait 32 px, et
+   la marque récupère la largeur dont elle a besoin. Un filet vertical sépare
+   ce qui nomme le site de ce qui le règle. */
+@media (max-width: 639px) {
+  .recherche-btn > span,
+  .prefs-btn > span,
+  .recherche-kbd { display: none; }
+
+  .recherche-btn,
+  .prefs-btn {
+    gap: 0;
+    width: 32px; height: 32px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  /* Le groupe d'outils s'écarte de la marque et s'en sépare d'un filet. */
+  .barre-outils {
+    gap: 6px;
+    padding-inline-start: 10px;
+    margin-inline-start: 10px;
+    border-inline-start: 1px solid rgba(255, 253, 249, .16);
+  }
+}
+
+/* Une seule note de source
+   -------------------------------------------------------------------------
+   Mesure sur les sept sections : treize notes de provenance, cinq formes —
+   10, 11 ou 12 px, italique ou non, trois gris différents, filet parfois. Le
+   lecteur ne les reconnaissait pas comme la même chose.
+
+   Le composant <Sources> porte la forme de référence (.provenance). Les notes
+   écrites à la main la reprennent ici : même corps, même gris, même filet, et
+   pas d'italique — sur douze pixels, l'italique se lit moins bien qu'il ne
+   distingue. */
+.note-source {
+  margin-top: var(--pas-2);
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font-size: calc(13px * var(--corps));
+  line-height: 1.45;
+  font-style: normal;
+  color: var(--label);
+  max-width: none !important;
+}
+
+/* La planche d'ouverture de l'Atlas, à la largeur des autres bandeaux
+   -------------------------------------------------------------------------
+   « La box du titre Atlas n'a pas été mise dans la même taille que les autres
+   box titre. » Mesure : bandeau 1207 px sur les six autres sections, scène de
+   l'Atlas 1022. Elle était ramenée à la colonne de lecture alors qu'elle joue
+   exactement le rôle du bandeau — ouvrir la page. Elle prend donc la largeur
+   de la pile, comme lui : ni la colonne de lecture (1 022), ni le débordement
+   réservé aux cartes (1 216). */
+:is(main, .reader) .scene-flux { /* même famille que le bandeau, plus haut. */ }
+
+/* La planche et sa légende dans un seul rectangle
+   -------------------------------------------------------------------------
+   « Ça dépasse encore légèrement… je vois en dessous aussi quelque chose de la
+   légende qui dépasse. » La cause n'était pas un débordement mais un vide :
+   le bloc de carte prenait 1 216 px de large alors que son contenu — planche,
+   légende, ligne de provenance — n'en occupait que 1 078, centrés. Le
+   rectangle du bloc ne coïncidait donc avec rien : ni avec la colonne de
+   lecture (1 022), ni avec ce qu'on y voit. Les bords de la légende tombaient
+   à vingt-huit pixels de ceux de la carte du dessus.
+
+   Le bloc se règle maintenant sur son contenu, et se centre sur l'axe de la
+   page. Ce qu'on voit et ce qui l'entoure ont les mêmes bords ; le
+   débordement reste symétrique, et il reste voulu — la planche a besoin de sa
+   largeur. La borne haute ne change pas : jamais plus large que l'écran moins
+   ses gouttières. */
+/* Cette règle vient APRÈS celle qui empile la carte et sa légende sur
+   téléphone, et porte le même !important : sans la borne de média, c’est
+   elle qui gagnerait, et la légende sortait de l’écran de 177 px. */
+
+
+/* Un titre ne se justifie pas
+   -------------------------------------------------------------------------
+   « Évite de justifier les titres — dans Données tu as justifié les un, deux,
+   trois. » Trente et une étiquettes et titres héritaient du `text-justify` de
+   leur bloc. Sur trois mots, la justification écarte les mots jusqu'au bord :
+   « Les plus longues interruptions » devenait une ligne trouée.
+
+   La justification sert la prose suivie, où elle a des lignes pleines à
+   régler. Elle ne sert rien sur un libellé. Les alignements posés à dessein
+   — centré, à droite — ne sont pas touchés. */
+:is(main, .reader) :is(h1, h2, h3, h4, h5, h6, .surtitre, dt, caption, figcaption):not(.text-center):not(.text-end):not(.text-right) { text-align: start; }
+
+/* Le feuilletage
+   -------------------------------------------------------------------------
+   « Un effet dynamique plus stylé, beaucoup plus moderne pour le feuilletage. »
+
+   Passer d'une fiche à l'autre changeait le contenu sans que rien ne bouge :
+   on ne savait pas si le clic avait pris. La fiche entre maintenant comme une
+   page qu'on tourne — elle vient du bord, se redresse et se pose. Le pivot est
+   posé au bord de départ, pas au centre, et la perspective reste courte : le
+   geste se lit comme un feuillet, pas comme un carrousel.
+
+   La règle est indexée sur la fiche affichée (`key`), si bien que l'animation
+   se rejoue à chaque changement — y compris quand on revient en arrière. */
+.fiche-entree {
+  animation: fiche-entree .44s cubic-bezier(.22, .68, .18, 1) both;
+  transform-origin: left center;
+  perspective: 1400px;
+  will-change: transform, opacity;
+}
+:root[dir='rtl'] .fiche-entree { transform-origin: right center; }
+
+@keyframes fiche-entree {
+  from {
+    opacity: 0;
+    transform: translate3d(-14px, 0, 0) rotateY(-3.5deg) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Le rail : la carte lue se distingue franchement des autres, et le survol
+   soulève légèrement — c'est ce qui donne au rail sa qualité tactile. */
+.rail-cartes button[aria-current='true'] {
+  box-shadow: 0 0 0 1px var(--accent), 0 6px 18px -8px var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fiche-entree { animation: fiche-fondu .2s linear both; }
+  @keyframes fiche-fondu { from { opacity: .4; } to { opacity: 1; } }
 }

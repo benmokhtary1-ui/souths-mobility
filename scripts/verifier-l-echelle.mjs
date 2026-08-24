@@ -96,7 +96,7 @@ if (coupures.length) {
 // derniere qui gagne. On ne retient donc que la derniere declaration.
 // Le bareme est descendu d'un cran le 22 aout 2026 : la prose de lecture est
 // revenue a 15, le plancher reste a 12.
-const RANGS = [12, 13, 15, 17, 19, 22, 26, 31, 41.6];
+const RANGS = [13, 15, 17, 19, 22, 26, 31, 41.6];
 const enPx = (v) => {
   const m = String(v).match(/([\d.]+)(px|rem)/);
   if (!m) return null;
