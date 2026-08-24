@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; background: #FCFAF8; color: #0C0E12;
+           font-family: 'IBM Plex Sans', system-ui, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    a { color: #3D3A78; } a:hover { color: #27205C; }
+    .lbl { font-size: 13px; font-weight: 600; letter-spacing: .16em;
+           text-transform: uppercase; color: #514B45; }
+  </style>
+</helmet>
+
+<div style="width: 1180px; padding: 40px 40px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px;">
+
+  <header style="display: flex; flex-direction: column; gap: 8px;">
+    <span class="lbl" style="color: #3D3A78;">Proposition · Gouvernance</span>
+    <h1 style="margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 26px; line-height: 1.15; letter-spacing: -0.01em; max-width: 36ch;">
+      Les six instruments, dans l’ordre du décrochage
+    </h1>
+    <p style="margin: 0; max-width: 78ch; font-size: 15px; line-height: 1.62; color: #342F29;">
+      Ici l’ordre <em>est</em> l’argument&nbsp;: du plus consensuel au plus contraignant, la courbe
+      des ratifications s’effondre de 54 à 4. Un carrousel qui n’en montre qu’une à la fois
+      détruirait précisément ce qu’il y a à voir. La proposition garde donc les six en vue —
+      c’est une <strong>frise</strong>, pas un feuilletage — et n’emprunte au carrousel que sa carte.
+    </p>
+  </header>
+
+  <!-- ============ LA FRISE ============ -->
+  <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #FFFFFF; border: 1px solid #E3DFDA; border-radius: 10px;">
+    <span class="lbl">Ratifications sur 54 États — du plus consensuel au plus contraignant</span>
+
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; align-items: end;">
+      <sc-for list="{{barres}}" as="b" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column; gap: 8px; align-items: stretch;">
+          <span style="font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; text-align: center; color: {{b.encre}};">{{b.n}}</span>
+          <div style="height: 132px; display: flex; align-items: flex-end;">
+            <div style="width: 100%; height: {{b.part}}; background: {{b.teinte}}; border-radius: 2px 2px 0 0;"></div>
+          </div>
+          <span style="font-size: 13px; line-height: 1.3; text-align: center; color: #342F29; min-height: 3.4em;">{{b.nom}}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid #E3DFDA;">
+      <span style="width: 8px; height: 8px; border-radius: 999px; background: #A32222; flex: none;"></span>
+      <span style="font-size: 13px; line-height: 1.45; color: #342F29;">
+        Le seuil d’entrée en vigueur du Protocole sur la libre circulation est de 15&nbsp;: il en compte 4.
+      </span>
+    </div>
+  </div>
+
+  <!-- ============ LA CARTE, EMPRUNTÉE AU CARROUSEL ============ -->
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <span class="lbl">La carte de détail, au clic sur une barre</span>
+    <div style="display: flex; gap: 16px; align-items: stretch;">
+
+      <div style="flex: 0 0 336px; display: flex; flex-direction: column; gap: 16px; padding: 16px; background: #FFFFFF; border: 1px solid #3D3A78; border-left: 3px solid #A32222; border-radius: 10px; box-shadow: 0 10px 24px -14px rgba(14,17,22,.38), 0 0 0 1px rgba(61,58,120,.34);">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; line-height: 1.3; color: #A32222; background: rgba(163,34,34,.10); border: 1px solid rgba(163,34,34,.26);">
+            4 / 54 ratifications
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; line-height: 1.3; color: #342F29; background: #F4F1EE; border: 1px solid #E3DFDA;">
+            2018
+          </span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 22px; line-height: 1.15;">Protocole de Kigali</span>
+          <span style="font-size: 13px; line-height: 1.45; color: #514B45;">Libre circulation des personnes</span>
+        </div>
+        <span style="font-size: 15px; line-height: 1.45;">
+          Pas encore en vigueur. Deux des quatre États ratifiants ont depuis quitté la CEDEAO
+          pour l’Alliance des États du Sahel.
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font-size: 13px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #27205C;">
+          Ouvrir la fiche
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: center; padding-left: 8px;">
+        <p style="margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.62; color: #342F29;">
+          La carte est <strong>exactement celle du carrousel</strong>&nbsp;: même cadre, même cran de
+          couleur en bord d’attaque, mêmes pastilles, même appel en bas. Ce qui change est ce
+          qui la commande — une barre de la frise plutôt qu’une position dans un rail.
+        </p>
+        <p style="margin: 0; max-width: 62ch; font-size: 15px; line-height: 1.62; color: #342F29;">
+          C’est le point de la revue&nbsp;: ce qui se réutilise d’une section à l’autre, c’est la
+          <strong>carte</strong>, pas le carrousel. Le carrousel est une réponse à un problème
+          d’effectif&nbsp;; la carte est le vocabulaire commun.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":1180,"height":880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ACCENT = '#3D3A78';
+    // Comptes recalcules sur la base pays de la plateforme, les 54 Etats de l'UA.
+    const brut = [
+      { nom: 'Acte constitutif',        n: 54 },
+      { nom: 'Traité d’Abuja',          n: 49 },
+      { nom: 'ZLECAf',                  n: 48 },
+      { nom: 'Convention OUA réfugiés', n: 46 },
+      { nom: 'Convention de Kampala',   n: 33 },
+      { nom: 'Protocole de Kigali',     n: 4 },
+    ];
+    const barres = brut.map((b) => ({
+      ...b,
+      part: Math.max(4, Math.round((b.n / 54) * 100)) + '%',
+      teinte: b.n < 15 ? '#A32222' : ACCENT,
+      encre: b.n < 15 ? '#A32222' : '#0C0E12',
+    }));
+    return { barres };
+  }
+}
+</script>
+</body>
+</html>

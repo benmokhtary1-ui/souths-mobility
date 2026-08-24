@@ -1,0 +1,24 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1180, "h": 1080, "title": "Le relevé" },
+    { "file": "CER.dc.html", "x": 1300, "y": 0, "w": 1180, "h": 760, "title": "Proposition — les 8 CER" },
+    { "file": "Instruments.dc.html", "x": 1300, "y": 880, "w": 1180, "h": 880, "title": "Proposition — les 6 instruments" }
+  ],
+  "annotations": [
+    {
+      "id": "mesures",
+      "x": 0,
+      "y": -180,
+      "w": 520,
+      "text": "Tous les effectifs et toutes les hauteurs sont mesurés dans le DOM à 1 280 px, section par section — rien n'est estimé.\n\nLes comptes de ratification sont recalculés sur la base pays du site, sur les 54 États de l'Union africaine."
+    },
+    {
+      "id": "a-trancher",
+      "x": 1300,
+      "y": -180,
+      "w": 520,
+      "text": "Deux décisions vous reviennent :\n\n1. L'ordre du rail des CER — par score d'ouverture, ou par région ?\n\n2. La bibliothèque (68 entrées, ≈ 4 000 px) reste hors du feuilletage ici. Si sa hauteur vous gêne, c'est un autre problème et une autre réponse — dites-le et je le regarde."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

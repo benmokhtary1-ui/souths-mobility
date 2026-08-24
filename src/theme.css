@@ -902,9 +902,9 @@ button, a { transition: color var(--dur-fast) var(--ease), background-color var(
      dans une autre, qui sinon bougeraient deux fois, l'une portant l'autre.
      L'opacite ne part pas de zero : meme si l'animation ne se declenchait
      jamais, le contenu resterait lisible.                                   */
-  /* `:not(.rail *)` ecarte les cartes du rail : elles ont leur propre mise en
-     avant, horizontale, et la levee verticale la neutralisait. */
-  :is(main, .reader) .bg-white:not(:is(main, .reader) .bg-white *):not(.rail *) {
+  /* Le carrousel est ecarte : ses feuillets ont leur propre mise en avant,
+     horizontale, et une levee verticale par-dessus la brouillerait. */
+  :is(main, .reader) .bg-white:not(:is(main, .reader) .bg-white *):not(.carrousel *) {
     animation: leveeFeuille linear both;
     animation-timeline: view(block);
     animation-range: entry 2% cover 16%;
@@ -1054,43 +1054,10 @@ main { view-transition-name: page; }
   .atlas-plate { animation: none; }
 }
 
-/* ---------- Le rail de cartes ------------------------------------------
-   Une pile de soixante-dix fiches se parcourt mal en grille : on scanne sans
-   rien lire. Le rail impose une carte a la fois, s'arrete dessus, et laisse
-   les voisines depasser — on sait toujours qu'il y a un avant et un apres. */
-.rail {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: .25rem;
-  padding-block: 4px 8px;
-  padding-inline: .25rem;
-}
-.rail > * {
-  scroll-snap-align: center;
-  flex: 0 0 min(86%, 25rem);
-  min-width: 0;
-}
-.rail:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-@supports (animation-timeline: view()) {
-  /* La carte au centre est nette ; ses voisines reculent. L'opacite plancher
-     reste haute : une carte a demi sortie doit rester lisible, pas disparaitre. */
-  .rail > * {
-    animation: railFocus linear both;
-    animation-timeline: view(inline);
-    animation-range: entry 20% exit 80%;
-  }
-}
-@keyframes railFocus {
-  0%        { opacity: .5; transform: scale(.945); }
-  42%, 58%  { opacity: 1;  transform: scale(1); }
-  100%      { opacity: .5; transform: scale(.945); }
-}
-
+/* ---------- Les fleches de parcours ------------------------------------
+   Le rail a defilement a laisse la place au carrousel (voir « LE
+   FEUILLETAGE », plus bas). Ses fleches, elles, restent : elles servent
+   maintenant a caler la carte suivante ou precedente au centre. */
 .rail-fleche {
   display: inline-flex; align-items: center; justify-content: center;
   /* 1,75 rem valait 28 px : sous le plancher des cibles, et les deux seules du
@@ -1106,14 +1073,6 @@ main { view-transition-name: page; }
 }
 .rail-fleche:disabled { opacity: .35; cursor: default; }
 
-@media (prefers-reduced-motion: reduce) {
-  .rail { scroll-behavior: auto; }
-  .rail > * { animation: none; opacity: 1; transform: none; }
-}
-@media print {
-  .rail { display: block; overflow: visible; }
-  .rail > * { animation: none !important; opacity: 1 !important; transform: none !important; }
-}
 
 /* ---------- Justification : les paragraphes, et rien d'autre -------------- */
 /* Un conteneur de prose justifie transmettait son alignement a tout ce qu'il
@@ -2658,7 +2617,6 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .scene-flux    { border-radius: 16px; }
 .atlas-scene   { border-radius: 12px; }
 .couche-btn    { border-radius: 999px; }
-.rail > *      { border-radius: 10px; }
 .rail-fleche   { border-radius: 999px; }
 .terme[aria-expanded="true"] { border-radius: 3px; }
 .terme-pop     { border-radius: 10px; }
@@ -3984,7 +3942,7 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    — une rangée de sous-navigation, une ligne d'affirmation — gardent le rayon de
    la carte, posé plus haut : une pilule de neuf cents pixels de long ne dit plus
    qu'elle se clique, elle se déforme. */
-:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-pliure):not(.panneau-fiche):not(.terme):not(.gov-subnav):not(.evidence-row):not([class*="rounded-lg"]):not([class*="rounded-xl"]) {
+:is(main, .reader) button:not([class*="rounded-full"]):not(.couche-btn):not(.rail-fleche):not(.panneau-fermer):not(.chapitre-pliure):not(.panneau-fiche):not(.terme):not(.gov-subnav):not(.evidence-row):not(.feuillet-carte):not([class*="rounded-lg"]):not([class*="rounded-xl"]) {
   border-radius: 999px;
 }
 
@@ -4903,13 +4861,170 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
   }
 }
 
-/* Le rail : la carte lue se distingue franchement des autres, et le survol
-   soulève légèrement — c'est ce qui donne au rail sa qualité tactile. */
-.rail-cartes button[aria-current='true'] {
-  box-shadow: 0 0 0 1px var(--accent), 0 6px 18px -8px var(--accent);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .fiche-entree { animation: fiche-fondu .2s linear both; }
   @keyframes fiche-fondu { from { opacity: .4; } to { opacity: 1; } }
+}
+
+/* ============================================================================
+   LE FEUILLETAGE — carrousel à la main
+   ----------------------------------------------------------------------------
+   Une seule règle de composition : la POSITION porte l'information. La carte au
+   centre est à pleine échelle, pleine opacité, pleine ombre ; ses voisines
+   reculent. L'œil sait donc laquelle est lue avant d'avoir lu quoi que ce soit.
+
+   Les couleurs sont celles du site, sans exception : `--paper-raised` pour la
+   carte, `--rule` pour le cadre, `--tier-1..4` pour le cran de robustesse,
+   `--accent-deep` pour l'appel à ouvrir. Aucune teinte nouvelle.
+
+   Ce qui vient du vocabulaire de Climate Policy Radar, ce n'est pas une
+   couleur : c'est la DENSITÉ. Des pastilles qui portent la donnée plutôt que de
+   la décorer, un cadre net d'un pixel, une ombre courte et basse, et une
+   typographie serrée où l'étiquette est petite et l'énoncé large.
+   ========================================================================== */
+
+.carrousel { position: relative; }
+
+.carrousel-tete {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--pas-2); margin-bottom: var(--pas-2);
+}
+.carrousel-commandes { display: flex; align-items: center; gap: 8px; }
+.carrousel-compte {
+  font-size: calc(13px * var(--corps));
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* La fenêtre déborde de la colonne des deux côtés : on doit voir que le
+   feuilletage continue au-delà du bord, sinon rien n'invite à le tirer. */
+.carrousel-fenetre {
+  overflow: hidden;
+  /* La perspective est courte : au-delà, la rotation devient un effet et non
+     plus une indication de profondeur. */
+  perspective: 1400px;
+  padding-block: var(--pas-2) var(--pas-3);
+  margin-inline: calc(-1 * var(--pas-carte));
+  padding-inline: var(--pas-carte);
+}
+
+.carrousel-piste {
+  display: flex;
+  column-gap: var(--pas-2);
+  align-items: stretch;
+  cursor: grab;
+  /* Sur téléphone, le doigt doit pouvoir tirer horizontalement SANS que la
+     page défile en même temps ; le geste vertical, lui, reste à la page. */
+  touch-action: pan-y;
+  will-change: transform;
+}
+.carrousel-piste:active { cursor: grabbing; }
+
+.feuillet-place { flex: 0 0 min(78vw, 21rem); min-width: 0; }
+.feuillet { height: 100%; transform-style: preserve-3d; }
+
+/* --- La carte ------------------------------------------------------------ */
+.feuillet-carte {
+  display: flex; flex-direction: column; gap: var(--pas-2);
+  width: 100%; height: 100%;
+  padding: var(--pas-2);
+  text-align: start;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  /* Le cran de robustesse tient le bord d'attaque : c'est la première chose
+     que l'œil rencontre, et elle est codée par la couleur ET par la jauge. */
+  border-inline-start: 3px solid var(--teinte-cran, var(--rule-strong));
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(14, 17, 22, .04);
+  cursor: pointer;
+  transition: box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.feuillet[data-actif='true'] .feuillet-carte {
+  border-color: var(--accent);
+  border-inline-start-color: var(--teinte-cran, var(--accent));
+  box-shadow: 0 10px 24px -14px rgba(14, 17, 22, .38), 0 0 0 1px var(--accent-filet);
+}
+.feuillet-carte:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* --- Les pastilles de données -------------------------------------------- */
+.feuillet-etiquettes { display: flex; flex-wrap: wrap; gap: 6px; }
+.pastille {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: calc(13px * var(--corps));
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.pastille--cran {
+  color: var(--teinte-cran);
+  background: color-mix(in oklab, var(--teinte-cran) 10%, transparent);
+  border-color: color-mix(in oklab, var(--teinte-cran) 26%, transparent);
+}
+.pastille--theme {
+  color: var(--ink-soft);
+  background: var(--paper-sunk);
+  border-color: var(--rule);
+}
+
+/* --- L'énoncé ------------------------------------------------------------ */
+.feuillet-enonce {
+  font-size: calc(15px * var(--corps));
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--ink);
+  /* Quatre lignes au plus : au-delà, les cartes cessent d'avoir la même
+     hauteur et le carrousel perd son assise. L'énoncé complet est dans la
+     fiche, à un clic. */
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.feuillet-pied {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: auto;
+  font-size: calc(13px * var(--corps));
+  font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.feuillet[data-actif='true'] .feuillet-pied svg { transform: translateX(2px); }
+.feuillet-pied svg { transition: transform var(--dur) var(--ease); }
+
+/* --- Mouvement réduit -----------------------------------------------------
+   On ne coupe pas la fonction, seulement le mouvement : plus de perspective,
+   plus d'échelle, plus de rotation. Le carrousel se tire et se cale toujours,
+   d'un seul coup. */
+@media (prefers-reduced-motion: reduce) {
+  .carrousel-fenetre { perspective: none; }
+  .feuillet { transform: none !important; opacity: 1 !important; }
+  .feuillet-pied svg, .feuillet-carte { transition: none; }
+}
+
+@media (max-width: 639px) {
+  .carrousel-fenetre { margin-inline: calc(-1 * var(--pas-2)); padding-inline: var(--pas-2); }
+  .feuillet-place { flex-basis: min(82vw, 19rem); }
+}
+
+@media print { .carrousel { display: none; } }
+
+/* Le logotype ramène à l'accueil
+   -------------------------------------------------------------------------
+   C'est la convention de presque tous les sites, donc une attente : une marque
+   qui ne fait rien se lit comme un défaut. Devenue bouton, elle a besoin de ce
+   qu'un bouton doit avoir — un curseur qui l'annonce et un focus visible. Elle
+   ne prend en revanche ni fond ni cadre : ce n'est pas une commande de plus
+   dans la barre, c'est l'identité du site. */
+.marque-accueil {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.marque-accueil:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 4px;
 }

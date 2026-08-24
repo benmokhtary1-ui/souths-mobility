@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback, useId } from 'react';
 import { flushSync } from 'react-dom';
+import { motion, animate, useMotionValue, useTransform } from 'framer-motion';
 import { 
   Globe, ShieldAlert, TrendingUp, MapPin, Database, 
   ArrowRight, Languages, Activity, Users, Scale, Leaf, 
@@ -1608,75 +1609,216 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
 // defilement du rail lui-meme — la ou le navigateur le sait faire, aucun
 // JavaScript n’intervient dans l’animation. Le composant ne garde en memoire
 // que la position courante, pour l’annoncer et pour griser les fleches.
-const RailCartes = ({ children, lang = 'fr', etiquette, className = '' }) => {
-  const ref = useRef(null);
-  const [pos, setPos] = useState(0);
-  const total = React.Children.count(children);
+// ============================================================================
+// LE FEUILLETAGE : UN CARROUSEL QU'ON TIRE À LA MAIN
+// ----------------------------------------------------------------------------
+// Le rail précédent défilait à la molette et par deux flèches. Il marchait,
+// mais rien n'y disait quelle carte comptait : les six visibles avaient le même
+// poids, et l'œil devait choisir seul.
+//
+// Ici la position PORTE l'information. La carte au centre est nette, à pleine
+// échelle et pleine ombre ; ses voisines reculent — un peu plus petites, un peu
+// plus pâles, légèrement tournées sur l'axe vertical. On sait donc en un regard
+// laquelle est lue, et laquelle vient ensuite.
+//
+// Trois choses valent d'être expliquées.
+//
+// LA MESURE. Toute la mécanique repose sur deux nombres relevés dans le DOM :
+// le PAS (largeur d'une carte plus la gouttière) et le CENTRE de la fenêtre.
+// Ils changent au redimensionnement, et le carrousel les reprend alors — sans
+// quoi le calage se décale dès qu'on tourne un téléphone.
+//
+// LA PROJECTION. Au relâchement, on ne cale pas sur la carte la plus proche de
+// l'endroit où le doigt s'est levé : on cale sur celle où l'élan AURAIT mené.
+// C'est ce que fait `info.velocity.x * 0.18` — sans quoi un geste rapide et
+// court se voit annulé, ce qui donne l'impression que le carrousel résiste.
+//
+// LE MOUVEMENT RÉDUIT. `prefers-reduced-motion` n'est pas un détail
+// d'accessibilité qu'on ajoute après : ici il coupe le ressort ET la
+// perspective. Le carrousel reste utilisable, il ne bouge simplement plus.
+
+const RESSORT = { type: 'spring', stiffness: 260, damping: 32, mass: 0.9 };
+
+// Une carte du feuilletage. Elle lit la position du chariot et en déduit sa
+// propre distance au centre, d'où son échelle, son opacité et sa rotation.
+// La carte de l'Observatoire des narratifs : un rendu du rail parmi d'autres.
+const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit }) => {
   const L = faireL(lang);
+  const t = tierOf(fiche.confidence_level);
+  const CatIcon = evidenceCategoryIcons[fiche.category.fr] || Globe;
 
-  const mesurer = useCallback(() => {
-    const el = ref.current;
-    if (!el || !el.firstElementChild) return;
-    const pas = el.firstElementChild.getBoundingClientRect().width + 16;
-    setPos(Math.round(el.scrollLeft / Math.max(1, pas)));
-  }, []);
+  // Distance du centre de CETTE carte au centre de la fenêtre, en pixels.
+  const ecart = useTransform(x, (v) => Math.abs(index * pas + carte / 2 + v - centre));
+  const echelle = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.9, 0.85]);
+  const opacite = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.55, 0.32]);
+  // Le signe de l'écart, lui, décide du sens de la rotation : la carte de
+  // gauche s'ouvre vers la droite, et l'inverse.
+  const tourner = useTransform(
+    x,
+    (v) => {
+      if (reduit) return 0;
+      const d = index * pas + carte / 2 + v - centre;
+      return Math.max(-16, Math.min(16, (-d / pas) * 9));
+    },
+  );
 
+  return (
+    <motion.div
+      className="feuillet"
+      style={{ scale: echelle, opacity: opacite, rotateY: tourner }}
+      data-actif={actif ? 'true' : 'false'}
+    >
+      <button
+        type="button"
+        className="feuillet-carte"
+        aria-current={actif ? 'true' : undefined}
+        onClick={() => onOuvrir(index)}
+        onFocus={() => onCentrer(index)}
+        style={{ '--teinte-cran': t.color }}
+      >
+        <span className="feuillet-etiquettes">
+          <span className="pastille pastille--cran">
+            <RobustnessMeter level={fiche.confidence_level} />
+            {tr(fiche.verdict, lang)}
+          </span>
+          <span className="pastille pastille--theme">
+            <CatIcon className="w-3 h-3 shrink-0" aria-hidden="true" />
+            {tr(fiche.category, lang)}
+          </span>
+        </span>
+
+        <span className="feuillet-enonce">{tr(fiche.narrative, lang)}</span>
+
+        <span className="feuillet-pied">
+          {L('Ouvrir le dossier', 'Open the file')}
+          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        </span>
+      </button>
+    </motion.div>
+  );
+};
+
+// Le rail, sans rien savoir de ce qu'il porte : il recoit des objets munis
+// d'un `id` et le composant qui sait les dessiner. Toute la mecanique —
+// mesure du pas, projection de l'elan, ressort de calage — vit ici, et ici
+// seulement.
+const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, className = '' }) => {
+  const L = faireL(lang);
+  const fenetreRef = useRef(null);
+  const carteRef = useRef(null);
+  const x = useMotionValue(0);
+  const [mesure, setMesure] = useState({ pas: 1, carte: 1, centre: 0 });
+  const [pos, setPos] = useState(0);
+  const reduit = prefersReducedMotion();
+  const total = items.length;
+
+  // --- La mesure ----------------------------------------------------------
+  // Le pas se relève sur la première carte plutôt que d'être posé en dur : la
+  // largeur est fixée par la feuille de style, qui la fait varier avec l'écran.
+  useLayoutEffect(() => {
+    const fenetre = fenetreRef.current;
+    if (!fenetre) return;
+    const relever = () => {
+      const carte = carteRef.current;
+      if (!carte) return;
+      const largeur = carte.getBoundingClientRect().width;
+      const style = getComputedStyle(fenetre);
+      const gouttiere = parseFloat(getComputedStyle(fenetre.firstElementChild).columnGap) || 0;
+      // Les cartes sont posees a partir de l'origine du CONTENU de la fenetre,
+      // donc apres sa marge interieure. Le centre doit se mesurer dans le meme
+      // repere, sans quoi il est decale de cette marge et aucune carte ne
+      // tombe jamais exactement sur l'axe de la page.
+      const marge = parseFloat(style.paddingInlineStart) || 0;
+      setMesure({
+        pas: largeur + gouttiere,
+        carte: largeur,
+        centre: fenetre.clientWidth / 2 - marge,
+      });
+    };
+    relever();
+    const obs = new ResizeObserver(relever);
+    obs.observe(fenetre);
+    return () => obs.disconnect();
+  }, [total]);
+
+  const cible = useCallback((i) => mesure.centre - mesure.carte / 2 - i * mesure.pas, [mesure]);
+
+  const aller = useCallback((i, doux = true) => {
+    const j = Math.max(0, Math.min(total - 1, i));
+    setPos(j);
+    if (reduit || !doux) x.set(cible(j));
+    else animate(x, cible(j), RESSORT);
+    return j;
+  }, [cible, reduit, total, x]);
+
+  // Le carrousel suit la fiche ouverte, d'où qu'elle vienne — un clic dans la
+  // liste, un filtre qui change, un retour d'historique.
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let brut = null;
-    const surDefilement = () => {
-      if (brut) return;
-      brut = requestAnimationFrame(() => { brut = null; mesurer(); });
-    };
-    el.addEventListener('scroll', surDefilement, { passive: true });
-    el.addEventListener('scrollend', mesurer);
-    mesurer();
-    return () => {
-      el.removeEventListener('scroll', surDefilement);
-      el.removeEventListener('scrollend', mesurer);
-      if (brut) cancelAnimationFrame(brut);
-    };
-  }, [mesurer, total]);
+    const i = items.findIndex((f) => f.id === choisie);
+    if (i >= 0 && i !== pos) aller(i);
+    else if (i >= 0) x.set(cible(i));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [choisie, mesure, items]);
 
-  const glisser = (sens) => {
-    const el = ref.current;
-    if (!el || !el.firstElementChild) return;
-    const pas = el.firstElementChild.getBoundingClientRect().width + 16;
-    el.scrollBy({ left: sens * pas, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-    // Le compteur avance avec le geste, sans attendre l’evenement de
-    // defilement : sur un defilement doux il arriverait une demi-seconde plus
-    // tard, et les fleches resteraient grisees a contretemps.
-    setPos(p => Math.max(0, Math.min(total - 1, p + sens)));
+  // --- Le relâchement -----------------------------------------------------
+  const surFin = (_e, info) => {
+    // On cale là où l'élan aurait mené, et non là où le doigt s'est levé.
+    const projection = x.get() + info.velocity.x * 0.18;
+    const i = Math.round((mesure.centre - mesure.carte / 2 - projection) / mesure.pas);
+    const j = aller(i);
+    if (items[j]) onChoisir(items[j].id);
+  };
+
+  const bornes = {
+    left: cible(total - 1),
+    right: cible(0),
   };
 
   return (
-    <div className={className}>
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <span className="surtitre" style={{ color: 'var(--label)' }}>
-          {etiquette}
-        </span>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] tabular-nums" style={{ color: 'var(--muted)' }} aria-live="polite">
+    <section className={'carrousel ' + className} aria-roledescription="carousel" aria-label={etiquette}>
+      <div className="carrousel-tete">
+        <span className="surtitre" style={{ color: 'var(--label)' }}>{etiquette}</span>
+        <div className="carrousel-commandes">
+          <span className="carrousel-compte tabular-nums" aria-live="polite">
             {Math.min(pos + 1, total)} / {total}
           </span>
-          <button type="button" onClick={() => glisser(-1)} disabled={pos <= 0}
-            className="rail-fleche" aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
+          <button type="button" className="rail-fleche" disabled={pos <= 0}
+                  onClick={() => { const j = aller(pos - 1); onChoisir(items[j].id); }}
+                  aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
             <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           </button>
-          <button type="button" onClick={() => glisser(1)} disabled={pos >= total - 1}
-            className="rail-fleche" aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
+          <button type="button" className="rail-fleche" disabled={pos >= total - 1}
+                  onClick={() => { const j = aller(pos + 1); onChoisir(items[j].id); }}
+                  aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
             <ChevronRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
-      {/* tabIndex sur le conteneur : le rail se parcourt aussi aux fleches du
-          clavier, comme n’importe quelle zone defilante. */}
-      <div ref={ref} className="rail custom-scrollbar" tabIndex={0}
-           role="group" aria-label={etiquette}>
-        {children}
+
+      <div className="carrousel-fenetre" ref={fenetreRef}>
+        <motion.div
+          className="carrousel-piste"
+          style={{ x }}
+          drag="x"
+          dragConstraints={bornes}
+          dragElastic={0.14}
+          dragMomentum={false}
+          onDragEnd={surFin}
+          whileTap={{ cursor: 'grabbing' }}
+        >
+          {items.map((o, i) => (
+            <div key={o.id} ref={i === 0 ? carteRef : null} className="feuillet-place">
+              <Carte
+                objet={o} index={i} x={x} pas={mesure.pas} carte={mesure.carte} centre={mesure.centre}
+                actif={o.id === choisie} lang={lang} reduit={reduit}
+                onCentrer={(j) => aller(j)}
+                onOuvrir={(j) => { aller(j); onChoisir(items[j].id); }}
+              />
+            </div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -1773,8 +1915,8 @@ const AspirationGap = ({ lang }) => {
             {L("Ce que l’écart démontre", 'What the gap demonstrates')}
           </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "Soixante pour cent de ceux qui envisagent de partir nomment l’Amérique du Nord ou l’Europe. Dans les faits, 54,4 % des partants africains restent sur le continent. Ce décalage est la définition même de la capabilité.\n\nL’aspiration se forme largement en direction du Nord ; la capacité de la réaliser, elle, est distribuée tout autrement — et c’est le régime de mobilité, visas, coûts, routes, accords, qui opère ce tri.\n\nMesurer l’aspiration sans mesurer la capacité produit le récit de l’invasion ; mesurer la capacité sans l’aspiration produit celui de l’immobilité. Il faut les deux (Ben Mokhtar, 2026).",
-              'Sixty per cent of those considering leaving name North America or Europe. In fact 54.4 per cent of African migrants stay on the continent. That gap is the very definition of capability.\n\nAspiration forms largely towards the North; the capacity to realise it is distributed quite differently — and it is the mobility regime, visas, costs, routes, agreements, that does the sorting.\n\nMeasuring aspiration without capability produces the invasion narrative; measuring capability without aspiration produces the immobility narrative. Both are needed (Ben Mokhtar, 2026).'
+              "Chacune des deux mesures, prise isolément, autorise une conclusion fausse. L’aspiration seule donne le récit de l’invasion, puisqu’elle compte des intentions que le régime de mobilité n’autorisera pas. La capacité seule donne celui de l’immobilité, puisqu’elle enregistre des trajectoires accomplies sans rien dire de celles qui ont été empêchées. C’est leur écart, et lui seul, qui décrit le régime (Ben Mokhtar, 2026).",
+              'Either measurement, taken on its own, licenses a false conclusion. Aspiration alone yields the invasion narrative, since it counts intentions the mobility regime will not permit. Capability alone yields the immobility narrative, since it records journeys completed while saying nothing of those that were prevented. It is the gap between them, and that alone, that describes the regime (Ben Mokhtar, 2026).'
             )}</Prose>
         </div>
       </div>
@@ -2763,13 +2905,14 @@ const t = {
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s’élève à 304 millions de personnes en 2024, soit 3,7 % de la population mondiale — une part qui n’a que modestement augmenté depuis 1990, où elle valait 2,9 % (UN DESA, 2024). Sur ce total, l’Afrique accueille environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial : loin derrière l’Europe et l’Asie, et en deçà du poids démographique du continent, proche de 18 % de la population mondiale. Il s’agit ici du stock de migrants présents en Afrique, et non de l’émigration africaine : sur ce second plan, 54,4 % des personnes nées dans un État de l’Union africaine et parties de leur pays résident dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L’attention s’y concentre de manière disproportionnée sur les traversées vers l’Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l’essentiel de la mobilité forcée sur le continent se joue à l’intérieur des frontières nationales. L’Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C’est davantage que tous les migrants internationaux présents sur l’ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l’intérieur d’un pays. Elle ne produit ni image de traversée, ni statistique d’entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d’un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s’impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d’UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c’est l’instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l’OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Un cadre théorique plus large éclaire ce constat. La recherche sur les « capabilités de mouvement » place mobilité et immobilité sur un même continuum : celui des aspirations et des capacités réellement exerçables. Elle s’écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). Les travaux sur la « diplomatie migratoire » montrent que les États africains négocient et retournent les agendas migratoires du Nord. Loin d’en être de simples récepteurs, ils instrumentalisent la coopération migratoire à leur propre bénéfice (Adamson & Tsourapas, 2019). Une lecture décoloniale du droit international de la migration questionne enfin l’asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
+        p2: "Deux cadres théoriques commandent la lecture de ces chiffres, et l’ordre compte. Le premier prend pour objet le mouvement lui-même plutôt que le seul franchissement de frontière : le paradigme des mobilités range sur un même plan les migrations, les circulations quotidiennes, les allers-retours saisonniers et les immobilités subies, en tenant chacune pour un fait social à part entière (Sheller & Urry, 2006). C’est ce cadre qui justifie le périmètre de cette plateforme — pourquoi elle compte les déplacés internes, qui ne migrent nulle part, et pourquoi son nom dit mobilités et non migrations. Le second explique la répartition observée : la recherche sur les capabilités de mouvement place mobilité et immobilité sur un continuum d’aspirations et de capacités réellement exerçables, et s’écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). S’y ajoutent deux éclairages politiques : les travaux sur la diplomatie migratoire montrent que les États africains négocient et retournent les agendas du Nord au lieu de les subir (Adamson & Tsourapas, 2019), et une lecture décoloniale du droit international interroge l’asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
         p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d’en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l’anecdote. Elle place l’architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l’appui. L’Afrique a parfois devancé la norme internationale. Avec la Convention de Kampala (2009), elle a adopté le premier traité régional contraignant au monde sur les personnes déplacées internes — à ce jour, toujours le seul. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l’ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C’est donc l’ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s’ouvre un « entre-deux national » : l’espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
         p4: "Cette exigence scientifique n’exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l’architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l’échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être. Elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l’on met en avant, et l’échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l’assume plutôt que de se présenter comme un simple reflet des données.",
         refs_title: "Pour aller plus loin",
         refs: [
+          { text: "Sheller, M. & Urry, J. (2006). The new mobilities paradigm. Environment and Planning A, 38(2), 207-226.", url: "https://doi.org/10.1068/a37268" },
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
           { text: "de Haas, H. (2023). How Migration Really Works. Penguin Books.", url: null },
           { text: "de Haas, H. (2017, 29 mars). Myths of migration: Much of what we think we know is wrong. Der Spiegel.", url: null },
@@ -3088,13 +3231,14 @@ const t = {
         p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world’s international migrant stock stands at 304 million people in 2024, or 3.7 per cent of the world’s population — a share that has risen only modestly since 1990, when it stood at 2.9 per cent (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil, or 9.5 per cent of the world stock: far behind Europe and Asia, and below the continent’s demographic weight, close to 18 per cent of the world’s population. This is the stock of migrants present in Africa, not African emigration: on that second count, 54.4 per cent of people born in an African Union member state who left their country reside in another African state (computed from UN DESA’s bilateral matrix, 2024).",
         p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). Africa’s largest form of mobility therefore unfolds entirely inside a single country: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
         caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA’s operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
-        p2: "A broader theoretical framework lights this observation. Research on \"capabilities of movement\" places mobility and immobility on a single continuum: that of aspirations and of the capabilities people can actually exercise. It thereby departs from the usual split between voluntary and forced departure (de Haas, 2021). Work on \"migration diplomacy\" shows that African states negotiate, redirect and instrumentalize migration cooperation with the North, far from merely receiving its agendas to their own benefit (Adamson & Tsourapas, 2019). A decolonial reading of international migration law, finally, questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
+        p2: "Two theoretical frameworks govern how these figures read, and the order matters. The first takes movement itself as its object rather than border crossing alone: the mobilities paradigm places migration, daily circulation, seasonal round trips and enforced immobility on a single plane, treating each as a social fact in its own right (Sheller & Urry, 2006). That framework is what justifies this platform’s perimeter — why it counts internally displaced people, who migrate nowhere, and why its name says mobility rather than migration. The second explains the distribution observed: research on capabilities of movement places mobility and immobility on a continuum of aspirations and of the capabilities people can actually exercise, departing from the usual split between voluntary and forced departure (de Haas, 2021). Two political readings complete the picture: work on migration diplomacy shows African states negotiating and redirecting Northern agendas rather than submitting to them (Adamson & Tsourapas, 2019), and a decolonial reading of international law questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
         p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one. It consolidates, harmonizes and recontextualizes data already produced by international and African institutions, instead of producing new data of its own. The platform favours proportion over absolute value, comparison over anecdote, and African institutional architecture — the African Union, the Regional Economic Communities — over normative frameworks imported solely from the North. This does not deny the power and funding asymmetries that concretely structure the regime (Bakewell, 2008; Bayart, 2000).",
         p3b: "This architecture produces a paradox the platform documents with figures. Africa has at times moved ahead of the international norm. With the Kampala Convention (2009) it adopted the world’s first binding regional treaty on internally displaced persons — to this day, still the only one. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
         p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material. Choosing what to foreground, and the scale against which to measure it, is itself an analytical act — one this platform states openly.",
         refs_title: "Further Reading",
         refs: [
+          { text: "Sheller, M. & Urry, J. (2006). The new mobilities paradigm. Environment and Planning A, 38(2), 207-226.", url: "https://doi.org/10.1068/a37268" },
           { text: "de Haas, H. (2021). A theory of migration: the aspirations–capabilities framework. Comparative Migration Studies.", url: "https://doi.org/10.1186/s40878-020-00210-4" },
           { text: "de Haas, H. (2023). How Migration Really Works. Penguin Books.", url: null },
           { text: "de Haas, H. (2017, March 29). Myths of migration: Much of what we think we know is wrong. Der Spiegel.", url: null },
@@ -3458,7 +3602,7 @@ const mapIndicators = [
     key: 'remittances', label: { fr: "Transferts de fonds (% PIB)", en: "Remittances (% GDP)" },
     unit: '%', get: c => (c.remittances === null || c.remittances === undefined ? NaN : Number(c.remittances)),
     hint: { fr: "Transferts des diasporas rapportés au PIB (Banque mondiale, 2024).", en: "Diaspora remittances as a share of GDP (World Bank, 2024)." },
-    plain: { fr: "L’argent envoyé au pays par ceux qui vivent à l’étranger, rapporté à la richesse produite sur place. Dans certains pays, cela dépasse l’aide internationale.", en: "Money sent home by people living abroad, measured against the wealth produced at home. In some countries it exceeds international aid." }
+    plain: { fr: "L’argent envoyé au pays par ceux qui vivent à l’étranger, rapporté à la richesse produite sur place. Sur les 48 États africains pour lesquels la Banque mondiale publie la mesure, ces transferts dépassent 5 % du produit intérieur brut dans seize d’entre eux, soit davantage que l’aide publique au développement reçue.", en: "Money sent home by people living abroad, measured against the wealth produced locally. Across the 48 African states for which the World Bank publishes the measurement, these transfers exceed 5 per cent of gross domestic product in sixteen of them, more than the official development assistance received." }
   },
   {
     key: 'idp_conflict', label: { fr: "Déplacés internes (conflit)", en: "IDPs (conflict)" },
@@ -3474,7 +3618,7 @@ const mapIndicators = [
     key: 'idp_disaster', label: { fr: "Déplacés internes (catastrophe)", en: "IDPs (disaster)" },
     unit: '', get: c => Number(c.idp_disaster),
     hint: { fr: "Personnes déplacées à l’intérieur du pays par une catastrophe (IDMC, GRID 2025).", en: "People displaced within the country by a disaster (IDMC, GRID 2025)." },
-    plain: { fr: "Le nombre de personnes chassées de chez elles par une inondation, une sécheresse ou une tempête, et restées dans leur pays. La mobilité climatique se mesure déjà.", en: "The number of people driven from home by flood, drought or storm, and still inside their country. Climate mobility is already measured." }
+    plain: { fr: "Le nombre de personnes chassées de chez elles par une inondation, une sécheresse ou une tempête, et restées dans leur pays. Contrairement à ce qu’on lit souvent, cette mobilité ne relève pas d’une projection : elle est enregistrée chaque année, pays par pays, depuis 2008.", en: "The number of people driven from home by flood, drought or storm and still inside their country. Contrary to what is often written, this mobility is not a projection: it has been recorded annually, country by country, since 2008." }
   },
   {
     key: 'refugees_hosted', label: { fr: "Réfugiés accueillis", en: "Refugees hosted" },
@@ -4769,8 +4913,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           {/* Ce que la plateforme est, avant ce qu’elle permet de faire. */}
           <Prose className="mt-3 text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#DFD9D3' }} lang={lang}>{L(
-            "Plateforme indépendante de recherche et de données sur les mobilités humaines dans les Suds, construite depuis l’Afrique. Chaque chiffre porte sa source ; chaque jeu de données s’exporte.",
-            'An independent research and data platform on human mobility across the Global South, built from Africa. Every figure carries its source; every dataset can be exported.',
+            "Plateforme indépendante de recherche et de données sur les mobilités humaines dans les Suds, construite depuis l’Afrique. Chaque chiffre y est rattaché à la source qui le publie, et chaque jeu de données peut être exporté pour être vérifié.",
+            'An independent research and data platform on human mobility in the Souths, built from Africa. Every figure is tied to the source that publishes it, and every dataset can be exported and checked.',
             { ar: 'منصة مستقلة للبحث والبيانات حول التنقلات البشرية في الجنوب، مبنية انطلاقاً من أفريقيا. لكل رقم مصدره، ولكل مجموعة بيانات تصديرها.' }
           )}</Prose>
 
@@ -4808,8 +4952,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
                 de 384 — la carte, que le lecteur vient voir, s’en trouvait
                 repoussee sous la ligne de flottaison. */}
             <p className="scene-flux-mode">
-              {L('Huit questions posées au continent — survolez pour un chiffre, cliquez pour le pays.',
-                 'Eight questions put to the continent — hover for a figure, click for the country.',
+              {L(`${COUCHES_ATLAS.length} questions posées au continent — survolez pour un chiffre, cliquez pour le pays.`,
+                 `${COUCHES_ATLAS.length} questions put to the continent — hover for a figure, click for the country.`,
                  { ar: 'ثمانية أسئلة مطروحة على القارة — مرّر لقراءة رقم، وانقر لفتح البلد.' })}
             </p>
             {/* Deux colonnes des que la place existe. En file simple, les dix
@@ -5454,7 +5598,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         }}
         notions={[
           { mot: { fr: 'Entrer', en: 'Enter' },
-            sens: { fr: "L’Atlas pose huit questions au continent et y répond pays par pays. C’est la porte d’entrée.", en: 'The Atlas puts eight questions to the continent and answers them country by country. It is the way in.' } },
+            sens: { fr: `L’Atlas pose ${COUCHES_ATLAS.length} questions au continent et y répond pays par pays. Chacune est choisie pour que la réponse contredise souvent l’attendu.`, en: `The Atlas puts ${COUCHES_ATLAS.length} questions to the continent and answers them country by country. Each is chosen so that the answer often contradicts what is expected.` } },
           { mot: { fr: 'Éprouver', en: 'Test' },
             sens: { fr: "Evidence Check confronte des énoncés courants aux meilleures sources disponibles, avec une jauge à quatre crans.", en: 'Evidence Check sets common claims against the best available sources, on a four-notch gauge.' } },
           { mot: { fr: 'Comprendre', en: 'Understand' },
@@ -5549,7 +5693,9 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           </span>
         </div>
         <h2 className="text-2xl md:text-4xl font-serif font-bold text-slate-900 mb-6 text-center">{text.home_editorial.title}</h2>
-        <Chapitre lang={lang}>
+        {/* Pas de pliure ici. Cette note pose le cadre scientifique du site ;
+            la replier ferait de l’argument une option, et le lecteur
+            arriverait sur les chiffres sans savoir d’où ils sont lus. */}
         <div className="note-cadrage-corps space-y-4 text-sm text-slate-700 leading-relaxed text-justify">
           <Prose className="lede" lang={lang}>{text.home_editorial.p1}</Prose>
         </div>
@@ -5575,7 +5721,6 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           </blockquote>
           <Prose className="font-medium text-slate-800" lang={lang}>{text.home_editorial.p4}</Prose>
         </div>
-        </Chapitre>
         <div className="mt-8 pt-6 border-t border-slate-100">
           <p className="surtitre">{text.home_editorial.refs_title}</p>
           <ul className="space-y-1.5">
@@ -5860,7 +6005,16 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         }}
       />
 
-      {/* Note de provenance : les affirmations sont de l’auteur, les donnees ne le sont pas. */}
+      {/* ------- Ce que la note évalue -------
+          La portée vient AVANT la première affirmation : sans elle, le lecteur
+          prend une sélection d'auteur pour un échantillon, et la jauge pour un
+          jugement sur l'énoncé plutôt que sur la preuve disponible. */}
+      <div>
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{L("Ce que la note évalue, et ce qu’elle n’évalue pas", "What the rating assesses, and what it does not")}</h2>
+        <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-4" lang={lang}>{L(
+            "La jauge à quatre crans porte sur la solidité de la preuve disponible, et sur elle seule. Elle ne dit pas qu’une affirmation est vraie ou fausse\u202f: elle dit ce que les sources permettent d’en établir, et à quel degré.",
+            "The four-notch gauge bears on the strength of the available evidence, and on that alone. It does not say a claim is true or false: it says what the sources allow to be established, and how firmly."
+          )}</Prose>
       <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <Prose className="text-xs text-amber-800 leading-relaxed" lang={lang}>{L(
@@ -5868,9 +6022,12 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."
           )}</Prose>
       </div>
+      </div>
 
-      {/* Barre de recherche et de tri du registre */}
-      <div className="bg-white border border-slate-200 print:hidden">
+      {/* ------- Chercher ------- */}
+      <div>
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{L("Chercher dans le corpus", "Search the corpus")}</h2>
+      <div className="bg-white border border-slate-200 print:hidden mt-2">
         <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 border-b border-slate-100">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -5944,6 +6101,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
           </div>
         </div>
       </div>
+      </div>
 
       {results.length === 0 ? (
         <div className="bg-white border border-slate-200 p-10 text-center">
@@ -5952,55 +6110,31 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         </div>
       ) : (
         <>
-        {/* ------- Parcours en cartes -------
-            Le registre donne la vue d’ensemble, le dossier donne la lecture ;
-            entre les deux il manquait le feuilletage. Le rail suit les memes
-            filtres que la liste et designe la meme fiche. */}
+        {/* ------- Les affirmations -------
+            Le troisieme et dernier moment de la section. Le carrousel fait le
+            parcours — la carte au centre est nette, ses voisines reculent, si
+            bien que la position porte l'information — et le dossier, dessous,
+            porte la lecture. Les deux suivent les memes filtres. */}
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
+          {L("Les affirmations, une par une", "The claims, one by one")}
+        </h2>
+        <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-5" lang={lang}>{L(
+            "Chaque fiche confronte un enonce a ses sources, expose ce qu’elles etablissent, et enonce ce qu’elles ne permettent pas de conclure.",
+            "Each file sets a claim against its sources, states what they establish, and states what they do not allow to be concluded."
+          )}</Prose>
         {results.length > 1 && (
-          <RailCartes
+          <Carrousel
+            items={results}
+            carte={CarteFeuillet}
             lang={lang}
+            choisie={selectedId}
+            onChoisir={setSelectedId}
             className="mb-8 print:hidden"
             etiquette={L(
-              `Feuilleter — ${results.length} affirmation${results.length > 1 ? 's' : ''}`,
-              `Browse — ${results.length} claim${results.length > 1 ? 's' : ''}`
+              `${results.length} affirmation${results.length > 1 ? 's' : ''} — tirer pour feuilleter`,
+              `${results.length} claim${results.length > 1 ? 's' : ''} — drag to browse`
             )}
-          >
-            {results.map((f) => {
-              const t = tierOf(f.confidence_level);
-              const CatIcon = evidenceCategoryIcons[f.category.fr] || Globe;
-              const isSel = selected && selected.id === f.id;
-              return (
-                <button
-                  key={f.id}
-                  type="button"
-                  onClick={() => setSelectedId(f.id)}
-                  aria-current={isSel ? 'true' : undefined}
-                  className="lift text-start bg-white border p-4 flex flex-col gap-3"
-                  style={{
-                    borderColor: isSel ? 'var(--accent)' : 'var(--rule)',
-                    borderInlineStartWidth: '3px',
-                    borderInlineStartColor: t.color,
-                  }}
-                >
-                  <span className="flex items-center gap-2">
-                    <RobustnessMeter level={f.confidence_level} />
-                    <span className="surtitre truncate">
-                      {tr(f.category, lang)}
-                    </span>
-                    <CatIcon className="w-3.5 h-3.5 shrink-0 ms-auto" style={{ color: 'var(--rule-strong)' }} aria-hidden="true" />
-                  </span>
-                  <span className="block text-[13px] leading-snug text-slate-800 font-medium">
-                    {tr(f.narrative, lang)}
-                  </span>
-                  <span className="surtitre mt-auto inline-flex items-center gap-1"
-                        style={{ color: 'var(--accent-deep)' }}>
-                    {L('Ouvrir le dossier', 'Open the file')}
-                    <ArrowRight className="w-3 h-3" aria-hidden="true" />
-                  </span>
-                </button>
-              );
-            })}
-          </RailCartes>
+          />
         )}
 
         {/* ------- Le dossier, pleine colonne -------
@@ -6175,8 +6309,8 @@ const GovernanceCross = ({ lang }) => {
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l’Indice Ibrahim, l’ouverture effective des frontières mesurée par l’indice AVOI, et le nombre d’instruments continentaux ratifiés. On peut donc tester ce que l’on suppose souvent sans le vérifier : est-ce que mieux gouverner, c’est plus ouvrir ? Et est-ce que signer, c’est ouvrir ?",
-              'The platform holds three independent measures for each of the 54 states: governance quality as measured by the Ibrahim Index, effective border openness as measured by the AVOI, and the number of continental instruments ratified. That makes it possible to test what is often assumed without checking: does governing better mean opening more? And does signing mean opening?'
+              "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l’Indice Ibrahim, l’ouverture effective des frontières mesurée par l’indice AVOI, et le nombre d’instruments continentaux ratifiés. Elle permet donc de soumettre à l’épreuve deux hypothèses que le débat public tient généralement pour acquises : qu’un État mieux gouverné ouvre davantage ses frontières, et qu’un État qui ratifie les textes de libre circulation les applique.",
+              'The platform carries three independent measurements for each of the 54 states: governance quality as measured by the Ibrahim Index, effective border openness as measured by the AVOI index, and the number of continental instruments ratified. It therefore allows two hypotheses that public debate generally takes for granted to be put to the test: that a better-governed state opens its borders more, and that a state which ratifies free-movement instruments applies them.'
             )}</Prose>
   
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
@@ -6382,7 +6516,7 @@ const AnchoringMatrix = ({ lang }) => {
             {L('Calculé depuis la base de la plateforme', 'Computed from the platform database')}
           </span>
           <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-            {L("L’ancrage : ce que les États ont réellement ratifié",
+            {L("L’engagement décroche dès qu’il devient contraignant",
                'Anchoring: what states have actually ratified')}
           </h3>
         </div>
@@ -6850,8 +6984,8 @@ const TabForced = ({ text, lang, children }) => {
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
           <Prose className="lede" lang={lang}>{L(
-              "Parler de « migration » pour désigner l’ensemble des mobilités africaines efface la distinction qui compte le plus en droit. Celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu’une frontière internationale a été franchie. Cette frontière décide de tout : du statut, de l’institution compétente, du financement, et même de la visibilité statistique.",
-              'Speaking of "migration" for all African mobility erases the distinction that matters most in law: between the person who chooses to leave and the person compelled to. And among the compelled, law still distinguishes according to whether an international border was crossed — and that border decides everything: status, competent institution, funding, and even statistical visibility.'
+              "Parler de « migration » pour désigner l’ensemble des mobilités africaines efface la distinction qui compte le plus en droit, celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu’une frontière internationale a été franchie ou non. De ce seul franchissement dépendent le statut de la personne, l’institution compétente pour la protéger, le financement mobilisable et jusqu’à sa visibilité dans les statistiques.",
+              'Using "migration" for the whole of African mobility erases the distinction that matters most in law, the one separating the person who chooses to leave from the person compelled to. And among the compelled, law distinguishes further according to whether an international border has been crossed. On that crossing alone depend the person’s status, the institution competent to protect them, the funding that can be mobilised, and even their visibility in the statistics.'
             )}</Prose>
         </div>
       </Reveal>
@@ -6932,8 +7066,8 @@ const TabForced = ({ text, lang, children }) => {
             })}
           </div>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify mt-4" lang={lang}>{L(
-              "En dix ans, le nombre de personnes déplacées dans leur propre pays et suivies par le HCR a plus que triplé sur le continent. Les réfugiés, eux — ceux qui franchissent une frontière —, ont un peu plus que doublé. La mobilité forcée africaine ne s’internationalise donc pas : elle s’intensifie à l’intérieur des frontières. C’est exactement la population que les statistiques migratoires ne comptent pas, et celle dont le traité qui la protège attend encore ses ratifications.",
-              "In a decade, the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent. Refugees — those who cross a border — have a little more than doubled. African forced mobility is therefore not internationalising: it is intensifying within borders. That is precisely the population migration statistics do not count, and the one whose protecting treaty is still awaiting ratifications."
+              "En dix ans, le nombre de personnes déplacées à l’intérieur de leur propre pays et suivies par le HCR a plus que triplé sur le continent, tandis que celui des réfugiés, qui franchissent une frontière, a un peu plus que doublé. La mobilité forcée africaine ne s’internationalise donc pas : elle s’intensifie à l’intérieur des frontières nationales. Or c’est précisément cette population que les statistiques migratoires n’enregistrent pas, faute de franchissement à comptabiliser, et que le seul traité conçu pour la protéger n’atteint qu’à proportion des ratifications obtenues.",
+              "Over ten years the number of people displaced inside their own country and monitored by UNHCR has more than tripled on the continent, while the number of refugees, who cross a border, has slightly more than doubled. African forced mobility is therefore not internationalising: it is intensifying within national borders. Yet this is precisely the population that migration statistics do not record, there being no crossing to count, and that the only treaty designed to protect it reaches only in proportion to the ratifications secured."
             )}</Prose>
         </div>
 
@@ -7005,7 +7139,15 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
   // La bascule est passee en enfant au volet, qui la place sous son bandeau :
   // au-dessus du titre, elle flottait sans rien a quoi se rattacher.
   const bascule = (
-    <nav className="bascule-groupe flex flex-wrap gap-2 -mt-2 mb-2" aria-label={L('Volets de la section', 'Section panes', { ar: 'أقسام الصفحة' })}>
+    <div className="mb-2 -mt-2">
+      {/* La these de la section, au-dessus de la bascule. Sans elle les quatre
+          volets se lisent comme un sommaire — quatre sujets qui cohabitent —
+          alors qu'ils demontrent le meme constat sur quatre terrains. */}
+      <Prose className="text-sm leading-relaxed max-w-4xl mb-3" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
+          "Ces quatre formes de mobilité ont un constat en commun\u202f: elles sont majoritairement internes aux pays ou intra-africaines. Or ce sont précisément celles que l’appareil statistique saisit le moins bien — un déplacement qui ne franchit aucune frontière ne produit aucune entrée à compter.",
+          "These four forms of mobility share one finding: they are predominantly internal to countries or intra-African. Yet they are precisely the ones statistical systems capture least well — movement that crosses no border produces no entry to count."
+        )}</Prose>
+    <nav className="bascule-groupe flex flex-wrap gap-2" aria-label={L('Volets de la section', 'Section panes', { ar: 'أقسام الصفحة' })}>
         {volets.map(v => (
           <button
             key={v.cle}
@@ -7019,6 +7161,7 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
           </button>
       ))}
     </nav>
+    </div>
   );
 
   // Un chapeau par volet, posé sous le bandeau que chaque volet affiche.
@@ -7045,15 +7188,15 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             { mot: { fr: 'Environnement', en: 'Environment' },
               sens: { fr: "Plus large : écosystèmes, sols, eau, qualité de l’air. Une nappe épuisée par surexploitation en relève, et se corrige localement.",
                       en: 'Broader: ecosystems, soil, water, air quality. A water table drained by over-extraction belongs here, and is corrected locally.' } },
-            { mot: { fr: 'Catastrophe', en: 'Disaster' },
+            { mot: { fr: 'Un événement soudain ou lent — inondation, sécheresse, cyclone, séisme — dont on compte les personnes qu’il chasse de chez elles sans qu’elles quittent leur pays. C’est la mesure que produit l’IDMC, et c’est elle que ce volet rapporte.', en: 'A sudden or slow-onset event — flood, drought, cyclone, earthquake — for which what is counted is the people it drives from their homes without their leaving the country. That is the measurement IDMC produces, and the one this section reports.' },
               sens: { fr: "Une inondation, une sécheresse, un cyclone, un séisme. On compte les personnes qu’elle chasse de chez elles sans qu’elles quittent leur pays — c’est ce que mesure l’IDMC, et c’est ce que ce volet rapporte.",
                       en: 'A flood, a drought, a cyclone, an earthquake. What is counted is the people it drives from their homes without their leaving the country — what IDMC measures, and what this section reports.' } },
             { mot: { fr: 'Mobilité induite', en: 'Induced mobility' },
-              sens: { fr: "Le facteur environnemental est déterminant sans être seul : il agit à travers des conditions économiques, sociales et politiques. D’où « induite » plutôt que « causée ».",
-                      en: 'The environmental factor is decisive without being sole: it works through economic, social and political conditions. Hence "induced" rather than "caused".' } },
+              sens: { fr: "Le facteur environnemental est déterminant sans jamais agir seul : il opère à travers des conditions économiques, sociales et politiques qui décident, à exposition égale, de qui part et de qui reste. Un même épisode de sécheresse ne produit donc pas la même mobilité selon le lieu où il survient, ce qui interdit d’en faire une cause au sens strict et justifie le terme d’« induite ».",
+                      en: 'The environmental factor is decisive without ever acting alone: it works through economic, social and political conditions which decide, at equal exposure, who leaves and who stays. The same drought episode therefore does not produce the same mobility depending on where it strikes, which rules out treating it as a cause in the strict sense and warrants the term "induced".' } },
             { mot: { fr: 'Populations immobilisées', en: 'Trapped populations' },
-              sens: { fr: "Exposées, et sans les ressources qu’exige un départ. Les plus pauvres restent là où le risque est le plus fort ; aucune statistique de mobilité ne les compte.",
-                      en: 'Exposed, and without the resources departure demands. The poorest stay where risk is greatest; no mobility statistic counts them.' } },
+              sens: { fr: "Des populations exposées à un risque qu’elles ne peuvent fuir, faute des ressources qu’exige un départ. Ce sont les plus pauvres qui restent là où le risque est le plus fort, et parce qu’aucun mouvement n’est enregistré, aucune statistique de mobilité ne les fait apparaître.",
+                      en: 'Populations exposed to a risk they cannot flee, lacking the resources departure demands. It is the poorest who stay where risk is greatest, and because no movement is recorded, no mobility statistic makes them visible.' } },
           ]}
           pied={{ fr: "Sources : Black et al. (2011) ; Foresight (2011) ; Ben Mokhtar, Y. (2024), projet Go Green.",
                   en: 'Sources: Black et al. (2011); Foresight (2011); Ben Mokhtar, Y. (2024), Go Green project.' }}
@@ -7065,8 +7208,8 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
                    en: 'What makes a departure a labour migration',
                    ar: 'ما الذي يجعل من المغادرة هجرة عمل' }}
           chapeau={{
-            fr: "Ce volet mesure des personnes employées hors de leur pays, et l’écart entre le droit qui les protège sur le papier et celui qu’elles peuvent invoquer. Quatre mots commandent cette lecture.",
-            en: 'This section measures people employed outside their own country, and the gap between the law that protects them on paper and the law they can actually invoke. Four words govern that reading.'
+            fr: "Ce volet mesure des personnes employées hors de leur pays, et l’écart entre le droit qui les protège sur le papier et celui qu’elles peuvent effectivement invoquer. Cet écart ne se lit qu’à condition de distinguer quatre notions que l’usage courant confond, et dont chacune commande une partie du raisonnement.",
+            en: 'This section measures people employed outside their own country, and the gap between the rights that protect them on paper and those they can actually invoke. That gap can be read only by distinguishing four notions that common usage runs together, each of which governs one part of the argument.'
           }}
           notions={[
             { mot: { fr: 'Travailleur migrant', en: 'Migrant worker' },
@@ -7242,8 +7385,8 @@ const TabLabour = ({ text, lang, children }) => {
           ]}
         >
           <Prose className="text-justify" lang={lang}>{L(
-              "Le rapport continental sur les statistiques de migration de travail en est à sa quatrième édition. Lues ensemble, les deux dernières disent la même chose sur le fond — la mobilité intra-africaine est d’abord une mobilité de travail — et deux choses différentes sur les chiffres. C’est cette double lecture qui est instructive.",
-              "The continental report on labour migration statistics is now in its fourth edition. Read together, the last two say the same thing in substance — intra-African mobility is first of all labour mobility — and two different things in figures. It is that double reading which is instructive."
+              "Le rapport continental sur les statistiques de migration de travail en est à sa quatrième édition. Lues ensemble, les deux dernières s’accordent sur le fond — la mobilité intra-africaine est d’abord une mobilité de travail — et divergent sur les chiffres. Cette divergence n’affaiblit pas le constat : elle montre qu’une série statistique se révise à mesure que les États déclarants s’ajoutent, et elle permet d’observer directement l’effet de l’harmonisation sur ce que le continent sait de lui-même.",
+              "The continental report on labour migration statistics is now in its fourth edition. Read together, the last two agree in substance — intra-African mobility is above all labour mobility — and diverge on the figures. That divergence does not weaken the finding: it shows that a statistical series is revised as reporting states are added, and it makes the effect of harmonisation on what the continent knows about itself directly observable."
             )}</Prose>
 
           {/* Releve comparatif : uniquement les points effectivement publies. */}
@@ -7301,8 +7444,8 @@ const TabLabour = ({ text, lang, children }) => {
               {L("Là où la donnée manque vraiment", "Where the data really runs out")}
             </p>
             <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-                "Pour établir les caractéristiques d’emploi des migrants, la 3e édition n’a pu s’appuyer que sur dix États déclarants sur cinquante-quatre — Cabo Verde, Cameroun, Tchad, Égypte, Liberia, Mali, Namibie, Niger, Nigeria, Seychelles.\n\nC’est sur cette base que l’on sait que l’agriculture, la sylviculture et la pêche employaient 27,5 % des travailleurs migrants recensés.\n\nLe chiffre est solide pour ces dix pays ; il ne l’est pas pour le continent. Le déficit n’est donc pas dans la production de données brutes, il est dans la chaîne de remontée et d’harmonisation (Ben Mokhtar, 2026).",
-                "To establish migrants' employment characteristics, the 3rd edition could draw on only ten reporting states out of fifty-four — Cabo Verde, Cameroon, Chad, Egypt, Liberia, Mali, Namibia, Niger, Nigeria, Seychelles.\n\nIt is on that basis that agriculture, forestry and fishing are known to have employed 27.5% of the migrant workers recorded.\n\nThe figure is sound for those ten countries; it is not sound for the continent. The deficit therefore sits in the reporting and harmonisation chain rather than in producing raw data (Ben Mokhtar, 2026)."
+                "Le chiffre vaut pour ces dix pays et ne vaut pas pour le continent, puisque rien ne garantit que les quarante-quatre absents présentent la même structure d’emploi. Ce que révèle cet écart n’est pas une carence de production : les données brutes existent dans les appareils nationaux. Il porte sur la chaîne qui les fait remonter et les rend comparables (Ben Mokhtar, 2026).",
+                "The figure holds for these ten countries and does not hold for the continent, since nothing guarantees that the forty-four absent ones share the same employment structure. What this gap reveals is not a failure of production: the raw data exist within national systems. It concerns the chain that reports them upward and makes them comparable (Ben Mokhtar, 2026)."
               )}</Prose>
           </div>
 
@@ -7348,8 +7491,8 @@ const TabLabour = ({ text, lang, children }) => {
   
             <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
               <Prose className="text-justify" lang={lang}>{L(
-                  "Onze conventions de l’OIT posent le socle des droits d’un travailleur migrant. Liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont celles-là qui comptent, bien plus que le nombre total de textes signés par le pays d’accueil. Le compte, pays par pays, donne un résultat net.",
-                  "Eleven ILO conventions set the floor of a migrant worker’s rights: freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. Those are what count, far more than the total number of texts the host country has signed. Counted country by country, the result is stark."
+                  "Onze conventions de l’OIT posent le socle des droits d’un travailleur migrant : liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont elles qu’il faut compter, et non le nombre total de textes ratifiés par le pays d’accueil : un État peut avoir ratifié beaucoup de conventions sans avoir ratifié celles-là, auquel cas le travailleur migrant ne peut invoquer aucun de ces droits devant un juge national.",
+                  "Eleven ILO conventions set the floor of a migrant worker’s rights: freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. These are the ones to count, not the total number of instruments the host country has ratified: a state may have ratified many conventions without ratifying these, in which case the migrant worker can invoke none of those rights before a national court."
                 )}</Prose>
   
               <div>
@@ -7707,8 +7850,8 @@ const TabCorridors = ({ text, lang, children }) => {
         }}
         notions={[
           { mot: { fr: 'Corridor', en: 'Corridor' },
-            sens: { fr: "Un couple de pays, mesuré par le nombre de personnes nées dans le premier et résidant dans le second. Une photographie de l’installation, tirée des recensements.",
-                    en: 'A pair of countries, measured by how many people born in the first reside in the second. A snapshot of settlement, drawn from censuses.' } },
+            sens: { fr: "Un couple de pays, mesuré par le nombre de personnes nées dans le premier et résidant dans le second. La mesure est tirée des recensements : elle décrit une installation constatée à une date, et laisse hors champ les allers-retours comme les séjours qui n’ont pas abouti à une résidence.",
+                    en: 'A pair of countries, measured by how many people born in the first reside in the second. The measurement comes from censuses: it describes settlement observed at a date, and leaves out round trips as well as stays that did not result in residence.' } },
           { mot: { fr: 'Route', en: 'Route' },
             sens: { fr: "Un tracé de passage, mesuré par des observations de terrain aux points de franchissement. Une mesure du mouvement, non de l’installation.",
                     en: 'A path of transit, measured by field observation at crossing points. A measure of movement, not of settlement.' } },
@@ -7720,8 +7863,8 @@ const TabCorridors = ({ text, lang, children }) => {
                     en: 'Repeated counting of crossings at a given point. IOM runs it on routes leading off the continent; no continental equivalent exists for internal corridors.' } },
         ]}
         pied={{
-          fr: "Un corridor documenté par les stocks se met à jour tous les deux ans et ignore les allers-retours. Une route suivie sur le terrain se met à jour tous les mois et ignore ceux qui restent. Les deux mesures ne se remplacent pas.",
-          en: 'A corridor documented by stocks updates every two years and ignores round trips. A route monitored in the field updates monthly and ignores those who stay. Neither measure replaces the other.'
+          fr: "Un corridor documenté par les stocks se met à jour tous les deux ans et ignore les allers-retours ; une route suivie sur le terrain se met à jour tous les mois et ignore ceux qui restent. Aucune des deux ne peut donc se substituer à l’autre : la première décrit une installation, la seconde un passage, et confondre les deux revient à lire un volume là où il n’y a qu’un flux, ou l’inverse.",
+          en: 'A corridor documented through stocks updates every two years and ignores round trips; a route monitored on the ground updates monthly and ignores those who stay. Neither can therefore stand in for the other: the first describes settlement, the second passage, and conflating them means reading a volume where there is only a flow, or the reverse.'
         }}
       />
 
@@ -7780,8 +7923,8 @@ const TabCorridors = ({ text, lang, children }) => {
 
         <div className="px-6 md:px-8 py-4 border-t border-slate-100" style={{ backgroundColor: 'var(--paper-sunk)' }}>
           <Prose className="text-[12px] leading-relaxed" style={{ color: 'var(--label)' }} lang={lang}>{L(
-            "Cinq corridors seulement, quand le continent en compte des dizaines. Ce n’est pas une sélection éditoriale : ce sont ceux pour lesquels un chiffre bilatéral publié a pu être retrouvé et vérifié. Le reste existe sans être compté.",
-            'Five corridors only, where the continent holds dozens. This is not an editorial selection: they are the ones for which a published bilateral figure could be found and verified. The rest exist without being counted.'
+            "Cinq corridors seulement sont représentés ici, quand le continent en compte des dizaines. La sélection n’est pas éditoriale : ce sont les seuls pour lesquels un chiffre bilatéral publié a pu être retrouvé et vérifié. Les autres circulent, sont décrits dans la littérature et cités par les administrations, mais aucune source publique ne leur attribue de valeur qu’on puisse reprendre sans l’inventer.",
+            'Only five corridors are shown here, where the continent has dozens. The selection is not editorial: these are the only ones for which a published bilateral figure could be found and verified. The others carry movement, are described in the literature and cited by administrations, but no public source assigns them a value that could be reproduced without being invented.'
           )}</Prose>
         </div>
       </Reveal>
@@ -7850,8 +7993,8 @@ const TabCorridors = ({ text, lang, children }) => {
              "Staying within one’s region: Africa among the others")}
         </h2>
         <Prose className="text-sm text-slate-600 mb-5" lang={lang}>{L(
-          "Une part intrarégionale ne se lit pas seule. UN DESA calcule, pour chaque région, la part des personnes nées dans la région qui vivent dans un autre pays de cette même région. La moyenne mondiale est de 45 %.",
-          "An intra-regional share cannot be read on its own. For each region, UN DESA computes the share of people born in the region who live in another country of that same region. The world average is 45 per cent."
+          "Une part intrarégionale ne signifie rien prise isolément : elle ne devient interprétable qu’une fois rapportée à ce que font les autres régions du monde. UN DESA calcule, pour chacune, la part des personnes nées dans la région qui résident dans un autre pays de cette même région ; la moyenne mondiale s’établit à 45 %, et c’est cette valeur qui sert ici de point de comparaison.",
+          "An intra-regional share means nothing taken on its own: it becomes interpretable only once set against what other world regions do. UN DESA computes, for each of them, the share of people born in the region who reside in another country of that same region; the world average stands at 45 per cent, and that is the value used here as the point of comparison."
         )}</Prose>
 
         <ReservePerimetre lang={lang} />
@@ -7899,8 +8042,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CEDEAO / ECOWAS (Afrique de l’Ouest)', en: 'ECOWAS (West Africa)' },
       tag: tr({ fr: 'Ouverture standardisée & pionnière', en: 'Pioneering & standardized openness' }, lang),
       desc: {
-        fr: "La CEDEAO constitue le bloc de référence du régime continental. L’ouverture y est une présomption stabilisée dans les pratiques administratives, malgré la sécession en 2024-2025 de l’Alliance des États du Sahel (AES - Mali, Burkina Faso, Niger) qui vient fragmenter l’acquis historique de 1979.",
-        en: "ECOWAS constitutes the reference bloc of the continental regime. Openness is a stabilized presumption in administrative practices, despite the 2024-2025 secession of the Alliance of Sahel States (AES - Mali, Burkina Faso, Niger) which fragments the historical 1979 acquis."
+        fr: "La CEDEAO est le bloc de référence du régime continental : c’est la seule Communauté où la libre circulation ne se déduit pas d’un objectif mais d’un droit ouvert depuis 1979, et où les administrations la traitent comme la règle plutôt que comme une faveur. La sécession de l’Alliance des États du Sahel en 2024-2025 — Mali, Burkina Faso, Niger — fragmente cet acquis sans l’abolir.",
+        en: "ECOWAS is the continental regime’s benchmark bloc: it is the only Community where free movement follows not from an objective but from a right open since 1979, and where administrations treat it as the rule rather than as a favour. The 2024-2025 secession of the Alliance of Sahel States — Mali, Burkina Faso, Niger — fragments that acquis without abolishing it."
       },
       instruments: {
         fr: "Protocole de 1979 et Actes additionnels de 2014 (suppression de la limite de 90 jours). Processus consultatif : MIDWA (Dialogue sur la migration en Afrique de l’Ouest).",
@@ -7924,8 +8067,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CAE / EAC (Communauté d’Afrique de l’Est)', en: 'EAC (East African Community)' },
       tag: tr({ fr: 'Citoyenneté de marché & corridors', en: 'Market citizenship & corridors' }, lang),
       desc: {
-        fr: "La CAE fonde son intégration sur une citoyenneté de marché. La mobilité y est pensée comme une condition de crédibilité du marché commun, articulant droit au travail, résidence et établissement de manière asymétrique.",
-        en: "The EAC bases its integration on market citizenship. Mobility is seen as a condition for the credibility of the common market, asymmetrically articulating the right to work, residence, and establishment."
+        fr: "La CAE fait de la mobilité une condition de crédibilité de son marché commun : sans circulation des personnes, la libre circulation des biens, des services et des capitaux resterait incomplète. Le Protocole de 2010 ouvre en conséquence le travail, la résidence et l’établissement, mais à des degrés inégaux, l’accès au marché du travail précédant partout la reconnaissance d’un droit au séjour.",
+        en: "The EAC makes mobility a condition of its common market’s credibility: without the movement of people, the free movement of goods, services and capital would remain incomplete. The 2010 Protocol accordingly opens work, residence and establishment, but to unequal degrees, access to the labour market everywhere preceding recognition of a right of residence."
       },
       instruments: {
         fr: "Protocole du marché commun (2010), politique de migration de travail (2025-2030), et forte procéduralisation douanière via les Postes-frontières à arrêt unique (OSBP).",
@@ -7949,8 +8092,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'SADC (Communauté de Développement de l’Afrique Australe)', en: 'SADC (Southern African Development Community)' },
       tag: tr({ fr: 'Procéduralisation sectorielle & prudence', en: 'Sectoral approach & caution' }, lang),
       desc: {
-        fr: "Face aux réticences souverainistes (notamment de l’Afrique du Sud), la SADC déploie une intégration asymétrique et sélective, privilégiant la gestion logistique des corridors et l’attraction des talents plutôt qu’une ouverture universelle.",
-        en: "Faced with sovereign reluctance (notably from South Africa), SADC deploys an asymmetric and selective integration, prioritizing logistics corridor management and talent attraction over universal openness."
+        fr: "La SADC n’a pas obtenu l’ouverture générale que son Protocole de 2005 prévoyait, l’Afrique du Sud en particulier s’y étant opposée au nom de sa souveraineté migratoire. L’intégration y progresse donc par des voies choisies : la gestion logistique des corridors commerciaux et l’attraction ciblée de qualifications, plutôt que la levée uniforme des obligations de visa.",
+        en: "SADC has not achieved the general opening its 2005 Protocol provided for, South Africa in particular having opposed it in the name of its migration sovereignty. Integration therefore advances along chosen paths: logistical management of trade corridors and targeted attraction of qualifications, rather than uniform removal of visa requirements."
       },
       instruments: {
         fr: "Protocole de 2005, plan sur la migration de travail (2020-2025). Processus consultatif : MIDSA (Dialogue sur la migration pour l’Afrique Australe).",
@@ -7974,8 +8117,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'COMESA (Marché Commun de l’Afrique Orientale et Australe)', en: 'COMESA (Common Market for Eastern and Southern Africa)' },
       tag: tr({ fr: 'Facilitation macro-régionale', en: 'Macro-regional facilitation' }, lang),
       desc: {
-        fr: "Vaste bloc de 21 États (de la Tunisie à l’Eswatini) où l’intégration humaine avance par accumulation technique (visas d’affaires) afin de réduire les coûts de transaction commerciale dans un espace hétérogène.",
-        en: "Vast bloc of 21 States (from Tunisia to Eswatini) where human integration advances through technical accumulation (business visas) to reduce commercial transaction costs in a heterogeneous space."
+        fr: "Le COMESA réunit 21 États, de la Tunisie à l’Eswatini, dont les régimes migratoires n’ont ni la même histoire ni la même doctrine. Faute de socle commun sur lequel poser une ouverture générale, l’intégration humaine y progresse par facilités successives — visas d’affaires au premier chef — dont chacune abaisse un coût de transaction commerciale précis sans engager le régime dans son ensemble.",
+        en: "COMESA brings together 21 states, from Tunisia to Eswatini, whose migration regimes share neither the same history nor the same doctrine. Lacking a common basis on which to found a general opening, human integration advances there through successive facilities — business visas first among them — each of which lowers one specific trade transaction cost without committing the regime as a whole."
       },
       instruments: {
         fr: "Protocoles de 1984 et 1998, d’application inégale. Processus consultatif : MIDCOM, qui produit l’essentiel des outils de capacitation technique du bloc.",
@@ -7999,8 +8142,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'IGAD (Autorité intergouvernementale pour le développement)', en: 'IGAD (Intergovernmental Authority on Development)' },
       tag: tr({ fr: 'Nexus sécurité-climat-mobilité', en: 'Security-climate-mobility nexus' }, lang),
       desc: {
-        fr: "Dans une Corne de l’Afrique marquée par les conflits et les chocs climatiques, la mobilité est saisie par l’IGAD à l’articulation exacte entre sécurité régionale, transhumance de survie et développement.",
-        en: "In a Horn of Africa marked by conflicts and climate shocks, mobility is captured by IGAD at the exact articulation between regional security, survival transhumance, and development."
+        fr: "Dans une Corne de l’Afrique où les conflits et les chocs climatiques déplacent plus de personnes que le travail n’en attire, l’IGAD traite la mobilité comme une question de sécurité régionale autant que de développement. Ses deux protocoles de 2020 le montrent : l’un porte sur la libre circulation des personnes, l’autre sur la transhumance pastorale transfrontalière, forme de mobilité qu’aucun autre bloc africain ne régit par un texte dédié.",
+        en: "In a Horn of Africa where conflict and climate shocks displace more people than work attracts, IGAD treats mobility as a matter of regional security as much as of development. Its two 2020 protocols show this: one covers free movement of persons, the other cross-border pastoral transhumance, a form of mobility no other African bloc governs through a dedicated instrument."
       },
       instruments: {
         fr: "Deux protocoles pionniers en 2020 : Libre circulation des personnes ET Transhumance pastorale transfrontalière. Processus consultatif : MIDIGAD.",
@@ -8024,8 +8167,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CEEAC & CEMAC (Afrique Centrale)', en: 'ECCAS & CEMAC (Central Africa)' },
       tag: tr({ fr: 'Configuration à deux étages', en: 'Two-tier configuration' }, lang),
       desc: {
-        fr: "L’Afrique Centrale repose sur une intégration à double vitesse où le noyau dense (CEMAC) porte la facilitation, tandis que le vaste ensemble CEEAC demeure entravé par les contraintes d’enclavement physique.",
-        en: "Central Africa relies on a two-tier integration where the dense core (CEMAC) carries facilitation, while the vast ECCAS whole remains hampered by physical landlocked constraints."
+        fr: "L’Afrique centrale fonctionne à deux vitesses. La CEMAC, noyau resserré de six États, a supprimé les visas pour quatre-vingt-dix jours et institué un passeport biométrique communautaire ; la CEEAC, qui l’englobe, n’a pas transposé cet acquis à son propre périmètre. L’enclavement de plusieurs de ses membres y ajoute une contrainte matérielle : ouvrir un droit ne suffit pas là où la route manque.",
+        en: "Central Africa runs at two speeds. CEMAC, a tight core of six states, has removed visas for ninety days and established a community biometric passport; ECCAS, which contains it, has not transposed that acquis to its own perimeter. The landlocked position of several members adds a material constraint: opening a right is not enough where the road is missing."
       },
       instruments: {
         fr: "Traité révisé de la CEEAC (2019). Actes additionnels CEMAC (2013, 2017) instituant la suppression des visas pour 90 jours et le passeport biométrique communautaire.",
@@ -8049,8 +8192,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'UMA (Union du Maghreb arabe)', en: 'AMU (Arab Maghreb Union)' },
       tag: tr({ fr: 'Normativité d’horizon & gel institutionnel', en: 'Horizon normativity & institutional freeze' }, lang),
       desc: {
-        fr: "La paralysie géopolitique structurelle gèle l’ambition fondatrice de 1989. L’intégration de la mobilité maghrébine se fait aujourd’hui par défaut, via l’externalisation sécuritaire européenne et des accords bilatéraux épars.",
-        en: "Structural geopolitical paralysis freezes the 1989 founding ambition. Maghreb mobility integration currently happens by default, via European security externalization and scattered bilateral agreements."
+        fr: "L’ambition fondatrice de 1989 est gelée : aucun sommet des chefs d’État ne s’est tenu depuis des décennies, et le différend algéro-marocain suffit à bloquer toute décision prise à l’unanimité. Ce qui subsiste d’intégration maghrébine se joue donc hors du cadre régional — dans des accords bilatéraux dispersés et dans les dispositifs d’externalisation du contrôle négociés avec l’Union européenne.",
+        en: "The founding ambition of 1989 is frozen: no heads-of-state summit has been held for decades, and the Algerian-Moroccan dispute is enough to block any decision requiring unanimity. What remains of Maghreb integration therefore plays out beyond the regional framework — in scattered bilateral agreements and in the control-externalisation arrangements negotiated with the European Union."
       },
       instruments: {
         fr: "Traité de Marrakech (1989) comme pur horizon normatif.",
@@ -8074,8 +8217,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       name: { fr: 'CEN-SAD (Communauté des États sahélo-sahariens)', en: 'CEN-SAD (Community of Sahel-Saharan States)' },
       tag: tr({ fr: 'Coordination sécuritaire de surcouche transrégionale', en: 'Transregional security overlay coordination' }, lang),
       desc: {
-        fr: "Avec 24 États membres, qui englobent plusieurs autres CER, la CEN-SAD tient davantage du forum politique et sécuritaire que du régime juridique autonome de libre circulation. Son traité fondateur inscrit pourtant la libre circulation des personnes parmi ses objectifs centraux.",
-        en: "With 24 member states, which overlap several other RECs, CEN-SAD is more a political and security forum than an autonomous legal regime of free movement. Its founding treaty nonetheless lists free movement of persons among its core objectives."
+        fr: "Avec 24 États membres, dont beaucoup appartiennent déjà à d’autres Communautés, la CEN-SAD fonctionne comme un forum politique et sécuritaire plus que comme un régime juridique autonome. Son traité fondateur inscrit pourtant la libre circulation des personnes parmi ses objectifs centraux, sans l’assortir d’un protocole d’application comparable à ceux de la CEDEAO ou de l’IGAD — ce qui explique qu’elle produise peu d’effets propres.",
+        en: "With 24 member states, many of them already belonging to other Communities, CEN-SAD operates as a political and security forum more than as an autonomous legal regime. Its founding treaty nonetheless lists free movement of persons among its central objectives, without attaching an implementing protocol comparable to those of ECOWAS or IGAD — which explains why it produces few effects of its own."
       },
       instruments: {
         fr: "Traité de 1998 (révisé 2013). La libre circulation des personnes figure parmi les objectifs fondateurs, sans protocole dédié équivalent à ceux de la CEDEAO ou de l’IGAD.",
@@ -8996,7 +9139,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 { when: "2018", what: tr({ fr: "Le Protocole sur la libre circulation des personnes est adopté à Kigali — c’est lui qui doit donner au passeport sa portée juridique.", en: "The Protocol on Free Movement of Persons is adopted in Kigali — it is what would give the passport its legal reach." }, lang)},
               ]} />
 
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "C’est ici que le geste symbolique et l’ancrage juridique se séparent. Le passeport a été lancé en 2016 ; le Protocole censé le rendre opposable comptait 4 ratifications sur 54 lors de la dernière vérification, très loin des 15 requises pour son entrée en vigueur. L’Agenda 2063 n’échoue donc pas faute de vision ni faute de texte : il bute sur le pas de porte des administrations nationales (Ben Mokhtar, 2026).", en: "This is where the symbolic gesture and the legal anchor part ways. The passport was launched in 2016; the Protocol meant to make it enforceable stood at 4 ratifications out of 54 at last check, far from the 15 required for entry into force. Agenda 2063 is therefore not failing for want of vision or of text: it stalls on the doorstep of national administrations (Ben Mokhtar, 2026)." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "C’est ici que le geste symbolique et l’ancrage juridique se séparent. Le passeport africain a été lancé en 2016, mais le Protocole censé le rendre opposable ne comptait, à la dernière vérification, que 4 ratifications sur 54 — très loin des 15 requises pour son entrée en vigueur. L’Agenda 2063 ne bute donc ni sur un défaut de vision ni sur l’absence d’un texte : l’un et l’autre existent, et c’est leur transposition dans les administrations nationales qui n’a pas eu lieu (Ben Mokhtar, 2026).", en: "This is where the symbolic gesture and the legal anchoring part company. The African passport was launched in 2016, yet the Protocol meant to make it enforceable stood, at the last check, at 4 ratifications out of 54 — far short of the 15 required for entry into force. Agenda 2063 therefore founders neither on a lack of vision nor on the absence of a text: both exist, and what has not happened is their transposition into national administrations (Ben Mokhtar, 2026)." }, lang)}</Prose>
             </AfricanCounterpoint>
           </div>
         )}
@@ -9072,7 +9215,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </div>
                   ))}
                 </div>
-                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes forment la grille d’interprétation des 23 objectifs qui suivent. Un objectif se lit toujours à travers eux : deux États peuvent appliquer le même texte et diverger sur ce seul point.", en: "These ten principles form the interpretive grid for the 23 objectives that follow. An objective is always read through them: two states can apply the same text and part company on this point alone." }, lang)}</Prose>
+                <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Ces dix principes forment la grille d’interprétation des 23 objectifs qui suivent, et aucun objectif ne se lit indépendamment d’eux. Comme le Pacte n’impose ni hiérarchie entre les principes ni méthode d’arbitrage lorsqu’ils entrent en tension, deux États peuvent appliquer le même objectif de bonne foi et parvenir à des politiques opposées, selon le principe auquel ils donnent le pas.", en: "These ten principles form the interpretive grid for the 23 objectives that follow, and no objective can be read independently of them. Since the Compact sets neither a hierarchy among the principles nor a method for arbitrating between them when they pull in opposite directions, two states may apply the same objective in good faith and arrive at opposed policies, depending on which principle they let prevail." }, lang)}</Prose>
               </div>
 
               <CounterpointFacts items={[
@@ -9142,7 +9285,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </ol>
               </div>
 
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Ces six domaines épousent délibérément l’architecture thématique du Pacte mondial — l’Afrique occupe le cadre qui se négocie et y inscrit ses propres priorités, au lieu d’en bâtir un à côté. La suite se lit dans la mécanique bureaucratique plutôt que dans les déclarations. Revue régionale africaine de la mise en œuvre du GCM en 2021. Plan d’action continental validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa 5e session en novembre 2025.", en: "These six areas deliberately mirror the Global Compact’s own thematic architecture — Africa occupies the framework being negotiated and writes its priorities into it, instead of building one alongside. What follows is legible in bureaucratic machinery more than in declarations. The Africa regional review of GCM implementation took place in 2021. A continental action plan was validated at senior-officials level in August 2024, then adopted by the STC-MRIDPs at its 5th session in November 2025." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Ces six domaines épousent délibérément l’architecture thématique du Pacte mondial : plutôt que de bâtir un cadre concurrent, l’Afrique occupe celui qui se négocie et y inscrit ses propres priorités. Ce qui a suivi relève de la mécanique bureaucratique plus que de la déclaration, et c’est là qu’il faut le chercher : une revue régionale africaine de la mise en œuvre du Pacte est conduite en 2021, un plan d’action continental est validé au niveau des hauts fonctionnaires en août 2024, puis adopté par le CTS-MRIDP à sa cinquième session en novembre 2025.", en: "These six domains deliberately mirror the thematic architecture of the Global Compact: rather than build a competing framework, Africa occupies the one under negotiation and writes its own priorities into it. What followed belongs to bureaucratic machinery more than to declarations, and that is where it must be looked for: an African regional review of implementation was held in 2021, a continental action plan was validated at senior-official level in August 2024, then adopted by the STC-MRIDP at its fifth session in November 2025." }, lang)}</Prose>
             </AfricanCounterpoint>
           </div>
         )}
@@ -9190,7 +9333,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 { when: "2018", what: tr({ fr: "Pacte mondial sur les réfugiés — il érige en principe un partage des charges que le continent assumait déjà.", en: "Global Compact on Refugees — it turns into a principle a sharing of responsibility the continent was already carrying." }, lang)},
               ]} />
 
-              <Prose className="text-justify" lang={lang}>{tr({ fr: "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu’il proclame ne décrit pas une charge à venir. D’après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde. Deux d’entre eux sont africains : l’Ouganda et le Tchad. L’enjeu, pour le continent, est d’obtenir que la norme mondiale reconnaisse et finance une pratique déjà ancienne — non d’adhérer à une norme venue d’ailleurs (Ben Mokhtar, 2026).", en: "This precedence changes how the Compact reads. The \"equitable sharing of the burden\" it proclaims concerns a burden already borne. According to UNHCR, six countries alone host more than a third of the world’s refugees. Two of them are African: Uganda and Chad. For the continent the stake is to get the global norm to recognise and fund a long-standing practice — not to sign up to a norm from elsewhere (Ben Mokhtar, 2026)." }, lang)}</Prose>
+              <Prose className="text-justify" lang={lang}>{tr({ fr: "Cette antériorité change la façon de lire le Pacte. Le « partage équitable des charges » qu’il proclame ne décrit pas une charge à venir mais une charge déjà assumée : d’après le HCR, six pays accueillent à eux seuls plus du tiers des réfugiés du monde, dont deux africains, l’Ouganda et le Tchad. Pour le continent, l’enjeu de la négociation n’est donc pas d’adhérer à une norme venue d’ailleurs, mais d’obtenir que la norme mondiale reconnaisse cette pratique et la finance à la hauteur de ce qu’elle coûte (Ben Mokhtar, 2026).", en: "That precedence changes how the Compact reads. The \"equitable sharing of burdens\" it proclaims describes not a burden to come but one already carried: according to UNHCR, six countries alone host more than a third of the world’s refugees, two of them African, Uganda and Chad. For the continent, what is at stake in the negotiation is therefore not adherence to a norm from elsewhere, but securing that the global norm recognise this practice and fund it in proportion to its cost (Ben Mokhtar, 2026)." }, lang)}</Prose>
             </AfricanCounterpoint>
           </div>
         )}
@@ -9240,7 +9383,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <FileText className="w-5 h-5 me-2 text-emerald-700" />
-                  {tr({ fr: "Textes fondateurs & cadres politiques", en: "Foundational Texts & Policy Frameworks" }, lang)}
+                  {tr({ fr: "Six textes, et une ambition en avance sur la norme mondiale", en: "Six instruments, and an ambition ahead of the global standard" }, lang)}
                 </h3>
                 <div className="space-y-4">
                   {auFrameworks.map((fw, idx) => (
@@ -9292,30 +9435,11 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               </div>
 
-              {/* La meme donnee que la matrice, vue en geographie : la matrice
-                  dit qui a signe quoi, la carte dit ou se trouvent les creux. */}
-              <CarteSection
-                lang={lang}
-                indicateur={CARTE_ANCRAGE}
-                kicker={tr({ fr: "Géographie de l’engagement", en: 'Geography of commitment' }, lang)}
-                titre={tr({ fr: "Ce que les États ont signé, vu du continent", en: 'What states have signed, seen from the continent' }, lang)}
-                plain={{
-                  fr: "Plus la teinte est dense, plus le pays a ratifié de ces six textes. Le blanc marque un État qui n’en a déposé aucun.",
-                  en: 'The denser the shade, the more of those six instruments the country has ratified. White marks a state that has deposited none.',
-                }}
-                sources={[{ label: tr({ fr: "Union africaine — listes officielles de statut des traités", en: 'African Union — official treaty status lists' }, lang),
-                            url: 'https://au.int/en/treaties' }]}
-              />
-
-              <AnchoringMatrix lang={lang} />
-
-              <GovernanceCross lang={lang} />
-
               {/* Organe de pilotage politique & forum consultatif */}
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Landmark className="w-5 h-5 me-2 text-emerald-700" />
-                  {tr({ fr: "Pilotage politique & forum consultatif", en: "Political Steering & Consultative Forum" }, lang)}
+                  {tr({ fr: "Qui décide, et devant qui l’on rend compte", en: "Who decides, and to whom account is rendered" }, lang)}
                 </h3>
                 <div className="space-y-4">
                   <div className="bg-emerald-50/50 rounded-lg border border-emerald-100 overflow-hidden">
@@ -9394,13 +9518,42 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 </div>
               </div>
 
+              {/* La meme donnee que la matrice, vue en geographie : la matrice
+                  dit qui a signe quoi, la carte dit ou se trouvent les creux. */}
+              <CarteSection
+                lang={lang}
+                indicateur={CARTE_ANCRAGE}
+                kicker={tr({ fr: "Géographie de l’engagement", en: 'Geography of commitment' }, lang)}
+                titre={tr({ fr: "Ce que les États ont signé, vu du continent", en: 'What states have signed, seen from the continent' }, lang)}
+                plain={{
+                  fr: "Plus la teinte est dense, plus le pays a ratifié de ces six textes. Le blanc marque un État qui n’en a déposé aucun.",
+                  en: 'The denser the shade, the more of those six instruments the country has ratified. White marks a state that has deposited none.',
+                }}
+                sources={[{ label: tr({ fr: "Union africaine — listes officielles de statut des traités", en: 'African Union — official treaty status lists' }, lang),
+                            url: 'https://au.int/en/treaties' }]}
+              />
+
+              <AnchoringMatrix lang={lang} />
+
+              <GovernanceCross lang={lang} />
+
+
+              {/* ------- Quand le droit bloque -------
+                  JLMP et les partenariats de competences sont les deux cartes
+                  d'un meme temps de l'argument. Sans ce titre elles tombaient
+                  sous « Qui decide », qui ne parle pas d'elles. */}
+              <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
+                <Briefcase className="w-5 h-5 me-2 text-blue-700" />
+                {tr({ fr: "Quand le droit bloque, la construction se déplace", en: "When law stalls, the building shifts ground" }, lang)}
+              </h3>
+
               {/* JLMP */}
               <div className="bg-blue-50 p-6 md:p-7 rounded-xl border border-blue-200 shadow-sm">
                 <div className="flex items-start gap-4 mb-5">
                   <Activity className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-bold text-blue-900">{tr({ fr: "Le Programme conjoint sur la migration de main-d’œuvre (JLMP)", en: "The Joint Labour Migration Programme (JLMP)" }, lang)}</h3>
-                    <Prose className="text-xs text-blue-800 leading-relaxed" lang={lang}>{tr({ fr: "Là où le droit pur bloque (Kigali), la gouvernance avance par la technique. Porté conjointement par la CUA, l’OIT, l’OIM et la CEA, avec le PNUD, le JLMP met en œuvre le 5e domaine prioritaire de la Déclaration d’Addis-Abeba sur l’emploi (2015). Il vise quatre chantiers : la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants.", en: "Where pure law stalls (Kigali), governance advances through technical means. Jointly carried by the AUC, ILO, IOM and ECA, with UNDP, the JLMP implements the 5th priority area of the 2015 Addis Ababa Declaration on Employment. It targets skills portability, social security portability, fair recruitment and migrant worker protection." }, lang)}</Prose>
+                    <Prose className="text-xs text-blue-800 leading-relaxed" lang={lang}>{tr({ fr: "Le blocage du Protocole de Kigali n’a pas arrêté la construction du régime continental : elle s’est déplacée du terrain juridique vers le terrain technique. Porté conjointement par la Commission de l’Union africaine, l’OIT, l’OIM et la CEA, avec le PNUD, le JLMP met en œuvre le cinquième domaine prioritaire de la Déclaration d’Addis-Abeba sur l’emploi (2015). Il porte sur quatre chantiers — la portabilité des compétences, celle des droits à la sécurité sociale, le recrutement équitable et la protection des travailleurs migrants — qui produisent des effets sans requérir la ratification d’un texte contraignant.", en: "The deadlock on the Kigali Protocol did not halt the building of the continental regime: it shifted it from legal ground to technical ground. Jointly led by the African Union Commission, the ILO, IOM and ECA, with UNDP, the JLMP implements the fifth priority area of the 2015 Addis Ababa Declaration on Employment. It works on four fronts — portability of skills, portability of social security entitlements, fair recruitment and protection of migrant workers — which produce effects without requiring any binding instrument to be ratified." }, lang)}</Prose>
                   </div>
                 </div>
                 <div className="bg-white/70 p-4 rounded-lg border border-blue-100">
@@ -9419,13 +9572,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-bold text-teal-900">{tr({ fr: "Partenariats de compétences en action", en: "Global Skills Partnerships in Action" }, lang)}</h3>
-                    <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ : c’est une alternative à la fuite des cerveaux, et elle est déjà testée.", en: "Beyond continental frameworks, concrete bilateral agreements already apply the \"Global Skills Partnership\" model (see Glossary) between African and European states — a tested alternative to brain drain, where training is jointly funded before departure." }, lang)}</Prose>
+                    <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ, de sorte que le pays d’origine reçoit une part de la valeur créée par la qualification, au lieu de la perdre entièrement au moment du départ. Le dispositif n’en est plus au stade de la proposition : il est documenté sur des promotions achevées.", en: "Beyond continental frameworks, bilateral agreements are already applying the \"skills partnership\" model between African and European states. Training is jointly funded before departure, so that the country of origin receives a share of the value the qualification creates instead of losing all of it at the moment of departure. The arrangement is no longer at the proposal stage: it is documented on completed cohorts." }, lang)}</Prose>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
                     <span className="surtitre surtitre--accent">{tr({ fr: "PALIM — Maroc ↔ Belgique (depuis 2019)", en: "PALIM — Morocco ↔ Belgium (since 2019)" }, lang)}</span>
-                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "120 diplômés formés aux métiers du numérique : 40 partis travailler en Flandre, 80 restés au Maroc — un résultat pensé comme un gain pour les deux économies, non comme une perte sèche.", en: "120 graduates trained in digital skills: 40 went to work in Flanders, 80 stayed in Morocco — a result designed as a gain for both economies, not a net loss." }, lang)}</Prose>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "120 diplômés formés aux métiers du numérique, dont 40 sont partis travailler en Flandre et 80 sont restés au Maroc. La répartition est le résultat attendu du dispositif et non son échec : la formation financée en commun bénéficie aux deux économies, que le diplômé parte ou reste.", en: "120 graduates trained in digital occupations, of whom 40 went to work in Flanders and 80 stayed in Morocco. That split is the arrangement’s intended outcome rather than its failure: jointly funded training benefits both economies, whether the graduate leaves or stays." }, lang)}</Prose>
                   </div>
                   <div className="bg-white/70 p-4 rounded-lg border border-teal-100">
                     <span className="surtitre surtitre--accent">{tr({ fr: "THAMM / THAMM Plus (2019-2027)", en: "THAMM / THAMM Plus (2019-2027)" }, lang)}</span>
@@ -9443,7 +9596,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
                 <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-6 border-b border-slate-100 pb-3">
                   <Database className="w-5 h-5 me-2 text-indigo-700" />
-                  {tr({ fr: "Agences spécialisées & souveraineté épistémique", en: "Specialized Agencies & Epistemic Sovereignty" }, lang)}
+                  {tr({ fr: "Produire ses propres diagnostics plutôt que les recevoir", en: "Producing its own diagnoses rather than receiving them" }, lang)}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
                   <AuAgencyCard
@@ -9454,7 +9607,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     founded={tr({ fr: "créé 2018 — lancé 2020", en: "created 2018 — launched 2020" }, lang)}
                     source={{ url: "https://amo.au.int/en", label: tr({ fr: "Site de l’OAM", en: "AMO website" }, lang)}}
                   >
-                    {tr({ fr: "Bureau technique spécialisé de l’UA, institué dans le sillage de la Déclaration de New York (2016) et de l’Objectif 1 du Pacte mondial (données factuelles), lancé le 18 décembre 2020. Il doit doter le continent de données migratoires centralisées, harmonisées et opportunes — le bras qui permet de produire ses propres diagnostics plutôt que de les recevoir. Son financement reste largement extrabudgétaire.", en: "AU specialized technical office, established in the wake of the 2016 New York Declaration and Objective 1 of the Global Compact (evidence-based data), launched on 18 December 2020. Its purpose is to give the continent centralised, harmonised and timely migration data — the arm that allows Africa to produce its own diagnoses rather than receive them. Its funding remains largely off the regular budget." }, lang)}
+                    {tr({ fr: "Bureau technique spécialisé de l’UA, institué dans le sillage de la Déclaration de New York (2016) et de l’Objectif 1 du Pacte mondial (données factuelles), lancé le 18 décembre 2020. Il doit doter le continent de données migratoires centralisées, harmonisées et opportunes, condition pour que l’Afrique produise ses propres diagnostics au lieu de les recevoir. Son financement demeure toutefois largement extrabudgétaire, ce qui fait dépendre la continuité de ses travaux de contributions reconduites d’exercice en exercice.", en: "AU specialised technical office, established in the wake of the New York Declaration (2016) and Objective 1 of the Global Compact (evidence base), launched on 18 December 2020. Its remit is to give the continent centralised, harmonised and timely migration data, the condition for Africa to produce its own diagnoses rather than receive them. Its funding nonetheless remains largely extrabudgetary, which makes the continuity of its work dependent on contributions renewed from one financial year to the next." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
@@ -9487,7 +9640,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     founded="2014"
                     source={{ url: "https://au.int/en/sa/air", label: tr({ fr: "Fiche AIR (UA)", en: "AIR page (AU)" }, lang)}}
                   >
-                    {tr({ fr: "Le Conseil exécutif ayant accepté l’offre d’accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l’accord de siège est signé et l’Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Trois objectifs. Abaisser le coût d’envoi d’argent vers l’Afrique et à l’intérieur du continent. Améliorer la mesure et la déclaration des transferts dans les États membres. Convertir ces flux en effet économique et social. L’AIR touche donc à la fois au droit bancaire et à la statistique migratoire.", en: "After the Executive Council accepted Kenya’s offer to host it (decision EX.CL/Dec.808(XXIV)), the host agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Three objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of remittance data across member states, and converting those flows into social and economic effect. AIR therefore sits at the junction of banking regulation and migration statistics." }, lang)}
+                    {tr({ fr: "Le Conseil exécutif ayant accepté l’offre d’accueil du Kenya (décision EX.CL/Dec.808(XXIV)), l’accord de siège est signé et l’Institut lancé le 28 novembre 2014 ; il est hébergé par la Kenya School of Monetary Studies. Son mandat tient en trois objectifs enchaînés : abaisser le coût d’envoi d’argent vers l’Afrique et à l’intérieur du continent, améliorer la mesure et la déclaration de ces transferts dans les États membres, et convertir les flux ainsi mieux connus en effet économique et social. L’AIR relève donc autant du droit bancaire que de la statistique migratoire, ce qui explique qu’il siège auprès d’une école de banque centrale plutôt qu’auprès d’un institut de statistique.", en: "After the Executive Council accepted Kenya’s offer to host it (decision EX.CL/Dec.808(XXIV)), the headquarters agreement was signed and the Institute launched on 28 November 2014; it is hosted by the Kenya School of Monetary Studies. Its mandate rests on three linked objectives: lowering the cost of sending money to and within Africa, improving the measurement and reporting of those transfers in member states, and converting the flows thus better known into economic and social effect. The AIR therefore belongs as much to banking law as to migration statistics, which is why it sits with a central-bank school rather than with a statistical institute." }, lang)}
                   </AuAgencyCard>
 
                   <AuAgencyCard
@@ -9518,7 +9671,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h2 className="font-serif font-bold text-2xl mb-3">
                 {tr({ fr: "Les communautés économiques régionales (CER)", en: "Regional Economic Communities (RECs)" }, lang)}
               </h2>
-              <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L’architecture continentale repose sur 8 CER reconnues. L’analyse démontre que l’intégration humaine y est à « géométrie variable » : chaque sous-région développe une trajectoire d’ouverture conditionnée par son histoire, son économie et ses défis sécuritaires.", en: "The continental architecture relies on 8 recognized RECs. Analysis shows human integration is of 'variable geometry': each sub-region develops an openness trajectory conditioned by its history, economy, and security challenges." }, lang)}</Prose>
+              <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L’architecture continentale repose sur les huit Communautés économiques régionales reconnues par l’Union africaine. Comparées entre elles, elles ne dessinent pas un régime unique appliqué à des degrés divers, mais des trajectoires d’ouverture distinctes : l’écart entre la CEDEAO et l’UMA sur l’indice AVOI est du simple au double, et il tient à l’histoire, à l’économie et aux contraintes sécuritaires propres à chaque sous-région bien plus qu’à l’ancienneté des textes.", en: "The continental architecture rests on the eight Regional Economic Communities recognised by the African Union. Compared with one another, they do not describe a single regime applied in varying degrees, but distinct trajectories of openness: the gap between ECOWAS and the AMU on the AVOI index is twofold, and it owes far more to each sub-region’s history, economy and security constraints than to how old its instruments are." }, lang)}</Prose>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -9666,7 +9819,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                 {tr({ fr: "Matrices de réciprocité des visas et profils d’entrée et de séjour (54 pays)", en: "Visa reciprocity matrices and entry/residence profiles (54 countries)" }, lang)}
               </h2>
-              <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "L’analyse des seuils d’entrée et de l’obligation de résidence montre qu’une frontière juridique stricte sépare deux statuts. Le « visiteur » est toléré pour le commerce ou le tourisme de courte durée ; l'« immigrant », lui, dépend du pouvoir discrétionnaire de l’État pour s’établir. Le seuil standard en Afrique est de 90 jours.", en: "Analysis of entry thresholds and the residence obligation shows the persistence of a strict legal border. On one side, \"visitor\" status, tolerated for short-term trade or tourism; on the other, \"immigrant\" status, subject to the State’s discretionary power over settlement. The standard threshold across Africa is 90 days." }, lang)}</Prose>
+              <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "La comparaison des seuils d’entrée et des obligations de résidence, État par État, fait apparaître une frontière juridique nette entre deux statuts. Le « visiteur » est admis de plein droit pour le commerce ou le tourisme de courte durée ; l’« immigrant », lui, ne s’établit qu’au terme d’une décision discrétionnaire de l’État. Le seuil qui sépare les deux est de 90 jours dans la grande majorité des législations africaines recensées ici, ce qui en fait le point de bascule le plus comparable d’un pays à l’autre.", en: "Comparing entry thresholds and residence obligations state by state brings out a sharp legal boundary between two statuses. The \"visitor\" is admitted as of right for trade or short-stay tourism; the \"immigrant\" settles only at the end of a discretionary decision by the state. The threshold separating the two is 90 days in the great majority of the African statutes surveyed here, which makes it the most comparable tipping point from one country to the next." }, lang)}</Prose>
             </div>
 
             {/* Disclaimer Methodologique */}
@@ -10520,22 +10673,22 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                  en: 'How a migration figure is made',
                  ar: 'كيف يُصنع رقم عن الهجرة' }}
         chapeau={{
-          fr: "Aucune institution ne compte les migrants du monde. Les chiffres que l’on cite sont assemblés, à partir de ce que chaque État a lui-même mesuré — et chaque façon de mesurer voit une chose et en manque une autre. Savoir laquelle change la lecture de tout ce qui suit.",
-          en: 'No institution counts the world’s migrants. The figures we quote are assembled from what each state measured itself — and every way of measuring sees one thing and misses another. Knowing which changes how everything below reads.'
+          fr: "Aucune institution ne dénombre directement les migrants du monde : les chiffres qui circulent sont des agrégats, construits à partir de ce que chaque État a lui-même mesuré, avec ses instruments et selon son calendrier. Or ces instruments ne sont pas équivalents. Un recensement, un registre de séjour, une enquête auprès des ménages et un poste-frontière ne saisissent ni la même population, ni la même période, ni le même événement. Identifier celui dont un chiffre provient est donc l’opération à conduire avant toute interprétation, et elle commande la lecture de ce qui suit.",
+          en: 'No institution counts the world’s migrants directly: the figures in circulation are aggregates, built from what each state has measured for itself, with its own instruments and on its own schedule. Those instruments are not equivalent. A census, a residence register, a household survey and a border post capture neither the same population, nor the same period, nor the same event. Identifying which one a figure comes from is therefore the operation to carry out before any interpretation, and it governs how everything below reads.'
         }}
         notions={[
           { mot: { fr: 'Stock', en: 'Stock' },
-            sens: { fr: "Combien de personnes nées ailleurs vivent dans un pays à une date donnée. Une photographie. La quasi-totalité des chiffres cités dans le débat public sont des stocks.",
-                    en: 'How many people born elsewhere live in a country on a given date. A photograph. Almost every figure quoted in public debate is a stock.' } },
+            sens: { fr: "Le nombre de personnes nées à l’étranger qui résident dans un pays à une date donnée. La mesure est instantanée : elle décrit un état de la population, et non les mouvements qui l’ont produit. La quasi-totalité des chiffres cités dans le débat public sont des stocks.",
+                    en: 'The number of people born abroad who reside in a country on a given date. The measurement is instantaneous: it describes a state of the population, not the movements that produced it. Almost every figure quoted in public debate is a stock.' } },
           { mot: { fr: 'Flux', en: 'Flow' },
-            sens: { fr: "Combien de personnes ont franchi une frontière pendant une période. Un film. Beaucoup plus rare, et beaucoup plus difficile à établir — c’est pourtant ce que le mot « arrivées » laisse entendre.",
-                    en: 'How many people crossed a border during a period. A film. Far rarer and far harder to establish — yet it is what the word “arrivals” suggests.' } },
+            sens: { fr: "Le nombre de personnes ayant franchi une frontière au cours d’une période. La mesure porte sur des événements et non sur un état, ce qui suppose un enregistrement continu que peu d’appareils statistiques tiennent. C’est pourtant un flux que le mot « arrivées » désigne, alors que le chiffre qui l’accompagne est presque toujours un stock.",
+                    en: 'The number of people who crossed a border over a period. The measurement bears on events rather than on a state, which presupposes continuous recording that few statistical systems maintain. Yet a flow is what the word “arrivals” denotes, while the figure attached to it is almost always a stock.' } },
           { mot: { fr: 'Millésime', en: 'Vintage' },
-            sens: { fr: "L’année à laquelle la mesure se rapporte, qui n’est pas celle de la publication. Un rapport paru en 2024 peut porter des stocks de 2020. Un chiffre sans son année ne veut rien dire.",
-                    en: 'The year the measurement refers to, which is not the year of publication. A 2024 report may carry 2020 stocks. A figure without its year says nothing.' } },
+            sens: { fr: "L’année à laquelle la mesure se rapporte, qui n’est pas celle de sa publication : un rapport paru en 2024 peut porter des stocks établis en 2020. Un chiffre cité sans son millésime ne peut donc être ni comparé à un autre, ni rapporté à un événement daté.",
+                    en: 'The year the measurement refers to, which is not the year of publication: a report issued in 2024 may carry stocks established in 2020. A figure quoted without its vintage can therefore be neither compared with another nor related to a dated event.' } },
           { mot: { fr: 'Compilateur', en: 'Compiler' },
-            sens: { fr: "L’organisation qui rassemble et harmonise les mesures nationales — UN DESA, HCR, IDMC, OIT, Banque mondiale. Elle ne mesure pas : elle réunit ce que les États déclarent, avec leurs trous.",
-                    en: 'The body that gathers and harmonises national measurements — UN DESA, UNHCR, IDMC, ILO, World Bank. It does not measure: it assembles what states declare, holes included.' } },
+            sens: { fr: "L’organisation qui rassemble et harmonise les mesures nationales — UN DESA, HCR, IDMC, OIT, Banque mondiale. Elle ne produit pas la mesure : elle réunit ce que les États déclarent, dans l’état où ils le déclarent. Les lacunes des appareils nationaux se retrouvent donc, telles quelles, dans l’agrégat mondial.",
+                    en: 'The body that gathers and harmonises national measurements — UN DESA, UNHCR, IDMC, ILO, the World Bank. It does not produce the measurement: it assembles what states declare, in the state in which they declare it. The gaps in national systems therefore carry over, unchanged, into the global aggregate.' } },
         ]}
         colonnes={[
           { fr: 'Source', en: 'Source' },
@@ -10544,21 +10697,21 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         ]}
         lignes={[
           { source: { fr: 'Recensement', en: 'Census' },
-            mesure: { fr: "Tous les résidents, pays de naissance compris, tous les dix ans environ.", en: 'Every resident, country of birth included, roughly every ten years.' },
-            angle: { fr: "Ceux qui sont partis, et tout ce qui bouge entre deux passages.", en: 'Those who have left, and everything that moves between two rounds.' } },
+            mesure: { fr: "Tous les résidents, pays de naissance compris, à un intervalle d’environ dix ans.", en: 'Every resident, country of birth included, at intervals of about ten years.' },
+            angle: { fr: "Ceux qui sont partis, et tout ce qui se produit entre deux passages.", en: 'Those who have left, and everything that happens between two rounds.' } },
           { source: { fr: 'Registres administratifs', en: 'Administrative registers' },
             mesure: { fr: "Les personnes titulaires d’un droit au séjour, en continu.", en: 'People holding a residence right, continuously.' },
-            angle: { fr: "Les personnes sans titre, qui existent sans figurer.", en: 'People without a permit, who exist without appearing.' } },
+            angle: { fr: "Les personnes sans titre de séjour, qui résident sans figurer nulle part.", en: 'People without a residence permit, who live there without appearing anywhere.' } },
           { source: { fr: 'Enquêtes auprès des ménages', en: 'Household surveys' },
-            mesure: { fr: "Les motifs, les conditions de vie, l’argent envoyé au pays.", en: 'Motives, living conditions, money sent home.' },
-            angle: { fr: "Le détail national fin : l’échantillon est trop mince pour descendre au pays d’origine.", en: 'Fine national detail: the sample is too thin to break down by country of origin.' } },
+            mesure: { fr: "Les motifs du départ, les conditions de vie, les sommes envoyées au pays.", en: 'Reasons for leaving, living conditions, sums sent home.' },
+            angle: { fr: "Le détail par pays d’origine : l’échantillon est trop mince pour y descendre.", en: 'Detail by country of origin: the sample is too thin to reach that level.' } },
           { source: { fr: 'Registres de frontière', en: 'Border records' },
             mesure: { fr: "Les passages enregistrés à un poste officiel.", en: 'Crossings recorded at an official post.' },
-            angle: { fr: "Les passages non enregistrés — et le même voyageur, compté à chaque aller-retour.", en: 'Unrecorded crossings — and the same traveller, counted at every round trip.' } },
+            angle: { fr: "Les passages non enregistrés, et le même voyageur compté à chaque aller-retour.", en: 'Unrecorded crossings, and the same traveller counted at every round trip.' } },
         ]}
         pied={{
-          fr: "Trois pièges suivent de là. Un chiffre sans année ne se lit pas. Un pourcentage sans son dénominateur non plus. Et deux institutions peuvent publier deux chiffres justes du même phénomène, parce qu’elles ne comptent pas la même population : c’est le cas des personnes déplacées internes chez l’IDMC et au HCR, et cette plateforme affiche alors les deux. Cadre de référence : Nations unies, Recommandations en matière de statistiques des migrations internationales, révision 1.",
-          en: 'Three traps follow. A figure without a year cannot be read. Neither can a percentage without its denominator. And two institutions can publish two correct figures for the same phenomenon, because they are not counting the same population — as with internally displaced people at IDMC and UNHCR, where this platform shows both. Reference framework: United Nations, Recommendations on Statistics of International Migration, Revision 1.'
+          fr: "Trois conséquences pratiques en découlent. Un chiffre privé de son millésime ne peut être interprété, puisque rien n’indique à quel état de la population il se rapporte. Un pourcentage privé de son dénominateur ne le peut pas davantage : la même proportion ne dit pas la même chose selon qu’elle porte sur les 47 États ayant recensé ou sur les 54 que compte l’Union africaine. Enfin, deux institutions peuvent publier de bonne foi deux valeurs différentes du même phénomène dès lors qu’elles ne dénombrent pas la même population : c’est le cas des personnes déplacées internes, suivies selon des périmètres distincts par l’IDMC et par le HCR. Cette plateforme affiche alors les deux valeurs plutôt que d’en retenir une. Cadre de référence : Nations unies, Recommandations en matière de statistiques des migrations internationales, révision 1.",
+          en: 'Three practical consequences follow. A figure stripped of its vintage cannot be interpreted, since nothing indicates which state of the population it refers to. A percentage stripped of its denominator cannot be either: the same proportion does not say the same thing depending on whether it bears on the 47 states that held a census or on the 54 that make up the African Union. Finally, two institutions may in good faith publish two different values for the same phenomenon whenever they are not counting the same population: this is the case for internally displaced persons, monitored under distinct perimeters by IDMC and by UNHCR. This platform then shows both values rather than settling on one. Reference framework: United Nations, Recommendations on Statistics of International Migration, Revision 1.'
         }}
       />
 
@@ -10571,14 +10724,14 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         accent="var(--accent-2)"
         kicker={L("Le constat", "The finding")}
         thesis={L(
-          "Les États africains recensent, à une fréquence qui tient la norme internationale. La collecte tient.",
-          "African states do census, at a frequency that holds to the international standard. Collection holds."
+          "La collecte primaire n’est pas le point faible de la statistique migratoire africaine : quarante-sept États sur cinquante-quatre ont recensé sur le cycle 2010, à un intervalle moyen de 11,1 ans pour une norme onusienne de dix ans.",
+          "Primary collection is not the weak point of African migration statistics: forty-seven states out of fifty-four held a census over the 2010 round, at an average interval of 11.1 years against a UN standard of ten."
         )}
       />
 
       <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-3">
-          {L("La collecte tient, et elle tient la norme", 'Collection holds, and it holds the standard')}
+          {L("Les États africains recensent, et à la fréquence recommandée", 'African states hold censuses, and at the recommended frequency')}
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
           <Prose lang={lang}>{L(
@@ -10594,7 +10747,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-5 flex items-start gap-3 max-w-4xl">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{L(
-              "Derrière le taux, la qualité des dénombrements reste à établir. Sept États n’ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join(", ") + " — et la République démocratique du Congo n’a conduit qu’un seul recensement dans son histoire, en 1984. L’Éthiopie a recensé, mais sans question sur la migration internationale.",
+              "Un taux de participation ne dit rien de la qualité des dénombrements, qui reste à établir pays par pays. Sept États n’ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join("A participation rate says nothing about the quality of the enumerations, which remains to be established country by country. Seven states did not census during the 2010 round — ") + " — et la République démocratique du Congo n’a conduit qu’un seul recensement dans son histoire, en 1984. L’Éthiopie a recensé, mais sans question sur la migration internationale.",
               "Behind the rate, enumeration quality remains to be established. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + " — and the Democratic Republic of the Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
             )}</Prose>
         </div>
@@ -10683,8 +10836,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                 "\"It is recommended that a national census be taken at least every 10 years.\" The standard adds that countries should make all efforts to census in years ending in \"0\", or as close as possible, so that results remain comparable across countries."
               )}</Prose>
             <Prose className="text-xs text-slate-500 mt-3 leading-relaxed" lang={lang}>{L(
-                "C’est l’étalon utile : l’intervalle moyen observé en Afrique est de 11,1 ans. L’écart à la norme est d’un an, pas d’une génération.",
-                "This is the useful yardstick: the average interval observed in Africa is 11.1 years. The gap to the standard is one year, not a generation."
+                "C’est l’étalon pertinent pour situer la performance africaine : l’intervalle moyen observé sur le continent est de 11,1 ans, soit un écart d’un an à la recommandation décennale — un ordre de grandeur sans rapport avec le retard structurel que l’on prête d’ordinaire aux appareils statistiques africains.",
+                "This is the relevant yardstick for situating African performance: the average interval observed across the continent is 11.1 years, an overshoot of one year on the decennial recommendation — an order of magnitude unrelated to the structural backwardness usually ascribed to African statistical systems."
               )}</Prose>
           </div>
 
@@ -10717,8 +10870,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
               ))}
             </ul>
             <Prose className="text-xs text-slate-500 mt-3 leading-relaxed text-justify" lang={lang}>{L(
-                "Trois de ces quatre caractéristiques sont des « thèmes centraux » : la norme recommande que tout recensement les collecte. L’instrument de mesure des migrations est donc déjà à l’intérieur du standard que les États africains appliquent. L’outil est là ; ce qui se perd se perd en aval, au dépouillement et à la publication.",
-                "Three of these four characteristics are \"core topics\": the standard recommends that every census collect them. The instrument for measuring migration is therefore already inside the standard African states apply. The tool is there; what gets lost is lost downstream, in tabulation and publication."
+                "Trois de ces quatre caractéristiques sont des « thèmes centraux », que la norme recommande de collecter dans tout recensement. L’instrument de mesure des migrations est donc déjà inscrit dans le standard que les États africains appliquent, et ce qui manque ensuite ne peut être imputé à la phase de collecte. La perte se produit en aval, au dépouillement et à la publication.",
+                "Three of these four characteristics are \"core topics\", which the standard recommends every census collect. The instrument for measuring migration is therefore already written into the standard African states apply, and what goes missing afterwards cannot be charged to the collection stage. The loss occurs downstream, in tabulation and publication."
               )}</Prose>
           </div>
         </AfricanCounterpoint>
@@ -10730,8 +10883,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         accent="var(--bad)"
         kicker={L("Le décrochage", "Where it breaks")}
         thesis={L(
-          "Le déficit est en aval : dans ce qui remonte, dans ce qui est harmonisé, et dans la profondeur des questions posées.",
-          "The deficit lies downstream: in what gets reported, in what gets harmonised, and in the depth of the questions asked."
+          "Reste à savoir où, exactement : dans ce qui remonte des instituts nationaux, dans ce qui est harmonisé entre eux, ou dans la profondeur des questions posées.",
+          "It remains to establish where exactly: in what national institutes report, in what is harmonised between them, or in the depth of the questions asked."
         )}
       />
 
@@ -10780,8 +10933,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           <p className="text-[11px] mt-3 leading-relaxed" style={{ color: 'var(--label)' }}>
             <span className="inline-block w-3 h-2 me-1.5 align-middle rounded-sm"
                   style={{ background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 3px, #FFF 3px 6px)', border: '1px solid var(--rule)' }} />
-            {L("Le cycle 2030 vient de s’ouvrir (fenêtre 2025-2034) : sa barre mesure une avance, pas un retard.",
-               "The 2030 round has only just opened (2025–2034 window): its bar measures progress, not shortfall.")}
+            {L("Le cycle 2030 vient de s’ouvrir (fenêtre 2025-2034) : sa barre ne compte encore que les opérations abouties en moins de deux ans, et elle continuera de monter jusqu’en 2034.",
+               "The 2030 round has just opened (2025-2034 window): its bar so far counts only the operations completed in under two years, and it will keep rising until 2034.")}
           </p>
           <Prose className="text-[10px] text-slate-500 italic mt-1.5 leading-relaxed text-justify" lang={lang}>{L("Le dénominateur varie : il correspond au nombre d’États africains indépendants au moment de chaque cycle. Compilation arrêtée en septembre 2024, puis actualisée en 2026 pour les recensements aboutis depuis : Angola, Maroc, Tunisie, Ouganda. Un audit des statuts encore ouverts, en août 2026, y a ajouté la Gambie (mai 2024) et São Tomé-et-Principe (novembre 2024). Le cycle 2020 passe ainsi de 29 à 35 États.",
                "The denominator varies: it reflects the number of independent African states at the time of each round. Compilation closed in September 2024, then updated in 2026 for censuses completed since: Angola, Morocco, Tunisia, Uganda. An audit of the statuses still open, in August 2026, added The Gambia (May 2024) and São Tomé and Príncipe (November 2024). The 2020 round thus moves from 29 to 35 states.")}</Prose>
@@ -10837,8 +10990,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         accent="var(--ok)"
         kicker={L("La réponse", "The response")}
         thesis={L(
-          "L’Afrique a répondu à ce diagnostic par une stratégie continentale, et cette plateforme y ajoute ses propres instruments.",
-          "Africa answered this diagnosis with a continental strategy, and this platform adds instruments of its own."
+          "À ce diagnostic, l’Union africaine a répondu par une stratégie continentale d’harmonisation statistique, dont cette plateforme prolonge l’ambition avec ses propres instruments.",
+          "To this diagnosis the African Union responded with a continental statistical harmonisation strategy, whose ambition this platform extends with instruments of its own."
         )}
       />
 
@@ -10907,8 +11060,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </h2>
         <div className="space-y-4 text-sm text-slate-300 leading-relaxed max-w-4xl text-justify">
           <Prose lang={lang}>{L(
-            "Le goulot d’étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l’extérieur — le Bureau du recensement des États-Unis (USCB) a accompagné pendant des décennies le traitement de ces données. Cette dépendance déplace le problème : la donnée brute existe ; ce qui fait défaut, c’est la maîtrise de sa mise en forme, de son interprétation et des catégories qu’elle mobilise.",
-            "The bottleneck sits after collection. A significant share of the processing of African census data has long been carried out externally — the United States Census Bureau (USCB) supported that processing for decades. This dependence shifts the problem: the raw data exists; what is missing is control over its shaping, its interpretation, and the categories it mobilises."
+            "Le goulot d’étranglement se situe après la collecte. Une part importante du traitement des données de recensement africaines a longtemps été assurée depuis l’extérieur, le Bureau du recensement des États-Unis (USCB) ayant accompagné pendant des décennies le dépouillement de ces données. Cette dépendance ne porte pas sur la production de la donnée brute, qui existe et que les instituts nationaux collectent eux-mêmes, mais sur ce qui vient après : la mise en forme, l’interprétation, et le choix des catégories dans lesquelles la population est rangée.",
+            "The bottleneck lies after collection. A significant share of the processing of African census data was long carried out from outside, the United States Census Bureau (USCB) having supported the tabulation of that data for decades. This dependence does not bear on the production of raw data, which exists and which national institutes collect themselves, but on what comes afterwards: formatting, interpretation, and the choice of the categories into which a population is sorted."
           )}</Prose>
           <Prose lang={lang}>{L(
             "Or la catégorie n’est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
@@ -10932,8 +11085,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
              "Statistical coverage, region by region")}
         </h2>
         <Prose className="text-sm text-slate-600 mb-5" lang={lang}>{L(
-          "Le déficit annoncé se mesure. UN DESA publie, pour chacune de ses régions, la part des pays disposant d’au moins une source empirique depuis 2010 sur trois points : le nombre total de migrants, leur répartition par sexe, et leur pays d’origine. Le troisième commande tout le reste — sans pays d’origine, aucun corridor ne peut être établi.",
-          "The announced deficit can be measured. For each of its regions, UN DESA publishes the share of countries with at least one empirical data source since 2010 on three points: the total number of migrants, their distribution by sex, and their country of origin. The third governs everything else — without country of origin, no corridor can be established."
+          "Le déficit de données que l’on prête au continent peut être mesuré, et il l’est. UN DESA publie, pour chacune de ses régions, la part des pays disposant d’au moins une source empirique depuis 2010 sur trois points : le nombre total de migrants, leur répartition par sexe et leur pays d’origine. Le troisième commande les deux autres, puisque sans pays d’origine aucun corridor ne peut être établi et que la mobilité se réduit alors à un volume sans direction.",
+          "The data deficit ascribed to the continent can be measured, and it has been. UN DESA publishes, for each of its regions, the share of countries holding at least one empirical source since 2010 on three points: the total number of migrants, their distribution by sex, and their country of origin. The third governs the other two, since without country of origin no corridor can be established and mobility is reduced to a volume with no direction."
         )}</Prose>
 
         <ReservePerimetre lang={lang} />
@@ -10946,8 +11099,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         />
 
         <Prose className="text-sm text-slate-600 mt-5" lang={lang}>{L(
-          "Sur ce point, l’Afrique subsaharienne est à 76 %, soit exactement la moyenne mondiale, et devant l’Afrique du Nord réunie à l’Asie de l’Ouest (64 %) comme devant l’Asie centrale et du Sud (50 %).\n\nLe classement se déplace sur les deux autres mesures : 84 % des pays d’Afrique subsaharienne documentent le nombre total de migrants, contre 87 % dans le monde, et 65 % leur répartition par sexe, contre 71 %. L’écart existe donc, il est mesurable, et il ne porte pas sur ce que le récit lui prête.",
-          "On this measure Sub-Saharan Africa stands at 76 per cent — exactly the world average — ahead of Northern Africa and Western Asia (64 per cent) and of Central and Southern Asia (50 per cent).\n\nThe ranking shifts on the other two: 84 per cent of Sub-Saharan African countries document the total number of migrants, against 87 per cent worldwide, and 65 per cent their distribution by sex, against 71 per cent. The gap is real and measurable — and it is not the one the narrative describes."
+          "Le classement se déplace sur les deux autres mesures : 84 % des pays d’Afrique subsaharienne documentent le nombre total de migrants, contre 87 % dans le monde, et 65 % leur répartition par sexe, contre 71 %. L’écart est donc réel et de l’ordre de trois à six points, quand le déficit statistique africain est couramment présenté comme une absence de données — ce que ces trois mesures contredisent.",
+          "The ranking shifts on the other two measures: 84 per cent of Sub-Saharan African countries document the total number of migrants, against 87 per cent worldwide, and 65 per cent their distribution by sex, against 71. The gap is therefore real and of the order of three to six points, whereas the African statistical deficit is commonly presented as an absence of data — which these three measures contradict."
         )}</Prose>
 
         <Sources lang={lang} items={[{ label: tr(SOURCE_MONDE.label, lang), url: SOURCE_MONDE.url }]}
@@ -11212,7 +11365,7 @@ const TabMethodology = ({ text, lang, children }) => (
       <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
         {tr({ fr: "De la source à la page", en: "From source to page" }, lang)}
       </h2>
-      <Prose className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8" lang={lang}>{tr({ fr: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et en documente le traitement. Voici les cinq étapes appliquées à chaque indicateur.", en: "The platform does not produce primary data: it consolidates public series and documents how they are handled. These are the five steps applied to every indicator." }, lang)}</Prose>
+      <Prose className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8" lang={lang}>{tr({ fr: "La plateforme ne produit aucune donnée primaire : elle consolide des séries publiques et documente le traitement qu’elle leur applique. Les cinq étapes qui suivent sont appliquées à chaque indicateur, dans cet ordre, et chacune est vérifiable sur la fiche de l’indicateur concerné.", en: "The platform produces no primary data: it consolidates public series and documents the processing it applies to them. The five stages below are applied to every indicator, in this order, and each can be checked on the relevant indicator’s card." }, lang)}</Prose>
       <ol className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {methodPipeline.map((step, i) => {
           const Icon = step.icon;
@@ -11606,18 +11759,18 @@ const TabAbout = ({ text, lang, children }) => {
         chapo={{ fr: 'Comment lire cette section', en: 'How to read this section' }}
         titre={{ fr: "Ce que la plateforme est, et ce qu’elle ne prétend pas être", en: 'What the platform is, and what it does not claim to be' }}
         chapeau={{
-          fr: "Une plateforme indépendante, adossée à une recherche doctorale en cours, sur les mobilités humaines dans les Suds. Elle rassemble et met en forme des données publiques ; elle ne les produit pas, sauf là où elle le dit explicitement.",
-          en: 'An independent platform, backed by ongoing doctoral research, on human mobility across the Global South. It gathers and shapes public data; it does not produce it, except where it says so explicitly.'
+          fr: "Une plateforme indépendante, adossée à une recherche doctorale en cours, sur les mobilités humaines dans les Suds. Elle rassemble des données publiques et les met en forme, sans en produire aucune, hormis les rares séries qu’elle signale explicitement comme des compilations de l’auteur.",
+          en: 'An independent platform, backed by ongoing doctoral research, on human mobility across the Souths. It gathers public data and puts it into shape, producing none itself, apart from the few series it explicitly flags as the author’s own compilations.'
         }}
         notions={[
           { mot: { fr: 'Indépendante', en: 'Independent' },
-            sens: { fr: "Aucune commande, aucun financement institutionnel. Les choix éditoriaux n’engagent que leur auteur.", en: 'No commission, no institutional funding. The editorial choices commit no one but their author.' } },
+            sens: { fr: "Le projet ne répond à aucune commande et ne reçoit aucun financement institutionnel, de sorte que le périmètre retenu, les définitions employées et les sources écartées n’engagent que leur auteur.", en: 'The project answers to no commission and receives no institutional funding, so that the perimeter adopted, the definitions used and the sources set aside commit no one but their author.' } },
           { mot: { fr: 'Adossée, pas confondue', en: 'Backed by, not merged with' },
-            sens: { fr: "Le cadre conceptuel vient d’une thèse en cours ; la plateforme n’en est ni le résumé ni la publication.", en: 'The conceptual frame comes from an ongoing thesis; the platform is neither its summary nor its publication.' } },
+            sens: { fr: "Le cadre conceptuel provient d’une thèse en cours, mais la plateforme n’en est ni le résumé ni la publication : elle n’expose que des données déjà publiques et les notions qui servent à les lire.", en: 'The conceptual frame comes from an ongoing thesis, but the platform is neither its summary nor its publication: it presents only data that is already public, and the concepts used to read it.' } },
           { mot: { fr: 'Ce qu’elle n’est pas', en: 'What it is not' },
-            sens: { fr: "Ni un observatoire officiel, ni une source primaire, ni un service de veille en temps réel.", en: 'Not an official observatory, not a primary source, not a real-time monitoring service.' } },
+            sens: { fr: "Elle n’est ni un observatoire officiel, ni une source primaire, ni un service de veille en temps réel : elle ne mesure rien elle-même et ne se prévaut d’aucun mandat institutionnel.", en: 'It is neither an official observatory, nor a primary source, nor a real-time monitoring service: it measures nothing itself and claims no institutional mandate.' } },
           { mot: { fr: 'En développement', en: 'In development' },
-            sens: { fr: "Les contenus s’enrichissent ; ce qui manque est signalé plutôt que masqué.", en: 'Content keeps growing; what is missing is flagged rather than hidden.' } },
+            sens: { fr: "Les contenus s’enrichissent au fil des vérifications, et une donnée manquante y est signalée comme telle plutôt que remplacée par une estimation.", en: 'Content grows as verification proceeds, and a missing figure is flagged as missing rather than replaced by an estimate.' } },
         ]}
       />
       {children}
@@ -12517,7 +12670,12 @@ export default function App() {
                 pousse la barre au-dela de l’ecran. A 375 px, elle debordait de
                 35 px sur toutes les pages — le selecteur de langue sortait du
                 cadre et le document entier glissait lateralement. */}
-            <div className="flex items-center space-x-3 rtl:space-x-reverse min-w-0">
+            <button
+              type="button"
+              onClick={() => allerVers('home')}
+              aria-label={tr({ fr: 'Revenir à l’accueil', en: 'Back to home', ar: 'العودة إلى الرئيسية' }, lang)}
+              className="marque-accueil flex items-center space-x-3 rtl:space-x-reverse min-w-0"
+            >
               {/* Le logotype empile, ici aussi. La barre s’ouvre de 56 a 76 px
                   pour l’accueillir : le nom sur une ligne rendait la marque
                   differente de celle du pied de page, et une identite qui change
@@ -12525,7 +12683,7 @@ export default function App() {
                   La ligne de nature reste au pied de page — dans une barre de
                   navigation, elle serait du remplissage. */}
               <BrandLockup corps={19} tone="dark" nature={false} ecart={0.42} className="shrink-0" />
-            </div>
+            </button>
             <div className="barre-outils flex items-center gap-2 shrink-0">
               {/* La recherche precede les reglages : c’est l’action, eux sont
                   le confort. Elle mene a une URL reelle, donc partageable. */}
