@@ -1444,7 +1444,10 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
   // Le calage reste juste : la cale posée au-dessus des trois mots reprend cette
   // même hauteur, donc le bloc demeure symétrique et « Mobility » garde le centre
   // de l’anneau.
-  const nature = avecNature ? Math.max(12, 0.46 * corps) : 0;
+  // Le plancher etait a 12 px, seule taille du site sous les 13 de l echelle.
+  // Une signature n a pas besoin d une taille a elle : 13 la pose sur le meme
+  // barreau que le reste, sans rien lui coûter.
+  const nature = avecNature ? Math.max(13, 0.46 * corps) : 0;
   const air = avecNature ? 0.30 * corps : 0;
   const sombre = tone === "dark";
   const cNom = sombre ? 'var(--reserve)' : 'var(--ink)';
@@ -1698,6 +1701,94 @@ const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang
   );
 };
 
+// La moyenne continentale de l’indice AVOI, telle que publiee par la BAD et
+// la Commission de l’UA. Elle sert de repere sur chaque carte et dans le
+// comparatif : ecrite deux fois, elle finirait par diverger.
+const AVOI_MOYENNE = 0.501;   // moyenne des HUIT CER (AVOI 2024), pas celle des 54 pays, qui vaut 0,479
+
+// La carte d'une Communauté régionale, pour le rail. Second rendu du même
+// carrousel que l'Observatoire des narratifs : la mécanique — glissement,
+// projection de l'élan, ressort de calage — ne change pas, seul le dessin de
+// la carte diffère.
+//
+// CE QUE LA CARTE PORTE. Le score AVOI, parce que c'est lui qui ordonne le
+// rail : la position dans le feuilletage EST le classement, du plus ouvert au
+// moins. La barre situe ce score sur la même échelle pour toutes, avec le
+// repère de la moyenne continentale — sans quoi 0,504 et 0,463 se ressemblent
+// alors que l'un est au-dessus de la moyenne et l'autre en dessous.
+//
+// La barre reprend la forme du site : 16 px, piste `--paper-sunk`, carrée.
+const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit }) => {
+  const L = faireL(lang);
+  // La borne haute de la barre : au-dessus du meilleur score, pour qu'aucune
+  // carte ne sature son échelle.
+  const BORNE = 0.7;
+
+  const ecart = useTransform(x, (v) => Math.abs(index * pas + carte / 2 + v - centre));
+  const echelle = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.9, 0.85]);
+  const opacite = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.55, 0.32]);
+  const tourner = useTransform(x, (v) => {
+    if (reduit) return 0;
+    const d = index * pas + carte / 2 + v - centre;
+    return Math.max(-16, Math.min(16, (-d / pas) * 9));
+  });
+
+  const sigle = rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase();
+  const auDessus = rec.avoi >= AVOI_MOYENNE;
+
+  return (
+    <motion.div
+      className="feuillet"
+      style={{ scale: echelle, opacity: opacite, rotateY: tourner }}
+      data-actif={actif ? 'true' : 'false'}
+    >
+      <button
+        type="button"
+        className="feuillet-carte"
+        aria-current={actif ? 'true' : undefined}
+        onClick={() => onOuvrir(index)}
+        onFocus={() => onCentrer(index)}
+        style={{ '--teinte-cran': auDessus ? 'var(--tier-4)' : 'var(--tier-2)' }}
+      >
+        <span className="feuillet-etiquettes">
+          <span className="pastille pastille--cran">
+            {L('AVOI', 'AVOI')} {rec.avoi.toFixed(3).replace('.', lang === 'fr' ? ',' : '.')}
+          </span>
+          <span className="pastille pastille--theme">
+            {rec.founded}
+          </span>
+        </span>
+
+        <span className="feuillet-titre-cer">
+          <span className="feuillet-sigle">{sigle}</span>
+          <span className="feuillet-tag">{rec.tag}</span>
+        </span>
+
+        {/* La barre, et le repère de la moyenne des huit CER : sans lui, deux
+            scores voisins se ressemblent alors qu'ils tombent de part et
+            d'autre de la moyenne. */}
+        <span className="feuillet-mesure" aria-hidden="true">
+          <span className="feuillet-piste">
+            <span className="feuillet-part"
+                  style={{ width: `${Math.min(100, (rec.avoi / BORNE) * 100)}%`,
+                           backgroundColor: auDessus ? 'var(--tier-4)' : 'var(--tier-2)' }} />
+            <span className="feuillet-moyenne" style={{ insetInlineStart: `${(AVOI_MOYENNE / BORNE) * 100}%` }} />
+          </span>
+          <span className="feuillet-echelle">
+            {L(`moyenne des huit CER ${AVOI_MOYENNE.toFixed(3).replace('.', ',')}`,
+               `average of the eight RECs ${AVOI_MOYENNE.toFixed(3)}`)}
+          </span>
+        </span>
+
+        <span className="feuillet-pied">
+          {L('Ouvrir la fiche', 'Open the file')}
+          <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        </span>
+      </button>
+    </motion.div>
+  );
+};
+
 // Le rail, sans rien savoir de ce qu'il porte : il recoit des objets munis
 // d'un `id` et le composant qui sait les dessiner. Toute la mecanique —
 // mesure du pas, projection de l'elan, ressort de calage — vit ici, et ici
@@ -1864,8 +1955,8 @@ const AspirationGap = ({ lang }) => {
           {L("Ce que la plateforme ne mesurait pas : l’aspiration", 'What the platform was not measuring: aspiration')}
         </span>
         <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
-          {L("47 % des Africains ont envisagé de partir. Sept sur dix de ceux qui partent restent en Afrique.",
-             '47% of Africans have considered leaving. Seven in ten of those who leave stay in Africa.')}
+          {L("47 % des Africains ont envisagé de partir. 54,4 % de ceux qui partent restent en Afrique.",
+             '47% of Africans have considered leaving. 54.4% of those who do leave stay in Africa.')}
         </h3>
       </div>
 
@@ -1983,7 +2074,7 @@ const ProportionGap = ({ lang }) => {
                     </span>
                   </div>
                   {/* Echelle commune 0-20 % : les quatre barres restent comparables entre elles. */}
-                  <div className="h-[6px] w-full" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                  <div className="h-4 w-full" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                     <div className={`h-full bar-fill bar-fill--d${ri + 1}`} style={{ width: `${(r.value / 20) * 100}%`, backgroundColor: 'var(--accent)' }} />
                   </div>
                 </div>
@@ -2786,7 +2877,7 @@ const t = {
       },
       metrics: { stock: "Stock Total (2024)", female: "Parité (Femmes % 2024)", evolution: "Part Pop. Nationale (2024)" },
       comparative_view_title: "Analyse comparative : transition démographique & résilience Sud-Sud",
-      comparative_view_desc: "Selon le 3e Rapport sur les statistiques migratoires de l’UA (2021) et UNDESA (2024), la dynamique démographique africaine alimente à 70% les marchés du travail régionaux internes. La part des migrants internationaux reste structurellement stable (~1,9% de la population continentale) depuis 1990.",
+      comparative_view_desc: "Le 3e Rapport de l’Union africaine sur les statistiques migratoires (2021) avance une part intra-africaine de 70 %, calculée hors Afrique méditerranéenne. Recalculée sur les 54 États de l’Union à partir de la matrice bilatérale d’UN DESA (2024), cette part est de 54,4 %. La proportion de migrants internationaux dans la population du continent, elle, reste structurellement stable autour de 1,9 % depuis 1990.",
       modal: {
         close: "Fermer", tabs: { demo: "Démographie", geo: "Géographie & Flux", econ: "Économie", rights: "Droits & engagements" },
         south_view: "Perspective analytique des Suds",
@@ -2935,7 +3026,7 @@ const t = {
         tab_gcr: "Pacte mondial sur les réfugiés (GCR)",
         sdg_desc: "L’Agenda 2030 de l’ONU intègre formellement les mobilités comme accélérateur de développement. La Cible 17.18 impose la désagrégation des données statistiques par statut migratoire.",
         gcm_desc: "Adopté à Marrakech en 2018, le Pacte mondial pour des migrations sûres, ordonnées et régulières énonce 23 objectifs structurants axés sur la souveraineté, les droits et la coopération factuelle.",
-        gcr_desc: "Affirmé en 2018, le Pacte mondial sur les réfugiés (GCR) établit un cadre de partage équitable des charges pour soutenir les pays du Sud qui accueillent 76% des réfugiés mondiaux.",
+        gcr_desc: "Affirmé en 2018, le Pacte mondial sur les réfugiés (GCR) établit un cadre de partage équitable des charges pour soutenir les pays du Sud qui accueillent 73 % des réfugiés mondiaux (HCR, Global Trends 2024).",
         link_text: "Accéder au portail officiel",
         sdg_points: [
           { goal: 10, title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées. La cible migratoire de l’Agenda 2030, suivie par 4 indicateurs (coûts de recrutement, gouvernance, sécurité des parcours, réfugiés)." },
@@ -2982,7 +3073,7 @@ const t = {
       debunk_cards: [
         { myth: "L’explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9% depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
         { myth: "L’Afrique migre massivement vers l’Europe.", real: "Un partant sur deux reste sur le continent.", stat_text: "54,4 % (2024)", stat_val: 54.4, color: "bg-teal-700", desc: "Calcul sur la matrice bilatérale d’UN DESA (2024), 54 États de l’Union africaine : sur 45,7 millions de personnes nées dans un État africain et vivant hors de leur pays, 24,9 millions résident dans un autre État africain." },
-        { myth: "Le Nord accueille l’écrasante majorité des réfugiés.", real: "76% des réfugiés restent dans les pays du Sud.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
+        { myth: "Le Nord accueille l’écrasante majorité des réfugiés.", real: "73 % des réfugiés sont accueillis par des pays à revenu faible ou intermédiaire.", stat_text: "73 % (2024)", stat_val: 73, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
         { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45% à 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l’économie autonome du soin et du commerce transfrontalier." },
         { myth: "L’Afrique dépend financièrement de l’Aide Publique.", real: "86,4 milliards $ d’envois de fonds dépassent l’APD.", stat_text: "86.4 Mrd $ (2019)", stat_val: 85, color: "bg-amber-600", desc: "Banque mondiale / UA (2021) : Les transferts de la diaspora (86,4 Mrd $ en 2019) dépassent largement l’aide publique au développement (APD) et constituent le premier capital de résilience." },
         { myth: "Le changement climatique va vider l’Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90% des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
@@ -3114,7 +3205,7 @@ const t = {
       },
       metrics: { stock: "Total Stock (2024)", female: "Parity (Women % 2024)", evolution: "Nat. Pop. Share (2024)" },
       comparative_view_title: "Comparative Analysis: Demographic Transition & South-South Resilience",
-      comparative_view_desc: "According to the 3rd AU Labour Migration Report (2021) and UNDESA (2024), African demographic dynamics feed 70% into internal regional labor markets. The international migrant share remains structurally stable (~1.9% of total continental population) since 1990.",
+      comparative_view_desc: "The African Union’s 3rd Report on Labour Migration Statistics (2021) puts the intra-African share at 70 per cent, computed excluding Mediterranean Africa. Recomputed across the Union’s 54 member states from the UN DESA bilateral matrix (2024), that share is 54.4 per cent. The proportion of international migrants in the continent’s population, for its part, has remained structurally stable at around 1.9 per cent since 1990.",
       modal: { 
         close: "Close", tabs: { demo: "Demography", geo: "Geography & Flows", econ: "Economy", rights: "Rights & commitments" }, 
         south_view: "Analytical Perspective", evo_title: "The Proportional Constant (1990-2024)", parity: "Feminization of flows (UNDESA 2024)", retention_title: "Regional South-South Retention (AU 2021)", orig_dest_title: "Transition & Proximity Dynamics", econ_title: "Economic Independence & Remittances", 
@@ -3261,7 +3352,7 @@ const t = {
         tab_gcr: "Global Compact on Refugees (GCR)",
         sdg_desc: "The UN 2030 Agenda officially incorporates mobility as a driver of sustainable development. Target 17.18 mandates data disaggregation by migratory status.",
         gcm_desc: "Adopted in Marrakech in 2018, the Global Compact for Safe, Orderly and Regular Migration outlines 23 objectives centered on sovereignty, rights, and factual cooperation.",
-        gcr_desc: "Affirmed in 2018, the Global Compact on Refugees (GCR) provides a framework for equitable responsibility-sharing to support Southern countries hosting 76% of world refugees.",
+        gcr_desc: "Affirmed in 2018, the Global Compact on Refugees (GCR) provides a framework for equitable responsibility-sharing to support Southern countries hosting 73% of the world’s refugees (UNHCR, Global Trends 2024).",
         link_text: "Access official portal",
         sdg_points: [
           { goal: 10, title: "Target 10.7 (Migration Governance)", desc: "Facilitate orderly, safe, regular and responsible migration through planned and well-managed policies. The centerpiece migration target of the 2030 Agenda, tracked through 4 indicators (recruitment costs, governance, safe journeys, refugees)." },
@@ -3308,7 +3399,7 @@ const t = {
       debunk_cards: [
         { myth: "Unstoppable African migration explosion.", real: "Continental proportion remains stable (~1.9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024): The proportion of international African migrants relative to the continent’s population has hovered around 1.9% since 1990. Absolute volume increases reflect total population growth." },
         { myth: "Africa is massively invading Europe.", real: "One departure in two stays on the continent.", stat_text: "54.4% (2024)", stat_val: 54.4, color: "bg-teal-700", desc: "Computed from UN DESA’s bilateral matrix (2024) across the 54 African Union member states: of 45.7 million people born in an African state and living outside their country, 24.9 million reside in another African state." },
-        { myth: "The North hosts the vast majority of refugees.", real: "76% of world refugees remain in Southern countries.", stat_text: "76% (2025)", stat_val: 76, color: "bg-amber-700", desc: "UNHCR (2025): Over three-quarters of people fleeing armed conflicts find safety in neighboring developing nations (e.g. Uganda, Chad, Ethiopia)." },
+        { myth: "The North hosts the vast majority of refugees.", real: "73% of refugees are hosted by low- and middle-income countries.", stat_text: "73% (2024)", stat_val: 73, color: "bg-amber-700", desc: "UNHCR (2025): Over three-quarters of people fleeing armed conflicts find safety in neighboring developing nations (e.g. Uganda, Chad, Ethiopia)." },
         { myth: "African migration is almost exclusively male.", real: "Structural feminization of flows (45% to 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / AU (2021): Women account for nearly half of international migrants in Africa, reshaping autonomous care and cross-border trade economies." },
         { myth: "Africa financially depends on Official Aid.", real: "$86.4 billion in remittances far exceed ODA.", stat_text: "$86.4B (2019)", stat_val: 85, color: "bg-amber-600", desc: "World Bank / AU (2021): Diaspora remittances ($86.4B in 2019) far surpass Official Development Assistance (ODA), serving as primary resilience capital." },
         { myth: "Climate will empty Africa towards the North.", real: ">90% of climate displacements are internal.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025): Over 90% of people displaced by climate events (droughts, floods) remain within their national or sub-regional borders." },
@@ -3652,6 +3743,30 @@ const PETITS_ETATS = [
   ['132',  16, 290],   // Cabo Verde
 ];
 
+// LE RAYON DE LA CIBLE TACTILE SE DÉDUIT DU VOISINAGE
+// ---------------------------------------------------------------------------
+// Un rayon uniforme ne marche pas : le Rwanda et le Burundi sont distants de
+// dix-sept unités, la Gambie et la Guinée-Bissau de vingt. Deux zones de vingt-
+// six se recouvriraient presque entièrement, et c'est la dernière rendue qui
+// prendrait le doigt — on aurait échangé une cible trop petite contre une cible
+// qui désigne le mauvais pays, ce qui est pire.
+//
+// Chaque archipel reçoit donc la moitié de sa distance au plus proche voisin,
+// plafonnée à vingt-six. Les isolés — Cabo Verde, Sao Tomé, les Seychelles,
+// Maurice — obtiennent le plafond ; les deux paires serrées gardent leur taille
+// et restent difficiles à viser, ce que la carte seule ne peut pas résoudre.
+// Calculé sur les coordonnées, pas écrit à la main : une correction de position
+// ne peut donc pas périmer les rayons en silence.
+const CIBLE_MAX = 26;
+const RAYONS_TACTILES = Object.fromEntries(
+  PETITS_ETATS.map(([id, x, y]) => {
+    const voisin = Math.min(...PETITS_ETATS
+      .filter(([a]) => a !== id)
+      .map(([, bx, by]) => Math.hypot(x - bx, y - by)));
+    return [id, Math.min(CIBLE_MAX, voisin / 2)];
+  })
+);
+
 // Le cadrage d’une sous-région, calculé sur l’emprise réunie de ses pays plutôt
 // que choisi à la main : ajouter un pays à une région recalcule son cadre.
 // Marge de 4 % pour que les côtes ne collent pas au bord.
@@ -3936,6 +4051,26 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect && onSelect(id); }
               }}
+            />
+          );
+        })}
+        {/* La cible tactile des archipels. Le disque visible fait 8,5 unites —
+            cinq pixels sur un ecran etroit, soit rien du tout pour un doigt.
+            Celui-ci ne peint rien et ne sert qu'a etre touche ; il ne s'active
+            qu'au pointeur grossier, la souris continuant de viser le disque.
+            Il vient APRES les autres pour passer au-dessus, et les archipels
+            sont assez ecartes pour que ces zones ne se recouvrent pas. */}
+        {PETITS_ETATS.map(([id, cx, cy]) => {
+          const nom = tr(countryById[id]?.name, lang) || id;
+          return (
+            <circle
+              key={'toucher-' + id}
+              cx={cx} cy={cy} r={RAYONS_TACTILES[id]}
+              className="choro-toucher"
+              aria-label={`${nom} — ${fmt(valueOf(id))}`}
+              onMouseEnter={() => setSurvole(id)}
+              onMouseMove={(e) => suivre(e, id)}
+              onClick={() => onSelect && onSelect(id)}
             />
           );
         })}
@@ -4894,8 +5029,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           parcourus. On comprend le sujet avant d’avoir lu une ligne. */}
       <SceneFlux lang={lang}>
         <div className="max-w-3xl">
-          {/* L’oeil-de-boeuf nomme l’objet. Il annoncait la planche — « Pl. I,
-              huit questions posées au continent » — ce qui suppose de savoir
+          {/* L’oeil-de-boeuf nomme l’objet. Il annoncait la planche et son
+              compte de questions, ce qui suppose de savoir
               deja ou l’on est. Il dit desormais ce qu’est le lieu, et la planche
               garde sa numerotation, qui court d’une section a l’autre. */}
           <span className="surtitre surtitre--clair">
@@ -6472,6 +6607,10 @@ const AnchoringMatrix = ({ lang }) => {
     [rows]
   );
 
+  // La prose cite deux de ces comptes. Elle les lit ici plutot que de les
+  // repeter en clair, pour qu’un changement de base ne puisse pas la perimer.
+  const nInstr = useCallback((k) => totals.find(i => i.key === k)?.n ?? 0, [totals]);
+
   // L’asymetrie de protection : le refugie qui arrive contre le deplace qui reste.
   const asym = useMemo(() => ({
     refOnly: rows.filter(r => r.t.refugees_1969 && !r.t.kampala),
@@ -6523,29 +6662,42 @@ const AnchoringMatrix = ({ lang }) => {
   
         <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
-              "Adhérer à l’Union est une chose, s’engager sur la mobilité des personnes en est une autre. En rangeant les six instruments continentaux du plus consensuel au plus contraignant, on obtient une courbe de décrochage : l’appartenance est unanime, la libre circulation ne l’est presque pas.",
-              'Joining the Union is one thing; committing on the mobility of persons is another. Ordering the six continental instruments from the most consensual to the most binding produces a curve of attrition: membership is unanimous, free movement almost non-existent.'
+              `Adhérer à l’Union est une chose, s’engager sur la mobilité des personnes en est une autre. En rangeant les six instruments continentaux du plus consensuel au plus contraignant, on obtient une courbe de décrochage : l’appartenance est unanime, la libre circulation ne l’est presque pas.\n\nLa descente n’est pourtant pas régulière, et l’irrégularité est instructive. Deux textes ouverts à la signature en 2018, à quelques semaines d’intervalle, ont connu des sorts opposés : la Zone de libre-échange, qui libère la circulation des marchandises, compte ${nInstr('zlecaf')} ratifications ; le Protocole sur la libre circulation des personnes en compte ${nInstr('free_movement')}. Ce n’est donc pas l’engagement continental qui se referme à mesure qu’il devient contraignant, c’est celui qui porte sur le mouvement des personnes.`,
+              `Joining the Union is one thing; committing on the mobility of persons is another. Ordering the six continental instruments from the most consensual to the most binding produces a curve of attrition: membership is unanimous, free movement almost non-existent.\n\nThe descent is not regular, however, and the irregularity is instructive. Two texts opened for signature in 2018, weeks apart, met opposite fates: the Continental Free Trade Area, which frees the movement of goods, has ${nInstr('zlecaf')} ratifications; the Protocol on Free Movement of Persons has ${nInstr('free_movement')}. What closes as commitment becomes binding is therefore not continental engagement in general, but the part of it that bears on the movement of people.`
             )}</Prose>
   
-          {/* Courbe de decrochage */}
-          <div className="space-y-2.5">
-            {totals.map((i, idx) => (
-              <div key={i.key} className="flex items-center gap-3">
-                <span className="text-[11px] font-semibold w-40 shrink-0 leading-snug text-slate-700">{tr(i.short, lang)}</span>
-                <div className="flex-1 h-5 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                  <div
-                    className={`h-full bar-fill bar-fill--d${Math.min(5, idx + 1)}`}
-                    style={{
-                      width: `${(i.n / total) * 100}%`,
-                      backgroundColor: i.n >= 46 ? 'var(--ok)' : i.n >= 30 ? 'var(--warn)' : 'var(--bad)',
-                    }}
-                  />
-                </div>
-                <span className="text-xs font-bold w-16 text-end shrink-0 tabular-nums text-slate-800">
-                  {i.n}/{total}
-                </span>
-              </div>
-            ))}
+          {/* ------- La frise des ratifications -------
+              Seule infographie verticale du site. La barre horizontale mesure
+              une longueur, et six longueurs se lisent comme six quantités
+              séparées ; la colonne mesure une hauteur, et six hauteurs posées
+              sur un même sol se lisent comme une chute. C'est la chute qui est
+              le constat. Elle REMPLACE la courbe horizontale, elle ne s'y
+              ajoute pas — deux formes pour un même fait feraient redite.
+              Le cadre de chaque colonne monte jusqu'aux 54 États : le vide
+              au-dessus du remplissage est le nombre d'États qui manquent. */}
+          <div>
+            <div className="flex items-baseline justify-between gap-4 mb-1">
+              <span className="surtitre">{L(`Ratifications, sur ${total} États`, `Ratifications, out of ${total} states`)}</span>
+              <span className="surtitre">{L('du plus consensuel au plus contraignant', 'most consensual to most binding')}</span>
+            </div>
+            <div className="frise">
+              {totals.map((i, idx) => {
+                const teinte = i.n >= 46 ? 'var(--ok)' : i.n >= 30 ? 'var(--warn)' : 'var(--bad)';
+                const part = `${(i.n / total) * 100}%`;
+                return (
+                  <div key={i.key} className="frise-colonne">
+                    <span className="frise-plot" style={{ '--part': part }} title={tr(i.full, lang)}>
+                      <span className="frise-n" style={{ color: teinte }}>{i.n}</span>
+                      <span
+                        className={`frise-part bar-fill--d${Math.min(5, idx + 1)}`}
+                        style={{ height: part, backgroundColor: teinte }}
+                      />
+                    </span>
+                    <span className="frise-nom">{tr(i.short, lang)}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
   
           {/* L’asymetrie de protection */}
@@ -8025,6 +8177,93 @@ const TabCorridors = ({ text, lang, children }) => {
   );
 };
 
+// La fiche d'une Communauté régionale : ce que l'accordéon dépliait, sorti
+// de sa pile. Le contenu est celui d'avant, mot pour mot — carte des
+// membres, instruments, dynamique, sources ; ce qui change est qu'il est
+// toujours ouvert, en pleine colonne, au lieu d'attendre un clic.
+const DossierCER = ({ rec, lang }) => {
+  const isOpen = true;   // la fiche ouverte est le seul état
+  return (
+                <div className="p-6 bg-slate-50 border-t border-slate-200 animate-in fade-in duration-300 space-y-5">
+                  <div className="flex flex-wrap gap-4 pb-4 border-b border-slate-200">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{rec.founded}</span> — {tr({ fr: 'fondation', en: 'founded' }, lang)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-xs text-slate-600 font-bold text-slate-800">{tr(rec.hq, lang)}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{Object.values(countryRecAffiliations).filter(a => a.includes(rec.id)).length}</span> {tr({ fr: 'États membres', en: 'member states' }, lang)}</span>
+                    </div>
+                  </div>
+                  <Prose className="text-sm text-slate-800 leading-relaxed font-medium" lang={lang}>{tr({ fr: rec.desc.fr, en: rec.desc.en }, lang)}</Prose>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                    <div className="lg:col-span-2 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
+                      <AfricaRecMap recId={rec.id} lang={lang} />
+                    </div>
+                    <div className="lg:col-span-3 bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                      <p className="surtitre flex items-center">
+                        <Users className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "États membres", en: "Member states" }, lang)}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(countryRecAffiliations)
+                          .filter(([, recs]) => recs.includes(rec.id))
+                          .map(([iso2]) => {
+                            const meta = Object.values(countryIdIndex).find(m => m.iso2 === iso2);
+                            const note = countryRecNotes[iso2];
+                            return (
+                              <span
+                                key={iso2}
+                                title={note ? tr(note, lang) : undefined}
+                                className="group/chip relative inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-default transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 hover:-translate-y-0.5 hover:shadow-sm"
+                              >
+                                <CountryFlag iso2={iso2} emoji="" size="sm" />
+                                {meta ? (tr(meta.name, lang) || meta.name.fr) : iso2.toUpperCase()}
+                                {note && <AlertTriangle className="w-3 h-3 text-amber-500" />}
+                              </span>
+                            );
+                          })}
+                      </div>
+                      <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours.", en: "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal." }, lang)}</Prose>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                      <p className="surtitre flex items-center"><FileText className="w-3.5 h-3.5 me-1.5 text-blue-600" /> {tr({ fr: "Instruments clés", en: "Key Instruments" }, lang)}</p>
+                      <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.instruments.fr, en: rec.instruments.en }, lang)}</Prose>
+                    </div>
+                    <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
+                      <p className="surtitre flex items-center"><Activity className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "Dynamique & défis", en: "Dynamics & Challenges" }, lang)}</p>
+                      <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.dynamics.fr, en: rec.dynamics.en }, lang)}</Prose>
+                    </div>
+                  </div>
+
+                  {rec.sources && (
+                    <div className="pt-4 border-t border-slate-200">
+                      <p className="surtitre flex items-center">
+                        <BookOpen className="w-3 h-3 me-1.5" /> {tr({ fr: "Sources", en: "Sources" }, lang)}
+                      </p>
+                      <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
+                        {rec.sources.map((s, si) => (
+                          <li key={si}>
+                            <a href={s.url} target="_blank" rel="noopener noreferrer"
+                               className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-blue-700 hover:underline">
+                              {s.label} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+  );
+};
+
 const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
   const [expandedRec, setExpandedRec] = useState(null);
   const [matrixView, setMatrixView] = useState('table'); // 'table' ou 'details'
@@ -8050,8 +8289,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affiche l’indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne continentale : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d’identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
-        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, continental average: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
+        fr: "La région affiche l’indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne des huit CER : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d’identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
+        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, average of the eight RECs: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
       },
       sources: [
         { label: "CEDEAO — Retrait du Burkina Faso, du Mali et du Niger (2025)", url: "https://www.ecowas.int/burkina-faso-mali-and-nigers-withdrawal-from-ecowas-is-now-a-reality/" },
@@ -8075,8 +8314,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne continentale de 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d’intégration restent en négociation.",
-        en: "An AVOI score of 0.504 in 2024 (above the 0.501 continental average), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne des huit CER, 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d’intégration restent en négociation.",
+        en: "An AVOI score of 0.504 in 2024 (above the 0.501 average of the eight RECs), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
       },
       sources: [
         { label: "CAE — Vue d’ensemble et États partenaires", url: "https://www.eac.int/overview-of-eac" },
@@ -8125,8 +8364,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1984 and 1998 Protocols, unevenly applied. Consultative process: MIDCOM, which produces most of the bloc’s technical capacity-building tools."
       },
       dynamics: {
-        fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne continentale (0,501). L’obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
-        en: "AVOI score of 0.463 in 2024, slightly below the continental average (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
+        fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne des huit CER (0,501). L’obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
+        en: "AVOI score of 0.463 in 2024, slightly below the average of the eight RECs (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
       },
       sources: [
         { label: "COMESA — États membres", url: "https://www.comesa.int/comesa-members-states/" },
@@ -8150,8 +8389,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne continentale de 0,501, et parmi les plus bas du continent. L’homogénéisation de l’ouverture reste suspendue à l’instabilité géopolitique chronique de la sous-région, guerre au Soudan comprise. L’Érythrée a notifié son retrait formel en décembre 2025, deux ans seulement après son retour dans l’organisation en juin 2023. L’Autorité revient ainsi à sept membres, ce qui dit la fragilité du multilatéralisme régional dans la Corne.",
-        en: "An AVOI score of 0.376 in 2024, well below the continental average (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea’s formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
+        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne des huit CER, 0,501, et parmi les plus bas du continent. L’homogénéisation de l’ouverture reste suspendue à l’instabilité géopolitique chronique de la sous-région, guerre au Soudan comprise. L’Érythrée a notifié son retrait formel en décembre 2025, deux ans seulement après son retour dans l’organisation en juin 2023. L’Autorité revient ainsi à sept membres, ce qui dit la fragilité du multilatéralisme régional dans la Corne.",
+        en: "An AVOI score of 0.376 in 2024, well below the average of the eight RECs (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea’s formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
       },
       sources: [
         { label: "IGAD — Communiqué sur le retrait de l’Érythrée (2025)", url: "https://igad.int/igad-regrets-eritreas-decision-to-withdraw-from-the-organisation/" },
@@ -8175,8 +8414,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Revised ECCAS Treaty (2019). CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90 days and the community biometric passport."
       },
       dynamics: {
-        fr: "Score AVOI le plus bas du continent avec l’UMA (0,320 en 2024, moyenne continentale : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là.\n\nLe défi reste la conversion de l’acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).\n\nLe retrait du Rwanda, annoncé en juin 2025 à la suite d’un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
-        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, continental average: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year.\n\nThe challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea).\n\nRwanda’s announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
+        fr: "Score AVOI le plus bas du continent avec l’UMA (0,320 en 2024, moyenne des huit CER : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là.\n\nLe défi reste la conversion de l’acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).\n\nLe retrait du Rwanda, annoncé en juin 2025 à la suite d’un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
+        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, average of the eight RECs: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year.\n\nThe challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea).\n\nRwanda’s announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
       },
       sources: [
         { label: "CEEAC — Présentation de la Communauté", url: "https://www.ceeac-eccas.org/2023/05/28/eccas-in-brief/" },
@@ -8200,8 +8439,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Marrakech Treaty (1989) as a pure normative horizon."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d’ouverture la plus basse du continent (0,306 en 2024, moyenne continentale : 0,501). L’Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l’intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d’État ne s’est tenu depuis des décennies : l’UMA subsiste comme coquille juridique plus que comme institution opérante.",
-        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, continental average: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
+        fr: "Le bloc affiche la moyenne d’ouverture la plus basse du continent (0,306 en 2024, moyenne des huit CER : 0,501). L’Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l’intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d’État ne s’est tenu depuis des décennies : l’UMA subsiste comme coquille juridique plus que comme institution opérante.",
+        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, average of the eight RECs: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
       },
       sources: [
         { label: "UMA — Historique et institutions", url: "https://maghrebarabe.org/en/historical/" },
@@ -8225,8 +8464,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1998 Treaty (revised 2013). Free movement of persons is listed among the founding objectives, without a dedicated protocol equivalent to those of ECOWAS or IGAD."
       },
       dynamics: {
-        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne continentale (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l’effet d’engagements pris ailleurs, plus que par une dynamique propre.\n\nLa Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N’Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
-        en: "AVOI score of 0.519 in 2024, above the continental average (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself.\n\nThe Community lay institutionally dormant after the 2011 Libyan conflict, its secretariat having relocated to N’Djamena. It reopened its Tripoli headquarters in April 2026, in the presence of eleven member-state foreign ministers. The operational effects of that reactivation remain to be seen."
+        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne des huit CER (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l’effet d’engagements pris ailleurs, plus que par une dynamique propre.\n\nLa Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N’Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
+        en: "AVOI score of 0.519 in 2024, above the average of the eight RECs (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself.\n\nThe Community lay institutionally dormant after the 2011 Libyan conflict, its secretariat having relocated to N’Djamena. It reopened its Tripoli headquarters in April 2026, in the presence of eleven member-state foreign ministers. The operational effects of that reactivation remain to be seen."
       },
       sources: [
         { label: "CEN-SAD — États membres et Secrétariat exécutif", url: "https://censad.int/en/who-are-we/member-states/" },
@@ -8235,6 +8474,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       ]
     }
   ];
+
+  // Le rail est ordonné par ouverture : la position y porte le classement.
+  const recsClasses = useMemo(() => [...recsList].sort((a, b) => b.avoi - a.avoi), [recsList]);
 
   // ========================================================================
   // 2. LES CADRES ET TEXTES FONDAMENTAUX DE L’UNION AFRICAINE
@@ -9364,7 +9606,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
                   {tr({ fr: "L’Union africaine et le régime panafricain des mobilités", en: "The African Union and the Pan-African Mobility Regime" }, lang)}
                 </h2>
-                <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s’enracine dans une architecture institutionnelle propre, structurée par l’Union africaine (UA).\n\nCette architecture illustre la tension du « normer sans ancrer ». La densification normative est exceptionnelle — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026).\n\nLe régime continental repose sur la construction d’une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU).\n\nThis architecture illustrates the tension of 'norming without anchoring': exceptional normative densification that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026).\n\nThe continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
+                <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s’enracine dans une architecture institutionnelle propre, structurée par l’Union africaine (UA).\n\nCette architecture illustre la tension du « normer sans ancrer ». La production normative y est dense — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026).\n\nLe régime continental repose sur la construction d’une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU).\n\nThis architecture illustrates the tension of 'norming without anchoring': dense normative production that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026).\n\nThe continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
                 <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-emerald-400" />
@@ -9678,13 +9920,13 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h3 className="text-sm font-bold text-slate-800 mb-1">
                 {tr({ fr: "Classement de l’ouverture visa (indice AVOI, 2024)", en: "Visa openness ranking (AVOI index, 2024)" }, lang)}
               </h3>
-              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score moyen par CER (BAD/UA). Le repère vertical marque la moyenne continentale des 8 CER (0,501).", en: "Average score per REC (AfDB/AU). The vertical marker shows the continental average across the 8 RECs (0.501)." }, lang)}</Prose>
+              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score par CER et moyenne des huit CER, tels que publiés par la BAD et la Commission de l’UA (0,501). Le score d’une CER mesure l’ouverture de ses membres entre eux : il ne s’obtient donc pas en moyennant les scores AVOI de ses pays, que la plateforme affiche par ailleurs. La moyenne de tous les pays, elle, s’établit à 0,479 en 2024, en recul sur les 0,485 de l’année précédente : l’ouverture mesurée du continent a légèrement reculé.", en: "REC scores and the average of the eight RECs, as published by the AfDB and the AU Commission (0.501). A REC score measures how open its members are to one another: it is therefore not obtained by averaging the AVOI scores of its countries, which the platform shows elsewhere. The all-country average, for its part, stands at 0.479 in 2024, down from 0.485 the year before: measured openness across the continent has slipped." }, lang)}</Prose>
               <div className="space-y-3">
                 {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
                   <div key={rec.id} className="flex items-center gap-3" title={`${tr(rec.name, lang)}: ${rec.avoi.toFixed(3)}`}>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
-                    <div className="flex-1 relative h-4 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-700 rounded-full bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
+                    <div className="flex-1 relative h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                      <div className="h-full bg-blue-700 bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
                       <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
                     </div>
                     <span className="text-xs font-bold text-slate-700 w-10 sm:w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
@@ -9693,116 +9935,33 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              {recsList.map((rec) => {
-                const isOpen = expandedRec === rec.id;
+            {/* ------- Le feuilletage des huit Communautés -------
+                L'accordéon empilait huit blocs sur 2 381 px et n'en ouvrait
+                qu'un, alors que ces huit entités portent déjà un classement —
+                l'AVOI, du simple au double. Le rail le rend lisible : la
+                position EST le classement, et la fiche s'ouvre dessous. */}
+            <Carrousel
+              items={recsClasses}
+              carte={CarteCER}
+              lang={lang}
+              choisie={expandedRec ?? recsClasses[0].id}
+              onChoisir={setExpandedRec}
+              className="mb-8 print:hidden"
+              etiquette={tr({
+                fr: `${recsClasses.length} Communautés régionales — de la plus ouverte à la moins`,
+                en: `${recsClasses.length} Regional Economic Communities — most to least open`,
+              }, lang)}
+            />
+
+            <div className="print:hidden">
+              {(() => {
+                const rec = recsClasses.find(r => r.id === (expandedRec ?? recsClasses[0].id)) || recsClasses[0];
                 return (
-                  <div key={rec.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm transition-all">
-                    <button onClick={() => setExpandedRec(isOpen ? null : rec.id)} className="w-full p-5 text-start flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center gap-4 min-w-0">
-                        <span className="shrink-0 min-w-11 h-11 px-1.5 rounded-full bg-white border border-emerald-200 flex items-center justify-center overflow-hidden text-emerald-700 font-serif font-bold text-[10px] leading-none tracking-tight">
-                          {recLogos[rec.id]
-                            ? <img src={recLogos[rec.id]} alt="" className="max-h-8 max-w-9 object-contain" />
-                            : (rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase())}
-                        </span>
-                        <div className="min-w-0">
-                          <h3 className="font-serif font-bold text-slate-900 text-base md:text-lg">{tr(rec.name, lang)}</h3>
-                          <span className="text-[10px] font-bold uppercase text-emerald-700 tracking-wider bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 mt-1.5 inline-block">
-                            {rec.tag}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4 shrink-0">
-                        <div className="text-end hidden sm:block">
-                          <div className="text-sm font-serif font-bold text-slate-800 tabular-nums">{rec.avoi.toFixed(3)}</div>
-                          <span className="surtitre">AVOI</span>
-                        </div>
-                        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
-                      </div>
-                    </button>
-
-                    {isOpen && (
-                      <div className="p-6 bg-slate-50 border-t border-slate-200 animate-in fade-in duration-300 space-y-5">
-                        <div className="flex flex-wrap gap-4 pb-4 border-b border-slate-200">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{rec.founded}</span> — {tr({ fr: 'fondation', en: 'founded' }, lang)}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600 font-bold text-slate-800">{tr(rec.hq, lang)}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Users className="w-3.5 h-3.5 text-slate-400" />
-                            <span className="text-xs text-slate-600"><span className="font-bold text-slate-800">{Object.values(countryRecAffiliations).filter(a => a.includes(rec.id)).length}</span> {tr({ fr: 'États membres', en: 'member states' }, lang)}</span>
-                          </div>
-                        </div>
-                        <Prose className="text-sm text-slate-800 leading-relaxed font-medium" lang={lang}>{tr({ fr: rec.desc.fr, en: rec.desc.en }, lang)}</Prose>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                          <div className="lg:col-span-2 bg-white p-4 rounded-md border border-slate-200 shadow-sm">
-                            <AfricaRecMap recId={rec.id} lang={lang} />
-                          </div>
-                          <div className="lg:col-span-3 bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <p className="surtitre flex items-center">
-                              <Users className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "États membres", en: "Member states" }, lang)}
-                            </p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {Object.entries(countryRecAffiliations)
-                                .filter(([, recs]) => recs.includes(rec.id))
-                                .map(([iso2]) => {
-                                  const meta = Object.values(countryIdIndex).find(m => m.iso2 === iso2);
-                                  const note = countryRecNotes[iso2];
-                                  return (
-                                    <span
-                                      key={iso2}
-                                      title={note ? tr(note, lang) : undefined}
-                                      className="group/chip relative inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-md cursor-default transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 hover:-translate-y-0.5 hover:shadow-sm"
-                                    >
-                                      <CountryFlag iso2={iso2} emoji="" size="sm" />
-                                      {meta ? (tr(meta.name, lang) || meta.name.fr) : iso2.toUpperCase()}
-                                      {note && <AlertTriangle className="w-3 h-3 text-amber-500" />}
-                                    </span>
-                                  );
-                                })}
-                            </div>
-                            <Prose className="text-[10px] text-slate-400 italic mt-3" lang={lang}>{tr({ fr: "Survolez un pays (carte ou étiquette) pour le situer ; le pictogramme ambré signale un retrait récent ou en cours.", en: "Hover a country (map or label) to locate it; the amber icon flags a recent or ongoing withdrawal." }, lang)}</Prose>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <p className="surtitre flex items-center"><FileText className="w-3.5 h-3.5 me-1.5 text-blue-600" /> {tr({ fr: "Instruments clés", en: "Key Instruments" }, lang)}</p>
-                            <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.instruments.fr, en: rec.instruments.en }, lang)}</Prose>
-                          </div>
-                          <div className="bg-white p-5 rounded-md border border-slate-200 shadow-sm">
-                            <p className="surtitre flex items-center"><Activity className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> {tr({ fr: "Dynamique & défis", en: "Dynamics & Challenges" }, lang)}</p>
-                            <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: rec.dynamics.fr, en: rec.dynamics.en }, lang)}</Prose>
-                          </div>
-                        </div>
-
-                        {rec.sources && (
-                          <div className="pt-4 border-t border-slate-200">
-                            <p className="surtitre flex items-center">
-                              <BookOpen className="w-3 h-3 me-1.5" /> {tr({ fr: "Sources", en: "Sources" }, lang)}
-                            </p>
-                            <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
-                              {rec.sources.map((s, si) => (
-                                <li key={si}>
-                                  <a href={s.url} target="_blank" rel="noopener noreferrer"
-                                     className="inline-flex items-center gap-1 text-[11px] text-slate-500 hover:text-blue-700 hover:underline">
-                                    {s.label} <ExternalLink className="w-2.5 h-2.5 shrink-0" />
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  <div key={rec.id} className="fiche-entree">
+                    <DossierCER rec={rec} lang={lang} />
                   </div>
                 );
-              })}
+              })()}
             </div>
           </div>
         )}
@@ -10916,11 +11075,11 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
                         style={r.inProgress ? { color: 'var(--accent-2)' } : undefined}>
                     {tr(r.label, lang)} <span className="text-slate-400 font-normal">({r.span})</span>
                   </span>
-                  <div className="flex-1 h-4 rounded-full overflow-hidden relative"
+                  <div className="flex-1 h-4 overflow-hidden relative"
                        style={r.inProgress
                          ? { background: 'repeating-linear-gradient(135deg, var(--paper-sunk) 0 5px, var(--paper-raised) 5px 10px)' }
                          : { backgroundColor: 'var(--paper-sunk)' }}>
-                    <div className={`h-full rounded-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
+                    <div className={`h-full bar-fill ${r.inProgress ? '' : 'bg-teal-600'}`}
                          style={{ width: `${pct}%`, ...(r.inProgress ? { backgroundColor: 'var(--accent-2)' } : null) }} />
                   </div>
                   <span className="text-xs font-bold text-slate-700 w-16 sm:w-24 text-end shrink-0 tabular-nums">
@@ -11315,6 +11474,97 @@ const methodLimits = [
   },
 ];
 
+// LA CONVENTION, MESURÉE SUR ELLE-MÊME
+// ---------------------------------------------------------------------------
+// La cinquième convention déclare que les séries « ne partagent pas toutes la
+// même année de référence ». Elle l'énonce ; elle ne le montre pas. Un lecteur
+// ne peut donc pas savoir si l'écart tient à deux pays ou à la moitié du
+// tableau — et la déclaration, faute de mesure, se lit comme une précaution de
+// style plutôt que comme un fait.
+//
+// LE CHAMP RETENU est celui des transferts de fonds, pour deux raisons. C'est
+// le seul dont les millésimes se dispersent réellement : l'activité des
+// migrants est datée de 2022 partout, les séries de population de 1990 et
+// 2024 partout. Et c'est celui qu'on cite le plus souvent hors de son contexte,
+// donc celui dont la date compte le plus.
+//
+// LA FORME est la barre horizontale du site — 16 px, piste `--paper-sunk`,
+// carrée, libellé à gauche, compte à droite — sans exception d'aucune sorte.
+// La frise verticale de Gouvernance encode une chute ; ceci est une
+// distribution, et une distribution se lit en longueurs.
+//
+// Les comptes sont calculés au rendu depuis la base. Aucun n'est écrit en clair.
+const DispersionMillesimes = ({ lang }) => {
+  const L = faireL(lang);
+  const d = useMemo(() => {
+    const pays = Object.values(countryData).flat();
+    const par = new Map();
+    let sans = 0;
+    for (const c of pays) {
+      const a = c.remittances_year;
+      if (a == null) { sans += 1; continue; }
+      par.set(a, (par.get(a) || 0) + 1);
+    }
+    const rangs = [...par.entries()].sort((a, b) => b[0] - a[0]);
+    const annees = rangs.map(([a]) => a);
+    return {
+      rangs, sans, total: pays.length,
+      recent: annees[0], ancien: annees[annees.length - 1],
+      domine: rangs.reduce((m, r) => (r[1] > m[1] ? r : m), rangs[0]),
+    };
+  }, []);
+
+  const lignes = [
+    ...d.rangs.map(([an, n]) => ({ cle: an, nom: String(an), n, manque: false })),
+    ...(d.sans ? [{ cle: 'sans', nom: L('aucune valeur déclarée', 'no value declared'), n: d.sans, manque: true }] : []),
+  ];
+
+  return (
+    <Reveal delay={40} className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
+      <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
+        {L(`Une seule colonne, ${d.rangs.length} millésimes`,
+           `One column, ${d.rangs.length} vintages`)}
+      </h2>
+      <Prose className="text-sm text-slate-500 leading-relaxed max-w-3xl mb-8" lang={lang}>{L(
+        `La convention ci-dessus annonce que les séries ne sont pas alignées sur une même année. Voici de combien. La colonne des transferts de fonds, celle qu’on cite le plus volontiers sans sa date, agrège ${d.rangs.length} années de référence réparties sur ${d.recent - d.ancien} ans, et ${d.sans} États n’y déclarent aucune valeur. L’année ${d.domine[0]} couvre ${d.domine[1]} des ${d.total} États : c’est la valeur dominante, ce n’est pas la seule.`,
+        `The convention above states that the series are not aligned on a single year. Here is by how much. The remittances column — the one most readily quoted without its date — aggregates ${d.rangs.length} reference years spread over ${d.recent - d.ancien} years, and ${d.sans} states declare no value at all. The year ${d.domine[0]} covers ${d.domine[1]} of the ${d.total} states: it is the dominant value, not the only one.`
+      )}</Prose>
+
+      <div className="flex items-baseline justify-between gap-4 mb-3">
+        <span className="surtitre">{L('Année de référence déclarée', 'Declared reference year')}</span>
+        <span className="surtitre">{L(`sur ${d.total} États`, `out of ${d.total} states`)}</span>
+      </div>
+
+      <div className="space-y-2.5">
+        {lignes.map((r, idx) => (
+          <div key={r.cle} className="flex items-center gap-3">
+            <span className="text-[13px] font-semibold w-40 shrink-0 leading-snug tabular-nums"
+                  style={{ color: r.manque ? 'var(--bad)' : 'var(--ink)' }}>{r.nom}</span>
+            <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+              <div
+                className={`h-full bar-fill bar-fill--d${Math.min(5, idx + 1)}`}
+                style={{
+                  width: `${Math.max(1.2, (r.n / d.total) * 100)}%`,
+                  backgroundColor: r.manque ? 'var(--bad)' : 'var(--accent)',
+                }}
+              />
+            </div>
+            <span className="text-[13px] font-bold w-16 text-end shrink-0 tabular-nums"
+                  style={{ color: r.manque ? 'var(--bad)' : 'var(--ink)' }}>
+              {r.n}/{d.total}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <p className="note-source">{L(
+        `Calculé au rendu depuis la base de la plateforme : le champ « année des transferts » des ${d.total} États. Aucune interpolation n’est pratiquée pour aligner ces millésimes — c’est la convention, et c’est aussi la limite.`,
+        `Computed at render from the platform database: the “remittance year” field across the ${d.total} states. No interpolation is applied to align these vintages — that is the convention, and it is also the limit.`
+      )}</p>
+    </Reveal>
+  );
+};
+
 const TabMethodology = ({ text, lang, children }) => (
   <div className="space-y-8 animate-in fade-in duration-500">
     <PageHeader
@@ -11400,6 +11650,8 @@ const TabMethodology = ({ text, lang, children }) => (
         ))}
       </dl>
     </Reveal>
+
+    <DispersionMillesimes lang={lang} />
 
     {/* Limites */}
     <Reveal delay={40} className="bg-slate-900 rounded-xl p-8 md:p-10 border border-slate-800 shadow-sm text-white">

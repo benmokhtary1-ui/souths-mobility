@@ -28,7 +28,11 @@ const CLES = [
   { nom: 'Part mondiale de l\'Afrique', re: /(\d[,.]\d)\s*%[^.]{0,50}(?:stock mondial|migrants dans le monde)/gi, attendu: '9,5' },
   { nom: 'Intervalle inter-recensitaire', re: /(\d{2}[,.]\d)\s*ans?[^.]{0,50}recensements?/gi, attendu: '11,1' },
   { nom: 'Deplaces internes subsahariens', re: /(\d{2}[,.]\d)\s*millions? de (?:personnes )?deplacees?/gi, attendu: '38,8' },
-  { nom: 'Moyenne continentale AVOI', re: /moyenne continentale[^.]{0,30}?0[,.](\d{3})/gi, attendu: '0,501' },
+  // Le rapport AVOI publie DEUX moyennes, et les confondre est exactement
+  // l erreur que le site portait : 0,501 est la moyenne des HUIT CER, 0,479
+  // celle des cinquante-quatre pays. Chacune se verifie sous son propre nom.
+  { nom: 'Moyenne des huit CER (AVOI)', re: /moyenne des huit CER[^.]{0,34}?0[,.](\d{3})/gi, attendu: '0,501' },
+  { nom: 'Moyenne de tous les pays (AVOI)', re: /moyenne de tous les pays[^.]{0,44}?0[,.](\d{3})/gi, attendu: '0,479' },
 ];
 console.log('=== 1. Chiffres repetes ===');
 for (const c of CLES) {

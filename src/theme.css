@@ -688,6 +688,37 @@ table td, table th, .tabular-nums, .font-mono { font-variant-numeric: tabular-nu
 .bar-fill--d4 { animation-delay: .20s; }
 .bar-fill--d5 { animation-delay: .25s; }
 
+/* --- La frise des ratifications -----------------------------------------
+   La SEULE infographie verticale du site, contre quatre-vingt-dix-sept barres
+   horizontales. L'exception se justifie par ce qu'elle encode, pas par un
+   effet : la barre horizontale mesure une LONGUEUR, et six longueurs empilees
+   se lisent comme six quantites separees ; la colonne mesure une HAUTEUR, et
+   six hauteurs posees sur un meme sol se lisent comme une CHUTE. C'est la
+   chute qui est le constat de la section.
+   Elle REMPLACE la courbe de decrochage horizontale, elle ne s'y ajoute pas :
+   deux formes pour un meme fait feraient redite.
+   Le fond de chaque colonne monte jusqu'a cinquante-quatre. Le vide au-dessus
+   du remplissage n'est donc pas du decor : c'est le nombre d'Etats manquants,
+   lisible sans compter. */
+.frise { display: flex; align-items: flex-end; gap: 10px; padding-top: 22px; }
+.frise-colonne { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.frise-plot {
+  position: relative; width: 100%; height: 168px;
+  display: flex; align-items: flex-end;
+  background-color: var(--paper-sunk);
+}
+.frise-part { width: 100%; transform-origin: bottom center;
+              animation: colonneGrow var(--dur-story) var(--ease) both; }
+@keyframes colonneGrow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+/* Le nombre suit le sommet de sa colonne : pose en haut du cadre, il flotterait
+   loin d'une colonne courte et cesserait de la designer. */
+.frise-n {
+  position: absolute; inset-inline: 0; bottom: calc(var(--part) + 6px);
+  text-align: center; font-size: 19px; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.frise-nom { font-size: 13px; line-height: 1.3; text-align: center; color: var(--ink-soft); }
+
 /* --- Entrees decalees : les elements d'une grille arrivent l'un apres l'autre --- */
 @keyframes riseIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -763,7 +794,7 @@ button, a { transition: color var(--dur-fast) var(--ease), background-color var(
     transition-duration: .001ms !important;
     animation-timeline: none !important;
   }
-  .bar-fill { transform: none !important; }
+  .bar-fill, .frise-part { transform: none !important; }
   .stagger > * { opacity: 1 !important; transform: none !important; }
 }
 
@@ -2324,9 +2355,13 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .classement-rang   { font-size: calc(13px * var(--corps)); color: var(--label); font-variant-numeric: tabular-nums; }
 .classement-nom    { font-size: calc(13px * var(--corps)); color: var(--ink); font-weight: 600; }
 .classement-valeur { font-size: calc(13px * var(--corps)); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-.classement-jauge  { display: block; height: 6px; border-radius: 999px; background: var(--rule); overflow: hidden; }
+/* La jauge du classement est la barre du site, en version legere : dans une
+   ligne de classement elle accompagne le rang et la valeur au lieu de porter
+   seule l’information. Seule la HAUTEUR change donc — la piste et le rayon
+   sont ceux des quatre-vingt-neuf autres. */
+.classement-jauge  { display: block; height: 8px; background: var(--paper-sunk); overflow: hidden; }
 .classement-jauge > span {
-  display: block; height: 100%; border-radius: 999px;
+  display: block; height: 100%;
   background: var(--accent);
   transition: width var(--dur-slow, 420ms) var(--ease-both, cubic-bezier(.32,.72,0,1));
 }
@@ -2535,6 +2570,19 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   :is(main, .reader) :is(button, a[href], [role="button"]):not(.terme):not(.choro-pays) {
     min-height: 44px;
   }
+  /* Les champs de saisie relevaient du meme oubli : le champ « Chercher un
+     pays » faisait 39 px, alors que c est LUI le chemin de secours quand la
+     carte est trop petite pour etre visee au doigt. */
+  :is(main, .reader) :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    min-height: 44px;
+  }
+
+  /* LA BANDE SUPERIEURE ETAIT HORS DE LA REGLE. Elle vit hors de <main>, donc
+     le selecteur ne l atteignait pas : recherche et lecture y faisaient 32 px,
+     le selecteur de langue 33, les onglets 41. Ce sont les commandes les plus
+     souvent touchees du site, et les seules qu on vise d une main. */
+  nav :is(button, a[href], [role="button"]) { min-height: 44px; }
+  nav :is(button, a[href])[aria-label] { min-width: 44px; }
   /* Les commandes en ligne dans une phrase gardent leur hauteur de texte :
      les etirer casserait l'interligne du paragraphe qui les contient. */
   :is(main, .reader) p :is(button, a[href]) { min-height: 0; }
@@ -5027,4 +5075,101 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 .marque-accueil:focus-visible {
   outline: 2px solid var(--accent-light);
   outline-offset: 4px;
+}
+
+/* La carte d'une Communauté régionale
+   -------------------------------------------------------------------------
+   Second rendu du même rail que l'Observatoire des narratifs : le cadre, le
+   cran de couleur, les pastilles et l'appel viennent de `.feuillet-carte` et
+   ne sont pas redéfinis ici. Seul s'ajoute ce que cette carte porte en propre —
+   le sigle, et la mesure.
+
+   La barre reprend la forme du site — 16 px, piste `--paper-sunk`, carrée —
+   et porte le repère de la moyenne continentale. Sans ce repère, 0,504 et
+   0,463 se ressemblent, alors que l'un est au-dessus de la moyenne et l'autre
+   en dessous : c'est toute la lecture qui change. */
+.feuillet-titre-cer { display: flex; flex-direction: column; gap: 4px; }
+
+.feuillet-sigle {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: calc(22px * var(--corps));
+  line-height: 1.15;
+  color: var(--ink);
+}
+.feuillet-tag {
+  font-size: calc(13px * var(--corps));
+  line-height: 1.45;
+  color: var(--label);
+}
+
+.feuillet-mesure { display: flex; flex-direction: column; gap: 6px; }
+.feuillet-piste {
+  position: relative;
+  display: block;
+  height: 16px;
+  background: var(--paper-sunk);
+  overflow: hidden;
+}
+.feuillet-part { display: block; height: 100%; }
+.feuillet-moyenne {
+  position: absolute;
+  inset-block: 0;
+  width: 1px;
+  background: var(--rule-strong);
+}
+.feuillet-echelle {
+  font-size: calc(13px * var(--corps));
+  line-height: 1.45;
+  color: var(--label);
+}
+
+
+/* --- La gouttiere des cartes, sur un ecran etroit -------------------------
+   `--pas-carte` valait 32 px partout, ecran compris. Sur 375 px, cela faisait
+   16 px de gouttiere de page plus deux fois 32 dans chaque carte : deux cent
+   soixante-dix-neuf pixels de contenu sur trois cent soixante-quinze, soit un
+   QUART de l'ecran en marge — et une planche de l'Atlas rendue a 277 px de
+   large, ou les archipels tombent sous cinq pixels.
+   Trente-deux pixels ont ete regles pour une colonne de mille : c'est la
+   proportion qui a du sens, pas la valeur absolue. On la ramene a vingt sous
+   768 px, ce qui rend vingt-quatre pixels au contenu sans que la carte cesse
+   de se lire comme une carte. Au-dessus du seuil, rien ne bouge : la mise en
+   page de bureau reste exactement celle qui a ete reglee. */
+@media (max-width: 767px) {
+  :root { --pas-carte: 1.25rem; }   /* 20 px */
+}
+
+/* --- Viser une ile au doigt ----------------------------------------------
+   Les archipels sont des disques de 8,5 unites, soit environ cinq pixels sur
+   un ecran etroit : intappables. On ne peut pas leur donner 44 px sans couvrir
+   le continent, mais on peut separer CE QU ON VOIT de CE QU ON TOUCHE — un
+   disque transparent, plus large, pose au-dessus et sensible au seul doigt.
+   Elargir le disque VISIBLE ne marcherait pas : il porte une bordure blanche
+   qui le detache de la mer, et l elargir peindrait un halo.
+   A la souris la cible reste le disque lui-meme, sinon elle volerait le survol
+   des pays voisins.                                                        */
+.choro-toucher { fill: transparent; pointer-events: none; }
+@media (pointer: coarse) {
+  .choro-toucher { pointer-events: all; cursor: pointer; }
+}
+
+/* --- Le drapeau plutot que le fer, sur un ecran etroit --------------------
+   Cent dix-neuf paragraphes sont justifies. Sur une colonne de bureau ils se
+   composent bien ; sur 375 px la ligne tombe a TRENTE-SIX SIGNES, et la
+   justification n a alors plus de quoi repartir le blanc : elle l entasse
+   entre les mots. Le francais aggrave le cas — « intergouvernementale »,
+   « transfrontalieres » — parce qu un mot long qui ne passe pas rejette a lui
+   seul toute la ligne. Le fer a gauche est la seule reponse a cette largeur ;
+   la coupure automatique, deja posee plus haut, reduit la dentelure du bord.
+
+   LE SELECTEUR EST CELUI DE LA REGLE QU IL ANNULE, a l identique. Sa force
+   tient a cinq :not() enchaines ; une version plus courte, meme placee apres,
+   perdait sans rien signaler — la justification restait, et seule la mesure
+   dans le navigateur le montrait. */
+@media (max-width: 767px) {
+  :is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not([class*="text-center"]):not([class*="text-end"]) {
+    text-align: start;
+  }
+  :is(main, .reader) :is(li, dd, .text-justify, [class*="text-justify"]) { text-align: start; hyphens: auto; }
 }

@@ -38,10 +38,9 @@ const COLLECTIONS = [
     mots: ['affirmations'] },
   { nom: 'références (biblio)',     n: (lire('src/data/library.js').match(/\{ title: /g) || []).length,
     mots: ['références sourcées'] },
-  { nom: 'notions du glossaire',    n: (() => {
-      const i = src.indexOf('const PLAIN_TERMS = {');
-      return (src.slice(i, src.indexOf('\n};', i)).match(/\n  \w+: \{/g) || []).length;
-    })(), mots: ['notions définies'] },
+  // Les compteurs de la planche d'ouverture (`ASSISE`) sont déjà calculés
+  // sur les données : ils ne peuvent pas dériver. Ce relevé ne cherche que
+  // les nombres ÉCRITS DANS UNE PHRASE.
 ];
 
 console.log('COLLECTIONS RELEVÉES DANS LE CODE\n');
@@ -61,6 +60,8 @@ for (const c of COLLECTIONS) {
       // un gabarit `${…}` est calculé : il ne peut pas dériver
       const debut = src.lastIndexOf('\n', m.index);
       const ligne = src.slice(debut + 1, src.indexOf('\n', m.index));
+      // Un commentaire de code peut citer un ancien libellé à bon droit.
+      if (/^\s*(\/\/|\*|\{\/\*)/.test(ligne)) continue;
       if (/\$\{/.test(ligne.slice(Math.max(0, m.index - debut - 40), m.index - debut + 4))) continue;
 
       const valeur = /^\d+$/.test(avant)
