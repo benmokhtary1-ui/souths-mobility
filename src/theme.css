@@ -2499,7 +2499,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    `max-w-4xl`, 896 px — et son titre la remplit. Lui appliquer les 49 rem
    n'aurait touché que le descriptif, qui se serait recentré à 54 px du
    titre : le décalage même qu'on vient de corriger dans la note.        */
-:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.note-source):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *) {
+:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.note-source):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *):not(.note-cadrage *) {
   /* La largeur est désormais décidée par la CARTE (voir « un seul bloc
      descendant » plus haut). L'élément n'impose plus la sienne : deux
      règles de largeur, c'étaient deux axes. */

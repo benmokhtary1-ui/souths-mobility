@@ -1952,12 +1952,18 @@ const AspirationGap = ({ lang }) => {
     <section className="bg-white my-7" style={{ borderStyle: 'solid', borderColor: 'var(--rule)', borderWidth: 1, borderTopWidth: 2, borderTopColor: 'var(--accent-2)' }}>
       <div className="px-6 md:px-8 pt-6 pb-5 border-b border-slate-200">
         <span className="surtitre surtitre--accent">
-          {L("Ce que la plateforme ne mesurait pas : l’aspiration", 'What the platform was not measuring: aspiration')}
+          {L("Entre vouloir partir et partir", 'Between wanting to leave and leaving')}
         </span>
         <h3 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">
           {L("47 % des Africains ont envisagé de partir. 54,4 % de ceux qui partent restent en Afrique.",
              '47% of Africans have considered leaving. 54.4% of those who do leave stay in Africa.')}
         </h3>
+        {/* Les deux chiffres du titre ne se lisent pas séparément : c’est leur
+            écart qui porte le cadre des capabilités, et rien ne le disait. */}
+        <Prose className="mt-3 text-[13px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
+          "L’aspiration est large, le départ est rare, et quand il a lieu il reste le plus souvent sur le continent. C’est cet écart — entre ce qu’on souhaite et ce qu’on peut effectivement faire — que mesure le cadre des capabilités, et non le seul nombre de départs.",
+          "Aspiration is broad, departure is rare, and when it happens it usually stays on the continent. It is this gap — between what one wishes and what one can actually do — that the capabilities framework measures, not the number of departures alone."
+        )}</Prose>
       </div>
 
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
@@ -2484,32 +2490,19 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
     />
 
     <div className="relative z-10 max-w-4xl">
-      {/* Tete de planche : on sait ou l’on est avant meme de lire le titre. */}
-      {plate && (
-        <div className="flex items-center gap-3 mb-5">
-          {/* La marque n’existait qu’en tête et en pied de page — deux fois sur
-              quatre mille pixels. Elle ouvre désormais chaque planche, à la
-              taille du numéro qu’elle précède, et prend la teinte de la
-              section comme tout le reste. */}
-          <BrandMark className="w-9 h-9 shrink-0" tone="dark" aria-hidden="true" />
-          <span className="surtitre surtitre--clair">
-            {plate}
-          </span>
-          {/* Un filet de 112 px qui ne menait nulle part, et une icône de 14 px
-              suspendue à son bout : retirés. Ni l’un ni l’autre ne portait
-              d’information — la section est déjà nommée par son titre, sa
-              couleur et la planche d’Afrique derrière. C’était de l’ornement
-              qui remplit, pas qui dit. */}
-        </div>
-      )}
 
       {/* Le numero de planche, l’etiquette et le mot en italique du titre
           prenaient le meme indigo dans les neuf sections : la couleur de
           section s’arretait au fond du bandeau, sans jamais toucher la
           typographie. Ils se calculent maintenant sur l’accent de la section,
           au-dessus de l’encre. */}
+      {/* La marque ouvre la planche a la place du folio, et sur la MEME
+          ligne que l’etiquette : le bandeau perd une rangee entiere.
+          Elle prend la teinte de la section comme tout le reste. */}
+      <span className="inline-flex items-center gap-3 mb-5">
+      <BrandMark className="w-7 h-7 shrink-0" tone="dark" aria-hidden="true" />
       <span
-        className="inline-flex items-center gap-2 px-3 py-1 rounded-sm mb-5 text-[10px] font-semibold uppercase"
+        className="inline-flex items-center gap-2 px-3 py-1 rounded-sm text-[10px] font-semibold uppercase"
         style={{
           letterSpacing: '.16em',
           color: 'color-mix(in oklab, var(--accent-light) 62%, #FFFDF9)',
@@ -2518,6 +2511,7 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
         }}
       >
         {badge}
+      </span>
       </span>
 
       <h1
@@ -2992,7 +2986,7 @@ const t = {
       },
       home_editorial: {
         badge: "Note de cadrage scientifique",
-        title: "Pourquoi ce hub de connaissances ?",
+        title: "Pourquoi ce Hub de connaissances ?",
         p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s’élève à 304 millions de personnes en 2024, soit 3,7 % de la population mondiale — une part qui n’a que modestement augmenté depuis 1990, où elle valait 2,9 % (UN DESA, 2024). Sur ce total, l’Afrique accueille environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial : loin derrière l’Europe et l’Asie, et en deçà du poids démographique du continent, proche de 18 % de la population mondiale. Il s’agit ici du stock de migrants présents en Afrique, et non de l’émigration africaine : sur ce second plan, 54,4 % des personnes nées dans un État de l’Union africaine et parties de leur pays résident dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024).",
         p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L’attention s’y concentre de manière disproportionnée sur les traversées vers l’Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l’essentiel de la mobilité forcée sur le continent se joue à l’intérieur des frontières nationales. L’Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C’est davantage que tous les migrants internationaux présents sur l’ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l’intérieur d’un pays. Elle ne produit ni image de traversée, ni statistique d’entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
         caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d’un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s’impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d’UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c’est l’instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l’OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
@@ -4934,7 +4928,13 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
   const tete = rangs.slice(0, 5);
   const queue = rangs.slice(-3);
   const max = tete[0].v || 1;
-  const fmt = (v) => (indicateur.unit === '' ? formatNumber(v, lang) : `${v}${indicateur.unit}`);
+  // La branche a unite concatenait la valeur BRUTE : « 17.7% » en francais, ou
+  // la decimale se marque par une virgule. Le defaut ne se voyait pas tant que
+  // ces valeurs restaient dans une colonne de chiffres ; il saute aux yeux des
+  // qu une phrase les reprend. Les deux branches passent par le meme format.
+  // Les deux branches passent par le même format : la branche à unité
+  // concaténait la valeur brute, ce qui donnait « 17.7% » en français.
+  const fmt = (v) => `${formatNumber(v, lang)}${indicateur.unit || ''}`;
 
   const Ligne = ({ r, i, sourd }) => (
     <li>
@@ -4958,12 +4958,28 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
     <section className="bg-white border border-slate-200 overflow-hidden" aria-label={L('Classement de la couche affichée', 'Ranking for the displayed layer')}>
       <div className="px-6 md:px-8 pt-5 pb-3 flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="font-serif font-bold text-lg text-slate-900 leading-snug">
-          {L('Qui est en tête, qui ferme la marche', 'Who leads, who trails', { ar: 'مَن يتصدّر ومَن يُغلق' })}
+          {L('Le continent, du premier au dernier', 'The continent, first to last', { ar: 'القارة، من الأول إلى الأخير' })}
         </h2>
         <span className="text-[11px] tabular-nums" style={{ color: 'var(--label)' }}>
           {tr(indicateur.label, lang)} · {rangs.length} {L('pays classés', 'countries ranked', { ar: 'بلداً مصنفاً' })}
         </span>
       </div>
+      {/* CE QU’UN CLASSEMENT CACHE : l’ampleur. On voit l’ordre, jamais
+          l’écart — un rapport de 1 à 3 et un rapport de 1 à 60 donnent la
+          même liste. Cette ligne le dit, et se recalcule à chaque couche
+          comme à chaque région. */}
+      <p className="px-6 md:px-8 pb-4 text-[13px] leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+        {(() => {
+          const haut = rangs[0], bas = rangs[rangs.length - 1];
+          const rapport = bas.v > 0 ? Math.round((haut.v / bas.v) * 10) / 10 : null;
+          return L(
+            `${haut.nom} ouvre le classement avec ${fmt(haut.v)}, ${bas.nom} le ferme avec ${fmt(bas.v)}` +
+              (rapport ? ` — un rapport de 1 à ${formatNumber(rapport, lang)}.` : '.'),
+            `${haut.nom} opens the ranking at ${fmt(haut.v)}, ${bas.nom} closes it at ${fmt(bas.v)}` +
+              (rapport ? ` — a ratio of 1 to ${formatNumber(rapport, lang)}.` : '.')
+          );
+        })()}
+      </p>
       <ol className="px-6 md:px-8 pb-3 space-y-1">
         {tete.map((r, i) => <Ligne key={r.id} r={r} i={i} />)}
       </ol>
@@ -5048,26 +5064,11 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           {/* Ce que la plateforme est, avant ce qu’elle permet de faire. */}
           <Prose className="mt-3 text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#DFD9D3' }} lang={lang}>{L(
-            "Plateforme indépendante de recherche et de données sur les mobilités humaines dans les Suds, construite depuis l’Afrique. Chaque chiffre y est rattaché à la source qui le publie, et chaque jeu de données peut être exporté pour être vérifié.",
-            'An independent research and data platform on human mobility in the Souths, built from Africa. Every figure is tied to the source that publishes it, and every dataset can be exported and checked.',
+            "Une plateforme indépendante, qui réunit ce que les institutions publient sur les mobilités des Suds et le lit avec les définitions africaines.",
+            'An independent platform that gathers what institutions publish on mobility across the Souths, and reads it through African definitions.',
             { ar: 'منصة مستقلة للبحث والبيانات حول التنقلات البشرية في الجنوب، مبنية انطلاقاً من أفريقيا. لكل رقم مصدره، ولكل مجموعة بيانات تصديرها.' }
           )}</Prose>
 
-          {/* L’assise, comptee sur les donnees. Ce qui etablit une reference
-              n’est pas l’adjectif mais l’inventaire — et il se verifie. */}
-          <ul className="assise" aria-label={L('Ce que contient la plateforme', 'What the platform holds', { ar: 'ما تحتويه المنصة' })}>
-            {[
-              [ASSISE.etats,      L('États documentés', 'states documented', { ar: 'دولة موثّقة' })],
-              [ASSISE.references, L('références sourcées', 'sourced references', { ar: 'مرجع موثّق' })],
-              [ASSISE.notions,    L('notions définies', 'defined terms', { ar: 'مفهوم مُعرَّف' })],
-              [ASSISE.enonces,    L('énoncés passés à l’épreuve', 'claims put to the test', { ar: 'ادعاء تم اختباره' })],
-            ].map(([n, quoi], i) => (
-              <li key={quoi} style={{ animationDelay: `${240 + i * 90}ms` }}>
-                <CompteurEntree valeur={n} duree={700 + i * 90} className="assise-n" />
-                <span className="assise-quoi">{quoi}</span>
-              </li>
-            ))}
-          </ul>
 
 
           {/* Les questions vivent dans le bandeau, pas en dessous. Elles y
@@ -5645,6 +5646,13 @@ const indicatorThemes = [
 // ============================================================================
 
 const homeCards = [
+  // La carte ouvre le parcours : le chapeau de la grille annonce qu’on entre
+  // par elle, il faut donc qu’elle y soit.
+  // `Map` sans alias resout vers le constructeur natif de JavaScript, pas
+  // vers l icone : le module l importe sous le nom `MapIcon`.
+  { id: 'atlas', icon: MapIcon, label: { fr: 'Atlas', en: 'Atlas' },
+    desc: { fr: `${COUCHES_ATLAS.length} questions posées au continent, et la réponse pays par pays.`,
+            en: `${COUCHES_ATLAS.length} questions put to the continent, answered country by country.` } },
   { id: 'evidence', icon: Globe, label: { fr: 'Vérification', en: 'Evidence Check' },
     desc: { fr: `${evidenceCheckData.length} affirmations courantes sur les migrations confrontées aux meilleures données disponibles.`,
             en: `${evidenceCheckData.length} common migration claims tested against the best available data.` } },
@@ -5685,23 +5693,6 @@ const TabHome = ({ text, lang, setActiveTab }) => {
   // Le premier ecran d’un nouveau venu n’affichait que des nombres nus, sous des
   // libelles de neuf pixels en gris. Chaque tuile dit maintenant ce qu’elle
   // compte, et ce qui se passe si on clique — ce sont des portes, pas un decor.
-  const statTiles = [
-    { value: totalCountries, unit: null,
-      label: { fr: "pays d’Afrique couverts", en: 'African countries covered' },
-      door: { fr: "Ouvrir l’atlas", en: 'Open the atlas' }, tab: 'atlas' },
-    { value: totalRegions, unit: null,
-      label: { fr: "régions découpées par l’Union africaine", en: 'regions as defined by the African Union' },
-      door: { fr: 'Voir les régions', en: 'See the regions' }, tab: 'atlas' },
-    { value: totalEvidence, unit: null,
-      label: { fr: "affirmations passées au crible des sources", en: 'claims checked against the sources' },
-      door: { fr: 'Vérifier une affirmation', en: 'Check a claim' }, tab: 'evidence' },
-    { value: totalLibrary, unit: null,
-      label: { fr: "rapports et bases de données consultables", en: 'reports and datasets you can consult' },
-      door: { fr: 'Ouvrir la bibliothèque', en: 'Open the library' }, tab: 'resources' },
-    { value: totalDisplaced, unit: { fr: 'millions', en: 'million' },
-      label: { fr: "de personnes déplacées dans leur propre pays par un conflit", en: 'people displaced inside their own country by conflict' },
-      door: { fr: 'Comprendre pourquoi', en: 'Understand why' }, tab: 'mobilites' },
-  ];
 
   const essayWordCount = [text.home_editorial.p1, text.home_editorial.p1b, text.home_editorial.caveats, text.home_editorial.p2, text.home_editorial.p3, text.home_editorial.pullquote, text.home_editorial.p4]
     .join(' ').trim().split(/\s+/).length;
@@ -5721,74 +5712,19 @@ const TabHome = ({ text, lang, setActiveTab }) => {
 
       <BarreSection lang={lang} />
 
-      {/* Sous le bloc-titre, comme partout : ce que la section apprend et
-          comment la lire, replie par defaut. */}
-      <Reperes
-        lang={lang}
-        chapo={{ fr: 'Comment lire ce hub', en: 'How to read this hub' }}
-        titre={{ fr: "Sept sections, un ordre de lecture", en: 'Seven sections, one reading order' }}
-        chapeau={{
-          fr: "L’ordre des onglets suit celui dans lequel on comprend : on entre par la carte, on éprouve une idée reçue, on regarde d’où vient le chiffre, on lit les analyses, puis on vérifie l’appareil. Rien n’oblige à le suivre, mais il explique pourquoi les sections sont rangées ainsi.",
-          en: 'The tab order follows the order in which one understands: enter through the map, test a received idea, look at where the figure comes from, read the analyses, then check the apparatus. Nothing forces you to follow it, but it explains why the sections are arranged this way.'
-        }}
-        notions={[
-          { mot: { fr: 'Entrer', en: 'Enter' },
-            sens: { fr: `L’Atlas pose ${COUCHES_ATLAS.length} questions au continent et y répond pays par pays. Chacune est choisie pour que la réponse contredise souvent l’attendu.`, en: `The Atlas puts ${COUCHES_ATLAS.length} questions to the continent and answers them country by country. Each is chosen so that the answer often contradicts what is expected.` } },
-          { mot: { fr: 'Éprouver', en: 'Test' },
-            sens: { fr: "Evidence Check confronte des énoncés courants aux meilleures sources disponibles, avec une jauge à quatre crans.", en: 'Evidence Check sets common claims against the best available sources, on a four-notch gauge.' } },
-          { mot: { fr: 'Comprendre', en: 'Understand' },
-            sens: { fr: "Données & statistiques dit comment un chiffre africain se fabrique — et ce qu’il ne compte pas.", en: 'Data & statistics explains how an African figure is produced — and what it does not count.' } },
-          { mot: { fr: 'Analyser', en: 'Analyse' },
-            sens: { fr: "Mobilités et Gouvernance portent les deux corpus : les mouvements d’un côté, les règles de l’autre.", en: 'Mobility and Governance carry the two corpora: movements on one side, rules on the other.' } },
-        ]}
-        pied={{
-          fr: "Chaque section porte ce même bloc sous son titre. Il se déplie si vous en avez besoin et reste fermé sinon.",
-          en: 'Every section carries this same block under its title. It opens if you need it and stays closed otherwise.'
-        }}
-      />
-
       {/* Releve de chiffres : une seule feuille divisee par des filets, plutot que
           quatre vignettes posees cote a cote. */}
-      <Reveal>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 bg-white border border-slate-200 divide-x divide-y lg:divide-y-0 divide-slate-200 stat-ledger stagger">
-          {statTiles.map((stat, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveTab(stat.tab)}
-              aria-label={`${stat.value} ${stat.unit ? tr(stat.unit, lang) + ' ' : ''}${tr(stat.label, lang)} — ${tr(stat.door, lang)}`}
-              className="relative overflow-hidden px-5 py-6 text-start group flex flex-col"
-            >
-              <span
-                className="absolute start-0 top-0 h-full w-[2px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
-                style={{ backgroundColor: 'var(--accent)' }}
-              />
-              <div className="text-4xl font-serif font-bold text-slate-900 tabular-nums leading-none">
-                <CountUp value={stat.value} />
-                  {/* L’espace est dans le texte, pas seulement dans la marge :
-                      sans lui, un copier-coller donne « 29millions ». */}
-                {stat.unit && (
-                  <span className="text-lg font-semibold" style={{ color: 'var(--label)' }}>
-                    {' '}{tr(stat.unit, lang)}
-                  </span>
-                )}
-              </div>
-              {/* Ce que compte le chiffre : c’est cette ligne qui porte le sens. */}
-              <span className="block mt-2 text-[13px] leading-snug text-slate-700 flex-1">
-                {tr(stat.label, lang)}
-              </span>
-              {/* Ce que fait le clic : rien ne disait que ces tuiles menaient quelque part. */}
-              <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold group-hover:gap-2 transition-[gap]"
-                    style={{ color: 'var(--accent)' }}>
-                {tr(stat.door, lang)}
-                <ArrowRight className="w-3 h-3 shrink-0" aria-hidden="true" />
-              </span>
-            </button>
-          ))}
-        </div>
-      </Reveal>
 
       <Reveal delay={60}>
-        <h2 className="text-lg font-serif font-bold text-slate-800 mb-4">{tr({ fr: "Explorer le hub de connaissances", en: "Explore the Knowledge Hub" }, lang)}</h2>
+        {/* L’ordre des onglets n’est pas alphabétique : il suit celui dans
+            lequel on comprend. Dit ici, il fait de la grille un parcours ;
+            dit dans un dépliant séparé, il n’était lu par personne. */}
+        <span className="surtitre">{tr({ fr: `${homeCards.length} sections, un ordre de lecture`, en: `${homeCards.length} sections, one reading order` }, lang)}</span>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-2">{tr({ fr: "Explorer le Hub de connaissances", en: "Explore the Knowledge Hub" }, lang)}</h2>
+        <Prose className="text-sm text-slate-600 leading-relaxed mb-6 max-w-3xl" lang={lang}>{tr({
+          fr: "On entre par la carte, on éprouve une idée reçue, on regarde d’où vient le chiffre, on lit les analyses, puis on vérifie l’appareil qui les produit.",
+          en: "Enter through the map, test a received idea, look at where the figure comes from, read the analyses, then check the apparatus that produces them."
+        }, lang)}</Prose>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger">
           {homeCards.map((card, i) => {
             const Icon = card.icon;
@@ -5835,19 +5771,19 @@ const TabHome = ({ text, lang, setActiveTab }) => {
           <Prose className="lede" lang={lang}>{text.home_editorial.p1}</Prose>
         </div>
 
-        <div className="max-w-4xl">
+        <div className="">
           <ProportionGap lang={lang} />
           <AspirationGap lang={lang} />
         </div>
 
-        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed text-justify">
           <Prose lang={lang}>{text.home_editorial.p1b}</Prose>
         </div>
-        <div className="max-w-4xl bg-slate-50 border border-slate-200 rounded-lg p-5 my-5 flex items-start gap-3">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-5 my-5 flex items-start gap-3">
           <AlertTriangle className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
           <Prose className="text-xs text-slate-600 leading-relaxed text-justify" lang={lang}>{text.home_editorial.caveats}</Prose>
         </div>
-        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed text-justify">
           <Prose lang={lang}>{text.home_editorial.p2}</Prose>
           <Prose lang={lang}>{text.home_editorial.p3}</Prose>
           <Prose lang={lang}>{text.home_editorial.p3b}</Prose>
