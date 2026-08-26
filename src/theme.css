@@ -53,6 +53,13 @@
      lit rien sous 4. Une seule suffit, et elle est chaude comme le papier du
      site plutôt que blanche d'écran. */
   --reserve:      #FFFDF9;
+  /* Deux retraits de la reserve, pour ce qui vit SUR le plan encre : le pied
+     de page les ecrivait en dur — #A79E92 et #8A8175 — donc hors palette et
+     immobiles en mode nuit. Derives du plan, ils le suivent. */
+  --reserve-douce: color-mix(in oklab, #FFFDF9 66%, var(--plan-encre, #14161C));
+  /* 54 % et non 50 : a la moitie exacte, le contraste tombait a 4,49:1 sur
+     le plan encre — sous le seuil de 4,5 d un centieme. */
+  --reserve-tenue: color-mix(in oklab, #FFFDF9 56%, var(--plan-encre, #14161C));
   --paper-sunk:   #F4F1EE;
   /* Le fond sombre revient au noir. Le taupe le réchauffait trop : un bandeau
      d'atlas se tient sur du noir, et le dégradé de couleur n'a de force que
@@ -77,10 +84,10 @@
      depuis #14653F (L 0,450 · C 0,098 · H 157,4°). Les quatre valeurs ne sont
      pas choisies mais visées : on cherche la clarté qui atteint au plus juste la
      cible de contraste, à teinte et chroma constantes. */
-  --accent:       #046345;   /* 7,1:1 sur le papier */
-  --accent-deep:  #004630;   /* 10,7:1 — petit corps et texte dense */
-  --accent-soft:  #D9F5E7;   /* l'encre y tient 16,1:1, --accent-deep 9,4:1 */
-  --accent-light: #85B79F;   /* recalculé sur l'encre taupe : 8,0:1 */
+  --accent:       #3F4654;   /* 7,1:1 sur le papier */
+  --accent-deep:  #272E3B;   /* 10,7:1 — petit corps et texte dense */
+  --accent-soft:  #E5E6E8;   /* l'encre y tient 16,1:1, --accent-deep 9,4:1 */
+  --accent-light: #929AA9;   /* recalculé sur l'encre taupe : 8,0:1 */
 
   /* L'accent de lecture. Le vert tient tant qu'on regarde — la marque, le
      bandeau, la barre — et devient bruyant dès qu'on lit. Les blocs de texte
@@ -241,9 +248,12 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
    12, où le texte frôle le filet ; et les variantes de point d'arrêt
    (`md:p-8`, `md:p-10`, `md:p-12`) rouvraient 32 à 48 px dès 768 px de large,
    c'est-à-dire sur tous les écrans où le site se lit vraiment.               */
-:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td) { padding: var(--pas-carte) !important; }
-:is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5):not(th):not(td) { padding-inline: var(--pas-carte) !important; }
-:is(main, .reader) :is(.py-7, .py-6, .py-5):not(th):not(td) { padding-block: var(--pas-carte) !important; }
+/* Une fiche de catalogue n est pas une boite de section : elle prend le pas
+   courant, pas la gouttiere de trente-deux. Sans cette exclusion la regle
+   ci-dessous gagnait avec son !important, et la fiche gardait ses 32 px.  */
+:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *) { padding: var(--pas-carte) !important; }
+:is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5):not(th):not(td):not(.fiche-entree *) { padding-inline: var(--pas-carte) !important; }
+:is(main, .reader) :is(.py-7, .py-6, .py-5):not(th):not(td):not(.fiche-entree *) { padding-block: var(--pas-carte) !important; }
 :is(main, .reader) :is(.p-4, .p-3\.5, .p-3):not(th):not(td) { padding: var(--pas-2) !important; }
 :is(main, .reader) :is(.p-2\.5, .p-2):not(th):not(td) { padding: var(--pas-1) !important; }
 :is(main, .reader) :is(.p-1\.5, .p-1):not(th):not(td) { padding: 4px !important; }
@@ -1588,10 +1598,10 @@ main:focus { outline: none; }
    grise. Ces quatre valeurs sont celles de la racine — l'émeraude du pied de
    page, celle qui signe le site. */
 .marque-emeraude {
-  --accent:       #046345;
-  --accent-deep:  #004630;
-  --accent-soft:  #D9F5E7;
-  --accent-light: #85B79F;
+  --accent:       #3F4654;
+  --accent-deep:  #272E3B;
+  --accent-soft:  #E5E6E8;
+  --accent-light: #929AA9;
 }
 
 /* ---------- Une teinte par section ---------------------------------------- */
@@ -1642,13 +1652,21 @@ main:focus { outline: none; }
   --accent-soft:  #EEE5E7;
   --accent-light: #CA8795;
 }
-/* L'Atlas porte la couleur générale du site : c'est le point de départ, il
-   n'appartient à aucune section en particulier. Il suit donc la marque. */
+/* L’ATLAS ET « À PROPOS » PARTAGENT LA COULEUR ÉTALON — le graphite. Ce
+   n’est pas une neuvième teinte mais la valeur par défaut du site, celle
+   de la marque comprise. À chroma 0,025 elle est presque neutre : elle ne
+   peut donc évoquer aucune institution de la question migratoire, et elle
+   laisse les sept teintes de section faire seules le travail de
+   distinction au lieu de les concurrencer depuis l’entrée.
+   L’émeraude qui l’a précédée se tenait à trois degrés du vert de l’Union
+   africaine ; un carmin puis un vermillon, calculés pour être les plus
+   éloignés possible de toute institution, tenaient les contraintes sans
+   convenir — une teinte forte à l’entrée engage tout le reste. */
 :is(main, header, nav)[data-section="atlas"] {
-  --accent:       #046345;
-  --accent-deep:  #004630;
-  --accent-soft:  #D9F5E7;
-  --accent-light: #85B79F;
+  --accent:       #3F4654;
+  --accent-deep:  #272E3B;
+  --accent-soft:  #E5E6E8;
+  --accent-light: #929AA9;
 }
 /* bleu-violet */
 :is(main, header, nav)[data-section="governance"] {
@@ -2499,7 +2517,7 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    `max-w-4xl`, 896 px — et son titre la remplit. Lui appliquer les 49 rem
    n'aurait touché que le descriptif, qui se serait recentré à 54 px du
    titre : le décalage même qu'on vient de corriger dans la note.        */
-:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.note-source):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *):not(.note-cadrage *) {
+:is(main, .reader) :is(p, h2, h3, h4, ul, ol, dl, blockquote):not(.provenance):not(.note-source):not(.en-clair):not(.compare-legende):not(.compare-reserve):not(.assise):not([class*="grid"]):not([class*="flex"]):not(table *):not(figure *):not(.rail *):not(.classement-ligne *):not(.carte-continent *):not(.scene-flux-texte *):not(.page-bandeau *):not(.note-cadrage *):not(.fiche-entree *) {
   /* La largeur est désormais décidée par la CARTE (voir « un seul bloc
      descendant » plus haut). L'élément n'impose plus la sienne : deux
      règles de largeur, c'étaient deux axes. */
@@ -3742,10 +3760,18 @@ main[data-section] ::selection { background: var(--accent-soft); color: var(--ac
    que soit la teinte, y compris les plus claires.                          */
 .page-bandeau {
   background-color: var(--plan-encre);
+  /* UNE seule coulee, pas trois taches. Le bandeau portait deux halos
+     radiaux et une diagonale : trois sources de lumiere dans une meme image,
+     donc aucune. La coulee va de l accent vers sa variante profonde en
+     diagonale, et un halo tres efface tient le coin oppose pour qu il ne
+     tombe pas au noir. */
   background-image:
-    radial-gradient(circle at 10% 15%, color-mix(in oklab, var(--accent) 62%, transparent), transparent 46%),
-    radial-gradient(circle at 88% 88%, color-mix(in oklab, var(--accent-light) 34%, transparent), transparent 52%),
-    linear-gradient(152deg, transparent 40%, color-mix(in oklab, var(--accent-deep) 42%, transparent) 100%);
+    radial-gradient(120% 90% at 92% 96%, color-mix(in oklab, var(--accent-light) 18%, transparent), transparent 60%),
+    linear-gradient(148deg,
+      color-mix(in oklab, var(--accent) 74%, transparent) 0%,
+      color-mix(in oklab, var(--accent) 34%, transparent) 34%,
+      color-mix(in oklab, var(--accent-deep) 46%, transparent) 74%,
+      color-mix(in oklab, var(--accent-deep) 62%, transparent) 100%);
 }
 
 /* La bascule de volet, calee sous le bandeau plutot qu'au-dessus du titre. */
@@ -4680,12 +4706,12 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
   --plan-emphase: #362325;
 }
 :root[data-theme="nuit"] :is(main, header, nav)[data-section="atlas"] {
-  --accent:       #7E9B8C;
-  --accent-deep:  #9DBAAB;
-  --accent-soft:  #1A2D25;
-  --accent-light: #5D796C;
-  --plan-encre:   #1A2D25;
-  --plan-emphase: #1A2D25;
+  --accent:       #8D95A5;
+  --accent-deep:  #ABB4C4;
+  --accent-soft:  #222936;
+  --accent-light: #6B7382;
+  --plan-encre:   #222936;
+  --plan-emphase: #222936;
 }
 :root[data-theme="nuit"] :is(main, header, nav)[data-section="governance"] {
   --accent:       #9192AC;
@@ -4723,12 +4749,12 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 /* L'emblème garde sa couleur propre — c'est tout l'objet de `.marque-emeraude` :
    ne jamais prendre la teinte de la section qui l'héberge. Mais ses quatre
    valeurs sont celles du jour, écrites en dur, et de nuit son aplat clair
-   (#D9F5E7) porterait de l'encre claire. On lui donne donc ses pas de nuit, dans
+   (#E5E6E8) porterait de l'encre claire. On lui donne donc ses pas de nuit, dans
    sa propre teinte : la marque reste verte, elle cesse d'être lumineuse. */
 :root[data-theme="nuit"] .marque-emeraude {
-  --accent:       #7E9B8C;
-  --accent-deep:  #9DBAAB;
-  --accent-soft:  #1A2D25;
+  --accent:       #8D95A5;
+  --accent-deep:  #ABB4C4;
+  --accent-soft:  #222936;
   --accent-light: #5F7B6D;
 }
 
@@ -5172,4 +5198,181 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
     text-align: start;
   }
   :is(main, .reader) :is(li, dd, .text-justify, [class*="text-justify"]) { text-align: start; hyphens: auto; }
+}
+
+/* --- La lumiere des mesures ----------------------------------------------
+   La couleur d une barre est posee EN LIGNE, au cas par cas : un cran de
+   robustesse ici, l accent de la section la, un rouge de manque ailleurs. On
+   ne peut donc pas la remplacer par un degrade sans reecrire cent appels.
+   On pose donc le degrade PAR-DESSUS : une lumiere neutre, claire a l origine
+   de la mesure et sourde a son extremite, qui compose avec n importe quelle
+   couleur de fond. La barre garde sa valeur exacte et gagne un sens de
+   lecture — on voit d ou elle part.
+   La frise de Gouvernance mesure vers le haut : sa lumiere est verticale. */
+.bar-fill, .classement-jauge > span, .feuillet-part {
+  background-image: linear-gradient(90deg,
+    rgba(255, 255, 255, .20) 0%,
+    rgba(255, 255, 255, .06) 42%,
+    rgba(0, 0, 0, .10) 100%);
+}
+:root[dir="rtl"] :is(.bar-fill, .classement-jauge > span, .feuillet-part) {
+  background-image: linear-gradient(270deg,
+    rgba(255, 255, 255, .20) 0%,
+    rgba(255, 255, 255, .06) 42%,
+    rgba(0, 0, 0, .10) 100%);
+}
+.frise-part {
+  background-image: linear-gradient(0deg,
+    rgba(255, 255, 255, .20) 0%,
+    rgba(255, 255, 255, .06) 42%,
+    rgba(0, 0, 0, .10) 100%);
+}
+/* De nuit la lumiere s inverse : un voile blanc sur un aplat sombre le
+   delave, quand un voile noir sur un aplat clair le creuse. */
+:root[data-theme="nuit"] :is(.bar-fill, .classement-jauge > span, .feuillet-part) {
+  background-image: linear-gradient(90deg,
+    rgba(255, 255, 255, .12) 0%,
+    rgba(0, 0, 0, .04) 42%,
+    rgba(0, 0, 0, .16) 100%);
+}
+
+/* --- Le fond de mer ------------------------------------------------------
+   La mer prend une coulee ; les PAYS, non. Un aplat de choroplethe doit
+   valoir exactement son pas d echelle, sinon la legende ment sur ce qu on
+   voit — c est le seul endroit du site ou un degrade serait une faute de
+   fond et non une question de gout. */
+/* La variable se declare SUR l element qui la consomme : posee sur le svg
+   enfant, elle ne resolvait pas sur le parent, et tout le degrade tombait a
+    sans que rien ne le signale. */
+.carte-continent {
+  --mer: color-mix(in oklab, var(--accent-soft) 40%, var(--paper));
+  background-image: linear-gradient(158deg, var(--mer), var(--paper) 72%);
+}
+/* --- Les bandes a icones, centrees ---------------------------------------
+   Trois bandes de commandes a icones ne partaient pas du milieu : la barre
+   d'export etait poussee a droite (`justify-end`), les commandes du carrousel
+   aussi, et le groupe de bascules de Ressources restait cale a gauche dans une
+   largeur `fit-content`. Une bande qui longe un bord laisse un vide de l'autre
+   cote, et c'est ce vide qu'on lisait comme un defaut de mise en page — pas la
+   bande elle-meme.
+   Elles se posent maintenant sur l'axe de la page, comme les cartes et les
+   planches.
+
+   LE CORPS PASSE DE 13 A 15 PX. La demande etait « vingt pour cent » ; quinze
+   est le barreau suivant de l'echelle, a quinze pour cent. On ne fabrique pas
+   un 15,6 px hors echelle pour trois pixels de mieux : le site n'a que sept
+   corps, et c'est ce qui le tient. */
+:is(main, .reader) .barre-section { justify-content: center; }
+:is(main, .reader) .carrousel-commandes { justify-content: center; }
+
+/* CENTRER LA BANDE NE SUFFIT PAS : une commande a icones vit presque toujours
+   dans une RANGEE, aux cotes de son libelle — « Robustesse » et ses crans, le
+   titre du carrousel et ses fleches. Poser  sur l enfant
+   ne fait rien tant que la rangee, elle, part du bord. C est donc la rangee
+   qu on centre, libelle compris : le couple reste solidaire et se pose sur
+   l axe de la page.  permet de designer un parent par ce qu il
+   contient, ce qu aucun selecteur ne savait faire avant. */
+:is(main, .reader) :is(div, nav, header, p):has(> .bascule-groupe),
+:is(main, .reader) :is(div, nav, header, p):has(> .carrousel-commandes),
+:is(main, .reader) .carrousel-tete {
+  justify-content: center;
+}
+:is(main, .reader) .bascule-groupe { margin-inline: auto; }
+
+:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]) {
+  font-size: calc(15px * var(--corps, 1));
+}
+/* L'icone suit son libelle : elle etait calee sur 13 px, elle passe au meme
+   rapport que le texte a cote duquel elle vit. */
+:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]) svg {
+  width: 1.06em;
+  height: 1.06em;
+}
+/* --- La tuile d'agregat, resserree ---------------------------------------
+   Les six tuiles du bloc continental portaient `px-5 py-5`, que la regle
+   d'harmonisation remontait a trente-deux pixels : la marge interieure d'une
+   BOITE DE SECTION, appliquee a une case de tableau de bord. Cent vingt et un
+   pixels de haut pour un nombre et un libelle, dont soixante-quatre de vide.
+   Une tuile n'est pas une boite de section — elle est ce qu'il y a DEDANS. Elle
+   reprend donc le pas courant, et la grille passe de 242 a 194 px sans qu'un
+   seul corps de texte ait bouge. */
+:is(main, .reader) .tuile-agregat {
+  padding: var(--pas-3) var(--pas-2);
+}
+@media (max-width: 767px) {
+  :is(main, .reader) .tuile-agregat { padding: var(--pas-2); }
+}
+/* --- Les fiches de la bibliotheque, resserrees ---------------------------
+   Une fiche « pour commencer » faisait 332 px, dont QUATRE-VINGT-HUIT de vide :
+   trente-deux pixels de marge interieure en haut et en bas — la valeur d'une
+   boite de section, imposee par la regle d'harmonisation a une fiche de
+   catalogue — plus vingt-quatre d'ecarts entre ses quatre elements.
+   On retire trente-cinq pour cent de ce vide, et rien d'autre : les resumes
+   vont de trois a neuf lignes, les rogner couperait du fond, et le corps ne
+   bouge pas. L'interligne du resume passe de 1,625 a 1,5 — c'est de l'espace,
+   pas de la taille.
+   Quatre-vingt-huit pixels de vide deviennent cinquante-sept. */
+:is(main, .reader) .fiche-nature { padding-top: 0; }
+:is(main, .reader) :is(a, div):has(> .fiche-nature) {
+  /* Seize pixels et non vingt-quatre : le vide d une fiche passe de 88 a 56,
+     soit les trente-cinq pour cent demandes, et seize est un pas de l echelle
+     quand vingt n en est pas un. L ecart interne reste a huit — le forcer a
+     six aurait fait gagner six pixels contre un pas hors echelle. */
+  padding: var(--pas-2);
+}
+:is(main, .reader) :is(a, div):has(> .fiche-nature) p {
+  line-height: 1.5;
+}
+/* --- La fiche de verification, resserree ---------------------------------
+   Huit cent soixante-deux pixels de haut sur mille vingt-deux de large, en
+   trois panneaux empiles portant chacun trente-deux pixels de gouttiere : cent
+   quatre-vingt-douze pixels de marge interieure pour une seule fiche. D'ou
+   l'impression qu'il y a « beaucoup dedans » — ce n'est pas le contenu qui
+   encombre, c'est l'air entre ses parties.
+   La gouttiere VERTICALE des panneaux internes passe a vingt-quatre ; la
+   gouttiere horizontale ne bouge pas, sinon le bord gauche du texte se
+   deplacerait d'un panneau a l'autre.
+
+   ET SURTOUT LA MESURE. A quinze pixels dans une colonne de 958, la ligne
+   court sur cent cinq signes environ. L'oeil en lit soixante-cinq a
+   soixante-quinze : au-dela, il perd le debut de la ligne suivante et relit.
+   La prose de la fiche prend donc une mesure de lecture. Les grilles, les
+   listes d'indicateurs et les jauges gardent la pleine largeur : ce sont des
+   objets a balayer, pas a lire ligne a ligne. */
+:is(main, .reader) .fiche-entree article > :is(header, div) {
+  padding-block: var(--pas-2);
+}
+:is(main, .reader) .fiche-entree :is(p, blockquote):not([class*="surtitre"]):not(.note-source) {
+  /* 36rem et non 42 : a quinze pixels, 42rem laissait encore quatre-vingt-dix
+     signes par ligne, et trente-six encore quatre-vingt-quatre. Trente-deux en donne soixante-quinze, la borne haute de
+     ce que l oeil suit sans relire. La fiche gagne en hauteur ce qu elle perd
+     en largeur — c est le prix d une mesure lisible, et il vaut d etre paye. */
+  max-width: 32rem;
+}
+/* --- Le panneau pays sur un ecran etroit ---------------------------------
+   Trois defauts, tous mesures a 375 px.
+
+   LA CROIX DE FERMETURE faisait 26 px de LARGE pour 44 de haut : la regle du
+   pointeur grossier ne posait qu'un plancher de hauteur, et une croix est
+   aussi large que haute. C'est la commande qu'on cherche en premier quand on
+   s'est trompe de pays, et c'est la plus difficile a viser du panneau.
+
+   LA GOUTTIERE DE LA SCENE, vingt pixels, s'ajoutait a celle du panneau,
+   seize : trente-six pixels de bord pour une fiche qui n'en a que 301 de
+   large. Sur telephone la scene n'a pas a border sa propre fiche — elle la
+   laisse aller au bord.
+
+   LES DEUX COLONNES du bloc de chiffres tenaient sur 126 px chacune, ou
+   « Migrants presents » se coupait en deux lignes au-dessus de sa valeur. En
+   dessous de 400 px elles passent en une seule colonne : un chiffre par
+   ligne, avec son libelle entier a cote. */
+@media (pointer: coarse) {
+  :is(main, .reader) .panneau-fermer { min-width: 44px; }
+}
+@media (max-width: 767px) {
+  .atlas-scene { padding: var(--pas-2); }
+  .atlas-scene .panneau-pays { padding-inline: var(--pas-2); }
+}
+@media (max-width: 400px) {
+  .panneau-pays dl.grid { grid-template-columns: 1fr; }
 }

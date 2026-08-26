@@ -24,7 +24,8 @@ import { glossaryData } from './data/glossary';
 import { libraryData } from './data/library';
 import { methodConventions } from './data/methodConventions';
 import { SOURCE_MONDE, REGIONS_DESA, MONDE_2024, RESTE_DANS_SA_REGION,
-         CORRIDORS_INTERREGIONAUX, SEUIL_AUTRES_CORRIDORS, COUVERTURE_STATISTIQUE } from './data/mondeData';
+         CORRIDORS_INTERREGIONAUX, SEUIL_AUTRES_CORRIDORS, COUVERTURE_STATISTIQUE,
+         INTRA_AFRICAIN_UA } from './data/mondeData';
 
 // ============================================================================
 // 1. FONCTIONS ET COMPOSANTS UTILITAIRES
@@ -2518,10 +2519,10 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
         className="font-serif font-black text-[2.4rem] md:text-[3.6rem] leading-[1.02] tracking-[-0.025em]"
         style={{ color: 'var(--reserve)' }}
       >
-        {title}{' '}
+        {poserLesChiffres(title)}{' '}
         {/* La seconde famille, ici et nulle part ailleurs : la reprise du titre
             se dit dans la moderne quand le constat se dit dans la graphique. */}
-        <span className="titre-reprise" style={{ color: 'var(--accent-light)' }}>{highlight}</span>
+        <span className="titre-reprise" style={{ color: 'var(--accent-light)' }}>{poserLesChiffres(highlight)}</span>
       </h1>
 
       <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#D3D5DC' }}>
@@ -2915,8 +2916,8 @@ const t = {
         },
         evidence: {
           badge: "Observatoire des Narratifs",
-          title: "Ce qu’on dit des migrations africaines,",
-          highlight: "et ce que les sources en disent.",
+          title: "{enonces} affirmations courantes,",
+          highlight: "passées aux meilleures sources disponibles.",
           desc: "{enonces} affirmations publiques, reprises une par une et confrontées aux sources qui permettent de les vérifier. La note porte sur la solidité de la preuve disponible, et sur elle seule.",
           plain: "Les affirmations qu’on entend souvent sur les migrations africaines, reprises une par une et confrontées aux sources. Chacune reçoit une note de solidité."
         },
@@ -2929,15 +2930,15 @@ const t = {
         },
         home: {
           badge: "Plateforme de Savoirs & de Données",
-          title: "Ce que rassemble cette plateforme,",
-          highlight: "et par où la prendre.",
-          desc: "Une infrastructure ouverte de recherche et de données sur les mobilités humaines dans les Suds, avec une première focalisation sur l’Afrique — 54 pays, 5 régions, des dizaines de sources institutionnelles vérifiées.",
+          title: "Entre ce qu’on dit des mobilités africaines et ce qu’en disent les chiffres,",
+          highlight: "l’écart se mesure.",
+          desc: "C’est cet écart que la plateforme documente : elle réunit ce que les institutions publient sur les mobilités des Suds, le date, le rend comparable, et le lit avec les définitions africaines plutôt qu’avec celles du Nord.",
           plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
         },
         governance: {
           badge: "Gouvernance & Cadres Stratégiques",
-          title: "Six instruments continentaux engagent les États africains,",
-          highlight: "avec des ratifications très inégales.",
+          title: "L’Afrique s’est dotée de ses propres instruments, souvent avant la norme mondiale.",
+          highlight: "Reste ce que les États en font.",
           desc: "Six instruments continentaux, {etats} États, un tableau de ratification. L’Acte constitutif les réunit tous ; le Protocole sur la libre circulation des personnes en réunit quatre.",
           plain: "Qui fixe les règles de circulation en Afrique — l’Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s’appliquent réellement."
         },
@@ -3180,7 +3181,7 @@ const t = {
         s8: "Banque mondiale - Base de données des transferts de fonds (2024)"
       },
       myth: "Postulat", reality: "Donnée Factuelle",
-      footer: { tag: "L’ingénierie des données au service d’un nouveau récit factuel sur les mobilités.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
+      footer: { tag: "Les données publiques sur les mobilités des Suds, réunies, datées et rendues comparables. La plateforme n’en produit aucune : elle les rassemble et dit d’où elles viennent.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
       analysis_title: "Tableau de bord détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
@@ -3241,8 +3242,8 @@ const t = {
         },
         evidence: {
           badge: "Narratives Observatory",
-          title: "What gets said about African migration,",
-          highlight: "and what the sources say.",
+          title: "{enonces} common claims,",
+          highlight: "tested against the best available sources.",
           desc: "{enonces} public claims, taken one at a time and set against the sources that make them checkable. The score rates the strength of the available evidence, and nothing else.",
           plain: "The claims commonly made about African migration, taken one by one and checked against the sources. Each is given a robustness rating."
         },
@@ -3255,15 +3256,15 @@ const t = {
         },
         home: {
           badge: "Knowledge & Data Platform",
-          title: "What this platform gathers,",
-          highlight: "and where to take it up.",
-          desc: "An open research and data infrastructure on human mobility in the Global South, with an initial focus on Africa — 54 countries, 5 regions, dozens of verified institutional sources.",
+          title: "Between what is said about African mobility and what the figures say,",
+          highlight: "the gap can be measured.",
+          desc: "That gap is what the platform documents: it gathers what institutions publish on mobility across the Souths, dates it, makes it comparable, and reads it through African definitions rather than Northern ones.",
           plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
         },
         governance: {
           badge: "Governance & Strategic Frameworks",
-          title: "Six continental instruments bind African states,",
-          highlight: "with highly uneven ratification.",
+          title: "Africa built its own instruments, often ahead of the global norm.",
+          highlight: "What states do with them is another matter.",
           desc: "Six continental instruments, {etats} states, one ratification table. The Constitutive Act binds every one of them; the Free Movement Protocol binds four.",
           plain: "Who sets the rules of movement in Africa — the African Union, the regional blocs, or each state? This section shows the rules on paper, then which ones actually apply."
         },
@@ -3506,7 +3507,7 @@ const t = {
         s8: "World Bank - Migration and Remittances Data (2024)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Data engineering serving a new factual narrative on mobilities.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
+      footer: { tag: "Public data on mobility across the Souths, gathered, dated and made comparable. The platform produces none of it: it assembles it and says where it comes from.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report"
     }
 };
@@ -3521,9 +3522,9 @@ const t = {
 // ----------------------------------------------------------------------------
 const aggregates = {
   'africa_perspective': {
-    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flagIcon: Globe, flagColor: "text-blue-700", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: 70, remittances: 6.5, aid: 3.2,
+    name: { fr: "Afrique (Continentale)", en: "Africa (Continental)" }, flagIcon: Globe, flagColor: "text-blue-700", stock: '28,5 M', female: '47.1', evolution: '1.9', retention: INTRA_AFRICAIN_UA.part, remittances: 6.5, aid: 3.2,
     history: [{ year: 1990, value: '2.5' }, { year: 2000, value: '2.0' }, { year: 2010, value: '1.8' }, { year: 2024, value: '1.9' }],
-    distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: 70, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: 30, color: 'bg-slate-700' }],
+    distribution: [{ label: {fr: 'Intra-Africain', en: 'Intra-African'}, value: INTRA_AFRICAIN_UA.part, color: 'bg-blue-700' }, { label: {fr: 'Extra-Africain', en: 'Extra-African'}, value: INTRA_AFRICAIN_UA.partHorsContinent, color: 'bg-slate-700' }],
     ...genericDesc
   },
   'af_med_perspective': {
@@ -4318,7 +4319,7 @@ const construireIndex = (lang) => {
     type: 'terme',
     titre: tr({ fr: t.term, en: (t.en_term || t.term) }, lang),
     contexte: L(g.category),
-    aller: { tab: 'resources' },
+    aller: { tab: 'about' },
     mots: `${t.term} ${t.en_term || ''} ${t.fr || ''} ${t.en || ''} ${D(g.category)}`,
   })));
 
@@ -4326,7 +4327,7 @@ const construireIndex = (lang) => {
     type: 'source',
     titre: it.title,
     contexte: `${L(s.section)}${it.year ? ` · ${it.year}` : ''}`,
-    aller: { tab: 'resources' },
+    aller: { tab: 'about' },
     lien: it.url,
     mots: `${it.title} ${D(it.desc)} ${D(s.section)}`,
   })));
@@ -5050,9 +5051,9 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
               deja ou l’on est. Il dit desormais ce qu’est le lieu, et la planche
               garde sa numerotation, qui court d’une section a l’autre. */}
           <span className="surtitre surtitre--clair">
-            Pl. I · {L('Centre de ressources — mobilités africaines et des Suds',
-                       'Knowledge hub — African and Global South mobility',
-                       { ar: 'مركز موارد — التنقلات الأفريقية وتنقلات الجنوب' })}
+            {L('Atlas — les mobilités africaines, question par question',
+               'Atlas — African mobility, question by question',
+               { ar: 'أطلس — التنقلات الأفريقية، سؤالاً بسؤال' })}
           </span>
           <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
               style={{ color: 'var(--reserve)' }}>
@@ -5244,7 +5245,22 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
             lang={lang}
             region={cadre}
             selectedId={paysOuvert}
-            onSelect={(id) => setPaysOuvert(id === paysOuvert ? null : id)}
+            onSelect={(id) => {
+              // OUVRIR UN PAYS, C'EST AUSSI ENTRER DANS SA RÉGION. La fiche
+              // répond « ce pays » ; la question suivante est toujours « par
+              // rapport à quoi ». En calant le cadre sur la région du pays, la
+              // carte le montre parmi ses voisins et le bloc d'ensemble, en bas
+              // de page, bascule sur la perspective correspondante — cliquer le
+              // Maroc donne la fiche du Maroc ET l'Afrique méditerranéenne.
+              // `countryRegionMap` porte déjà l'association ; elle n'était pas
+              // branchée.
+              const ouvre = id !== paysOuvert;
+              setPaysOuvert(ouvre ? id : null);
+              if (ouvre) {
+                const region = countryRegionMap[id];
+                if (region) setActiveSubRegion(region);
+              }
+            }}
           />
         </div>
         {paysOuvert && countryById[paysOuvert] && (
@@ -5268,17 +5284,25 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           plateforme dont la premiere regle est qu’un chiffre sans annee ne se
           lit pas. */}
       <div className="flex flex-wrap items-baseline justify-between gap-4 pt-1 border-t" style={{ borderColor: 'var(--rule)' }}>
-        <div className="max-w-2xl mt-4">
-          <Prose className="text-[13px] leading-relaxed" style={{ color: 'var(--ink-soft)' }} lang={lang}>{tr(plain, lang)}</Prose>
+        {/* La consigne de lecture et la provenance en UNE note, pas en deux
+            paragraphes. C’est la forme `.note-source` employée partout
+            ailleurs sur le site : un filet fin, un corps de note, la couleur
+            d’étiquette. Elles disaient comment lire un aplat et d’où il vient
+            — cela se met en note, pas en texte courant. */}
+        <p className="note-source" style={{ marginTop: 0, borderTop: 0, paddingTop: 0 }}>
+          {tr(plain, lang)}
           {hint && (
-            <p className="mt-2 text-[12px] leading-relaxed" style={{ color: 'var(--label)' }}>
-              <span className="surtitre me-1.5">
-                {L('Source', 'Source', { ar: 'المصدر' })}
-              </span>
+            <>
+              {' — '}
+              {/* L espace vit dans le TEXTE, pas seulement dans la marge : sans lui,
+                  un copier-coller rend « SourceMigrants ». Le site releve deja ce defaut
+                  ailleurs, sur « 29millions ». */}
+              <span className="surtitre">{L('Source', 'Source', { ar: 'المصدر' })}</span>
+              {' : '}
               {tr(hint, lang)}
-            </p>
+            </>
           )}
-        </div>
+        </p>
         {/* Une couche sans destination repond ici meme : le bouton ne s’affiche
             que s’il mene reellement quelque part. */}
         {couche.mene && (
@@ -5337,15 +5361,18 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
         <dl className="grid grid-cols-2 md:grid-cols-3 border-t border-slate-100 divide-x divide-y md:divide-y-0 divide-slate-100">
           {[
             { v: display.stock, l: L('Personnes nées ailleurs', 'People born elsewhere', { ar: 'أشخاص وُلدوا في مكان آخر' }) },
-            { v: `${display.evolution}%`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
-            { v: `${display.female}%`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
-            { v: `${display.retention}%`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) },
-            { v: display.remittances != null ? `${display.remittances}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            { v: `${formatNumber(display.evolution, lang)}%`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
+            { v: `${formatNumber(display.female, lang)}%`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
+            // La tuile ne paraît que si la valeur existe : elle est vérifiée pour
+            // le continent, et incalculable pour une sous-région. Une case en
+            // moins vaut mieux qu’un nombre fabriqué.
+            ...(display.retention != null ? [{ v: `${formatNumber(display.retention, lang)}%`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) }] : []),
+            { v: display.remittances != null ? `${formatNumber(display.remittances, lang)}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Transferts, en part du PIB', 'Remittances, share of GDP', { ar: 'التحويلات كنسبة من الناتج' }) },
-            { v: display.labour_participation != null ? `${display.labour_participation}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            { v: display.labour_participation != null ? `${formatNumber(display.labour_participation, lang)}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Migrants en activité', 'Migrants in work', { ar: 'المهاجرون العاملون' }) },
           ].map((k, i) => (
-            <div key={i} className="px-5 py-5">
+            <div key={i} className="tuile-agregat">
               <dd className="text-2xl md:text-3xl font-serif font-bold text-slate-900 tabular-nums leading-none">{k.v}</dd>
               <dt className="block mt-2 text-[11px] leading-snug" style={{ color: 'var(--label)' }}>{k.l}</dt>
             </div>
@@ -5356,15 +5383,15 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           <div className="px-6 md:px-8 py-5 border-t border-slate-100">
             <div className="flex justify-between text-[11px] font-bold mb-2">
               <span style={{ color: 'var(--accent-deep)' }}>
-                {tr(display.distribution[0].label, lang)} ({display.distribution[0].value} %)
+                {tr(display.distribution[0].label, lang)} ({formatNumber(display.distribution[0].value, lang)} %)
               </span>
               <span style={{ color: 'var(--label)' }}>
-                {tr(display.distribution[1].label, lang)} ({display.distribution[1].value} %)
+                {tr(display.distribution[1].label, lang)} ({formatNumber(display.distribution[1].value, lang)} %)
               </span>
             </div>
             <div className="h-2.5 w-full flex overflow-hidden" style={{ backgroundColor: 'var(--rule)', borderRadius: 999 }}>
-              <div style={{ width: `${display.distribution[0].value}%`, backgroundColor: 'var(--accent)' }} />
-              <div style={{ width: `${display.distribution[1].value}%`, backgroundColor: 'var(--rule-strong)' }} />
+              <div style={{ width: `${formatNumber(display.distribution[0].value, lang)}%`, backgroundColor: 'var(--accent)' }} />
+              <div style={{ width: `${formatNumber(display.distribution[1].value, lang)}%`, backgroundColor: 'var(--rule-strong)' }} />
             </div>
           </div>
         )}
@@ -5512,7 +5539,13 @@ const seriesContinentales = (() => {
 const computeRegionAggregate = (countries) => {
   const totalStock = countries.reduce((sum, c) => sum + parseStockNumber(c.stock), 0);
   const female = weightedAverage(countries, c => c.female);
-  const retention = weightedAverage(countries, c => c.retention);
+  // PAS DE RÉTENTION PONDÉRÉE. Le poids disponible est `stock`, le nombre de
+  // migrants PRÉSENTS dans le pays ; la rétention est un rapport sur les
+  // PARTANTS. Pondérer l’un par l’autre est une erreur de catégorie, et la
+  // base ne porte pas les stocks d’émigrés qui permettraient de faire
+  // autrement. La grandeur n’est donc pas calculable ici : on ne la calcule
+  // pas. Le continent, lui, a sa valeur vérifiée dans `INTRA_AFRICAIN_UA`.
+  const retention = null;
   const remittances = weightedAverage(countries, c => c.remittances);
   const aid = weightedAverage(countries, c => c.aid);
   const labourParticipation = weightedAverage(countries, c => c.labour_participation);
@@ -5666,7 +5699,7 @@ const homeCards = [
     desc: { fr: "L’architecture juridique panafricaine, et ce que les États ont réellement ratifié.",
             en: "The pan-African legal architecture, and what states have actually ratified." } },
   // {count} est substitué au rendu (libraryData est déclaré plus bas dans le module).
-  { id: 'resources', icon: BookOpen, label: { fr: 'Ressources', en: 'Resources' },
+  { id: 'about', icon: BookOpen, label: { fr: 'À propos & méthode', en: 'About & method' },
     desc: { fr: "{count} sources vérifiées et un glossaire de {notions} notions, définies d’abord par l’instrument africain.",
             en: "{count} verified sources and a glossary of {notions} terms, defined first by the African instrument." } },
 ];
@@ -7046,6 +7079,20 @@ const TabForced = ({ text, lang, children }) => {
         ]} />
       </Reveal>
 
+      {/* Le cadrage */}
+      <Reveal delay={20} className="bg-white border border-slate-200 p-8 md:p-10">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
+          {L("Ce que la frontière décide",
+             'What the border decides')}
+        </h2>
+        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
+          <Prose className="lede" lang={lang}>{L(
+              "Parler de « migration » pour désigner l’ensemble des mobilités africaines efface la distinction qui compte le plus en droit, celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu’une frontière internationale a été franchie ou non. De ce seul franchissement dépendent le statut de la personne, l’institution compétente pour la protéger, le financement mobilisable et jusqu’à sa visibilité dans les statistiques.",
+              'Using "migration" for the whole of African mobility erases the distinction that matters most in law, the one separating the person who chooses to leave from the person compelled to. And among the compelled, law distinguishes further according to whether an international border has been crossed. On that crossing alone depend the person’s status, the institution competent to protect them, the funding that can be mobilised, and even their visibility in the statistics.'
+            )}</Prose>
+        </div>
+      </Reveal>
+
       {/* Le continent d’abord : la masse du deplacement interne se voit d’un
           coup d’oeil, la ou une liste de chiffres demande un effort. */}
       <Reveal delay={15}>
@@ -7062,20 +7109,6 @@ const TabForced = ({ text, lang, children }) => {
           sources={[{ label: L('IDMC — Global Internal Displacement Database', 'IDMC — Global Internal Displacement Database'),
                       url: 'https://www.internal-displacement.org/database/displacement-data/' }]}
         />
-      </Reveal>
-
-      {/* Le cadrage */}
-      <Reveal delay={20} className="bg-white border border-slate-200 p-8 md:p-10">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
-          {L("Ce que la frontière décide",
-             'What the border decides')}
-        </h2>
-        <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
-          <Prose className="lede" lang={lang}>{L(
-              "Parler de « migration » pour désigner l’ensemble des mobilités africaines efface la distinction qui compte le plus en droit, celle qui sépare la personne qui choisit de partir de celle qui y est contrainte. Or, parmi les contraintes, le droit distingue encore selon qu’une frontière internationale a été franchie ou non. De ce seul franchissement dépendent le statut de la personne, l’institution compétente pour la protéger, le financement mobilisable et jusqu’à sa visibilité dans les statistiques.",
-              'Using "migration" for the whole of African mobility erases the distinction that matters most in law, the one separating the person who chooses to leave from the person compelled to. And among the compelled, law distinguishes further according to whether an international border has been crossed. On that crossing alone depend the person’s status, the institution competent to protect them, the funding that can be mobilised, and even their visibility in the statistics.'
-            )}</Prose>
-        </div>
       </Reveal>
 
       {/* Classements */}
@@ -7458,8 +7491,8 @@ const TabLabour = ({ text, lang, children }) => {
           lang={lang}
           kicker={L("Le volet travail", "The labour dimension")}
           title={L(
-            "La mobilité africaine est d’abord une mobilité de travail — et la série se corrige d’une édition à l’autre",
-            "African mobility is first a labour mobility — and the series is revised from one edition to the next"
+            "Deux éditions du même rapport s’accordent sur le fond et divergent sur les chiffres",
+            "Two editions of the same report agree in substance and diverge on the figures"
           )}
           sources={[
             { label: L(
@@ -7911,15 +7944,29 @@ const TabCorridors = ({ text, lang, children }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <PageHeader
-        badge={text.headers.corridors.badge}
-        plate={"Pl. VII"}
-        lang={lang}
-        title={text.headers.corridors.title}
-        highlight={text.headers.corridors.highlight}
-        desc={text.headers.corridors.desc}
-        icon={ArrowRight}
-      />
+      {/* LA SCÈNE PLUTÔT QUE LE BANDEAU. `SceneFlux` est tracée sur
+          `CORRIDORS` — la donnée même de cette section. C'est le seul
+          endroit du site où cette carte illustre exactement son sujet, et
+          le trait y porte déjà le constat : plein pour l'intra-africain,
+          fin pour ce qui sort du continent. */}
+      <SceneFlux lang={lang}>
+        <div className="max-w-3xl">
+          <span className="surtitre surtitre--clair">
+            {text.headers.corridors.badge}
+          </span>
+          <h1 className="font-serif font-bold text-2xl md:text-4xl leading-[1.06]"
+              style={{ color: 'var(--reserve)' }}>
+            {text.headers.corridors.title}{' '}
+            <span style={{ color: 'var(--accent-light)' }}>
+              {text.headers.corridors.highlight}
+            </span>
+          </h1>
+          <Prose className="mt-3 text-[15px] leading-relaxed max-w-xl"
+                 style={{ color: 'var(--reserve-douce)' }} lang={lang}>
+            {text.headers.corridors.desc}
+          </Prose>
+        </div>
+      </SceneFlux>
 
       <BarreSection lang={lang}>
         <CsvButton onClick={exporterCorridors}
@@ -7982,8 +8029,8 @@ const TabCorridors = ({ text, lang, children }) => {
       <Reveal className="bg-white border border-slate-200 overflow-hidden">
         <div className="px-6 md:px-8 pt-6 pb-4">
           <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug mb-2">
-            {L('Les corridors intra-africains que la plateforme documente',
-               'The intra-African corridors the platform documents',
+            {L('Un seul corridor africain pèse plus que la plupart des routes vers le Nord',
+               'One African corridor alone outweighs most routes to the North',
                { ar: 'الممرات الأفريقية البينية الموثقة' })}
           </h2>
           <Prose className="text-[13px] leading-relaxed max-w-3xl" style={{ color: 'var(--ink-soft)' }} lang={lang}>{L(
@@ -10874,6 +10921,40 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         />
       </Reveal>
 
+      {/* L'Afrique comparee. Le recit d'une Afrique « sans donnees » ne se
+          refute pas par une affirmation contraire : il se verifie sur la seule
+          mesure qui vaille ici — la part des pays d'une region disposant d'une
+          source empirique. UN DESA la publie region par region ; on la pose
+          telle quelle, y compris la ou elle place l'Afrique en dessous. */}
+      <Reveal delay={40} className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+        <h2 className="text-xl font-serif font-bold text-slate-900 mb-3">
+          {L("La couverture statistique, région par région",
+             "Statistical coverage, region by region")}
+        </h2>
+        <Prose className="text-sm text-slate-600 mb-5" lang={lang}>{L(
+          "Le déficit de données que l’on prête au continent peut être mesuré, et il l’est. UN DESA publie, pour chacune de ses régions, la part des pays disposant d’au moins une source empirique depuis 2010 sur trois points : le nombre total de migrants, leur répartition par sexe et leur pays d’origine. Le troisième commande les deux autres, puisque sans pays d’origine aucun corridor ne peut être établi et que la mobilité se réduit alors à un volume sans direction.",
+          "The data deficit ascribed to the continent can be measured, and it has been. UN DESA publishes, for each of its regions, the share of countries holding at least one empirical source since 2010 on three points: the total number of migrants, their distribution by sex, and their country of origin. The third governs the other two, since without country of origin no corridor can be established and mobility is reduced to a volume with no direction."
+        )}</Prose>
+
+        <ReservePerimetre lang={lang} />
+
+        <CompareRegions
+          lignes={COUVERTURE_STATISTIQUE} champ="origine" lang={lang}
+          repere={COUVERTURE_STATISTIQUE.find(r => r.region === 'monde').origine}
+          titre={L("Pays disposant d’une source sur le pays d’origine des migrants, depuis 2010",
+                   "Countries with a data source on migrants’ country of origin, since 2010")}
+        />
+
+        <Prose className="text-sm text-slate-600 mt-5" lang={lang}>{L(
+          "Le classement se déplace sur les deux autres mesures : 84 % des pays d’Afrique subsaharienne documentent le nombre total de migrants, contre 87 % dans le monde, et 65 % leur répartition par sexe, contre 71 %. L’écart est donc réel et de l’ordre de trois à six points, quand le déficit statistique africain est couramment présenté comme une absence de données — ce que ces trois mesures contredisent.",
+          "The ranking shifts on the other two measures: 84 per cent of Sub-Saharan African countries document the total number of migrants, against 87 per cent worldwide, and 65 per cent their distribution by sex, against 71. The gap is therefore real and of the order of three to six points, whereas the African statistical deficit is commonly presented as an absence of data — which these three measures contradict."
+        )}</Prose>
+
+        <Sources lang={lang} items={[{ label: tr(SOURCE_MONDE.label, lang), url: SOURCE_MONDE.url }]}
+                 note={L("Tableau 1 de la publication. La couverture décrit l’existence d’une source, pas sa qualité ni sa périodicité.",
+                         "Table 1 of the publication. Coverage describes the existence of a source, not its quality or its periodicity.")} />
+      </Reveal>
+
       {/* La norme onusienne : l’etalon contre lequel se mesure la regularite africaine. */}
       <Reveal delay={20}>
         <AfricanCounterpoint
@@ -11169,39 +11250,6 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         </div>
       </Reveal>
 
-      {/* L'Afrique comparee. Le recit d'une Afrique « sans donnees » ne se
-          refute pas par une affirmation contraire : il se verifie sur la seule
-          mesure qui vaille ici — la part des pays d'une region disposant d'une
-          source empirique. UN DESA la publie region par region ; on la pose
-          telle quelle, y compris la ou elle place l'Afrique en dessous. */}
-      <Reveal delay={40} className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-        <h2 className="text-xl font-serif font-bold text-slate-900 mb-3">
-          {L("La couverture statistique, région par région",
-             "Statistical coverage, region by region")}
-        </h2>
-        <Prose className="text-sm text-slate-600 mb-5" lang={lang}>{L(
-          "Le déficit de données que l’on prête au continent peut être mesuré, et il l’est. UN DESA publie, pour chacune de ses régions, la part des pays disposant d’au moins une source empirique depuis 2010 sur trois points : le nombre total de migrants, leur répartition par sexe et leur pays d’origine. Le troisième commande les deux autres, puisque sans pays d’origine aucun corridor ne peut être établi et que la mobilité se réduit alors à un volume sans direction.",
-          "The data deficit ascribed to the continent can be measured, and it has been. UN DESA publishes, for each of its regions, the share of countries holding at least one empirical source since 2010 on three points: the total number of migrants, their distribution by sex, and their country of origin. The third governs the other two, since without country of origin no corridor can be established and mobility is reduced to a volume with no direction."
-        )}</Prose>
-
-        <ReservePerimetre lang={lang} />
-
-        <CompareRegions
-          lignes={COUVERTURE_STATISTIQUE} champ="origine" lang={lang}
-          repere={COUVERTURE_STATISTIQUE.find(r => r.region === 'monde').origine}
-          titre={L("Pays disposant d’une source sur le pays d’origine des migrants, depuis 2010",
-                   "Countries with a data source on migrants’ country of origin, since 2010")}
-        />
-
-        <Prose className="text-sm text-slate-600 mt-5" lang={lang}>{L(
-          "Le classement se déplace sur les deux autres mesures : 84 % des pays d’Afrique subsaharienne documentent le nombre total de migrants, contre 87 % dans le monde, et 65 % leur répartition par sexe, contre 71 %. L’écart est donc réel et de l’ordre de trois à six points, quand le déficit statistique africain est couramment présenté comme une absence de données — ce que ces trois mesures contredisent.",
-          "The ranking shifts on the other two measures: 84 per cent of Sub-Saharan African countries document the total number of migrants, against 87 per cent worldwide, and 65 per cent their distribution by sex, against 71. The gap is therefore real and of the order of three to six points, whereas the African statistical deficit is commonly presented as an absence of data — which these three measures contradict."
-        )}</Prose>
-
-        <Sources lang={lang} items={[{ label: tr(SOURCE_MONDE.label, lang), url: SOURCE_MONDE.url }]}
-                 note={L("Tableau 1 de la publication. La couverture décrit l’existence d’une source, pas sa qualité ni sa périodicité.",
-                         "Table 1 of the publication. Coverage describes the existence of a source, not its quality or its periodicity.")} />
-      </Reveal>
 
       <IndicatorsMatrix
         text={text} lang={lang}
@@ -11940,7 +11988,6 @@ const TabAbout = ({ text, lang, children }) => {
         icon={Info}
       />
 
-      <BarreSection lang={lang} />
 
       <Reperes
         lang={lang}
@@ -12322,7 +12369,7 @@ const ROUTES = {
   mobilites:  { fr: 'mobilites',    en: 'mobilities' },
   governance: { fr: 'gouvernance',  en: 'governance' },
   data:       { fr: 'donnees',      en: 'data' },
-  resources:  { fr: 'ressources',   en: 'resources' },
+  resources:  { fr: 'ressources',   en: 'resources' },   // conservé : les liens déjà partagés doivent continuer d'ouvrir
   about:      { fr: 'a-propos',     en: 'about' },
 };
 
@@ -12330,8 +12377,8 @@ const ROUTES = {
 // segment. Les adresses de l’ancienne organisation restent valides plutot que
 // de rendre 404 : une URL citee dans un article ne se rattrape pas.
 const ROUTES_ANCIENNES = {
-  methodologie: 'resources',
-  methodology: 'resources',
+  methodologie: 'about',
+  methodology: 'about',
   // L’Explorateur a ete verse dans l’Atlas ; ses adresses y menent.
   pays: 'atlas',
   countries: 'atlas',
@@ -12427,7 +12474,9 @@ export default function App() {
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   // La Gouvernance ouvre sur l’Union africaine, pas sur l’Agenda 2030.
   const [activeSdgzTab, setActiveSdgzTab] = useState('au');
-  const [activeResourceTab, setActiveResourceTab] = useState('library');
+  // Le volet d'ouverture est la signature, pas la bibliothèque : on arrive par
+  // « qui fait cela », on descend vers l'appareil.
+  const [activeResourceTab, setActiveResourceTab] = useState('about');
   // Le volet ouvert dans la section Mobilites : contraintes ou travail.
   const [voletMobilites, setVoletMobilites] = useState('contraintes');
 
@@ -12611,7 +12660,10 @@ export default function App() {
       stock: formatNumber(Math.round(agg.stock), lang),
       female: agg.female ?? fallback.female,
       evolution: fallback.evolution,
-      retention: agg.retention ?? (fallback.retention || 50),
+      // Vérifiée pour l’Union entière, incalculable pour une sous-région — et
+      // surtout pas « 50 » par défaut, qui n’est pas une valeur mais un nombre
+      // inventé ayant l’air d’une mesure.
+      retention: activeSubRegion === 'all' ? INTRA_AFRICAIN_UA.part : null,
       remittances: agg.remittances,
       remittances_year: agg.remittancesYearLabel,
       labour_participation: agg.labourParticipation,
@@ -12757,8 +12809,9 @@ export default function App() {
     { id: 'data', icon: BarChart3, label: { fr: 'Données', en: 'Data', ar: 'البيانات والإحصاءات' } },
     { id: 'mobilites', icon: ShieldAlert, label: { fr: 'Mobilités', en: 'Mobilities', ar: 'التنقلات' } },
     { id: 'governance', icon: Landmark, label: { fr: 'Gouvernance', en: 'Governance', ar: 'الحوكمة' } },
-    { id: 'resources', icon: BookOpen, label: { fr: 'Ressources & méthode', en: 'Resources & method', ar: 'المراجع والمنهجية' } },
-    { id: 'about', icon: Info, label: { fr: 'À propos', en: 'About', ar: 'عن المنصة' } },
+    // « À propos » porte désormais tout l'appareil du site : la signature, les
+    // sources, les mots et la méthode. Quatre volets, une seule entrée.
+    { id: 'about', icon: Info, label: { fr: 'À propos & méthode', en: 'About & method', ar: 'عن المنصة والمنهجية' } },
   ];
 
   // Knowledge Hub : les onglets de lecture (essai éditorial, à propos, bibliothèque) adoptent une
@@ -12946,7 +12999,7 @@ export default function App() {
 
       {/* data-section : c’est lui qui redefinit --accent pour toute la section.
           Aucun composant n’a besoin de connaitre la couleur de l’onglet. */}
-      <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 py-10 ${showModal ? 'print:hidden' : ''}`}>
+      <main id="contenu" tabIndex={-1} data-section={activeTab} className={`${mainMaxWidth} mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6 ${showModal ? 'print:hidden' : ''}`}>
         {activeTab === 'atlas' && (
           <TabAtlas
             lang={lang} text={text} allerVers={allerVers}
@@ -12973,11 +13026,20 @@ export default function App() {
         {activeTab === 'governance' && (
           <TabGovernance text={text} lang={lang} activeSdgzTab={activeSdgzTab} setActiveSdgzTab={setActiveSdgzTab} />
         )}
-        {activeTab === 'resources' && (
+        {activeTab === 'about' && (
           <div className="space-y-8">
             {(() => {
               const resourceSwitch = (
-                <div className="bascule-groupe flex max-w-lg">
+                <div className="bascule-groupe flex max-w-2xl">
+                  {/* La signature ouvre le groupe : on arrive par « qui fait
+                      cela », on descend vers l’appareil. */}
+                  <button
+                    onClick={() => setActiveResourceTab('about')}
+                    data-actif={activeResourceTab === 'about' ? 'true' : 'false'}
+                    className="bascule flex-1 justify-center transition-all"
+                  >
+                    <Info className="w-3.5 h-3.5 hidden sm:block" aria-hidden="true" /> {tr({ fr: 'À propos', en: 'About', ar: 'عن المنصة' }, lang)}
+                  </button>
                   <button
                     onClick={() => setActiveResourceTab('library')}
                     data-actif={activeResourceTab === 'library' ? 'true' : 'false'}
@@ -13005,6 +13067,8 @@ export default function App() {
                   </button>
                 </div>
               );
+              if (activeResourceTab === 'about')
+                return <TabAbout text={text} lang={lang}>{resourceSwitch}</TabAbout>;
               if (activeResourceTab === 'methodology')
                 return <TabMethodology text={text} lang={lang}>{resourceSwitch}</TabMethodology>;
               return activeResourceTab === 'library'
@@ -13020,7 +13084,6 @@ export default function App() {
             exportIndicatorsCSV={exportIndicatorsCSV}
           />
         )}
-        {activeTab === 'about' && <TabAbout text={text} lang={lang} />}
         {/* Un seul pied de citation pour toute la page. Il nomme le volet quand la
             section en a un : sans cela, un tirage des « Corridors » se citait
             « Mobilités », et l’on ne retrouvait pas ce qu’on avait imprimé. */}
@@ -13139,7 +13202,7 @@ export default function App() {
                   <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
                     <div className="absolute inset-4 bg-[#0f172a] print:bg-white rounded-full flex flex-col items-center justify-center border border-slate-800 print:border-slate-100">
-                      <span className="text-3xl font-serif font-bold text-white print:text-slate-900 print:text-xl">{display.retention}%</span>
+                      <span className="text-3xl font-serif font-bold text-white print:text-slate-900 print:text-xl">{formatNumber(display.retention, lang)}%</span>
                       <span className="text-[9px] font-bold text-blue-400 uppercase mt-0.5 tracking-widest text-center px-2">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
                     </div>
                   </div>
@@ -13411,61 +13474,58 @@ export default function App() {
         </div>
       )}
 
-      <footer className="mt-20 print:hidden" style={{ backgroundColor: 'var(--plan-encre)' }}>
-        {/* filet de signature en tete de pied de page */}
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--accent), rgba(43,58,103,.38) 40%, transparent)' }} />
+      {/* Le vide avant le pied faisait deux cents pixels — quatre-vingts de
+          marge plus les marges du dernier bloc. Il prend le pas d'écart entre
+          cartes, qui est celui de tout le reste de la page. */}
+      <footer className="print:hidden" style={{ backgroundColor: 'var(--plan-encre)', marginTop: 'var(--pas-3)' }}>
+        {/* Le filet de signature portait un indigo écrit en dur : le même dans
+            les neuf sections, quelle que soit leur teinte. Il prend l'accent. */}
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 38%, transparent) 40%, transparent)' }} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
 
-            {/* Marque : le pied de page a la hauteur qu’il faut au logotype
-                complet, ce que la barre de navigation n’a pas. */}
+            {/* Marque : le pied a la hauteur qu'il faut au logotype complet,
+                ce que la barre de navigation n'a pas. */}
             <div className="md:col-span-5">
               <BrandLockup corps={26} tone="dark" className="mb-5" />
-              <Prose className="text-sm leading-relaxed max-w-sm" style={{ color: '#A79E92' }} lang={lang}>{text.footer.tag}</Prose>
+              <Prose className="text-sm leading-relaxed max-w-sm" style={{ color: 'var(--reserve-douce)' }} lang={lang}>{text.footer.tag}</Prose>
             </div>
 
-            {/* Navigation secondaire */}
-            <div className="md:col-span-3">
+            {/* CITER PLUTÔT QUE NAVIGUER. Une seconde liste des sept onglets, à
+                trois cents pixels du menu resté collé en haut, n'apprenait rien.
+                La référence, elle, ne se trouve nulle part ailleurs au moment où
+                on en a besoin — c'est-à-dire quand on vient de finir de lire. */}
+            <div className="md:col-span-4">
               <span className="surtitre surtitre--clair">
-                {tr({ fr: 'Explorer', en: 'Explore' }, lang)}
+                {tr({ fr: 'Citer cette plateforme', en: 'Cite this platform' }, lang)}
               </span>
-              <ul className="space-y-2">
-                {navigation.filter(n => n.id !== 'home').map(item => (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => allerVers(item.id)}
-                      className="text-sm transition-colors hover:text-[var(--accent-light)]"
-                      style={{ color: '#CFC6BA' }}
-                    >
-                      {tr(item.label, lang)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <Prose className="text-xs leading-relaxed" style={{ color: 'var(--reserve-douce)' }} lang={lang}>
+                {text.about.citation_text}
+              </Prose>
             </div>
 
             {/* Provenance & contact */}
-            <div className="md:col-span-4">
+            <div className="md:col-span-3">
               <span className="surtitre surtitre--clair">
                 {tr({ fr: 'Sources & contact', en: 'Sources & contact' }, lang)}
               </span>
-              <Prose className="text-xs leading-relaxed mb-4" style={{ color: '#A79E92' }} lang={lang}>{text.footer.sources}</Prose>
+              <Prose className="text-xs leading-relaxed mb-4" style={{ color: 'var(--reserve-douce)' }} lang={lang}>{text.footer.sources}</Prose>
               <a
                 href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20-%20Contact"
-                className="inline-flex items-center gap-2 min-h-[32px] text-sm transition-colors hover:text-[var(--accent-light)]"
-                style={{ color: '#CFC6BA' }}
+                className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[var(--accent-light)]"
+                style={{ color: 'var(--reserve-tenue)' }}
               >
                 <Mail className="w-3.5 h-3.5" /> benmokhtary1@gmail.com
               </a>
             </div>
           </div>
 
-          <div className="mt-12 pt-6 flex flex-col sm:flex-row justify-between gap-3" style={{ borderTop: '1px solid rgba(255,253,249,.10)' }}>
-            <p className="text-[11px]" style={{ color: '#8A8175' }}>
-              © 2026 Yassine Ben Mokhtar — {tr({ fr: 'Initiative citoyenne & recherche indépendante', en: 'Independent research & civic initiative' }, lang)}
+          <div className="mt-10 pt-6 flex flex-col sm:flex-row justify-between gap-3" style={{ borderTop: '1px solid color-mix(in oklab, var(--reserve) 10%, transparent)' }}>
+            <p className="text-[13px]" style={{ color: 'var(--reserve-tenue)' }}>
+              © 2026 Yassine Ben Mokhtar — {tr({ fr: 'recherche indépendante', en: 'independent research' }, lang)}
             </p>
-            <Prose className="text-[11px] italic" style={{ color: '#8A8175' }} lang={lang}>{tr({ fr: 'Données publiques consolidées, sources citées.', en: 'Consolidated public data, sources cited.' }, lang)}</Prose>
+            <Prose className="text-[13px]" style={{ color: 'var(--reserve-tenue)' }} lang={lang}>{tr({ fr: 'Données publiques consolidées, chaque chiffre avec sa source et son millésime.', en: 'Consolidated public data; every figure with its source and vintage.' }, lang)}</Prose>
           </div>
         </div>
       </footer>

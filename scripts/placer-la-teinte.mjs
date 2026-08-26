@@ -96,24 +96,51 @@ Object.entries(INSTITUTIONS).forEach(([n, h]) => dire(n, h));
 console.log('\nsections du site');
 Object.entries(SECTIONS).forEach(([n, h]) => dire(n, h));
 
-// --- le plus grand vide, l'Atlas mis de côté -------------------------------
-const occupees = [
-  ...Object.values(INSTITUTIONS),
-  ...Object.entries(SECTIONS).filter(([n]) => n !== 'atlas').map(([, h]) => h),
-].map(h => lch(h).h).sort((a, b) => a - b);
+// --- le point le plus libre du plan teinte x chroma -----------------------
+// Chercher le plus grand vide sur le seul CERCLE des teintes ne suffit pas :
+// les accents du site sont tous peu satures et de clarte voisine, si bien que
+// deux teintes ecartees de soixante degres restent proches a l oeil. Le vide
+// trouve ainsi tombait a 4,4 d Explorer et 6,3 du vert de l Union — soit la
+// confusion qu on voulait fuir.
+// On cherche donc dans le PLAN : pour chaque couple (teinte, chroma) a clarte
+// fixee, on mesure la distance au plus proche voisin, et on retient le couple
+// qui la maximise. C est le point le plus seul de l espace percu.
 
-let vide = { debut: 0, fin: 0, taille: 0 };
-for (let i = 0; i < occupees.length; i++) {
-  const a = occupees[i];
-  const b = occupees[(i + 1) % occupees.length] + (i === occupees.length - 1 ? 360 : 0);
-  if (b - a > vide.taille) vide = { debut: a, fin: b, taille: b - a };
+// La distance percue entre deux couleurs : la norme euclidienne dans OKLab,
+// ou une unite vaut a peu pres autant a l oeil quelle que soit la teinte.
+const dOk = (a, b) => { const [x, y] = [oklab(a), oklab(b)]; return Math.hypot(...x.map((v, i) => (v - y[i]) * 100)); };
+// DEUX OBJECTIFS DIFFERENTS, PAS UN SEUL. Maximiser la distance a TOUT donnait
+// le bleu #00559A — c est-a-dire, a neuf unites pres, celui de l OIM et du HCR :
+// l espace est si occupe que le point le plus libre reste institutionnel.
+// Les institutions ne sont donc plus un terme a maximiser mais une CONTRAINTE :
+// dix-huit unites minimum, sous peine de rejet. On maximise ensuite la distance
+// aux seules sections du site, et la clarte varie elle aussi — la fixer etait
+// une contrainte de plus dont personne n avait besoin.
+const INSTIT = Object.values(INSTITUTIONS);
+const SITE = Object.entries(SECTIONS).filter(([n]) => n !== 'atlas').map(([, h]) => h);
+const PLANCHER_INSTIT = 18;
+let best = null;
+for (let h = 0; h < 360; h += 1) {
+  for (let C = 0.06; C <= 0.18; C += 0.005) {
+    for (let Lc = 0.34; Lc <= 0.52; Lc += 0.01) {
+      const hex = deLch({ L: Lc, C, h });
+      const rendu = lch(hex);
+      // hors gamut : la conversion sature et rend autre chose que le demande
+      if (Math.abs(((rendu.h - h + 540) % 360) - 180) > 2) continue;
+      if (Math.abs(rendu.C - C) > 0.006) continue;
+      if (contraste(hex, PAPIER) < 4.5) continue;
+      if (Math.min(...INSTIT.map(o => dOk(hex, o))) < PLANCHER_INSTIT) continue;
+      const proche = Math.min(...SITE.map(o => dOk(hex, o)));
+      if (!best || proche > best.proche) best = { hex, h, C, L: Lc, proche };
+    }
+  }
 }
-const cible = (vide.debut + vide.taille / 2) % 360;
-
-console.log(`\n${'='.repeat(70)}`);
-console.log(`Plus grand vide : de ${vide.debut.toFixed(0)}° à ${(vide.fin % 360).toFixed(0)}°  `
-  + `(${vide.taille.toFixed(0)}° de large)`);
-console.log(`Teinte visée    : ${cible.toFixed(0)}°`);
+if (!best) throw new Error("aucune couleur ne tient les contraintes");
+const cible = best.h;
+console.log();
+console.log("=".repeat(70));
+console.log("Point retenu : h=" + best.h + String.fromCharCode(176) + "  C=" + best.C.toFixed(3) + "  L=" + best.L.toFixed(2) + "  " + best.hex);
+console.log("Distance a la section la plus proche : " + best.proche.toFixed(1) + "  ·  a l institution la plus proche : " + Math.min(...INSTIT.map(o => dOk(best.hex, o))).toFixed(1));
 
 // --- la gamme, calée sur les contrastes que la charte exige ---------------
 // On garde les clartés et les chromas de l'ancienne gamme : c'est ce qui fait
@@ -124,7 +151,7 @@ console.log('-'.repeat(70));
 const gamme = {};
 for (const [role, hex] of Object.entries(MODELE)) {
   const c = lch(hex);
-  const neuf = deLch({ ...c, h: cible });
+  const neuf = deLch({ L: c.L * (best.L / lch(SECTIONS.atlas).L), C: c.C * (best.C / lch(SECTIONS.atlas).C), h: cible });
   gamme[role] = neuf;
   const sur = role === 'light' ? '#14161C' : PAPIER;
   const quoi = role === 'light' ? 'sur l’encre' : 'sur le papier';
@@ -134,7 +161,6 @@ for (const [role, hex] of Object.entries(MODELE)) {
 }
 
 // --- la distance a tout le reste ------------------------------------------
-const dOk = (a, b) => { const [x, y] = [oklab(a), oklab(b)]; return Math.hypot(...x.map((v, i) => (v - y[i]) * 100)); };
 console.log(`\nDISTANCE PERÇUE de l’accent proposé (OKLab ×100)`);
 console.log('-'.repeat(70));
 const toutes = { ...INSTITUTIONS, ...Object.fromEntries(Object.entries(SECTIONS).filter(([n]) => n !== 'atlas')) };
