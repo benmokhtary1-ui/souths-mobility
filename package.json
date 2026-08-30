@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "verifier": "node scripts/verifier-les-regles.mjs && node scripts/confronter-les-versions.mjs && node scripts/verifier-l-echelle.mjs && node scripts/verifier-les-comptes.mjs && node scripts/relever-les-definitions-doubles.mjs && node scripts/relever-les-attributions.mjs && node scripts/auditer-fond.mjs"
+    "verifier": "node scripts/verifier-les-demandes.mjs && node scripts/verifier-les-regles.mjs && node scripts/confronter-les-versions.mjs && node scripts/verifier-l-echelle.mjs && node scripts/verifier-les-comptes.mjs && node scripts/relever-les-definitions-doubles.mjs && node scripts/relever-les-attributions.mjs && node scripts/auditer-fond.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

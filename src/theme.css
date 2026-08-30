@@ -275,7 +275,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* Une fiche de catalogue n est pas une boite de section : elle prend le pas
    courant, pas la gouttiere de trente-deux. Sans cette exclusion la regle
    ci-dessous gagnait avec son !important, et la fiche gardait ses 32 px.  */
-:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *):not(.hub-card):not(.carte-constat) { padding: var(--pas-carte) !important; }
+:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *):not(.hub-card):not(.carte-constat):not([class*="grid-cols"] > *) { padding: var(--pas-carte) !important; }
 :is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5):not(th):not(td):not(.fiche-entree *) { padding-inline: var(--pas-carte) !important; }
 :is(main, .reader) :is(.py-7, .py-6, .py-5):not(th):not(td):not(.fiche-entree *) { padding-block: var(--pas-carte) !important; }
 :is(main, .reader) :is(.p-4, .p-3\.5, .p-3):not(th):not(td) { padding: var(--pas-2) !important; }
@@ -5420,7 +5420,12 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    Une vignette n'est pas une boite de section : elle est un ELEMENT dans une
    grille, et c'est la grille qui porte le rythme. Elle est donc exclue de la
    gouttiere (voir la regle ligne 278) et prend le pas courant. */
-:is(main, .reader) :is(.hub-card, .carte-constat) { padding: var(--pas-3); }
+/* Seize et non vingt-quatre : sur une carte de 234 px, vingt-quatre en haut
+   et vingt-quatre en bas font quarante-huit pixels de bord pour cent
+   quarante-cinq de matiere. Seize suffit a poser la carte sur son filet, et
+   c est le pas des autres items de grille — une seule marge pour tout ce qui
+   vit dans une grille. */
+:is(main, .reader) :is(.hub-card, .carte-constat) { padding: var(--pas-2); }
 :is(main, .reader) :is(.hub-card, .carte-constat) > h3 { margin-bottom: var(--pas-1); }
 :is(main, .reader) :is(.hub-card, .carte-constat) > :is(.hub-card-cta, button) {
   margin-top: var(--pas-2);
@@ -5438,8 +5443,139 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    plus large que l'ecran l'amputerait des deux cotes. */
 /* Le conteneur qui defile est en  :  n y fait rien.
    C est la rangee de boutons a l interieur qu il faut centrer, et elle est
-   designee par ce qu elle contient. */
+   designee par ce qu elle contient.
+   TROISIEME EXCEPTION, trouvee en mesurant : une grille qui porte un OBJET
+   GRAPHIQUE garde l etirement. La carte du continent vit dans une grille a
+   deux colonnes — la planche et sa legende — et son SVG se dimensionne sur la
+   hauteur de sa case. Sans etirement, elle est passee de 558 x 624 a 492 x 274 :
+   la moitie de sa hauteur perdue, sans qu aucun garde le dise. */
 nav .max-w-7xl.overflow-x-auto > * { justify-content: center; }
 @media (max-width: 767px) {
   nav .max-w-7xl.overflow-x-auto > * { justify-content: flex-start; }
+}
+
+/* --- Les items d'une grille, a la mesure de ce qu'ils portent -------------
+   Releve sur les sept sections : une trentaine de petites tuiles ou plus de
+   quarante pour cent de la boite est du vide. Mesure de l'une d'elles — un
+   nombre de 25 px, un libelle de 38 — 113 px de haut pour 63 px de contenu.
+   Seize pixels de marge en haut, seize en bas, plus huit d'ecart interne :
+   cinquante pixels de vide autour de soixante-trois de matiere.
+   Seize est la marge d'un BLOC DE TEXTE, ou l'oeil a besoin d'air pour
+   entrer dans une phrase. Une tuile ne se lit pas, elle se balaye : elle porte
+   un nombre et son libelle, et huit pixels suffisent a la detacher de son
+   filet. L'horizontale ne bouge pas — c'est elle qui tient l'alignement des
+   colonnes.
+   La tuile passe de 113 a 97 px, et le vide de 50 a 34. */
+:is(main, .reader) :is(.p-4, .tuile-agregat):not(th):not(td):not(.hub-card):not(.carte-constat) {
+  padding-block: var(--pas-1);
+  padding-inline: var(--pas-2);
+}
+/* Le pas d'ecart entre le nombre et son libelle suit : quatre pixels au lieu
+   de huit, puisque la boite s'est resserree autour d'eux. */
+:is(main, .reader) :is(.p-4, .tuile-agregat) > :is(span, dt, dd) { margin-block: var(--pas-1); }
+:is(main, .reader) :is(.p-4, .tuile-agregat) > :first-child { margin-block-start: 0; }
+:is(main, .reader) :is(.p-4, .tuile-agregat) > :last-child { margin-block-end: 0; }
+
+/* --- Le rythme interne d'une carte ---------------------------------------
+   Mesure d'une carte de constat : 337 px pour 239 de contenu, dont QUATRE
+   ecarts de seize pixels entre ses cinq elements. Tous egaux, donc la carte se
+   lit comme cinq choses de meme poids — alors qu'elle en porte deux : un
+   propos (la question, le nombre, ce qu'il compte) et son appareil (la source,
+   le lien).
+   On regle donc un rythme, pas une quantite. Ce qui se tient se serre a huit ;
+   ce qui separe le propos de son appareil garde seize. La carte descend a
+   313 px, et surtout elle se lit par groupes.
+   Meme geste sur les vignettes : un titre et ce qu'il introduit ne sont pas
+   deux blocs, ils sont une phrase coupee en deux. */
+:is(main, .reader) :is(.hub-card, .carte-constat) > * + * { margin-top: var(--pas-1); }
+:is(main, .reader) :is(.hub-card, .carte-constat) > .note-source { margin-top: var(--pas-2); }
+:is(main, .reader) :is(.hub-card, .carte-constat) > :is(h3, h4) { margin-bottom: 0; }
+/* L'appel a l'action se detache du corps : c'est la seule chose qu'on clique. */
+:is(main, .reader) :is(.hub-card, .carte-constat) > :is(.hub-card-cta, button) {
+  margin-top: var(--pas-2);
+  margin-bottom: 0;
+}
+
+/* --- Une carte de grille n'est pas une boite de section -------------------
+   Releve dans Gouvernance : cinq cartes d'agence de 510 a 585 px, portant
+   chacune SOIXANTE-QUATRE pixels de marge interieure — trente-deux en haut,
+   trente-deux en bas. C'est la gouttiere d'une boite de section, posee sur une
+   carte de grille a trois colonnes. Cinq cartes font deux mille sept cent
+   cinquante pixels pour cinq descriptions d'agence.
+   La regle vaut partout ou la meme confusion se produit, et elle se dit d'un
+   trait : ce qui est ENFANT DIRECT d'une grille prend le pas des items, pas
+   celui des sections. On ne touche qu'aux cases qui portaient deja une marge —
+   ajouter une marge a une case qui n'en a pas ne resserre rien, cela gonfle.  */
+:is(main, .reader) [class*="grid-cols"] > :is(.p-8, .p-7, .p-6, .p-5, .p-4) {
+  padding: var(--pas-2) !important;
+}
+
+/* --- L'interligne dans une carte -----------------------------------------
+   Le corps de texte du site est a 1,62 : c'est la respiration qu'il faut a une
+   colonne de lecture de soixante-douze signes. Dans une carte de grille, la
+   ligne fait trente a quarante signes et le meme interligne y devient un
+   ecartement : trois lignes prennent la place de quatre. On descend a 1,5, qui
+   reste au-dessus du seuil d'accessibilite et rend une ligne sur huit. */
+:is(main, .reader) [class*="grid-cols"] > * :is(p, li, dd, span.block) {
+  line-height: 1.5;
+}
+
+/* --- L'appel a l'action tenait sur deux lignes ---------------------------
+   Le balisage demande `flex items-center` ; la classe `.surtitre`, qui porte
+   les etiquettes en capitales, imposait `display: block`. La fleche redevenait
+   donc un element EN LIGNE, et passait a la ligne sous le mot. Trente-cinq
+   pixels au lieu de dix-neuf, sur chacune des douze cartes de l'accueil — et
+   un appel a l'action visiblement casse.
+   On lui rend sa disposition, et on interdit la coupure : « Ouvrir la carte »
+   et sa fleche sont une seule chose. */
+:is(main, .reader) .hub-card-cta {
+  display: inline-flex !important;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* --- Ce qui se tient ne se separe pas de seize pixels --------------------
+   Entre le titre d'une carte et le texte qu'il introduit, il y avait vingt-
+   quatre pixels : seize sous le titre, huit au-dessus du texte, additionnes.
+   Un titre et sa phrase sont une seule idee coupee en deux ; huit suffisent.
+   Le seize est garde la ou il separe vraiment — entre le texte et l'action. */
+:is(main, .reader) :is(.hub-card, .carte-constat) > :is(h2, h3, h4) {
+  margin-bottom: 0;
+}
+
+/* --- Une grille ne tire pas ses cases a la hauteur de la plus haute ------
+   Les cases de l'accueil portent `flex-1` sur leur description, ce qui pousse
+   l'appel a l'action en bas de la case ; combine a l'etirement de la grille,
+   une carte courte se retrouvait avec cent pixels de vide entre son texte et
+   son lien. Chaque carte prend desormais sa hauteur propre. */
+:is(main, .reader) [class*="grid-cols"]:has(> .hub-card),
+:is(main, .reader) [class*="grid-cols"]:has(> .carte-constat) {
+  align-items: start;
+}
+
+/* Le rythme interne des cartes, impose. Les regles de rythme generales du site
+   portent une specificite superieure ; dans le contexte borne d'une carte, on
+   tranche. Huit entre ce qui se tient, seize avant l'action. */
+:is(main, .reader) :is(.hub-card, .carte-constat) > * { margin-bottom: 0 !important; }
+:is(main, .reader) :is(.hub-card, .carte-constat) > * + * { margin-top: var(--pas-1) !important; }
+:is(main, .reader) :is(.hub-card, .carte-constat) > :is(.hub-card-cta, button, .note-source) {
+  margin-top: var(--pas-2) !important;
+}
+
+/* --- Une grille ne tire pas ses cases, nulle part -------------------------
+   La regle posee pour l'accueil ne valait que pour ses deux familles de
+   cartes. Le meme defaut existait ailleurs, et la fiche pays complete en donne
+   le pire exemple : deux cases cote a cote, l'une portant 515 px de contenu,
+   l'autre 232, toutes deux etirees a 637 — QUATRE CENT CINQ PIXELS de vide
+   dans la seconde, entre son dernier mot et son filet du bas.
+   L'etirement ne sert que si quelque chose est ancre en bas de la case. Quand
+   rien ne l'est, il ne produit que du vide, et ce vide se voit d'autant plus
+   qu'il est borde. Les grilles prennent donc la hauteur de leur contenu.
+   DEUX EXCEPTIONS, toutes deux voulues. La bibliotheque pousse la nature et
+   l'annee en pied de fiche pour que leur ligne s'aligne d'une carte a l'autre :
+   la, le vide se range entre le texte et elles, et se lit comme une intention.
+   Et toute case qui contient un element pousse en bas — `mt-auto` — a besoin
+   de sa hauteur pleine pour que la poussee ait un sens. */
+:is(main, .reader) [class*="grid-cols"]:not(:has(> * > .fiche-nature)):not(:has(> * [class*="mt-auto"])):not(.carte-continent):not(:has(> .atlas-carte)) {
+  align-items: start;
 }
