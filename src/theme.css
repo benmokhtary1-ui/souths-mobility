@@ -19,7 +19,11 @@
    libre depuis que l'arabe est active : il faut une famille dessinee d'un seul
    trait pour les deux ecritures, sinon la page change de main en changeant de
    langue. IBM Plex a sa compagne arabe, concue avec elle. */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+/* LES POLICES SE CHARGENT DEPUIS LE DOCUMENT, plus depuis ici. Un @import
+   dans une feuille de style impose trois allers-retours en serie — le CSS,
+   puis la feuille de Google, puis les fichiers — avant que le titre puisse
+   s afficher. C etait la cause du LCP a 5,12 s releve par l audit. Voir le
+   <link rel="preconnect"> et le <link rel="stylesheet"> dans index.html. */
 
 /* ============================================================================
    Fondation — « chrome silencieux, donnee sonore »
@@ -37,6 +41,26 @@
    Chaque valeur a ete mesuree avant d'entrer ici, sur les trois fonds du site.
    Aucune ne descend sous 5,1:1 ; le seuil AA est a 4,5.
    ========================================================================== */
+/* --- POURQUOI IL N Y A PAS DE REPLI AJUSTE POUR FRAUNCES ----------------
+   Piste suivie puis abandonnee, et il vaut mieux le dire que de la laisser
+   rouvrir. L audit releve un CLS de 0,144 ; mesure dans le navigateur, la
+   cause est l echange de police sur le titre : Georgia occupe 1,097 fois la
+   largeur de Fraunces a 58 px, le titre se recompose donc a l arrivee de
+   Fraunces et tout ce qui suit remonte.
+   La correction connue est un @font-face de repli portant , pour
+   que Georgia occupe exactement la place de Fraunces. Trois calibrages
+   successifs — 93,5 %, puis 91,2 % — ont rendu 0,876 puis 0,855 la ou le
+   modele predit 1,000. La face ne se comporte pas comme prevu, probablement
+   parce qu elle ne declare pas d axe de graisse et que le titre demande 700.
+   ON NE POSE PAS UN REGLAGE QU ON NE SAIT PAS VERIFIER : un repli mal calibre
+   decale davantage qu aucun repli, et le volet de previsualisation ne permet
+   pas de mesurer le CLS reel — l observateur ne peut s attacher qu apres le
+   chargement. A reprendre avec l outil qui a donne 0,144, en declarant
+    sur la face et en calibrant sur la mesure obtenue.
+   Ce qui reste acquis :  et le , qui font peindre
+   le titre sans attendre la police. La hauteur de ligne, elle, est deja
+   identique entre les deux (rapport 1,0000) : le decalage est horizontal,
+   donc borne au reflux du texte. */
 :root {
   /* Le froid est parti. L'encre était un noir bleuté, le papier un blanc froid :
      l'ensemble tirait vers le clinique là où ce site est un objet de lecture.
@@ -251,7 +275,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* Une fiche de catalogue n est pas une boite de section : elle prend le pas
    courant, pas la gouttiere de trente-deux. Sans cette exclusion la regle
    ci-dessous gagnait avec son !important, et la fiche gardait ses 32 px.  */
-:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *) { padding: var(--pas-carte) !important; }
+:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *):not(.hub-card):not(.carte-constat) { padding: var(--pas-carte) !important; }
 :is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5):not(th):not(td):not(.fiche-entree *) { padding-inline: var(--pas-carte) !important; }
 :is(main, .reader) :is(.py-7, .py-6, .py-5):not(th):not(td):not(.fiche-entree *) { padding-block: var(--pas-carte) !important; }
 :is(main, .reader) :is(.p-4, .p-3\.5, .p-3):not(th):not(td) { padding: var(--pas-2) !important; }
@@ -5367,6 +5391,16 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    dessous de 400 px elles passent en une seule colonne : un chiffre par
    ligne, avec son libelle entier a cote. */
 @media (pointer: coarse) {
+  /* UN BOUTON SANS LIBELLE EST AUSSI LARGE QUE HAUT. La regle ne posait
+     qu un plancher de HAUTEUR : une croix de fermeture faisait 26 px de large,
+     les fleches du carrousel 32. Ce sont les commandes les plus difficiles a
+     viser — pas de mot a toucher, seulement une icone — et ce sont celles qui
+     en avaient le moins.
+     On les designe par ce qu elles sont : un bouton qui porte un 
+     et aucun texte visible. La regle vaut donc pour celles qu on ajoutera. */
+  :is(main, .reader) :is(button, a[href])[aria-label]:not(:has(*:not(svg):not(:empty))) {
+    min-width: 44px;
+  }
   :is(main, .reader) .panneau-fermer { min-width: 44px; }
 }
 @media (max-width: 767px) {
@@ -5375,4 +5409,37 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 }
 @media (max-width: 400px) {
   .panneau-pays dl.grid { grid-template-columns: 1fr; }
+}
+
+/* --- La marge des vignettes ----------------------------------------------
+   Mesure d'une carte de la grille d'accueil avant correction : 269 px de haut
+   pour 163 px de contenu. CENT SIX PIXELS DE VIDE, trente-neuf pour cent de la
+   carte — trente-deux en haut, trente-deux en bas, la gouttiere d'une boite de
+   section imposee a une vignette de six lignes, plus quarante d'ecarts
+   internes.
+   Une vignette n'est pas une boite de section : elle est un ELEMENT dans une
+   grille, et c'est la grille qui porte le rythme. Elle est donc exclue de la
+   gouttiere (voir la regle ligne 278) et prend le pas courant. */
+:is(main, .reader) :is(.hub-card, .carte-constat) { padding: var(--pas-3); }
+:is(main, .reader) :is(.hub-card, .carte-constat) > h3 { margin-bottom: var(--pas-1); }
+:is(main, .reader) :is(.hub-card, .carte-constat) > :is(.hub-card-cta, button) {
+  margin-top: var(--pas-2);
+  margin-bottom: 0;
+}
+@media (max-width: 767px) {
+  :is(main, .reader) :is(.hub-card, .carte-constat) { padding: var(--pas-2); }
+}
+
+/* --- La bande des sections, sur l'axe de la page -------------------------
+   Les sept onglets etaient cales a gauche dans une bande large de 1 216 px :
+   le dernier finissait bien avant le bord droit, et la rangee paraissait
+   pendre. Elle se pose au milieu, comme les cartes, les planches et les
+   bandes a icones. Sous 768 px elle continue de defiler : centrer une rangee
+   plus large que l'ecran l'amputerait des deux cotes. */
+/* Le conteneur qui defile est en  :  n y fait rien.
+   C est la rangee de boutons a l interieur qu il faut centrer, et elle est
+   designee par ce qu elle contient. */
+nav .max-w-7xl.overflow-x-auto > * { justify-content: center; }
+@media (max-width: 767px) {
+  nav .max-w-7xl.overflow-x-auto > * { justify-content: flex-start; }
 }

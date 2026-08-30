@@ -1,13 +1,115 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>datahub</title>
+
+    <!-- Les polices, decouvertes des la premiere ligne du HTML. Elles
+         etaient importees depuis theme.css, ce qui imposait trois
+         allers-retours en serie avant que le titre puisse etre peint.
+         `preconnect` ouvre les deux connexions pendant que le reste se
+         telecharge ; `display=swap`, deja dans l URL, fait peindre le
+         texte en Georgia sans attendre Fraunces. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" />
+
+    <!-- =====================================================================
+         CE QUE LES MACHINES LISENT AVANT QUE JAVASCRIPT NE TOURNE
+         =====================================================================
+         Le titre statique valait « datahub » — le gabarit de Vite, jamais
+         repris. Un audit externe l'a relevé sous ce nom, et c'est ce nom qui
+         partait dans un partage LinkedIn, dans un signet, dans une notice de
+         bibliothèque. L'application pose bien `document.title` au rendu, mais
+         un robot qui n'exécute pas JavaScript ne voit que ce qui suit.
+
+         Le `lang` disait `en` alors que la plateforme ouvre en français : la
+         coupure automatique des mots, les lecteurs d'écran et les moteurs s'y
+         fiaient. L'application recale l'attribut quand on change de langue.
+    -->
+    <title>South(s) Mobility DataHub — les mobilités africaines par les données africaines</title>
+    <meta name="description" content="Plateforme indépendante de recherche et de données sur les mobilités humaines dans les Suds. 54 États africains, sources institutionnelles vérifiées, chaque chiffre daté et rattaché à sa source." />
+    <meta name="author" content="Yassine Ben Mokhtar" />
+    <link rel="canonical" href="https://souths-mobility.vercel.app/" />
+
+    <!-- L'aperçu au partage : sans lui, un lien collé dans un fil de
+         discussion n'affiche ni nom, ni sujet, ni image. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="South(s) Mobility DataHub" />
+    <meta property="og:title" content="South(s) Mobility DataHub" />
+    <meta property="og:description" content="Les mobilités africaines, par les données africaines. Une plateforme indépendante qui réunit ce que les institutions publient sur les mobilités des Suds et le lit avec les définitions africaines." />
+    <meta property="og:url" content="https://souths-mobility.vercel.app/" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:image" content="https://souths-mobility.vercel.app/apercu-partage.png" />
+    <meta property="og:image:alt" content="South(s) Mobility DataHub — carte du continent africain et corridors de mobilité" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Les deux langues servies à la même adresse : on le déclare plutôt que
+         de laisser un moteur deviner. -->
+    <link rel="alternate" hreflang="fr" href="https://souths-mobility.vercel.app/fr/" />
+    <link rel="alternate" hreflang="en" href="https://souths-mobility.vercel.app/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://souths-mobility.vercel.app/" />
+
+    <!-- Ce que le projet EST, dans un vocabulaire que les moteurs comprennent.
+         Pour un travail de recherche, `Dataset` et `ScholarlyArticle` sont plus
+         justes que `WebSite` : ils portent l'auteur, la licence et le sujet. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "South(s) Mobility DataHub",
+      "alternateName": "Souths Mobility",
+      "description": "Données consolidées sur les mobilités humaines dans les Suds, avec une focalisation sur les 54 États membres de l'Union africaine : stocks de migrants, déplacements internes, transferts de fonds, ouverture des visas, ratifications des instruments continentaux.",
+      "url": "https://souths-mobility.vercel.app/",
+      "inLanguage": ["fr", "en"],
+      "spatialCoverage": "Afrique",
+      "creator": {
+        "@type": "Person",
+        "name": "Yassine Ben Mokhtar",
+        "email": "benmokhtary1@gmail.com"
+      },
+      "isAccessibleForFree": true,
+      "keywords": "mobilités africaines, migration, Union africaine, données ouvertes, Suds, gouvernance migratoire, libre circulation"
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- LE CONTENU DE SECOURS. Il n'est visible que le temps du premier
+           rendu, et par tout ce qui n'exécute pas JavaScript : robots
+           d'indexation, aperçus de partage, archiveurs, certains lecteurs
+           d'écran en cas d'échec du script. L'application le remplace.
+           Il porte le strict nécessaire — ce qu'est le projet, ce qu'on y
+           trouve, qui le fait — et rien de plus : ce n'est pas une page
+           parallèle à tenir à jour. -->
+      <main id="secours">
+        <h1>South(s) Mobility DataHub</h1>
+        <p>
+          Les mobilités africaines, par les données africaines. Une plateforme
+          indépendante qui réunit ce que les institutions publient sur les
+          mobilités des Suds, le date, le rend comparable, et le lit avec les
+          définitions africaines plutôt qu’avec celles du Nord.
+        </p>
+        <h2>Ce qu’on y trouve</h2>
+        <ul>
+          <li><strong>Atlas</strong> — dix questions posées au continent, et la réponse pays par pays, sur les 54 États membres de l’Union africaine.</li>
+          <li><strong>Vérification</strong> — des affirmations courantes sur les migrations africaines, reprises une par une et confrontées aux sources.</li>
+          <li><strong>Données &amp; statistiques</strong> — d’où viennent les chiffres africains, comment ils se fabriquent, et où se situe réellement le déficit.</li>
+          <li><strong>Mobilités</strong> — déplacement contraint, migration de travail, corridors intra-africains, mobilité climatique.</li>
+          <li><strong>Gouvernance</strong> — les instruments continentaux, ce que les États ont ratifié, et les régimes d’entrée et de séjour.</li>
+          <li><strong>À propos &amp; méthode</strong> — la bibliographie, le glossaire, la chaîne de traitement, les conventions et les limites.</li>
+        </ul>
+        <p>
+          Projet de recherche indépendant mené par Yassine Ben Mokhtar, adossé à
+          une thèse de doctorat en relations internationales sur la gouvernance
+          des mobilités africaines. Chaque chiffre est daté et rattaché à la
+          source qui le publie ; chaque jeu de données est exportable.
+        </p>
+        <p><noscript>Cette plateforme a besoin de JavaScript pour ses cartes et ses tableaux interactifs. Les données restent téléchargeables au format CSV.</noscript></p>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

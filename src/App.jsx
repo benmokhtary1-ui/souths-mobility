@@ -512,17 +512,21 @@ const marquerLesNotions = (texte, lang) => {
 // Une chaine qui porte une ligne vide se lit en alineas. Une idee par
 // paragraphe : au-dela de soixante mots d’un trait, un paragraphe de prose se
 // relit avant d’etre compris. Le texte reste une seule entree de traduction.
-const Prose = ({ children, lang = 'fr', className, ...reste }) => {
+// `nu` : le texte sans ses boutons de definition. Indispensable partout ou
+// la prose vit DANS un element cliquable — une carte, une bascule — puisque
+// HTML interdit un bouton dans un bouton et que le navigateur y casse
+// silencieusement l imbrication, avec le gestionnaire de clic.
+const Prose = ({ children, lang = 'fr', className, nu = false, ...reste }) => {
   const texte = typeof children === 'string' ? children : null;
   if (!texte) return <p className={className} {...reste}>{children}</p>;
 
   const blocs = texte.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
   if (blocs.length < 2) {
-    return <p className={className} {...reste}>{marquerLesNotions(texte, lang)}</p>;
+    return <p className={className} {...reste}>{nu ? texte : marquerLesNotions(texte, lang)}</p>;
   }
   return (
     <div className={'suite-alineas ' + (className || '')} {...reste}>
-      {blocs.map((b, n) => <p key={n}>{marquerLesNotions(b, lang)}</p>)}
+      {blocs.map((b, n) => <p key={n}>{nu ? b : marquerLesNotions(b, lang)}</p>)}
     </div>
   );
 };
@@ -1969,8 +1973,8 @@ const AspirationGap = ({ lang }) => {
 
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
         <Prose className="text-justify" lang={lang}>{L(
-            "Cette plateforme s’appuie sur le cadre des « capabilités de mouvement » : la mobilité s’y comprend comme la rencontre entre une aspiration et une capacité effectivement exerçable. Jusqu’ici elle ne mesurait que le second terme — des stocks, des ratifications, des recensements. Afrobarometer, seule enquête menée à l’échelle continentale auprès des citoyens eux-mêmes, permet enfin de chiffrer le premier.",
-            'This platform works from the "capabilities of movement" framework: mobility is understood as the meeting of an aspiration with a capability that can actually be exercised. Until now it measured only the second term — stocks, ratifications, censuses. Afrobarometer, the only continental survey of citizens themselves, finally makes the first one countable.'
+            "De l’aspiration, on ne savait rien de chiffré. Les stocks, les ratifications et les recensements disent ce que les gens font ; aucun ne dit ce qu’ils voudraient faire, et le premier terme du cadre restait donc une hypothèse. Afrobarometer, seule enquête menée à l’échelle du continent auprès des citoyens eux-mêmes, le rend mesurable.",
+            'Of aspiration, nothing was counted. Stocks, ratifications and censuses say what people do; none says what they would like to do, so the first term of the framework remained a hypothesis. Afrobarometer, the only continent-wide survey of citizens themselves, makes it measurable.'
           )}</Prose>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
@@ -2459,7 +2463,7 @@ const poserLesChiffres = (t) => (typeof t === "string"
   ? t.replace(/\{(etats|references|notions|enonces)\}/g, (_, k) => CHIFFRES_DU_CORPUS()[k])
   : t);
 
-const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', icon: Icon = Globe }) => (
+const PageHeader = ({ badge, title, highlight, desc, plate, plain, actions, lang = 'fr', icon: Icon = Globe }) => (
   <>
   <header
     /* Le bandeau portait deux halos indigo écrits en dur : la même couleur dans
@@ -2528,6 +2532,17 @@ const PageHeader = ({ badge, title, highlight, desc, plate, plain, lang = 'fr', 
       <p className="mt-6 text-base md:text-[1.05rem] leading-[1.6] max-w-3xl" style={{ color: '#D3D5DC' }}>
         {poserLesChiffres(desc)}
       </p>
+
+      {/* LES DEUX INTENTIONS, SÉPARÉES. Un visiteur arrive avec l'une ou
+          l'autre : voir les données, ou comprendre la démarche. Le bandeau ne
+          proposait rien — il fallait deviner qu'on pouvait cliquer ailleurs.
+          Un seul bandeau les porte, celui de l'accueil : les autres sections
+          sont déjà une réponse, elles n'ont pas à réorienter. */}
+      {actions && (
+        <div className="flex flex-wrap gap-3 mt-8">
+          {actions}
+        </div>
+      )}
     </div>
   </header>
   {/* Le bloc « En clair » a été retiré : il redisait le descriptif dans quatre
@@ -2988,14 +3003,14 @@ const t = {
       home_editorial: {
         badge: "Note de cadrage scientifique",
         title: "Pourquoi ce Hub de connaissances ?",
-        p1: "Un écart mesurable sépare la perception publique des mobilités africaines de leur réalité statistique. Le stock mondial de migrants internationaux s’élève à 304 millions de personnes en 2024, soit 3,7 % de la population mondiale — une part qui n’a que modestement augmenté depuis 1990, où elle valait 2,9 % (UN DESA, 2024). Sur ce total, l’Afrique accueille environ 29 millions de migrants internationaux, soit 9,5 % du stock mondial : loin derrière l’Europe et l’Asie, et en deçà du poids démographique du continent, proche de 18 % de la population mondiale. Il s’agit ici du stock de migrants présents en Afrique, et non de l’émigration africaine : sur ce second plan, 54,4 % des personnes nées dans un État de l’Union africaine et parties de leur pays résident dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024).",
-        p1b: "Cette proportion contraste avec la place que les mobilités africaines occupent dans le débat public occidental. L’attention s’y concentre de manière disproportionnée sur les traversées vers l’Europe, un biais médiatique déjà documenté par la recherche (de Haas, 2017). Ce déséquilibre masque une réalité plus structurante : l’essentiel de la mobilité forcée sur le continent se joue à l’intérieur des frontières nationales. L’Afrique subsaharienne compte à elle seule près de 38,8 millions de personnes déplacées internes, soit environ 46 % du total mondial — 82,2 millions recensés dans 104 pays. C’est davantage que tous les migrants internationaux présents sur l’ensemble du continent (IDMC). La forme de mobilité la plus massive en Afrique se déroule donc entièrement à l’intérieur d’un pays. Elle ne produit ni image de traversée, ni statistique d’entrée dans les pays du Nord. Elle disparaît donc des récits dominants sur « la migration africaine ».",
-        caveats: "Ces chiffres appellent une prudence méthodologique explicite. Les statistiques migratoires africaines souffrent d’un sous-enregistrement chronique — mobilités informelles, circulations transfrontalières non déclarées, capacités administratives inégales selon les pays. Cette plateforme travaille avec les meilleures données disponibles (UN DESA, OIM, IDMC, UA/OIT/OIM/CEA) tout en reconnaissant ces angles morts statistiques, documentés au cas par cas dans la section Méthodologie plutôt que dissimulés. Une distinction s’impose enfin sur les définitions. Pour les agrégats statistiques, la plateforme retient la définition opératoire d’UN DESA — condition de toute comparaison internationale. Pour les notions juridiques et normatives, en revanche, c’est l’instrument africain qui fait référence. Le réfugié se lit à travers la Convention de l’OUA de 1969, plus large que celle de Genève ; la personne déplacée interne, à travers la Convention de Kampala de 2009. Chaque terme est explicité dans le Glossaire.",
-        p2: "Deux cadres théoriques commandent la lecture de ces chiffres, et l’ordre compte. Le premier prend pour objet le mouvement lui-même plutôt que le seul franchissement de frontière : le paradigme des mobilités range sur un même plan les migrations, les circulations quotidiennes, les allers-retours saisonniers et les immobilités subies, en tenant chacune pour un fait social à part entière (Sheller & Urry, 2006). C’est ce cadre qui justifie le périmètre de cette plateforme — pourquoi elle compte les déplacés internes, qui ne migrent nulle part, et pourquoi son nom dit mobilités et non migrations. Le second explique la répartition observée : la recherche sur les capabilités de mouvement place mobilité et immobilité sur un continuum d’aspirations et de capacités réellement exerçables, et s’écarte ainsi de la coupure habituelle entre départ volontaire et départ contraint (de Haas, 2021). S’y ajoutent deux éclairages politiques : les travaux sur la diplomatie migratoire montrent que les États africains négocient et retournent les agendas du Nord au lieu de les subir (Adamson & Tsourapas, 2019), et une lecture décoloniale du droit international interroge l’asymétrie structurelle des régimes de mobilité mondiaux (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub part de ce cadre pour proposer une réponse méthodologique plutôt que polémique. Il consolide, harmonise et recontextualise des données déjà produites par les institutions internationales et africaines, au lieu d’en produire de nouvelles. La plateforme privilégie la proportion à la valeur absolue, et la comparaison à l’anecdote. Elle place l’architecture institutionnelle africaine — Union africaine, Communautés économiques régionales — avant les seuls cadres normatifs venus du Nord. Cela ne nie en rien les asymétries de pouvoir et de financement qui structurent ce régime (Bakewell, 2008 ; Bayart, 2000).",
-        p3b: "Cette architecture produit un paradoxe que la plateforme documente chiffre à l’appui. L’Afrique a parfois devancé la norme internationale. Avec la Convention de Kampala (2009), elle a adopté le premier traité régional contraignant au monde sur les personnes déplacées internes — à ce jour, toujours le seul. Quatre États (Bénin, Gambie, Rwanda, Seychelles) accueillent déjà sans visa l’ensemble des ressortissants africains. Pourtant, le Protocole continental sur la libre circulation adopté à Kigali en 2018 ne compte que 4 ratifications sur 54, très loin des 15 requises pour son entrée en vigueur. C’est donc l’ancrage dans les administrations qui tarde, bien plus que la production normative nationales.",
+        p1: "Un Africain qui vit hors de son pays de naissance a plus d’une chance sur deux d’être resté en Afrique. Un Africain chassé de chez lui par un conflit, lui, n’a le plus souvent pas quitté son pays du tout. Aucune de ces deux trajectoires ne ressemble à l’image que le débat européen se fait de « la migration africaine », et c’est cette image, autant que les mobilités elles-mêmes, que cette plateforme confronte aux chiffres.\n\nEn 2024, 304 millions de personnes vivaient hors de leur pays de naissance, soit 3,7 % de l’humanité — une proportion presque inchangée depuis 1990, où elle valait 2,9 % (UN DESA, 2024). L’Afrique en accueille environ 29 millions, 9,5 % du total mondial, pour près de 18 % de la population de la planète. Et parmi les personnes nées dans un État de l’Union africaine et parties de leur pays, 54,4 % vivent dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024).",
+        p1b: "Ce que le débat regarde le moins est pourtant ce qui pèse le plus. La mobilité contrainte africaine se joue d’abord à l’intérieur des frontières : l’Afrique subsaharienne compte à elle seule 38,8 millions de personnes déplacées dans leur propre pays, sur les 82,2 millions recensés dans 104 pays, soit 46 % du total mondial (IDMC). C’est davantage que tous les migrants internationaux présents sur le continent. Un déplacement qui ne franchit aucune frontière ne produit ni image de traversée, ni entrée dans un registre d’arrivée, ni ligne dans une statistique d’asile. Il ne laisse aucune trace là où se fabrique le récit, et il en disparaît — non parce qu’on le cache, mais parce que rien ne le compte.",
+        caveats: "Ces chiffres se lisent avec leurs limites. Les statistiques migratoires africaines sont chroniquement sous-enregistrées : circulations transfrontalières non déclarées, mobilités informelles, capacités administratives très inégales d’un pays à l’autre. La plateforme travaille donc avec les meilleures données publiées sans prétendre qu’elles soient complètes, et chaque angle mort est documenté dans la section Méthode plutôt que passé sous silence.\n\nSur les définitions, la règle est constante. Pour les agrégats, c’est celle d’UN DESA : sans elle, aucune comparaison internationale ne tient. Pour les notions juridiques, c’est l’instrument africain qui fait référence — le réfugié se lit par la Convention de l’OUA de 1969, plus large que celle de Genève, et la personne déplacée par la Convention de Kampala de 2009. Ce n’est pas une préférence : appliquer une définition genevoise à un continent qui s’est doté de la sienne fausserait le compte.",
+        p2: "Deux idées commandent la lecture. La première tient au mot même : on compte ici des mobilités, non des migrations. Le départ définitif, la circulation quotidienne, l’aller-retour saisonnier et l’immobilité subie tiennent sur le même plan, parce qu’aucun n’a plus de réalité que les autres du seul fait qu’il franchit une frontière (Sheller & Urry, 2006). C’est ce qui explique la présence, ici, des déplacés internes, qui ne migrent nulle part.\n\nLa seconde tient à ce qui décide du mouvement. Vouloir partir et pouvoir partir sont deux choses, et leur écart explique mieux la carte que la coupure habituelle entre départ volontaire et départ contraint : on reste souvent faute de moyens, on part parfois sans l’avoir choisi (de Haas, 2021). Deux travaux prolongent ce cadre du côté politique — les États africains négocient les agendas migratoires du Nord au lieu de les subir (Adamson & Tsourapas, 2019), et le droit international de la mobilité porte une asymétrie qui se lit à la lumière de l’histoire coloniale (Achiume, 2019).",
+        p3: "La méthode qui en découle est délibérément étroite. La plateforme ne produit pas de données : elle réunit celles que les institutions publient, les date, et les rapporte à la population dont il est question — un nombre absolu ne dit rien tant qu’on ignore à quoi le rapporter. Elle place l’architecture africaine, Union africaine et Communautés économiques régionales, avant les cadres venus d’ailleurs, sans ignorer que le financement et le pouvoir de nommer restent très inégalement répartis (Bakewell, 2008 ; Bayart, 2000).",
+        p3b: "Cette architecture produit un paradoxe, et le paradoxe se chiffre. L’Afrique a devancé la norme mondiale plus d’une fois : avec la Convention de Kampala (2009), elle s’est dotée du premier traité contraignant au monde sur les personnes déplacées internes, et il reste le seul. Quatre États — le Bénin, la Gambie, le Rwanda et les Seychelles — accueillent déjà sans visa tous les ressortissants africains. Et pourtant le Protocole sur la libre circulation, adopté à Kigali en 2018, ne compte que 4 ratifications sur 54, quand il en faut 15 pour entrer en vigueur. Ce qui manque n’est donc pas le texte, mais son ancrage dans les administrations qui devraient l’appliquer — et c’est cet intervalle, entre la norme proclamée et la pratique des guichets, que la thèse dont ce travail est issu appelle l’« entre-deux national ».",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s’ouvre un « entre-deux national » : l’espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
-        p4: "Cette exigence scientifique n’exclut pas la vulgarisation : elle la conditionne. La section Evidence Check applique cette méthode affirmation par affirmation ; la section Gouvernance documente l’architecture institutionnelle qui tente — avec des moyens souvent limités — de gouverner ces mobilités à l’échelle continentale. Le lecteur pressé peut se contenter des chiffres ; le lecteur exigeant trouvera, à chaque affirmation, la source qui la fonde. Une réserve, enfin, sur ce que cette plateforme ne prétend pas être. Elle ne produit aucune statistique officielle, ne se substitue à aucun institut national de statistique et ne formule aucune recommandation de politique publique. Elle consolide, situe et rend citable un matériau déjà public. Choisir ce que l’on met en avant, et l’échelle à laquelle on le rapporte, est déjà un geste analytique : la plateforme l’assume plutôt que de se présenter comme un simple reflet des données.",
+        p4: "Cette plateforme ne produit aucune statistique officielle, ne remplace aucun institut national et ne formule aucune recommandation de politique publique. Elle consolide un matériau déjà public, le situe, et le rend citable. Choisir ce qu’on met en avant et l’échelle à laquelle on le rapporte est déjà un geste d’analyse : elle l’assume plutôt que de se donner pour un simple reflet des données.\n\nElle est le travail d’une seule personne — Yassine Ben Mokhtar, doctorant en relations internationales, dont la thèse porte sur la gouvernance des mobilités africaines — et elle n’engage aucune institution. Qui est pressé peut s’en tenir aux chiffres ; qui veut vérifier trouvera, sous chacun, la source qui le porte.",
         refs_title: "Pour aller plus loin",
         refs: [
           { text: "Sheller, M. & Urry, J. (2006). The new mobilities paradigm. Environment and Planning A, 38(2), 207-226.", url: "https://doi.org/10.1068/a37268" },
@@ -3314,14 +3329,14 @@ const t = {
       home_editorial: {
         badge: "Scientific Framing Note",
         title: "Why this Knowledge Hub?",
-        p1: "A measurable gap separates public perception of African mobility from its statistical reality. The world’s international migrant stock stands at 304 million people in 2024, or 3.7 per cent of the world’s population — a share that has risen only modestly since 1990, when it stood at 2.9 per cent (UN DESA, 2024). Of that total, Africa hosts about 29 million international migrants on its soil, or 9.5 per cent of the world stock: far behind Europe and Asia, and below the continent’s demographic weight, close to 18 per cent of the world’s population. This is the stock of migrants present in Africa, not African emigration: on that second count, 54.4 per cent of people born in an African Union member state who left their country reside in another African state (computed from UN DESA’s bilateral matrix, 2024).",
-        p1b: "This proportion contrasts sharply with the place African mobility occupies in Western public debate, where attention is disproportionately focused on crossings toward Europe — a media bias already documented by research (de Haas, 2017). This imbalance obscures a more structural reality: most forced mobility on the continent stays inside national borders. Sub-Saharan Africa alone accounts for close to 38.8 million internally displaced people, roughly 46% of the global total — 82.2 million recorded across 104 countries. That is more than all the international migrants present across the entire continent (IDMC). Africa’s largest form of mobility therefore unfolds entirely inside a single country: it produces neither crossing imagery nor entry statistics in Northern countries, and therefore vanishes from dominant narratives about \"African migration\".",
-        caveats: "These figures call for explicit methodological caution. African migration statistics suffer from chronic under-registration — informal mobility, undeclared cross-border circulation, uneven administrative capacity across countries. This platform works with the best available data (UN DESA, IOM, IDMC, AU/ILO/IOM/ECA) while acknowledging these statistical blind spots, documented case by case in the Methodology section rather than concealed. One distinction finally matters on definitions. For statistical aggregates, the platform retains UN DESA’s operational definition — a precondition for any international comparison. But for legal and normative concepts, the African instrument is the reference: refugee is read through the 1969 OAU Convention, broader than the Geneva one, and internally displaced person through the 2009 Kampala Convention. Each term is spelled out in the Glossary.",
-        p2: "Two theoretical frameworks govern how these figures read, and the order matters. The first takes movement itself as its object rather than border crossing alone: the mobilities paradigm places migration, daily circulation, seasonal round trips and enforced immobility on a single plane, treating each as a social fact in its own right (Sheller & Urry, 2006). That framework is what justifies this platform’s perimeter — why it counts internally displaced people, who migrate nowhere, and why its name says mobility rather than migration. The second explains the distribution observed: research on capabilities of movement places mobility and immobility on a continuum of aspirations and of the capabilities people can actually exercise, departing from the usual split between voluntary and forced departure (de Haas, 2021). Two political readings complete the picture: work on migration diplomacy shows African states negotiating and redirecting Northern agendas rather than submitting to them (Adamson & Tsourapas, 2019), and a decolonial reading of international law questions the structural asymmetry of global mobility regimes (Achiume, 2019).",
-        p3: "South(s) Mobility DataHub builds on this framework to offer a methodological response rather than a polemical one. It consolidates, harmonizes and recontextualizes data already produced by international and African institutions, instead of producing new data of its own. The platform favours proportion over absolute value, comparison over anecdote, and African institutional architecture — the African Union, the Regional Economic Communities — over normative frameworks imported solely from the North. This does not deny the power and funding asymmetries that concretely structure the regime (Bakewell, 2008; Bayart, 2000).",
-        p3b: "This architecture produces a paradox the platform documents with figures. Africa has at times moved ahead of the international norm. With the Kampala Convention (2009) it adopted the world’s first binding regional treaty on internally displaced persons — to this day, still the only one. Four states (Benin, The Gambia, Rwanda, Seychelles) already admit all African nationals without a visa. Yet the continental Free Movement Protocol adopted in Kigali in 2018 has secured only 4 ratifications out of 54, far short of the 15 required for it to enter into force. What lags, then, is the anchoring in national administrations, far more than the drafting of norms.",
+        p1: "An African living outside their country of birth is more likely than not to have stayed in Africa. An African driven from home by conflict, meanwhile, has usually not left their country at all. Neither trajectory looks like the picture European debate holds of “African migration”, and it is that picture, as much as mobility itself, that this platform sets against the figures.\n\nIn 2024, 304 million people were living outside their country of birth — 3.7 per cent of humanity, a share almost unchanged since 1990, when it stood at 2.9 per cent (UN DESA, 2024). Africa hosts some 29 million of them, 9.5 per cent of the world total, for close to 18 per cent of the planet’s population. And among people born in an African Union member state who have left it, 54.4 per cent live in another African state (computed from the UN DESA bilateral matrix, 2024).",
+        p1b: "What the debate looks at least is what weighs most. Forced mobility in Africa happens first of all inside borders: Sub-Saharan Africa alone counts 38.8 million people displaced within their own country, out of the 82.2 million recorded across 104 countries — 46 per cent of the world total (IDMC). That is more than every international migrant present on the continent. Displacement that crosses no border produces no crossing image, no entry in an arrivals register, no line in an asylum statistic. It leaves no trace where the story is made, and so it disappears from it — not because anyone hides it, but because nothing counts it.",
+        caveats: "These figures come with their limits. African migration statistics are chronically under-recorded: undeclared cross-border movement, informal mobility, administrative capacity that varies widely from one country to the next. The platform therefore works with the best published data without claiming they are complete, and each blind spot is documented in the Method section rather than passed over.\n\nOn definitions, the rule is constant. For aggregates it is UN DESA’s: without it no international comparison holds. For legal notions the African instrument governs — refugee status is read through the 1969 OAU Convention, broader than the Geneva one, and internal displacement through the 2009 Kampala Convention. This is not a preference: applying a Geneva definition to a continent that wrote its own would distort the count.",
+        p2: "Two ideas govern the reading. The first is in the word itself: what is counted here is mobility, not migration. Permanent departure, daily movement, seasonal back-and-forth and enforced immobility sit on the same plane, because none is more real than the others merely by crossing a border (Sheller & Urry, 2006). That is what explains the presence here of internally displaced people, who migrate nowhere.\n\nThe second concerns what decides movement. Wanting to leave and being able to leave are two different things, and the gap between them explains the map better than the usual split between voluntary and forced departure: people often stay for lack of means, and sometimes leave without having chosen to (de Haas, 2021). Two bodies of work extend this on the political side — African states negotiate the North’s migration agendas rather than submit to them (Adamson & Tsourapas, 2019), and international mobility law carries an asymmetry that reads in the light of colonial history (Achiume, 2019).",
+        p3: "The method that follows is deliberately narrow. The platform produces no data: it gathers what institutions publish, dates it, and sets it against the population in question — an absolute number says nothing until you know what to measure it against. It puts the African architecture, the African Union and the Regional Economic Communities, ahead of frameworks from elsewhere, without ignoring that funding and the power to name remain very unevenly distributed (Bakewell, 2008; Bayart, 2000).",
+        p3b: "That architecture produces a paradox, and the paradox has figures. Africa has been ahead of the global norm more than once: with the Kampala Convention (2009) it gave itself the world’s first binding treaty on internally displaced people, and it remains the only one. Four states — Benin, The Gambia, Rwanda and Seychelles — already admit all African nationals without a visa. Yet the Free Movement Protocol adopted in Kigali in 2018 has only 4 ratifications out of 54, where 15 are needed for entry into force. What is missing is not the text but its anchoring in the administrations that would have to apply it — and it is that interval, between the proclaimed norm and the practice of the counter, that the doctoral work behind this platform calls the “national in-between”.",
         pullquote: "Between the principles proclaimed in Addis Ababa and their application at border posts lies a \"national in-between\": the space where the African migration governance regime is actually played out (Ben Mokhtar, 2026).",
-        p4: "This scientific rigor does not exclude accessibility: it is its precondition. The Evidence Check section applies this method claim by claim; the Governance section documents the institutional architecture that — with often limited means — attempts to govern these mobilities at the continental scale. The hurried reader can settle for the figures; the demanding reader will find, behind every claim, the source that grounds it. One caveat, finally, on what this platform does not claim to be: it produces no official statistics, substitutes for no national statistical institute and issues no policy recommendation. It consolidates, situates and makes citable a body of already-public material. Choosing what to foreground, and the scale against which to measure it, is itself an analytical act — one this platform states openly.",
+        p4: "This platform produces no official statistics, replaces no national institute and makes no policy recommendation. It consolidates material that is already public, situates it, and makes it citable. Choosing what to foreground, and the scale to measure it against, is already an analytical act: the platform owns that rather than presenting itself as a plain reflection of the data.\n\nIt is the work of one person — Yassine Ben Mokhtar, a doctoral researcher in international relations whose thesis concerns the governance of African mobility — and it commits no institution. Whoever is in a hurry can stop at the figures; whoever wants to check will find, under each one, the source that carries it.",
         refs_title: "Further Reading",
         refs: [
           { text: "Sheller, M. & Urry, J. (2006). The new mobilities paradigm. Environment and Planning A, 38(2), 207-226.", url: "https://doi.org/10.1068/a37268" },
@@ -5016,11 +5031,13 @@ const ClassementCouche = ({ lang, indicateur, region = null, onChoisir, selectio
 // disponible à :root pour que ce qui vit hors de <main> puisse s’y appuyer.
 
 
-const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSousOngletGouvernance,
+const TabAtlas = ({ lang, text, allerVers, ouvrirPays, coucheAtlas, setCoucheAtlas, setVoletMobilites, setSousOngletGouvernance,
                     activeSubRegion, setActiveSubRegion, searchTerm, setSearchTerm,
                     filteredCountries, display, exportCountriesCSV }) => {
   const L = faireL(lang);
-  const [coucheCle, setCoucheCle] = useState('accueil');
+  // La couche est pilotée depuis l'application : une carte d'accueil doit
+  // pouvoir l'avoir déjà choisie quand l'Atlas s'ouvre.
+  const [coucheCle, setCoucheCle] = [coucheAtlas, setCoucheAtlas];
   const [paysOuvert, setPaysOuvert] = useState(null);
   const couche = COUCHES_ATLAS.find(c => c.cle === coucheCle) || COUCHES_ATLAS[0];
   const indicateur = couche.ind();
@@ -5118,7 +5135,10 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, setVoletMobilites, setSou
           </nav>
           {/* La provenance des traces. Un corridor dessine sur une carte est
               une affirmation : il se source comme un chiffre. */}
-          <p className="scene-flux-source">
+      {/* La source existait, sans la classe commune : elle echappait donc au
+          releve systematique des objets graphiques, qui cherche .
+          Une seule forme de note de source sur le site, celle-ci comprise. */}
+          <p className="note-source scene-flux-source">
             {L("Corridors intra-africains : stocks bilatéraux UN DESA, repris par l’OIM. Routes extracontinentales : OIM, Global Overview of Migration Routes, janvier-avril 2026. Le trait plein pèse ce que pèse le corridor.",
                "Intra-African corridors: UN DESA bilateral stocks, reported by IOM. Extra-continental routes: IOM, Global Overview of Migration Routes, January-April 2026. Line weight follows corridor size.",
                { ar: 'الممرات: المنظمة الدولية للهجرة — نظرة عامة عالمية على مسارات الهجرة، يناير-أبريل 2026' })}
@@ -5678,6 +5698,18 @@ const indicatorThemes = [
 // 3. COMPOSANTS DES ONGLETS
 // ============================================================================
 
+// Les trois questions mises en avant sur l accueil. Elles ne dupliquent pas
+// les couches de l Atlas : elles les DESIGNENT par leur cle, si bien qu une
+// question reformulee la-bas se reformule ici sans qu on y touche.
+const ENTREES_ACCUEIL = [
+  { cle: 'reste',   quoi: { fr: 'Le débat suppose un départ vers le Nord. La carte donne, pays par pays, la part de ceux qui restent sur le continent.',
+                            en: 'Public debate assumes departure northward. The map gives, country by country, the share of those who stay on the continent.' } },
+  { cle: 'argent',  quoi: { fr: 'Dans une majorité d’États, ce que les diasporas renvoient dépasse ce que l’aide publique apporte. La carte dit lesquels, et de combien.',
+                            en: 'In most states, what diasporas send home exceeds what public aid brings. The map shows which ones, and by how much.' } },
+  { cle: 'ratifie', quoi: { fr: 'Six instruments continentaux engagent les États. La carte compte, pour chacun, ce qu’il a déposé — pas ce qu’il a signé.',
+                            en: 'Six continental instruments bind states. The map counts, for each one, what it has deposited — not what it has signed.' } },
+];
+
 const homeCards = [
   // La carte ouvre le parcours : le chapeau de la grille annonce qu’on entre
   // par elle, il faut donc qu’elle y soit.
@@ -5705,7 +5737,105 @@ const homeCards = [
 ];
 
 
-const TabHome = ({ text, lang, setActiveTab }) => {
+// LES TROIS CONSTATS, EN TÊTE DE L'ACCUEIL
+// ===========================================================================
+// L'audit externe le formule ainsi : « une plateforme entièrement ouverte donne
+// l'impression voici les données, trouvez vous-même ce qui est intéressant ».
+// C'est vrai — le site laissait le visiteur produire lui-même ses résultats.
+//
+// Trois constats remontent donc, choisis sur deux critères : chacun est établi
+// par les données de la plateforme, et chacun contredit une attente courante.
+// Ils couvrent les trois registres du site — la mesure, le droit, l'appareil
+// statistique — et chacun ouvre l'endroit qui l'établit.
+//
+// LA FORME EST CELLE DU TRIPTYQUE 47 % / 27 % / +9, retenue comme référence :
+// un chiffre en chasse serif, ce qu'il compte, d'où il vient. Rien de plus.
+// Ce qu'elle ajoute ici est la QUESTION à laquelle chaque chiffre répond, et
+// le chemin vers sa démonstration — ce que l'audit appelle « why it matters »
+// et « explore this finding ».
+//
+// AUCUN NOMBRE N'EST ÉCRIT EN CLAIR. La part intra-africaine vient de la
+// matrice bilatérale recalculée, les ratifications se comptent sur la base des
+// 54 États, les recensements sur le cycle 2010 tel que les Nations unies le
+// bornent. Un changement de données déplace le constat sans qu'on y touche.
+const ConstatsClefs = ({ lang, allerVers, allerAtlas }) => {
+  const L = faireL(lang);
+
+  const constats = useMemo(() => {
+    const pays = Object.values(countryData).flat();
+    const compte = (cle) => pays.filter(c => c.au_treaties?.[cle]).length;
+    const cycle = censusRoundMeta.find(r => r.key === 'r2010');
+    return [
+      {
+        v: `${formatNumber(INTRA_AFRICAIN_UA.part, lang)} %`,
+        question: L('Les Africains qui partent vont-ils vers le Nord ?',
+                    'Do Africans who leave head north?'),
+        quoi: L('des personnes nées dans un État de l’Union africaine et vivant hors de leur pays résident dans un autre pays africain',
+                'of people born in an African Union state and living abroad reside in another African country'),
+        source: L('UN DESA, matrice bilatérale 2024 — recalculé sur les 54 États',
+                  'UN DESA bilateral matrix 2024 — recomputed across the 54 states'),
+        tone: 'figure-inkblue',
+        ou: () => allerAtlas('reste'),
+        mot: L('Voir la carte', 'See the map'),
+      },
+      {
+        v: `${compte('free_movement')}/${pays.length}`,
+        question: L('L’Afrique s’engage-t-elle sur la libre circulation ?',
+                    'Is Africa committed to free movement?'),
+        quoi: L('États ont ratifié le Protocole sur la libre circulation des personnes — contre 54 pour l’Acte constitutif de l’Union',
+                'states have ratified the Free Movement Protocol — against 54 for the Union’s Constitutive Act'),
+        source: L('Calculé sur la base de la plateforme, dépôts recensés',
+                  'Computed from the platform database, recorded depositions'),
+        tone: 'figure-terra',
+        ou: () => allerVers('governance'),
+        mot: L('Voir les ratifications', 'See the ratifications'),
+      },
+      {
+        v: `${cycle?.conducted ?? 47}/${cycle?.base ?? 54}`,
+        question: L('L’Afrique manque-t-elle de données sur elle-même ?',
+                    'Does Africa lack data on itself?'),
+        quoi: L('États ont conduit un recensement national sur le cycle 2010 — la production existe, le déficit se situe en aval',
+                'states ran a national census in the 2010 round — production exists; the shortfall lies downstream'),
+        source: L(`Division de statistique des Nations unies, cycle ${cycle?.span ?? '2005-2014'}`,
+                  `UN Statistics Division, ${cycle?.span ?? '2005-2014'} round`),
+        tone: 'figure-warn',
+        ou: () => allerVers('data'),
+        mot: L('Voir l’appareil statistique', 'See the statistical apparatus'),
+      },
+    ];
+  }, [lang, allerVers, allerAtlas]);
+
+  return (
+    <Reveal delay={45}>
+      <span className="surtitre">{L('Ce que les données établissent', 'What the data establishes')}</span>
+      <h2 className="text-lg font-serif font-bold text-slate-800 mb-2">
+        {L(`${constats.length} constats, et où les vérifier`, `${constats.length} findings, and where to check them`)}
+      </h2>
+      <Prose className="text-sm text-slate-600 leading-relaxed mb-6 max-w-3xl" lang={lang} nu>{L(
+        "Chacun contredit une attente courante, et chacun est établi par une donnée que la plateforme rend vérifiable. Le lien mène à l’endroit qui le démontre.",
+        "Each one contradicts a common assumption, and each rests on data the platform makes checkable. The link leads to where it is demonstrated."
+      )}</Prose>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
+        {constats.map((c, i) => (
+          <div key={i} className="carte-constat bg-white border border-slate-200 flex flex-col h-full">
+            <p className="text-[13px] leading-snug mb-4" style={{ color: 'var(--ink-soft)' }}>{c.question}</p>
+            <div className={`text-[26px] font-serif font-bold tabular-nums leading-none ${c.tone}`}>{c.v}</div>
+            <p className="text-[13px] leading-relaxed mt-3 flex-1" style={{ color: 'var(--ink)' }}>{c.quoi}</p>
+            <p className="note-source">{c.source}</p>
+            <button type="button" onClick={c.ou} className="surtitre hub-card-cta flex items-center mt-4 group">
+              {c.mot}
+              <ArrowRight className="w-3 h-3 ms-1.5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        ))}
+      </div>
+    </Reveal>
+  );
+};
+
+const TabHome = ({ text, lang, setActiveTab, allerAtlas, allerVers }) => {
+  const L = faireL(lang);
   const totalCountries = Object.values(countryData).flat().length;
   const totalRegions = Object.keys(countryData).length;
   const totalEvidence = evidenceCheckData.length;
@@ -5740,6 +5870,23 @@ const TabHome = ({ text, lang, setActiveTab }) => {
         title={text.headers.home.title}
         highlight={text.headers.home.highlight}
         desc={text.headers.home.desc}
+        actions={<>
+          <button
+            type="button"
+            onClick={() => allerAtlas('reste')}
+            className="cta cta--plein"
+          >
+            {L('Voir les données', 'See the data')}
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => document.querySelector('.note-cadrage')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            className="cta cta--creux"
+          >
+            {L('Comprendre la démarche', 'Understand the approach')}
+          </button>
+        </>}
         icon={Globe}
       />
 
@@ -5747,6 +5894,48 @@ const TabHome = ({ text, lang, setActiveTab }) => {
 
       {/* Releve de chiffres : une seule feuille divisee par des filets, plutot que
           quatre vignettes posees cote a cote. */}
+
+      {/* ------- TROIS QUESTIONS, PAS TROIS FONCTIONNALITÉS -------
+          Un visiteur ne pense pas en « couches de carte », il pense en
+          questions. L'Atlas en pose dix ; trois remontent ici, et le clic
+          l'ouvre AVEC LA RÉPONSE DÉJÀ AFFICHÉE — pas devant un choix de
+          filtres. Les trois retenues couvrent les trois registres du site
+          — la mesure, l'économie, le droit — et chacune contredit une
+          attente courante. */}
+      <Reveal delay={30}>
+        <span className="surtitre">{L('Par où commencer', 'Where to start')}</span>
+        <h2 className="text-lg font-serif font-bold text-slate-800 mb-2">
+          {L(`${ENTREES_ACCUEIL.length} questions pour entrer dans la carte`,
+             `${ENTREES_ACCUEIL.length} questions to enter the map`)}
+        </h2>
+        <Prose className="text-sm text-slate-600 leading-relaxed mb-6 max-w-3xl" lang={lang}>{L(
+          "Chacune ouvre la carte sur sa réponse, pays par pays. Ce sont trois des dix questions de l’Atlas — les autres s’y trouvent.",
+          "Each one opens the map on its answer, country by country. These are three of the Atlas’s ten questions; the rest are there."
+        )}</Prose>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
+          {ENTREES_ACCUEIL.map(({ cle, quoi }) => {
+            const couche = COUCHES_ATLAS.find(c => c.cle === cle);
+            if (!couche) return null;
+            return (
+              <button
+                key={cle}
+                onClick={() => allerAtlas(cle)}
+                className="hub-card lift text-start p-6 bg-white border border-slate-200 group flex flex-col h-full"
+              >
+                <h3 className="font-serif font-bold text-lg text-slate-900 mb-2 leading-snug">
+                  {tr(couche.question, lang)}
+                </h3>
+                <Prose className="text-xs text-slate-500 leading-relaxed flex-1" lang={lang} nu>{tr(quoi, lang)}</Prose>
+                <span className="surtitre hub-card-cta flex items-center mt-5">
+                  {L('Ouvrir la carte', 'Open the map')}
+                  <ArrowRight className="w-3 h-3 ms-1.5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </Reveal>
+      <ConstatsClefs lang={lang} allerVers={allerVers} allerAtlas={allerAtlas} />
 
       <Reveal delay={60}>
         {/* L’ordre des onglets n’est pas alphabétique : il suit celui dans
@@ -5776,7 +5965,7 @@ const TabHome = ({ text, lang, setActiveTab }) => {
                 </div>
                 <span className="block h-px w-full mb-4" style={{ backgroundColor: 'var(--rule)' }} />
                 <h3 className="font-serif font-bold text-lg text-slate-900 mb-2 leading-snug">{tr(card.label, lang)}</h3>
-                <Prose className="text-xs text-slate-500 leading-relaxed flex-1" lang={lang}>{tr(card.desc, lang).replace('{count}', totalLibrary).replace('{notions}', totalNotions)}</Prose>
+                <Prose className="text-xs text-slate-500 leading-relaxed flex-1" lang={lang} nu>{tr(card.desc, lang).replace('{count}', totalLibrary).replace('{notions}', totalNotions)}</Prose>
                 <span className="surtitre hub-card-cta flex items-center mt-5">
                   {tr({ fr: "Découvrir", en: "Discover" }, lang)} <ArrowRight className="w-3 h-3 ms-1.5 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -8146,9 +8335,33 @@ const TabCorridors = ({ text, lang, children }) => {
           "Sub-Saharan Africa stands at 64 per cent, above the world average and behind Europe, 74 per cent of whose emigrants live in another European country.\n\nThat 64 per cent does not describe this platform’s perimeter, however: recomputed across the 54 African Union member states, Mediterranean Africa included, the intra-African share falls to 54.4 per cent.\n\nAt the other end, three regions send most of their diaspora beyond their regional borders: Central and Southern Asia (75 per cent outside the region), Northern America (73 per cent) and Latin America and the Caribbean (71 per cent)."
         )}</Prose>
 
+        {/* LA PHRASE LA PLUS LONGUE DU SITE — soixante-douze mots — était une
+            ÉNUMÉRATION forcée en une seule phrase : cinq corridors et leurs
+            effectifs, séparés par des virgules. Une énumération se lit en
+            liste, pas en période.
+            Et elle recopiait à la main `CORRIDORS_INTERREGIONAUX`, importé mais
+            jamais rendu : les cinq couples et leurs cinq chiffres existaient en
+            donnée, et la prose les redisait — deux endroits à tenir d'accord,
+            pour un texte qu'on ne pouvait pas lire d'un trait. */}
         <Prose className="text-sm text-slate-600 mt-4" lang={lang}>{L(
-          "Les cinq plus grands corridors entre régions se lisent dans le même jeu de données : Amérique latine vers Amérique du Nord (27 millions de personnes), Asie centrale et du Sud vers l’Afrique du Nord et l’Asie de l’Ouest (20 millions), Afrique du Nord et Asie de l’Ouest vers l’Europe (13 millions), Asie de l’Est et du Sud-Est vers l’Amérique du Nord (12 millions), Asie centrale et du Sud vers l’Europe (10 millions).\n\nPour tous les autres corridors interrégionaux, y compris celui qui relie l’Afrique subsaharienne à l’Europe, le stock de 2024 reste sous les 7 millions.",
-          "The five largest inter-regional corridors come from the same dataset: Latin America to Northern America (27 million people), Central and Southern Asia to Northern Africa and Western Asia (20 million), Northern Africa and Western Asia to Europe (13 million), Eastern and South-Eastern Asia to Northern America (12 million), Central and Southern Asia to Europe (10 million).\n\nFor every other inter-regional corridor — including the one linking Sub-Saharan Africa to Europe — the 2024 stock remains below 7 million."
+          "Les cinq plus grands corridors entre régions se lisent dans le même jeu de données.",
+          "The five largest inter-regional corridors come from the same dataset."
+        )}</Prose>
+        <ol className="corridors-monde">
+          {CORRIDORS_INTERREGIONAUX.map(({ de, vers, personnes }) => (
+            <li key={`${de}-${vers}`}>
+              <span className="corridors-monde-route">
+                {tr(REGIONS_DESA[de], lang)} <ArrowRight className="w-3 h-3 shrink-0" aria-hidden="true" /> {tr(REGIONS_DESA[vers], lang)}
+              </span>
+              <span className="corridors-monde-poids tabular-nums">
+                {formatNumber(personnes / 1_000_000, lang)} {L('millions', 'million')}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <Prose className="text-sm text-slate-600 mt-4" lang={lang}>{L(
+          `Pour tous les autres corridors interrégionaux, y compris celui qui relie l’Afrique subsaharienne à l’Europe, le stock de 2024 reste sous les ${formatNumber(SEUIL_AUTRES_CORRIDORS / 1_000_000, lang)} millions.`,
+          `For every other inter-regional corridor — including the one linking Sub-Saharan Africa to Europe — the 2024 stock remains below ${formatNumber(SEUIL_AUTRES_CORRIDORS / 1_000_000, lang)} million.`
         )}</Prose>
 
         <Sources lang={lang} items={[{ label: tr(SOURCE_MONDE.label, lang), url: SOURCE_MONDE.url }]}
@@ -9587,7 +9800,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   </div>
                 </div>
                 <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
-                  {tr({ fr: "L’Union africaine et le régime panafricain des mobilités", en: "The African Union and the Pan-African Mobility Regime" }, lang)}
+                  {tr({ fr: "Normer sans ancrer : une architecture dense, et des États qui suivent inégalement", en: "Norming without anchoring: a dense architecture, unevenly followed" }, lang)}
                 </h2>
                 <Prose className="text-emerald-100 text-sm md:text-base leading-relaxed max-w-4xl text-justify" lang={lang}>{tr({ fr: "La gouvernance des mobilités en Afrique ne se réduit pas aux pactes mondiaux. Elle s’enracine dans une architecture institutionnelle propre, structurée par l’Union africaine (UA).\n\nCette architecture illustre la tension du « normer sans ancrer ». La production normative y est dense — traités, positions communes, agences — mais elle se heurte souvent aux capacités et aux réticences des États dans l'« entre-deux national » (Ben Mokhtar, 2026).\n\nLe régime continental repose sur la construction d’une souveraineté épistémique (produire ses propres données et diagnostics) et sur un maillage de textes et de bureaucraties interconnectés.", en: "African mobility governance is not reduced to global compacts. It is rooted in its own institutional architecture, structured by the African Union (AU).\n\nThis architecture illustrates the tension of 'norming without anchoring': dense normative production that often clashes with State capacities and reluctance in the 'national in-between' (Ben Mokhtar, 2026).\n\nThe continental regime relies on building epistemic sovereignty and a network of interconnected texts and bureaucracies." }, lang)}</Prose>
                 <div className="flex flex-wrap gap-5 mt-6 pt-5 border-t border-emerald-800">
@@ -9894,7 +10107,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 {tr({ fr: 'Les Blocs Régionalisés du Régime Continental', en: 'Regionalized Blocs of the Continental Regime' }, lang)}
               </span>
               <h2 className="font-serif font-bold text-2xl mb-3">
-                {tr({ fr: "Les communautés économiques régionales (CER)", en: "Regional Economic Communities (RECs)" }, lang)}
+                {tr({ fr: "Huit communautés, et non un régime unique appliqué à des degrés divers", en: "Eight communities, not one regime applied in varying degrees" }, lang)}
               </h2>
               <Prose className="text-emerald-100 text-sm leading-relaxed" lang={lang}>{tr({ fr: "L’architecture continentale repose sur les huit Communautés économiques régionales reconnues par l’Union africaine. Comparées entre elles, elles ne dessinent pas un régime unique appliqué à des degrés divers, mais des trajectoires d’ouverture distinctes : l’écart entre la CEDEAO et l’UMA sur l’indice AVOI est du simple au double, et il tient à l’histoire, à l’économie et aux contraintes sécuritaires propres à chaque sous-région bien plus qu’à l’ancienneté des textes.", en: "The continental architecture rests on the eight Regional Economic Communities recognised by the African Union. Compared with one another, they do not describe a single regime applied in varying degrees, but distinct trajectories of openness: the gap between ECOWAS and the AMU on the AVOI index is twofold, and it owes far more to each sub-region’s history, economy and security constraints than to how old its instruments are." }, lang)}</Prose>
             </div>
@@ -9959,7 +10172,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                 {tr({ fr: "Cartographie Réglementaire Continentale", en: "Continental Regulatory Mapping" }, lang)}
               </span>
               <h2 className="font-serif font-bold text-2xl md:text-3xl mb-4 leading-tight">
-                {tr({ fr: "Matrices de réciprocité des visas et profils d’entrée et de séjour (54 pays)", en: "Visa reciprocity matrices and entry/residence profiles (54 countries)" }, lang)}
+                {tr({ fr: "Entre le visiteur et le résident, une frontière juridique nette", en: "Between visitor and resident, a sharp legal boundary" }, lang)}
               </h2>
               <Prose className="text-slate-300 text-sm md:text-base leading-relaxed max-w-4xl" lang={lang}>{tr({ fr: "La comparaison des seuils d’entrée et des obligations de résidence, État par État, fait apparaître une frontière juridique nette entre deux statuts. Le « visiteur » est admis de plein droit pour le commerce ou le tourisme de courte durée ; l’« immigrant », lui, ne s’établit qu’au terme d’une décision discrétionnaire de l’État. Le seuil qui sépare les deux est de 90 jours dans la grande majorité des législations africaines recensées ici, ce qui en fait le point de bascule le plus comparable d’un pays à l’autre.", en: "Comparing entry thresholds and residence obligations state by state brings out a sharp legal boundary between two statuses. The \"visitor\" is admitted as of right for trade or short-stay tourism; the \"immigrant\" settles only at the end of a discretionary decision by the state. The threshold separating the two is 90 days in the great majority of the African statutes surveyed here, which makes it the most comparable tipping point from one country to the next." }, lang)}</Prose>
             </div>
@@ -12444,14 +12657,30 @@ const lireURL = () => {
     if (trouve) tab = trouve[0];
     else if (ROUTES_ANCIENNES[seg]) tab = ROUTES_ANCIENNES[seg];
   }
-  return { lang, tab, detail: bouts[2] ? decodeURIComponent(bouts[2]) : null };
+  // Les reglages de vue vivent en parametres : une adresse sans parametre
+  // reste exactement celle d avant, et un lien deja partage continue de
+  // fonctionner.
+  const q = new URLSearchParams(window.location.search);
+  return {
+    lang, tab,
+    detail: bouts[2] ? decodeURIComponent(bouts[2]) : null,
+    couche: q.get('couche') || null,
+    region: q.get('region') || null,
+  };
 };
 
-const ecrireURL = ({ lang, tab, detail }, remplacer = false) => {
+const ecrireURL = ({ lang, tab, detail, couche, region }, remplacer = false) => {
   const seg = tr(ROUTES[tab], lang) || tr(ROUTES.atlas, lang);
   const chemin = `/${lang}/${seg}${detail ? `/${detail}` : ''}`;
-  if (chemin === window.location.pathname) return;
-  window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail }, '', chemin);
+  // On ne note que ce qui s ecarte du defaut : ecrire « couche=accueil » sur
+  // toutes les adresses les allongerait sans rien dire.
+  const q = new URLSearchParams();
+  if (couche && couche !== 'accueil') q.set('couche', couche);
+  if (region && region !== 'all') q.set('region', region);
+  const suite = q.toString() ? `?${q}` : '';
+  const cible = chemin + suite;
+  if (cible === window.location.pathname + window.location.search) return;
+  window.history[remplacer ? 'replaceState' : 'pushState']({ lang, tab, detail, couche, region }, '', cible);
 };
 
 export default function App() {
@@ -12464,7 +12693,7 @@ export default function App() {
   // pied-de-mouche qui copie le lien. Voir useAncresDeCitation.
   useAncresDeCitation(lang, activeTab);
   
-  const [activeSubRegion, setActiveSubRegion] = useState('all');
+  const [activeSubRegion, setActiveSubRegion] = useState(depart.region || 'all');
   const [activeSubTab, setActiveSubTab] = useState('perspective');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -12509,6 +12738,10 @@ export default function App() {
   // fil de ce qui vient d’arriver. L’API de transition de vue enchaine les deux
   // etats en un fondu court — le navigateur s’en charge, sans bibliotheque et
   // sans rendu supplementaire. La ou elle manque, la bascule reste immediate.
+  // La couche affichée par l'Atlas. Elle vit ici, et non dans l'Atlas, pour
+  // qu'une question posée sur l'accueil puisse l'avoir déjà réglée.
+  const [coucheAtlas, setCoucheAtlas] = useState(depart.couche || 'accueil');
+
   const allerVers = useCallback((tab) => {
     const appliquer = () => setActiveTab(tab);
     if (typeof document === 'undefined' || !document.startViewTransition || prefersReducedMotion()) {
@@ -12528,6 +12761,13 @@ export default function App() {
     vt.finished?.catch(tairel);
     vt.updateCallbackDone?.catch(tairel);
   }, []);
+
+  // Ouvrir l’Atlas SUR une question, pas devant un choix. C’est ce que
+  // l’audit appelle un lien profond : le visiteur arrive sur une réponse.
+  const allerAtlas = useCallback((cle) => {
+    setCoucheAtlas(cle);
+    allerVers('atlas');
+  }, [allerVers]);
 
   // --- Adressage : l’etat ecrit l’URL, l’URL relit l’etat -------------------
   // Le pays selectionne fait partie de l’adresse : c’est lui qu’on partage ou
@@ -12559,8 +12799,11 @@ export default function App() {
     slugPays(x.name?.fr || x.name) === s || slugPays(x.name?.en || x.name) === s);
 
   useEffect(() => {
-    ecrireURL({ lang, tab: activeTab, detail: segmentDetail });
-  }, [lang, activeTab, segmentDetail]);
+    ecrireURL({ lang, tab: activeTab, detail: segmentDetail, couche: coucheAtlas, region: activeSubRegion });
+  // Les reglages de vue font partie de l adresse : sans eux dans les
+  // dependances, l effet ne se rejoue pas quand on change de couche ou de
+  // region, et l URL reste sur l etat precedent.
+  }, [lang, activeTab, segmentDetail, coucheAtlas, activeSubRegion]);
 
   // Precedent / suivant du navigateur.
   useEffect(() => {
@@ -12596,7 +12839,7 @@ export default function App() {
       if (depart.tab === 'governance' && cle) setActiveSdgzTab(cle);
       if (depart.tab === 'resources' && cle) setActiveResourceTab(cle);
     }
-    ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail }, true);
+    ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail, couche: depart.couche, region: depart.region }, true);
   }, []);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [activeTab]);
@@ -13003,6 +13246,7 @@ export default function App() {
         {activeTab === 'atlas' && (
           <TabAtlas
             lang={lang} text={text} allerVers={allerVers}
+            coucheAtlas={coucheAtlas} setCoucheAtlas={setCoucheAtlas}
             /* La fiche complete s’ouvre sur place, dans le dossier qui porte
                deja l’export PDF — plus de saut vers une autre section. */
             ouvrirPays={(id) => { setActiveSubTab(id); setShowModal(true); }}
@@ -13015,7 +13259,7 @@ export default function App() {
           />
         )}
         {activeTab === 'home' && (
-          <TabHome text={text} lang={lang} setActiveTab={allerVers} />
+          <TabHome text={text} lang={lang} allerAtlas={allerAtlas} allerVers={allerVers} setActiveTab={allerVers} />
         )}
         {activeTab === 'evidence' && (
           <TabEvidenceCheck text={text} lang={lang} exportEvidenceCSV={exportEvidenceCSV} />
