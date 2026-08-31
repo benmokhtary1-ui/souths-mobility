@@ -1118,6 +1118,17 @@ const LinkedInIcon = ({ className = "w-3.5 h-3.5" }) => (
 //
 //   3. Le format des nombres court-circuitait celui du site : « 2.6M » avec un
 //      point décimal anglais dans une page française. Il passe par formatNumber.
+// DEUX POINTS NE FONT PAS UNE COURBE.
+// ---------------------------------------------------------------------------
+// Relevé sur les données : les cinquante-quatre États portent exactement DEUX
+// millésimes, 1990 et 2024. Le graphique en dessinait donc deux barres, sur
+// cent soixante-dix pixels de haut, pour dire « 55 k, puis 111 k » — et il
+// fallait lire deux étiquettes et comparer deux hauteurs pour retrouver une
+// phrase de six mots. Les régions, elles, en portent quatre : là, une série
+// existe et la barre la sert.
+//
+// La forme suit donc la donnée. À partir de trois points on trace ; à deux, on
+// écrit l'avant, l'après et l'écart, sur une seule ligne.
 const HistoricalChart = ({ data, colorClass, lang = 'fr' }) => {
   if (!data || data.length === 0) return null;
   const valeurs = data.map(d => parseFloat(d.value));
@@ -1127,6 +1138,31 @@ const HistoricalChart = ({ data, colorClass, lang = 'fr' }) => {
     if (v > 100)      return formatNumber(Math.round(v / 1000), lang) + ' k';
     return formatNumber(v, lang) + ' %';
   };
+
+  if (data.length === 2) {
+    const [a, b] = valeurs;
+    // L ecart n a de sens que si le point de depart n est pas nul.
+    const ecart = a > 0 ? Math.round(((b - a) / a) * 100) : null;
+    return (
+      <div className="evolution-deux">
+        <span className="evolution-borne">
+          <b>{enBref(a)}</b>
+          <small>{data[0].year}</small>
+        </span>
+        <ArrowRight className="evolution-fleche" aria-hidden="true" />
+        <span className="evolution-borne evolution-borne--fin">
+          <b>{enBref(b)}</b>
+          <small>{data[1].year}</small>
+        </span>
+        {ecart !== null && (
+          <span className="evolution-ecart">
+            {ecart > 0 ? '+' : ''}{formatNumber(ecart, lang)} %
+          </span>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-end justify-between h-28 w-full gap-2 mt-5 pt-6 border-b-2 border-slate-100 pb-2">
       {data.map((point, i) => {
@@ -1164,7 +1200,7 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
         <div className="surtitre flex justify-between font-black">
           <span className="text-amber-600 print:!text-amber-600">{remLabel}</span>
           {hasRemittances ? (
-            <span className="text-amber-700 print:!text-amber-700">{remittances}% PIB</span>
+            <span className="text-amber-700 print:!text-amber-700">{formatNumber(remittances, lang)} % {tr({ fr: 'du PIB', en: 'of GDP' }, lang)}</span>
           ) : (
             <span className="text-slate-400 italic normal-case tracking-normal print:!text-slate-400">{tr({ fr: "Donnée non disponible", en: "Data not available" }, lang)}</span>
           )}
@@ -1180,7 +1216,7 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
       <div>
         <div className="surtitre flex justify-between font-black">
           <span className="text-slate-500 print:!text-slate-500">{tr({ fr: "Aide Internationale - APD (OCDE, 2024)", en: "International Aid - ODA (OECD, 2024)" }, lang)}</span>
-          <span className="text-slate-600 print:!text-slate-600">{aid}% PIB</span>
+          <span className="text-slate-600 print:!text-slate-600">{formatNumber(aid, lang)} % {tr({ fr: 'du PIB', en: 'of GDP' }, lang)}</span>
         </div>
         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
           <div className="h-full bg-slate-400 rounded-full transition-all duration-1000 print:!bg-slate-400" style={{width: `${aidPct}%`}}></div>
@@ -1222,6 +1258,28 @@ const ordinal = (n, lang) => {
   return n === 1 ? '1er' : n + 'e';
 };
 
+// LE RANG CONTINENTAL, DIT PLUTÔT QUE DESSINÉ
+// ---------------------------------------------------------------------------
+// Ce bloc portait un rail de cinquante-quatre traits d'un pixel, espacés de
+// 7,5 px : un pays par trait. Trois choses n'allaient pas, et la mesure les a
+// toutes montrées.
+//
+// D'abord les trois légendes — « Le plus élevé », « Médiane », « Le plus bas »
+// — se touchaient sans une espace : l'écran affichait « LE PLUS
+// ÉLEVÉMÉDIANELE PLUS BAS ». Un `justify-between` sur trois éléments qui
+// remplissent la ligne ne laisse rien entre eux.
+//
+// Ensuite le rail lui-même. Cinquante-quatre traits ne se comptent pas ; ils
+// font un grisé. Et le repère de la médiane, un trait d'un pixel de plus, s'y
+// perdait exactement comme les autres — la seule marque qui portait un sens
+// était invisible parmi celles qui n'en portaient aucun.
+//
+// Enfin la précision était fausse : un rail de traits promet qu'on peut situer
+// chaque pays, quand on ne peut situer que celui-ci.
+//
+// Reste donc ce que le lecteur cherche : où se place ce pays, et de quel côté
+// de la médiane. Le rang s'écrit en toutes lettres, la médiane est nommée là
+// où elle tombe, et les deux bouts portent leur rang plutôt qu'un superlatif.
 const RangContinental = ({ valeur, serie, libelle, lang, teinte = 'bg-blue-700', encre = 'text-blue-800' }) => {
   const v = nombreOuNull(valeur);
   const valeurs = (serie || []).map(nombreOuNull).filter(x => x !== null).sort((a, b) => b - a);
@@ -1231,46 +1289,51 @@ const RangContinental = ({ valeur, serie, libelle, lang, teinte = 'bg-blue-700',
   const trouve = valeurs.findIndex(x => x <= v);
   const rang = trouve === -1 ? n : trouve + 1;
   const mediane = Math.ceil(n / 2);
-  // Le trait du dernier rang depasserait le rail de sa propre largeur : on
-  // retranche cette largeur au prorata de la position, de sorte que le premier
-  // trait commence au bord et que le dernier finisse dessus.
   const pos = (i) => (n === 1 ? 50 : (i / (n - 1)) * 100);
+  const posRang = pos(rang - 1);
+  const posMed = pos(mediane - 1);
+  // Au-dessus comme au-dessous, le rang se dit par rapport a la mediane : c est
+  // la seule comparaison que le lecteur peut faire sans connaitre les 54 valeurs.
+  const cote = rang < mediane
+    ? tr({ fr: 'au-dessus de la médiane', en: 'above the median' }, lang)
+    : rang > mediane
+      ? tr({ fr: 'au-dessous de la médiane', en: 'below the median' }, lang)
+      : tr({ fr: 'à la médiane', en: 'at the median' }, lang);
 
   const lecture = tr({
-    fr: `${libelle} : ${ordinal(rang, 'fr')} rang sur ${n} pays africains.`,
-    en: `${libelle}: ranked ${ordinal(rang, 'en')} of ${n} African countries.`,
+    fr: `${libelle} : ${ordinal(rang, 'fr')} rang sur ${n} pays africains, ${cote}.`,
+    en: `${libelle}: ranked ${ordinal(rang, 'en')} of ${n} African countries, ${cote}.`,
   }, lang);
 
   return (
     <div className="mt-5 pt-4 border-t border-slate-100 print:mt-3 print:pt-2 print:break-inside-avoid">
-      <div className="flex items-baseline justify-between gap-3 mb-2">
-        <span className="surtitre">
-          {tr({ fr: 'Rang continental', en: 'Continental rank' }, lang)}
-        </span>
+      <div className="flex items-baseline justify-between gap-3 mb-2.5">
+        <span className="surtitre">{tr({ fr: 'Rang continental', en: 'Continental rank' }, lang)}</span>
         <span className={`text-sm font-serif font-bold tabular-nums ${encre}`}>
           {ordinal(rang, lang)} <span className="text-slate-400 text-xs font-sans font-semibold">/ {n}</span>
+          {' '}<span className="ms-1 text-[11px] font-sans font-semibold text-slate-500">{cote}</span>
         </span>
       </div>
 
-      <div className="relative h-4" role="img" aria-label={lecture}>
-        <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-slate-200 print:!bg-slate-300" aria-hidden="true" />
-        {valeurs.map((_, i) => (
-          <span key={i} aria-hidden="true"
-                className="absolute top-1/2 w-px h-2 -translate-y-1/2 bg-slate-300 print:!bg-slate-400"
-                style={{ insetInlineStart: `calc(${pos(i)}% - ${pos(i) / 100}px)` }} />
-        ))}
-        <span aria-hidden="true"
-              className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-600"
-              style={{ insetInlineStart: `calc(${pos(mediane - 1)}% - ${pos(mediane - 1) / 100}px)` }} />
-        <span aria-hidden="true"
-              className={`absolute -top-0.5 -bottom-0.5 w-[3px] rounded-full ${teinte} print:!bg-slate-900`}
-              style={{ insetInlineStart: `calc(${pos(rang - 1)}% - ${(3 * pos(rang - 1)) / 100}px)` }} />
+      {/* Un rail, deux marques. Le point porte le rang ; l encoche porte la
+          mediane, et elle est nommee — sinon c est un trait de plus. */}
+      <div className="rang-rail" role="img" aria-label={lecture}>
+        <span className="rang-piste" aria-hidden="true" />
+        <span className="rang-mediane" aria-hidden="true" style={{ insetInlineStart: `${posMed}%` }} />
+        <span aria-hidden="true" className={`rang-point ${teinte} print:!bg-slate-900`}
+              style={{ insetInlineStart: `${posRang}%` }} />
       </div>
 
-      <div className="surtitre flex justify-between mt-1.5">
-        <span>{tr({ fr: 'Le plus élevé', en: 'Highest' }, lang)}</span>
-        <span className="text-amber-600">{tr({ fr: 'Médiane', en: 'Median' }, lang)}</span>
-        <span>{tr({ fr: 'Le plus bas', en: 'Lowest' }, lang)}</span>
+      {/* `surtitre` ne peut pas coiffer ce conteneur : il pose `display: block`
+          et il est declare plus loin dans la feuille, donc il gagnait sur le
+          `display: flex` — les deux bornes se retrouvaient collees a gauche,
+          « 1ER54E ». La classe descend sur les enfants, ou elle ne decide rien. */}
+      <div className="rang-bornes">
+        <span className="surtitre">{ordinal(1, lang)}</span>
+        <span className="rang-bornes-med surtitre" style={{ insetInlineStart: `${posMed}%` }}>
+          {tr({ fr: 'médiane', en: 'median' }, lang)}
+        </span>
+        <span className="surtitre">{ordinal(n, lang)}</span>
       </div>
     </div>
   );
@@ -3576,6 +3639,24 @@ const recNames = {
   ceeac: { fr: 'CEEAC', en: 'ECCAS' },
   uma: { fr: 'UMA', en: 'AMU' },
   censad: { fr: 'CEN-SAD', en: 'CEN-SAD' },
+};
+
+// CE QUE L ACRONYME NE DIT PAS.
+// La fiche pays affichait un monogramme dans une pastille, PUIS l acronyme :
+// pour l Union du Maghreb arabe elle ecrivait donc « UMA UMA », et pour la
+// Communaute des Etats saheliens « CS CEN-SAD ». Le monogramme ne portait
+// aucune information que l acronyme n avait deja. Ces huit noms complets sont
+// ceux du dossier des communautes economiques, plus bas dans la Gouvernance ;
+// ils y sont deja ecrits, et c est la meme table qui devrait les servir.
+const recFullNames = {
+  cedeao: { fr: 'Communauté économique des États de l’Afrique de l’Ouest', en: 'Economic Community of West African States' },
+  cae:    { fr: 'Communauté d’Afrique de l’Est', en: 'East African Community' },
+  sadc:   { fr: 'Communauté de développement d’Afrique australe', en: 'Southern African Development Community' },
+  comesa: { fr: 'Marché commun de l’Afrique orientale et australe', en: 'Common Market for Eastern and Southern Africa' },
+  igad:   { fr: 'Autorité intergouvernementale pour le développement', en: 'Intergovernmental Authority on Development' },
+  ceeac:  { fr: 'Communauté économique des États de l’Afrique centrale', en: 'Economic Community of Central African States' },
+  uma:    { fr: 'Union du Maghreb arabe', en: 'Arab Maghreb Union' },
+  censad: { fr: 'Communauté des États sahélo-sahariens', en: 'Community of Sahel-Saharan States' },
 };
 
 const countryRecAffiliations = {
@@ -6063,13 +6144,24 @@ const tierOf = (level) => EVIDENCE_TIERS[level] || { rank: 0, fill: 0, color: 'v
 
 // Jauge de robustesse : quatre crans. Le nombre de crans pleins porte
 // l’information, la teinte ne fait que la renforcer.
+// Mesuree sur l ecran, elle faisait 34 x 3 px — quatre traits de sept pixels
+// sur trois de haut, separes de deux. A cette taille on ne compte pas des
+// crans : on voit une bavure sombre suivie d une bavure claire. L encodage que
+// la section prend soin d expliquer en tete — « la jauge a quatre crans porte
+// sur la solidite de la preuve disponible » — ne se lisait donc pas sur les
+// cartes qui le portent.
+//
+// Les crans doublent de hauteur et s espacent ; les vides prennent un contour
+// plutot qu un aplat pale. Quatre positions distinctes, comptables d un coup
+// d oeil, sans que la teinte y soit pour rien — c est la condition meme de sa
+// lisibilite sans la couleur, qui est sa raison d etre.
 const RobustnessMeter = ({ level, className = "" }) => {
   const { fill, color } = tierOf(level);
   return (
-    <span className={`inline-flex items-center gap-[2px] ${className}`} aria-hidden="true">
+    <span className={`jauge-crans ${className}`} aria-hidden="true">
       {[0, 1, 2, 3].map(i => (
-        <span key={i} className="block w-[7px] h-[3px]"
-              style={{ backgroundColor: i < fill ? color : 'var(--rule-strong)' }} />
+        <span key={i} className="jauge-cran" data-plein={i < fill ? 'oui' : 'non'}
+              style={i < fill ? { backgroundColor: color, borderColor: color } : undefined} />
       ))}
     </span>
   );
@@ -13363,18 +13455,31 @@ export default function App() {
             onClick={(e) => e.stopPropagation()} 
             className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
-            <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-5 print:break-inside-avoid">
-              <div className="flex items-center space-x-5 rtl:space-x-reverse">
+            {/* L EN-TÊTE MESURAIT 200 px SUR UNE FICHE DE 855.
+                Avec le pied de page, un tiers de la fenêtre partait en chrome et
+                il ne restait que 522 px pour le contenu — chaque onglet demandait
+                alors deux à trois écrans de défilement. La gouttière verticale
+                passe donc de 32 à 16 px, et l’étiquette « Fiche de données
+                brutes » remonte à côté du nom au lieu de tenir une ligne à elle
+                seule. La gouttière latérale, elle, ne bouge pas : c’est celle qui
+                aligne l’en-tête sur le corps. */}
+            <div className="px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-4 print:break-inside-avoid">
+              <div className="flex items-center gap-4">
                 {display.flagIcon ? (
-                  <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2.5 shadow-sm print:border-none ${display.flagColor || 'text-blue-700'}`}>
-                    <display.flagIcon className="w-8 h-8 md:w-9 md:h-9" />
+                  <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2 shadow-sm print:border-none shrink-0 ${display.flagColor || 'text-blue-700'}`}>
+                    <display.flagIcon className="w-7 h-7 md:w-8 md:h-8" />
                   </span>
                 ) : (
-                  <CountryFlag iso2={display.iso2} emoji={display.flag} size="lg" className="border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none" />
+                  <CountryFlag iso2={display.iso2} emoji={display.flag} size="lg" className="border border-slate-200 rounded-sm bg-slate-50 p-1 shadow-sm print:border-none shrink-0" />
                 )}
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight">{display.name}</h2>
-                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
+                {/* L etiquette est revenue SOUS le nom. Posee a cote, elle
+                    elargissait le bloc de gauche assez pour que la barre des
+                    quatre onglets passe a la ligne — l en-tete gagnait alors
+                    une rangee, soit plus que ce que l etiquette faisait
+                    economiser. La gouttiere verticale, elle, reste a 16. */}
+                <div className="min-w-0">
+                  <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight leading-none">{display.name}</h2>
+                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
                 </div>
               </div>
                 
@@ -13387,20 +13492,31 @@ export default function App() {
               <button onClick={() => setShowModal(false)} aria-label={tr({ fr: 'Fermer le rapport', en: 'Close the report' }, lang)} className="absolute top-6 end-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
-            <div className="p-6 md:p-10 overflow-y-auto space-y-10 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
+            <div className="fiche-corps p-6 md:p-10 overflow-y-auto space-y-6 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
               <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
                   <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Le poids démographique réel", en: "The Real Demographic Weight" }, lang)}</h3>
                   <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "La population migrante comparée à la population totale.", en: "Migrant population compared to total population." }, lang)}</Prose>
-                  <div className="relative pt-6 pb-3 print:pt-4">
-                    <div className="flex items-baseline justify-between mb-2">
-                      <span className="text-2xl font-serif font-bold text-blue-800 print:text-lg">{display.evolution}%</span>
-                      <span className="surtitre">{tr({ fr: "Population totale", en: "Total population" }, lang)}</span>
-                    </div>
-                    <div className="h-10 w-full bg-slate-100 rounded-sm relative overflow-hidden flex items-center border border-slate-200 print:h-8 print:!bg-slate-100">
-                      <div className="h-full bg-blue-700 transition-all duration-1000 print:!bg-blue-700" style={{width: `${Math.max(5, parseFloat(display.evolution))}%`}}></div>
-                    </div>
-                  </div>
+                  {/* UNE BARRE QUI MENTAIT DE SEIZE FOIS.
+                      Ce bloc posait une piste de 40 px de haut sur toute la
+                      largeur, remplie a `Math.max(5, valeur)` : sous 5 %, la
+                      barre affichait donc 5 quoi qu il arrive. Le Maroc est a
+                      0,3 % — le trace en montrait seize fois trop. Et la part
+                      des migrants dans la population est petite presque partout
+                      en Afrique : la borne se declenchait sur la majorite des
+                      pays, c est-a-dire que la barre etait fausse la plupart du
+                      temps, et vide le reste.
+                      Le chiffre se suffit, et le rang continental juste dessous
+                      le situe pour de bon — lui compare les 54 valeurs reelles. */}
+                  <p className="fiche-mesure">
+                    {/* La virgule decimale suit la langue : « 0,3 % » en francais.
+                        Le gabarit precedent posait la chaine brute — « 0.3% ». */}
+                    <span className="fiche-mesure-n">{formatNumber(parseFloat(display.evolution), lang)} %</span>
+                    <span className="fiche-mesure-quoi">{tr({
+                      fr: 'de la population totale',
+                      en: 'of the total population',
+                    }, lang)}</span>
+                  </p>
                   <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
                     <p className="surtitre text-slate-800 print:text-[9px]">
                       {display.isRegion ? text.modal.evo_title : (tr({ fr: "Évolution du stock migratoire absolu (1990-2024)", en: "Absolute migrant stock evolution (1990-2024)" }, lang))}
@@ -13415,23 +13531,34 @@ export default function App() {
                   )}
                 </div>
                   
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-center items-center print:border print:p-4">
-                   <h3 className="font-serif font-bold text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
-                   <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-sm border border-slate-100 print:w-24 print:h-24" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
-                     <div className="absolute inset-4 bg-white rounded-full flex flex-col items-center justify-center border border-slate-50">
-                       <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">{display.female}%</span>
-                       <span className="surtitre text-blue-700 mt-0.5">{tr({ fr: "Femmes", en: "Women" }, lang)}</span>
+                {/* L anneau disait « a peu pres la moitie » — c est bien ce qu on
+                    veut lire ici, et le texte a cote le dit en toutes lettres.
+                    Il gardait pourtant 160 px de cote, centre dans une carte qui
+                    ne portait que lui : la carte faisait 306 px pour un nombre.
+                    L anneau reste, a 112 px, et le texte passe a cote plutot que
+                    dessous — la carte perd sa moitie de hauteur sans rien perdre
+                    de ce qu elle montre. */}
+                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
+                   <h3 className="font-serif font-bold text-slate-900 mb-5 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
+                   <div className="flex items-center gap-5">
+                     <div className="relative w-28 h-28 shrink-0 rounded-full flex items-center justify-center border border-slate-100 print:w-20 print:h-20" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
+                       <div className="absolute inset-3 bg-white rounded-full flex flex-col items-center justify-center border border-slate-50">
+                         <span className="text-xl font-serif font-bold text-slate-900 print:text-lg">{formatNumber(parseFloat(display.female), lang)} %</span>
+                         <span className="surtitre text-blue-700">{tr({ fr: "Femmes", en: "Women" }, lang)}</span>
+                       </div>
                      </div>
+                     <Prose className="text-sm text-slate-600 leading-relaxed print:text-[10px]" lang={lang}>{tr({ fr: "La migration n’est pas qu’une affaire d’hommes fuyant la misère. Elle est structurellement féminisée.", en: "Migration is not just men fleeing poverty. It is structurally feminized." }, lang)}</Prose>
                    </div>
-                   <Prose className="text-center text-sm text-slate-600 mt-6 max-w-xs leading-relaxed print:mt-3 print:text-[10px]" lang={lang}>{tr({ fr: "La migration n’est pas qu’une affaire d’hommes fuyant la misère. Elle est structurellement féminisée.", en: "Migration is not just men fleeing poverty. It is structurally feminized." }, lang)}</Prose>
-                </div>
+                   {/* Ce rang etait pose APRES la fermeture de la carte : il
+                       devenait une troisieme case de la grille et flottait sur le
+                       fond gris, sans cartouche, loin du chiffre qu il situe. Il
+                       rentre dans la carte, comme son jumeau de gauche. */}
                    {!display.isRegion && (
-                     <div className="w-full">
-                       <RangContinental valeur={display.female} serie={seriesContinentales.female}
-                                        libelle={tr({ fr: 'Part des femmes dans le stock migratoire', en: 'Women in the migrant stock' }, lang)}
-                                        lang={lang} teinte="bg-blue-700" encre="text-blue-800" />
-                     </div>
+                     <RangContinental valeur={display.female} serie={seriesContinentales.female}
+                                      libelle={tr({ fr: 'Part des femmes dans le stock migratoire', en: 'Women in the migrant stock' }, lang)}
+                                      lang={lang} teinte="bg-blue-700" encre="text-blue-800" />
                    )}
+                </div>
               </div>
 
 
@@ -13447,13 +13574,16 @@ export default function App() {
 
               <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
                 <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
-                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-6 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
-                  <div className="relative w-40 h-40 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, ${display.isRegion ? '#1e293b' : '#1e293b'} 0)` }}>
-                    <div className="absolute inset-4 bg-[#0f172a] print:bg-white rounded-full flex flex-col items-center justify-center border border-slate-800 print:border-slate-100">
-                      <span className="text-3xl font-serif font-bold text-white print:text-slate-900 print:text-xl">{formatNumber(display.retention, lang)}%</span>
-                      <span className="text-[9px] font-bold text-blue-400 uppercase mt-0.5 tracking-widest text-center px-2">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
+                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-5 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
+                  {/* Le libelle vivait DANS l anneau, sur trois lignes serrees
+                      entre le chiffre et le bord : « Restent / dans la / region ».
+                      Il descend dessous, ou il tient sur une ligne et se lit. */}
+                  <div className="relative w-32 h-32 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, #1e293b 0)` }}>
+                    <div className="absolute inset-3 bg-[#0f172a] print:bg-white rounded-full flex items-center justify-center border border-slate-800 print:border-slate-100">
+                      <span className="text-2xl font-serif font-bold text-white print:text-slate-900 print:text-lg">{formatNumber(display.retention, lang)} %</span>
                     </div>
                   </div>
+                  <span className="text-[10px] font-bold text-blue-400 print:text-slate-600 uppercase tracking-widest text-center mt-3">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
                 </div>
                   
                 <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
@@ -13470,35 +13600,36 @@ export default function App() {
                       {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
                         <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
                           <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
-                          <div className="space-y-4 print:space-y-2">
+                          {/* TROIS BARRES QUI NE MESURAIENT RIEN.
+                              Ces trois lignes portaient chacune une barre posee a
+                              `width: 100%` en dur — quelle que soit la valeur.
+                              Trois barres pleines cote a cote, pour trois nombres
+                              sans rapport d ordre : la forme promettait une
+                              comparaison que le trace ne faisait pas, et un
+                              lecteur pouvait en conclure que les trois grandeurs
+                              s equivalaient. Un tableau de trois lignes dit la
+                              meme chose sans rien promettre de faux, et tient sur
+                              trois fois moins de hauteur. */}
+                          <dl className="fiche-releve">
                             {display.refugees_hosted > 0 && (
-                              <div>
-                                <div className="surtitre flex justify-between print:text-[8px]">
-                                  <span className="text-slate-600 print:!text-slate-600">{text.modal.hcr_hosted}</span>
-                                  <span className="text-slate-900 print:!text-slate-900"><Num value={display.refugees_hosted} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-slate-500 rounded-sm print:!bg-slate-500" style={{width: '100%'}}></div></div>
+                              <div className="fiche-releve-ligne">
+                                <dt>{text.modal.hcr_hosted}</dt>
+                                <dd><Num value={display.refugees_hosted} lang={lang} /></dd>
                               </div>
                             )}
                             {display.idp_conflict > 0 && (
-                              <div>
-                                <div className="surtitre flex justify-between print:text-[8px]">
-                                  <span className="text-rose-700 print:!text-rose-700">{text.modal.idp_conflict}</span>
-                                  <span className="text-rose-900 print:!text-rose-900"><Num value={display.idp_conflict} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-rose-700 rounded-sm print:!bg-rose-700" style={{width: '100%'}}></div></div>
+                              <div className="fiche-releve-ligne">
+                                <dt>{text.modal.idp_conflict}</dt>
+                                <dd><Num value={display.idp_conflict} lang={lang} /></dd>
                               </div>
                             )}
                             {display.idp_disaster > 0 && (
-                              <div>
-                                <div className="surtitre flex justify-between print:text-[8px]">
-                                  <span className="text-blue-600 print:!text-blue-600">{text.modal.idp_disaster}</span>
-                                  <span className="text-blue-800 print:!text-blue-800"><Num value={display.idp_disaster} lang={lang} /></span>
-                                </div>
-                                <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden print:h-1.5 print:!bg-slate-200"><div className="h-full bg-blue-600 rounded-sm print:!bg-blue-600" style={{width: '100%'}}></div></div>
+                              <div className="fiche-releve-ligne">
+                                <dt>{text.modal.idp_disaster}</dt>
+                                <dd><Num value={display.idp_disaster} lang={lang} /></dd>
                               </div>
                             )}
-                          </div>
+                          </dl>
                           <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
                         </div>
                       )}
@@ -13558,35 +13689,46 @@ export default function App() {
                                      lang={lang} teinte="bg-amber-600" encre="text-amber-700" />
                   )}
 
-                  {/* Le taux d’activité des migrants était rangé en démographie, où il
-                      détonnait : sa propre notice le décrit comme « un indicateur direct
-                      de l’insertion économique, distinct du volume migratoire lui-même ».
-                      Il rejoint l’économie, qui portait deux blocs quand la démographie
-                      en portait quatre — 1 181 px contre 873. */}
-                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-6 print:p-4">
-                  <div className="flex items-center gap-4 shrink-0">
-                    <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center print:w-12 print:h-12">
-                      <Activity className="w-7 h-7 text-emerald-700 print:w-5 print:h-5" />
+                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les transferts des diasporas vont directement aux ménages — logement, santé, scolarité — sans passer par un budget d’État ni par un bailleur. Sur les 48 États africains pour lesquels la Banque mondiale publie la mesure, ils représentent plus de 5 % du produit intérieur brut dans seize d’entre eux et plus de 10 % dans sept ; la médiane continentale est de 2,7 %.", en: "Diaspora transfers go straight to households — housing, health, schooling — without passing through a state budget or a donor. Across the 48 African states for which the World Bank publishes the measure, they exceed 5 per cent of gross domestic product in sixteen and 10 per cent in seven; the continental median is 2.7 per cent." }, lang)}</Prose></div>
+                </div>
+
+                {/* Le taux d’activité des migrants était rangé en démographie, où il
+                    détonnait : sa propre notice le décrit comme « un indicateur direct
+                    de l’insertion économique, distinct du volume migratoire lui-même ».
+                    Il rejoint l’économie, qui portait deux blocs quand la démographie
+                    en portait quatre.
+
+                    Sa carte était en revanche IMBRIQUÉE dans celle des transferts :
+                    une carte blanche à l’intérieur d’une carte blanche, deux
+                    gouttières de 32 px l’une dans l’autre, et rien qui distingue le
+                    bord de la première du bord de la seconde. Elle redevient sœur.
+                    Son rang, lui, était une troisième colonne du même `flex` : il se
+                    trouvait comprimé à côté du texte au lieu de courir sous la
+                    carte, où un rail a la place de se lire. */}
+                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div className="flex items-center gap-4 shrink-0">
+                      <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center print:w-12 print:h-12">
+                        <Activity className="w-6 h-6 text-emerald-700 print:w-5 print:h-5" />
+                      </div>
+                      <div>
+                        <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
+                          {display.labour_participation !== null && display.labour_participation !== undefined ? `${formatNumber(parseFloat(display.labour_participation), lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}
+                        </span>
+                        <span className="surtitre text-emerald-700 mt-0.5">
+                          {tr({ fr: `Taux d’activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
-                        {display.labour_participation !== null && display.labour_participation !== undefined ? `${display.labour_participation}%` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}
-                      </span>
-                      <span className="surtitre text-emerald-700 mt-0.5">
-                        {tr({ fr: `Taux d’activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
-                      </span>
-                    </div>
+                    <Prose className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-s border-slate-100 sm:ps-6 pt-4 sm:pt-0" lang={lang}>{display.labour_participation !== null && display.labour_participation !== undefined
+                        ? (tr({ fr: "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d’emploi), estimation modélisée par l’OIT — un indicateur direct de l’insertion économique, distinct du volume migratoire lui-même.", en: "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself." }, lang))
+                        : (tr({ fr: "L’OIT ne publie pas d’estimation modélisée pour cette entité (échantillon insuffisant).", en: "The ILO does not publish a modelled estimate for this entity (insufficient sample)." }, lang))}</Prose>
                   </div>
-                  <Prose className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-s border-slate-100 sm:ps-6 pt-4 sm:pt-0" lang={lang}>{display.labour_participation !== null && display.labour_participation !== undefined
-                      ? (tr({ fr: "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d’emploi), estimation modélisée par l’OIT — un indicateur direct de l’insertion économique, distinct du volume migratoire lui-même.", en: "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself." }, lang))
-                      : (tr({ fr: "L’OIT ne publie pas d’estimation modélisée pour cette entité (échantillon insuffisant).", en: "The ILO does not publish a modelled estimate for this entity (insufficient sample)." }, lang))}</Prose>
                   {!display.isRegion && (
                     <RangContinental valeur={display.labour_participation} serie={seriesContinentales.labour}
                                      libelle={tr({ fr: "Taux d’activité des migrants", en: 'Migrant labour participation' }, lang)}
                                      lang={lang} teinte="bg-emerald-600" encre="text-emerald-700" />
                   )}
-                </div>
-                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les transferts des diasporas vont directement aux ménages — logement, santé, scolarité — sans passer par un budget d’État ni par un bailleur. Sur les 48 États africains pour lesquels la Banque mondiale publie la mesure, ils représentent plus de 5 % du produit intérieur brut dans seize d’entre eux et plus de 10 % dans sept ; la médiane continentale est de 2,7 %.", en: "Diaspora transfers go straight to households — housing, health, schooling — without passing through a state budget or a donor. Across the 48 African states for which the World Bank publishes the measure, they exceed 5 per cent of gross domestic product in sixteen and 10 per cent in seven; the continental median is 2.7 per cent." }, lang)}</Prose></div>
                 </div>
 
                 <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
@@ -13615,30 +13757,74 @@ export default function App() {
                 {display.au_treaties && (
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
-                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "État de ratification des conventions phares de l’OUA/UA en matière d’intégration et de mobilité.", en: "Ratification status of key OAU/AU conventions on integration and mobility." }, lang)}</Prose>
-                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-flex items-center min-h-[32px] text-xs text-blue-700 font-bold hover:underline mb-4 print:hidden">
+                    {/* Le chapo disait « Etat de ratification des conventions
+                        phares de l OUA/UA » quand le titre, deux lignes plus
+                        haut, disait deja « Traites & conventions cles de l Union
+                        africaine (Etat de ratification 2025) ». Il ne reste que
+                        ce que le titre ne dit pas : sur quoi portent ces six
+                        textes. */}
+                    <Prose className="text-sm text-slate-600 mb-3 print:mb-3" lang={lang}>{tr({ fr: "Les six instruments continentaux qui engagent un État en matière d’intégration et de mobilité.", en: "The six continental instruments that bind a state on integration and mobility." }, lang)}</Prose>
+                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-flex items-center min-h-[32px] text-xs text-blue-700 font-bold hover:underline mb-3 print:hidden">
                       {tr({ fr: "→ Consulter la base des traités de l’UA", en: "→ View AU Treaties Database" }, lang)}
                     </a>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      {[
-                        { key: 'constitutive', fr: "Acte Constitutif UA", en: "AU Constitutive Act" },
-                        { key: 'abuja', fr: "Traité d’Abuja (AEC)", en: "Abuja Treaty (AEC)" },
-                        { key: 'refugees_1969', fr: "Conv. Réfugiés (1969)", en: "Refugee Conv. (1969)" },
-                        { key: 'kampala', fr: "Conv. de Kampala (IDPs)", en: "Kampala Conv. (IDPs)" },
-                        { key: 'free_movement', fr: "Protocole Libre Circ.", en: "Free Movement Protocol" },
-                        { key: 'zlecaf', fr: "Accord ZLECAf", en: "AfCFTA Agreement" },
-                      ].map((t) => {
-                        const ratified = display.au_treaties[t.key];
-                        return (
-                          <div key={t.key} className={`p-3 rounded-md border flex items-center justify-between ${ratified ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-                            <span className="text-xs font-bold">{tr({ fr: t.fr, en: t.en }, lang)}</span>
-                            <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-sm border ${ratified ? 'bg-blue-100 border-blue-200 text-blue-800' : 'bg-white border-slate-200 text-slate-500'}`}>
-                              {ratified ? (tr({ fr: 'Ratifié', en: 'Ratified' }, lang)) : (tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang))}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    {/* SIX TEXTES, UN COMPTE, PUIS LA LISTE.
+                        Ces six instruments s’affichaient en grille de pastilles
+                        colorées : bleu pour ratifié, gris pour non. Trois choses
+                        n’allaient pas. Le compte — la seule question qu’on pose
+                        vraiment à ce bloc — n’était écrit nulle part : il fallait
+                        parcourir six cases et les additionner de tête. L’état ne
+                        tenait qu’à la couleur du fond, doublée d’une étiquette de
+                        9 px dont le libellé « NON RATIFIÉ » se coupait en deux
+                        lignes une fois sur deux. Et l’ordre était celui des clés,
+                        si bien que ratifiés et non-ratifiés alternaient au hasard.
+                        Le compte s’écrit donc, la liste range les ratifiés d’abord,
+                        et l’état se lit dans un mot autant que dans une marque. */}
+                    {(() => {
+                      const INSTRUMENTS = [
+                        { key: 'constitutive',  fr: "Acte constitutif de l’Union africaine", en: 'Constitutive Act of the African Union' },
+                        { key: 'abuja',         fr: "Traité d’Abuja (Communauté économique africaine)", en: 'Abuja Treaty (African Economic Community)' },
+                        { key: 'refugees_1969', fr: "Convention de l’OUA sur les réfugiés (1969)", en: 'OAU Refugee Convention (1969)' },
+                        { key: 'kampala',       fr: "Convention de Kampala (personnes déplacées internes)", en: 'Kampala Convention (internally displaced persons)' },
+                        { key: 'free_movement', fr: "Protocole sur la libre circulation des personnes", en: 'Protocol on Free Movement of Persons' },
+                        { key: 'zlecaf',        fr: "Accord portant création de la ZLECAf", en: 'Agreement establishing the AfCFTA' },
+                      ];
+                      // Ratifies d abord, chaque groupe dans l ordre canonique.
+                      const ranges = [...INSTRUMENTS].sort((a, b) =>
+                        (display.au_treaties[b.key] ? 1 : 0) - (display.au_treaties[a.key] ? 1 : 0));
+                      const n = INSTRUMENTS.filter(t => display.au_treaties[t.key]).length;
+                      return (
+                        <>
+                          <p className="ratif-compte">
+                            <span className="ratif-n">{n}</span>
+                            <span className="ratif-sur"> / {INSTRUMENTS.length}</span>
+                            {/* La phrase ne repete pas le compte — « 3 / 6 » suivi
+                                de « 3 des six textes sont ratifies » disait deux
+                                fois la meme chose. Elle nomme ce qu on compte. */}
+                            <span className="ratif-dit">{tr({
+                              fr: 'textes ratifiés et déposés',
+                              en: 'instruments ratified and deposited',
+                            }, lang)}</span>
+                          </p>
+                          <ul className="ratif-liste">
+                            {ranges.map((t) => {
+                              const ratified = !!display.au_treaties[t.key];
+                              return (
+                                <li key={t.key} className="ratif-ligne" data-ratifie={ratified ? 'oui' : 'non'}>
+                                  <span className="ratif-marque" aria-hidden="true">
+                                    {ratified ? <Check className="w-3.5 h-3.5" /> : null}
+                                  </span>
+                                  <span className="ratif-nom">{tr({ fr: t.fr, en: t.en }, lang)}</span>
+                                  <span className="ratif-etat">
+                                    {ratified ? tr({ fr: 'Ratifié', en: 'Ratified' }, lang)
+                                              : tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang)}
+                                  </span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </>
+                      );
+                    })()}
                   </div>
                 )}
 
@@ -13646,16 +13832,18 @@ export default function App() {
                   <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
                     <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Affiliation aux communautés économiques régionales", en: "Regional Economic Community Affiliation" }, lang)}</h3>
                     <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "Blocs régionaux dont le pays est membre (l’appartenance à plusieurs CER est courante en Afrique).", en: "Regional blocs the country belongs to (multiple REC membership is common in Africa)." }, lang)}</Prose>
-                    <div className="flex flex-wrap gap-3">
+                    {/* Même grammaire que les six textes ci-dessus : une ligne par
+                        engagement, le sigle en colonne, le nom en clair à côté. La
+                        pastille précédente répétait le sigle dans un monogramme —
+                        « UMA UMA » — et laissait le nom complet nulle part. */}
+                    <ul className="ratif-liste">
                       {countryRecAffiliations[display.iso2].map((recId) => (
-                        <div key={recId} className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200 rounded-full ps-1.5 pe-4 py-1.5 print:bg-white">
-                          <span className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-emerald-700 font-serif font-bold text-[9px] shrink-0">
-                            {recId === 'censad' ? 'CS' : recId.toUpperCase()}
-                          </span>
-                          <span className="text-xs font-bold text-emerald-900">{tr(recNames[recId], lang)}</span>
-                        </div>
+                        <li key={recId} className="ratif-ligne ratif-ligne--cer">
+                          <span className="ratif-sigle">{tr(recNames[recId], lang)}</span>
+                          <span className="ratif-nom">{recFullNames[recId] ? tr(recFullNames[recId], lang) : ''}</span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                     {countryRecNotes[display.iso2] && (
                       <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4 flex items-start gap-2 print:bg-white">
                         <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {tr(countryRecNotes[display.iso2], lang)}
@@ -13686,24 +13874,29 @@ export default function App() {
                         {tr({ fr: "→ Consulter le profil national NORMLEX", en: "→ View NORMLEX National Profile" }, lang)}
                       </a>
                     )}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 print:grid-cols-4">
-                      <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="surtitre">{tr({ fr: "Fondamentales", en: "Fundamental" }, lang)}</span>
-                        <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.fundamental} / 11</span>
+                    {/* Quatre nombres, quatre pavés bordés et centrés : 300 px de
+                        carte pour ce qui tient en quatre lignes. Ils prennent le
+                        relevé — la même forme que les déplacés, deux onglets plus
+                        tôt — et le total se détache, parce qu’il additionne les
+                        trois autres au lieu de se ranger à côté d’eux. */}
+                    <dl className="fiche-releve">
+                      <div className="fiche-releve-ligne">
+                        <dt>{tr({ fr: 'Conventions fondamentales', en: 'Fundamental conventions' }, lang)}</dt>
+                        <dd>{display.normlex.fundamental} <span className="fiche-releve-sur">/ 11</span></dd>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="surtitre">{tr({ fr: "Gouvernance", en: "Governance" }, lang)}</span>
-                        <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.governance} / 4</span>
+                      <div className="fiche-releve-ligne">
+                        <dt>{tr({ fr: 'Conventions de gouvernance', en: 'Governance conventions' }, lang)}</dt>
+                        <dd>{display.normlex.governance} <span className="fiche-releve-sur">/ 4</span></dd>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="surtitre">{tr({ fr: "Techniques", en: "Technical" }, lang)}</span>
-                        <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.technical}</span>
+                      <div className="fiche-releve-ligne">
+                        <dt>{tr({ fr: 'Conventions techniques', en: 'Technical conventions' }, lang)}</dt>
+                        <dd>{display.normlex.technical}</dd>
                       </div>
-                      <div className="bg-slate-50 p-4 rounded-md border border-slate-200 text-center print:p-2">
-                        <span className="surtitre">{tr({ fr: "Total Ratifications", en: "Total Ratified" }, lang)}</span>
-                        <span className="text-xl font-serif font-bold text-slate-900 print:text-sm">{display.normlex.total}</span>
+                      <div className="fiche-releve-ligne fiche-releve-ligne--somme">
+                        <dt>{tr({ fr: 'Total ratifié', en: 'Total ratified' }, lang)}</dt>
+                        <dd>{display.normlex.total}</dd>
                       </div>
-                    </div>
+                    </dl>
                   </div>
                 )}
 
@@ -13711,7 +13904,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="p-5 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
+            {/* Le pied prenait 130 px pour une ligne de sources et deux boutons,
+                sur une fiche où le contenu n’en avait que 522. Sa gouttière
+                verticale passe de 32 à 16 : les sources restent visibles en
+                permanence — c’est leur raison d’être ici — sans coûter la
+                hauteur d’un bloc de lecture. */}
+            <div className="px-6 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
               <span className="surtitre hidden md:block">{text.modal.data_source}</span>
               <div className="flex items-center space-x-2 rtl:space-x-reverse w-full sm:w-auto justify-end">
                 <CsvButton onClick={exportCountryProfileCSV} label={text.modal.export_csv} className="flex-1 sm:flex-none justify-center" />

@@ -130,6 +130,53 @@ const DEMANDES = [
 
   ['aucun matériau de terrain non publié n’est cité',
    () => !/observation participante/i.test(app + readFileSync('src/narrativesData.js', 'utf8'))],
+
+  // --- LA FICHE PAYS : ESPACE, ÉPURATION, CLARTÉ --------------------------
+  ['le rang continental ne trace plus un trait par pays',
+   () => !app.includes('valeurs.map((_, i) => (')
+      && css.includes('.rang-rail')],
+
+  ['les trois légendes du rang ne se touchent plus',
+   () => !app.includes('<div className="rang-bornes surtitre">')
+      && css.includes('.rang-bornes-med')],
+
+  ['les six textes de l’UA se comptent avant de se lire',
+   () => app.includes('className="ratif-compte"') && app.includes('const ranges = [...INSTRUMENTS].sort')],
+
+  ['l’état d’un texte ne tient plus à la seule couleur du fond',
+   () => !app.includes("bg-blue-50 border-blue-200 text-blue-900") && app.includes('data-ratifie=')],
+
+  ['les communautés régionales portent leur nom complet',
+   () => app.includes('const recFullNames = {') && !app.includes("recId === 'censad' ? 'CS'")],
+
+  ['aucune barre n’est figée à 100 % de large',
+   () => !/style=\{\{width: '100%'\}\}/.test(app)],
+
+  ['aucune barre n’affiche un minimum de 5 % à la place de sa valeur',
+   () => !app.includes('Math.max(5, parseFloat(display.evolution))')],
+
+  ['une série de deux points s’écrit au lieu de se tracer',
+   () => app.includes('if (data.length === 2)') && css.includes('.evolution-deux')],
+
+  ['la carte du travail n’est plus imbriquée dans celle des transferts',
+   () => {
+     // La carte des transferts doit se fermer AVANT que celle du travail s ouvre.
+     const i = app.indexOf('{text.modal.econ_title}');
+     const bloc = app.slice(i, i + 6000);
+     return bloc.indexOf('Le taux d’activité des migrants était rangé')
+          > bloc.indexOf('la médiane continentale est de 2,7 %');
+   }],
+
+  ['`surtitre` ne bat plus les classes de disposition',
+   () => css.includes('.surtitre.flex        { display: flex; }')
+      && css.includes('.surtitre.hidden      { display: none; }')],
+
+  ['le corps de la fiche a sa propre gouttière verticale',
+   () => css.includes('.fiche-corps { padding: var(--pas-3) var(--pas-carte) !important; }')
+      && css.includes(':not(.fiche-corps)')],
+
+  ['la jauge de robustesse se compte',
+   () => css.includes('.jauge-cran') && !app.includes('className="block w-[7px] h-[3px]"')],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

@@ -275,7 +275,10 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 /* Une fiche de catalogue n est pas une boite de section : elle prend le pas
    courant, pas la gouttiere de trente-deux. Sans cette exclusion la regle
    ci-dessous gagnait avec son !important, et la fiche gardait ses 32 px.  */
-:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *):not(.hub-card):not(.carte-constat):not([class*="grid-cols"] > *) { padding: var(--pas-carte) !important; }
+/* Le corps de la fiche pays est un DEFILEUR, pas une boite de lecture : la
+   gouttiere verticale y coute deux fois, en haut et en bas d une zone qui ne
+   fait deja que 522 px de haut. Il prend donc sa propre mesure, plus bas. */
+:is(main, .reader) :is(.p-8, .p-7, .p-6, .p-5):not(th):not(td):not(:has(> .fiche-nature)):not(.fiche-entree *):not(.hub-card):not(.carte-constat):not(.fiche-corps):not([class*="grid-cols"] > *) { padding: var(--pas-carte) !important; }
 :is(main, .reader) :is(.px-8, .px-7, .px-6, .px-5):not(th):not(td):not(.fiche-entree *) { padding-inline: var(--pas-carte) !important; }
 :is(main, .reader) :is(.py-7, .py-6, .py-5):not(th):not(td):not(.fiche-entree *) { padding-block: var(--pas-carte) !important; }
 :is(main, .reader) :is(.p-4, .p-3\.5, .p-3):not(th):not(td) { padding: var(--pas-2) !important; }
@@ -334,7 +337,7 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
 
 :is(main, .reader) :is(.px-4, .px-3\.5, .px-3):not(th):not(td) { padding-inline: var(--pas-2) !important; }
 @media (min-width: 768px) {
-  :is(main, .reader) :is(.md\:p-8, .md\:p-10, .md\:p-12):not(th):not(td) { padding: var(--pas-carte) !important; }
+  :is(main, .reader) :is(.md\:p-8, .md\:p-10, .md\:p-12):not(th):not(td):not(.fiche-corps) { padding: var(--pas-carte) !important; }
   :is(main, .reader) :is(.md\:px-8, .md\:px-10, .md\:px-12):not(th):not(td) { padding-inline: var(--pas-carte) !important; }
 }
 
@@ -2413,6 +2416,169 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   .classement-jauge { display: none; }
 }
 
+/* ---------- La fiche pays ----------------------------------------------------
+   Mesure, sur une fenêtre de 900 px : la fiche faisait 855 px de haut, dont
+   200 d’en-tête et 130 de pied. Restaient 522 px de contenu — moins de deux
+   tiers — et chaque onglet en demandait entre 1 100 et 1 200. Le lecteur
+   défilait donc deux à trois fois par onglet pour un pays.
+
+   La gouttière latérale reste à la mesure du site : c’est elle qui aligne le
+   contenu sur l’en-tête. Seule la verticale cède, parce qu’elle se paie deux
+   fois et qu’elle ne cale rien.                                              */
+.fiche-corps { padding: var(--pas-3) var(--pas-carte) !important; }
+@media (max-width: 767px) { .fiche-corps { padding: var(--pas-2) var(--pas-carte) !important; } }
+@media print { .fiche-corps { padding: 0 !important; padding-top: var(--pas-3) !important; } }
+
+/* ---------- Une mesure, énoncée ----------------------------------------------
+   Le chiffre et ce qu’il mesure, sur une ligne. Remplace les pistes remplies
+   à `max(5 %, valeur)`, qui affichaient toutes la même chose sous 5 %.      */
+.fiche-mesure { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem; margin: var(--pas-2) 0 0; }
+.fiche-mesure-n {
+  font-family: var(--serif); font-weight: 700;
+  font-size: calc(26px * var(--corps, 1)); line-height: 1; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.fiche-mesure-quoi { font-size: calc(13px * var(--corps, 1)); color: var(--ink-soft); }
+
+/* ---------- L’évolution en deux points ---------------------------------------
+   Quand la série n’a que deux millésimes, elle s’écrit au lieu de se tracer :
+   l’avant, l’après, l’écart. Une ligne au lieu de cent soixante-dix pixels.  */
+.evolution-deux {
+  display: flex; align-items: baseline; flex-wrap: wrap;
+  gap: .5rem .875rem; margin-top: var(--pas-2);
+}
+.evolution-borne { display: inline-flex; align-items: baseline; gap: .4rem; }
+.evolution-borne b {
+  font-family: var(--serif); font-weight: 700;
+  font-size: calc(19px * var(--corps, 1)); color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.evolution-borne--fin b { color: var(--ink); }
+.evolution-borne small { font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+.evolution-fleche { width: 14px; height: 14px; color: var(--ink-mute); align-self: center; flex: none; }
+:root[dir="rtl"] .evolution-fleche { transform: scaleX(-1); }
+.evolution-ecart {
+  font-size: calc(13px * var(--corps, 1)); font-weight: 600;
+  color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  padding-inline-start: .5rem; border-inline-start: 1px solid var(--rule);
+}
+
+/* ---------- Les six textes de l’Union africaine ------------------------------
+   Le compte d’abord, en gros ; la liste ensuite. L’état d’un texte se lit dans
+   son mot — « Ratifié », « Non ratifié » — et la coche ne fait que le doubler :
+   la grille précédente le confiait à la seule couleur du fond.                */
+.ratif-compte {
+  display: flex; align-items: baseline; gap: .5rem;
+  margin: 0 0 var(--pas-2, 1rem);
+  padding-bottom: var(--pas-2, 1rem);
+  border-bottom: 1px solid var(--rule);
+}
+.ratif-n   { font-family: var(--serif); font-weight: 700; font-size: calc(26px * var(--corps, 1)); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ratif-sur { font-family: var(--serif); font-weight: 600; font-size: calc(17px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+.ratif-dit { font-size: calc(13px * var(--corps, 1)); color: var(--ink-soft); }
+
+.ratif-liste { list-style: none; margin: 0; padding: 0; }
+.ratif-ligne {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr auto;
+  align-items: baseline; gap: .75rem;
+  padding: .5rem 0;
+  border-top: 1px solid var(--rule);
+  font-size: calc(14px * var(--corps, 1));
+}
+.ratif-ligne:first-child { border-top: 0; }
+.ratif-marque { display: flex; align-items: center; justify-content: center; align-self: center; height: 1rem; color: var(--ok, var(--accent)); }
+.ratif-nom   { color: var(--ink); }
+.ratif-etat  { font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ratif-ligne[data-ratifie="oui"] .ratif-nom  { font-weight: 600; }
+.ratif-ligne[data-ratifie="oui"] .ratif-etat { color: var(--ink-soft); }
+/* Sous 560 px, l etat reste en colonne : mesure faite, le passer sous le nom
+   ajoutait une rangee de dix-huit pixels par ligne sans elargir le nom pour
+   autant — celui-ci se cassait sur le meme nombre de lignes dans les deux cas.
+   Six instruments, six fois dix-huit : cent huit pixels pour rien. */
+@media (max-width: 559px) {
+  .ratif-ligne { grid-template-columns: 1rem 1fr auto; gap: .5rem; align-items: start; }
+  .ratif-marque { align-self: start; height: auto; margin-top: .15rem; }
+  .ratif-etat { font-size: calc(12px * var(--corps, 1)); }
+}
+/* Les communautes economiques prennent la meme ligne, sigle en tete. */
+.ratif-ligne--cer { grid-template-columns: 5.5rem 1fr; }
+@media (max-width: 559px) { .ratif-ligne--cer { grid-template-columns: 5rem 1fr; } }
+.ratif-sigle {
+  font-family: var(--serif); font-weight: 700;
+  font-size: calc(13px * var(--corps, 1)); color: var(--ink);
+  letter-spacing: .01em;
+}
+
+/* Un releve : un libelle, un nombre, un filet. Rien de plus. C est la forme
+   qui remplace les barres figees a 100 % — elles occupaient trois fois la
+   hauteur pour promettre une comparaison qu elles ne faisaient pas.        */
+.fiche-releve { margin: 0; }
+.fiche-releve-ligne {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding: .375rem 0; border-top: 1px solid var(--rule);
+}
+.fiche-releve-ligne:first-child { border-top: 0; padding-top: 0; }
+.fiche-releve dt { font-size: calc(13px * var(--corps, 1)); color: var(--ink-soft); margin: 0; }
+.fiche-releve dd {
+  margin: 0; font-family: var(--serif); font-weight: 700;
+  font-size: calc(15px * var(--corps, 1)); color: var(--ink);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.fiche-releve-sur { font-weight: 600; font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); }
+/* Une somme n est pas une ligne de plus : elle additionne celles du dessus. */
+.fiche-releve-ligne--somme { border-top-width: 2px; border-top-color: var(--rule-strong); margin-top: 2px; }
+.fiche-releve-ligne--somme dt { color: var(--ink); font-weight: 600; }
+
+/* ---------- Le rang continental ---------------------------------------------
+   Ce rail portait un trait d’un pixel PAR PAYS — cinquante-quatre traits à
+   7,5 px d’intervalle. Rien ne s’y comptait : ils faisaient un grisé, et le
+   repère de la médiane, un trait d’un pixel de plus, s’y perdait au milieu des
+   autres. La seule marque qui portait un sens était donc la seule qu’on ne
+   voyait pas.
+
+   Il ne reste que ce qui se lit : une piste, la médiane nommée là où elle
+   tombe, et le pays posé dessus. Les deux légendes de bout portent un rang —
+   « 1er », « 54e » — au lieu d’un superlatif, parce qu’un rang se compare et
+   qu’un superlatif ne se compare pas.                                        */
+.rang-rail { position: relative; height: 14px; }
+.rang-piste {
+  position: absolute; inset-inline: 0; top: 50%;
+  height: 2px; transform: translateY(-50%);
+  background: var(--paper-sunk);
+}
+.rang-mediane {
+  position: absolute; top: 0; bottom: 0; width: 1px;
+  background: var(--rule-strong);
+  transform: translateX(-50%);
+}
+:root[dir="rtl"] .rang-mediane, :root[dir="rtl"] .rang-point { transform: translateX(50%); }
+.rang-point {
+  position: absolute; top: 50%; width: 11px; height: 11px;
+  margin-top: -5.5px; border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 2.5px var(--paper);
+}
+/* La ligne des bornes : les deux extremes aux bouts, la mediane posee a son
+   abscisse. Sans position absolue pour celle du milieu, `justify-between`
+   collait les trois libelles bord a bord — l ecran affichait bien
+   « LE PLUS ELEVEMEDIANELE PLUS BAS ». */
+.rang-bornes { position: relative; display: flex; justify-content: space-between; margin-top: 6px; }
+/* Les enfants portent `surtitre` ; leur marge basse ne sert a rien ici. */
+.rang-bornes > .surtitre { margin-bottom: 0; }
+.rang-bornes-med {
+  position: absolute; top: 0;
+  transform: translateX(-50%); white-space: nowrap;
+  color: var(--ink-mute);
+}
+:root[dir="rtl"] .rang-bornes-med { transform: translateX(50%); }
+/* Sous 480 px la mediane croiserait les bornes : elle passe sous la piste, au
+   centre, et cesse d etre calee sur son abscisse. */
+@media (max-width: 479px) {
+  .rang-bornes-med { position: static; transform: none; }
+  .rang-bornes { justify-content: space-between; gap: .5rem; }
+}
+
 
 /* ---------- La comparaison avec les autres regions --------------------------
    Une mesure africaine ne dit rien seule. « 64 % des partants restent dans la
@@ -3164,6 +3330,33 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   text-transform: uppercase;
   color: var(--label);
 }
+/* `surtitre` POSE `display: block`, ET IL GAGNE.
+   Vingt-quatre endroits lui adjoignent une classe de disposition — `flex`,
+   `inline-flex` — pour ranger une icone a cote du libelle ou pousser une valeur
+   a l autre bout de la ligne. Les deux selecteurs pesent une classe chacun ;
+   c est donc l ordre des feuilles qui tranche, et celle-ci passe apres les
+   utilitaires. `display: block` l emportait partout.
+
+   Le degat se voyait la ou la disposition portait un sens : dans la fiche pays,
+   « TRANSFERTS DES DIASPORAS (BM, 2025) » et « 7,49 % DU PIB » devaient se
+   tenir aux deux bouts de la ligne et se touchaient, colles en un seul mot. Le
+   rang continental affichait de meme « 1ER54E » a gauche et sa mediane seule au
+   milieu.
+
+   Il masquait aussi le contraire. Le pied de la fiche pays porte sa ligne de
+   sources en `hidden md:block` : elle doit disparaitre sous 768 px, ou la
+   place manque. `display: block` gagnait la aussi, donc elle s affichait
+   toujours — soixante-quinze pixels pris sur les deux cent quarante-six qui
+   restaient au contenu, sur un telephone.
+
+   Deux classes valent plus qu une : ces regles gagnent quel que soit l ordre,
+   et rendent leur effet aux vingt-six appels d un coup. Releve sur le corpus :
+   `surtitre` ne cotoie que ces quatre utilitaires de disposition.          */
+.surtitre.flex        { display: flex; }
+.surtitre.inline-flex { display: inline-flex; }
+.surtitre.hidden      { display: none; }
+@media (min-width: 768px) { .surtitre.hidden.md\:block { display: block; } }
+
 .surtitre--accent  { color: var(--accent-deep); }
 .surtitre--clair   { color: var(--accent-light); }
 .surtitre--reserve { color: var(--warn-ink); }
@@ -5057,6 +5250,19 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
   line-height: 1.3;
   white-space: nowrap;
 }
+/* La jauge de robustesse : quatre crans, comptables. Elle mesurait 34 × 3 px,
+   soit trois pixels de haut — a cette taille les quatre positions ne se
+   distinguent plus, et l encodage sans couleur que la section explique en tete
+   ne se lisait pas. Le cran plein prend un aplat, le vide un contour : deux
+   etats francs plutot qu un degrade de gris.                                 */
+.jauge-crans { display: inline-flex; align-items: center; gap: 3px; }
+.jauge-cran {
+  display: block; width: 8px; height: 8px;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 1px;
+}
+.jauge-cran[data-plein="non"] { background: transparent; }
+
 .pastille--cran {
   color: var(--teinte-cran);
   background: color-mix(in oklab, var(--teinte-cran) 10%, transparent);
