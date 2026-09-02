@@ -548,6 +548,23 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
    Tailwind, soit 3,04:1 sur le bleu d'ardoise. On les ramene au papier.     */
 :is(.bg-emerald-900, .bg-[#0f172a], .bg-slate-900, .bg-slate-800)
   :is(.text-emerald-300, .text-emerald-400, .text-emerald-500) { color: var(--reserve) !important; }
+/* DEUX FUITES, RELEVÉES SUR LE RENDU ET NON SUR LE CODE.
+   Un balayage des couleurs RÉELLEMENT peintes dans les sept sections a trouvé
+   `rgb(16, 185, 129)` — l’émeraude brute de Tailwind — sur vingt-quatre icônes
+   d’À propos. La règle ci-dessus s’arrête à `emerald-600` ; la règle des verts
+   clairs, elle, ne s’applique que sur un aplat sombre. `text-emerald-500` sur
+   du papier ne rencontrait donc personne, et c’est précisément le vert dont il
+   avait été demandé qu’il disparaisse, parce qu’il rappelle l’Union africaine.
+
+   Et les utilitaires `fill-*` n’étaient interceptés nulle part : une étoile
+   pleine gardait l’ambre de Tailwind quand son contour prenait la teinte du
+   système. Deux nuances côte à côte dans le même signe.                     */
+.text-emerald-500 { color: var(--ok) !important; }
+.fill-emerald-300, .fill-emerald-400, .fill-emerald-500 { fill: var(--ok) !important; }
+.fill-amber-300, .fill-amber-400, .fill-amber-500  { fill: var(--warn) !important; }
+.fill-rose-300, .fill-rose-400, .fill-rose-500     { fill: var(--bad) !important; }
+.fill-blue-300, .fill-blue-400, .fill-blue-500     { fill: var(--accent) !important; }
+
 .bg-emerald-50, .bg-emerald-100 { background-color: var(--ok-soft) !important; }
 .border-emerald-100, .border-emerald-200, .border-emerald-300 { border-color: #C4D5C9 !important; }
 .bg-emerald-600, .bg-emerald-700 { background-color: var(--ok) !important; }
@@ -2424,10 +2441,90 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 
    La gouttière latérale reste à la mesure du site : c’est elle qui aligne le
    contenu sur l’en-tête. Seule la verticale cède, parce qu’elle se paie deux
-   fois et qu’elle ne cale rien.                                              */
-.fiche-corps { padding: var(--pas-3) var(--pas-carte) !important; }
-@media (max-width: 767px) { .fiche-corps { padding: var(--pas-2) var(--pas-carte) !important; } }
-@media print { .fiche-corps { padding: 0 !important; padding-top: var(--pas-3) !important; } }
+   fois et qu’elle ne cale rien.
+
+   LA FORME, ELLE, A ÉTÉ REPRISE EN ENTIER. La fiche était un tableau de bord :
+   quatre onglets nommés par discipline, et sous chacun des pavés blancs à ombre
+   portée posés sur un fond gris. Elle devient un document — une seule colonne,
+   cinq mouvements numérotés, séparés par un filet. Le fond gris et les cartes
+   disparaissent ensemble : ils ne servaient qu’à border ce qu’un filet borde
+   mieux, et ils coûtaient deux gouttières là où il en faut une.             */
+.fiche-corps { padding: 0 !important; background: var(--paper) !important; }
+/* PAS DE `scroll-behavior: smooth` ICI, ET C EST DELIBERE.
+   Mesure faite : avec le glissement, le sommaire ne conduit plus nulle part
+   dans le volet de rendu — l affectation de `scrollTop` reste sans effet, tout
+   comme `scrollTo({ behavior: 'smooth' })`. Sans lui, elle aboutit a chaque
+   fois. Un sommaire qui n emmene pas ou il dit vaut moins qu un saut sec, et je
+   n ai aucun moyen de verifier ici que le glissement se comporterait mieux
+   ailleurs. Un lien d ancre saute ; celui-ci saute aussi.                    */
+
+.fiche-mvt {
+  padding: var(--pas-3) var(--pas-carte) var(--pas-4);
+  border-top: 1px solid var(--rule);
+}
+.fiche-mvt:first-of-type { border-top: 0; }
+@media (max-width: 767px) { .fiche-mvt { padding: var(--pas-3) var(--pas-carte); } }
+
+/* Une paire de blocs quand la place existe ; l un sous l autre sinon. Le seuil
+   est celui du contenu, pas celui de l ecran : la fiche vit dans une boite de
+   1 024 px, elle n a donc jamais la largeur de la page. */
+.fiche-paire { display: grid; gap: var(--pas-3); margin-top: var(--pas-3); }
+@media (min-width: 860px) { .fiche-paire { grid-template-columns: 1fr 1fr; column-gap: var(--pas-4); } }
+.fiche-bloc { min-width: 0; margin-top: var(--pas-3); }
+.fiche-paire > .fiche-bloc { margin-top: 0; }
+
+/* Un sous-bloc : un filet fin le detache de ce qui precede, sans le boiter. */
+.fiche-sous { margin-top: var(--pas-3); padding-top: var(--pas-3); border-top: 1px solid var(--rule); }
+
+.fiche-texte { font-size: calc(15px * var(--corps, 1)); line-height: 1.6; color: var(--ink-soft); margin: var(--pas-1) 0 0; max-width: 68ch; }
+.fiche-texte--fort { color: var(--ink); font-weight: 500; margin-top: var(--pas-2); }
+.fiche-note { font-size: calc(13px * var(--corps, 1)); line-height: 1.55; color: var(--ink-mute); margin: var(--pas-2) 0 0; max-width: 68ch; }
+.fiche-mesure-sur { font-size: calc(15px * var(--corps, 1)); font-weight: 600; color: var(--ink-mute); }
+
+/* Une reserve : un signe, un texte, un fond a peine pose. Elle remplace les
+   cartouches ambre et emeraude, qui portaient chacun leur palette. */
+.fiche-reserve {
+  display: flex; align-items: flex-start; gap: .5rem;
+  margin: var(--pas-2) 0 0; padding: .625rem .75rem;
+  background: var(--paper-sunk); border-inline-start: 2px solid var(--rule-strong);
+  font-size: calc(13px * var(--corps, 1)); line-height: 1.5; color: var(--ink-soft);
+}
+.fiche-reserve svg { margin-top: .15rem; color: var(--ink-mute); }
+.fiche-reserve--bonne { border-inline-start-color: var(--accent); }
+.fiche-reserve--bonne svg { color: var(--accent-deep); }
+
+/* La chaine de causes : trois temps, numerotes par le filet plutot que par un
+   chiffre. Elle vivait dans un pave d encre range sous l economie, ou elle ne
+   parlait pourtant que du mouvement. */
+.fiche-chaine { list-style: none; margin: var(--pas-2) 0 0; padding: 0; display: grid; gap: var(--pas-2); }
+@media (min-width: 860px) { .fiche-chaine { grid-template-columns: repeat(3, 1fr); gap: var(--pas-3); } }
+.fiche-chaine > li { padding-top: .625rem; border-top: 2px solid var(--rule-strong); }
+.fiche-chaine-quoi {
+  display: block; margin-bottom: .375rem;
+  font-size: calc(13px * var(--corps, 1)); font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--label);
+}
+/* La justification de `.reader` s applique a tout paragraphe. Sur une colonne
+   de tiers de fiche — trente-cinq caracteres — elle ouvre des rivieres a chaque
+   ligne : « Asymetries    de    developpement   et ». Ces trois colonnes se
+   lisent au fer a gauche, comme tout ce qui est etroit sur ce site. */
+.fiche-chaine > li > p {
+  font-size: calc(14px * var(--corps, 1)); line-height: 1.55;
+  color: var(--ink-soft); margin: 0; text-align: start;
+}
+
+/* Le lien de source : il portait un bleu d hyperlien par defaut, seul bleu de
+   la fiche depuis que le reste a pris le graphite. */
+.fiche-lien {
+  display: inline-flex; align-items: center; gap: .375rem;
+  margin-top: var(--pas-2); min-height: 32px;
+  font-size: calc(13px * var(--corps, 1)); font-weight: 600;
+  color: var(--accent-deep); text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, var(--accent) 42%, transparent);
+}
+.fiche-lien:is(:hover, :focus-visible) { border-bottom-color: var(--accent); }
+
+@media print { .fiche-corps { padding: 0 !important; } }
 
 /* ---------- Une mesure, énoncée ----------------------------------------------
    Le chiffre et ce qu’il mesure, sur une ligne. Remplace les pistes remplies
@@ -2735,7 +2832,12 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 :is(main, .reader) [class*="flex"]:not([class*="flex-col"]) > :is(p, h2, h3, h4, ul, ol, dl, blockquote)
   { margin-inline: 0 !important; }
 
-:is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not([class*="text-center"]):not([class*="text-end"]) {
+/* `fiche-etroit` : une colonne de tiers de fiche fait trente-cinq caractères.
+   Justifiée, elle ouvre une rivière par ligne — « Asymétries    de
+   développement   et ». La chaîne de causes de la fiche pays porte donc cette
+   classe, et l’exclusion vit ICI : écrite ailleurs, elle perdait contre les
+   six :not() de ce sélecteur, silencieusement.                              */
+:is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not(.fiche-etroit):not([class*="text-center"]):not([class*="text-end"]) {
   text-align: justify;
   text-align-last: start;
   hyphens: auto;
@@ -4441,7 +4543,13 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 
    L'ecart revient donc au pas de l'echelle, et une seule fois : la pile
    flexible porte le sien, les autres conteneurs gardent la marge.          */
-:is(main, .reader) > *:not([class*="space-y-8"]) > * + * { margin-block-start: var(--pas-4); }
+/* LA FICHE PAYS N EST PAS UNE PILE DE BLOCS. Cette regle ecarte les blocs
+   d une section de 40 px. Appliquee au dialogue du profil, elle ecartait son
+   EN-TETE de son corps, et son corps de son PIED : quatre-vingts pixels perdus
+   sur une fiche qui n en avait que 586 pour lire, et — depuis que le corps est
+   passe au papier quand la boite reste au gris — deux bandes grises visibles en
+   travers. Les trois parties d un dialogue se touchent, un filet les separe. */
+:is(main, .reader) > *:not([class*="space-y-8"]):not(.fiche-boite) > * + * { margin-block-start: var(--pas-4); }
 
 /* --- Les filets de separation : une seule epaisseur, une seule teinte ---- */
 :is(main, .reader) :is(hr, .border-t, .border-b) { border-color: var(--rule); }
@@ -5004,7 +5112,11 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
   margin-top: var(--pas-2);
   padding: 10px var(--pas-2);
   border: 1px solid var(--accent-filet, var(--rule));
-  border-radius: 2px;
+  /* Le site ne peint que DEUX rayons : 10 px pour ce qui porte un fond, 999 pour
+     la pastille. Relevé sur les sept sections — 302 blocs à 10, 260 à 999, et
+     ces cinq boutons-ci à 2, seuls de leur espèce. Deux pixels ne se lisent pas
+     comme une nuance ; ils se lisent comme un oubli. */
+  border-radius: 10px;
   background: var(--accent-voile);
   color: var(--accent-deep);
   text-align: center;
@@ -5424,7 +5536,7 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    perdait sans rien signaler — la justification restait, et seule la mesure
    dans le navigateur le montrait. */
 @media (max-width: 767px) {
-  :is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not([class*="text-center"]):not([class*="text-end"]) {
+  :is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not(.fiche-etroit):not([class*="text-center"]):not([class*="text-end"]) {
     text-align: start;
   }
   :is(main, .reader) :is(li, dd, .text-justify, [class*="text-justify"]) { text-align: start; hyphens: auto; }

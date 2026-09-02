@@ -2516,6 +2516,19 @@ const MovementOpener = ({ n, sur, kicker, thesis, accent = 'var(--accent-deep)' 
 );
 
 // `plain` : la meme section, dite en une phrase, pour qui n’est pas du metier.
+// LES CINQ TEMPS D UNE FICHE PAYS.
+// La table vit ici, a cote du composant qui ouvre un mouvement, et non dans le
+// gabarit : le sommaire de l en-tete et les sections du document la lisent tous
+// les deux, si bien qu un libelle reecrit une fois se propage aux deux endroits
+// — la meme discipline que pour les trois entrees de l accueil.
+const MOUVEMENTS_FICHE = [
+  { cle: 'm1', court: { fr: 'Mouvement',   en: 'Movement' } },
+  { cle: 'm2', court: { fr: 'Composition', en: 'Composition' } },
+  { cle: 'm3', court: { fr: 'Poids',       en: 'Weight' } },
+  { cle: 'm4', court: { fr: 'Engagement',  en: 'Commitment' } },
+  { cle: 'm5', court: { fr: 'Réserve',     en: 'Caveat' } },
+];
+
 // Elle ne remplace pas `desc` — le registre institutionnel garde son role — elle
 // se pose en dessous, sur le papier, ou elle se lit sans effort.
 const CHIFFRES_DU_CORPUS = () => ({
@@ -6400,7 +6413,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             "La jauge à quatre crans porte sur la solidité de la preuve disponible, et sur elle seule. Elle ne dit pas qu’une affirmation est vraie ou fausse\u202f: elle dit ce que les sources permettent d’en établir, et à quel degré.",
             "The four-notch gauge bears on the strength of the available evidence, and on that alone. It does not say a claim is true or false: it says what the sources allow to be established, and how firmly."
           )}</Prose>
-      <div className="bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
+      <div className="aparte aparte--reserve flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <Prose className="text-xs text-amber-800 leading-relaxed" lang={lang}>{L(
             "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l’auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d’un m\u00e9dia ou d’une institution identifi\u00e9s ; seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d’institutions v\u00e9rifiables (voir Sources).",
@@ -10208,19 +10221,46 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h3 className="text-sm font-bold text-slate-800 mb-1">
                 {tr({ fr: "Classement de l’ouverture visa (indice AVOI, 2024)", en: "Visa openness ranking (AVOI index, 2024)" }, lang)}
               </h3>
-              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score par CER et moyenne des huit CER, tels que publiés par la BAD et la Commission de l’UA (0,501). Le score d’une CER mesure l’ouverture de ses membres entre eux : il ne s’obtient donc pas en moyennant les scores AVOI de ses pays, que la plateforme affiche par ailleurs. La moyenne de tous les pays, elle, s’établit à 0,479 en 2024, en recul sur les 0,485 de l’année précédente : l’ouverture mesurée du continent a légèrement reculé.", en: "REC scores and the average of the eight RECs, as published by the AfDB and the AU Commission (0.501). A REC score measures how open its members are to one another: it is therefore not obtained by averaging the AVOI scores of its countries, which the platform shows elsewhere. The all-country average, for its part, stands at 0.479 in 2024, down from 0.485 the year before: measured openness across the continent has slipped." }, lang)}</Prose>
-              <div className="space-y-3">
-                {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
-                  <div key={rec.id} className="flex items-center gap-3" title={`${tr(rec.name, lang)}: ${rec.avoi.toFixed(3)}`}>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
-                    <div className="flex-1 relative h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
-                      <div className="h-full bg-blue-700 bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
-                      <div className="absolute top-0 bottom-0 w-px bg-slate-400" style={{ left: '50.1%' }}></div>
+              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score par CER, tel que publié par la BAD et la Commission de l’UA. Le score d’une CER mesure l’ouverture de ses membres entre eux : il ne s’obtient donc pas en moyennant les scores AVOI de ses pays, que la plateforme affiche par ailleurs. La moyenne de tous les pays, elle, s’établit à 0,479 en 2024, en recul sur les 0,485 de l’année précédente : l’ouverture mesurée du continent a légèrement reculé.\n\nUne réserve sur la moyenne des CER. Le rapport avance 0,501 ; la moyenne arithmétique des huit scores qu’il publie, et que reprend le graphique ci-dessous, vaut 0,458. La plateforme trace la seconde, parce que c’est celle que les barres affichées soutiennent, et elle signale l’écart plutôt que de trancher en silence.", en: "REC score, as published by the AfDB and the AU Commission. A REC score measures how open its members are to one another: it is therefore not obtained by averaging the AVOI scores of its countries, which the platform shows elsewhere. The all-country average, for its part, stands at 0.479 in 2024, down from 0.485 the year before: measured openness across the continent has slipped.\n\nA caveat on the REC average. The report gives 0.501; the arithmetic mean of the eight scores it publishes, and which the chart below reproduces, is 0.458. The platform draws the latter, because it is the one the bars shown support, and it flags the divergence rather than settling it in silence." }, lang)}</Prose>
+              {/* UN TRAIT SANS LÉGENDE, POSÉ OÙ LES BARRES NE LE METTENT PAS.
+                  Ce repère était écrit en dur à 50,1 % — la moyenne des huit CER
+                  telle que la publient la BAD et la Commission de l’UA. Or les
+                  huit scores affichés juste à côté, ceux-là mêmes que le rapport
+                  donne, ont pour moyenne arithmétique 0,458. Un lecteur qui fait
+                  l’addition trouve donc le trait quatre points trop à droite,
+                  et rien à l’écran ne lui disait ce qu’était ce trait : il
+                  n’avait ni libellé, ni infobulle.
+
+                  La règle de la plateforme veut qu’on recalcule plutôt qu’on
+                  reprenne. Le trait est donc la moyenne des huit barres, calculée
+                  sur elles, et il porte son nom. Le chiffre publié reste cité
+                  dans le chapô, avec l’écart énoncé : c’est une divergence de la
+                  source, et la masquer serait la reprendre à notre compte. */}
+              {(() => {
+                const moyenne = recsList.reduce((n, r) => n + r.avoi, 0) / recsList.length;
+                return (
+                  <>
+                    <div className="space-y-3">
+                      {[...recsList].sort((a, b) => b.avoi - a.avoi).map((rec) => (
+                        <div key={rec.id} className="flex items-center gap-3" title={`${tr(rec.name, lang)}: ${rec.avoi.toFixed(3)}`}>
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
+                          <div className="flex-1 relative h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
+                            <div className="h-full bg-blue-700 bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
+                            <div className="absolute top-0 bottom-0 w-px" style={{ left: `${moyenne * 100}%`, backgroundColor: 'var(--ink-mute)' }} />
+                          </div>
+                          <span className="text-xs font-bold text-slate-700 w-10 sm:w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
+                        </div>
+                      ))}
                     </div>
-                    <span className="text-xs font-bold text-slate-700 w-10 sm:w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
-                  </div>
-                ))}
-              </div>
+                    <p className="note-source" style={{ marginTop: 'var(--pas-2)' }}>
+                      {tr({
+                        fr: `Le trait vertical marque la moyenne des huit scores ci-dessus, soit ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)}.`,
+                        en: `The vertical rule marks the average of the eight scores above, that is ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)}.`,
+                      }, lang)}
+                    </p>
+                  </>
+                );
+              })()}
             </div>
 
             {/* ------- Le feuilletage des huit Communautés -------
@@ -10776,7 +10816,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
           ))
         )}
 
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 text-xs text-amber-800 leading-relaxed">
+        <div className="aparte aparte--reserve text-xs leading-relaxed">
           {tr({ fr: `Cette bibliothèque rassemble ${totalDocs} sources institutionnelles, juridiques et académiques vérifiées — dont une sélection tirée du corpus bibliographique de la thèse à l’origine de cette plateforme. Chaque référence pointe vers son texte ou portail officiel lorsqu’un lien stable existe.`, en: `This library gathers ${totalDocs} verified institutional, legal, and academic sources — including a selection drawn from the bibliographic corpus of the thesis behind this platform. Each reference links to its official text or portal where a stable link exists.` }, lang)}
         </div>
       </div>
@@ -10815,7 +10855,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
             <CsvButton onClick={exportIndicatorsCSV} label={text.download_indicators} className="shrink-0" />
           </div>
   
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-10 flex items-start gap-3">
+          <div className="aparte aparte--reserve mb-10 flex items-start gap-3">
             <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice est une proposition issue de la recherche doctorale à l’origine du projet (Ben Mokhtar, 2026).\n\nElle avance douze indicateurs répartis en six axes, conçus en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Chacun vise une dimension des mobilités africaines qu’aucune mesure continentale ne couvre : effectivité réelle des protocoles de libre circulation, part investie des transferts, mobilité circulaire comme adaptation climatique, apport migrant aux systèmes de soins, circulation intra-africaine des compétences, portabilité des droits sociaux. Chaque fiche indique, sous « Le déplacement qu’il opère », le cadre de mesure auquel elle répond.\n\nC’est une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain, non un jeu de données déjà constitué.", en: "The other sections of this platform consolidate data already collected by international institutions. This matrix is a proposal stemming from the doctoral research behind the project (Ben Mokhtar, 2026).\n\nIt advances twelve indicators across six axes, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. Each targets a dimension of African mobility no continental measure covers: actual effectiveness of free-movement protocols, invested share of remittances, circular mobility as climate adaptation, migrant contribution to care systems, intra-African circulation of skills, portability of social rights. Each card states, under \"The shift it makes\", the measurement framework it answers.\n\nThis is a methodological recommendation aimed at national statistical institutes and field researchers, not an already-constituted dataset." }, lang)}</Prose>
           </div>
@@ -11191,7 +11231,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           )}</Prose>
         </div>
 
-        <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-5 flex items-start gap-3 max-w-4xl">
+        <div className="mt-6 aparte aparte--reserve flex items-start gap-3 max-w-4xl">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{L(
               "Un taux de participation ne dit rien de la qualité des dénombrements, qui reste à établir pays par pays. Sept États n’ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join("A participation rate says nothing about the quality of the enumerations, which remains to be established country by country. Seven states did not census during the 2010 round — ") + " — et la République démocratique du Congo n’a conduit qu’un seul recensement dans son histoire, en 1984. L’Éthiopie a recensé, mais sans question sur la migration internationale.",
@@ -12791,7 +12831,74 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const [showModal, setShowModal] = useState(false);
-  const [modalView, setModalView] = useState('demography');
+
+  // LA FICHE PAYS SE LIT D UN SEUL TENANT.
+  // `modalView` designait l onglet visible, c est-a-dire les trois quarts du
+  // contenu qu on cachait. Il n y a plus d onglets : cet etat ne retient plus
+  // que le mouvement SOUS LES YEUX, et c est l observateur d intersection qui
+  // le pose, pas le clic. Le sommaire dit donc ou l on en est, et non ou l on
+  // a appuye la derniere fois.
+  const [mouvementLu, setMouvementLu] = useState('m1');
+  const corpsFiche = useRef(null);
+
+  const allerAuMouvement = useCallback((cle) => {
+    const cible = document.getElementById(`fiche-${cle}`);
+    const boite = corpsFiche.current;
+    if (!cible || !boite) return;
+    // `scrollIntoView` remonterait la page entiere derriere la fiche : on
+    // deplace le defileur lui-meme.
+    //
+    // Et la position se calcule sur les rectangles, pas sur `offsetTop` :
+    // celui-ci compte depuis le premier ancetre POSITIONNE, qui n est pas le
+    // defileur ici mais la couche fixe du dialogue. Mesure faite, un clic sur
+    // « Engagement » deposait la section a 1 149 px au-dessus du haut — la
+    // fiche filait en butee de fin.
+    const haut = cible.getBoundingClientRect().top - boite.getBoundingClientRect().top + boite.scrollTop;
+    // L AFFECTATION PLUTOT QUE `scrollTo`. Mesure faite dans le volet de rendu :
+    // `scrollTo({ behavior: 'smooth' })` n y deplace RIEN — pas seulement sans
+    // animation, sans effet du tout — quand une affectation de `scrollTop`
+    // aboutit toujours. Un sommaire qui ne conduit nulle part n est pas un
+    // sommaire, et la justesse ne doit pas dependre d une option d animation.
+    // Le glissement passe donc par `scroll-behavior` en CSS, ou son absence
+    // degrade en saut immediat au lieu de ne rien faire — et ou le reglage
+    // systeme « reduire les animations » l eteint sans que le code s en mele.
+    boite.scrollTop = haut;
+    setMouvementLu(cle);
+  }, []);
+
+  // POURQUOI UN ÉCOUTEUR DE DÉFILEMENT ET NON UN IntersectionObserver.
+  // L observateur etait ecrit, pose sur les cinq sections, avec le defileur
+  // pour racine. Il n a jamais emis un seul appel — pas meme l appel initial
+  // que la specification garantit. Un temoin monte a la main dans la page a
+  // donne le meme silence, ce qui ecarte une faute de branchement : c est le
+  // rendu sans composition de ce volet qui ne le declenche pas.
+  //
+  // Il marcherait peut-etre dans un vrai navigateur. Je n en sais rien, et
+  // c est precisement la raison de ne pas l expedier : un mecanisme que je ne
+  // peux pas mesurer ici n a rien a faire en production. Le calcul de position
+  // fait la meme chose, se verifie d un relevé, et ne coute rien — un profil
+  // porte cinq sections, pas cinq cents.
+  useEffect(() => {
+    const boite = corpsFiche.current;
+    if (!showModal || !boite) return;
+    const sections = [...boite.querySelectorAll('[data-mvt]')];
+    if (!sections.length) return;
+
+    // La ligne de lecture est au tiers superieur du defileur : on retient la
+    // derniere section dont le haut est passe au-dessus d elle.
+    const relever = () => {
+      const ligne = boite.getBoundingClientRect().top + boite.clientHeight / 3;
+      let courante = sections[0];
+      for (const s of sections) {
+        if (s.getBoundingClientRect().top <= ligne) courante = s;
+      }
+      setMouvementLu(courante.dataset.mvt);
+    };
+
+    relever();
+    boite.addEventListener('scroll', relever, { passive: true });
+    return () => boite.removeEventListener('scroll', relever);
+  }, [showModal, activeSubTab, lang]);
 
   const [expandedIndicator, setExpandedIndicator] = useState(null);
   // La Gouvernance ouvre sur l’Union africaine, pas sur l’Agenda 2030.
@@ -13453,7 +13560,7 @@ export default function App() {
         >
           <div 
             onClick={(e) => e.stopPropagation()} 
-            className="bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
+            className="fiche-boite bg-slate-50 rounded-xl w-full max-w-5xl max-h-[95vh] overflow-hidden shadow-2xl flex flex-col border border-slate-700 print:shadow-none print:border-none print:max-h-none print:rounded-none"
           >
             {/* L EN-TÊTE MESURAIT 200 px SUR UNE FICHE DE 855.
                 Avec le pied de page, un tiers de la fenêtre partait en chrome et
@@ -13483,359 +13590,304 @@ export default function App() {
                 </div>
               </div>
                 
-              <div className="bascule-groupe flex print:hidden">
-                <button onClick={() => setModalView('demography')} aria-pressed={modalView === 'demography'} data-actif={modalView === 'demography' ? 'true' : 'false'} className="bascule">{text.modal.tabs.demo}</button>
-                <button onClick={() => setModalView('geography')} aria-pressed={modalView === 'geography'} data-actif={modalView === 'geography' ? 'true' : 'false'} className="bascule">{text.modal.tabs.geo}</button>
-                <button onClick={() => setModalView('economy')} aria-pressed={modalView === 'economy'} data-actif={modalView === 'economy' ? 'true' : 'false'} className="bascule">{text.modal.tabs.econ}</button>
-                <button onClick={() => setModalView('rights')} aria-pressed={modalView === 'rights'} data-actif={modalView === 'rights' ? 'true' : 'false'} className="bascule">{text.modal.tabs.rights}</button>
+              {/* CE N EST PLUS UNE BARRE D ONGLETS, C EST UN SOMMAIRE.
+                  Les quatre onglets cachaient chacun les trois autres : pour
+                  savoir ce qu un Etat avait ratifie il fallait deviner que cela
+                  vivait sous « Droits », puis y aller. Les cinq mouvements sont
+                  tous presents dans le document ; ces boutons y conduisent au
+                  lieu de les masquer, et celui qui s allume est celui qu on est
+                  en train de lire — non celui qu on a clique. */}
+              <div className="bascule-groupe flex print:hidden" role="list">
+                {MOUVEMENTS_FICHE.map((m) => (
+                  <button key={m.cle} role="listitem" onClick={() => allerAuMouvement(m.cle)}
+                          aria-current={mouvementLu === m.cle ? 'true' : undefined}
+                          data-actif={mouvementLu === m.cle ? 'true' : 'false'} className="bascule">
+                    {tr(m.court, lang)}
+                  </button>
+                ))}
               </div>
               <button onClick={() => setShowModal(false)} aria-label={tr({ fr: 'Fermer le rapport', en: 'Close the report' }, lang)} className="absolute top-6 end-6 p-2 bg-white hover:bg-slate-50 rounded-sm border border-slate-200 transition-colors print:hidden shadow-sm"><X className="w-4 h-4 text-slate-600" aria-hidden="true" /></button>
             </div>
 
-            <div className="fiche-corps p-6 md:p-10 overflow-y-auto space-y-6 print:overflow-visible print:p-0 print:pt-6 bg-slate-50 print:bg-white h-full print:flex print:flex-col print:gap-6 print:space-y-0">
-              <div className={`grid-cols-1 lg:grid-cols-2 gap-8 animate-in fade-in duration-500 ${modalView === 'demography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Le poids démographique réel", en: "The Real Demographic Weight" }, lang)}</h3>
-                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "La population migrante comparée à la population totale.", en: "Migrant population compared to total population." }, lang)}</Prose>
-                  {/* UNE BARRE QUI MENTAIT DE SEIZE FOIS.
-                      Ce bloc posait une piste de 40 px de haut sur toute la
-                      largeur, remplie a `Math.max(5, valeur)` : sous 5 %, la
-                      barre affichait donc 5 quoi qu il arrive. Le Maroc est a
-                      0,3 % — le trace en montrait seize fois trop. Et la part
-                      des migrants dans la population est petite presque partout
-                      en Afrique : la borne se declenchait sur la majorite des
-                      pays, c est-a-dire que la barre etait fausse la plupart du
-                      temps, et vide le reste.
-                      Le chiffre se suffit, et le rang continental juste dessous
-                      le situe pour de bon — lui compare les 54 valeurs reelles. */}
-                  <p className="fiche-mesure">
-                    {/* La virgule decimale suit la langue : « 0,3 % » en francais.
-                        Le gabarit precedent posait la chaine brute — « 0.3% ». */}
-                    <span className="fiche-mesure-n">{formatNumber(parseFloat(display.evolution), lang)} %</span>
-                    <span className="fiche-mesure-quoi">{tr({
-                      fr: 'de la population totale',
-                      en: 'of the total population',
-                    }, lang)}</span>
-                  </p>
-                  <div className="mt-6 pt-5 border-t border-slate-100 print:mt-3 print:pt-3">
-                    <p className="surtitre text-slate-800 print:text-[9px]">
-                      {display.isRegion ? text.modal.evo_title : (tr({ fr: "Évolution du stock migratoire absolu (1990-2024)", en: "Absolute migrant stock evolution (1990-2024)" }, lang))}
-                    </p>
-                    <HistoricalChart data={display.history} colorClass="bg-blue-700" lang={lang} />
+            {/* LA FICHE PAYS, REFAITE.
+                =============================================================
+                Elle était un tableau de bord : quatre onglets nommés par
+                discipline — Démographie, Géographie, Économie, Droits — et,
+                sous chacun, des pavés blancs à ombre portée sur un fond gris,
+                avec des anneaux, des pastilles bleues, des jauges ambre. Trois
+                choses n’allaient pas, et aucune ne se réglait en resserrant les
+                gouttières.
+
+                LES ONGLETS CACHAIENT LES TROIS QUARTS. Pour savoir ce qu’un
+                État a ratifié, il fallait deviner que cela vivait sous
+                « Droits », puis y aller. Un profil de pays tient en une page :
+                rien n’y justifiait qu’on en cache trois.
+
+                L’ORDRE ÉTAIT UN CLASSEMENT, PAS UNE LECTURE. Quatre disciplines
+                mises côte à côte ne forment pas un raisonnement — et la règle
+                du site veut que chaque section en porte un. Elle porte donc
+                désormais une démonstration en cinq temps : ce qui bouge, qui se
+                déplace, ce que cela pèse, ce que l’État a signé, et enfin ce
+                qu’on sait vraiment en savoir. La réserve vient en dernier parce
+                que tout ce qui précède en dépend.
+
+                LES FORMES SE CONTREDISAIENT. Un anneau pour 48,5 %, une piste
+                pour 0,3 %, des pastilles pour six textes, quatre pavés bordés
+                pour quatre nombres : cinq grammaires pour dire chaque fois la
+                même chose — un nombre et ce qu’il mesure. Il n’en reste qu’une,
+                et le rang continental la complète quand la comparaison existe.
+
+                Le foliotage est celui de `MovementOpener`, et il obéit à sa
+                règle : on ne numérote que ce qui se lit dans l’ordre. C’est le
+                cas ici, et c’est la raison d’être de la refonte. */}
+            <div ref={corpsFiche} className="fiche-corps overflow-y-auto h-full print:overflow-visible">
+
+              {/* 01 — CE QUI BOUGE ------------------------------------------ */}
+              <section id="fiche-m1" data-mvt="m1" className="fiche-mvt">
+                <MovementOpener
+                  n="01" sur="05"
+                  kicker={tr({ fr: 'Le mouvement', en: 'The movement' }, lang)}
+                  thesis={tr({
+                    fr: 'Combien de personnes sont là, combien sont parties, jusqu’où elles sont allées — et combien se déplacent sans franchir aucune frontière.',
+                    en: 'How many people are here, how many have left, how far they went — and how many move without crossing any border.',
+                  }, lang)}
+                />
+
+                <div className="fiche-paire">
+                  <div className="fiche-bloc">
+                    <span className="surtitre">
+                      {display.isRegion ? text.modal.evo_title : tr({ fr: 'Stock migratoire (1990-2024)', en: 'Migrant stock (1990-2024)' }, lang)}
+                    </span>
+                    <HistoricalChart data={display.history} colorClass="bar-fill" lang={lang} />
                     <Sources lang={lang} items={["UN DESA, International Migrant Stock 2024"]} />
                   </div>
-                  {!display.isRegion && (
-                    <RangContinental valeur={display.evolution} serie={seriesContinentales.part}
-                                     libelle={tr({ fr: 'Part des migrants dans la population', en: 'Migrants as a share of population' }, lang)}
-                                     lang={lang} teinte="bg-blue-700" encre="text-blue-800" />
-                  )}
-                </div>
-                  
-                {/* L anneau disait « a peu pres la moitie » — c est bien ce qu on
-                    veut lire ici, et le texte a cote le dit en toutes lettres.
-                    Il gardait pourtant 160 px de cote, centre dans une carte qui
-                    ne portait que lui : la carte faisait 306 px pour un nombre.
-                    L anneau reste, a 112 px, et le texte passe a cote plutot que
-                    dessous — la carte perd sa moitie de hauteur sans rien perdre
-                    de ce qu elle montre. */}
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:border print:p-4">
-                   <h3 className="font-serif font-bold text-slate-900 mb-5 flex items-center text-lg w-full print:mb-3"><HeartPulse className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.parity}</h3>
-                   <div className="flex items-center gap-5">
-                     <div className="relative w-28 h-28 shrink-0 rounded-full flex items-center justify-center border border-slate-100 print:w-20 print:h-20" style={{ background: `conic-gradient(#1d4ed8 ${display.female}%, #f1f5f9 0)` }}>
-                       <div className="absolute inset-3 bg-white rounded-full flex flex-col items-center justify-center border border-slate-50">
-                         <span className="text-xl font-serif font-bold text-slate-900 print:text-lg">{formatNumber(parseFloat(display.female), lang)} %</span>
-                         <span className="surtitre text-blue-700">{tr({ fr: "Femmes", en: "Women" }, lang)}</span>
-                       </div>
-                     </div>
-                     <Prose className="text-sm text-slate-600 leading-relaxed print:text-[10px]" lang={lang}>{tr({ fr: "La migration n’est pas qu’une affaire d’hommes fuyant la misère. Elle est structurellement féminisée.", en: "Migration is not just men fleeing poverty. It is structurally feminized." }, lang)}</Prose>
-                   </div>
-                   {/* Ce rang etait pose APRES la fermeture de la carte : il
-                       devenait une troisieme case de la grille et flottait sur le
-                       fond gris, sans cartouche, loin du chiffre qu il situe. Il
-                       rentre dans la carte, comme son jumeau de gauche. */}
-                   {!display.isRegion && (
-                     <RangContinental valeur={display.female} serie={seriesContinentales.female}
-                                      libelle={tr({ fr: 'Part des femmes dans le stock migratoire', en: 'Women in the migrant stock' }, lang)}
-                                      lang={lang} teinte="bg-blue-700" encre="text-blue-800" />
-                   )}
-                </div>
-              </div>
 
-
-              <div className={`animate-in fade-in duration-500 ${modalView === 'demography' ? 'block' : 'hidden print:block'} print:mb-6`}>
-                {/* La frise des recensements appartient à la démographie : elle dit
-                    si le pays sait se compter, et à quel rythme. */}
-                  {display.iso2 && censusByCountry[display.iso2] && (
-                    <div className="print:break-inside-avoid">
-                      <CensusTimeline iso2={display.iso2} lang={lang} />
-                    </div>
-                  )}
-              </div>
-
-              <div className={`grid-cols-1 lg:grid-cols-5 gap-8 animate-in fade-in duration-500 ${modalView === 'geography' ? 'grid' : 'hidden print:grid'} print:gap-4 print:mb-6`}>
-                <div className="lg:col-span-2 bg-[#0f172a] rounded-lg p-7 text-white shadow-md flex flex-col justify-center items-center print:bg-white print:text-slate-900 print:border print:border-slate-200 print:p-4 print:shadow-none">
-                  <h3 className="font-serif font-bold text-white print:text-slate-900 mb-5 flex items-center text-lg w-full print:mb-3"><Globe className="w-5 h-5 me-2.5 text-blue-400 print:w-4 print:h-4" /> {text.modal.retention_title}</h3>
-                  {/* Le libelle vivait DANS l anneau, sur trois lignes serrees
-                      entre le chiffre et le bord : « Restent / dans la / region ».
-                      Il descend dessous, ou il tient sur une ligne et se lit. */}
-                  <div className="relative w-32 h-32 rounded-full flex items-center justify-center shadow-inner border border-slate-700 print:shadow-inner print:w-24 print:h-24 print:border-slate-200" style={{ background: `conic-gradient(#3b82f6 ${display.retention}%, #1e293b 0)` }}>
-                    <div className="absolute inset-3 bg-[#0f172a] print:bg-white rounded-full flex items-center justify-center border border-slate-800 print:border-slate-100">
-                      <span className="text-2xl font-serif font-bold text-white print:text-slate-900 print:text-lg">{formatNumber(display.retention, lang)} %</span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-blue-400 print:text-slate-600 uppercase tracking-widest text-center mt-3">{tr({ fr: "Restent dans la région", en: "Stay in the region" }, lang)}</span>
-                </div>
-                  
-                <div className="lg:col-span-3 bg-white rounded-lg border border-slate-200 p-7 shadow-sm flex flex-col justify-between print:p-4 print:break-inside-avoid">
-                  <div>
-                    <h3 className="font-serif font-bold text-slate-900 mb-4 flex items-center text-xl print:mb-2 print:text-lg"><GitMerge className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.orig_dest_title}</h3>
-                    <p className="text-slate-700 text-base leading-relaxed print:text-xs">{display.origDest}</p>
-                    <div className="mt-4 pt-4 border-t border-slate-100 print:mt-2 print:pt-2">
-                      <Prose className="text-xs text-slate-500 italic print:text-[10px]" lang={lang}>{tr({ fr: "Cette dynamique prouve que les pays du Sud sont avant tout des pays d’accueil et de passage interne.", en: "This dynamic proves that Southern countries are primarily host and internal passage countries." }, lang)}</Prose>
-                    </div>
-                  </div>
-                    
-                  {!display.isRegion && (
-                    <div className="mt-6 flex flex-col gap-4 print:mt-3 print:gap-2">
-                      {(display.idp_conflict > 0 || display.idp_disaster > 0 || display.refugees_hosted > 0) && (
-                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><ShieldAlert className="w-4 h-4 me-2 text-slate-400" /> {text.modal.idp_title}</h4>
-                          {/* TROIS BARRES QUI NE MESURAIENT RIEN.
-                              Ces trois lignes portaient chacune une barre posee a
-                              `width: 100%` en dur — quelle que soit la valeur.
-                              Trois barres pleines cote a cote, pour trois nombres
-                              sans rapport d ordre : la forme promettait une
-                              comparaison que le trace ne faisait pas, et un
-                              lecteur pouvait en conclure que les trois grandeurs
-                              s equivalaient. Un tableau de trois lignes dit la
-                              meme chose sans rien promettre de faux, et tient sur
-                              trois fois moins de hauteur. */}
-                          <dl className="fiche-releve">
-                            {display.refugees_hosted > 0 && (
-                              <div className="fiche-releve-ligne">
-                                <dt>{text.modal.hcr_hosted}</dt>
-                                <dd><Num value={display.refugees_hosted} lang={lang} /></dd>
-                              </div>
-                            )}
-                            {display.idp_conflict > 0 && (
-                              <div className="fiche-releve-ligne">
-                                <dt>{text.modal.idp_conflict}</dt>
-                                <dd><Num value={display.idp_conflict} lang={lang} /></dd>
-                              </div>
-                            )}
-                            {display.idp_disaster > 0 && (
-                              <div className="fiche-releve-ligne">
-                                <dt>{text.modal.idp_disaster}</dt>
-                                <dd><Num value={display.idp_disaster} lang={lang} /></dd>
-                              </div>
-                            )}
-                          </dl>
-                          <Prose className="text-xs text-slate-500 mt-3 italic print:mt-1.5 print:text-[8px]" lang={lang}>{text.modal.idp_desc}</Prose>
-                        </div>
-                      )}
-
-                      {display.avoi !== null && (
-                        <div className="bg-slate-50 p-5 rounded-md border border-slate-200 print:p-3">
-                          <h4 className="font-bold text-slate-800 text-sm mb-4 flex items-center print:text-xs print:mb-2"><Unlock className="w-4 h-4 me-2 text-slate-400" /> {text.modal.avoi_title}</h4>
-                          <div>
-                            <div className="surtitre flex justify-between print:text-[8px]">
-                              <span className="text-slate-600 print:!text-slate-600">Score</span>
-                              <span className="text-slate-900 print:!text-slate-900">{display.avoi}/100</span>
-                            </div>
-                            <div className="h-1.5 w-full bg-slate-200 rounded-sm overflow-hidden relative print:h-1.5 print:!bg-slate-200">
-                              <div className="h-full bg-slate-600 rounded-sm transition-all duration-1000 print:!bg-slate-600" style={{width: `${display.avoi}%`}}></div>
-                              {continentalAvoiAvg !== null && (
-                                <div className="absolute top-0 bottom-0 w-px bg-amber-500 print:!bg-amber-500" style={{ left: `${continentalAvoiAvg}%` }} title={`${tr({ fr: 'Moyenne continentale', en: 'Continental average' }, lang)}: ${continentalAvoiAvg}/100`}></div>
-                              )}
-                            </div>
-                            {continentalAvoiAvg !== null && (
-                              <Prose className="text-xs text-amber-700 mt-1.5 font-bold" lang={lang}>{tr({ fr: `Moyenne continentale : ${continentalAvoiAvg}/100`, en: `Continental average: ${continentalAvoiAvg}/100` }, lang)}</Prose>
-                            )}
-                            <Prose className="text-xs text-slate-500 mt-2 italic print:text-[8px] print:mt-1.5" lang={lang}>{text.modal.avoi_desc}</Prose>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-
-              {/* L’ÉCONOMIE. La troisième vue portait six blocs et trois sujets à la
-                  fois — l’argent, le droit, la qualité des recensements. Elle n’en
-                  garde qu’un : ce que les diasporas envoient, et ce que ce flux pèse
-                  face à l’aide publique. La chaîne causale le suit, parce qu’elle dit
-                  ce qui met en mouvement. */}
-              <div className={`space-y-8 animate-in fade-in duration-500 ${modalView === 'economy' ? 'block' : 'hidden print:block'} print:mb-6`}>
-                <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                  <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Landmark className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.econ_title}</h3>
-                  <Prose className="text-sm text-slate-600 mb-6 print:mb-3" lang={lang}>{tr({ fr: "L’apport des diasporas face à l’aide publique au développement (APD).", en: "Diaspora contribution vs. Official Development Assistance (ODA)." }, lang)}</Prose>
-                  <div className="max-w-2xl"><EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} /></div>
-                  {/* Le rapport des deux barres, dit en toutes lettres. Deux
-                      pourcentages de PIB côte à côte se comparent mal à l’œil ;
-                      « six fois l’aide publique » se retient. Simple division des
-                      deux chiffres affichés au-dessus — aucune donnée nouvelle. */}
-                  {!display.isRegion && display.remittances > 0 && display.aid > 0 && (
-                    <p className="mt-5 text-sm text-slate-800 print:text-xs">
-                      {tr({
-                        fr: `Pour un point de PIB reçu en aide publique, ce pays en reçoit ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} en transferts de sa diaspora.`,
-                        en: `For every point of GDP received as public aid, this country receives ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} in diaspora remittances.`,
-                      }, lang)}
+                  <div className="fiche-bloc">
+                    <span className="surtitre">{text.modal.retention_title}</span>
+                    <p className="fiche-mesure">
+                      <span className="fiche-mesure-n">{formatNumber(display.retention, lang)} %</span>
+                      <span className="fiche-mesure-quoi">{tr({ fr: 'restent dans la région', en: 'stay in the region' }, lang)}</span>
                     </p>
-                  )}
-                  {!display.isRegion && (
-                    <RangContinental valeur={display.remittances} serie={seriesContinentales.remittances}
-                                     libelle={tr({ fr: 'Transferts des diasporas, en part du PIB', en: 'Diaspora remittances as a share of GDP' }, lang)}
-                                     lang={lang} teinte="bg-amber-600" encre="text-amber-700" />
-                  )}
-
-                  <div className="mt-6 bg-slate-50 p-4 rounded-md border border-slate-200 print:mt-3 print:p-2"><Prose className="text-slate-700 text-sm print:text-[10px]" lang={lang}>{tr({ fr: "Les transferts des diasporas vont directement aux ménages — logement, santé, scolarité — sans passer par un budget d’État ni par un bailleur. Sur les 48 États africains pour lesquels la Banque mondiale publie la mesure, ils représentent plus de 5 % du produit intérieur brut dans seize d’entre eux et plus de 10 % dans sept ; la médiane continentale est de 2,7 %.", en: "Diaspora transfers go straight to households — housing, health, schooling — without passing through a state budget or a donor. Across the 48 African states for which the World Bank publishes the measure, they exceed 5 per cent of gross domestic product in sixteen and 10 per cent in seven; the continental median is 2.7 per cent." }, lang)}</Prose></div>
-                </div>
-
-                {/* Le taux d’activité des migrants était rangé en démographie, où il
-                    détonnait : sa propre notice le décrit comme « un indicateur direct
-                    de l’insertion économique, distinct du volume migratoire lui-même ».
-                    Il rejoint l’économie, qui portait deux blocs quand la démographie
-                    en portait quatre.
-
-                    Sa carte était en revanche IMBRIQUÉE dans celle des transferts :
-                    une carte blanche à l’intérieur d’une carte blanche, deux
-                    gouttières de 32 px l’une dans l’autre, et rien qui distingue le
-                    bord de la première du bord de la seconde. Elle redevient sœur.
-                    Son rang, lui, était une troisième colonne du même `flex` : il se
-                    trouvait comprimé à côté du texte au lieu de courir sous la
-                    carte, où un rail a la place de se lire. */}
-                <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-                    <div className="flex items-center gap-4 shrink-0">
-                      <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center print:w-12 print:h-12">
-                        <Activity className="w-6 h-6 text-emerald-700 print:w-5 print:h-5" />
-                      </div>
-                      <div>
-                        <span className="text-3xl font-serif font-bold text-slate-900 print:text-xl">
-                          {display.labour_participation !== null && display.labour_participation !== undefined ? `${formatNumber(parseFloat(display.labour_participation), lang)} %` : (tr({ fr: 'N/D', en: 'N/A' }, lang))}
-                        </span>
-                        <span className="surtitre text-emerald-700 mt-0.5">
-                          {tr({ fr: `Taux d’activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
-                        </span>
-                      </div>
-                    </div>
-                    <Prose className="text-xs text-slate-600 leading-relaxed border-t sm:border-t-0 sm:border-s border-slate-100 sm:ps-6 pt-4 sm:pt-0" lang={lang}>{display.labour_participation !== null && display.labour_participation !== undefined
-                        ? (tr({ fr: "Part des migrants en âge de travailler qui sont actifs (en emploi ou en recherche d’emploi), estimation modélisée par l’OIT — un indicateur direct de l’insertion économique, distinct du volume migratoire lui-même.", en: "Share of working-age migrants who are economically active (employed or seeking work), ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself." }, lang))
-                        : (tr({ fr: "L’OIT ne publie pas d’estimation modélisée pour cette entité (échantillon insuffisant).", en: "The ILO does not publish a modelled estimate for this entity (insufficient sample)." }, lang))}</Prose>
-                  </div>
-                  {!display.isRegion && (
-                    <RangContinental valeur={display.labour_participation} serie={seriesContinentales.labour}
-                                     libelle={tr({ fr: "Taux d’activité des migrants", en: 'Migrant labour participation' }, lang)}
-                                     lang={lang} teinte="bg-emerald-600" encre="text-emerald-700" />
-                  )}
-                </div>
-
-                <div className="bg-[#0f172a] p-7 rounded-lg text-white relative overflow-hidden shadow-md print:bg-white print:text-slate-900 print:shadow-none print:border print:border-slate-200 print:p-4 print:break-inside-avoid">
-                  <h3 className="text-lg font-serif font-bold mb-6 border-b border-slate-700 pb-3 print:border-slate-200 print:mb-3 print:pb-2 print:text-base">{text.modal.causal_chain}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10 print:gap-3">
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="surtitre text-amber-400 print:text-amber-600 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> {text.modal.trigger}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.trigger}</p>
-                    </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="surtitre text-blue-400 print:text-blue-600 flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5" /> {text.modal.response}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.response}</p>
-                    </div>
-                    <div className="bg-slate-800/50 p-5 rounded-md border border-slate-700/50 print:bg-slate-50 print:border print:border-slate-200 print:p-3">
-                      <span className="surtitre text-emerald-400 print:text-emerald-600 flex items-center gap-1.5"><TrendingUp className="w-3.5 h-3.5" /> {text.modal.impact}</span>
-                      <p className="text-sm leading-relaxed print:text-xs text-slate-200 print:text-slate-800 mt-2">{display.impact}</p>
-                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* LE DROIT. Ce qu’un État a signé, ce à quoi il appartient, ce qu’il a
-                  ratifié à l’OIT. Trois registres de même nature, qui n’avaient rien
-                  à faire dans la vue de l’économie. */}
-              <div className={`space-y-8 animate-in fade-in duration-500 ${modalView === 'rights' ? 'block' : 'hidden print:block'} print:mb-6`}>
-                {display.au_treaties && (
-                  <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><FileText className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {text.modal.au_instruments}</h3>
-                    {/* Le chapo disait « Etat de ratification des conventions
-                        phares de l OUA/UA » quand le titre, deux lignes plus
-                        haut, disait deja « Traites & conventions cles de l Union
-                        africaine (Etat de ratification 2025) ». Il ne reste que
-                        ce que le titre ne dit pas : sur quoi portent ces six
-                        textes. */}
-                    <Prose className="text-sm text-slate-600 mb-3 print:mb-3" lang={lang}>{tr({ fr: "Les six instruments continentaux qui engagent un État en matière d’intégration et de mobilité.", en: "The six continental instruments that bind a state on integration and mobility." }, lang)}</Prose>
-                    <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="inline-flex items-center min-h-[32px] text-xs text-blue-700 font-bold hover:underline mb-3 print:hidden">
-                      {tr({ fr: "→ Consulter la base des traités de l’UA", en: "→ View AU Treaties Database" }, lang)}
-                    </a>
-                    {/* SIX TEXTES, UN COMPTE, PUIS LA LISTE.
-                        Ces six instruments s’affichaient en grille de pastilles
-                        colorées : bleu pour ratifié, gris pour non. Trois choses
-                        n’allaient pas. Le compte — la seule question qu’on pose
-                        vraiment à ce bloc — n’était écrit nulle part : il fallait
-                        parcourir six cases et les additionner de tête. L’état ne
-                        tenait qu’à la couleur du fond, doublée d’une étiquette de
-                        9 px dont le libellé « NON RATIFIÉ » se coupait en deux
-                        lignes une fois sur deux. Et l’ordre était celui des clés,
-                        si bien que ratifiés et non-ratifiés alternaient au hasard.
-                        Le compte s’écrit donc, la liste range les ratifiés d’abord,
-                        et l’état se lit dans un mot autant que dans une marque. */}
-                    {(() => {
-                      const INSTRUMENTS = [
-                        { key: 'constitutive',  fr: "Acte constitutif de l’Union africaine", en: 'Constitutive Act of the African Union' },
-                        { key: 'abuja',         fr: "Traité d’Abuja (Communauté économique africaine)", en: 'Abuja Treaty (African Economic Community)' },
-                        { key: 'refugees_1969', fr: "Convention de l’OUA sur les réfugiés (1969)", en: 'OAU Refugee Convention (1969)' },
-                        { key: 'kampala',       fr: "Convention de Kampala (personnes déplacées internes)", en: 'Kampala Convention (internally displaced persons)' },
-                        { key: 'free_movement', fr: "Protocole sur la libre circulation des personnes", en: 'Protocol on Free Movement of Persons' },
-                        { key: 'zlecaf',        fr: "Accord portant création de la ZLECAf", en: 'Agreement establishing the AfCFTA' },
-                      ];
-                      // Ratifies d abord, chaque groupe dans l ordre canonique.
-                      const ranges = [...INSTRUMENTS].sort((a, b) =>
-                        (display.au_treaties[b.key] ? 1 : 0) - (display.au_treaties[a.key] ? 1 : 0));
-                      const n = INSTRUMENTS.filter(t => display.au_treaties[t.key]).length;
-                      return (
-                        <>
-                          <p className="ratif-compte">
-                            <span className="ratif-n">{n}</span>
-                            <span className="ratif-sur"> / {INSTRUMENTS.length}</span>
-                            {/* La phrase ne repete pas le compte — « 3 / 6 » suivi
-                                de « 3 des six textes sont ratifies » disait deux
-                                fois la meme chose. Elle nomme ce qu on compte. */}
-                            <span className="ratif-dit">{tr({
-                              fr: 'textes ratifiés et déposés',
-                              en: 'instruments ratified and deposited',
-                            }, lang)}</span>
-                          </p>
-                          <ul className="ratif-liste">
-                            {ranges.map((t) => {
-                              const ratified = !!display.au_treaties[t.key];
-                              return (
-                                <li key={t.key} className="ratif-ligne" data-ratifie={ratified ? 'oui' : 'non'}>
-                                  <span className="ratif-marque" aria-hidden="true">
-                                    {ratified ? <Check className="w-3.5 h-3.5" /> : null}
-                                  </span>
-                                  <span className="ratif-nom">{tr({ fr: t.fr, en: t.en }, lang)}</span>
-                                  <span className="ratif-etat">
-                                    {ratified ? tr({ fr: 'Ratifié', en: 'Ratified' }, lang)
-                                              : tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang)}
-                                  </span>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </>
-                      );
-                    })()}
+                <div className="fiche-sous">
+                  <span className="surtitre">{text.modal.orig_dest_title}</span>
+                  <Prose className="fiche-texte" lang={lang}>{display.origDest}</Prose>
+                </div>
+
+                {!display.isRegion && (display.refugees_hosted > 0 || display.idp_conflict > 0 || display.idp_disaster > 0) && (
+                  <div className="fiche-sous">
+                    <span className="surtitre">{text.modal.idp_title}</span>
+                    {/* Ces trois lignes portaient chacune une barre posée à
+                        `width: 100%` en dur, quelle que soit la valeur : trois
+                        barres pleines côte à côte pour trois grandeurs sans
+                        rapport d’ordre. La forme promettait une comparaison que
+                        le tracé ne faisait pas. */}
+                    <dl className="fiche-releve">
+                      {display.refugees_hosted > 0 && (
+                        <div className="fiche-releve-ligne">
+                          <dt>{text.modal.hcr_hosted}</dt>
+                          <dd><Num value={display.refugees_hosted} lang={lang} /></dd>
+                        </div>
+                      )}
+                      {display.idp_conflict > 0 && (
+                        <div className="fiche-releve-ligne">
+                          <dt>{text.modal.idp_conflict}</dt>
+                          <dd><Num value={display.idp_conflict} lang={lang} /></dd>
+                        </div>
+                      )}
+                      {display.idp_disaster > 0 && (
+                        <div className="fiche-releve-ligne">
+                          <dt>{text.modal.idp_disaster}</dt>
+                          <dd><Num value={display.idp_disaster} lang={lang} /></dd>
+                        </div>
+                      )}
+                    </dl>
+                    <Prose className="fiche-note" lang={lang}>{text.modal.idp_desc}</Prose>
                   </div>
                 )}
 
+                {(display.trigger || display.response || display.impact) && (
+                  <div className="fiche-sous">
+                    <span className="surtitre">{text.modal.causal_chain}</span>
+                    {/* La chaîne vivait dans un pavé d’encre, à part, sous
+                        l’économie — où elle ne parlait pourtant que du
+                        mouvement. Elle le suit désormais, et prend la forme du
+                        reste : trois temps, un filet entre eux. */}
+                    <ol className="fiche-chaine">
+                      <li><span className="fiche-chaine-quoi">{text.modal.trigger}</span><Prose className="fiche-etroit" lang={lang}>{display.trigger}</Prose></li>
+                      <li><span className="fiche-chaine-quoi">{text.modal.response}</span><Prose className="fiche-etroit" lang={lang}>{display.response}</Prose></li>
+                      <li><span className="fiche-chaine-quoi">{text.modal.impact}</span><Prose className="fiche-etroit" lang={lang}>{display.impact}</Prose></li>
+                    </ol>
+                  </div>
+                )}
+              </section>
+
+              {/* 02 — QUI SE DÉPLACE ---------------------------------------- */}
+              <section id="fiche-m2" data-mvt="m2" className="fiche-mvt">
+                <MovementOpener
+                  n="02" sur="05"
+                  kicker={tr({ fr: 'La composition', en: 'The composition' }, lang)}
+                  thesis={tr({
+                    fr: 'Un stock migratoire n’est pas une masse indistincte : il a un sexe, une part dans la population du pays, et un rapport au travail.',
+                    en: 'A migrant stock is not an undifferentiated mass: it has a sex, a share of the country’s population, and a relation to work.',
+                  }, lang)}
+                />
+
+                <div className="fiche-paire">
+                  <div className="fiche-bloc">
+                    <span className="surtitre">{tr({ fr: 'Part de la population totale', en: 'Share of total population' }, lang)}</span>
+                    {/* La piste de 40 px se remplissait à `max(5, valeur)` :
+                        sous 5 %, elle affichait 5 quoi qu’il arrive. Le Maroc
+                        est à 0,3 % — seize fois moins que ce qu’elle montrait.
+                        Le rang, lui, compare les 54 valeurs réelles. */}
+                    <p className="fiche-mesure">
+                      <span className="fiche-mesure-n">{formatNumber(parseFloat(display.evolution), lang)} %</span>
+                      <span className="fiche-mesure-quoi">{tr({ fr: 'de la population du pays', en: 'of the country’s population' }, lang)}</span>
+                    </p>
+                    {!display.isRegion && (
+                      <RangContinental valeur={display.evolution} serie={seriesContinentales.part}
+                                       libelle={tr({ fr: 'Part des migrants dans la population', en: 'Migrants as a share of population' }, lang)}
+                                       lang={lang} teinte="bar-fill" encre="text-slate-900" />
+                    )}
+                  </div>
+
+                  <div className="fiche-bloc">
+                    <span className="surtitre">{text.modal.parity}</span>
+                    <p className="fiche-mesure">
+                      <span className="fiche-mesure-n">{formatNumber(parseFloat(display.female), lang)} %</span>
+                      <span className="fiche-mesure-quoi">{tr({ fr: 'de femmes', en: 'women' }, lang)}</span>
+                    </p>
+                    <Prose className="fiche-note" lang={lang}>{tr({ fr: 'La migration n’est pas qu’une affaire d’hommes fuyant la misère. Elle est structurellement féminisée.', en: 'Migration is not just men fleeing poverty. It is structurally feminized.' }, lang)}</Prose>
+                    {!display.isRegion && (
+                      <RangContinental valeur={display.female} serie={seriesContinentales.female}
+                                       libelle={tr({ fr: 'Part des femmes dans le stock migratoire', en: 'Women in the migrant stock' }, lang)}
+                                       lang={lang} teinte="bar-fill" encre="text-slate-900" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="fiche-sous">
+                  <span className="surtitre">
+                    {tr({ fr: `Taux d’activité des migrants${display.labour_participation_year ? ` (OIT ${display.labour_participation_year})` : ' (OIT)'}`, en: `Migrant labour participation${display.labour_participation_year ? ` (ILO ${display.labour_participation_year})` : ' (ILO)'}` }, lang)}
+                  </span>
+                  <p className="fiche-mesure">
+                    <span className="fiche-mesure-n">
+                      {display.labour_participation !== null && display.labour_participation !== undefined
+                        ? `${formatNumber(parseFloat(display.labour_participation), lang)} %`
+                        : tr({ fr: 'N/D', en: 'N/A' }, lang)}
+                    </span>
+                    <span className="fiche-mesure-quoi">{tr({ fr: 'des migrants en âge de travailler sont actifs', en: 'of working-age migrants are economically active' }, lang)}</span>
+                  </p>
+                  <Prose className="fiche-note" lang={lang}>{display.labour_participation !== null && display.labour_participation !== undefined
+                    ? tr({ fr: 'Estimation modélisée par l’OIT — un indicateur direct de l’insertion économique, distinct du volume migratoire lui-même.', en: 'ILO modelled estimate — a direct indicator of economic insertion, distinct from migration volume itself.' }, lang)
+                    : tr({ fr: 'L’OIT ne publie pas d’estimation modélisée pour cette entité (échantillon insuffisant).', en: 'The ILO does not publish a modelled estimate for this entity (insufficient sample).' }, lang)}</Prose>
+                  {!display.isRegion && (
+                    <RangContinental valeur={display.labour_participation} serie={seriesContinentales.labour}
+                                     libelle={tr({ fr: 'Taux d’activité des migrants', en: 'Migrant labour participation' }, lang)}
+                                     lang={lang} teinte="bar-fill" encre="text-slate-900" />
+                  )}
+                </div>
+              </section>
+
+              {/* 03 — CE QUE ÇA PÈSE --------------------------------------- */}
+              <section id="fiche-m3" data-mvt="m3" className="fiche-mvt">
+                <MovementOpener
+                  n="03" sur="05"
+                  kicker={tr({ fr: 'Le poids économique', en: 'The economic weight' }, lang)}
+                  thesis={tr({
+                    fr: 'Ce que les diasporas renvoient se compare à ce que l’aide publique apporte : les deux se mesurent en points de produit intérieur brut.',
+                    en: 'What diasporas send home compares with what public aid brings: both are measured in points of gross domestic product.',
+                  }, lang)}
+                />
+
+                <EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} />
+
+                {!display.isRegion && display.remittances > 0 && display.aid > 0 && (
+                  <p className="fiche-texte fiche-texte--fort">
+                    {tr({
+                      fr: `Pour un point de PIB reçu en aide publique, ce pays en reçoit ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} en transferts de sa diaspora.`,
+                      en: `For every point of GDP received as public aid, this country receives ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} in diaspora remittances.`,
+                    }, lang)}
+                  </p>
+                )}
+
+                {!display.isRegion && (
+                  <RangContinental valeur={display.remittances} serie={seriesContinentales.remittances}
+                                   libelle={tr({ fr: 'Transferts des diasporas, en part du PIB', en: 'Diaspora remittances as a share of GDP' }, lang)}
+                                   lang={lang} teinte="bar-fill" encre="text-slate-900" />
+                )}
+
+                <div className="fiche-sous">
+                  <Prose className="fiche-note" lang={lang}>{tr({ fr: 'Les transferts des diasporas vont directement aux ménages — logement, santé, scolarité — sans passer par un budget d’État ni par un bailleur. Sur les 48 États africains pour lesquels la Banque mondiale publie la mesure, ils représentent plus de 5 % du produit intérieur brut dans seize d’entre eux et plus de 10 % dans sept ; la médiane continentale est de 2,7 %.', en: 'Diaspora transfers go straight to households — housing, health, schooling — without passing through a state budget or a donor. Across the 48 African states for which the World Bank publishes the measure, they exceed 5 per cent of gross domestic product in sixteen and 10 per cent in seven; the continental median is 2.7 per cent.' }, lang)}</Prose>
+                </div>
+              </section>
+
+              {/* 04 — CE QUE L’ÉTAT A SIGNÉ -------------------------------- */}
+              <section id="fiche-m4" data-mvt="m4" className="fiche-mvt">
+                <MovementOpener
+                  n="04" sur="05"
+                  kicker={tr({ fr: 'L’engagement', en: 'The commitment' }, lang)}
+                  thesis={tr({
+                    fr: 'Un État s’engage au dépôt de l’instrument, pas à la signature. C’est ce dépôt qui se compte ici, et lui seul.',
+                    en: 'A state commits when it deposits the instrument, not when it signs. It is that deposit that is counted here, and nothing else.',
+                  }, lang)}
+                />
+
+                {display.au_treaties && (() => {
+                  const INSTRUMENTS = [
+                    { key: 'constitutive',  fr: 'Acte constitutif de l’Union africaine', en: 'Constitutive Act of the African Union' },
+                    { key: 'abuja',         fr: 'Traité d’Abuja (Communauté économique africaine)', en: 'Abuja Treaty (African Economic Community)' },
+                    { key: 'refugees_1969', fr: 'Convention de l’OUA sur les réfugiés (1969)', en: 'OAU Refugee Convention (1969)' },
+                    { key: 'kampala',       fr: 'Convention de Kampala (personnes déplacées internes)', en: 'Kampala Convention (internally displaced persons)' },
+                    { key: 'free_movement', fr: 'Protocole sur la libre circulation des personnes', en: 'Protocol on Free Movement of Persons' },
+                    { key: 'zlecaf',        fr: 'Accord portant création de la ZLECAf', en: 'Agreement establishing the AfCFTA' },
+                  ];
+                  // Ratifies d abord, chaque groupe dans l ordre canonique. La
+                  // grille precedente suivait l ordre des cles : ratifies et
+                  // non-ratifies y alternaient au hasard, et le compte — la
+                  // seule question qu on pose a ce bloc — n etait ecrit nulle
+                  // part. Il fallait parcourir six cases et les additionner.
+                  const ranges = [...INSTRUMENTS].sort((a, b) =>
+                    (display.au_treaties[b.key] ? 1 : 0) - (display.au_treaties[a.key] ? 1 : 0));
+                  const n = INSTRUMENTS.filter(t => display.au_treaties[t.key]).length;
+                  return (
+                    <div className="fiche-bloc">
+                      <span className="surtitre">{text.modal.au_instruments}</span>
+                      <p className="ratif-compte">
+                        <span className="ratif-n">{n}</span>
+                        <span className="ratif-sur"> / {INSTRUMENTS.length}</span>
+                        <span className="ratif-dit">{tr({ fr: 'textes ratifiés et déposés', en: 'instruments ratified and deposited' }, lang)}</span>
+                      </p>
+                      <ul className="ratif-liste">
+                        {ranges.map((t) => {
+                          const ratified = !!display.au_treaties[t.key];
+                          return (
+                            <li key={t.key} className="ratif-ligne" data-ratifie={ratified ? 'oui' : 'non'}>
+                              <span className="ratif-marque" aria-hidden="true">{ratified ? <Check className="w-3.5 h-3.5" /> : null}</span>
+                              <span className="ratif-nom">{tr({ fr: t.fr, en: t.en }, lang)}</span>
+                              <span className="ratif-etat">
+                                {ratified ? tr({ fr: 'Ratifié', en: 'Ratified' }, lang) : tr({ fr: 'Non ratifié', en: 'Not ratified' }, lang)}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <a href="https://au.int/en/treaties" target="_blank" rel="noopener noreferrer" className="fiche-lien">
+                        {tr({ fr: 'Consulter la base des traités de l’UA', en: 'View the AU Treaties Database' }, lang)}
+                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      </a>
+                    </div>
+                  );
+                })()}
+
                 {display.iso2 && countryRecAffiliations[display.iso2] && (
-                  <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4 print:break-inside-avoid">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Users className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Affiliation aux communautés économiques régionales", en: "Regional Economic Community Affiliation" }, lang)}</h3>
-                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "Blocs régionaux dont le pays est membre (l’appartenance à plusieurs CER est courante en Afrique).", en: "Regional blocs the country belongs to (multiple REC membership is common in Africa)." }, lang)}</Prose>
-                    {/* Même grammaire que les six textes ci-dessus : une ligne par
-                        engagement, le sigle en colonne, le nom en clair à côté. La
-                        pastille précédente répétait le sigle dans un monogramme —
-                        « UMA UMA » — et laissait le nom complet nulle part. */}
+                  <div className="fiche-sous">
+                    <span className="surtitre">{tr({ fr: 'Communautés économiques régionales', en: 'Regional economic communities' }, lang)}</span>
+                    {/* La pastille précédente répétait le sigle dans un
+                        monogramme — « UMA UMA », « CS CEN-SAD » — et ne donnait
+                        le nom complet nulle part. */}
                     <ul className="ratif-liste">
                       {countryRecAffiliations[display.iso2].map((recId) => (
                         <li key={recId} className="ratif-ligne ratif-ligne--cer">
@@ -13845,40 +13897,46 @@ export default function App() {
                       ))}
                     </ul>
                     {countryRecNotes[display.iso2] && (
-                      <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3 mt-4 flex items-start gap-2 print:bg-white">
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {tr(countryRecNotes[display.iso2], lang)}
+                      <p className="fiche-reserve">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <span>{tr(countryRecNotes[display.iso2], lang)}</span>
                       </p>
                     )}
-                    {visaOpenToAllAfrica[display.iso2] && (() => {
-                      const openness = visaOpenToAllAfrica[display.iso2];
-                      const tier = visaOpenTiers[openness.tier];
-                      return (
-                        <div className={`mt-4 p-4 rounded-md border flex items-start gap-3 print:bg-white ${tier.style}`}>
-                          <Star className={`w-4 h-4 shrink-0 mt-0.5 ${tier.dot}`} />
-                          <div>
-                            <span className="surtitre">{tr(tier.label, lang)}</span>
-                            <Prose className="text-xs leading-relaxed" lang={lang}>{tr(openness.note, lang)}</Prose>
-                          </div>
-                        </div>
-                      );
-                    })()}
+                    {visaOpenToAllAfrica[display.iso2] && (
+                      <p className="fiche-reserve fiche-reserve--bonne">
+                        <Star className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <span>
+                          <b>{tr(visaOpenTiers[visaOpenToAllAfrica[display.iso2].tier].label, lang)}</b>{' — '}
+                          {tr(visaOpenToAllAfrica[display.iso2].note, lang)}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {!display.isRegion && display.avoi !== null && (
+                  <div className="fiche-sous">
+                    <span className="surtitre">{text.modal.avoi_title}</span>
+                    <p className="fiche-mesure">
+                      <span className="fiche-mesure-n">{formatNumber(display.avoi, lang)}<span className="fiche-mesure-sur"> / 100</span></span>
+                      {continentalAvoiAvg !== null && (
+                        <span className="fiche-mesure-quoi">
+                          {tr({ fr: `moyenne continentale : ${formatNumber(continentalAvoiAvg, lang)} / 100`, en: `continental average: ${formatNumber(continentalAvoiAvg, lang)} / 100` }, lang)}
+                        </span>
+                      )}
+                    </p>
+                    <Prose className="fiche-note" lang={lang}>{text.modal.avoi_desc}</Prose>
                   </div>
                 )}
 
                 {display.normlex && (
-                  <div className="bg-white p-7 rounded-lg border border-slate-200 shadow-sm print:p-4">
-                    <h3 className="font-serif font-bold text-slate-900 mb-1.5 flex items-center text-lg"><Scale className="w-5 h-5 me-2.5 text-slate-400 print:w-4 print:h-4" /> {tr({ fr: "Évaluation juridique des droits (Base NORMLEX OIT)", en: "Legal Evaluation of Rights (ILO NORMLEX)" }, lang)}</h3>
-                    <Prose className="text-sm text-slate-600 mb-4 print:mb-3" lang={lang}>{tr({ fr: "Ratification des conventions internationales du travail et protection des travailleurs.", en: "Ratification of international labor standards and worker protection." }, lang)}</Prose>
-                    {display.normlex.link && (
-                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center min-h-[32px] text-xs text-blue-700 font-bold hover:underline mb-4 print:hidden">
-                        {tr({ fr: "→ Consulter le profil national NORMLEX", en: "→ View NORMLEX National Profile" }, lang)}
-                      </a>
-                    )}
-                    {/* Quatre nombres, quatre pavés bordés et centrés : 300 px de
-                        carte pour ce qui tient en quatre lignes. Ils prennent le
-                        relevé — la même forme que les déplacés, deux onglets plus
-                        tôt — et le total se détache, parce qu’il additionne les
-                        trois autres au lieu de se ranger à côté d’eux. */}
+                  <div className="fiche-sous">
+                    <span className="surtitre">{tr({ fr: 'Conventions du travail ratifiées (OIT, base NORMLEX)', en: 'Labour conventions ratified (ILO NORMLEX)' }, lang)}</span>
+                    {/* Quatre nombres tenaient dans quatre pavés bordés et
+                        centrés. Ils prennent le relevé — la forme des déplacés,
+                        plus haut — et le total se détache, parce qu’il
+                        additionne les trois autres au lieu de se ranger à côté
+                        d’eux. */}
                     <dl className="fiche-releve">
                       <div className="fiche-releve-ligne">
                         <dt>{tr({ fr: 'Conventions fondamentales', en: 'Fundamental conventions' }, lang)}</dt>
@@ -13897,11 +13955,44 @@ export default function App() {
                         <dd>{display.normlex.total}</dd>
                       </div>
                     </dl>
+                    {display.normlex.link && (
+                      <a href={display.normlex.link} target="_blank" rel="noopener noreferrer" className="fiche-lien">
+                        {tr({ fr: 'Consulter le profil national NORMLEX', en: 'View the NORMLEX national profile' }, lang)}
+                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      </a>
+                    )}
                   </div>
                 )}
+              </section>
 
-                <PrintCitationFooter lang={lang} sectionLabel={display.isRegion ? (tr({ fr: 'Profil Régional', en: 'Regional Profile' }, lang)) : (tr({ fr: 'Profil Pays', en: 'Country Profile' }, lang))} />
-              </div>
+              {/* 05 — CE QU’ON SAIT EN SAVOIR ------------------------------ */}
+              <section id="fiche-m5" data-mvt="m5" className="fiche-mvt">
+                <MovementOpener
+                  n="05" sur="05"
+                  kicker={tr({ fr: 'La réserve', en: 'The caveat' }, lang)}
+                  thesis={tr({
+                    fr: 'Tout ce qui précède repose sur la capacité de l’État à se compter lui-même, et sur la date à laquelle il l’a fait pour la dernière fois.',
+                    en: 'Everything above rests on the state’s capacity to count itself, and on the date when it last did so.',
+                  }, lang)}
+                />
+
+                {display.iso2 && censusByCountry[display.iso2] ? (
+                  <CensusTimeline iso2={display.iso2} lang={lang} />
+                ) : (
+                  <Prose className="fiche-note" lang={lang}>{tr({
+                    fr: 'Aucune série de recensements n’est enregistrée pour cette entité.',
+                    en: 'No census series is recorded for this entity.',
+                  }, lang)}</Prose>
+                )}
+
+                <p className="fiche-reserve">
+                  <Info className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                  <span>{tr({
+                    fr: 'Les années d’observation ne sont pas alignées d’un champ à l’autre, et ne le seront pas : chaque mesure porte la sienne. Cette fiche se lit ligne par ligne, jamais comme un instantané unique.',
+                    en: 'Observation years are not aligned across fields, and will not be: each measure carries its own. This profile reads line by line, never as a single snapshot.',
+                  }, lang)}</span>
+                </p>
+              </section>
             </div>
 
             {/* Le pied prenait 130 px pour une ligne de sources et deux boutons,

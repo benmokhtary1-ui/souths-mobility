@@ -158,25 +158,84 @@ const DEMANDES = [
   ['une série de deux points s’écrit au lieu de se tracer',
    () => app.includes('if (data.length === 2)') && css.includes('.evolution-deux')],
 
-  ['la carte du travail n’est plus imbriquée dans celle des transferts',
+  // La version intermediaire de cette assertion visait une carte imbriquee dans
+  // une autre. La refonte a supprime les cartes : plus rien ne peut s y nicher,
+  // et c est desormais l ABSENCE de pave qui se verifie.
+  ['la fiche ne porte plus de pavés blancs empilés',
    () => {
-     // La carte des transferts doit se fermer AVANT que celle du travail s ouvre.
-     const i = app.indexOf('{text.modal.econ_title}');
-     const bloc = app.slice(i, i + 6000);
-     return bloc.indexOf('Le taux d’activité des migrants était rangé')
-          > bloc.indexOf('la médiane continentale est de 2,7 %');
+     const i = app.indexOf('LA FICHE PAYS, REFAITE');
+     const j = app.indexOf('Le pied prenait 130 px', i);
+     const corps = app.slice(i, j > i ? j : i + 40000);
+     return !/bg-white p-\d rounded-lg border/.test(corps) && !/shadow-sm/.test(corps);
    }],
 
   ['`surtitre` ne bat plus les classes de disposition',
    () => css.includes('.surtitre.flex        { display: flex; }')
       && css.includes('.surtitre.hidden      { display: none; }')],
 
-  ['le corps de la fiche a sa propre gouttière verticale',
-   () => css.includes('.fiche-corps { padding: var(--pas-3) var(--pas-carte) !important; }')
+  // Meme chose : le corps ne paie plus de gouttiere du tout, ce sont les
+  // mouvements qui la portent — une seule fois au lieu de deux.
+  ['la gouttière ne se paie plus deux fois dans la fiche',
+   () => css.includes('.fiche-corps { padding: 0 !important;')
+      && /\.fiche-mvt\s*\{[^}]*padding:/s.test(css)
       && css.includes(':not(.fiche-corps)')],
 
   ['la jauge de robustesse se compte',
    () => css.includes('.jauge-cran') && !app.includes('className="block w-[7px] h-[3px]"')],
+
+  // --- LA FICHE PAYS : LA FORME, REPRISE EN ENTIER -----------------------
+  ['la fiche ne cache plus rien derrière un onglet',
+   () => !app.includes("setModalView('demography')") && !/modalView === '(demography|geography|economy|rights)'/.test(app)],
+
+  ['la fiche se lit en cinq mouvements numérotés',
+   () => app.includes('const MOUVEMENTS_FICHE = [')
+      && ['m1', 'm2', 'm3', 'm4', 'm5'].every(k => app.includes(`id="fiche-${k}" data-mvt="${k}"`))
+      && (app.match(/<MovementOpener\s+n="0[1-5]" sur="05"/g) || []).length === 5],
+
+  ['le sommaire conduit au mouvement au lieu de le masquer',
+   () => app.includes('const allerAuMouvement = useCallback') && app.includes('boite.scrollTop = haut;')],
+
+  ['le sommaire suit la lecture, et non le dernier clic',
+   () => app.includes("boite.addEventListener('scroll', relever")],
+
+  ['la position du sommaire ne passe plus par offsetTop',
+   () => !app.includes('cible.offsetTop - boite.offsetTop')],
+
+  ['le corps de la fiche est un document, pas une pile de pavés',
+   () => css.includes('.fiche-mvt {') && css.includes('.fiche-corps { padding: 0 !important;')
+      && !/fiche-corps p-6 md:p-10/.test(app)],
+
+  ['le dialogue échappe au rythme de 40 px entre ses trois parties',
+   () => css.includes(':not(.fiche-boite) > * + *') && app.includes('className="fiche-boite')],
+
+  ['le glissement ne décide pas de la justesse du sommaire',
+   () => !/\.fiche-corps\s*\{[^}]*scroll-behavior:\s*smooth/s.test(css)],
+
+  ['les colonnes étroites de la fiche ne sont pas justifiées',
+   () => css.includes(':not(.fiche-etroit)') && app.includes('<Prose className="fiche-etroit"')],
+
+  // --- ÉPURATION ET HARMONISATION DU SITE --------------------------------
+  ['aucune teinte Tailwind brute n’échappe aux jetons',
+   () => css.includes('.text-emerald-500 { color: var(--ok) !important; }')
+      && css.includes('.fill-emerald-300, .fill-emerald-400, .fill-emerald-500')
+      && css.includes('.fill-amber-300, .fill-amber-400, .fill-amber-500')],
+
+  ['le site ne peint que deux rayons',
+   () => !/border-radius:\s*2px;/.test(css)],
+
+  ['la moyenne des CER se calcule au lieu de s’écrire',
+   () => !app.includes("left: '50.1%'")
+      && app.includes('const moyenne = recsList.reduce')],
+
+  ['le repère de la moyenne porte sa légende',
+   () => app.includes('Le trait vertical marque la moyenne des huit scores')],
+
+  ['l’écart entre la moyenne publiée et celle des barres est dit',
+   () => app.includes('Une réserve sur la moyenne des CER')
+      && app.includes('A caveat on the REC average')],
+
+  ['les mises en garde passent toutes par .aparte',
+   () => !app.includes('bg-amber-50 border border-amber-200')],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
