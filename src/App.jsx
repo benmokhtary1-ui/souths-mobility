@@ -1832,7 +1832,7 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
           <span className="feuillet-tag">{rec.tag}</span>
         </span>
 
-        {/* La barre, et le repère de la moyenne des huit CER : sans lui, deux
+        {/* La barre, et le repère de la moyenne publiée des huit CER : sans lui, deux
             scores voisins se ressemblent alors qu'ils tombent de part et
             d'autre de la moyenne. */}
         <span className="feuillet-mesure" aria-hidden="true">
@@ -1843,8 +1843,8 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
             <span className="feuillet-moyenne" style={{ insetInlineStart: `${(AVOI_MOYENNE / BORNE) * 100}%` }} />
           </span>
           <span className="feuillet-echelle">
-            {L(`moyenne des huit CER ${AVOI_MOYENNE.toFixed(3).replace('.', ',')}`,
-               `average of the eight RECs ${AVOI_MOYENNE.toFixed(3)}`)}
+            {L(`moyenne publiée des huit CER ${AVOI_MOYENNE.toFixed(3).replace('.', ',')}`,
+               `published average of the eight RECs ${AVOI_MOYENNE.toFixed(3)}`)}
           </span>
         </span>
 
@@ -8590,8 +8590,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1979 Protocol and 2014 Additional Acts (removal of the 90-day limit). Consultative process: MIDWA (Migration Dialogue for West Africa)."
       },
       dynamics: {
-        fr: "La région affiche l’indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne des huit CER : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d’identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
-        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, average of the eight RECs: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
+        fr: "La région affiche l’indice AVOI le plus élevé des huit CER (0,629 en 2024, moyenne publiée des huit CER : 0,501), portée par le Protocole de 1979. Le retrait effectif du Mali, du Burkina Faso et du Niger, le 29 janvier 2025, ramène la Communauté à douze membres. La CEDEAO a pourtant demandé aux États restants de continuer à reconnaître les passeports et cartes d’identité des trois pays, et de laisser circuler leurs ressortissants sans visa. La sortie politique se trouve ainsi découplée du régime de mobilité.",
+        en: "The region shows the highest AVOI index of the eight RECs (0.629 in 2024, published average of the eight RECs: 0.501), driven by the 1979 Protocol. The effective withdrawal of Mali, Burkina Faso and Niger on 29 January 2025 brings the Community down to twelve members. ECOWAS nonetheless asked its remaining states to keep recognising the three countries' passports and ID cards, and to maintain visa-free movement for their nationals. The political exit is thereby decoupled from the mobility regime."
       },
       sources: [
         { label: "CEDEAO — Retrait du Burkina Faso, du Mali et du Niger (2025)", url: "https://www.ecowas.int/burkina-faso-mali-and-nigers-withdrawal-from-ecowas-is-now-a-reality/" },
@@ -8615,8 +8615,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Common Market Protocol (2010), labor migration policy (2025-2030), and strong customs proceduralization via One-Stop Border Posts (OSBP)."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne des huit CER, 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d’intégration restent en négociation.",
-        en: "An AVOI score of 0.504 in 2024 (above the 0.501 average of the eight RECs), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
+        fr: "Un score AVOI de 0,504 en 2024 (au-dessus de la moyenne publiée des huit CER, 0,501), porté par le Rwanda et le Kenya. La Communauté est passée de six à huit partenaires en moins de deux ans : la RDC le 11 juillet 2022, puis la Somalie, membre de plein droit le 4 mars 2024. Cet élargissement rapide étend le marché commun à des espaces sécuritairement complexes, dont les feuilles de route d’intégration restent en négociation.",
+        en: "An AVOI score of 0.504 in 2024 (above the 0.501 published average of the eight RECs), driven by Rwanda and Kenya. The Community moved from six to eight partner states in under two years: the DRC on 11 July 2022, then Somalia as a full member on 4 March 2024. This rapid enlargement extends the common market into security-complex areas, and the integration roadmaps are still under negotiation."
       },
       sources: [
         { label: "CAE — Vue d’ensemble et États partenaires", url: "https://www.eac.int/overview-of-eac" },
@@ -8665,8 +8665,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1984 and 1998 Protocols, unevenly applied. Consultative process: MIDCOM, which produces most of the bloc’s technical capacity-building tools."
       },
       dynamics: {
-        fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne des huit CER (0,501). L’obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
-        en: "AVOI score of 0.463 in 2024, slightly below the average of the eight RECs (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
+        fr: "Score AVOI de 0,463 en 2024, légèrement au-dessous de la moyenne publiée des huit CER (0,501). L’obligation juridique de libre circulation pure y est supplantée par une rationalisation pragmatique liée à la facilitation commerciale et à la complémentarité avec la ZLECAf.",
+        en: "AVOI score of 0.463 in 2024, slightly below the published average of the eight RECs (0.501). The pure legal obligation of free movement is supplanted by pragmatic rationalization linked to trade facilitation and complementarity with the AfCFTA."
       },
       sources: [
         { label: "COMESA — États membres", url: "https://www.comesa.int/comesa-members-states/" },
@@ -8690,8 +8690,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Two pioneering protocols in 2020: Free movement of persons AND Cross-border pastoral transhumance. Consultative process: MIDIGAD."
       },
       dynamics: {
-        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne des huit CER, 0,501, et parmi les plus bas du continent. L’homogénéisation de l’ouverture reste suspendue à l’instabilité géopolitique chronique de la sous-région, guerre au Soudan comprise. L’Érythrée a notifié son retrait formel en décembre 2025, deux ans seulement après son retour dans l’organisation en juin 2023. L’Autorité revient ainsi à sept membres, ce qui dit la fragilité du multilatéralisme régional dans la Corne.",
-        en: "An AVOI score of 0.376 in 2024, well below the average of the eight RECs (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea’s formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
+        fr: "Un score AVOI de 0,376 en 2024, nettement sous la moyenne publiée des huit CER, 0,501, et parmi les plus bas du continent. L’homogénéisation de l’ouverture reste suspendue à l’instabilité géopolitique chronique de la sous-région, guerre au Soudan comprise. L’Érythrée a notifié son retrait formel en décembre 2025, deux ans seulement après son retour dans l’organisation en juin 2023. L’Autorité revient ainsi à sept membres, ce qui dit la fragilité du multilatéralisme régional dans la Corne.",
+        en: "An AVOI score of 0.376 in 2024, well below the published average of the eight RECs (0.501) and among the lowest on the continent: homogenizing openness remains suspended on the chronic geopolitical instability of the sub-region (war in Sudan). Eritrea’s formal withdrawal, notified in December 2025 — barely two years after it rejoined in June 2023 — brings the Authority down to seven members and illustrates the fragility of regional multilateralism in the Horn."
       },
       sources: [
         { label: "IGAD — Communiqué sur le retrait de l’Érythrée (2025)", url: "https://igad.int/igad-regrets-eritreas-decision-to-withdraw-from-the-organisation/" },
@@ -8715,8 +8715,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Revised ECCAS Treaty (2019). CEMAC Additional Acts (2013, 2017) establishing visa abolition for 90 days and the community biometric passport."
       },
       dynamics: {
-        fr: "Score AVOI le plus bas du continent avec l’UMA (0,320 en 2024, moyenne des huit CER : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là.\n\nLe défi reste la conversion de l’acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).\n\nLe retrait du Rwanda, annoncé en juin 2025 à la suite d’un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
-        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, average of the eight RECs: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year.\n\nThe challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea).\n\nRwanda’s announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
+        fr: "Score AVOI le plus bas du continent avec l’UMA (0,320 en 2024, moyenne publiée des huit CER : 0,501), même si la CEEAC affiche la plus forte progression annuelle de tous les CER cette année-là.\n\nLe défi reste la conversion de l’acquis CEMAC vers les piliers de résidence, et son extension au périmètre CEEAC face à des États très sourcilleux sur leur souveraineté sécuritaire (Gabon, Guinée Équatoriale).\n\nLe retrait du Rwanda, annoncé en juin 2025 à la suite d’un différend sur la présidence tournante au sommet de Malabo, ajoute une fracture institutionnelle à une intégration déjà contrainte.",
+        en: "The lowest AVOI score on the continent alongside the AMU (0.320 in 2024, published average of the eight RECs: 0.501), even though ECCAS recorded the largest year-on-year increase of any REC that year.\n\nThe challenge remains converting the CEMAC acquis towards residence pillars, and its extension to the ECCAS perimeter facing States highly sensitive about their security sovereignty (Gabon, Equatorial Guinea).\n\nRwanda’s announced withdrawal in June 2025 — following a dispute over the rotating chairmanship at the Malabo summit — adds an institutional fracture to an already constrained integration."
       },
       sources: [
         { label: "CEEAC — Présentation de la Communauté", url: "https://www.ceeac-eccas.org/2023/05/28/eccas-in-brief/" },
@@ -8740,8 +8740,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Marrakech Treaty (1989) as a pure normative horizon."
       },
       dynamics: {
-        fr: "Le bloc affiche la moyenne d’ouverture la plus basse du continent (0,306 en 2024, moyenne des huit CER : 0,501). L’Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l’intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d’État ne s’est tenu depuis des décennies : l’UMA subsiste comme coquille juridique plus que comme institution opérante.",
-        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, average of the eight RECs: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
+        fr: "Le bloc affiche la moyenne d’ouverture la plus basse du continent (0,306 en 2024, moyenne publiée des huit CER : 0,501). L’Algérie a notamment imposé des visas aux ressortissants marocains fin 2024, illustrant le recul de l’intégration sous-régionale. Le Secrétariat permanent siège à Rabat depuis 1992, mais aucun sommet des chefs d’État ne s’est tenu depuis des décennies : l’UMA subsiste comme coquille juridique plus que comme institution opérante.",
+        en: "The bloc shows the lowest openness average on the continent (0.306 in 2024, published average of the eight RECs: 0.501). Algeria notably imposed visas on Moroccan nationals in late 2024, illustrating the regression of sub-regional integration. The permanent Secretariat has been based in Rabat since 1992, but no Heads of State summit has been held for decades: the AMU survives as a legal shell rather than an operating institution."
       },
       sources: [
         { label: "UMA — Historique et institutions", url: "https://maghrebarabe.org/en/historical/" },
@@ -8765,8 +8765,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "1998 Treaty (revised 2013). Free movement of persons is listed among the founding objectives, without a dedicated protocol equivalent to those of ECOWAS or IGAD."
       },
       dynamics: {
-        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne des huit CER (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l’effet d’engagements pris ailleurs, plus que par une dynamique propre.\n\nLa Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N’Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
-        en: "AVOI score of 0.519 in 2024, above the average of the eight RECs (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself.\n\nThe Community lay institutionally dormant after the 2011 Libyan conflict, its secretariat having relocated to N’Djamena. It reopened its Tripoli headquarters in April 2026, in the presence of eleven member-state foreign ministers. The operational effects of that reactivation remain to be seen."
+        fr: "Score AVOI de 0,519 en 2024, au-dessus de la moyenne publiée des huit CER (0,501), mais en léger recul par rapport à 2023 où elle occupait la deuxième place ex æquo avec la SADC. Le chevauchement géographique avec la CEDEAO explique une part de cette ouverture. Plusieurs membres de la CEN-SAD ont assoupli leur circulation régionale sous l’effet d’engagements pris ailleurs, plus que par une dynamique propre.\n\nLa Communauté était institutionnellement en sommeil depuis le conflit libyen de 2011, son secrétariat replié à N’Djamena. Elle a rouvert son siège de Tripoli en avril 2026, devant onze ministres des Affaires étrangères des États membres. Les effets opérationnels de cette réactivation restent à observer.",
+        en: "AVOI score of 0.519 in 2024, above the published average of the eight RECs (0.501), though slightly down from 2023 when it held joint second place with SADC. The significant geographic overlap with ECOWAS explains part of this openness: several CEN-SAD members eased regional movement due to commitments made elsewhere, more than through a dynamic specific to CEN-SAD itself.\n\nThe Community lay institutionally dormant after the 2011 Libyan conflict, its secretariat having relocated to N’Djamena. It reopened its Tripoli headquarters in April 2026, in the presence of eleven member-state foreign ministers. The operational effects of that reactivation remain to be seen."
       },
       sources: [
         { label: "CEN-SAD — États membres et Secrétariat exécutif", url: "https://censad.int/en/who-are-we/member-states/" },
@@ -10221,9 +10221,9 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <h3 className="text-sm font-bold text-slate-800 mb-1">
                 {tr({ fr: "Classement de l’ouverture visa (indice AVOI, 2024)", en: "Visa openness ranking (AVOI index, 2024)" }, lang)}
               </h3>
-              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score par CER, tel que publié par la BAD et la Commission de l’UA. Le score d’une CER mesure l’ouverture de ses membres entre eux : il ne s’obtient donc pas en moyennant les scores AVOI de ses pays, que la plateforme affiche par ailleurs. La moyenne de tous les pays, elle, s’établit à 0,479 en 2024, en recul sur les 0,485 de l’année précédente : l’ouverture mesurée du continent a légèrement reculé.\n\nUne réserve sur la moyenne des CER. Le rapport avance 0,501 ; la moyenne arithmétique des huit scores qu’il publie, et que reprend le graphique ci-dessous, vaut 0,458. La plateforme trace la seconde, parce que c’est celle que les barres affichées soutiennent, et elle signale l’écart plutôt que de trancher en silence.", en: "REC score, as published by the AfDB and the AU Commission. A REC score measures how open its members are to one another: it is therefore not obtained by averaging the AVOI scores of its countries, which the platform shows elsewhere. The all-country average, for its part, stands at 0.479 in 2024, down from 0.485 the year before: measured openness across the continent has slipped.\n\nA caveat on the REC average. The report gives 0.501; the arithmetic mean of the eight scores it publishes, and which the chart below reproduces, is 0.458. The platform draws the latter, because it is the one the bars shown support, and it flags the divergence rather than settling it in silence." }, lang)}</Prose>
+              <Prose className="text-xs text-slate-500 mb-5" lang={lang}>{tr({ fr: "Score par CER, tel que publié par la BAD et la Commission de l’UA. Le score d’une CER mesure l’ouverture de ses membres entre eux : il ne s’obtient donc pas en moyennant les scores AVOI de ses pays, que la plateforme affiche par ailleurs. La moyenne de tous les pays, elle, s’établit à 0,479 en 2024, en recul sur les 0,485 de l’année précédente : l’ouverture mesurée du continent a légèrement reculé.\n\nUne réserve sur la moyenne des CER. Le rapport avance 0,501 ; la moyenne arithmétique des huit scores qu’il publie, et que reprend le graphique ci-dessous, vaut 0,458. L’écart tient vraisemblablement à ce que la moyenne publiée est pondérée par les pays membres et non calculée sur les huit scores — le rapport ne le dit pas explicitement. La plateforme trace donc le chiffre publié, qui est la référence sourcée, et énonce l’écart au lieu de le corriger d’elle-même.", en: "REC score, as published by the AfDB and the AU Commission. A REC score measures how open its members are to one another: it is therefore not obtained by averaging the AVOI scores of its countries, which the platform shows elsewhere. The all-country average, for its part, stands at 0.479 in 2024, down from 0.485 the year before: measured openness across the continent has slipped.\n\nA caveat on the REC average. The report gives 0.501; the arithmetic mean of the eight scores it publishes, and which the chart below reproduces, is 0.458. The gap most likely arises because the published average is weighted by member countries rather than computed across the eight scores — the report does not say so explicitly. The platform therefore draws the published figure, which is the sourced reference, and states the gap instead of correcting it on its own authority." }, lang)}</Prose>
               {/* UN TRAIT SANS LÉGENDE, POSÉ OÙ LES BARRES NE LE METTENT PAS.
-                  Ce repère était écrit en dur à 50,1 % — la moyenne des huit CER
+                  Ce repère était écrit en dur à 50,1 % — la moyenne publiée des huit CER
                   telle que la publient la BAD et la Commission de l’UA. Or les
                   huit scores affichés juste à côté, ceux-là mêmes que le rapport
                   donne, ont pour moyenne arithmétique 0,458. Un lecteur qui fait
@@ -10238,6 +10238,19 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   source, et la masquer serait la reprendre à notre compte. */}
               {(() => {
                 const moyenne = recsList.reduce((n, r) => n + r.avoi, 0) / recsList.length;
+                // UNE SEULE RÉFÉRENCE POUR LES DEUX GRAPHIQUES DE CETTE SECTION.
+                // Le rail des feuillets, plus haut, colore chaque CER selon
+                // qu'elle passe AVOI_MOYENNE — le chiffre publié. Tracer ici la
+                // moyenne arithmétique des huit barres aurait donné deux verdicts
+                // opposés pour le même objet : le COMESA, à 0,463, tombe sous
+                // 0,501 et au-dessus de 0,458. Un lecteur aurait vu la même CER
+                // dite en dessous à un endroit, au-dessus à l'autre.
+                //
+                // Le repère est donc partout le chiffre publié, et il porte son
+                // nom. L'écart avec la moyenne des huit barres se dit en toutes
+                // lettres, sous le graphique et dans le chapô : c'est une
+                // divergence de la source, et elle s'énonce plutôt qu'elle ne se
+                // tranche par un trait qu'on déplace en silence.
                 return (
                   <>
                     <div className="space-y-3">
@@ -10246,7 +10259,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide w-16 shrink-0">{rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase()}</span>
                           <div className="flex-1 relative h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                             <div className="h-full bg-blue-700 bar-fill" style={{ width: `${Math.max(4, rec.avoi * 100)}%` }}></div>
-                            <div className="absolute top-0 bottom-0 w-px" style={{ left: `${moyenne * 100}%`, backgroundColor: 'var(--ink-mute)' }} />
+                            <div className="absolute top-0 bottom-0 w-px" style={{ left: `${AVOI_MOYENNE * 100}%`, backgroundColor: 'var(--ink-mute)' }} />
                           </div>
                           <span className="text-xs font-bold text-slate-700 w-10 sm:w-12 text-end shrink-0 tabular-nums">{rec.avoi.toFixed(3)}</span>
                         </div>
@@ -10254,8 +10267,8 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     </div>
                     <p className="note-source" style={{ marginTop: 'var(--pas-2)' }}>
                       {tr({
-                        fr: `Le trait vertical marque la moyenne des huit scores ci-dessus, soit ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)}.`,
-                        en: `The vertical rule marks the average of the eight scores above, that is ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)}.`,
+                        fr: `Le trait vertical marque la moyenne publiée des huit CER, ${formatNumber(AVOI_MOYENNE, lang)}. La moyenne arithmétique des huit scores ci-dessus vaut, elle, ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)} : l’écart vient de la source, la plateforme le signale sans le corriger.`,
+                        en: `The vertical rule marks the published average of the eight RECs, ${formatNumber(AVOI_MOYENNE, lang)}. The arithmetic mean of the eight scores above is ${formatNumber(Math.round(moyenne * 1000) / 1000, lang)}: the divergence comes from the source, and the platform flags it rather than correcting it.`,
                       }, lang)}
                     </p>
                   </>

@@ -223,12 +223,21 @@ const DEMANDES = [
   ['le site ne peint que deux rayons',
    () => !/border-radius:\s*2px;/.test(css)],
 
-  ['la moyenne des CER se calcule au lieu de s’écrire',
+  ['le repère de la moyenne n’est plus écrit en dur',
    () => !app.includes("left: '50.1%'")
-      && app.includes('const moyenne = recsList.reduce')],
+      && app.includes('left: `${AVOI_MOYENNE * 100}%`')],
+
+  ['les deux graphiques AVOI partagent une seule référence',
+   () => {
+     // Le rail des feuillets colore selon AVOI_MOYENNE ; le classement doit
+     // tracer le meme repere, sans quoi le COMESA (0,463) serait dit au-dessus
+     // a un endroit et en dessous a l autre.
+     const n = (app.match(/AVOI_MOYENNE/g) || []).length;
+     return n >= 4 && !/left:\s*`\$\{moyenne \* 100\}%`/.test(app);
+   }],
 
   ['le repère de la moyenne porte sa légende',
-   () => app.includes('Le trait vertical marque la moyenne des huit scores')],
+   () => app.includes('Le trait vertical marque la moyenne publiée des huit CER')],
 
   ['l’écart entre la moyenne publiée et celle des barres est dit',
    () => app.includes('Une réserve sur la moyenne des CER')
@@ -236,6 +245,17 @@ const DEMANDES = [
 
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
+
+  ['le site ne porte qu’un seul dessin d’étiquette',
+   () => {
+     // `.surtitre` tient 600 / .16em ; la regle des chapeaux tenait 700 / .18em.
+     // Deux dessins pour un role, dont l ecart etait juste assez petit pour se
+     // lire comme une erreur. Ils doivent coincider.
+     const chapeaux = css.match(/span\[class\*="uppercase"\]\[class\*="tracking"\]\s*\{[^}]*\}/s);
+     return !!chapeaux
+         && /letter-spacing:\s*\.16em/.test(chapeaux[0])
+         && /font-weight:\s*600/.test(chapeaux[0]);
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

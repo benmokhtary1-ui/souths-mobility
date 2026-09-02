@@ -4480,12 +4480,22 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 
 /* --- Les chapeaux : un seul dessin ---------------------------------------
    Ils variaient de 1,76 a 2,20 px d'interlettrage et du gras 600 au gras 700,
-   pour dire exactement la meme chose : « voici de quoi parle ce bloc ». */
+   pour dire exactement la meme chose : « voici de quoi parle ce bloc ».
+
+   RECTIFICATION, RELEVEE SUR LE RENDU. Cette regle a bien unifie les chapeaux
+   qu'elle atteint — mais sur 700 / 0,18 em, quand `.surtitre`, la classe que le
+   site emploie cent cinquante et une fois pour le meme role, tient 600 /
+   0,16 em. Il y avait donc DEUX dessins d'etiquette, chacun se croyant
+   l'unique : cent trente-deux elements a 600 / 2,08 px, trente a 700 /
+   2,34 px. C'est exactement le quasi-alignement que ce bloc chasse par
+   ailleurs — trop proche pour se lire comme une intention, trop loin pour
+   passer inapercu. La regle s'aligne donc sur `.surtitre`, qui est la forme
+   majoritaire ET la forme nommee. */
 :is(main, .reader) span[class*="uppercase"][class*="tracking"] {
   font-size: calc(13px * var(--corps)) !important;
-  letter-spacing: .18em !important;
-  font-weight: 700 !important;
-  line-height: 1.4;
+  letter-spacing: .16em !important;
+  font-weight: 600 !important;
+  line-height: 1.45;
 }
 
 /* --- Les titres : deux crans, pas neuf ------------------------------------
