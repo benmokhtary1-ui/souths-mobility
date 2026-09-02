@@ -246,6 +246,22 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- L’ORDRE DU REGARD DANS LA FICHE ------------------------------------
+  ['les deux faces sont nommées, et `var(--serif)` résout',
+   () => /--serif:\s*'Fraunces'/.test(css) && /--sans:\s*'IBM Plex Sans'/.test(css)],
+
+  ['le chiffre passe avant le folio et avant la thèse',
+   () => {
+     // 31 px pour le nombre mene, 22 pour le folio, 19 pour la these.
+     const mesure = css.match(/\.fiche-mesure-n\s*\{[^}]*\}/s);
+     return !!mesure && /font-size:\s*calc\(31px/.test(mesure[0])
+         && /\.fiche-mvt span\[class\*="text-\\\[2\.6rem\\\]"\]/.test(css)
+         && css.includes('.fiche-mvt > div > p.font-serif.font-bold');
+   }],
+
+  ['la coupure entre ratifiés et non-ratifiés se voit',
+   () => css.includes('.ratif-ligne[data-ratifie="oui"] + .ratif-ligne[data-ratifie="non"]')],
+
   ['aucune définition n’occupe le champ du mot',
    () => !app.includes("mot: { fr: 'Un événement soudain ou lent")
       && app.includes("mot: { fr: 'Déplacement lié aux catastrophes'")],

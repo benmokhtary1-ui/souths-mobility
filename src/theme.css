@@ -255,6 +255,21 @@ h1, .font-serif.text-3xl, .font-serif.text-4xl, .font-serif.text-5xl { line-heig
   --pas-4: 2.5rem;   /* 40 px — entre cartes */
   /* La gouttiere des boites de section : le pas 3 ouvert de 30 %. */
   --pas-carte: 2rem; /* 32 px — dedans une boite de section */
+
+  /* LES DEUX FACES, NOMMÉES.
+     Elles n'existaient qu'en toutes lettres, répétées vingt fois dans la
+     feuille et jamais sous forme de jeton. Les règles écrites depuis
+     appelaient donc `var(--serif)` — qui ne résolvait rien, et retombait en
+     silence sur le sans hérité. Résultat mesuré sur la fiche pays : « 55 k »,
+     « 111 k », « 55 % », le compte « 3 / 6 », tous les nombres qu'on vient y
+     chercher, étaient composés dans la face de labeur pendant que la phrase
+     au-dessus tenait la Fraunces. La hiérarchie s'inversait : le raisonnement
+     paraissait plus important que le chiffre qu'il sert.
+
+     Une variable qui n'existe pas ne casse rien, elle appauvrit — c'est ce qui
+     la rend difficile à voir. Elles sont donc nommées ici, une fois. */
+  --serif: 'Fraunces', Georgia, serif;
+  --sans:  'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui, sans-serif;
 }
 
 /* Le rembourrage des cartes de lecture : 32, 40, 48 et 64 px disaient la même
@@ -2462,6 +2477,43 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   padding: var(--pas-3) var(--pas-carte) var(--pas-4);
   border-top: 1px solid var(--rule);
 }
+/* LE FOLIO ORIENTE, IL NE HÈLE PAS — ET SEULEMENT ICI.
+   `MovementOpener` sort son numéro à 2,6 rem en gras noir sur l’accent. Dans
+   Données, c’est juste : le folio y est la colonne vertébrale d’une page qu’on
+   parcourt, et il porte le rythme de la démonstration. Dans la fiche pays il
+   entre en concurrence avec la seule chose qu’on y vient chercher — le nombre.
+   Mesuré sur le premier mouvement : le folio l’emportait sur « 55 % » de
+   quinze pixels de corps et de tout le contraste.
+
+   Il garde donc sa fonction et perd son emphase : même corps que la thèse,
+   posé dans le gris du filet plutôt que dans l’accent. On le trouve quand on
+   le cherche, il ne se présente plus le premier. La règle est bornée à
+   `.fiche-mvt` : Données n’est pas touchée. */
+.fiche-mvt .font-black[class*="text-\[2.6rem\]"],
+.fiche-mvt span[class*="text-\[2.6rem\]"] {
+  font-size: calc(22px * var(--corps, 1)) !important;
+  font-weight: 700 !important;
+  color: var(--ink-mute) !important;
+  letter-spacing: .01em;
+}
+.fiche-mvt span[class*="text-\[2.6rem\]"] > span { font-size: calc(13px * var(--corps, 1)) !important; }
+/* La thèse du mouvement explique ; elle ne titre pas. En gras noir sur deux
+   lignes pleine largeur, elle formait le bloc le plus sombre du mouvement et
+   reprenait au chiffre la place qu’on venait de lui donner. Elle garde son
+   corps et sa face — c’est l’argument, et le site tient à ce que chaque section
+   en porte un — mais elle passe au demi-gras et à l’encre douce. L’ordre du
+   regard devient : le nombre, puis ce qu’il démontre, puis les libellés.
+
+   Écrite d’abord `.fiche-mvt > div > p`, elle perdait sans rien dire : une
+   classe et deux éléments, soit (0,1,2), quand `.font-serif.font-bold` en pèse
+   deux, (0,2,0) — les classes passent avant les éléments — et que l’encre
+   d’ardoise est posée en `!important` par la couche d’interception. Le
+   sélecteur nomme donc les deux classes qu’il vient corriger. */
+.fiche-mvt > div > p.font-serif.font-bold {
+  font-weight: 600 !important;
+  color: var(--ink-soft) !important;
+  max-width: 62ch;
+}
 .fiche-mvt:first-of-type { border-top: 0; }
 @media (max-width: 767px) { .fiche-mvt { padding: var(--pas-3) var(--pas-carte); } }
 
@@ -2527,15 +2579,28 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 @media print { .fiche-corps { padding: 0 !important; } }
 
 /* ---------- Une mesure, énoncée ----------------------------------------------
-   Le chiffre et ce qu’il mesure, sur une ligne. Remplace les pistes remplies
-   à `max(5 %, valeur)`, qui affichaient toutes la même chose sous 5 %.      */
-.fiche-mesure { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem; margin: var(--pas-2) 0 0; }
+   Le chiffre et ce qu’il mesure. Remplace les pistes remplies à
+   `max(5 %, valeur)`, qui affichaient toutes la même chose sous 5 %.
+
+   L’ORDRE DU REGARD. Relevé sur le premier mouvement : le folio « 01 » sortait
+   à 2,6 rem en gras noir, la thèse à 19 px, et les nombres — ce qu’on vient
+   chercher — à 19 et 26. L’œil tombait donc sur un numéro d’ordre, puis sur une
+   phrase, et trouvait le chiffre en troisième. Le chiffre passe en tête de la
+   hiérarchie : il monte au haut de l’échelle du site, son libellé descend sous
+   lui au lieu de le border, et le blanc les sépare. Un nombre suivi d’un vide
+   se voit de loin ; le même nombre serré contre son libellé se lit de près. */
+.fiche-mesure { margin: var(--pas-2) 0 0; }
 .fiche-mesure-n {
+  display: block;
   font-family: var(--serif); font-weight: 700;
-  font-size: calc(26px * var(--corps, 1)); line-height: 1; color: var(--ink);
-  font-variant-numeric: tabular-nums;
+  font-size: calc(31px * var(--corps, 1)); line-height: 1.02; color: var(--ink);
+  font-variant-numeric: tabular-nums; letter-spacing: -.015em;
 }
-.fiche-mesure-quoi { font-size: calc(13px * var(--corps, 1)); color: var(--ink-soft); }
+.fiche-mesure-quoi {
+  display: block; margin-top: .3rem;
+  font-size: calc(13px * var(--corps, 1)); line-height: 1.4; color: var(--ink-soft);
+  max-width: 34ch;
+}
 
 /* ---------- L’évolution en deux points ---------------------------------------
    Quand la série n’a que deux millésimes, elle s’écrit au lieu de se tracer :
@@ -2545,12 +2610,15 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   gap: .5rem .875rem; margin-top: var(--pas-2);
 }
 .evolution-borne { display: inline-flex; align-items: baseline; gap: .4rem; }
+/* Le point d arrivee porte l information ; celui de depart la situe. Ils
+   avaient le meme corps et presque la meme encre, si bien qu il fallait lire
+   les millesimes pour savoir lequel etait lequel. */
 .evolution-borne b {
   font-family: var(--serif); font-weight: 700;
-  font-size: calc(19px * var(--corps, 1)); color: var(--ink-soft);
+  font-size: calc(19px * var(--corps, 1)); color: var(--ink-mute);
   font-variant-numeric: tabular-nums;
 }
-.evolution-borne--fin b { color: var(--ink); }
+.evolution-borne--fin b { font-size: calc(26px * var(--corps, 1)); color: var(--ink); }
 .evolution-borne small { font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 .evolution-fleche { width: 14px; height: 14px; color: var(--ink-mute); align-self: center; flex: none; }
 :root[dir="rtl"] .evolution-fleche { transform: scaleX(-1); }
@@ -2570,8 +2638,11 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   padding-bottom: var(--pas-2, 1rem);
   border-bottom: 1px solid var(--rule);
 }
-.ratif-n   { font-family: var(--serif); font-weight: 700; font-size: calc(26px * var(--corps, 1)); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
-.ratif-sur { font-family: var(--serif); font-weight: 600; font-size: calc(17px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+/* Le compte mene son mouvement comme les autres chiffres menent le leur : meme
+   corps de tete, meme encre. Il tenait 26 quand `.fiche-mesure-n` en tient 31,
+   ce qui faisait du quatrieme mouvement le seul ou le nombre ne primait pas. */
+.ratif-n   { font-family: var(--serif); font-weight: 700; font-size: calc(31px * var(--corps, 1)); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.015em; }
+.ratif-sur { font-family: var(--serif); font-weight: 600; font-size: calc(19px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 .ratif-dit { font-size: calc(13px * var(--corps, 1)); color: var(--ink-soft); }
 
 .ratif-liste { list-style: none; margin: 0; padding: 0; }
@@ -2584,6 +2655,18 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   font-size: calc(14px * var(--corps, 1));
 }
 .ratif-ligne:first-child { border-top: 0; }
+/* LA COUPURE SE VOIT, DONC LE COMPTE SE VOIT.
+   La liste est triée : ratifiés d’abord. Les six lignes portaient pourtant le
+   même filet, si bien que la frontière entre les deux groupes — la seule chose
+   que ce bloc a à dire — ne se lisait qu’en parcourant la colonne de droite mot
+   à mot. Un filet plus appuyé à l’endroit exact où l’on bascule, et « trois sur
+   six » se voit sans rien lire. Le sélecteur prend le premier « non » qui suit
+   un « oui » : sur une liste toute ratifiée ou pas du tout, il ne trouve rien
+   et aucune coupure n’apparaît, ce qui est juste. */
+.ratif-ligne[data-ratifie="oui"] + .ratif-ligne[data-ratifie="non"] {
+  border-top-width: 2px;
+  border-top-color: var(--rule-strong);
+}
 .ratif-marque { display: flex; align-items: center; justify-content: center; align-self: center; height: 1rem; color: var(--ok, var(--accent)); }
 .ratif-nom   { color: var(--ink); }
 .ratif-etat  { font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; white-space: nowrap; }
