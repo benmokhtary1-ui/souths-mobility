@@ -7603,9 +7603,30 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             { mot: { fr: 'Environnement', en: 'Environment' },
               sens: { fr: "Plus large : écosystèmes, sols, eau, qualité de l’air. Une nappe épuisée par surexploitation en relève, et se corrige localement.",
                       en: 'Broader: ecosystems, soil, water, air quality. A water table drained by over-extraction belongs here, and is corrected locally.' } },
-            { mot: { fr: 'Un événement soudain ou lent — inondation, sécheresse, cyclone, séisme — dont on compte les personnes qu’il chasse de chez elles sans qu’elles quittent leur pays. C’est la mesure que produit l’IDMC, et c’est elle que ce volet rapporte.', en: 'A sudden or slow-onset event — flood, drought, cyclone, earthquake — for which what is counted is the people it drives from their homes without their leaving the country. That is the measurement IDMC produces, and the one this section reports.' },
-              sens: { fr: "Une inondation, une sécheresse, un cyclone, un séisme. On compte les personnes qu’elle chasse de chez elles sans qu’elles quittent leur pays — c’est ce que mesure l’IDMC, et c’est ce que ce volet rapporte.",
-                      en: 'A flood, a drought, a cyclone, an earthquake. What is counted is the people it drives from their homes without their leaving the country — what IDMC measures, and what this section reports.' } },
+            // LA DÉFINITION AVAIT ÉTÉ ÉCRITE DANS LE CHAMP DU MOT.
+            // Cette entrée portait, en guise de terme, le paragraphe entier —
+            // « Un événement soudain ou lent — inondation, sécheresse… » — que
+            // `sens` répétait ensuite en plus court. Le lexique affichait donc
+            // un paragraphe là où les quatre autres entrées affichent un mot,
+            // puis le redisait. Le terme manquant est celui que la plateforme
+            // emploie partout ailleurs, jusque dans l’Observatoire : le
+            // déplacement lié aux catastrophes.
+            //
+            // Le sens, lui, ouvrait sur quatre noms sans verbe — « Une
+            // inondation, une sécheresse, un cyclone, un séisme. » — puis
+            // reprenait par « elle », qui ne s’accordait avec aucun d’eux. Une
+            // phrase construite ne coûte pas plus de lignes et dit ce que le
+            // fragment laissait deviner.
+            //
+            // Une première rédaction ajoutait ici que l’IDMC « compte des
+            // déplacements, non des personnes ». C’est vrai de sa série de
+            // nouveaux déplacements, mais le champ que cette plateforme affiche
+            // est intitulé « Déplacés internes (catastrophe) » : il porte un
+            // stock de personnes. La clause a donc été retirée plutôt que
+            // vérifiée à la hâte.
+            { mot: { fr: 'Déplacement lié aux catastrophes', en: 'Disaster displacement' },
+              sens: { fr: "Le départ contraint qu’impose un événement soudain ou lent — inondation, cyclone, séisme, sécheresse pluriannuelle — lorsque les personnes chassées de chez elles restent à l’intérieur des frontières de leur pays. C’est cette grandeur que l’IDMC mesure, et que ce volet rapporte.",
+                      en: 'The forced departure imposed by a sudden or slow-onset event — flood, cyclone, earthquake, multi-year drought — where the people driven from their homes remain inside their country’s borders. It is this quantity that IDMC measures, and that this section reports.' } },
             { mot: { fr: 'Mobilité induite', en: 'Induced mobility' },
               sens: { fr: "Le facteur environnemental est déterminant sans jamais agir seul : il opère à travers des conditions économiques, sociales et politiques qui décident, à exposition égale, de qui part et de qui reste. Un même épisode de sécheresse ne produit donc pas la même mobilité selon le lieu où il survient, ce qui interdit d’en faire une cause au sens strict et justifie le terme d’« induite ».",
                       en: 'The environmental factor is decisive without ever acting alone: it works through economic, social and political conditions which decide, at equal exposure, who leaves and who stays. The same drought episode therefore does not produce the same mobility depending on where it strikes, which rules out treating it as a cause in the strict sense and warrants the term "induced".' } },
@@ -7657,8 +7678,15 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
         }}
         notions={[
           { mot: { fr: 'Déplacé interne', en: 'Internally displaced person' },
-            sens: { fr: "Chassé de chez lui, resté dans son pays. Convention de Kampala (2009), seul traité contraignant au monde sur cette situation. Aucune frontière franchie, donc aucune statistique d’entrée nulle part.",
-                    en: 'Driven from home, still inside their own country. Kampala Convention (2009), the world’s only binding treaty on this situation. No border crossed, therefore no entry statistic anywhere.' } },
+            // Trois fragments sans verbe se suivaient — « Chassé de chez lui,
+            // resté dans son pays. Convention de Kampala (2009), seul traité
+            // contraignant au monde sur cette situation. Aucune frontière
+            // franchie, donc aucune statistique d’entrée nulle part. » Le
+            // lecteur devait relier lui-même le statut, le texte qui le régit
+            // et la conséquence statistique ; c’est précisément ce travail
+            // qu’une définition doit faire à sa place.
+            sens: { fr: "Une personne chassée de chez elle qui n’a pas quitté son pays. L’Afrique est le seul continent à s’être doté d’un traité contraignant sur cette situation — la Convention de Kampala, adoptée en 2009 — et cette antériorité ne se retrouve nulle part dans les comptes : puisqu’aucune frontière n’est franchie, aucun poste d’entrée n’enregistre le déplacement, et il n’apparaît dans aucune statistique migratoire.",
+                    en: 'A person driven from home who has not left their country. Africa is the only continent to have given itself a binding treaty on this situation — the Kampala Convention, adopted in 2009 — and that precedence is nowhere reflected in the counts: since no border is crossed, no entry post records the movement, and it appears in no migration statistic.' } },
           { mot: { fr: 'Réfugié', en: 'Refugee' },
             sens: { fr: "A franchi une frontière et ne peut rentrer. La Convention de l’OUA (1969) va plus loin que celle de Genève : elle couvre aussi l’agression extérieure, l’occupation, la domination étrangère et les événements troublant gravement l’ordre public.",
                     en: 'Has crossed a border and cannot return. The OAU Convention (1969) reaches further than the Geneva one: it also covers external aggression, occupation, foreign domination and events seriously disturbing public order.' } },

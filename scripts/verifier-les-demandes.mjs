@@ -246,6 +246,14 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  ['aucune définition n’occupe le champ du mot',
+   () => !app.includes("mot: { fr: 'Un événement soudain ou lent")
+      && app.includes("mot: { fr: 'Déplacement lié aux catastrophes'")],
+
+  ['les définitions du lexique sont des phrases, pas des fragments',
+   () => !app.includes('Chassé de chez lui, resté dans son pays.')
+      && !app.includes('Une inondation, une sécheresse, un cyclone, un séisme.')],
+
   ['le site ne porte qu’un seul dessin d’étiquette',
    () => {
      // `.surtitre` tient 600 / .16em ; la regle des chapeaux tenait 700 / .18em.
