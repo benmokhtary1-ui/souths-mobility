@@ -3058,7 +3058,7 @@ const t = {
           badge: "Lexique & Définitions",
           title: "Les mots du régime",
           highlight: "et leur définition africaine.",
-          desc: "Chaque notion est définie d’abord par l’instrument africain qui fait référence : Convention de l’OUA sur les réfugiés (1969), Convention de Kampala sur les déplacés internes (2009). La définition opératoire d’UN DESA n’intervient que pour les agrégats statistiques. Le choix du mot n’est jamais neutre : il détermine ce qui est compté.",
+          desc: "Chaque notion est définie d’abord par l’instrument africain qui fait référence : Convention de l’OUA sur les réfugiés (1969), Convention de Kampala sur les personnes déplacées internes (2009). La définition opératoire d’UN DESA n’intervient que pour les agrégats statistiques. Le choix du mot n’est jamais neutre : il détermine ce qui est compté.",
           plain: "Le sens exact des mots employés ici. Chaque définition part du texte africain qui fait référence, parce que la façon de nommer décide de ce qui sera compté."
         },
         about: {
@@ -3082,7 +3082,7 @@ const t = {
         p1: "Un Africain qui vit hors de son pays de naissance a plus d’une chance sur deux d’être resté en Afrique. Un Africain chassé de chez lui par un conflit, lui, n’a le plus souvent pas quitté son pays du tout. Aucune de ces deux trajectoires ne ressemble à l’image que le débat européen se fait de « la migration africaine », et c’est cette image, autant que les mobilités elles-mêmes, que cette plateforme confronte aux chiffres.\n\nEn 2024, 304 millions de personnes vivaient hors de leur pays de naissance, soit 3,7 % de l’humanité — une proportion presque inchangée depuis 1990, où elle valait 2,9 % (UN DESA, 2024). L’Afrique en accueille environ 29 millions, 9,5 % du total mondial, pour près de 18 % de la population de la planète. Et parmi les personnes nées dans un État de l’Union africaine et parties de leur pays, 54,4 % vivent dans un autre État africain (calcul sur la matrice bilatérale d’UN DESA, 2024). Et cette part monte : elle valait 51,9 % en 2015, 53,0 % en 2020.\n\nLe chiffre appelle son objection, et elle est juste. Une majorité de 54,4 % est mince, et les 45,6 % qui restent représentent près de 21 millions de personnes parties hors du continent : c’est considérable, et aucune lecture ne doit le minorer. Ce que ces pages contestent n’est donc pas l’existence de l’émigration africaine vers le Nord, mais la place qu’elle occupe à elle seule dans le débat, et l’idée qu’elle serait la forme ordinaire du départ africain.",
         p1b: "Ce que le débat regarde le moins est pourtant ce qui pèse le plus. La mobilité contrainte africaine se joue d’abord à l’intérieur des frontières : l’Afrique subsaharienne compte à elle seule 38,8 millions de personnes déplacées dans leur propre pays, sur les 82,2 millions recensés dans 104 pays, soit 46 % du total mondial (IDMC). C’est davantage que tous les migrants internationaux présents sur le continent. Un déplacement qui ne franchit aucune frontière ne produit ni image de traversée, ni entrée dans un registre d’arrivée, ni ligne dans une statistique d’asile. Il ne laisse aucune trace là où se fabrique le récit, et il en disparaît — non parce qu’on le cache, mais parce que rien ne le compte.",
         caveats: "Ces chiffres se lisent avec leurs limites. Les statistiques migratoires africaines sont chroniquement sous-enregistrées : circulations transfrontalières non déclarées, mobilités informelles, capacités administratives très inégales d’un pays à l’autre. La plateforme travaille donc avec les meilleures données publiées sans prétendre qu’elles soient complètes, et chaque angle mort est documenté dans la section Méthode plutôt que passé sous silence.\n\nSur les définitions, la règle est constante. Pour les agrégats, c’est celle d’UN DESA : sans elle, aucune comparaison internationale ne tient. Pour les notions juridiques, c’est l’instrument africain qui fait référence — le réfugié se lit par la Convention de l’OUA de 1969, plus large que celle de Genève, et la personne déplacée par la Convention de Kampala de 2009. Ce n’est pas une préférence : appliquer une définition genevoise à un continent qui s’est doté de la sienne fausserait le compte. Ce choix a un prix, qu’il vaut mieux énoncer : une donnée lue avec les définitions africaines ne se compare pas terme à terme avec une donnée européenne lue par Genève. La plateforme préfère une comparaison difficile à une équivalence commode, et signale l’écart partout où il joue.",
-        p2: "Deux idées commandent la lecture. La première tient au mot même : on compte ici des mobilités, non des migrations. Le départ définitif, la circulation quotidienne, l’aller-retour saisonnier et l’immobilité subie tiennent sur le même plan, parce qu’aucun n’a plus de réalité que les autres du seul fait qu’il franchit une frontière (Sheller & Urry, 2006). C’est ce qui explique la présence, ici, des déplacés internes, qui ne migrent nulle part.\n\nLa seconde tient à ce qui décide du mouvement. Vouloir partir et pouvoir partir sont deux choses, et leur écart explique mieux la carte que la coupure habituelle entre départ volontaire et départ contraint : on reste souvent faute de moyens, on part parfois sans l’avoir choisi (de Haas, 2021). Deux travaux prolongent ce cadre du côté politique — les États africains négocient les agendas migratoires du Nord au lieu de les subir (Adamson & Tsourapas, 2019), et le droit international de la mobilité porte une asymétrie qui se lit à la lumière de l’histoire coloniale (Achiume, 2019).",
+        p2: "Deux idées commandent la lecture. La première tient au mot même : on compte ici des mobilités, non des migrations. Le départ définitif, la circulation quotidienne, l’aller-retour saisonnier et l’immobilité subie tiennent sur le même plan, parce qu’aucun n’a plus de réalité que les autres du seul fait qu’il franchit une frontière (Sheller & Urry, 2006). C’est ce qui explique la présence, ici, des personnes déplacées internes, qui ne migrent nulle part.\n\nLa seconde tient à ce qui décide du mouvement. Vouloir partir et pouvoir partir sont deux choses, et leur écart explique mieux la carte que la coupure habituelle entre départ volontaire et départ contraint : on reste souvent faute de moyens, on part parfois sans l’avoir choisi (de Haas, 2021). Deux travaux prolongent ce cadre du côté politique — les États africains négocient les agendas migratoires du Nord au lieu de les subir (Adamson & Tsourapas, 2019), et le droit international de la mobilité porte une asymétrie qui se lit à la lumière de l’histoire coloniale (Achiume, 2019).",
         p3: "La méthode qui en découle est délibérément étroite. La plateforme ne produit pas de données : elle réunit celles que les institutions publient, les date, et les rapporte à la population dont il est question — un nombre absolu ne dit rien tant qu’on ignore à quoi le rapporter. Elle place l’architecture africaine, Union africaine et Communautés économiques régionales, avant les cadres venus d’ailleurs, sans ignorer que le financement et le pouvoir de nommer restent très inégalement répartis (Bakewell, 2008 ; Bayart, 2000).",
         p3b: "Cette architecture produit un paradoxe, et le paradoxe se chiffre. L’Afrique a devancé la norme mondiale plus d’une fois : avec la Convention de Kampala (2009), elle s’est dotée du premier traité contraignant au monde sur les personnes déplacées internes, et il reste le seul. Quatre États — le Bénin, la Gambie, le Rwanda et les Seychelles — accueillent déjà sans visa tous les ressortissants africains. Et pourtant le Protocole sur la libre circulation, adopté à Kigali en 2018, ne compte que 4 ratifications sur 54, quand il en faut 15 pour entrer en vigueur. Ce qui manque n’est donc pas le texte, mais son ancrage dans les administrations qui devraient l’appliquer — et c’est cet intervalle, entre la norme proclamée et la pratique des guichets, que la thèse dont ce travail est issu appelle l’« entre-deux national ».",
         pullquote: "Entre les principes proclamés à Addis-Abeba et leur application aux postes-frontières s’ouvre un « entre-deux national » : l’espace où le régime africain de gouvernance migratoire se joue réellement (Ben Mokhtar, 2026).",
@@ -6629,7 +6629,7 @@ const ANCHOR_INSTRUMENTS = [
   { key: 'zlecaf',        short: { fr: 'ZLECAf', en: 'AfCFTA' },
     full: { fr: 'Zone de libre-échange continentale africaine (2018)', en: 'African Continental Free Trade Area (2018)' } },
   { key: 'kampala',       short: { fr: 'Kampala', en: 'Kampala' },
-    full: { fr: 'Convention de Kampala sur les déplacés internes (2009)', en: 'Kampala Convention on internally displaced persons (2009)' } },
+    full: { fr: 'Convention de Kampala sur les personnes déplacées internes (2009)', en: 'Kampala Convention on internally displaced persons (2009)' } },
   { key: 'free_movement', short: { fr: 'Libre circulation', en: 'Free movement' },
     full: { fr: 'Protocole sur la libre circulation des personnes (2018)', en: 'Protocol on Free Movement of Persons (2018)' } },
 ];
@@ -10674,6 +10674,9 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
   const totalDocs = libraryData.reduce((sum, s) => sum + s.items.length, 0);
   const essentials = libraryData.flatMap(s => s.items.filter(i => i.essential));
+  // Le panneau de lecture annoncait « douze essentielles » ; elles sont
+  // quatorze. Le compte se prend sur la liste, comme le total juste au-dessus.
+  const nbEssentiels = essentials.length;
 
   const query = searchTerm.trim().toLowerCase();
   const matchesSearch = (item) => {
@@ -10714,27 +10717,39 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
 
       <BarreSection lang={lang} />
 
+      {/* QUATRE COMPTES ÉCRITS À LA MAIN, DONT TROIS AVAIENT DÉRIVÉ.
+            Ce panneau annonçait « Soixante-sept références » quand le bandeau,
+            six centimètres plus haut, en annonçait 70 — celui-là les comptait.
+            La première famille disait 28 pour 31, et le pied « douze
+            essentielles » pour quatorze. Les quatre nombres avaient été justes
+            le jour où on les a tapés, et la bibliothèque a grandi sans eux.
+
+            La plateforme demande partout qu'un chiffre se recalcule plutôt
+            qu'il ne se reprenne. Sa propre bibliographie n'y échappe pas : les
+            comptes viennent désormais de `libraryData`, et ne peuvent plus
+            vieillir. */}
       <Reperes
         lang={lang}
         chapo={{ fr: 'Comment lire cette bibliothèque', en: 'How to read this library' }}
-        titre={{ fr: "Soixante-sept références, quatre familles", en: 'Sixty-seven references, four families' }}
+        titre={{ fr: `${totalDocs} références, ${libraryData.length === 4 ? 'quatre' : libraryData.length} familles`,
+                 en: `${totalDocs} references, ${libraryData.length === 4 ? 'four' : libraryData.length} families` }}
         chapeau={{
           fr: "La bibliothèque ne cherche pas l’exhaustivité : elle réunit ce sur quoi la plateforme s’appuie réellement. Toute source citée ailleurs sur le site doit s’y retrouver, et chaque entrée porte son année, son type et son lien d’origine.",
           en: 'The library does not aim at exhaustiveness: it gathers what the platform actually rests on. Any source cited elsewhere on the site must appear here, and each entry carries its year, its type and its original link.'
         }}
         notions={[
-          { mot: { fr: 'Rapports institutionnels & données — 28', en: 'Institutional reports & data — 28' },
+          { mot: { fr: `Rapports institutionnels & données — ${libraryData[0].items.length}`, en: `Institutional reports & data — ${libraryData[0].items.length}` },
             sens: { fr: "Les producteurs de chiffres : UN DESA, OIM, HCR, Banque mondiale, Afrobarometer.", en: 'The figure producers: UN DESA, IOM, UNHCR, World Bank, Afrobarometer.' } },
-          { mot: { fr: 'Union africaine, agences et CER — 12', en: 'African Union, agencies and RECs — 12' },
+          { mot: { fr: `Union africaine, agences et CER — ${libraryData[1].items.length}`, en: `African Union, agencies and RECs — ${libraryData[1].items.length}` },
             sens: { fr: "Les sources continentales, qui priment ici sur leurs équivalents onusiens.", en: 'The continental sources, which here take precedence over their UN equivalents.' } },
-          { mot: { fr: 'Cadres juridiques & instruments — 11', en: 'Legal frameworks & instruments — 11' },
+          { mot: { fr: `Cadres juridiques & instruments — ${libraryData[2].items.length}`, en: `Legal frameworks & instruments — ${libraryData[2].items.length}` },
             sens: { fr: "Les textes eux-mêmes : Kampala, protocoles de libre circulation, Agenda 2063.", en: 'The texts themselves: Kampala, free movement protocols, Agenda 2063.' } },
-          { mot: { fr: 'Recherche académique — 16', en: 'Academic research — 16' },
+          { mot: { fr: `Recherche académique — ${libraryData[3].items.length}`, en: `Academic research — ${libraryData[3].items.length}` },
             sens: { fr: "Les travaux qui donnent aux chiffres leur cadre d’interprétation.", en: 'The work that gives the figures their interpretive frame.' } },
         ]}
         pied={{
-          fr: "Douze références sont marquées « essentielles » : ce sont celles par lesquelles commencer si vous découvrez le champ.",
-          en: 'Twelve references are marked “essential”: those are where to start if the field is new to you.'
+          fr: `${nbEssentiels} références sont marquées « essentielles » : ce sont celles par lesquelles commencer si vous découvrez le champ.`,
+          en: `${nbEssentiels} references are marked “essential”: those are where to start if the field is new to you.`
         }}
       />
       {children}

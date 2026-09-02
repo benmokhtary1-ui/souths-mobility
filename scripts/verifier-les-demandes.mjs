@@ -246,6 +246,31 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- LE LEXIQUE, LA BIBLIOGRAPHIE, LA JUSTIFICATION ---------------------
+  ['la bibliothèque compte ses références au lieu de les écrire',
+   // Le libellé en toutes lettres survit dans le commentaire qui explique
+   // pourquoi il est parti — on vise donc le TITRE, pas le fichier entier.
+   () => /titre=\{\{ fr: `\$\{totalDocs\} références/.test(app)
+      && !app.includes('Rapports institutionnels & données — 28')
+      && app.includes('${nbEssentiels} références sont marquées')],
+
+  ['les quatre familles tirent leur compte de la bibliothèque',
+   // Quatre familles, deux langues chacune : huit appels, pas quatre.
+   () => (app.match(/libraryData\[\d\]\.items\.length/g) || []).length === 8],
+
+  ['la prose emploie la forme de la Convention de Kampala',
+   () => !app.includes('Convention de Kampala sur les déplacés internes')
+      && app.includes('Convention de Kampala sur les personnes déplacées internes')],
+
+  ['la justification s’arrête sous 26 rem de colonne',
+   () => {
+     // Le seuil se lit sur le conteneur, pas sur l ecran : une case de grille
+     // etroite sur un large ecran est le cas que la mesure a trouve.
+     const c = css.match(/@container \(max-width: 26rem\)\s*\{[\s\S]*?\n\}/);
+     return !!c && /text-align:\s*start/.test(c[0])
+         && css.includes(':is(main, .reader) [class*="grid-cols"] > * { container-type: inline-size; }');
+   }],
+
   // --- L’ORDRE DU REGARD DANS LA FICHE ------------------------------------
   ['les deux faces sont nommées, et `var(--serif)` résout',
    () => /--serif:\s*'Fraunces'/.test(css) && /--sans:\s*'IBM Plex Sans'/.test(css)],

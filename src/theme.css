@@ -2926,6 +2926,37 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   hyphens: auto;
 }
 
+/* ---------- LA JUSTIFICATION S'ARRÊTE OÙ LA COLONNE DEVIENT ÉTROITE --------
+   Relevé sur les sept sections : 121 paragraphes justifiés sur des colonnes de
+   moins de 340 px — une quarantaine de signes par ligne. À cette largeur, la
+   justification n'aligne plus, elle creuse : une rivière par ligne, visible
+   d'un coup d'œil sur la bibliothèque et sur toutes les grilles de cartes.
+
+   Le critère est la LARGEUR, et rien d'autre. J'ai d'abord essayé « dans une
+   case de grille », qui se sélectionne en CSS ordinaire — mais la mesure a
+   montré que 41 paragraphes pleine mesure, jusqu'à 923 px, vivent eux aussi
+   dans une grille et auraient perdu leur justification sans raison. Seule une
+   requête de conteneur lit une largeur ; c'est donc elle, et elle seule.
+
+   `container-type: inline-size` sur une case de grille ne change pas sa
+   largeur — c'est la piste de la grille qui la fixe — mais rend cette largeur
+   interrogeable. 26 rem valent 416 px : au-dessus, la justification tient ;
+   en dessous, le fer à gauche. Le seuil est celui que la mesure a montré, pas
+   un chiffre rond choisi d'avance.
+
+   Le sélecteur ci-dessous est le MÊME que celui de la règle de justification,
+   au caractère près. Écrit plus court, il perdait : `@container` est une
+   condition, pas un poids, et la règle de justification pèse ses six `:not()`.
+   À égalité de spécificité, c'est l'ordre qui tranche — et celle-ci vient
+   après.                                                                    */
+:is(main, .reader) [class*="grid-cols"] > * { container-type: inline-size; }
+@container (max-width: 26rem) {
+  :is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not(.fiche-etroit):not([class*="text-center"]):not([class*="text-end"]) {
+    text-align: start;
+    hyphens: manual;
+  }
+}
+
 /* ---------- Barre d'outils de section --------------------------------------
    Le meme bouton, au meme endroit, dans chaque section. Il prend la teinte de
    la section plutot qu'un indigo fixe : c'est un outil de la page ou il se
