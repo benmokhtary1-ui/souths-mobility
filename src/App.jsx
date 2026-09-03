@@ -7247,7 +7247,7 @@ const AnchoringMatrix = ({ lang }) => {
           <p className="surtitre">
             {L('Provenance et réserve', 'Provenance and caveat')}
           </p>
-          <Prose className="text-[11px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
+          <Prose className="text-[13px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
               "Matrice constituée par l’auteur d’après les listes de ratification de l’Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l’UA : 48 États ont déposé leur instrument. Les six qui manquent sont l’Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n’est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés.\n\nLa colonne Kampala a été reprise sur la liste de statut officielle de l’UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé.\n\nLa matrice concorde avec les listes de l’UA, État par État.",
               "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 48 states have deposited their instrument. The six outstanding are Eritrea, not a signatory; Benin, Libya, Sudan and South Sudan, whose ratification is not approved; and Somalia, which approved without depositing. Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected.\n\nThe Kampala column was revised against the AU’s official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected.\n\nThe matrix matches the AU lists state by state."
             )}</Prose>
@@ -7572,7 +7572,7 @@ const TabForced = ({ text, lang, children }) => {
 
       {/* Le cadrage */}
       <Reveal delay={20} className="bg-white border border-slate-200 p-8 md:p-10">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L("Ce que la frontière décide",
              'What the border decides')}
         </h2>
@@ -7691,7 +7691,7 @@ const TabForced = ({ text, lang, children }) => {
 
       {/* Solutions durables */}
       <Reveal delay={50} className="bg-white border border-slate-200 p-8 md:p-10">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L('Sortir du déplacement : trois issues, rarement atteintes', 'Leaving displacement: three exits, rarely reached')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
@@ -8213,16 +8213,14 @@ const TabLabour = ({ text, lang, children }) => {
               </div>
             </div>
   
-            <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-              <p className="surtitre">{L('Source', 'Source')}</p>
-              <a href="https://normlex.ilo.org/" target="_blank" rel="noopener noreferrer"
-                 className="inline-flex items-start gap-1.5 text-[11px] hover:underline" style={{ color: 'var(--accent-2)' }}>
-                <span>{L(
-                  "OIT — base NORMLEX (ratifications par pays). Compilation integree a la base pays de la plateforme ; chaque fiche pays renvoie a la page NORMLEX de l’Etat concerne.",
-                  'ILO — NORMLEX database (ratifications by country). Compiled into the platform country base; each country profile links to that state’s NORMLEX page.'
-                )}</span>
-                <ExternalLink className="w-3 h-3 shrink-0 mt-0.5" />
-              </a>
+            <div className="px-6 md:px-8 pb-5">
+              <Sources lang={lang} items={[{
+                label: L('OIT — base NORMLEX (ratifications par pays)',
+                         'ILO — NORMLEX database (ratifications by country)'),
+                url: 'https://normlex.ilo.org/',
+              }]}
+                note={L("Compilation integree a la base pays de la plateforme ; chaque fiche pays renvoie a la page NORMLEX de l’Etat concerne.",
+                        'Compiled into the platform country base; each country profile links to that state’s NORMLEX page.')} />
             </div>
           </section>
         </Chapitre>
@@ -8230,7 +8228,7 @@ const TabLabour = ({ text, lang, children }) => {
 
       {/* La jeunesse, que la 4e edition chiffre pour la premiere fois. */}
       <Reveal delay={45} className="bg-white border border-slate-200 p-8 md:p-10">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L('Six millions de jeunes, et un déséquilibre qui ne bouge pas',
              'Six million young workers, and an imbalance that does not move')}
         </h2>
@@ -8650,7 +8648,7 @@ const TabCorridors = ({ text, lang, children }) => {
           publication d'UN DESA la donne region par region ; on la pose sans
           trier, et l'ordre place l'Europe devant l'Afrique. */}
       <Reveal delay={40} className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-        <h2 className="text-xl font-serif font-bold text-slate-900 mb-3">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L("Rester dans sa région : l’Afrique parmi les autres",
              "Staying within one’s region: Africa among the others")}
         </h2>
@@ -10348,7 +10346,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                   <Briefcase className="w-6 h-6 text-teal-700 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-bold text-teal-900">{tr({ fr: "Partenariats de compétences en action", en: "Global Skills Partnerships in Action" }, lang)}</h3>
-                    <Prose className="text-xs text-teal-800 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ, de sorte que le pays d’origine reçoit une part de la valeur créée par la qualification, au lieu de la perdre entièrement au moment du départ. Le dispositif n’en est plus au stade de la proposition : il est documenté sur des promotions achevées.", en: "Beyond continental frameworks, bilateral agreements are already applying the \"skills partnership\" model between African and European states. Training is jointly funded before departure, so that the country of origin receives a share of the value the qualification creates instead of losing all of it at the moment of departure. The arrangement is no longer at the proposal stage: it is documented on completed cohorts." }, lang)}</Prose>
+                    <Prose className="text-xs text-teal-900 leading-relaxed" lang={lang}>{tr({ fr: "Au-delà des cadres continentaux, des accords bilatéraux appliquent déjà le modèle du « partenariat de compétences » entre États africains et européens. La formation y est financée conjointement avant le départ, de sorte que le pays d’origine reçoit une part de la valeur créée par la qualification, au lieu de la perdre entièrement au moment du départ. Le dispositif n’en est plus au stade de la proposition : il est documenté sur des promotions achevées.", en: "Beyond continental frameworks, bilateral agreements are already applying the \"skills partnership\" model between African and European states. Training is jointly funded before departure, so that the country of origin receives a share of the value the qualification creates instead of losing all of it at the moment of departure. The arrangement is no longer at the proposal stage: it is documented on completed cohorts." }, lang)}</Prose>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -10742,7 +10740,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                     <h3 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h3>
                     <Prose className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic" lang={lang}>{tr(regionObj.intro, lang)}</Prose>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {regionObj.countries.map((country, cIdx) => (
                         <div key={cIdx} className="bg-slate-50 p-5 rounded-lg border border-slate-200 flex flex-col h-full">
                           <div className="flex justify-between items-start mb-3">
@@ -10763,7 +10761,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
                             {country.details.map((detail, dIdx) => (
                               <div key={dIdx}>
                                 <p className="surtitre">{tr(detail.label, lang)}</p>
-                                <Prose className="text-xs text-slate-800 leading-relaxed" lang={lang}>{tr(detail.text, lang)}</Prose>
+                                <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr(detail.text, lang)}</Prose>
                               </div>
                             ))}
                           </div>
@@ -11484,7 +11482,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
       />
 
       <Reveal className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-3">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L("Les États africains recensent, et à la fréquence recommandée", 'African states hold censuses, and at the recommended frequency')}
         </h2>
         <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify">
@@ -11539,7 +11537,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
           source empirique. UN DESA la publie region par region ; on la pose
           telle quelle, y compris la ou elle place l'Afrique en dessous. */}
       <Reveal delay={40} className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
-        <h2 className="text-xl font-serif font-bold text-slate-900 mb-3">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
           {L("La couverture statistique, région par région",
              "Statistical coverage, region by region")}
         </h2>
@@ -12785,7 +12783,7 @@ const TabAbout = ({ text, lang, children }) => {
 
       <div className="bg-slate-50 p-8 md:p-10 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-10">
         <div className="flex-1 space-y-4">
-          <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.founder_title}</h2>
+          <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{text.about.founder_title}</h2>
           <div className="text-sm text-slate-600 leading-relaxed space-y-3 text-justify">
             <Prose lang={lang}>{text.about.founder_p1}</Prose>
             <Prose lang={lang}>{text.about.founder_p2}</Prose>
@@ -12796,7 +12794,7 @@ const TabAbout = ({ text, lang, children }) => {
 
         <div className="flex-1 flex flex-col justify-between space-y-6">
           <div>
-            <h2 className="text-xl font-serif font-bold text-slate-900 mb-4">{text.about.collab_title}</h2>
+            <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{text.about.collab_title}</h2>
             <Prose className="text-sm text-slate-600 leading-relaxed mb-4" lang={lang}>{text.about.collab_p1}</Prose>
             <Prose className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3" lang={lang}>{text.about.contact_p}</Prose>
             
