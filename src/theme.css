@@ -5691,7 +5691,15 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 .carrousel-piste:active { cursor: grabbing; }
 
 .feuillet-place { flex: 0 0 min(78vw, 21rem); min-width: 0; }
-.feuillet { height: 100%; transform-style: preserve-3d; }
+/* `position: relative` N'EST PAS DÉCORATIF ICI : SANS LUI, `z-index` NE FAIT
+   RIEN. La carte portait bien 10 au centre, 9 et 8 sur ses voisines — la
+   valeur se calculait, se lisait, et n'était jamais appliquée, parce qu'un
+   élément statique ne participe pas à l'empilement. Les cartes se peignaient
+   donc dans l'ordre du DOM et celle de DROITE passait devant la centrale, à
+   l'inverse de ce que le chevauchement doit dire.
+   `preserve-3d` part avec la rotation qu'il servait : il n'y a plus de plan à
+   préserver, et il ouvrait un contexte d'empilement de plus. */
+.feuillet { height: 100%; position: relative; }
 
 /* --- La carte ------------------------------------------------------------ */
 .feuillet-carte {

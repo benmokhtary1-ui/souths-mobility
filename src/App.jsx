@@ -1733,7 +1733,7 @@ const COURBE = { duration: 0.7, ease: [0.4, 0, 0.2, 1] };
 // Une carte du feuilletage. Elle lit la position du chariot et en déduit sa
 // propre distance au centre, d'où son échelle, son opacité et sa rotation.
 // La carte de l'Observatoire des narratifs : un rendu du rail parmi d'autres.
-const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit }) => {
+const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit, total }) => {
   const L = faireL(lang);
   const t = tierOf(fiche.confidence_level);
   const CatIcon = evidenceCategoryIcons[fiche.category.fr] || Globe;
@@ -1760,7 +1760,21 @@ const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang
   // Le glissement au doigt reste — la référence ne l'a pas, et c'est le seul
   // geste naturel sur un téléphone. La correction se calcule donc en continu
   // depuis la position du chariot, et non par créneaux fixes.
-  const signe = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  // La distance est CYCLIQUE : ramenée dans [-total/2, +total/2], une carte
+  // sortie par la droite revient par la gauche. C'est ce qui fait la boucle,
+  // sans dupliquer une seule carte.
+  // DEUX distances, et il faut les deux.
+  // `brut` est la place réelle de la carte dans le rang : c'est elle, et elle
+  // seule, que la correction ci-dessous doit annuler pour poser la carte où on
+  // la veut. `signe` est la distance VUE, ramenée dans [-total/2, +total/2] :
+  // une carte sortie par la droite y revient par la gauche, et c'est ce
+  // repliement qui fait la boucle sans dupliquer une seule carte.
+  const brut = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  const signe = useTransform(brut, (d) => {
+    if (!total) return d;
+    const demi = total / 2;
+    return ((d % total) + total + demi) % total - demi;
+  });
   const ecart = useTransform(signe, (d) => Math.abs(d));
 
   const echelle = useTransform(ecart, [0, 1, 2, 3], reduit ? [1, 1, 1, 1] : [1, 0.73, 0.599, 0.52]);
@@ -1776,11 +1790,14 @@ const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang
   // La correction ramène la carte de sa place de rang vers sa place voulue :
   // à un rang d'écart elle devrait être à 0,40 largeur du centre, non à un pas
   // entier. C'est ce resserrement qui fait le chevauchement.
-  const glisse = useTransform(signe, (d) => {
+  const glisse = useTransform([signe, brut], ([d, dBrut]) => {
     if (reduit) return 0;
     const a = Math.abs(d);
     const voulu = a <= 1 ? a * 0.40 : a <= 2 ? 0.40 + (a - 1) * 0.259 : 0.659 + (a - 2) * 0.09;
-    return Math.sign(d) * voulu * carte - d * pas;
+    // On part de la place RÉELLE (dBrut) et on vise la place VUE (d) : c'est
+    // ce seul écart qui transporte, sans saut, une carte d'un bout du rang à
+    // l'autre.
+    return Math.sign(d) * voulu * carte - dBrut * pas;
   });
   // La carte centrale passe DEVANT ses voisines, sans quoi le chevauchement
   // se lit à l'envers.
@@ -1839,7 +1856,7 @@ const AVOI_MOYENNE = 0.501;   // moyenne des HUIT CER (AVOI 2024), pas celle des
 // alors que l'un est au-dessus de la moyenne et l'autre en dessous.
 //
 // La barre reprend la forme du site : 16 px, piste `--paper-sunk`, carrée.
-const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit }) => {
+const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCentrer, onOuvrir, reduit, total }) => {
   const L = faireL(lang);
   // La borne haute de la barre : au-dessus du meilleur score, pour qu'aucune
   // carte ne sature son échelle.
@@ -1849,15 +1866,32 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
   // partagent la coquille et les commandes, et se seraient contredits l'un
   // l'autre en gardant des lois de profondeur différentes. Voir CarteFeuillet
   // pour le relevé qui les fixe.
-  const signe = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  // La distance est CYCLIQUE : ramenée dans [-total/2, +total/2], une carte
+  // sortie par la droite revient par la gauche. C'est ce qui fait la boucle,
+  // sans dupliquer une seule carte.
+  // DEUX distances, et il faut les deux.
+  // `brut` est la place réelle de la carte dans le rang : c'est elle, et elle
+  // seule, que la correction ci-dessous doit annuler pour poser la carte où on
+  // la veut. `signe` est la distance VUE, ramenée dans [-total/2, +total/2] :
+  // une carte sortie par la droite y revient par la gauche, et c'est ce
+  // repliement qui fait la boucle sans dupliquer une seule carte.
+  const brut = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  const signe = useTransform(brut, (d) => {
+    if (!total) return d;
+    const demi = total / 2;
+    return ((d % total) + total + demi) % total - demi;
+  });
   const ecart = useTransform(signe, (d) => Math.abs(d));
   const echelle = useTransform(ecart, [0, 1, 2, 3], reduit ? [1, 1, 1, 1] : [1, 0.73, 0.599, 0.52]);
   const opacite = useTransform(ecart, [0, 2, 2.4, 3.2], reduit ? [1, 1, 1, 1] : [1, 1, 0.9, 0]);
-  const glisse = useTransform(signe, (d) => {
+  const glisse = useTransform([signe, brut], ([d, dBrut]) => {
     if (reduit) return 0;
     const a = Math.abs(d);
     const voulu = a <= 1 ? a * 0.40 : a <= 2 ? 0.40 + (a - 1) * 0.259 : 0.659 + (a - 2) * 0.09;
-    return Math.sign(d) * voulu * carte - d * pas;
+    // On part de la place RÉELLE (dBrut) et on vise la place VUE (d) : c'est
+    // ce seul écart qui transporte, sans saut, une carte d'un bout du rang à
+    // l'autre.
+    return Math.sign(d) * voulu * carte - dBrut * pas;
   });
   const plan = useTransform(ecart, (a) => Math.round(10 - Math.min(a, 4)));
 
@@ -1963,7 +1997,9 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
   const cible = useCallback((i) => mesure.centre - mesure.carte / 2 - i * mesure.pas, [mesure]);
 
   const aller = useCallback((i, doux = true) => {
-    const j = Math.max(0, Math.min(total - 1, i));
+    // On BOUCLE au lieu de buter : le rang demandé est ramené modulo la
+    // liste, si bien qu'après la dernière carte vient la première.
+    const j = total ? ((i % total) + total) % total : 0;
     setPos(j);
     if (reduit || !doux) x.set(cible(j));
     else animate(x, cible(j), COURBE);
@@ -1988,10 +2024,10 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
     if (items[j]) onChoisir(items[j].id);
   };
 
-  const bornes = {
-    left: cible(total - 1),
-    right: cible(0),
-  };
+  // PLUS DE BORNES : une boucle n'a pas de bout où buter. Le chariot peut
+  // dériver librement pendant le glissement ; chaque relâchement le ramène sur
+  // `cible(j)`, qui vit dans l'intervalle de la liste — il ne s'éloigne donc
+  // jamais durablement, et la distance cyclique fait le reste.
 
   return (
     <section className={'carrousel ' + className} aria-roledescription="carousel" aria-label={etiquette}>
@@ -2004,7 +2040,6 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
           className="carrousel-piste"
           style={{ x }}
           drag="x"
-          dragConstraints={bornes}
           dragElastic={0.14}
           dragMomentum={false}
           onDragEnd={surFin}
@@ -2013,7 +2048,7 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
           {items.map((o, i) => (
             <div key={o.id} ref={i === 0 ? carteRef : null} className="feuillet-place">
               <Carte
-                objet={o} index={i} x={x} pas={mesure.pas} carte={mesure.carte} centre={mesure.centre}
+                objet={o} index={i} x={x} pas={mesure.pas} carte={mesure.carte} centre={mesure.centre} total={total}
                 actif={o.id === choisie} lang={lang} reduit={reduit}
                 onCentrer={(j) => aller(j)}
                 onOuvrir={(j) => { aller(j); onChoisir(items[j].id); }}
@@ -2026,12 +2061,12 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
         <span className="carrousel-compte tabular-nums" aria-live="polite">
           {Math.min(pos + 1, total)} / {total}
         </span>
-        <button type="button" className="rail-fleche" disabled={pos <= 0}
+        <button type="button" className="rail-fleche"
                 onClick={() => { const j = aller(pos - 1); onChoisir(items[j].id); }}
                 aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
           <ChevronLeft className="w-4 h-4" aria-hidden="true" />
         </button>
-        <button type="button" className="rail-fleche" disabled={pos >= total - 1}
+        <button type="button" className="rail-fleche"
                 onClick={() => { const j = aller(pos + 1); onChoisir(items[j].id); }}
                 aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
           <ChevronRight className="w-4 h-4" aria-hidden="true" />

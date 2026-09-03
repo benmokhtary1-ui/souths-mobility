@@ -253,7 +253,7 @@ const DEMANDES = [
 
   ['les voisines ne s’effacent plus, elles se chevauchent',
    () => !app.includes('[1, 0.55, 0.32]')
-      && app.includes('const glisse = useTransform(signe,')
+      && app.includes('const glisse = useTransform([signe, brut],')
       && app.includes('const plan = useTransform(ecart,')],
 
   ['le plan reste plat — aucune rotation',
@@ -412,6 +412,38 @@ const DEMANDES = [
      return !!chapeaux
          && /letter-spacing:\s*\.16em/.test(chapeaux[0])
          && /font-weight:\s*600/.test(chapeaux[0]);
+   }],
+
+  ['le feuilletage tourne en boucle, sans premier ni dernier',
+   () => {
+     // Deux choses font la boucle, et elles se tiennent : la distance vue est
+     // repliée dans [-total/2, +total/2], et le rang demandé est pris modulo
+     // la liste. Une seule des deux, et le carrousel bute à nouveau.
+     const compte = (h, n) => h.split(n).length - 1;
+     return compte(app, '((d % total) + total + demi) % total - demi') === 2
+         && app.includes('const j = total ? ((i % total) + total) % total : 0;')
+         && !app.includes('Math.min(total - 1, i)')
+         && !app.includes('disabled={pos <= 0}')
+         && !app.includes('disabled={pos >= total - 1}');
+   }],
+
+  ['la correction de place part du rang réel, non de la distance vue',
+   () => {
+     // Sans cette distinction, replier la distance envoyait les cartes des
+     // deux bouts à plus de vingt-sept mille pixels — mesuré sur le rendu.
+     const compte = (h, n) => h.split(n).length - 1;
+     return compte(app, 'useTransform([signe, brut], ([d, dBrut])') === 2
+         && compte(app, '- dBrut * pas;') === 2;
+   }],
+
+  ['la carte centrale passe devant ses voisines',
+   () => {
+     // `z-index` ne fait rien sur une boîte `static` : la règle calculait
+     // 10/9/8 et les cartes se peignaient dans l’ordre du DOM, celle de
+     // droite couvrant le centre.
+     const i = css.indexOf('.feuillet {');
+     if (i < 0) return false;
+     return css.slice(i, css.indexOf('}', i)).includes('position: relative');
    }],
 ];
 
