@@ -2464,7 +2464,116 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    cinq mouvements numérotés, séparés par un filet. Le fond gris et les cartes
    disparaissent ensemble : ils ne servaient qu’à border ce qu’un filet borde
    mieux, et ils coûtaient deux gouttières là où il en faut une.             */
-.fiche-corps { padding: 0 !important; background: var(--paper) !important; }
+/* ---------- L’EN-TÊTE DE LA FICHE : UN PLAN, PAS UNE BANDE -----------------
+   « Le design des fiches pays est trop plain. » Il l’était : la fiche avait
+   gagné en clarté et perdu toute présence. Son en-tête était une bande blanche
+   de la même matière que son corps, et un profil de pays n’y montrait jamais
+   le pays dont il parle.
+
+   Elle prend donc le plan d’encre du site — la MÊME coulée que les bandeaux de
+   section, reprise ici et non réinventée — et la silhouette du pays s’y déverse
+   par la droite, tirée des mêmes tracés que la carte de l’Atlas. Identité,
+   matière et sens arrivent d’un seul geste, porté par le pays lui-même.     */
+.fiche-tete {
+  position: relative;
+  /* `overflow: hidden` retire à un élément de flex sa taille minimale
+     automatique : l'en-tête, qui tenait jusque-là par la hauteur de son
+     contenu, s'est laissé écraser à 48 px et son étiquette a été rognée.
+     Il faut donc lui interdire de rétrécir. */
+  flex: none;
+  overflow: hidden;
+  background-color: var(--plan-encre);
+  background-image:
+    radial-gradient(110% 140% at 88% 120%, color-mix(in oklab, var(--accent-light) 16%, transparent), transparent 62%),
+    linear-gradient(146deg,
+      color-mix(in oklab, var(--accent) 66%, transparent) 0%,
+      color-mix(in oklab, var(--accent) 28%, transparent) 40%,
+      color-mix(in oklab, var(--accent-deep) 52%, transparent) 100%);
+  border-bottom: 1px solid color-mix(in oklab, var(--reserve) 14%, transparent);
+}
+.fiche-tete-silhouette {
+  position: absolute;
+  right: -2%; top: 50%;
+  height: 260%;
+  width: auto;
+  /* Les pays n'ont pas tous la même forme, et la hauteur seule ne suffit pas :
+     la Gambie, très large et très fine, sortait à 854 px de large sur un
+     en-tête de 1 022 et recouvrait le nom. Le cadre est donc borné dans les
+     deux sens ; `preserveAspectRatio` fait tenir la forme dedans. */
+  max-width: 38%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: .3;
+}
+.fiche-tete-silhouette path {
+  fill: color-mix(in oklab, var(--reserve) 9%, transparent);
+  stroke: color-mix(in oklab, var(--reserve) 42%, transparent);
+  stroke-width: 2.2;
+  vector-effect: non-scaling-stroke;
+}
+/* Le contenu de l en-tete repasse en reserve : il est desormais sur l encre.
+   La silhouette est EXCLUE de cette regle : ecrite `> *`, elle lui rendait
+   `position: relative`, la silhouette redevenait une case du flex et poussait
+   le nom, le drapeau et les onglets hors de leur place.
+
+   Le bouton de fermeture en est exclu au même titre : il est posé en
+   `absolute`, et lui rendre `position: relative` le remettait dans le flux —
+   quarante-quatre pixels de plus, plus une gouttière, soit soixante sur un
+   en-tête de mobile qui n'en avait pas à donner. */
+.fiche-tete > *:not(.fiche-tete-silhouette):not(.absolute) { position: relative; z-index: 1; }
+.fiche-tete > .absolute { z-index: 2; }
+.fiche-tete h2 { color: var(--reserve) !important; }
+.fiche-tete .bascule-groupe { border-color: color-mix(in oklab, var(--reserve) 18%, transparent); }
+/* Les bascules portent un fond blanc au repos, pose par le site pour du papier.
+   Sur l encre elles devenaient des pastilles blanches. */
+:is(main, .reader) .fiche-tete .bascule:not([data-actif='true']) {
+  color: color-mix(in oklab, var(--reserve) 78%, transparent) !important;
+  background: color-mix(in oklab, var(--reserve) 8%, transparent) !important;
+  border-color: color-mix(in oklab, var(--reserve) 20%, transparent) !important;
+}
+:is(main, .reader) .fiche-tete .bascule:not([data-actif='true']):hover {
+  color: var(--reserve) !important;
+  background: color-mix(in oklab, var(--reserve) 16%, transparent) !important;
+}
+/* L etiquette « Fiche de donnees brutes » et le cartouche du drapeau. */
+/* Les classes de papier que porte le balisage — filet clair, encre de libellé,
+   fond creusé — sont posées en `!important` par la couche d'interception, et
+   sortaient donc en sombre sur le plan d'encre. On les reprend au même poids,
+   avec la classe de l'en-tête en plus pour passer devant. */
+:is(main, .reader) .fiche-tete .border-slate-200 { border-color: color-mix(in oklab, var(--reserve) 26%, transparent) !important; }
+:is(main, .reader) .fiche-tete :is(.text-slate-500, .text-slate-600) { color: color-mix(in oklab, var(--reserve) 74%, transparent) !important; }
+:is(main, .reader) .fiche-tete .bg-slate-50 { background: color-mix(in oklab, var(--reserve) 12%, transparent) !important; }
+.fiche-tete button[aria-label] {
+  background: color-mix(in oklab, var(--reserve) 12%, transparent) !important;
+  border-color: color-mix(in oklab, var(--reserve) 24%, transparent) !important;
+  box-shadow: none !important;
+}
+/* Son icone porte `text-slate-600`, que la couche d interception pose en
+   `!important` : elle sortait en encre foncee sur le plan d encre. */
+.fiche-tete button[aria-label] svg { color: var(--reserve) !important; }
+.fiche-tete button[aria-label]:hover { background: color-mix(in oklab, var(--reserve) 22%, transparent) !important; }
+
+/* SOUS 768 PX, LA SILHOUETTE PART.
+   Mesurée à 375 px : bornée à 38 % elle fait encore 127 px, et le nom du pays
+   passe dessous — un filigrane qui recouvre ce qu'il illustre. Le plan d'encre
+   reste, lui : c'est lui qui porte l'identité. Et la gouttière se resserre,
+   parce que l'en-tête reprenait soixante pixels sur une fiche qui n'en a que
+   trois cent soixante-six pour lire. */
+@media (max-width: 767px) {
+  .fiche-tete-silhouette { display: none; }
+  .fiche-tete { padding-top: var(--pas-1) !important; padding-bottom: var(--pas-1) !important; gap: var(--pas-1); }
+}
+
+/* Le corps garde le papier, avec la meme trame de points que la page du site :
+   la fiche cesse d etre une surface lisse posee dans un site qui, lui, a du
+   grain. Trente-deux pixels au lieu de vingt-deux — la fiche se lit de plus
+   pres que la page. */
+.fiche-corps {
+  padding: 0 !important;
+  background-color: var(--paper) !important;
+  background-image: radial-gradient(circle at 1px 1px, color-mix(in oklab, var(--ink) 4%, transparent) 1px, transparent 0) !important;
+  background-size: 32px 32px !important;
+}
 /* PAS DE `scroll-behavior: smooth` ICI, ET C EST DELIBERE.
    Mesure faite : avec le glissement, le sommaire ne conduit plus nulle part
    dans le volet de rendu — l affectation de `scrollTop` reste sans effet, tout

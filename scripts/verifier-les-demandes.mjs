@@ -246,6 +246,32 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- L’EN-TÊTE DE LA FICHE PAYS -----------------------------------------
+  ['la fiche montre le pays dont elle parle',
+   () => app.includes('const cadreDuPays = (() => {')
+      && app.includes('className="fiche-tete-silhouette"')
+      && app.includes('id: country.id,')],
+
+  ['l’en-tête de la fiche est un plan, pas une bande blanche',
+   () => /\.fiche-tete\s*\{[^}]*background-color: var\(--plan-encre\)/s.test(css)],
+
+  ['la silhouette ne prend pas la place du nom',
+   () => {
+     const r = css.match(/\.fiche-tete-silhouette\s*\{[^}]*\}/s);
+     return !!r && /max-width:\s*38%/.test(r[0])
+         && /@media \(max-width: 767px\)[^}]*\{\s*\.fiche-tete-silhouette \{ display: none; \}/s.test(css);
+   }],
+
+  ['l’en-tête ne remet pas ses éléments absolus dans le flux',
+   // `> *` avait rendu `position: relative` a la silhouette ET au bouton de
+   // fermeture : soixante pixels de plus sur un en-tete de mobile.
+   () => css.includes('.fiche-tete > *:not(.fiche-tete-silhouette):not(.absolute)')],
+
+  ['l’en-tête ne se laisse pas écraser',
+   // `overflow: hidden` retire a un element de flex sa taille minimale
+   // automatique : sans `flex: none` l en-tete tombait a 48 px.
+   () => /\.fiche-tete\s*\{[^}]*flex: none;[^}]*overflow: hidden/s.test(css)],
+
   // --- LES CIBLES TACTILES ------------------------------------------------
   ['un lien seul dans sa puce devient une cible, pas une ligne',
    // `min-height` etait pose sur ces liens depuis toujours, et sans effet :

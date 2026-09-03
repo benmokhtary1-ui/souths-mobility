@@ -3772,6 +3772,31 @@ const visaOpenTiers = {
 // Carte choroplèthe de l’Explorateur : la carte devient la porte d’entrée, l’utilisateur
 // choisit l’indicateur affiché. Rampe séquentielle mono-teinte (magnitude), gris = sans donnée.
 // ----------------------------------------------------------------------------
+// CADRER UN PAYS DANS SON PROPRE TRACÉ.
+// Les tracés sont dessinés dans le repère du continent : posé tel quel, un
+// pays occupe quelques pour cent du cadre et se perd dans un coin. On relit
+// donc ses coordonnées pour en tirer sa boîte, avec une marge d un vingtième.
+// Le résultat est mis en cache : cinquante-quatre calculs au plus, une fois.
+const cadreDuPays = (() => {
+  const cache = new Map();
+  return (id) => {
+    if (cache.has(id)) return cache.get(id);
+    const d = africaCountryPaths[id];
+    if (!d) { cache.set(id, null); return null; }
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const m of d.matchAll(/(-?[0-9.]+)[ ,](-?[0-9.]+)/g)) {
+      const x = +m[1], y = +m[2];
+      if (x < x0) x0 = x; if (x > x1) x1 = x;
+      if (y < y0) y0 = y; if (y > y1) y1 = y;
+    }
+    if (!Number.isFinite(x0)) { cache.set(id, null); return null; }
+    const marge = Math.max(x1 - x0, y1 - y0) * 0.05;
+    const vb = `${(x0 - marge).toFixed(1)} ${(y0 - marge).toFixed(1)} ${(x1 - x0 + marge * 2).toFixed(1)} ${(y1 - y0 + marge * 2).toFixed(1)}`;
+    cache.set(id, vb);
+    return vb;
+  };
+})();
+
 const countryById = {};
 Object.values(countryData).flat().forEach(c => { countryById[c.id] = c; });
 
@@ -13186,6 +13211,9 @@ export default function App() {
     
     if (country && activeSubTab !== 'perspective') {
       return {
+        // `id` est l identifiant M49, celui qui indexe aussi `africaCountryPaths` :
+        // la fiche peut donc montrer la silhouette du pays dont elle parle.
+        id: country.id,
         name: tr(country.name, lang) || country.name?.fr || 'Unknown', flag: country.flag, iso2: country.iso2, flagIcon: null, flagColor: null, stock: country.stock, female: country.female, evolution: country.evolution,
         retention: country.retention ?? 50,
         remittances: country.remittances ?? null, remittances_year: country.remittances_year ?? null,
@@ -13679,7 +13707,22 @@ export default function App() {
                 brutes » remonte à côté du nom au lieu de tenir une ligne à elle
                 seule. La gouttière latérale, elle, ne bouge pas : c’est celle qui
                 aligne l’en-tête sur le corps. */}
-            <div className="px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row md:justify-between md:items-center bg-white print:border-b-2 print:border-slate-900 print:pb-4 gap-4 print:break-inside-avoid">
+            {/* L’EN-TÊTE ÉTAIT UNE BANDE BLANCHE, ET LA FICHE ÉTAIT PLATE.
+                Elle avait gagné en clarté et perdu toute présence : un profil
+                de pays qui ne montre jamais le pays, sur une bande de la même
+                matière que son corps. Elle prend le plan d’encre du site — la
+                même coulée que les bandeaux de section, pas une invention — et
+                la silhouette du pays s’y déverse par la droite, tirée des mêmes
+                tracés que la carte de l’Atlas. L’identité, la matière et le sens
+                arrivent d’un seul geste, et c’est le pays lui-même qui les
+                porte. */}
+            <div className="fiche-tete px-6 py-4 flex flex-col md:flex-row md:justify-between md:items-center print:border-b-2 print:border-slate-900 print:pb-4 gap-4 print:break-inside-avoid">
+              {display.id && africaCountryPaths[display.id] && (
+                <svg className="fiche-tete-silhouette" viewBox={cadreDuPays(display.id)}
+                     preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+                  <path d={africaCountryPaths[display.id]} />
+                </svg>
+              )}
               <div className="flex items-center gap-4">
                 {display.flagIcon ? (
                   <span className={`border border-slate-200 rounded-sm bg-slate-50 p-2 shadow-sm print:border-none shrink-0 ${display.flagColor || 'text-blue-700'}`}>
