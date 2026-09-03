@@ -1719,7 +1719,16 @@ const AfricaPlate = React.memo(({ opacity = 0.13, plate }) => {
 // d'accessibilité qu'on ajoute après : ici il coupe le ressort ET la
 // perspective. Le carrousel reste utilisable, il ne bouge simplement plus.
 
-const RESSORT = { type: 'spring', stiffness: 260, damping: 32, mass: 0.9 };
+// LE MOUVEMENT DU CARROUSEL : UNE COURBE, PAS UN RESSORT.
+// Un ressort rebondit en fin de course. C'est juste pour un objet qu'on lâche,
+// et faux pour un pas commandé par une flèche : la pile dépassait sa place
+// puis revenait. La référence relevée tient 700 ms sur une courbe
+// d'entrée-sortie standard, et se replace d'un seul mouvement.
+//
+// Le ressort servait au recalage APRÈS un glissement, et il n'y sert plus non
+// plus : les deux gestes se replacent maintenant de la même façon, ce qui est
+// la seule manière que la pile ait toujours l'air du même objet.
+const COURBE = { duration: 0.7, ease: [0.4, 0, 0.2, 1] };
 
 // Une carte du feuilletage. Elle lit la position du chariot et en déduit sa
 // propre distance au centre, d'où son échelle, son opacité et sa rotation.
@@ -1729,25 +1738,58 @@ const CarteFeuillet = ({ objet: fiche, index, x, pas, carte, centre, actif, lang
   const t = tierOf(fiche.confidence_level);
   const CatIcon = evidenceCategoryIcons[fiche.category.fr] || Globe;
 
-  // Distance du centre de CETTE carte au centre de la fenêtre, en pixels.
-  const ecart = useTransform(x, (v) => Math.abs(index * pas + carte / 2 + v - centre));
-  const echelle = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.9, 0.85]);
-  const opacite = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.55, 0.32]);
-  // Le signe de l'écart, lui, décide du sens de la rotation : la carte de
-  // gauche s'ouvre vers la droite, et l'inverse.
-  const tourner = useTransform(
-    x,
-    (v) => {
-      if (reduit) return 0;
-      const d = index * pas + carte / 2 + v - centre;
-      return Math.max(-16, Math.min(16, (-d / pas) * 9));
-    },
-  );
+  // LA GÉOMÉTRIE DU FEUILLETAGE, RELEVÉE SUR UN CARROUSEL QUI MARCHE.
+  // ------------------------------------------------------------------------
+  // Le réglage précédent — échelles 1 / 0,90 / 0,85, opacités 1 / 0,55 / 0,32,
+  // et une rotation de seize degrés — donnait un rail de cartes presque égales
+  // qui s'effaçaient en s'éloignant. Relevé sur la référence apportée : les
+  // proportions sont l'inverse.
+  //
+  //   échelle    1 · 0,73 · 0,599      la carte centrale ÉCRASE ses voisines
+  //   décalage   0 · ±0,40 · ±0,66     en largeurs de carte : elles se
+  //                                    chevauchent, et l'écart se resserre
+  //   opacité    1 partout             AUCUN fondu : la profondeur vient de
+  //                                    l'échelle et du recouvrement
+  //   rotation   aucune                le plan reste plat
+  //
+  // Ce que ces trois choix produisent ensemble : une carte lisible au centre,
+  // des voisines qu'on lit encore assez pour vouloir y aller, et une pile qui
+  // se sent en profondeur sans qu'aucune ne s'évapore. Le fondu, lui, dit au
+  // lecteur que ce qui est à côté ne compte pas.
+  //
+  // Le glissement au doigt reste — la référence ne l'a pas, et c'est le seul
+  // geste naturel sur un téléphone. La correction se calcule donc en continu
+  // depuis la position du chariot, et non par créneaux fixes.
+  const signe = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  const ecart = useTransform(signe, (d) => Math.abs(d));
+
+  const echelle = useTransform(ecart, [0, 1, 2, 3], reduit ? [1, 1, 1, 1] : [1, 0.73, 0.599, 0.52]);
+  // LE SEUL ÉCART AVEC LA RÉFÉRENCE, ET IL EST FORCÉ.
+  // Elle ne monte QUE CINQ cartes : le centre et deux de chaque côté. Le
+  // problème du fondu ne se pose donc jamais chez elle. Ici la liste en compte
+  // soixante-dix-neuf, et sans extinction seize se pressaient dans la fenêtre,
+  // les plus lointaines formant un tas au bord. L'opacité tient donc à 1
+  // jusqu'au deuxième rang — les cinq que la référence montre — puis tombe.
+  // Le résultat visible est le sien ; le moyen diffère parce que la donnée
+  // diffère.
+  const opacite = useTransform(ecart, [0, 2, 2.4, 3.2], reduit ? [1, 1, 1, 1] : [1, 1, 0.9, 0]);
+  // La correction ramène la carte de sa place de rang vers sa place voulue :
+  // à un rang d'écart elle devrait être à 0,40 largeur du centre, non à un pas
+  // entier. C'est ce resserrement qui fait le chevauchement.
+  const glisse = useTransform(signe, (d) => {
+    if (reduit) return 0;
+    const a = Math.abs(d);
+    const voulu = a <= 1 ? a * 0.40 : a <= 2 ? 0.40 + (a - 1) * 0.259 : 0.659 + (a - 2) * 0.09;
+    return Math.sign(d) * voulu * carte - d * pas;
+  });
+  // La carte centrale passe DEVANT ses voisines, sans quoi le chevauchement
+  // se lit à l'envers.
+  const plan = useTransform(ecart, (a) => Math.round(10 - Math.min(a, 4)));
 
   return (
     <motion.div
       className="feuillet"
-      style={{ scale: echelle, opacity: opacite, rotateY: tourner }}
+      style={{ scale: echelle, x: glisse, zIndex: plan, opacity: opacite }}
       data-actif={actif ? 'true' : 'false'}
     >
       <button
@@ -1803,14 +1845,21 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
   // carte ne sature son échelle.
   const BORNE = 0.7;
 
-  const ecart = useTransform(x, (v) => Math.abs(index * pas + carte / 2 + v - centre));
-  const echelle = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.9, 0.85]);
-  const opacite = useTransform(ecart, [0, pas, pas * 2], reduit ? [1, 1, 1] : [1, 0.55, 0.32]);
-  const tourner = useTransform(x, (v) => {
+  // Même géométrie que le feuilletage des affirmations : les deux carrousels
+  // partagent la coquille et les commandes, et se seraient contredits l'un
+  // l'autre en gardant des lois de profondeur différentes. Voir CarteFeuillet
+  // pour le relevé qui les fixe.
+  const signe = useTransform(x, (v) => (index * pas + carte / 2 + v - centre) / pas);
+  const ecart = useTransform(signe, (d) => Math.abs(d));
+  const echelle = useTransform(ecart, [0, 1, 2, 3], reduit ? [1, 1, 1, 1] : [1, 0.73, 0.599, 0.52]);
+  const opacite = useTransform(ecart, [0, 2, 2.4, 3.2], reduit ? [1, 1, 1, 1] : [1, 1, 0.9, 0]);
+  const glisse = useTransform(signe, (d) => {
     if (reduit) return 0;
-    const d = index * pas + carte / 2 + v - centre;
-    return Math.max(-16, Math.min(16, (-d / pas) * 9));
+    const a = Math.abs(d);
+    const voulu = a <= 1 ? a * 0.40 : a <= 2 ? 0.40 + (a - 1) * 0.259 : 0.659 + (a - 2) * 0.09;
+    return Math.sign(d) * voulu * carte - d * pas;
   });
+  const plan = useTransform(ecart, (a) => Math.round(10 - Math.min(a, 4)));
 
   const sigle = rec.id === 'censad' ? 'CEN-SAD' : rec.id.toUpperCase();
   const auDessus = rec.avoi >= AVOI_MOYENNE;
@@ -1818,7 +1867,7 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
   return (
     <motion.div
       className="feuillet"
-      style={{ scale: echelle, opacity: opacite, rotateY: tourner }}
+      style={{ scale: echelle, x: glisse, zIndex: plan, opacity: opacite }}
       data-actif={actif ? 'true' : 'false'}
     >
       <button
@@ -1917,7 +1966,7 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
     const j = Math.max(0, Math.min(total - 1, i));
     setPos(j);
     if (reduit || !doux) x.set(cible(j));
-    else animate(x, cible(j), RESSORT);
+    else animate(x, cible(j), COURBE);
     return j;
   }, [cible, reduit, total, x]);
 
@@ -1948,21 +1997,6 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
     <section className={'carrousel ' + className} aria-roledescription="carousel" aria-label={etiquette}>
       <div className="carrousel-tete">
         <span className="surtitre" style={{ color: 'var(--label)' }}>{etiquette}</span>
-        <div className="carrousel-commandes">
-          <span className="carrousel-compte tabular-nums" aria-live="polite">
-            {Math.min(pos + 1, total)} / {total}
-          </span>
-          <button type="button" className="rail-fleche" disabled={pos <= 0}
-                  onClick={() => { const j = aller(pos - 1); onChoisir(items[j].id); }}
-                  aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
-            <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-          </button>
-          <button type="button" className="rail-fleche" disabled={pos >= total - 1}
-                  onClick={() => { const j = aller(pos + 1); onChoisir(items[j].id); }}
-                  aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
-            <ChevronRight className="w-4 h-4" aria-hidden="true" />
-          </button>
-        </div>
       </div>
 
       <div className="carrousel-fenetre" ref={fenetreRef}>
@@ -1987,6 +2021,21 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
             </div>
           ))}
         </motion.div>
+      </div>
+      <div className="carrousel-commandes carrousel-commandes--pied">
+        <span className="carrousel-compte tabular-nums" aria-live="polite">
+          {Math.min(pos + 1, total)} / {total}
+        </span>
+        <button type="button" className="rail-fleche" disabled={pos <= 0}
+                onClick={() => { const j = aller(pos - 1); onChoisir(items[j].id); }}
+                aria-label={L('Carte précédente', 'Previous card', { ar: 'البطاقة السابقة' })}>
+          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+        </button>
+        <button type="button" className="rail-fleche" disabled={pos >= total - 1}
+                onClick={() => { const j = aller(pos + 1); onChoisir(items[j].id); }}
+                aria-label={L('Carte suivante', 'Next card', { ar: 'البطاقة التالية' })}>
+          <ChevronRight className="w-4 h-4" aria-hidden="true" />
+        </button>
       </div>
     </section>
   );

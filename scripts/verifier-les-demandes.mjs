@@ -246,6 +246,27 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- LE FEUILLETAGE, SUR LA GÉOMÉTRIE RELEVÉE ---------------------------
+  ['la carte centrale écrase ses voisines',
+   // Releve sur la reference : 1 / 0,73 / 0,599 — non 1 / 0,90 / 0,85.
+   () => app.includes('[1, 0.73, 0.599, 0.52]')],
+
+  ['les voisines ne s’effacent plus, elles se chevauchent',
+   () => !app.includes('[1, 0.55, 0.32]')
+      && app.includes('const glisse = useTransform(signe,')
+      && app.includes('const plan = useTransform(ecart,')],
+
+  ['le plan reste plat — aucune rotation',
+   () => !/rotateY: tourner/.test(app)],
+
+  ['le pas commandé suit une courbe, pas un ressort',
+   () => app.includes('const COURBE = { duration: 0.7, ease: [0.4, 0, 0.2, 1] };')
+      && !app.includes('const RESSORT =')],
+
+  ['les commandes du carrousel sont sous la pile',
+   () => app.includes('carrousel-commandes carrousel-commandes--pied')
+      && css.includes('.carrousel-commandes--pied')],
+
   // --- LE BANDEAU DES SOURCES ---------------------------------------------
   ['les sources défilent au lieu de se replier en grille',
    () => app.includes('const BandeauSources = ({ lang }) =>')

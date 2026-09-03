@@ -2553,6 +2553,20 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .fiche-tete button[aria-label] svg { color: var(--reserve) !important; }
 .fiche-tete button[aria-label]:hover { background: color-mix(in oklab, var(--reserve) 22%, transparent) !important; }
 
+/* ---------- LES COMMANDES DU CARROUSEL, SOUS LA PILE -----------------------
+   Elles vivaient en haut à droite, au bout du libellé : pour avancer, l'œil
+   remontait chercher deux flèches dans un coin. Sous la pile et centrées, il
+   descend de la carte à la commande. Le compteur les accompagne — il dit où
+   l'on en est, sa place est à côté de ce qui fait avancer.                  */
+.carrousel-commandes--pied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pas-1);
+  margin-top: var(--pas-3);
+}
+.carrousel-commandes--pied .carrousel-compte { margin-inline-end: var(--pas-1); }
+
 /* ---------- LE BANDEAU DES SOURCES : UNE BANDE QUI DÉFILE ------------------
    Vingt-trois logos dans une grille qui se replie, c’est trois rangées
    inégales sur un écran large et vingt-trois lignes sur un téléphone : on les
