@@ -14152,7 +14152,12 @@ export default function App() {
                 verticale passe de 32 à 16 : les sources restent visibles en
                 permanence — c’est leur raison d’être ici — sans coûter la
                 hauteur d’un bloc de lecture. */}
-            <div className="px-6 py-3 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
+            {/* Le pied reprend le plan de l’en-tête. Une fiche encadrée par deux
+                bandes d’encre se lit comme une planche : le papier devient un
+                objet posé, et non le fond de la fenêtre. C’est aussi ce qui rend
+                les deux boutons d’export lisibles — ils flottaient sur un gris
+                à peine distinct du corps. */}
+            <div className="fiche-pied px-6 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 print:hidden">
               <span className="surtitre hidden md:block">{text.modal.data_source}</span>
               <div className="flex items-center space-x-2 rtl:space-x-reverse w-full sm:w-auto justify-end">
                 <CsvButton onClick={exportCountryProfileCSV} label={text.modal.export_csv} className="flex-1 sm:flex-none justify-center" />

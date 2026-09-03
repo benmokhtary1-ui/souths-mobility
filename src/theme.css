@@ -2553,6 +2553,34 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .fiche-tete button[aria-label] svg { color: var(--reserve) !important; }
 .fiche-tete button[aria-label]:hover { background: color-mix(in oklab, var(--reserve) 22%, transparent) !important; }
 
+/* ---------- LE PIED : L’AUTRE BORD DE LA PLANCHE ---------------------------
+   Encadrée par deux bandes d’encre, la fiche se lit comme une planche : le
+   papier devient un objet posé, et non le fond de la fenêtre. Le pied prend
+   donc le même plan que l’en-tête, en plus sourd — il ferme, il n’ouvre pas.  */
+.fiche-pied {
+  flex: none;
+  background-color: var(--plan-encre);
+  background-image: linear-gradient(180deg,
+    color-mix(in oklab, var(--accent-deep) 46%, transparent) 0%,
+    color-mix(in oklab, var(--accent-deep) 20%, transparent) 100%);
+  border-top: 1px solid color-mix(in oklab, var(--reserve) 14%, transparent);
+}
+:is(main, .reader) .fiche-pied .surtitre { color: color-mix(in oklab, var(--reserve) 62%, transparent); }
+/* Le bouton d’impression portait `bg-slate-900` : de l’encre sur de l’encre.
+   Il passe en réserve pleine, et l’export CSV en contour clair à côté. */
+:is(main, .reader) .fiche-pied button:not([class*="bg-slate-900"]) {
+  background: color-mix(in oklab, var(--reserve) 10%, transparent) !important;
+  border-color: color-mix(in oklab, var(--reserve) 26%, transparent) !important;
+  color: var(--reserve) !important;
+}
+:is(main, .reader) .fiche-pied button:not([class*="bg-slate-900"]) svg { color: var(--reserve) !important; }
+:is(main, .reader) .fiche-pied button[class*="bg-slate-900"] {
+  background: var(--reserve) !important;
+  color: var(--ink) !important;
+}
+:is(main, .reader) .fiche-pied button[class*="bg-slate-900"] svg { color: var(--ink) !important; }
+:is(main, .reader) .fiche-pied button:hover { filter: brightness(1.12); }
+
 /* SOUS 768 PX, LA SILHOUETTE PART.
    Mesurée à 375 px : bornée à 38 % elle fait encore 127 px, et le nom du pays
    passe dessous — un filigrane qui recouvre ce qu'il illustre. Le plan d'encre
@@ -2624,6 +2652,38 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   max-width: 62ch;
 }
 .fiche-mvt:first-of-type { border-top: 0; }
+
+/* ---------- LE CHIFFRE REÇOIT UNE ASSISE ----------------------------------
+   J’ai d’abord essayé un grand folio fantôme derrière chaque ouverture — un
+   « 01 » de 132 px en teinte à quatre pour cent, à la manière d’un folio
+   d’imprimeur. Mesure faite : il tombe exactement sur le libellé du mouvement,
+   à 857 px du bord dans une colonne de 1 012, et le descendre le mettait
+   derrière la donnée. Un décor qui doit choisir entre couvrir le titre et
+   couvrir le chiffre ne vaut pas d’être posé.
+
+   La présence va donc là où elle sert : sous les chiffres. Chaque mesure
+   repose sur un lavis très pâle, bordé d’un filet d’accent à gauche — le
+   nombre cesse de flotter sur le papier, et l’œil trouve où atterrir sans
+   qu’aucune ligne de plus ait été ajoutée.                                  */
+.fiche-mesure {
+  padding: var(--pas-2) var(--pas-2) var(--pas-2) calc(var(--pas-2) - 3px);
+  border-inline-start: 3px solid var(--accent);
+  background: linear-gradient(100deg,
+    color-mix(in oklab, var(--accent) 7%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 2%, transparent) 62%,
+    transparent 100%);
+}
+/* Le compte des six textes reçoit la même assise, pour la même raison. Son
+   filet de fermeture reste : il vient d’une règle déclarée plus bas, et il
+   sépare utilement le compte de la liste qu’il annonce. */
+.ratif-compte {
+  padding: var(--pas-2) var(--pas-2) var(--pas-2) calc(var(--pas-2) - 3px);
+  border-inline-start: 3px solid var(--accent);
+  background: linear-gradient(100deg,
+    color-mix(in oklab, var(--accent) 7%, transparent) 0%,
+    color-mix(in oklab, var(--accent) 2%, transparent) 62%,
+    transparent 100%);
+}
 @media (max-width: 767px) { .fiche-mvt { padding: var(--pas-3) var(--pas-carte); } }
 
 /* Une paire de blocs quand la place existe ; l un sous l autre sinon. Le seuil

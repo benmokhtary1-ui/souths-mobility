@@ -267,6 +267,22 @@ const DEMANDES = [
    // fermeture : soixante pixels de plus sur un en-tete de mobile.
    () => css.includes('.fiche-tete > *:not(.fiche-tete-silhouette):not(.absolute)')],
 
+  ['la fiche est encadrée par deux plans, pas par un seul',
+   () => app.includes('className="fiche-pied')
+      && /\.fiche-pied\s*\{[^}]*background-color: var\(--plan-encre\)/s.test(css)],
+
+  ['les boutons d’export se lisent sur le plan du pied',
+   // Le bouton d impression portait `bg-slate-900` : de l encre sur de l encre.
+   () => css.includes(':is(main, .reader) .fiche-pied button[class*="bg-slate-900"]')],
+
+  ['les chiffres de la fiche reposent sur une assise',
+   () => /\.fiche-mesure\s*\{[^}]*border-inline-start: 3px solid var\(--accent\)/s.test(css)
+      && /\.ratif-compte\s*\{[^}]*border-inline-start: 3px solid var\(--accent\)/s.test(css)],
+
+  ['aucun folio fantôme ne subsiste',
+   // Essaye, mesure, abandonne : il tombait sur le libelle du mouvement.
+   () => !app.includes('data-folio=') && !css.includes('content: attr(data-folio)')],
+
   ['l’en-tête ne se laisse pas écraser',
    // `overflow: hidden` retire a un element de flex sa taille minimale
    // automatique : sans `flex: none` l en-tete tombait a 48 px.
