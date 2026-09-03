@@ -1,5 +1,5 @@
 /* ============================================================================
-   South(s) Mobility — Direction artistique « Indigo & coton écru »
+   African Mobility Hub — Direction artistique « Indigo & coton écru »
    ----------------------------------------------------------------------------
    Coton non blanchi, encre bleutée, un indigo profond en structure et un safran
    tenu en réserve. L'indigo n'est pas un choix décoratif : c'est la teinture qui
@@ -3172,7 +3172,17 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    condition, pas un poids, et la règle de justification pèse ses six `:not()`.
    À égalité de spécificité, c'est l'ordre qui tranche — et celle-ci vient
    après.                                                                    */
-:is(main, .reader) [class*="grid-cols"] > * { container-type: inline-size; }
+/* PAS SUR CE QUI SE DIMENSIONNE PAR SON RAPPORT.
+   Regression mesuree, et grave : la carte du continent passait de 616 px de
+   haut a 150. Un SVG a viewBox tire sa hauteur de son rapport intrinseque
+   quand on lui donne `width: 100%; height: auto` ; `container-type` le lui
+   retire, et il s'affaisse a la hauteur par defaut d'un remplace sans
+   dimension. La regle ci-dessus vise des BLOCS DE TEXTE, qui n'ont pas de
+   rapport intrinseque et ne perdent donc rien ; les elements remplaces en
+   sont exclus, et ils n'avaient de toute facon aucune requete a porter. */
+:is(main, .reader) [class*="grid-cols"] > *:not(svg):not(img):not(canvas):not(video):not(iframe) {
+  container-type: inline-size;
+}
 @container (max-width: 26rem) {
   :is(main, .reader) p:not(.provenance):not(.note-source):not(.en-clair):not(.surtitre):not(.fiche-etroit):not([class*="text-center"]):not([class*="text-end"]) {
     text-align: start;

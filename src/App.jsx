@@ -1422,7 +1422,7 @@ const BrandMark = ({ className = "w-8 h-8", tone = "paper", style, isoler = null
   // recouvriraient, et la marque du pied de page prendrait les tons de l’en-tete
   const dg = `mq${useId().replace(/:/g, '')}`;
   return (
-    <svg viewBox={MARQUE_VUE} className={className} style={style} role="img" aria-label="South(s) Mobility DataHub">
+    <svg viewBox={MARQUE_VUE} className={className} style={style} role="img" aria-label="African Mobility Hub">
       <defs>
         <linearGradient id={dg} gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="0" y2="0">
           <stop offset="0" stopColor={t.bas} /><stop offset="1" stopColor={t.haut} />
@@ -1469,8 +1469,8 @@ const SceauMarque = ({ className = "w-4 h-4" }) => (
 //
 // Deux calages qui se font par le calcul et non a l’oeil.
 //
-// LA MARQUE AFFLEURE LE BLOC. Son encre doit aller du haut de « South(s) » au bas
-// de « DataHub ». Comme l’encre n’occupe que 91,0 % de la vue et y est centree,
+// LA MARQUE AFFLEURE LE BLOC. Son encre doit aller du haut de « African » au bas
+// de « Hub ». Comme l’encre n’occupe que 91,0 % de la vue et y est centree,
 // le SVG vaut 1/0,910 fois la hauteur du bloc, et centrer l’un sur l’autre suffit.
 //
 // « MOBILITY » TOMBE AU CENTRE DE L’ANNEAU. Le bloc porte quatre lignes — trois
@@ -1480,7 +1480,7 @@ const SceauMarque = ({ className = "w-4 h-4" }) => (
 //
 // L’ecart annonce est d’encre a encre : 3,36 % de la hauteur separent le bord du
 // point du bord du SVG, et cet air est repris dans l’ecart.
-const LOGO_MOTS = ['South(s)', 'Mobility', 'DataHub'];
+const LOGO_MOTS = ['African', 'Mobility', 'Hub'];
 
 // Les trois mots doivent tomber a la meme largeur, et l’egalisation ne se fait
 // pas a l’oeil : chaque mot est mesure une fois les polices chargees, puis son
@@ -1499,10 +1499,18 @@ const useEgaliser = (refs, corps) => {
       if (els.length < 3) return;
       els.forEach(el => { el.style.letterSpacing = '0px'; el.style.marginRight = '0px'; });
       const vise = Math.max(...els.slice(0, 3).map(el => el.getBoundingClientRect().width));
+      // Le plafond. Un mot court paie tres cher une largeur qu il n a pas :
+      // trois signes se partagent l ecart en deux intervalles, la ou huit le
+      // repartissent en sept. Passe un dixieme du corps, l ecart se voit, et
+      // le mot se defait en lettres. On ne justifie donc que sous ce seuil ;
+      // au-dessus, la chasse naturelle — la meme que celle des mots longs,
+      // dont l ecart, lui, reste imperceptible.
+      const PLAFOND = 0.12 * corps;
       els.forEach(el => {
         const n = (el.textContent || '').length - 1;
         if (n < 1) return;
         const e = (vise - el.getBoundingClientRect().width) / n;
+        if (e > PLAFOND) return;
         el.style.letterSpacing = `${e.toFixed(4)}px`;
         el.style.marginRight = `${(-e).toFixed(4)}px`;
       });
@@ -1530,6 +1538,10 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
   const air = avecNature ? 0.30 * corps : 0;
   const sombre = tone === "dark";
   const cNom = sombre ? 'var(--reserve)' : 'var(--ink)';
+  // « Hub » est peint de l encre de l anneau, qui est celle de la section :
+  // sur le papier l accent lui-meme, sur fond sombre son cran clair — les deux
+  // bouts du degrade que l anneau parcourt.
+  const cHub = sombre ? 'var(--mqs-haut)' : 'var(--mq-bas)';
   const cNat = sombre ? '#9AA1AF' : 'var(--muted)';
   const refs = useRef([]);
   useEgaliser(refs, corps);
@@ -1542,9 +1554,9 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
         <span aria-hidden="true" style={{ height: `${nature}px`, marginBottom: `${air}px` }} />
         {LOGO_MOTS.map((mot, i) => (
           <span key={mot} ref={(el) => { refs.current[i] = el; }} className="font-serif whitespace-nowrap"
-                style={{ font: `600 ${corps}px/1 Fraunces, Georgia, serif`, color: cNom }}>
-            {/* le pluriel se marque a l’italique : c’est la these du nom */}
-            {mot === 'South(s)' ? <>South(<em style={{ fontStyle: 'italic' }}>s</em>)</> : mot}
+                style={{ font: `600 ${corps}px/1 Fraunces, Georgia, serif`,
+                         color: mot === 'Hub' ? cHub : cNom }}>
+            {mot}
           </span>
         ))}
         {avecNature && (
@@ -2937,7 +2949,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div style={{ marginBottom: '.8mm' }}><strong>{L('Sources', 'Sources')} · </strong>{text.modal.data_source}</div>
         <div style={{ marginBottom: '.8mm' }}><strong>{L('Citation', 'Citation')} · </strong><em>{tr(PRINT_CITATION, lang)}</em></div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <span>South(s) Mobility DataHub — {siteUrl}</span>
+          <span>African Mobility Hub — {siteUrl}</span>
           <span>© 2026 Yassine Ben Mokhtar · {L('Généré le', 'Generated')} {date}</span>
         </div>
       </div>
@@ -2955,13 +2967,13 @@ const PrintCitationFooter = ({ lang, sectionLabel, tab = null, detail = null }) 
   const chemin = seg
     ? `/${lang}/${seg}${detail ? `/${detail}` : ''}`
     : (typeof window !== 'undefined' ? window.location.pathname : '');
-  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'South(s) Mobility DataHub';
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'African Mobility Hub';
   const printDate = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-US' }, lang), { year: 'numeric', month: 'long', day: 'numeric' });
   return (
     <div className="hidden print:block mt-8 pt-4 border-t-2 border-slate-900 break-inside-avoid">
       <div className="flex items-center gap-2 mb-1.5">
         <Globe className="w-3.5 h-3.5 text-slate-700" />
-        <span className="font-serif font-bold text-slate-900 text-xs">South(s) Mobility DataHub</span>
+        <span className="font-serif font-bold text-slate-900 text-xs">African Mobility Hub</span>
         {sectionLabel && <span className="text-slate-400 text-[10px]">— {sectionLabel}</span>}
       </div>
       <p className="text-[10px] text-slate-600">{siteUrl}</p>
@@ -3120,7 +3132,7 @@ const BandeauSources = ({ lang }) => {
 
 const t = {
     fr: {
-      title: "South(s) Mobility",
+      title: "African Mobility Hub",
       subtitle: "Savoirs & Données",
       desc: "Analyse citoyenne des migrations mondiales. Une lecture empirique et décolonisée privilégiant la proportionnalité, la gouvernance de l’Union africaine (CUA) et les dynamiques de transition démographique.",
       sidebar: { title: "Niveaux d’Analyse", subregion: "Sous-région", search: "Rechercher un pays…" },
@@ -3196,7 +3208,7 @@ const t = {
           badge: "Plateforme de Savoirs & de Données",
           title: "Entre ce qu’on dit des mobilités africaines et ce qu’en disent les chiffres,",
           highlight: "l’écart se mesure.",
-          desc: "C’est cet écart que la plateforme documente : elle réunit ce que les institutions publient sur les mobilités des Suds, le date, le rend comparable, et le lit avec les définitions africaines plutôt qu’avec celles du Nord.",
+          desc: "C’est cet écart que la plateforme documente : elle réunit ce que les institutions publient sur les mobilités africaines, le date, le rend comparable, et le lit avec les définitions africaines plutôt qu’avec celles du Nord.",
           plain: "Cette plateforme rassemble et vérifie les chiffres sur les migrations africaines, puis les met en accès libre. Vous pouvez explorer un pays, examiner une affirmation entendue quelque part, ou télécharger les données."
         },
         governance: {
@@ -3238,7 +3250,7 @@ const t = {
           badge: "À propos de la plateforme",
           title: "Une initiative citoyenne",
           highlight: "adossée à une recherche doctorale.",
-          desc: "L’origine, le périmètre et les limites assumées de South(s) Mobility DataHub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être.",
+          desc: "L’origine, le périmètre et les limites assumées de African Mobility Hub : qui la produit, à partir de quelles données, et ce que la plateforme ne prétend pas être.",
           plain: "Qui produit cette plateforme, pourquoi, et avec quels moyens. Elle est adossée à une thèse de doctorat et reste indépendante de toute institution."
         },
         methodology: {
@@ -3341,9 +3353,9 @@ const t = {
         { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l’emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d’emploi, 27,5 % des migrants occupés travaillent dans l’agriculture, la sylviculture ou la pêche. Ils y comblent des pénuries de main-d’œuvre et dynamisent les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
       ],
       about: {
-        intro_title: "À propos de South(s) Mobility",
-        intro_subtitle: "Une infrastructure ouverte pour comprendre les mobilités dans les Suds",
-        intro_p1: "South(s) Mobility DataHub est une plateforme indépendante de recherche, de données et de visualisation consacrée aux mobilités humaines dans les Suds, avec une première focalisation sur l’Afrique.",
+        intro_title: "À propos de African Mobility Hub",
+        intro_subtitle: "Une infrastructure ouverte pour comprendre les mobilités africaines",
+        intro_p1: "African Mobility Hub est une plateforme indépendante de recherche, de données et de visualisation consacrée aux mobilités humaines africaines.",
         intro_p2: "La plateforme se tient à l’intersection des sciences sociales, de la science des données et des études sur les migrations. Elle rassemble, harmonise et met en valeur des données, indicateurs, cartes, publications, instruments juridiques et ressources documentaires d’institutions internationales, régionales et nationales.",
         intro_p3: "Son ambition est de rendre les données sur les mobilités humaines plus accessibles, plus comparables et plus intelligibles, afin de favoriser une compréhension empirique, nuancée et documentée des dynamiques migratoires contemporaines.",
         
@@ -3410,10 +3422,10 @@ const t = {
           "La collecte pilote des indicateurs alternatifs proposés dans la Méthodologie",
           "Une extension progressive à d’autres régions des Suds"
         ],
-        evolution_p2: "L’objectif est de construire progressivement une infrastructure de référence pour l’étude des mobilités humaines dans les Suds.",
+        evolution_p2: "L’objectif est de construire progressivement une infrastructure de référence pour l’étude des mobilités humaines africaines.",
 
         founder_title: "Qui porte ce projet",
-        founder_p1: "South(s) Mobility a été fondé par Yassine Ben Mokhtar, doctorant en relations internationales dont les recherches portent sur la gouvernance des migrations africaines, les dynamiques institutionnelles continentales et les politiques de mobilité.",
+        founder_p1: "African Mobility Hub a été fondé par Yassine Ben Mokhtar, doctorant en relations internationales dont les recherches portent sur la gouvernance des migrations africaines, les dynamiques institutionnelles continentales et les politiques de mobilité.",
         founder_p2: "Le projet s’appuie sur plusieurs années de recherche académique, d’analyse documentaire et de terrain, ainsi que sur une expérience professionnelle auprès d’institutions travaillant sur les questions migratoires et de gouvernance en Afrique.",
         founder_p3: "La plateforme prolonge cette recherche et en assure la valorisation scientifique, destinée à rendre les connaissances, les données et les ressources plus accessibles au plus grand nombre.",
         founder_p4: "Les analyses, interprétations et éventuelles erreurs relèvent de la seule responsabilité de son auteur et n’engagent aucune institution avec laquelle il a collaboré.",
@@ -3421,10 +3433,10 @@ const t = {
         collab_title: "Contribuer, signaler, écrire",
         collab_p1: "Les collaborations académiques, institutionnelles et techniques sont bienvenues, qu’il s’agisse de jeux de données, de publications, de visualisations, de corrections, de projets communs ou de partenariats.",
         contact_p: "Pour toute question, proposition de collaboration ou contribution au projet :",
-        disclaimer: "South(s) Mobility est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d’améliorer la couverture, la qualité et l’accessibilité des informations disponibles.",
+        disclaimer: "African Mobility Hub est un projet indépendant en développement actif. Les contenus, fonctionnalités et jeux de données sont régulièrement enrichis afin d’améliorer la couverture, la qualité et l’accessibilité des informations disponibles.",
         
         citation_title: "Pour citer ce projet :",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub : Une infrastructure ouverte pour comprendre les mobilités dans les Suds. Récupéré de https://souths-mobility.vercel.app/"
+        citation_text: "Ben Mokhtar, Y. (2026). African Mobility Hub : Une infrastructure ouverte pour comprendre les mobilités africaines. Récupéré de https://souths-mobility.vercel.app/"
       },
       method: { 
         summary: "La plateforme ne produit pas de données primaires : elle consolide des séries publiques et documente chaque opération appliquée. Six principes régissent ce traitement.",
@@ -3445,11 +3457,11 @@ const t = {
         s8: "Banque mondiale - Base de données des transferts de fonds (2024)"
       },
       myth: "Postulat", reality: "Donnée Factuelle",
-      footer: { tag: "Les données publiques sur les mobilités des Suds, réunies, datées et rendues comparables. La plateforme n’en produit aucune : elle les rassemble et dit d’où elles viennent.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
+      footer: { tag: "Les données publiques sur les mobilités africaines, réunies, datées et rendues comparables. La plateforme n’en produit aucune : elle les rassemble et dit d’où elles viennent.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
       analysis_title: "Tableau de bord détaillé", analysis_btn: "Accéder au rapport"
     },
     en: {
-      title: "South(s) Mobility", subtitle: "Knowledge & Data",
+      title: "African Mobility Hub", subtitle: "Knowledge & Data",
       desc: "Citizen analysis of global migrations. An empirical, decolonized reading prioritizing mathematical proportionality, African Union (AU) governance frameworks, and demographic transition dynamics.",
       sidebar: { title: "Analysis Levels", subregion: "Sub-region", search: "Search country…" },
       all_regions: "All Africa",
@@ -3522,7 +3534,7 @@ const t = {
           badge: "Knowledge & Data Platform",
           title: "Between what is said about African mobility and what the figures say,",
           highlight: "the gap can be measured.",
-          desc: "That gap is what the platform documents: it gathers what institutions publish on mobility across the Souths, dates it, makes it comparable, and reads it through African definitions rather than Northern ones.",
+          desc: "That gap is what the platform documents: it gathers what institutions publish on African mobility, dates it, makes it comparable, and reads it through African definitions rather than Northern ones.",
           plain: "This platform gathers and checks the figures on African migration, then opens them to everyone. You can explore a country, examine a claim you heard somewhere, or download the data."
         },
         governance: {
@@ -3564,7 +3576,7 @@ const t = {
           badge: "About the platform",
           title: "A civic initiative",
           highlight: "grounded in doctoral research.",
-          desc: "The origin, scope and stated limits of South(s) Mobility DataHub: who produces it, from which data, and what the platform does not claim to be.",
+          desc: "The origin, scope and stated limits of African Mobility Hub: who produces it, from which data, and what the platform does not claim to be.",
           plain: "Who produces this platform, why, and with what resources. It is grounded in doctoral research and remains independent of any institution."
         },
         methodology: {
@@ -3667,9 +3679,9 @@ const t = {
         { myth: "Migrant workers are a burden on host economies.", real: "Drivers of local employment and value creation.", stat_text: "+ Value (2021)", stat_val: 85, color: "bg-emerald-700", desc: "AU/ILO Report (2021): across the ten states that reported employment data, 27.5% of employed migrants work in agriculture, forestry or fishing — filling labour shortages and stimulating local trade. Reporting coverage remains the weak link: see Data & Stats." }
       ],
       about: { 
-        intro_title: "About South(s) Mobility",
-        intro_subtitle: "An open infrastructure to understand mobility in the Global South",
-        intro_p1: "South(s) Mobility DataHub is an independent research, data, and visualization platform dedicated to human mobility in the Global South, with an initial focus on Africa.",
+        intro_title: "About African Mobility Hub",
+        intro_subtitle: "An open infrastructure to understand African mobility",
+        intro_p1: "African Mobility Hub is an independent research, data, and visualization platform dedicated to African human mobility.",
         intro_p2: "At the intersection of social sciences, data science, and migration studies, the platform gathers, harmonizes, and leverages data, indicators, maps, publications, legal instruments, and documentary resources from international, regional, and national institutions.",
         intro_p3: "Its ambition is to make data on human mobility more accessible, comparable, and intelligible, in order to foster an empirical, nuanced, and documented understanding of contemporary migratory dynamics.",
         
@@ -3736,10 +3748,10 @@ const t = {
           "Pilot collection of the alternative indicators proposed in the Methodology",
           "Progressive extension to other regions of the Global South"
         ],
-        evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of human mobility in the Global South.",
+        evolution_p2: "The goal is to progressively build a benchmark infrastructure for the study of African human mobility.",
 
         founder_title: "Who carries this project",
-        founder_p1: "South(s) Mobility was founded by Yassine Ben Mokhtar, a PhD candidate in international relations whose research focuses on African migration governance, continental institutional dynamics, and mobility policies.",
+        founder_p1: "African Mobility Hub was founded by Yassine Ben Mokhtar, a PhD candidate in international relations whose research focuses on African migration governance, continental institutional dynamics, and mobility policies.",
         founder_p2: "The project is built on several years of academic research, documentary and field analysis, as well as professional experience with institutions working on migration and governance issues in Africa.",
         founder_p3: "The platform extends this research and carries its scientific dissemination, designed to make knowledge, data, and resources more accessible to a wider audience.",
         founder_p4: "Analyses, interpretations, and any potential errors are the sole responsibility of the author and do not commit any institution with which he has collaborated.",
@@ -3747,10 +3759,10 @@ const t = {
         collab_title: "Contribute, report, write",
         collab_p1: "Academic, institutional and technical collaborations are welcome — datasets, publications, visualizations, corrections, joint projects or partnerships alike.",
         contact_p: "For any questions, collaboration proposals, or contributions to the project:",
-        disclaimer: "South(s) Mobility is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
+        disclaimer: "African Mobility Hub is an independent project in active development. Content, features, and datasets are regularly enriched to improve the coverage, quality, and accessibility of available information.",
         
         citation_title: "To cite this project:",
-        citation_text: "Ben Mokhtar, Y. (2026). South(s) Mobility DataHub: An open infrastructure to understand mobility in the Global South. Retrieved from https://souths-mobility.vercel.app/"
+        citation_text: "Ben Mokhtar, Y. (2026). African Mobility Hub: An open infrastructure to understand African mobility. Retrieved from https://souths-mobility.vercel.app/"
       },
       method: { 
         summary: "The platform produces no primary data: it consolidates public series and documents every operation applied to them. Six principles govern that processing.",
@@ -3771,7 +3783,7 @@ const t = {
         s8: "World Bank - Migration and Remittances Data (2024)"
       },
       myth: "Premise", reality: "Factual Data",
-      footer: { tag: "Public data on mobility across the Souths, gathered, dated and made comparable. The platform produces none of it: it assembles it and says where it comes from.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
+      footer: { tag: "Public data on African mobility, gathered, dated and made comparable. The platform produces none of it: it assembles it and says where it comes from.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
       analysis_title: "Detailed Dashboard", analysis_btn: "Access detailed report"
     }
 };
@@ -5366,8 +5378,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, coucheAtlas, setCoucheAtl
           {/* Ce que la plateforme est, avant ce qu’elle permet de faire. */}
           <Prose className="mt-3 text-[15px] leading-relaxed max-w-xl"
                  style={{ color: '#DFD9D3' }} lang={lang}>{L(
-            "Une plateforme indépendante, qui réunit ce que les institutions publient sur les mobilités des Suds et le lit avec les définitions africaines.",
-            'An independent platform that gathers what institutions publish on mobility across the Souths, and reads it through African definitions.',
+            "Une plateforme indépendante, qui réunit ce que les institutions publient sur les mobilités africaines et le lit avec les définitions africaines.",
+            'An independent platform that gathers what institutions publish on African mobility, and reads it through African definitions.',
             { ar: 'منصة مستقلة للبحث والبيانات حول التنقلات البشرية في الجنوب، مبنية انطلاقاً من أفريقيا. لكل رقم مصدره، ولكل مجموعة بيانات تصديرها.' }
           )}</Prose>
 
@@ -6319,7 +6331,7 @@ const TabHome = ({ text, lang, setActiveTab, allerAtlas, allerVers }) => {
           {tr({ fr: "Données croisées et vérifiées à partir des sources institutionnelles suivantes", en: "Data cross-checked and verified against the following institutional sources" }, lang)}
         </p>
         <BandeauSources lang={lang} />
-        <Prose className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation, ni un endossement de South(s) Mobility DataHub.", en: "These institutions are cited as sources of open public data. Their presence constitutes neither a partnership, nor a validation, nor an endorsement of South(s) Mobility DataHub." }, lang)}</Prose>
+        <Prose className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation, ni un endossement de African Mobility Hub.", en: "These institutions are cited as sources of open public data. Their presence constitutes neither a partnership, nor a validation, nor an endorsement of African Mobility Hub." }, lang)}</Prose>
       </Reveal>
     </div>
   );
@@ -7090,7 +7102,7 @@ const AnchoringMatrix = ({ lang }) => {
 
   // L’export se fait ici : le composant porte deja la matrice complete.
   const exportMatrix = () => {
-    downloadCSV('souths_ancrage_continental.csv', toCSV(rows.map(r => {
+    downloadCSV('african_mobility_ancrage_continental.csv', toCSV(rows.map(r => {
       const line = { pays: r.name, iso2: r.iso2 || '' };
       ANCHOR_INSTRUMENTS.forEach(i => { line[i.key] = r.t[i.key] ? 1 : 0; });
       line.score_sur_6 = r.score;
@@ -7494,7 +7506,7 @@ const TabForced = ({ text, lang, children }) => {
 
   const exportCSV = () => {
     const all = Object.values(countryData).flat();
-    downloadCSV('souths_mobilites_contraintes.csv', toCSV(all.map(c => ({
+    downloadCSV('african_mobility_mobilites_contraintes.csv', toCSV(all.map(c => ({
       pays: nm(c), iso2: c.iso2 || '',
       deplaces_conflit: Number(c.idp_conflict) || 0,
       deplaces_catastrophes: Number(c.idp_disaster) || 0,
@@ -7966,7 +7978,7 @@ const TabLabour = ({ text, lang, children }) => {
   }, [lang]);
 
   const exportCSV = () => {
-    downloadCSV('souths_conventions_oit.csv', toCSV(ilo.rows.map(r => ({
+    downloadCSV('african_mobility_conventions_oit.csv', toCSV(ilo.rows.map(r => ({
       pays: r.n, conventions_total: r.total, fondamentales_sur_11: r.fund,
       gouvernance: r.gov, techniques: r.tech,
     }))));
@@ -8312,7 +8324,7 @@ const TabClimat = ({ text, lang, children }) => {
   const maxCata = classement[0]?.cata || 1;
 
   const exporter = () => {
-    downloadCSV('souths_mobilite_climatique.csv', toCSV(pays.map(c => ({
+    downloadCSV('african_mobility_mobilite_climatique.csv', toCSV(pays.map(c => ({
       pays: c.nom,
       deplaces_catastrophe: c.cata,
       deplaces_conflit: c.conflit,
@@ -8460,7 +8472,7 @@ const TabCorridors = ({ text, lang, children }) => {
   const maxPoids = rangs[0]?.poids || 1;
 
   const exporterCorridors = () => {
-    downloadCSV('souths_corridors_intra_africains.csv', toCSV(rangs.map(c => ({
+    downloadCSV('african_mobility_corridors_intra_africains.csv', toCSV(rangs.map(c => ({
       corridor_fr: c.note?.fr, corridor_en: c.note?.en,
       stock_bilateral: c.poids,
       source: 'UN DESA, International Migrant Stock — repris par l’OIM',
@@ -9699,7 +9711,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       dynamics_fr: r.dynamics?.fr,
       sources: (r.sources || []).map(s => s.url).join(' | '),
     }));
-    downloadCSV('souths_recs.csv', toCSV(rows));
+    downloadCSV('african_mobility_recs.csv', toCSV(rows));
   };
 
   const exportLegalMatrixCSV = () => {
@@ -9711,7 +9723,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
       table_notes_fr: c.tableNotes?.fr,
       visa_open_to_all_africa: opennessByName(c.name.fr)?.tier || '',
     })));
-    downloadCSV('souths_legal_matrix.csv', toCSV(rows));
+    downloadCSV('african_mobility_legal_matrix.csv', toCSV(rows));
   };
 
   return (
@@ -12533,8 +12545,8 @@ const MarqueExpliquee = ({ lang = 'fr' }) => {
         { ar: 'يقوم الشعار على عبارة لاتينية، e pluribus unum — «من الكثرة، واحد»: أربع وخمسون دولة ذات سيادة، قارة واحدة.' }
       )}</Prose>
       <Prose className="text-sm text-slate-600 leading-relaxed mb-8 max-w-2xl" lang={lang}>{L(
-        "Sous la marque, les trois mots du nom tombent à la même largeur, et le s de South(s) est en italique : il n’y a pas un Sud, il y en a plusieurs.",
-        'Beneath the mark, the three words of the name share one width, and the s of South(s) is italic: there is not one South but several.',
+        "Sous la marque, les trois mots du nom tombent à la même largeur — une largeur mesurée, non estimée : chaque mot est pesé une fois les polices chargées, puis son interlettrage ajusté à l’écart qui reste.",
+        'Beneath the mark, the three words of the name share one width — a measured width, not an estimated one: each word is weighed once the fonts have loaded, then its letter-spacing set to whatever gap remains.',
         { ar: 'تحت العلامة، تتساوى الكلمات الثلاث في العرض.' }
       )}</Prose>
 
@@ -12604,8 +12616,8 @@ const TabAbout = ({ text, lang, children }) => {
         chapo={{ fr: 'Comment lire cette section', en: 'How to read this section' }}
         titre={{ fr: "Ce que la plateforme est, et ce qu’elle ne prétend pas être", en: 'What the platform is, and what it does not claim to be' }}
         chapeau={{
-          fr: "Une plateforme indépendante, adossée à une recherche doctorale en cours, sur les mobilités humaines dans les Suds. Elle rassemble des données publiques et les met en forme, sans en produire aucune, hormis les rares séries qu’elle signale explicitement comme des compilations de l’auteur.",
-          en: 'An independent platform, backed by ongoing doctoral research, on human mobility across the Souths. It gathers public data and puts it into shape, producing none itself, apart from the few series it explicitly flags as the author’s own compilations.'
+          fr: "Une plateforme indépendante, adossée à une recherche doctorale en cours, sur les mobilités humaines africaines. Elle rassemble des données publiques et les met en forme, sans en produire aucune, hormis les rares séries qu’elle signale explicitement comme des compilations de l’auteur.",
+          en: 'An independent platform, backed by ongoing doctoral research, on African human mobility. It gathers public data and puts it into shape, producing none itself, apart from the few series it explicitly flags as the author’s own compilations.'
         }}
         notions={[
           { mot: { fr: 'Indépendante', en: 'Independent' },
@@ -12697,7 +12709,7 @@ const TabAbout = ({ text, lang, children }) => {
                 );
               })}
             </div>
-            <Prose className="text-xs italic text-slate-400" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation, ni un endossement de South(s) Mobility DataHub.", en: "These institutions are cited as sources of open public data. Their presence constitutes neither a partnership, nor a validation, nor an endorsement of South(s) Mobility DataHub." }, lang)}</Prose>
+            <Prose className="text-xs italic text-slate-400" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation, ni un endossement de African Mobility Hub.", en: "These institutions are cited as sources of open public data. Their presence constitutes neither a partnership, nor a validation, nor an endorsement of African Mobility Hub." }, lang)}</Prose>
 
             <Prose lang={lang}>{text.about.data_p2}</Prose>
             <Prose className="italic" lang={lang}>{text.about.data_p3}</Prose>
@@ -12799,7 +12811,7 @@ const TabAbout = ({ text, lang, children }) => {
             <Prose className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3" lang={lang}>{text.about.contact_p}</Prose>
             
             <div className="flex flex-col gap-3">
-              <a href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20DataHub%20-%20Contact" 
+              <a href="mailto:benmokhtary1@gmail.com?subject=African%20Mobility%20Hub%20-%20Contact" 
                  className="inline-flex items-center space-x-3 rtl:space-x-reverse bg-white hover:bg-blue-50 border border-slate-200 text-slate-700 hover:text-blue-700 hover:border-blue-200 px-4 py-3 rounded-md transition-colors shadow-sm w-fit">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm font-bold">benmokhtary1@gmail.com</span>
@@ -13431,7 +13443,7 @@ export default function App() {
     const partie = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
       ? display.name
       : nomSection;
-    document.title = partie ? `${partie} | South(s) Mobility DataHub` : 'South(s) Mobility DataHub';
+    document.title = partie ? `${partie} | African Mobility Hub` : 'African Mobility Hub';
     appliquerLangue(lang);
 
     const desc = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
@@ -13448,7 +13460,7 @@ export default function App() {
     indicatorThemes.forEach(thm => thm.items.forEach(i => {
       csvContent += `${i.id},"${thm.theme_fr}","${thm.theme_en}","${(i.fr||'').replace(/"/g, '""')}","${(i.en||'').replace(/"/g, '""')}","${(i.desc_fr||"").replace(/"/g, '""')}","${(i.desc_en||"").replace(/"/g, '""')}"\n`;
     }));
-    downloadCSV("souths_indicators_registry.csv", csvContent);
+    downloadCSV("african_mobility_indicators_registry.csv", csvContent);
   };
 
   const exportCountryProfileCSV = () => {
@@ -13472,7 +13484,7 @@ export default function App() {
       ilo_conventions_total: c.normlex?.total,
       au_treaties_ratified: c.au_treaties ? Object.entries(c.au_treaties).filter(([, v]) => v).map(([k]) => k).join(' | ') : '',
     })));
-    downloadCSV('souths_country_indicators.csv', toCSV(rows));
+    downloadCSV('african_mobility_country_indicators.csv', toCSV(rows));
   };
 
   const exportEvidenceCSV = () => {
@@ -13484,7 +13496,7 @@ export default function App() {
       sources: (e.sources?.fr || []).join(' | '),
       limits_fr: e.limits?.fr,
     }));
-    downloadCSV('souths_evidence_check.csv', toCSV(rows));
+    downloadCSV('african_mobility_evidence_check.csv', toCSV(rows));
   };
 
   const exportCensusCSV = () => {
@@ -13494,7 +13506,7 @@ export default function App() {
       pct_of_censusing_states: q.pctRound,
       pct_of_54_african_states: q.pct54,
     }));
-    downloadCSV('souths_census_question_depth_2010round.csv', toCSV(rows));
+    downloadCSV('african_mobility_census_question_depth_2010round.csv', toCSV(rows));
   };
 
   const exportGlossaryCSV = () => {
@@ -13505,7 +13517,7 @@ export default function App() {
       source_fr: t.source?.fr || '', source_en: t.source?.en || '', source_url: t.source?.url || '',
       stakes_fr: t.stakes?.fr || '', stakes_en: t.stakes?.en || '',
     })));
-    downloadCSV('souths_glossary.csv', toCSV(rows));
+    downloadCSV('african_mobility_glossary.csv', toCSV(rows));
   };
 
   const exportLibraryCSV = () => {
@@ -13516,7 +13528,7 @@ export default function App() {
       description_fr: i.desc?.fr, url: i.url || '',
       essential: i.essential ? 'yes' : 'no',
     })));
-    downloadCSV('souths_library.csv', toCSV(rows));
+    downloadCSV('african_mobility_library.csv', toCSV(rows));
   };
 
   // L’ordre suit quatre familles, dans l’ordre ou on les lit : on entre par la
@@ -14355,7 +14367,7 @@ export default function App() {
               </span>
               <Prose className="text-xs leading-relaxed mb-4" style={{ color: 'var(--reserve-douce)' }} lang={lang}>{text.footer.sources}</Prose>
               <a
-                href="mailto:benmokhtary1@gmail.com?subject=South(s)%20Mobility%20-%20Contact"
+                href="mailto:benmokhtary1@gmail.com?subject=African%20Mobility%20Hub%20-%20Contact"
                 className="inline-flex items-center gap-2 text-sm transition-colors hover:text-[var(--accent-light)]"
                 style={{ color: 'var(--reserve-tenue)' }}
               >

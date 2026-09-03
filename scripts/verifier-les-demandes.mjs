@@ -17,6 +17,7 @@ const app = readFileSync('src/App.jsx', 'utf8');
 const css = readFileSync('src/theme.css', 'utf8');
 const html = readFileSync('index.html', 'utf8');
 const tout = app + css;
+const lire = (f) => { try { return readFileSync(f, 'utf8'); } catch { return ''; } };
 
 // Chaque demande : son libellé, et un test qui rend vrai quand elle est tenue.
 const DEMANDES = [
@@ -95,7 +96,7 @@ const DEMANDES = [
 
   ['le titre de page n’est plus « datahub »',
    () => !html.includes('<title>datahub</title>')
-      && html.includes('South(s) Mobility DataHub —')],
+      && html.includes('African Mobility Hub —')],
 
   ['le document porte description, canonical et aperçu de partage',
    () => html.includes('name="description"') && html.includes('rel="canonical"')
@@ -376,7 +377,7 @@ const DEMANDES = [
      // etroite sur un large ecran est le cas que la mesure a trouve.
      const c = css.match(/@container \(max-width: 26rem\)\s*\{[\s\S]*?\n\}/);
      return !!c && /text-align:\s*start/.test(c[0])
-         && css.includes(':is(main, .reader) [class*="grid-cols"] > * { container-type: inline-size; }');
+         && css.includes(':is(main, .reader) [class*="grid-cols"] > *:not(svg):not(img):not(canvas):not(video):not(iframe)');
    }],
 
   // --- L’ORDRE DU REGARD DANS LA FICHE ------------------------------------
@@ -540,11 +541,44 @@ const DEMANDES = [
 
   ['le plan du site connaît les trois volets adressables',
    () => {
-     const plan = readFileSync('public/sitemap.xml', 'utf8');
+     const plan = lire('public/sitemap.xml');
      return ['fr/a-propos/glossaire', 'fr/a-propos/bibliotheque', 'fr/a-propos/methode',
              'en/about/glossary', 'en/about/library', 'en/about/method']
        .every((u) => plan.includes(u));
    }],
+
+  ['aucune carte ne s’affaisse sous une requête de conteneur',
+   () => {
+     // Regression mesuree : la carte du continent passait de 616 px de haut a
+     // 150. Un SVG a viewBox tire sa hauteur de son rapport intrinseque ;
+     // `container-type` le lui retire. La regle vise des blocs de texte, qui
+     // n ont pas de rapport et ne perdent rien.
+     return css.includes('[class*="grid-cols"] > *:not(svg):not(img):not(canvas):not(video):not(iframe)')
+         && !css.includes('[class*="grid-cols"] > * { container-type: inline-size; }');
+   }],
+
+  ['le site porte partout le nom African Mobility Hub',
+   () => {
+     const fichiers = [app, css, html, lire('public/sitemap.xml'), lire('public/robots.txt'),
+                       lire('package.json'), lire('flyer.html')];
+     const ancien = ['South(s)', 'Souths Mobility', 'DataHub'];
+     return fichiers.every((f) => ancien.every((mot) => !f.includes(mot)))
+         && app.includes("const LOGO_MOTS = ['African', 'Mobility', 'Hub'];")
+         && html.includes('African Mobility Hub');
+   }],
+
+  ['le logotype ne disloque pas le mot court',
+   () => {
+     // « Hub » ne fait que trois signes : le porter a la largeur de
+     // « Mobility » demandait 0,84 em entre chaque lettre, et le mot se lisait
+     // H, U, B. Au-dela du plafond, la chasse reste naturelle.
+     return app.includes('const PLAFOND = 0.12 * corps;')
+         && app.includes('if (e > PLAFOND) return;');
+   }],
+
+  ['« Hub » reprend l’encre de l’anneau',
+   () => app.includes("const cHub = sombre ? 'var(--mqs-haut)' : 'var(--mq-bas)';")
+      && app.includes("color: mot === 'Hub' ? cHub : cNom")],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

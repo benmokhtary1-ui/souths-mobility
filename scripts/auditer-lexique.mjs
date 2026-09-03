@@ -4,7 +4,7 @@
 // choses se verifient par machine, et une seule d'entre elles est evidente.
 //
 // 1. LES ANGLICISMES SUPERFLUS. Certains sont voulus et portent le nom du site
-//    ou d'une rubrique — DataHub, Evidence Check, Knowledge Hub. Les autres
+//    ou d'une rubrique — African Mobility Hub, Evidence Check, Knowledge Hub. Les autres
 //    sont des glissements : « monitorer » pour suivre, « impacter » pour
 //    affecter, « reporting » pour compte rendu. La liste distingue les deux.
 //
@@ -34,7 +34,7 @@ const EXT = new Set(['.js', '.jsx', '.mjs']);
 
 // Anglicismes voulus : ils nomment le site ou une rubrique, on les laisse.
 const VOULUS = [
-  'DataHub', 'Evidence Check', 'Knowledge Hub', 'Knowledge & Data', 'South(s) Mobility',
+  'African Mobility Hub', 'Evidence Check', 'Knowledge Hub', 'Knowledge & Data',
   'Global Overview of Migration Routes', 'Free Movement Protocol', 'Data', 'Atlas',
 ];
 

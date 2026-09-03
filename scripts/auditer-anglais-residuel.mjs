@@ -11,7 +11,7 @@
 //   2. la branche fr ne porte aucun signe diacritique ni mot-outil francais ;
 //   3. elle contient un mot anglais courant qui n'est pas un emprunt admis.
 //
-// Les anglicismes voulus du site — DataHub, Evidence Check, Knowledge Hub — et
+// Les anglicismes voulus du site — African Mobility Hub, Evidence Check, Knowledge Hub — et
 // les noms d'institutions ne comptent pas : ce sont des noms propres.
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';

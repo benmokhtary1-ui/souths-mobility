@@ -67,8 +67,8 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${L}" height="${H}" 
   <text x="72" y="168" font-family="Georgia, serif" font-size="19" letter-spacing="3.4"
         fill="${GRAPHITE_CLAIR}">PLATEFORME INDÉPENDANTE DE RECHERCHE</text>
 
-  <text x="72" y="268" font-family="Georgia, serif" font-size="74" font-weight="700" fill="${RESERVE}">South(s) Mobility</text>
-  <text x="72" y="352" font-family="Georgia, serif" font-size="74" font-weight="700" fill="${RESERVE}">DataHub</text>
+  <text x="72" y="268" font-family="Georgia, serif" font-size="74" font-weight="700" fill="${RESERVE}">African Mobility</text>
+  <text x="72" y="352" font-family="Georgia, serif" font-size="74" font-weight="700" fill="${RESERVE}">Hub</text>
 
   <text x="72" y="428" font-family="Georgia, serif" font-size="30" fill="${GRAPHITE_CLAIR}">Les mobilités africaines,</text>
   <text x="72" y="470" font-family="Georgia, serif" font-size="30" fill="${GRAPHITE_CLAIR}">par les données africaines.</text>

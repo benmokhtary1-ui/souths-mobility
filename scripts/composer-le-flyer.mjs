@@ -195,7 +195,7 @@ const page = `<title>Feuille de lancement</title>
     <div>
       <div class="oeil">Plateforme indépendante de recherche</div>
       <div class="filet"></div>
-      <h1 class="nom">South(<em>s</em>) Mobility<br>DataHub</h1>
+      <h1 class="nom">African<br>Mobility Hub</h1>
       <p class="these">Les mobilités africaines, par les données africaines.</p>
       <p class="quoi">Ce que les institutions publient sur les mobilités des Suds, réuni, daté, rendu comparable — et lu avec les définitions africaines plutôt qu’avec celles du Nord.</p>
     </div>

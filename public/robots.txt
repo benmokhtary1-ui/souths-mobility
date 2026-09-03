@@ -1,4 +1,4 @@
-# South(s) Mobility DataHub — projet de recherche public, indexation souhaitee.
+# African Mobility Hub — projet de recherche public, indexation souhaitee.
 User-agent: *
 Allow: /
 

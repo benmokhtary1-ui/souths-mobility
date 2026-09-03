@@ -1,4 +1,4 @@
-# Modèle de données — South(s) Mobility DataHub
+# Modèle de données — African Mobility Hub
 
 Ce fichier décrit **ce que contient chaque champ, d'où il vient, et ce qu'il ne
 dit pas**. Il fait partie du dépôt au même titre que le code : une donnée dont on
