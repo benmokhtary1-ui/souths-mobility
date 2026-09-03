@@ -12979,7 +12979,6 @@ const ROUTES = {
   mobilites:  { fr: 'mobilites',    en: 'mobilities' },
   governance: { fr: 'gouvernance',  en: 'governance' },
   data:       { fr: 'donnees',      en: 'data' },
-  resources:  { fr: 'ressources',   en: 'resources' },   // conservé : les liens déjà partagés doivent continuer d'ouvrir
   about:      { fr: 'a-propos',     en: 'about' },
 };
 
@@ -12989,6 +12988,11 @@ const ROUTES = {
 const ROUTES_ANCIENNES = {
   methodologie: 'about',
   methodology: 'about',
+  // La Bibliotheque, le Glossaire et la Methode sont passes sous « A propos ».
+  // La cle « ressources » etait restee dans le tableau vivant, ou elle ouvrait
+  // une page sans contenu ; elle rejoint les adresses d avant, qui redirigent.
+  ressources: 'about',
+  resources: 'about',
   // L’Explorateur a ete verse dans l’Atlas ; ses adresses y menent.
   pays: 'atlas',
   countries: 'atlas',
@@ -13012,7 +13016,11 @@ const SOUS_ROUTES = {
     gcm:    { fr: 'pacte-migrations', en: 'migration-compact' },
     gcr:    { fr: 'pacte-refugies',   en: 'refugee-compact' },
   },
-  resources: {
+  // Le premier de la liste est le volet par defaut : il ne s ecrit pas.
+  // « bibliotheque » et « glossaire » gardent les segments qu ils avaient
+  // sous /fr/ressources : les liens deja partages retrouvent leur volet.
+  about: {
+    about:       { fr: 'presentation', en: 'overview' },
     library:     { fr: 'bibliotheque', en: 'library' },
     glossary:    { fr: 'glossaire',    en: 'glossary' },
     methodology: { fr: 'methode',      en: 'method' },
@@ -13256,7 +13264,7 @@ export default function App() {
     if (activeTab === 'atlas') return paysSlug;
     const cle = activeTab === 'mobilites' ? voletMobilites
               : activeTab === 'governance' ? activeSdgzTab
-              : activeTab === 'resources' ? activeResourceTab : null;
+              : activeTab === 'about' ? activeResourceTab : null;
     return segmentDuVolet(activeTab, cle, lang);
   }, [activeTab, paysSlug, voletMobilites, activeSdgzTab, activeResourceTab, lang]);
 
@@ -13286,7 +13294,7 @@ export default function App() {
         const cle = voletDuSegment(e.tab, e.detail) || defautDe(e.tab);
         if (e.tab === 'mobilites' && cle) setVoletMobilites(cle);
         if (e.tab === 'governance' && cle) setActiveSdgzTab(cle);
-        if (e.tab === 'resources' && cle) setActiveResourceTab(cle);
+        if (e.tab === 'about' && cle) setActiveResourceTab(cle);
       }
     };
     window.addEventListener('popstate', surRetour);
@@ -13302,7 +13310,7 @@ export default function App() {
       const cle = voletDuSegment(depart.tab, depart.detail);
       if (depart.tab === 'mobilites' && cle) setVoletMobilites(cle);
       if (depart.tab === 'governance' && cle) setActiveSdgzTab(cle);
-      if (depart.tab === 'resources' && cle) setActiveResourceTab(cle);
+      if (depart.tab === 'about' && cle) setActiveResourceTab(cle);
     }
     ecrireURL({ lang: depart.lang, tab: depart.tab, detail: depart.detail, couche: depart.couche, region: depart.region }, true);
   }, []);
@@ -13406,10 +13414,20 @@ export default function App() {
       mobilites: { fr: 'Mobilités', en: 'Mobilities' },
       governance: { fr: 'Gouvernance', en: 'Governance' },
       data: { fr: 'Données & statistiques', en: 'Data & Statistics' },
-      resources: { fr: 'Ressources', en: 'Resources' },
       about: { fr: 'À propos', en: 'About' },
     };
-    const nomSection = tr(NOMS[activeTab], lang);
+    // Les quatre volets d « A propos » ont chacun leur adresse : le titre doit
+    // dire lequel elle ouvre, sans quoi un lien vers le glossaire s annonce
+    // « A propos » dans l onglet, le favori et le partage.
+    const VOLETS_APROPOS = {
+      about:       { fr: 'À propos',     en: 'About' },
+      library:     { fr: 'Bibliothèque', en: 'Library' },
+      glossary:    { fr: 'Glossaire',    en: 'Glossary' },
+      methodology: { fr: 'Méthodologie', en: 'Methodology' },
+    };
+    const nomSection = activeTab === 'about'
+      ? tr(VOLETS_APROPOS[activeResourceTab] || NOMS.about, lang)
+      : tr(NOMS[activeTab], lang);
     const partie = activeTab === 'atlas' && showModal && activeSubTab !== 'perspective'
       ? display.name
       : nomSection;
@@ -13423,7 +13441,7 @@ export default function App() {
     let m = document.querySelector('meta[name="description"]');
     if (!m) { m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); }
     m.content = String(desc).slice(0, 300);
-  }, [display, lang, activeTab, activeSubTab, showModal, text]);
+  }, [display, lang, activeTab, activeSubTab, activeResourceTab, showModal, text]);
 
   const exportIndicatorsCSV = () => {
     let csvContent = "ID,Theme(FR),Theme(EN),Indicator(FR),Indicator(EN),Description(FR),Description(EN)\n";

@@ -507,6 +507,44 @@ const DEMANDES = [
          && css.includes('.note-source:first-child,')
          && css.includes('.surtitre + .note-source');
    }],
+
+  ['le glossaire, la bibliographie et la méthode ont chacun leur adresse',
+   () => {
+     // Trente-quatre mille caracteres de glossaire, cent soixante-douze
+     // entrees, et aucun lien pour les designer : les quatre volets
+     // partageaient /fr/a-propos. Un glossaire qu on ne peut pas citer.
+     return app.includes('  about: {') && app.includes("about:       { fr: 'presentation', en: 'overview' },")
+         && app.includes("glossary:    { fr: 'glossaire',    en: 'glossary' },")
+         && app.includes("activeTab === 'about' ? activeResourceTab : null")
+         && !app.includes("activeTab === 'resources' ? activeResourceTab");
+   }],
+
+  ['aucune adresse conservée ne mène à une page vide',
+   () => {
+     // « conserve : les liens deja partages doivent continuer d ouvrir » --
+     // et /fr/ressources servait un en-tete, un pied, et rien entre les deux.
+     // La cle rejoint les adresses d avant, qui redirigent pour de bon.
+     return !app.includes("resources:  { fr: 'ressources',   en: 'resources' }")
+         && app.includes("  ressources: 'about',")
+         && app.includes("  resources: 'about',");
+   }],
+
+  ['le titre de la page nomme le volet que l’adresse ouvre',
+   () => {
+     // Un lien vers le glossaire s annoncait « A propos » dans l onglet, le
+     // favori et le partage : indiscernable de la page de signature.
+     return app.includes('const VOLETS_APROPOS = {')
+         && app.includes('tr(VOLETS_APROPOS[activeResourceTab] || NOMS.about, lang)')
+         && app.includes('activeSubTab, activeResourceTab, showModal, text]);');
+   }],
+
+  ['le plan du site connaît les trois volets adressables',
+   () => {
+     const plan = readFileSync('public/sitemap.xml', 'utf8');
+     return ['fr/a-propos/glossaire', 'fr/a-propos/bibliotheque', 'fr/a-propos/methode',
+             'en/about/glossary', 'en/about/library', 'en/about/method']
+       .every((u) => plan.includes(u));
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
