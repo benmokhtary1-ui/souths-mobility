@@ -2478,7 +2478,7 @@ const CensusRhythm = ({ lang }) => {
         </div>
   
         <div className="px-6 md:px-8 py-4" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
-          <Prose className="text-[11px] leading-relaxed text-justify" style={{ color: 'var(--label)' }} lang={lang}>{L(
+          <Prose className="note-source text-justify" lang={lang}>{L(
               `Calcul effectué sur la compilation de l’auteur (d’après UNSD / UN DESA), qui recense la date de chaque opération nationale des cycles 1970 à 2030. Deux règles écartent une opération du calcul. D’abord, une date annoncée n’est pas une donnée : les recensements programmés puis reportés, longtemps portés dans la base comme s’ils avaient eu lieu, ont été retirés lors de l’audit d’août 2026. Ensuite, une opération conduite sur un territoire non encore indépendant, ou par un État tiers, est signalée dans la frise du pays mais n’est pas comptabilisée. Mesurer la régularité d’un État depuis un dénombrement colonial reviendrait à lui imputer le rythme de la puissance qui l’administrait. Ces ${data.exclus} opérations pré-indépendance sont donc visibles et non comptées — la frise de l’Angola, de la Namibie ou du Mozambique les porte en clair. La ligne de couverture par cycle, plus haut, reste celle publiée par l’auteur et n’est pas recalculée ici. Les dénominateurs varient donc d’un pays à l’autre — c’est précisément ce que ce calcul rend visible.`,
               `Computed from the author’s compilation (after UNSD / UN DESA), which records the date of every national operation from the 1970 to the 2030 round. Two rules remove an operation from the calculation. First, an announced date is not data: censuses scheduled and then postponed, long carried in the base as though they had happened, were removed in the August 2026 audit. Second, an operation conducted on a territory not yet independent, or by a third state, is flagged in that country’s timeline but not counted. Measuring a state’s regularity from a colonial enumeration would credit it with the rhythm of the power that administered it. Those ${data.exclus} pre-independence operations are therefore visible and uncounted — the timelines for Angola, Namibia and Mozambique carry them plainly. The coverage-by-round row above remains the author’s published figure and is not recomputed here. Denominators therefore vary between countries — which is precisely what this calculation makes visible.`
             )}</Prose>
@@ -6923,7 +6923,7 @@ const GovernanceCross = ({ lang }) => {
           {/* Nuage de points : gouvernance en abscisse, ouverture en ordonnee,
               ancrage porte par la teinte. */}
           <div>
-            <div className="flex flex-wrap items-baseline justify-between gap-2 mb-2">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
               <span className="surtitre">
                 {L('Chaque point est un État', 'Each dot is a state')}
               </span>
@@ -7247,7 +7247,7 @@ const AnchoringMatrix = ({ lang }) => {
           <p className="surtitre">
             {L('Provenance et réserve', 'Provenance and caveat')}
           </p>
-          <Prose className="text-[13px] leading-relaxed text-slate-600 text-justify" lang={lang}>{L(
+          <Prose className="note-source text-justify" lang={lang}>{L(
               "Matrice constituée par l’auteur d’après les listes de ratification de l’Union africaine. La colonne ZLECAf a été reprise en août 2026 sur la liste nominative de tralac et de l’UA : 48 États ont déposé leur instrument. Les six qui manquent sont l’Érythrée, non signataire ; le Bénin, la Libye, le Soudan et le Soudan du Sud, dont la ratification n’est pas approuvée ; et la Somalie, qui a approuvé sans déposer. Le Liberia et Madagascar, marqués non-ratifiants à tort, ont été corrigés.\n\nLa colonne Kampala a été reprise sur la liste de statut officielle de l’UA arrêtée au 8 juillet 2024, qui donne 33 ratifications et 33 dépôts. Sao Tomé-et-Principe, marqué non-ratifiant à tort, a été corrigé.\n\nLa matrice concorde avec les listes de l’UA, État par État.",
               "Matrix compiled by the author from African Union ratification lists. The AfCFTA column was revised in August 2026 against the named list from tralac and the AU: 48 states have deposited their instrument. The six outstanding are Eritrea, not a signatory; Benin, Libya, Sudan and South Sudan, whose ratification is not approved; and Somalia, which approved without depositing. Liberia and Madagascar, wrongly marked as non-ratifiers, have been corrected.\n\nThe Kampala column was revised against the AU’s official status list as at 8 July 2024, which records 33 ratifications and 33 deposits. Sao Tome and Principe, wrongly marked as a non-ratifier, has been corrected.\n\nThe matrix matches the AU lists state by state."
             )}</Prose>
@@ -8567,7 +8567,7 @@ const TabCorridors = ({ text, lang, children }) => {
         <ul className="px-6 md:px-8 pb-6 space-y-3">
           {rangs.map((c, i) => (
             <li key={i} className="figure-row">
-              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1.5">
                 <span className="text-[13px] font-semibold text-slate-900">{tr(c.note, lang)}</span>
                 <span className="text-[13px] tabular-nums" style={{ color: 'var(--ink-soft)' }}>
                   <Num value={c.poids} lang={lang} />
@@ -12270,7 +12270,7 @@ const TabMethodology = ({ text, lang, children }) => (
     <section className="bg-white rounded-xl p-8 md:p-10 border shadow-sm relative border-slate-200">
       <div className="flex justify-between items-center mb-6"><h2 className="text-xl font-serif font-bold text-slate-900 flex items-center"><Database className="w-5 h-5 me-2.5 text-blue-700" /> {text.sections.method_title}</h2></div>
       <Prose className="text-slate-700 text-sm leading-relaxed mb-2" lang={lang}>{text.method.summary}</Prose>
-      <div className="mt-6 pt-6 border-t border-slate-100">
+      <div className="mt-8 pt-6 border-t border-slate-100">
         <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
           {['m1', 'm2', 'm3', 'm4', 'm5', 'm6'].filter(k => text.method[k]).map((k, i) => {
             // Le nombre de references est substitue au rendu : il suit la

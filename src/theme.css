@@ -5546,6 +5546,14 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    écrites à la main la reprennent ici : même corps, même gris, même filet, et
    pas d'italique — sur douze pixels, l'italique se lit moins bien qu'il ne
    distingue. */
+/* Ouvrant sa bande, ou posee sous son propre intitule, la note n a pas de
+   filet a tracer : la bande porte deja le sien, et separer une etiquette du
+   texte qu elle annonce par un trait les eloigne au lieu de les lier. */
+.note-source:first-child,
+.surtitre + .note-source {
+  margin-top: 0; padding-top: 0; border-top: 0;
+}
+
 .note-source {
   margin-top: var(--pas-2);
   padding-top: 8px;

@@ -479,6 +479,34 @@ const DEMANDES = [
          && !app.includes('figure-row px-1 py-1"')
          && compte(app, 'figure-row px-1 py-0.5"') === 6;
    }],
+
+  ['le titre de section n’a qu’un seul dessin',
+   () => {
+     // Quinze exemplaires, cinq orthographes : mb-2, mb-3, mb-4, avec ou
+     // sans le cran md:text-2xl. Le role est le meme aux quinze endroits.
+     //
+     // Cinq autres titres restent a vingt pixels, et c est voulu : ils
+     // coiffent un panneau, non une section de page. Ils s accordent entre
+     // eux — c est un second niveau, pas un sixieme ecart.
+     const compte = (h, n) => h.split(n).length - 1;
+     const dessin = '<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2"';
+     return compte(app, dessin) === 15
+         && !app.includes('<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-3"')
+         && !app.includes('<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4"')
+         && !app.includes('<h2 className="text-xl font-serif font-bold text-slate-900 mb-');
+   }],
+
+  ['la note de pied suit la forme que la feuille de style annonce',
+   () => {
+     // « Le composant <Sources> porte la forme de reference (.provenance).
+     // Les notes ecrites a la main la reprennent ici. » Deux notes se
+     // redessinaient a la main, l une a onze pixels, l autre avec une autre
+     // encre ; une bande de pied entiere refaisait le composant.
+     return !app.includes("text-[11px] leading-relaxed text-justify\" style={{ color: 'var(--label)' }}")
+         && !app.includes('<p className="surtitre">{L(\'Source\', \'Source\')}</p>')
+         && css.includes('.note-source:first-child,')
+         && css.includes('.surtitre + .note-source');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
