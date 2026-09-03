@@ -246,6 +246,25 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- LA TYPOGRAPHIE DU POUR-CENT, DANS LES DEUX LANGUES -----------------
+  ['le pour-cent passe par une fonction, pas par une concaténation',
+   () => /const pourCent = \(val, lang = 'fr'\) =>/.test(app)
+      && !/\$\{formatNumber\([^)]+, lang\)\}%/.test(app)],
+
+  ['le rapport exporté écrit ses pourcentages en français',
+   () => {
+     const nn = app.match(/const nn = \(v, suffix = ''\) => \{[\s\S]*?\n  \};/);
+     return !!nn && /formatNumber\(n, lang\)/.test(nn[0]);
+   }],
+
+  ['la bande de chiffres de Données est bilingue jusque dans ses valeurs',
+   () => app.includes('{ val: formatNumber(11.1, lang)')
+      && app.includes('{ val: pourCent(13.6, lang)')
+      && app.includes('L("1-5 €", "€1–5")')],
+
+  ['la comparaison régionale formate sa valeur',
+   () => app.includes("unite === '%' ? pourCent(v, lang)")],
+
   // --- LE LEXIQUE, LA BIBLIOGRAPHIE, LA JUSTIFICATION ---------------------
   ['la bibliothèque compte ses références au lieu de les écrire',
    // Le libellé en toutes lettres survit dans le commentaire qui explique

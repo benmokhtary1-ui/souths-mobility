@@ -105,6 +105,17 @@ const formatNumber = (val, lang = 'fr') => {
   return new Intl.NumberFormat(localeOf(lang)).format(n).replace(GROUP_SEP, ' ');
 };
 
+// LE POUR-CENT, AVEC L ESPACE QUE SA LANGUE DEMANDE.
+// Le francais pose une fine insecable devant le signe, l anglais le colle. Le
+// gabarit qui concatenait `formatNumber(v, lang)` et « % » ecrivait donc
+// « 1,8% » en francais : juste sur le nombre, faux sur le signe. Le defaut
+// n apparaissait dans aucune chaine du code — le nombre et le signe y sont
+// deux noeuds separes — et ne s est vu qu a l ecran, dans le panneau de
+// l Atlas et dans les parts regionales de Donnees. Une fonction, et il ne
+// peut plus se reformer.
+const pourCent = (val, lang = 'fr') =>
+  `${formatNumber(val, lang)}${lang === 'en' ? '' : ' '}%`;
+
 // Version JSX : identique, mais chaque separateur de groupe devient un element
 // qu’on peut espacer. C’est ce qui rend la coupure million / millier evidente.
 const Num = ({ value, lang = 'fr', unit = null, className = '', ...rest }) => {
@@ -2675,7 +2686,20 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
   const date = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-GB' }, lang), { day: '2-digit', month: 'long', year: 'numeric' });
   const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
   const L = faireL(lang);
-  const nn = (v, suffix = '') => (v === null || v === undefined || v === '' ? '—' : `${v}${suffix}`);
+  // LE RAPPORT EXPORTÉ ÉCRIVAIT « 0.3% » QUAND L’ÉCRAN DIT « 0,3 % ».
+  // Ce raccourci posait la valeur brute contre son suffixe : point décimal
+  // anglais, et pas d’espace devant le signe. Le même chiffre se lisait donc
+  // de deux façons selon qu’on le regardait ou qu’on l’imprimait — dans le
+  // document destiné à être cité, celui des deux qui porte la référence.
+  // Dix emplois, tous en pourcentage.
+  const nn = (v, suffix = '') => {
+    if (v === null || v === undefined || v === '') return '—';
+    const n = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+    if (!Number.isFinite(n)) return `${v}${suffix}`;
+    // L’espace fine insécable ne se pose qu’en français : l’anglais colle le %.
+    const liant = suffix === '%' && lang !== 'en' ? ' ' : '';
+    return `${formatNumber(n, lang)}${liant}${suffix}`;
+  };
 
   const kpis = [
     { lbl: L('Stock migrant (2024)', 'Migrant stock (2024)'), val: formatNumber(display.stock, lang) },
@@ -3102,7 +3126,7 @@ const t = {
       },
       global_stats: {
         world: "Total Mondial (2024)", europe: "Europe (2024)", asia: "Asie (2024)", na: "Amérique du Nord (2024)", africa: "Afrique (2024)", latam: "Amérique Latine (2024)", share: "Part mondiale :",
-        note: "Données UNDESA (2024) : L’Afrique ne représente que 9,5% du stock migratoire mondial (28,5 M), loin derrière l’Europe (94 M) et l’Asie (92 M)."
+        note: "Données UNDESA (2024) : L’Afrique ne représente que 9,5 % du stock migratoire mondial (28,5 M), loin derrière l’Europe (94 M) et l’Asie (92 M)."
       },
       sdg_section: {
         title: "Ancrage International : ODD (2030), GCM (2018) & GCR (2018)",
@@ -3116,7 +3140,7 @@ const t = {
         link_text: "Accéder au portail officiel",
         sdg_points: [
           { goal: 10, title: "Cible 10.7 (Gouvernance des migrations)", desc: "Faciliter une migration ordonnée, sûre, régulière et responsable grâce à des politiques planifiées et bien gérées. La cible migratoire de l’Agenda 2030, suivie par 4 indicateurs (coûts de recrutement, gouvernance, sécurité des parcours, réfugiés)." },
-          { goal: 10, title: "Cible 10.c (Réduction des coûts de transfert)", desc: "Ramener à moins de 3% les coûts de transaction des envois de fonds des diasporas (Banque mondiale)." },
+          { goal: 10, title: "Cible 10.c (Réduction des coûts de transfert)", desc: "Ramener à moins de 3 % les coûts de transaction des envois de fonds des diasporas (Banque mondiale)." },
           { goal: 17, title: "Cible 17.18 (Désagrégation des données)", desc: "Renforcer les capacités statistiques nationales pour ventiler les données selon le statut migratoire." },
           { goal: 8, title: "Cible 8.8 (Droits des travailleurs migrants)", desc: "Protéger les droits du travail et promouvoir un environnement sûr pour tous les travailleurs migrants, en particulier les femmes (OIT)." },
           { goal: 4, title: "Cible 4.b (Mobilité étudiante & bourses)", desc: "Développer les bourses offertes aux pays en développement pour l’enseignement supérieur — un vecteur direct de circulation intra-africaine et Sud-Sud des compétences." },
@@ -3157,12 +3181,12 @@ const t = {
       indicator_desc: "Douze indicateurs proposés pour objectiver la gouvernance des mobilités et orienter la collecte de données ouvertes sur le terrain.",
       download_indicators: "Télécharger la matrice (CSV)",
       debunk_cards: [
-        { myth: "L’explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9%).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9% depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
+        { myth: "L’explosion migratoire africaine incontournable.", real: "Stabilité de la proportion continentale (~1,9 %).", stat_text: "1.9% (2024)", stat_val: 1.9, color: "bg-blue-700", desc: "UNDESA (2024) : La part des migrants internationaux africains dans la population du continent stagne autour de 1,9 % depuis 1990. La hausse du volume absolu est un simple reflet de la croissance démographique globale." },
         { myth: "L’Afrique migre massivement vers l’Europe.", real: "Un partant sur deux reste sur le continent.", stat_text: "54,4 % (2024)", stat_val: 54.4, color: "bg-teal-700", desc: "Calcul sur la matrice bilatérale d’UN DESA (2024), 54 États de l’Union africaine : sur 45,7 millions de personnes nées dans un État africain et vivant hors de leur pays, 24,9 millions résident dans un autre État africain." },
         { myth: "Le Nord accueille l’écrasante majorité des réfugiés.", real: "73 % des réfugiés sont accueillis par des pays à revenu faible ou intermédiaire.", stat_text: "73 % (2024)", stat_val: 73, color: "bg-amber-700", desc: "UNHCR (2025) : Plus des trois quarts des personnes fuyant les conflits armés trouvent refuge dans un pays frontalier en développement (ex: Ouganda, Tchad, Éthiopie)." },
-        { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45% à 47%).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l’économie autonome du soin et du commerce transfrontalier." },
+        { myth: "La migration africaine est quasi-exclusivement masculine.", real: "Féminisation structurelle des flux (45 % à 47 %).", stat_text: "47% (2024)", stat_val: 47, color: "bg-purple-700", desc: "UNDESA (2024) / UA (2021) : Les femmes représentent près de la moitié des migrants internationaux en Afrique, redéfinissant l’économie autonome du soin et du commerce transfrontalier." },
         { myth: "L’Afrique dépend financièrement de l’Aide Publique.", real: "86,4 milliards $ d’envois de fonds dépassent l’APD.", stat_text: "86.4 Mrd $ (2019)", stat_val: 85, color: "bg-amber-600", desc: "Banque mondiale / UA (2021) : Les transferts de la diaspora (86,4 Mrd $ en 2019) dépassent largement l’aide publique au développement (APD) et constituent le premier capital de résilience." },
-        { myth: "Le changement climatique va vider l’Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90% des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
+        { myth: "Le changement climatique va vider l’Afrique vers le Nord.", real: ">90% des déplacements climatiques sont internes.", stat_text: ">90% (2025)", stat_val: 90, color: "bg-cyan-700", desc: "IDMC (2025) : Plus de 90 % des personnes déplacées par des chocs climatiques (sécheresses, inondations) restent au sein de leurs frontières nationales ou sous-régionales." },
         { myth: "Les pays d’Afrique côtière ne sont que de simples zones de transit.", real: "Transformation structurelle en pays de destination.", stat_text: "Mutation (2024)", stat_val: 65, color: "bg-indigo-700", desc: "Les données d’installation démontrent que les pays autrefois qualifiés de 'transit' deviennent des pôles d’ancrage économique durable pour la main-d’œuvre régionale." },
         { myth: "Le développement économique stoppe mécaniquement les départs.", real: "Le paradoxe de la transition (Migration Hump).", stat_text: "Catalyseur (2024)", stat_val: 80, color: "bg-rose-700", desc: "Démontré empiriquement : l’augmentation initiale des revenus fournit aux ménages le capital financier nécessaire pour financer un projet migratoire régulier." },
         { myth: "Les travailleurs migrants sont un fardeau pour le pays hôte.", real: "Moteurs de l’emploi et de la valeur ajoutée locale.", stat_text: "+ Valeur (2021)", stat_val: 85, color: "bg-emerald-700", desc: "Rapport UA/OIT (2021) : dans les dix États ayant déclaré leurs données d’emploi, 27,5 % des migrants occupés travaillent dans l’agriculture, la sylviculture ou la pêche. Ils y comblent des pénuries de main-d’œuvre et dynamisent les marchés locaux. La couverture déclarative reste le point faible : voir Données & Stats." }
@@ -5475,15 +5499,15 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, coucheAtlas, setCoucheAtl
         <dl className="grid grid-cols-2 md:grid-cols-3 border-t border-slate-100 divide-x divide-y md:divide-y-0 divide-slate-100">
           {[
             { v: display.stock, l: L('Personnes nées ailleurs', 'People born elsewhere', { ar: 'أشخاص وُلدوا في مكان آخر' }) },
-            { v: `${formatNumber(display.evolution, lang)}%`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
-            { v: `${formatNumber(display.female, lang)}%`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
+            { v: `${pourCent(display.evolution, lang)}`, l: L('Part dans la population', 'Share of the population', { ar: 'الحصة من السكان' }) },
+            { v: `${pourCent(display.female, lang)}`, l: L('Part de femmes', 'Share who are women', { ar: 'نسبة النساء' }) },
             // La tuile ne paraît que si la valeur existe : elle est vérifiée pour
             // le continent, et incalculable pour une sous-région. Une case en
             // moins vaut mieux qu’un nombre fabriqué.
-            ...(display.retention != null ? [{ v: `${formatNumber(display.retention, lang)}%`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) }] : []),
-            { v: display.remittances != null ? `${formatNumber(display.remittances, lang)}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            ...(display.retention != null ? [{ v: `${pourCent(display.retention, lang)}`, l: L('Restés sur le continent', 'Stayed on the continent', { ar: 'بقوا في القارة' }) }] : []),
+            { v: display.remittances != null ? `${pourCent(display.remittances, lang)}` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Transferts, en part du PIB', 'Remittances, share of GDP', { ar: 'التحويلات كنسبة من الناتج' }) },
-            { v: display.labour_participation != null ? `${formatNumber(display.labour_participation, lang)}%` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
+            { v: display.labour_participation != null ? `${pourCent(display.labour_participation, lang)}` : L('n. d.', 'n/a', { ar: 'غ. م.' }),
               l: L('Migrants en activité', 'Migrants in work', { ar: 'المهاجرون العاملون' }) },
           ].map((k, i) => (
             <div key={i} className="tuile-agregat">
@@ -5504,8 +5528,8 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, coucheAtlas, setCoucheAtl
               </span>
             </div>
             <div className="h-2.5 w-full flex overflow-hidden" style={{ backgroundColor: 'var(--rule)', borderRadius: 999 }}>
-              <div style={{ width: `${formatNumber(display.distribution[0].value, lang)}%`, backgroundColor: 'var(--accent)' }} />
-              <div style={{ width: `${formatNumber(display.distribution[1].value, lang)}%`, backgroundColor: 'var(--rule-strong)' }} />
+              <div style={{ width: `${pourCent(display.distribution[0].value, lang)}`, backgroundColor: 'var(--accent)' }} />
+              <div style={{ width: `${pourCent(display.distribution[1].value, lang)}`, backgroundColor: 'var(--rule-strong)' }} />
             </div>
           </div>
         )}
@@ -7139,8 +7163,15 @@ const CompareRegions = ({ lignes, champ, lang, repere = null, unite = '%',
                     style={repere !== null ? { '--repere': pourcent(repere) } : undefined}>
                 <span style={{ width: v === null || v === undefined ? 0 : pourcent(v) }} />
               </span>
+              {/* La valeur BRUTE était collée à son unité — « 95% », « 17.7% » —
+                  alors que le français veut la fine insécable et la virgule
+                  décimale. Le même défaut avait déjà été relevé et corrigé plus
+                  haut dans ce fichier, sur une autre branche à unité ; il ne se
+                  voyait pas ici, parce que la comparaison régionale n'affiche
+                  que des entiers et que seule l'espace manquait. */}
               <span className="compare-valeur">
-                {v === null || v === undefined ? '—' : `${v}${unite}`}
+                {v === null || v === undefined ? '—'
+                  : unite === '%' ? pourCent(v, lang) : `${formatNumber(v, lang)}${unite}`}
               </span>
             </div>
           );
@@ -7148,8 +7179,10 @@ const CompareRegions = ({ lignes, champ, lang, repere = null, unite = '%',
       </div>
       {repere !== null && (
         <p className="compare-legende">
-          <span><b>{L('Le filet vertical', 'The vertical rule')}</b> {L(`marque la valeur mondiale (${repere}${unite}).`,
-                                                                        `marks the world value (${repere}${unite}).`)}</span>
+          {/* La légende du repère collait elle aussi sa valeur à l’unité, alors
+              que les barres qu’elle explique viennent d’être réglées. */}
+          <span><b>{L('Le filet vertical', 'The vertical rule')}</b> {L(`marque la valeur mondiale (${unite === '%' ? pourCent(repere, 'fr') : `${formatNumber(repere, 'fr')}${unite}`}).`,
+                                                                        `marks the world value (${unite === '%' ? pourCent(repere, 'en') : `${formatNumber(repere, 'en')}${unite}`}).`)}</span>
         </p>
       )}
     </div>
@@ -11196,9 +11229,15 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
   const L = faireL(lang);
   const headline = [
     { val: "47/54", lbl: L("États ayant recensé (cycle 2010)", "States that censused (2010 round)"), sub: L("soit 87 % du continent, cycle 2005-2014", "i.e. 87% of the continent, 2005-2014 round") },
-    { val: "11,1", lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
-    { val: "1-5 €", lbl: L("Coût par habitant recensé", "Cost per inhabitant enumerated"), sub: L("charge logistique majeure", "a major logistical burden") },
-    { val: "13,6 %", lbl: L("Recensements interrogeant le motif", "Censuses asking the reason"), sub: L("le déficit est là, pas dans la collecte", "the deficit sits here, not in collection") },
+    // LES LIBELLÉS ÉTAIENT TRADUITS, PAS LES CHIFFRES.
+    // Cette bande posait ses valeurs en français en dur — « 11,1 »,
+    // « 13,6 % », « 1-5 € » — et les servait telles quelles au lecteur
+    // anglophone, sous des libellés eux correctement traduits. La virgule
+    // décimale et la fine devant le pour-cent sont des marques de langue au
+    // même titre qu’un mot.
+    { val: formatNumber(11.1, lang), lbl: L("Années entre deux recensements", "Years between two censuses"), sub: L("recommandation ONU : 10 ans", "UN recommendation: 10 years") },
+    { val: L("1-5 €", "€1–5"), lbl: L("Coût par habitant recensé", "Cost per inhabitant enumerated"), sub: L("charge logistique majeure", "a major logistical burden") },
+    { val: pourCent(13.6, lang), lbl: L("Recensements interrogeant le motif", "Censuses asking the reason"), sub: L("le déficit est là, pas dans la collecte", "the deficit sits here, not in collection") },
   ];
 
   return (
