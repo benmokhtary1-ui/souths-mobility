@@ -5757,6 +5757,23 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
    qu on centre, libelle compris : le couple reste solidaire et se pose sur
    l axe de la page.  permet de designer un parent par ce qu il
    contient, ce qu aucun selecteur ne savait faire avant. */
+/* CETTE RÈGLE EST INOPÉRANTE SUR CERTAINES RANGÉES, ET C’EST TRÈS BIEN AINSI.
+   Mesuré sur Vérification : la rangée « Robustesse » fait 909 px dans une
+   colonne de 1 271, celle de « Classer par » 306. Ajustées à leur contenu,
+   elles n’ont aucune place à répartir : `justify-content` y est lu et sans
+   effet.
+
+   J’ai essayé d’y remédier par `width: 100%`, et c’était une faute. Ces deux
+   rangées ne sont pas seules dans la colonne : elles sont deux filtres parmi
+   d’autres dans une barre d’outils de 1 020 px, posés côte à côte. Leur donner
+   toute la largeur centrait bien chacune — en poussant ses voisines et en
+   cassant la barre. Le remède était pire que le défaut, et le défaut n’en est
+   pas un : un filtre qui suit son voisin est à sa place.
+
+   La règle reste donc telle quelle. Elle centre ce qui est seul dans sa
+   colonne — le carrousel, les onglets d’À propos — et ne fait rien sur ce qui
+   partage sa ligne. Les bandes à icônes, elles, sont centrées par
+   `.barre-section` juste au-dessus, et le sont sur les six sections.        */
 :is(main, .reader) :is(div, nav, header, p):has(> .bascule-groupe),
 :is(main, .reader) :is(div, nav, header, p):has(> .carrousel-commandes),
 :is(main, .reader) .carrousel-tete {
