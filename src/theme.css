@@ -3007,6 +3007,25 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
      souvent touchees du site, et les seules qu on vise d une main. */
   nav :is(button, a[href], [role="button"]) { min-height: 44px; }
   nav :is(button, a[href])[aria-label] { min-width: 44px; }
+
+  /* `min-height` NE S APPLIQUE PAS A UNE BOITE INLINE.
+     La regle du haut posait bien 44 px sur tout `a[href]` de `main`. Les liens
+     de la liste des sources, sur l accueil, mesuraient pourtant 36 px — et l un
+     d eux 17. Ils sont `display: inline`, et une boite inline non remplacee
+     ignore `min-height` : la regle etait ecrite, appliquee, et sans effet.
+
+     Ce sont des cibles autonomes — chacune est le SEUL enfant de son `<li>` —
+     et non des liens pris dans une phrase, donc l exception de taille pour les
+     liens en ligne ne les couvre pas. Passees en bloc, elles recoivent enfin
+     la hauteur que la regle leur destinait. */
+  :is(main, .reader) li > a[href]:only-child { display: block; }
+
+  /* Les crans de la legende de carte : 44 px de haut, mais 40 de large. Quatre
+     pixels manquaient sur la seule dimension que la regle ne posait pas. Meme
+     chose pour le bouton de tri le plus court de la matrice — « Score », 34 px.
+     Sa colonne en fait 66 et la table defile deja dans son enveloppe : les
+     elargir ne deplace rien. */
+  :is(main, .reader) :is(.choro-cran, .tri-col) { min-width: 44px; }
   /* Les commandes en ligne dans une phrase gardent leur hauteur de texte :
      les etirer casserait l'interligne du paragraphe qui les contient. */
   :is(main, .reader) p :is(button, a[href]) { min-height: 0; }

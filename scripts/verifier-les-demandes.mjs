@@ -246,6 +246,15 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- LES CIBLES TACTILES ------------------------------------------------
+  ['un lien seul dans sa puce devient une cible, pas une ligne',
+   // `min-height` etait pose sur ces liens depuis toujours, et sans effet :
+   // une boite inline non remplacee l ignore.
+   () => css.includes(':is(main, .reader) li > a[href]:only-child { display: block; }')],
+
+  ['les cibles étroites reçoivent aussi une largeur',
+   () => css.includes(':is(main, .reader) :is(.choro-cran, .tri-col) { min-width: 44px; }')],
+
   // --- LA TYPOGRAPHIE DU POUR-CENT, DANS LES DEUX LANGUES -----------------
   ['le pour-cent passe par une fonction, pas par une concaténation',
    () => /const pourCent = \(val, lang = 'fr'\) =>/.test(app)
