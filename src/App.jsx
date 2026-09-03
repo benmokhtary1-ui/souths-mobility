@@ -2047,8 +2047,8 @@ const AspirationGap = ({ lang }) => {
 
       <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
         <Prose className="text-justify" lang={lang}>{L(
-            "De l’aspiration, on ne savait rien de chiffré. Les stocks, les ratifications et les recensements disent ce que les gens font ; aucun ne dit ce qu’ils voudraient faire, et le premier terme du cadre restait donc une hypothèse. Afrobarometer, seule enquête menée à l’échelle du continent auprès des citoyens eux-mêmes, le rend mesurable.",
-            'Of aspiration, nothing was counted. Stocks, ratifications and censuses say what people do; none says what they would like to do, so the first term of the framework remained a hypothesis. Afrobarometer, the only continent-wide survey of citizens themselves, makes it measurable.'
+            "De l’aspiration, on ne savait rien de chiffré. Les stocks, les ratifications et les recensements disent ce que les gens font ; aucun ne dit ce qu’ils voudraient faire, et le premier terme du cadre restait donc une hypothèse. Afrobarometer, la plus étendue et la plus ancienne des enquêtes menées à l’échelle du continent auprès des citoyens eux-mêmes, le rend mesurable — pour les pays et les vagues qu’elle couvre.",
+            'Of aspiration, nothing was counted. Stocks, ratifications and censuses say what people do; none says what they would like to do, so the first term of the framework remained a hypothesis. Afrobarometer, the broadest and longest-running of the continent-wide surveys of citizens themselves, makes it measurable — for the countries and rounds it covers.'
           )}</Prose>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 stagger">
@@ -2091,8 +2091,8 @@ const AspirationGap = ({ lang }) => {
             {L("Ce que l’écart démontre", 'What the gap demonstrates')}
           </p>
           <Prose className="text-[13px] text-slate-600 leading-relaxed text-justify" lang={lang}>{L(
-              "Chacune des deux mesures, prise isolément, autorise une conclusion fausse. L’aspiration seule donne le récit de l’invasion, puisqu’elle compte des intentions que le régime de mobilité n’autorisera pas. La capacité seule donne celui de l’immobilité, puisqu’elle enregistre des trajectoires accomplies sans rien dire de celles qui ont été empêchées. C’est leur écart, et lui seul, qui décrit le régime (Ben Mokhtar, 2026).",
-              'Either measurement, taken on its own, licenses a false conclusion. Aspiration alone yields the invasion narrative, since it counts intentions the mobility regime will not permit. Capability alone yields the immobility narrative, since it records journeys completed while saying nothing of those that were prevented. It is the gap between them, and that alone, that describes the regime (Ben Mokhtar, 2026).'
+              "Chacune des deux mesures, prise isolément, autorise une conclusion fausse. L’aspiration seule donne le récit de l’invasion, puisqu’elle compte des intentions que le régime de mobilité n’autorisera pas. La capacité seule donne celui de l’immobilité, puisqu’elle enregistre des trajectoires accomplies sans rien dire de celles qui ont été empêchées. C’est leur écart que le cadre prend pour objet, et c’est par lui qu’il décrit le régime (Ben Mokhtar, 2026) : non que le droit, le coût du passage ou la géographie des réseaux n’y comptent pas, mais parce qu’aucun de ces éléments ne se lit sans la distance entre ce qu’on veut et ce qu’on peut.",
+              'Either measurement, taken on its own, licenses a false conclusion. Aspiration alone yields the invasion narrative, since it counts intentions the mobility regime will not permit. Capability alone yields the immobility narrative, since it records journeys completed while saying nothing of those that were prevented. It is that gap the framework takes as its object, and through it that it describes the regime (Ben Mokhtar, 2026): not that law, the cost of passage or the geography of networks do not count, but that none of them can be read without the distance between what people want and what they can do.'
             )}</Prose>
         </div>
       </div>
@@ -11749,8 +11749,8 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
         chapo={{ fr: 'Comment lire ce glossaire', en: 'How to read this glossary' }}
         titre={{ fr: "Quand deux définitions s’opposent, l’africaine fait foi", en: 'Where two definitions clash, the African one prevails' }}
         chapeau={{
-          fr: "Un même mot n’a pas le même sens selon qui le définit, et l’écart n’est jamais technique : il engage qui est protégé et qui ne l’est pas. Ce glossaire donne la définition africaine en premier, et signale l’écart quand il existe.",
-          en: 'The same word does not mean the same thing depending on who defines it, and the gap is never merely technical: it decides who is protected and who is not. This glossary gives the African definition first, and flags the gap where there is one.'
+          fr: "Un même mot n’a pas le même sens selon qui le définit, et l’écart n’est pas qu’une affaire de technique : il décide, dans bien des cas, qui est protégé et qui ne l’est pas. Ce glossaire donne la définition africaine en premier, et signale l’écart quand il existe.",
+          en: 'The same word does not mean the same thing depending on who defines it, and the gap is rarely merely technical: in many cases it decides who is protected and who is not. This glossary gives the African definition first, and flags the gap where there is one.'
         }}
         notions={[
           { mot: { fr: 'La règle', en: 'The rule' },
