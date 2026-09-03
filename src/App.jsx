@@ -7685,14 +7685,22 @@ const TabMobilites = ({ text, lang, volet, setVolet }) => {
             // lecteur devait relier lui-même le statut, le texte qui le régit
             // et la conséquence statistique ; c’est précisément ce travail
             // qu’une définition doit faire à sa place.
-            sens: { fr: "Une personne chassée de chez elle qui n’a pas quitté son pays. L’Afrique est le seul continent à s’être doté d’un traité contraignant sur cette situation — la Convention de Kampala, adoptée en 2009 — et cette antériorité ne se retrouve nulle part dans les comptes : puisqu’aucune frontière n’est franchie, aucun poste d’entrée n’enregistre le déplacement, et il n’apparaît dans aucune statistique migratoire.",
-                    en: 'A person driven from home who has not left their country. Africa is the only continent to have given itself a binding treaty on this situation — the Kampala Convention, adopted in 2009 — and that precedence is nowhere reflected in the counts: since no border is crossed, no entry post records the movement, and it appears in no migration statistic.' } },
+            // Les quatre notions de ce groupe ouvrent sur un verbe — « A franchi
+            // une frontière », « Exerce une activité rémunérée ». Ma première
+            // reprise commençait par « Une personne chassée de chez elle », et
+            // rompait seule la forme des trois autres.
+            sens: { fr: "A été chassé de chez lui sans quitter son pays. L’Afrique est le seul continent à s’être doté d’un traité contraignant sur cette situation — la Convention de Kampala, adoptée en 2009 — et cette antériorité ne se retrouve nulle part dans les comptes : puisqu’aucune frontière n’est franchie, aucun poste d’entrée n’enregistre le déplacement, et il n’apparaît dans aucune statistique migratoire.",
+                    en: 'Has been driven from home without leaving the country. Africa is the only continent to have given itself a binding treaty on this situation — the Kampala Convention, adopted in 2009 — and that precedence is nowhere reflected in the counts: since no border is crossed, no entry post records the movement, and it appears in no migration statistic.' } },
           { mot: { fr: 'Réfugié', en: 'Refugee' },
             sens: { fr: "A franchi une frontière et ne peut rentrer. La Convention de l’OUA (1969) va plus loin que celle de Genève : elle couvre aussi l’agression extérieure, l’occupation, la domination étrangère et les événements troublant gravement l’ordre public.",
                     en: 'Has crossed a border and cannot return. The OAU Convention (1969) reaches further than the Geneva one: it also covers external aggression, occupation, foreign domination and events seriously disturbing public order.' } },
           { mot: { fr: 'Apatride', en: 'Stateless person' },
-            sens: { fr: "Aucun État ne le reconnaît comme son ressortissant. Convention de 1954, Déclaration d’Abidjan (2015). Sans nationalité, souvent sans papiers, il n’apparaît que là où un État accepte de le recenser.",
-                    en: 'No state recognises them as a national. 1954 Convention, Abidjan Declaration (2015). Without nationality, often without papers, they appear only where a state agrees to count them.' } },
+            // « Convention de 1954, Déclaration d’Abidjan (2015). » était posée
+            // seule, sans verbe, entre deux phrases construites : deux titres
+            // d’instruments jetés là, que le lecteur devait rattacher lui-même
+            // au statut décrit avant et à son effet décrit après.
+            sens: { fr: "Aucun État ne le reconnaît comme son ressortissant, au sens de la Convention de 1954 que la Déclaration d’Abidjan (2015) engage l’Afrique de l’Ouest à mettre en œuvre. Sans nationalité, souvent sans papiers, il n’apparaît que là où un État accepte de le recenser.",
+                    en: 'No state recognises them as a national, in the sense of the 1954 Convention which the Abidjan Declaration (2015) commits West Africa to implementing. Without nationality, often without papers, they appear only where a state agrees to count them.' } },
           { mot: { fr: 'Travailleur migrant', en: 'Migrant worker' },
             sens: { fr: "Exerce une activité rémunérée dans un État dont il n’a pas la nationalité. Le mot dit un statut d’emploi, pas une durée ni un motif de départ.",
                     en: 'Holds paid work in a state of which they are not a national. The word states an employment status, not a duration or a reason for leaving.' } },
