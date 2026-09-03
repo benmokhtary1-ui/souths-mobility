@@ -1955,7 +1955,7 @@ const CarteCER = ({ objet: rec, index, x, pas, carte, centre, actif, lang, onCen
 // d'un `id` et le composant qui sait les dessiner. Toute la mecanique —
 // mesure du pas, projection de l'elan, ressort de calage — vit ici, et ici
 // seulement.
-const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, className = '' }) => {
+const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, aria, className = '' }) => {
   const L = faireL(lang);
   const fenetreRef = useRef(null);
   const carteRef = useRef(null);
@@ -2030,10 +2030,12 @@ const Carrousel = ({ items, carte: Carte, lang, choisie, onChoisir, etiquette, c
   // jamais durablement, et la distance cyclique fait le reste.
 
   return (
-    <section className={'carrousel ' + className} aria-roledescription="carousel" aria-label={etiquette}>
-      <div className="carrousel-tete">
-        <span className="surtitre" style={{ color: 'var(--label)' }}>{etiquette}</span>
-      </div>
+    <section className={'carrousel ' + className} aria-roledescription="carousel" aria-label={aria || etiquette}>
+      {etiquette && (
+        <div className="carrousel-tete">
+          <span className="surtitre" style={{ color: 'var(--label)' }}>{etiquette}</span>
+        </div>
+      )}
 
       <div className="carrousel-fenetre" ref={fenetreRef}>
         <motion.div
@@ -2102,7 +2104,7 @@ const AspirationGap = ({ lang }) => {
   ];
 
   const Row = ({ l, v, color, i }) => (
-    <div className="flex items-center gap-3 figure-row px-1 py-1">
+    <div className="flex items-center gap-3 figure-row px-1 py-0.5">
       <span className="text-[11px] w-56 shrink-0 leading-snug text-slate-700">{l}</span>
       <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
         <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`} style={{ width: `${v}%`, backgroundColor: color }} />
@@ -2129,7 +2131,7 @@ const AspirationGap = ({ lang }) => {
         )}</Prose>
       </div>
 
-      <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+      <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
         <Prose className="text-justify" lang={lang}>{L(
             "De l’aspiration, on ne savait rien de chiffré. Les stocks, les ratifications et les recensements disent ce que les gens font ; aucun ne dit ce qu’ils voudraient faire, et le premier terme du cadre restait donc une hypothèse. Afrobarometer, la plus étendue et la plus ancienne des enquêtes menées à l’échelle du continent auprès des citoyens eux-mêmes, le rend mesurable — pour les pays et les vagues qu’elle couvre.",
             'Of aspiration, nothing was counted. Stocks, ratifications and censuses say what people do; none says what they would like to do, so the first term of the framework remained a hypothesis. Afrobarometer, the broadest and longest-running of the continent-wide surveys of citizens themselves, makes it measurable — for the countries and rounds it covers.'
@@ -2229,14 +2231,14 @@ const ProportionGap = ({ lang }) => {
         </span>
       </figcaption>
 
-      <div className="px-5 py-5 space-y-5">
+      <div className="px-5 py-4 space-y-4">
         {groups.map((g, gi) => (
-          <div key={gi} className={gi > 0 ? 'pt-5' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
+          <div key={gi} className={gi > 0 ? 'pt-4' : ''} style={gi > 0 ? { borderTop: '1px solid var(--rule)' } : undefined}>
             <p className="surtitre">{g.title}</p>
-            <div className="space-y-2.5">
+            <div className="space-y-1.5">
               {g.rows.map((r, ri) => (
                 <div key={ri}>
-                  <div className="flex items-baseline justify-between gap-3 mb-1">
+                  <div className="flex items-baseline justify-between gap-3 mb-0.5">
                     <span className="text-xs text-slate-700 leading-snug">{r.label}</span>
                     <span className="text-[13px] font-serif font-bold tabular-nums shrink-0" style={{ color: 'var(--accent-deep)' }}>
                       {r.note}
@@ -2396,7 +2398,7 @@ const CensusRhythm = ({ lang }) => {
           </h3>
         </div>
   
-        <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
               `La compilation porte, pour chaque pays, la date de chaque recensement depuis le cycle 1970. On peut donc calculer ${data.total} intervalles réels au lieu de se contenter d’une moyenne. Et la distribution ne ressemble pas à la moyenne : elle superpose deux régimes que le chiffre unique fusionne.`,
               `The compilation carries, for each country, the date of every census since the 1970 round. That makes ${data.total} actual intervals computable instead of relying on an average. And the distribution does not look like the average: it superimposes two regimes that a single figure merges.`
@@ -2422,7 +2424,7 @@ const CensusRhythm = ({ lang }) => {
             </p>
             <div className="space-y-2">
               {Object.entries(data.byCount).sort((a, b) => Number(b[0]) - Number(a[0])).map(([k, v], i) => (
-                <div key={k} className="flex items-center gap-3 figure-row px-1 py-1">
+                <div key={k} className="flex items-center gap-3 figure-row px-1 py-0.5">
                   <span className="text-[11px] font-semibold w-32 shrink-0 text-slate-700">
                     {k} {L(Number(k) > 1 ? 'recensements' : 'recensement', Number(k) > 1 ? 'censuses' : 'census')}
                   </span>
@@ -2445,7 +2447,7 @@ const CensusRhythm = ({ lang }) => {
             </p>
             <div className="space-y-2">
               {data.longest.map((r, i) => (
-                <div key={r.name} className="flex items-center gap-3 figure-row px-1 py-1">
+                <div key={r.name} className="flex items-center gap-3 figure-row px-1 py-0.5">
                   <span className="text-[11px] font-medium w-36 shrink-0 truncate text-slate-700">{censusName(r.iso2, r.name, lang)}</span>
                   <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                     <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
@@ -2518,7 +2520,7 @@ const LateRound = ({ lang }) => {
           </h4>
         </div>
   
-        <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
               `Neuf États figuraient encore sur cette plateforme comme « recensement prévu » ou « en cours », pour des dates toutes dépassées. Leur vérification, une par une, auprès des instituts nationaux, donne un résultat que la lecture par cycle rendait invisible. Six de ces opérations ont bien eu lieu. Mais ${rows.length} d’entre elles se sont achevées après la clôture du cycle 2020, le 31 décembre 2024. Aucune n’apparaît donc dans le taux de couverture du cycle, alors que le recensement existe, que les ménages ont été dénombrés et que les résultats sont en cours de publication.`,
               `Nine states still appeared on this platform as "census planned" or "under way", all for dates now past. Checking each against its national institute yields a result the round-by-round reading made invisible. Six of those operations did take place. But ${rows.length} of them were completed after the 2020 round closed on 31 December 2024. None therefore counts toward the round’s coverage rate, even though the census exists, households were enumerated and results are being published.`
@@ -2530,7 +2532,7 @@ const LateRound = ({ lang }) => {
             </p>
             <div className="space-y-2">
               {rows.map((r, i) => (
-                <div key={r.iso2} className="flex items-center gap-3 figure-row px-1 py-1">
+                <div key={r.iso2} className="flex items-center gap-3 figure-row px-1 py-0.5">
                   <span className="text-[11px] font-semibold w-32 shrink-0 truncate text-slate-800">{nm(r)}</span>
                   <div className="flex-1 h-4 overflow-hidden" style={{ backgroundColor: 'var(--paper-sunk)' }}>
                     <div className={`h-full bar-fill bar-fill--d${Math.min(5, i + 1)}`}
@@ -4457,14 +4459,6 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
                 </div>
               ))}
             </dl>
-            {onSelect && (
-              <Prose className="text-[11px] mt-3.5 pt-3 border-t leading-snug"
-                 style={{ borderColor: 'var(--rule)', color: 'var(--label)' }} lang={lang}>{selectedId === lu
-                  ? L('Pays sélectionné. Son profil complet est affiché ci-dessous.',
-                      'Country selected. Its full profile appears below.')
-                  : L('Cliquez le pays pour ouvrir son profil complet.',
-                      'Click the country to open its full profile.')}</Prose>
-            )}
             {/* Le geste qui appelle la comparaison. Il vit dans le relevé parce
                 que c'est là qu'on lit déjà le pays : on n'a pas à le chercher
                 ailleurs pour dire « celui-là aussi ». */}
@@ -5690,7 +5684,7 @@ const TabAtlas = ({ lang, text, allerVers, ouvrirPays, coucheAtlas, setCoucheAtl
         </dl>
 
         {display.distribution && (
-          <div className="px-6 md:px-8 py-5 border-t border-slate-100">
+          <div className="px-6 md:px-8 py-4 border-t border-slate-100">
             <div className="flex justify-between text-[11px] font-bold mb-2">
               <span style={{ color: 'var(--accent-deep)' }}>
                 {tr(display.distribution[0].label, lang)} ({formatNumber(display.distribution[0].value, lang)} %)
@@ -5726,7 +5720,7 @@ const CarteSection = ({ lang, indicateur, kicker, titre, plain, sources = [] }) 
         </span>
         <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{titre}</h2>
       </div>
-      <div className="px-6 md:px-8 py-6">
+      <div className="px-6 md:px-8 py-5">
         <EnClair lang={lang} fr={plain.fr} en={plain.en} />
         <AfricaChoropleth indicator={indicateur} lang={lang} />
         <Sources items={sources} lang={lang} />
@@ -5810,11 +5804,7 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
               {hoveredIsMember ? (tr({ fr: 'État membre', en: 'Member state' }, lang)) : (tr({ fr: 'Non membre', en: 'Not a member' }, lang))}
             </span>
           </div>
-        ) : (
-          <span className="surtitre">
-            {tr({ fr: 'Survolez la carte', en: 'Hover the map' }, lang)}
-          </span>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -6439,14 +6429,14 @@ const EvidenceDossier = ({ fiche, lang, onBack, showBack }) => {
         </div>
       </header>
 
-      <div className="px-6 md:px-8 py-6" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
+      <div className="px-6 md:px-8 py-5" style={{ backgroundColor: 'var(--paper-sunk)', borderTop: '1px solid var(--rule)' }}>
         <p className="surtitre" style={{ color: 'var(--accent-deep)' }}>
           {L("Ce que montrent les donn\u00e9es", "What data shows")}
         </p>
         <Prose className="text-[15px] leading-relaxed text-slate-800" lang={lang}>{tr(fiche.reality, lang)}</Prose>
       </div>
 
-      <div className="px-6 md:px-8 py-6 space-y-6">
+      <div className="px-6 md:px-8 py-5 space-y-5">
         {fiche.why_persists && tr(fiche.why_persists, lang).length > 0 && (
           <section>
             <p className="surtitre">
@@ -6618,11 +6608,21 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       </div>
       </div>
 
-      {/* ------- Chercher ------- */}
+      {/* ------- Les affirmations, et de quoi les restreindre -------
+          Le titre, la phrase qui dit ce que fait une fiche, la barre qui
+          restreint le corpus, le rail qui le parcourt : quatre blocs separes
+          par deux titres, pour un seul geste — on choisit ce qu on lit, puis
+          on le lit. Le titre qui coiffait la barre annoncait une recherche qui
+          s annonce toute seule ; il a disparu, et la barre a
+          rejoint ce qu elle filtre. */}
       <div>
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{L("Chercher dans le corpus", "Search the corpus")}</h2>
-      <div className="bg-white border border-slate-200 print:hidden mt-2">
-        <div className="flex flex-col md:flex-row md:items-center gap-3 p-3 border-b border-slate-100">
+        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{L("Les affirmations, une par une", "The claims, one by one")}</h2>
+        <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-4" lang={lang}>{L(
+            "Chaque fiche confronte un enonce a ses sources, expose ce qu’elles etablissent, et enonce ce qu’elles ne permettent pas de conclure.",
+            "Each file sets a claim against its sources, states what they establish, and states what they do not allow to be concluded."
+          )}</Prose>
+      <div className="bg-white border border-slate-200 print:hidden">
+        <div className="flex flex-col md:flex-row md:items-center gap-3 px-3 py-2.5 border-b border-slate-100">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -6643,7 +6643,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3 p-3">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-3 py-2.5">
           {/* Robustesse : l’axe principal du registre */}
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="surtitre me-1">
@@ -6704,18 +6704,10 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
         </div>
       ) : (
         <>
-        {/* ------- Les affirmations -------
-            Le troisieme et dernier moment de la section. Le carrousel fait le
-            parcours — la carte au centre est nette, ses voisines reculent, si
-            bien que la position porte l'information — et le dossier, dessous,
-            porte la lecture. Les deux suivent les memes filtres. */}
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">
-          {L("Les affirmations, une par une", "The claims, one by one")}
-        </h2>
-        <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-5" lang={lang}>{L(
-            "Chaque fiche confronte un enonce a ses sources, expose ce qu’elles etablissent, et enonce ce qu’elles ne permettent pas de conclure.",
-            "Each file sets a claim against its sources, states what they establish, and states what they do not allow to be concluded."
-          )}</Prose>
+        {/* Le carrousel fait le parcours — la carte au centre est nette, ses
+            voisines reculent, si bien que la position porte l information — et
+            le dossier, dessous, porte la lecture. Les deux suivent les memes
+            filtres, poses par la barre au-dessus. */}
         {results.length > 1 && (
           <Carrousel
             items={results}
@@ -6724,9 +6716,9 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
             choisie={selectedId}
             onChoisir={setSelectedId}
             className="mb-8 print:hidden"
-            etiquette={L(
-              `${results.length} affirmation${results.length > 1 ? 's' : ''} — tirer pour feuilleter`,
-              `${results.length} claim${results.length > 1 ? 's' : ''} — drag to browse`
+            aria={L(
+              `${results.length} affirmation${results.length > 1 ? 's' : ''}`,
+              `${results.length} claim${results.length > 1 ? 's' : ''}`
             )}
           />
         )}
@@ -6901,7 +6893,7 @@ const GovernanceCross = ({ lang }) => {
           </h4>
         </div>
   
-        <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
               "La plateforme porte trois mesures indépendantes pour chacun des 54 États : la qualité de gouvernance mesurée par l’Indice Ibrahim, l’ouverture effective des frontières mesurée par l’indice AVOI, et le nombre d’instruments continentaux ratifiés. Elle permet donc de soumettre à l’épreuve deux hypothèses que le débat public tient généralement pour acquises : qu’un État mieux gouverné ouvre davantage ses frontières, et qu’un État qui ratifie les textes de libre circulation les applique.",
               'The platform carries three independent measurements for each of the 54 states: governance quality as measured by the Ibrahim Index, effective border openness as measured by the AVOI index, and the number of continental instruments ratified. It therefore allows two hypotheses that public debate generally takes for granted to be put to the test: that a better-governed state opens its borders more, and that a state which ratifies free-movement instruments applies them.'
@@ -7119,7 +7111,7 @@ const AnchoringMatrix = ({ lang }) => {
           </h3>
         </div>
   
-        <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+        <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
           <Prose className="text-justify" lang={lang}>{L(
               `Adhérer à l’Union est une chose, s’engager sur la mobilité des personnes en est une autre. En rangeant les six instruments continentaux du plus consensuel au plus contraignant, on obtient une courbe de décrochage : l’appartenance est unanime, la libre circulation ne l’est presque pas.\n\nLa descente n’est pourtant pas régulière, et l’irrégularité est instructive. Deux textes ouverts à la signature en 2018, à quelques semaines d’intervalle, ont connu des sorts opposés : la Zone de libre-échange, qui libère la circulation des marchandises, compte ${nInstr('zlecaf')} ratifications ; le Protocole sur la libre circulation des personnes en compte ${nInstr('free_movement')}. Ce n’est donc pas l’engagement continental qui se referme à mesure qu’il devient contraignant, c’est celui qui porte sur le mouvement des personnes.`,
               `Joining the Union is one thing; committing on the mobility of persons is another. Ordering the six continental instruments from the most consensual to the most binding produces a curve of attrition: membership is unanimous, free movement almost non-existent.\n\nThe descent is not regular, however, and the irregularity is instructive. Two texts opened for signature in 2018, weeks apart, met opposite fates: the Continental Free Trade Area, which frees the movement of goods, has ${nInstr('zlecaf')} ratifications; the Protocol on Free Movement of Persons has ${nInstr('free_movement')}. What closes as commitment becomes binding is therefore not continental engagement in general, but the part of it that bears on the movement of people.`
@@ -7282,7 +7274,7 @@ const AfricanCounterpoint = ({ kicker, title, lang, sources = [], accent = 'var(
       </span>
       <h2 className="font-serif font-bold text-xl md:text-2xl text-slate-900 leading-snug">{title}</h2>
     </div>
-    <div className="px-6 md:px-8 py-6 space-y-5 text-sm text-slate-700 leading-relaxed">
+    <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
       {children}
       <Sources items={sources} lang={lang} />
     </div>
@@ -8145,7 +8137,7 @@ const TabLabour = ({ text, lang, children }) => {
               </h3>
             </div>
   
-            <div className="px-6 md:px-8 py-6 space-y-6 text-sm text-slate-700 leading-relaxed">
+            <div className="px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed">
               <Prose className="text-justify" lang={lang}>{L(
                   "Onze conventions de l’OIT posent le socle des droits d’un travailleur migrant : liberté syndicale, négociation collective, abolition du travail forcé, âge minimum, pires formes de travail des enfants, égalité de rémunération, non-discrimination, sécurité et santé au travail. Ce sont elles qu’il faut compter, et non le nombre total de textes ratifiés par le pays d’accueil : un État peut avoir ratifié beaucoup de conventions sans avoir ratifié celles-là, auquel cas le travailleur migrant ne peut invoquer aucun de ces droits devant un juge national.",
                   "Eleven ILO conventions set the floor of a migrant worker’s rights: freedom of association, collective bargaining, abolition of forced labour, minimum age, worst forms of child labour, equal remuneration, non-discrimination, occupational safety and health. These are the ones to count, not the total number of instruments the host country has ratified: a state may have ratified many conventions without ratifying these, in which case the migrant worker can invoke none of those rights before a national court."
@@ -8157,7 +8149,7 @@ const TabLabour = ({ text, lang, children }) => {
                 </p>
                 <div className="space-y-2">
                   {ilo.buckets.map((b, i) => (
-                    <div key={b.k} className="flex items-center gap-3 figure-row px-1 py-1">
+                    <div key={b.k} className="flex items-center gap-3 figure-row px-1 py-0.5">
                       <span className="text-[11px] font-semibold w-28 shrink-0 tabular-nums text-slate-700">
                         {b.k}/11
                       </span>

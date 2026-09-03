@@ -445,6 +445,40 @@ const DEMANDES = [
      if (i < 0) return false;
      return css.slice(i, css.indexOf('}', i)).includes('position: relative');
    }],
+
+  ['le site n’apprend nulle part à se servir d’une souris',
+   () => {
+     // « tirer pour feuilleter », « Cliquez le pays », « Survolez la carte » :
+     // trois consignes eparpillees qui decrivaient le geste au lieu de dire
+     // quelque chose. Deux etaient fausses sur un ecran tactile.
+     return !app.includes('tirer pour feuilleter')
+         && !app.includes('drag to browse')
+         && !app.includes('Cliquez le pays')
+         && !app.includes('Survolez la carte');
+   }],
+
+  ['la vérification tient en deux titres, non en trois',
+   () => {
+     // La barre de recherche portait son propre titre, entre la portee de la
+     // note et les affirmations qu elle filtre. Elle a rejoint ce qu elle
+     // filtre, et le compte ne parait plus qu une fois.
+     const compte = (h, n) => h.split(n).length - 1;
+     return !app.includes('Chercher dans le corpus')
+         && compte(app, 'Les affirmations, une par une') === 1
+         && app.includes('aria={L(');
+   }],
+
+  ['les infographies partagent une seule mise en page',
+   () => {
+     // Huit planches sur le meme gabarit : chapeau borde, corps, pied de
+     // sources. Trois portaient un corps plus haut que les autres, et cinq
+     // releves chiffres respiraient deux fois plus que le sixieme.
+     const compte = (h, n) => h.split(n).length - 1;
+     return !app.includes('px-6 md:px-8 py-6')
+         && compte(app, 'px-6 md:px-8 py-5 space-y-5 text-sm text-slate-700 leading-relaxed') === 7
+         && !app.includes('figure-row px-1 py-1"')
+         && compte(app, 'figure-row px-1 py-0.5"') === 6;
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
