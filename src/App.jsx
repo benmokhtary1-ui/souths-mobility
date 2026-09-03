@@ -5930,8 +5930,14 @@ const ConstatsClefs = ({ lang, allerVers, allerAtlas }) => {
         {L(`${constats.length} constats, et où les vérifier`, `${constats.length} findings, and where to check them`)}
       </h2>
       <Prose className="text-sm text-slate-600 leading-relaxed mb-6 max-w-3xl" lang={lang} nu>{L(
-        "Chacun contredit une attente courante, et chacun est établi par une donnée que la plateforme rend vérifiable. Le lien mène à l’endroit qui le démontre.",
-        "Each one contradicts a common assumption, and each rests on data the platform makes checkable. The link leads to where it is demonstrated."
+        // « Le lien mène à l’endroit qui le DÉMONTRE » : une mesure sourcée
+        // n’est pas une démonstration, et l’écrire sur la page d’accueil promet
+        // plus que la plateforme ne tient. De même, « contredit une attente
+        // courante » est une affirmation sur ce que le lecteur croit — elle se
+        // défend, mais à condition de dire d’où on la tient. L’Observatoire des
+        // narratifs recense précisément ces attentes ; il sert donc d’appui.
+        `Chacun prend à rebours une attente répandue — l’Observatoire des narratifs en recense ${evidenceCheckData.length} — et chacun repose sur une mesure sourcée que le lien permet d’aller vérifier.`,
+        `Each one cuts against a widespread assumption — the Narrative Observatory catalogues ${evidenceCheckData.length} of them — and each rests on a sourced measure the link lets you go and check.`
       )}</Prose>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
@@ -8258,14 +8264,14 @@ const TabClimat = ({ text, lang, children }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger">
             {[
               { t: L("Les stratégies climatiques", 'Climate strategies'),
-                d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — ne traitent pas la mobilité induite par le climat. Le plan climat algérien, complet sur l’atténuation et l’adaptation, ne l’aborde pas davantage.",
-                     "Morocco’s two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — do not address climate-induced mobility. Algeria’s climate plan, thorough on mitigation and adaptation, does not take it up either.") },
+                d: L("Les deux cadres structurants du Maroc — la stratégie nationale de développement durable à 2030 et le plan climat national — n’y consacrent aucune disposition nommée, et le plan climat algérien, par ailleurs complet sur l’atténuation comme sur l’adaptation, pas davantage. Ce silence porte sur la nomination, et sur elle seule : des mesures d’irrigation, de gestion de la ressource en eau ou de résorption de l’habitat précaire agissent sur les mêmes déterminants sans jamais employer le mot.",
+                     "Morocco’s two structuring frameworks — the national sustainable development strategy to 2030 and the national climate plan — devote no named provision to it, and Algeria’s climate plan, otherwise thorough on both mitigation and adaptation, none either. That silence concerns naming, and naming alone: irrigation schemes, water-resource management or slum-upgrading act on the same determinants without ever using the word.") },
               { t: L("Les rapports d’étape", 'Progress reports'),
-                d: L("Les rapports biennaux actualisés du Maroc reconnaissent une migration interne d’origine environnementale, des campagnes vers les villes. Le constat est posé ; aucun dispositif ne le prolonge.",
-                     "Morocco’s biennial update reports acknowledge internal migration of environmental origin, from countryside to cities. The observation is recorded; no mechanism follows from it.") },
+                d: L("Les rapports biennaux actualisés du Maroc reconnaissent en revanche une migration interne d’origine environnementale, des campagnes vers les villes. Le constat figure donc dans ce que l’État adresse à la Convention-cadre, sans qu’un dispositif nommé lui réponde dans les documents de programmation — l’écart se lit entre deux familles de textes, l’une qui observe et l’autre qui engage.",
+                     "Morocco’s biennial update reports do, by contrast, acknowledge internal migration of environmental origin, from countryside to cities. The observation thus appears in what the state submits to the Framework Convention, without a named mechanism answering it in the programming documents — the gap sits between two families of text, one that observes and one that commits.") },
               { t: L("Les instances de coordination", 'Coordinating bodies'),
-                d: L("Le Maroc dispose d’une commission interministérielle sur la migration et l’asile. La mobilité climatique ne figure pas à son ordre du jour : elle relève des autorités environnementales, qui ne traitent pas de mobilité.",
-                     'Morocco has an interministerial commission on migration and asylum. Climate mobility is not on its agenda: it falls to the environmental authorities, which do not handle mobility.') },
+                d: L("Le Maroc dispose par ailleurs d’une commission interministérielle sur la migration et l’asile, dont l’ordre du jour ne porte pas la mobilité climatique : dans la répartition des compétences telle que les textes l’établissent, le sujet revient aux autorités environnementales, dont le mandat ne couvre pas la mobilité. L’observation vaut pour l’organigramme ; elle ne dit rien des échanges qui peuvent avoir lieu entre administrations.",
+                     'Morocco also has an interministerial commission on migration and asylum, whose agenda does not carry climate mobility: in the division of competences as the texts establish it, the subject falls to the environmental authorities, whose mandate does not cover mobility. The observation holds for the organisation chart; it says nothing about the exchanges that may take place between administrations.') },
             ].map((x, i) => (
               <div key={i} className="border border-slate-200 p-5 lift">
                 <span className="block font-serif font-bold text-slate-900 mb-2">{x.t}</span>
