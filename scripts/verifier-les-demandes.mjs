@@ -246,6 +246,23 @@ const DEMANDES = [
   ['les mises en garde passent toutes par .aparte',
    () => !app.includes('bg-amber-50 border border-amber-200')],
 
+  // --- LE BANDEAU DES SOURCES ---------------------------------------------
+  ['les sources défilent au lieu de se replier en grille',
+   () => app.includes('const BandeauSources = ({ lang }) =>')
+      && app.includes('<BandeauSources lang={lang} />')
+      && css.includes('@keyframes bandeau-defile')],
+
+  ['le bandeau s’arrête au survol et au clavier',
+   () => css.includes('.bandeau-sources:focus-within .bandeau-sources-rail { animation-play-state: paused; }')],
+
+  ['le bandeau ne défile pas quand le mouvement est réduit',
+   () => /@media \(prefers-reduced-motion: reduce\) \{ \.bandeau-sources-rail \{ animation: none; \} \}/.test(css)
+      && app.includes('if (reduit) {')],
+
+  ['la seconde piste du bandeau est masquée aux lecteurs d’écran',
+   // Sans quoi ils annonceraient quarante-six sources pour vingt-trois.
+   () => app.includes("aria-hidden={aria ? undefined : 'true'}")],
+
   // --- L’EN-TÊTE DE LA FICHE PAYS -----------------------------------------
   ['la fiche montre le pays dont elle parle',
    () => app.includes('const cadreDuPays = (() => {')

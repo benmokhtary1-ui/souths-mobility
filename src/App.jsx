@@ -2965,6 +2965,69 @@ const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
   );
 };
 
+// LE BANDEAU DES SOURCES INSTITUTIONNELLES
+// ===========================================================================
+// Vingt-trois logos posés dans une grille qui se replie : sur un écran large
+// c'est trois rangées inégales, et sur un téléphone une colonne de vingt-trois
+// lignes. Aucune des deux ne se regarde — on les compte plutôt qu'on ne les
+// lit, et la dernière rangée finit toujours par un trou.
+//
+// Ils défilent donc en continu, sur une seule ligne. C'est un motif ordinaire
+// du web, et c'est justement pour cela qu'il convient : le lecteur sait
+// immédiatement qu'il s'agit d'un ensemble dont il voit une partie, et la
+// bande occupe une hauteur constante quelle que soit la largeur.
+//
+// Trois choses le rendent utilisable, et sans elles ce serait un bandeau
+// publicitaire :
+//   · il s'arrête au survol ET au focus clavier, pour qu'un logo puisse être
+//     lu et son intitulé consulté ;
+//   · sous `prefers-reduced-motion` il ne défile pas du tout — il retombe sur
+//     la grille repliée d'avant, qui reste la forme honnête à l'arrêt ;
+//   · la seconde copie de la liste est masquée aux lecteurs d'écran, qui
+//     annonceraient sinon quarante-six sources pour vingt-trois.
+const BandeauSources = ({ lang }) => {
+  // Lu à chaque rendu, sans mémoïsation : le réglage système peut changer en
+  // cours de visite, et l'appel est une simple interrogation de media query.
+  // C'est aussi la forme que le reste du fichier emploie.
+  const reduit = prefersReducedMotion();
+
+  // La bande a besoin de la liste DEUX FOIS : la première sort par la gauche
+  // pendant que la seconde entre par la droite, et l'animation revient à zéro
+  // au moment exact où la seconde occupe la place de la première. Sans ce
+  // doublon, la boucle saute.
+  const piste = (aria) => (
+    <ul className="bandeau-sources-piste" aria-hidden={aria ? undefined : 'true'}>
+      {institutionLogos.map((inst) => (
+        <li key={inst.key} className="bandeau-sources-item" title={inst.full || inst.name}>
+          <InstitutionLogo name={inst.name} src={inst.src} className="max-h-7 max-w-full" />
+        </li>
+      ))}
+    </ul>
+  );
+
+  if (reduit) {
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+        {institutionLogos.map((inst) => (
+          <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.full || inst.name}>
+            <InstitutionLogo name={inst.name} src={inst.src} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="bandeau-sources" role="group"
+         aria-label={tr({ fr: `Les ${institutionLogos.length} sources institutionnelles de la plateforme`,
+                          en: `The platform’s ${institutionLogos.length} institutional sources` }, lang)}>
+      <div className="bandeau-sources-rail">
+        {piste(true)}
+        {piste(false)}
+      </div>
+    </div>
+  );
+};
 // ============================================================================
 // 2. DONNÉES STATIQUES
 // ============================================================================
@@ -6181,13 +6244,7 @@ const TabHome = ({ text, lang, setActiveTab, allerAtlas, allerVers }) => {
         <p className="surtitre text-center mb-8">
           {tr({ fr: "Données croisées et vérifiées à partir des sources institutionnelles suivantes", en: "Data cross-checked and verified against the following institutional sources" }, lang)}
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
-          {institutionLogos.map((inst) => (
-            <div key={inst.key} className="h-9 flex items-center justify-center" title={inst.full || inst.name}>
-              <InstitutionLogo name={inst.name} src={inst.src} />
-            </div>
-          ))}
-        </div>
+        <BandeauSources lang={lang} />
         <Prose className="text-center text-xs text-slate-400 mt-8 max-w-xl mx-auto leading-relaxed" lang={lang}>{tr({ fr: "Ces institutions sont citées comme sources de données publiques ouvertes. Leur présence ne constitue ni un partenariat, ni une validation, ni un endossement de South(s) Mobility DataHub.", en: "These institutions are cited as sources of open public data. Their presence constitutes neither a partnership, nor a validation, nor an endorsement of South(s) Mobility DataHub." }, lang)}</Prose>
       </Reveal>
     </div>

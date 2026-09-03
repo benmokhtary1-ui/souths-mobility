@@ -2553,6 +2553,46 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
 .fiche-tete button[aria-label] svg { color: var(--reserve) !important; }
 .fiche-tete button[aria-label]:hover { background: color-mix(in oklab, var(--reserve) 22%, transparent) !important; }
 
+/* ---------- LE BANDEAU DES SOURCES : UNE BANDE QUI DÉFILE ------------------
+   Vingt-trois logos dans une grille qui se replie, c’est trois rangées
+   inégales sur un écran large et vingt-trois lignes sur un téléphone : on les
+   compte au lieu de les lire, et la dernière rangée finit toujours par un
+   trou. Sur une seule ligne qui défile, le lecteur comprend d’emblée qu’il
+   voit une partie d’un ensemble, et la bande garde la même hauteur à toutes
+   les largeurs.
+
+   Le voile aux deux bords est ce qui distingue une bande d’un débordement :
+   les logos s’y dissolvent au lieu d’être coupés net.                       */
+.bandeau-sources {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--pas-1);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.bandeau-sources-rail { display: flex; width: max-content; animation: bandeau-defile 62s linear infinite; }
+.bandeau-sources-piste {
+  display: flex; align-items: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  margin: 0; padding: 0 clamp(1.25rem, 2.5vw, 2.25rem);
+  list-style: none;
+}
+.bandeau-sources-item {
+  display: flex; align-items: center; justify-content: center;
+  height: 36px; flex: none;
+  filter: grayscale(1);
+  opacity: .62;
+  transition: opacity var(--dur-quick, 140ms) var(--ease-both, ease), filter var(--dur-quick, 140ms) var(--ease-both, ease);
+}
+.bandeau-sources-item:hover { filter: grayscale(0); opacity: 1; }
+/* Une bande qui ne s arrete pas est un bandeau publicitaire. Elle s arrete au
+   survol ET au focus clavier — sans quoi un logo atteint au clavier fuirait
+   sous le doigt du lecteur. */
+.bandeau-sources:hover .bandeau-sources-rail,
+.bandeau-sources:focus-within .bandeau-sources-rail { animation-play-state: paused; }
+@keyframes bandeau-defile { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .bandeau-sources-rail { animation: none; } }
+
 /* ---------- LE PIED : L’AUTRE BORD DE LA PLANCHE ---------------------------
    Encadrée par deux bandes d’encre, la fiche se lit comme une planche : le
    papier devient un objet posé, et non le fond de la fenêtre. Le pied prend
