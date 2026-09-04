@@ -14233,12 +14233,16 @@ export default function App() {
                 <EconomicComparison remittances={display.remittances} remittancesYear={display.remittances_year} aid={display.aid} lang={lang} />
 
                 {!display.isRegion && display.remittances > 0 && display.aid > 0 && (
-                  <p className="fiche-texte fiche-texte--fort">
-                    {tr({
-                      fr: `Pour un point de PIB reçu en aide publique, ce pays en reçoit ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} en transferts de sa diaspora.`,
-                      en: `For every point of GDP received as public aid, this country receives ${formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)} in diaspora remittances.`,
-                    }, lang)}
-                  </p>
+                  <div className="fiche-mesure">
+                    <span className="fiche-mesure-n">
+                      {formatNumber(Math.round((display.remittances / display.aid) * 10) / 10, lang)}
+                      <span className="fiche-mesure-sur"> {tr({ fr: 'fois', en: 'times' }, lang)}</span>
+                    </span>
+                    <span className="fiche-mesure-quoi">{tr({
+                      fr: 'plus en transferts de diaspora qu’en aide publique, à part de PIB égale',
+                      en: 'more in diaspora remittances than in public aid, as a share of GDP',
+                    }, lang)}</span>
+                  </div>
                 )}
 
                 {!display.isRegion && (

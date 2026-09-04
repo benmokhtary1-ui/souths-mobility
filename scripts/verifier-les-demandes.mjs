@@ -678,6 +678,18 @@ const DEMANDES = [
      const longs = app.match(new RegExp("[.]join[(][\"'][^\"']{6,}[\"'][)]", "g")) || [];
      return longs.length === 0;
    }],
+
+  ['chacun des quatre mouvements chiffrés porte son chiffre de tête',
+   () => {
+     // Le troisieme -- le poids economique -- etait le seul sans assise : son
+     // fait le plus fort, le rapport entre ce que la diaspora renvoie et ce que
+     // l aide publique apporte, etait pose en ligne de prose grasse sous deux
+     // barres. Il prend la forme des autres, et sa legende dit ce que le
+     // nombre mesure au lieu de le repeter.
+     return app.includes("{tr({ fr: 'fois', en: 'times' }, lang)}")
+         && app.includes("fr: 'plus en transferts de diaspora qu’en aide publique, à part de PIB égale',")
+         && !app.includes('ce pays en reçoit ');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
