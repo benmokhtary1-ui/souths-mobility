@@ -3,7 +3,7 @@ import json
 
 def process_data():
     print("🚀 Démarrage de l'extraction des données UNDESA...")
-    file_path = 'undesa_pd_2024_ims_stock_by_sex_destination_and_origin (1).xlsx'
+    file_path = 'donnees-sources/undesa-2024-stock-par-origine-et-destination.xlsx'
     
     try:
         # 1. Chargement ciblé de l'onglet 'Table 1' en sautant les 10 premières lignes

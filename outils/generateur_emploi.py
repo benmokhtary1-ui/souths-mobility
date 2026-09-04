@@ -3,7 +3,7 @@ import json
 
 def process_labour_data():
     print("🚀 Lecture du fichier OIT (Marché du travail)...")
-    file_path = 'Labour_force_by_international_migrant_status.xlsx'
+    file_path = 'donnees-sources/oit-population-active-par-statut-migratoire.xlsx'
     
     # Dictionnaire de traduction : Nom OIT -> Code ISO ONU (pour l'Afrique)
     ilo_to_un_codes = {

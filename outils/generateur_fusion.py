@@ -23,7 +23,7 @@ def process_fusion_data():
     # 1. Extraction OIT
     labour_data = {}
     try:
-        df_lab = pd.read_excel('Labour_force_by_international_migrant_status.xlsx', sheet_name='4. Participation rate by sex', skiprows=4, header=None)
+        df_lab = pd.read_excel('donnees-sources/oit-population-active-par-statut-migratoire.xlsx', sheet_name='4. Participation rate by sex', skiprows=4, header=None)
         for _, row in df_lab.iterrows():
             c_name = str(row[2]).strip()
             if c_name in ilo_to_un_codes and str(row[4]).strip() == 'Total' and str(row[5]).strip() == 'Migrants':
@@ -34,7 +34,7 @@ def process_fusion_data():
     # 2. Extraction UNDESA
     undesa_data = {}
     try:
-        df_un = pd.read_excel('undesa_pd_2024_ims_stock_by_sex_destination_and_origin (1).xlsx', sheet_name='Table 1', skiprows=10)
+        df_un = pd.read_excel('donnees-sources/undesa-2024-stock-par-origine-et-destination.xlsx', sheet_name='Table 1', skiprows=10)
         df_un.columns = df_un.columns.astype(str).str.strip()
         target_col = 'Location code of destination'
         df_un[target_col] = pd.to_numeric(df_un[target_col], errors='coerce')

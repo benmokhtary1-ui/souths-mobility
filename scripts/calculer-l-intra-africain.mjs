@@ -31,7 +31,7 @@
 //
 // Le fichier source :
 //   https://www.un.org/development/desa/pd/content/international-migrant-stock
-//   « Destination and origin » — undesa_pd_2024_ims_stock_by_sex_destination_and_origin.xlsx
+//   « Destination and origin » — donnees-sources/undesa-2024-stock-par-origine-et-destination.xlsx
 import { readFileSync } from 'node:fs';
 import { countryData } from '../src/data/countries.js';
 
