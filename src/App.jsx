@@ -869,11 +869,18 @@ const useAncresDeCitation = (lang, tab) => {
         // nombre de termes, et ajouter une entree cassait tout lien deja
         // partage. Ce qui porte `data-hors-ancre` est un ornement du titre, pas
         // son nom.
-        const orn = t.querySelectorAll('[data-hors-ancre]');
+        // Deux sortes d ornements. Le compte d entrees, qui colle au titre
+        // dans le texte — « Typologie des mobilites » + « 14 » — et lie
+        // l ancre au nombre de termes : ajouter une entree cassait tout lien
+        // deja partage. Et les COMMANDES posees dans la rangee du titre :
+        // mesure faite, « Essentiels — pour commencer » portait
+        // `essentiels-pour-commencer-bibliographie-csv`, le libelle du bouton
+        // d export. On ancre sur ce qu on lit, jamais sur ce qu on clique.
+        const orn = t.querySelectorAll('[data-hors-ancre], button, a[role="button"]');
         let texte;
         if (orn.length) {
           const copie = t.cloneNode(true);
-          copie.querySelectorAll('[data-hors-ancre]').forEach((e) => e.remove());
+          copie.querySelectorAll('[data-hors-ancre], button, a[role="button"]').forEach((e) => e.remove());
           texte = (copie.textContent || '').trim();
         } else {
           texte = (t.textContent || '').trim();
@@ -11091,7 +11098,7 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
               <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
                 <section.icon className="w-5 h-5 me-2.5 text-amber-700" />
                 {tr(section.section, lang)}
-                <span className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{section.items.length}</span>
+                <span data-hors-ancre className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{section.items.length}</span>
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {section.items.map((item, iIdx) => <LibraryCard key={iIdx} item={item} lang={lang} />)}

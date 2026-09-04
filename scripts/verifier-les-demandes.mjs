@@ -626,7 +626,8 @@ const DEMANDES = [
      // L identifiant venait du texte entier du titre, badge compris :
      // « typologie-des-mobilites14 ». Ajouter une quinzieme entree renommait
      // l ancre et cassait tout lien deja partage vers cette rubrique.
-     return app.includes('const orn = t.querySelectorAll(') && app.includes('data-hors-ancre')
+     const strip = "[data-hors-ancre], button, a[role=" + '"button"' + "]";
+     return app.includes(strip) && app.split(strip).length - 1 === 2
          && app.includes('copie.querySelectorAll(');
    }],
 ];
