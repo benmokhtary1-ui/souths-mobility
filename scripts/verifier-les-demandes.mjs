@@ -762,6 +762,19 @@ const DEMANDES = [
          && css.includes('.fiche-tete h2::before { display: none; }')
          && css.includes('background: var(--accent-light);');
    }],
+
+  ['la marque de l’onglet a quitté l’émeraude comme le reste du site',
+   () => {
+     // La charte est sortie de l emeraude parce qu elle evoquait l Union
+     // africaine. Le site l avait quittee partout SAUF dans le favicon --
+     // c est-a-dire a l endroit ou la marque se voit le plus souvent et le
+     // plus longtemps. Et la barre d onglets n a pas de fond fixe : la marque
+     // prend, sur fond sombre, les memes crans clairs que dans l en-tete.
+     const ico = lire('public/favicon.svg');
+     return !ico.includes('#11633D') && !ico.includes('#015633')
+         && ico.includes('#3F4654') && ico.includes('prefers-color-scheme: dark')
+         && ico.includes('class="anneau"');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
