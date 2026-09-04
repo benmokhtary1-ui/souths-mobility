@@ -827,6 +827,58 @@ const DEMANDES = [
      return app.slice(scene, scene + 700).includes('trait-trace--ouverture')
          && compte(app, '<BarreSection lang={lang} />') >= 5;
    }],
+
+  ['la bibliographie ne promet un lien que la ou il en existe un',
+   () => {
+     // Le papier Go Green etait la derniere entree jamais confrontee a sa
+     // source : sa notice avait ete ecrite de memoire. Le document dit ce
+     // qu'il etablit -- un ecart entre les resultats du Maroc sur les
+     // indicateurs climatiques et la place que ses cadres de gouvernance
+     // accordent a la mobilite induite -- et la notice le porte, dans la mesure
+     // de sa section : six lignes rendues, pour une mediane de quatre.
+     //
+     // Il reste sans lien, comme quatre autres entrees sur soixante-dix : deux
+     // travaux de l auteur et trois ouvrages sans edition en ligne. La fiche
+     // le disait deja (ni curseur ni chevron, et « Annee 2024 » au pied des
+     // essentielles au lieu de « Consulter ») ; le panneau de lecture, lui,
+     // promettait « son lien d'origine » pour chacune des soixante-dix.
+     const biblio = lire('src/data/library.js');
+     const sansLien = (biblio.match(/url: null/g) || []).length;
+     const avecLien = (biblio.match(/url: ['\"]/g) || []).length;
+     return biblio.includes('Charting New COURSES')
+         && biblio.includes('la place que ses cadres de gouvernance accordent')
+         && biblio.includes('against the place its governance frameworks give to')
+         && sansLien === 5 && avecLien === 65
+         && !app.includes('son type et son lien d’origine.')
+         && app.includes('lorsqu’elle est accessible en ligne, son lien d’origine.')
+         && !app.includes('its type and its original link.')
+         && app.includes('where it is available online, its original link.');
+   }],
+
+  ['le francais du site porte ses accents',
+   () => {
+     // Trois passages ecrivaient le francais sans ses accents, parce que le
+     // texte etait passe par un script et que le shell les avait manges en
+     // chemin. Deux notices de la bibliotheque -- « Quatrieme edition […]
+     // envois de fonds par sous-region » et « les populations deplacees et
+     // apatrides, par pays d asile et par annee » -- et la phrase qui dit ce
+     // que fait une fiche de Verification, « confronte un enonce a ses
+     // sources ». Toutes trois se lisaient ainsi sur la page, dans la langue
+     // premiere du site.
+     //
+     // Le repere est serre : un mot francais dont la forme correcte porte un
+     // accent, ou une elision reduite a une espace.
+     const biblio = lire('src/data/library.js');
+     // Le controle ne porte que sur le francais : « edition » est un mot
+     // anglais legitime dans la moitie anglaise de chaque notice.
+     const fr = [...biblio.matchAll(/fr:\s*"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]).join('\n');
+     const fautes = /\b(Quatrieme|edition|Serie|sous-region|Revise|deplacees|deplaces|refugies|Integree|millesimes|annee|enonce|etablissent)\b/;
+     const elision = / d (asile|origine|un|une) /;
+     return !fautes.test(fr) && !elision.test(fr)
+         && biblio.includes('Quatrième édition') && biblio.includes('par sous-région')
+         && biblio.includes('populations déplacées') && biblio.includes('pays d’asile et par année')
+         && app.includes('confronte un énoncé à ses sources, expose ce qu’elles établissent');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

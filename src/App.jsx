@@ -6681,7 +6681,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <div className="aparte aparte--reserve flex items-start gap-3">
         <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <Prose className="text-xs text-amber-800 leading-relaxed" lang={lang}>{L(
-            "Les affirmations examin\u00e9es ci-dessous sont formul\u00e9es par l’auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d’un m\u00e9dia ou d’une institution identifi\u00e9s ; seules les sections \u00ab Ce que montrent les donn\u00e9es \u00bb sont sourc\u00e9es aupr\u00e8s d’institutions v\u00e9rifiables (voir Sources).",
+            "Les affirmations examinées ci-dessous sont formulées par l’auteur pour illustrer des perceptions et discours courants sur les migrations africaines. Elles reformulent des perceptions, sans reprendre les mots d’un média ou d’une institution identifiés ; seules les sections « Ce que montrent les données » sont sourcées auprès d’institutions vérifiables (voir Sources).",
             "The claims examined below are formulated by the author to illustrate common perceptions and discourse about African migration. They are not direct quotes from identified media outlets or institutions: only the \"What data shows\" sections are sourced from verifiable institutions (see Sources)."
           )}</Prose>
       </div>
@@ -6697,7 +6697,7 @@ const TabEvidenceCheck = ({ text, lang, exportEvidenceCSV }) => {
       <div>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{L("Les affirmations, une par une", "The claims, one by one")}</h2>
         <Prose className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-4" lang={lang}>{L(
-            "Chaque fiche confronte un enonce a ses sources, expose ce qu’elles etablissent, et enonce ce qu’elles ne permettent pas de conclure.",
+            "Chaque fiche confronte un énoncé à ses sources, expose ce qu’elles établissent, et énonce ce qu’elles ne permettent pas de conclure.",
             "Each file sets a claim against its sources, states what they establish, and states what they do not allow to be concluded."
           )}</Prose>
       <div className="bg-white border border-slate-200 print:hidden">
@@ -11016,8 +11016,8 @@ const TabLibrary = ({ text, lang, exportLibraryCSV, children }) => {
         titre={{ fr: `${totalDocs} références, ${libraryData.length === 4 ? 'quatre' : libraryData.length} familles`,
                  en: `${totalDocs} references, ${libraryData.length === 4 ? 'four' : libraryData.length} families` }}
         chapeau={{
-          fr: "La bibliothèque ne cherche pas l’exhaustivité : elle réunit ce sur quoi la plateforme s’appuie réellement. Toute source citée ailleurs sur le site doit s’y retrouver, et chaque entrée porte son année, son type et son lien d’origine.",
-          en: 'The library does not aim at exhaustiveness: it gathers what the platform actually rests on. Any source cited elsewhere on the site must appear here, and each entry carries its year, its type and its original link.'
+          fr: "La bibliothèque ne cherche pas l’exhaustivité : elle réunit ce sur quoi la plateforme s’appuie réellement. Toute source citée ailleurs sur le site doit s’y retrouver, et chaque entrée porte son année, son type et, lorsqu’elle est accessible en ligne, son lien d’origine.",
+          en: 'The library does not aim at exhaustiveness: it gathers what the platform actually rests on. Any source cited elsewhere on the site must appear here, and each entry carries its year, its type and, where it is available online, its original link.'
         }}
         notions={[
           { mot: { fr: `Rapports institutionnels & données — ${libraryData[0].items.length}`, en: `Institutional reports & data — ${libraryData[0].items.length}` },
