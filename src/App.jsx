@@ -13899,7 +13899,18 @@ export default function App() {
                     economiser. La gouttiere verticale, elle, reste a 16. */}
                 <div className="min-w-0">
                   <h2 className="text-2xl md:text-3xl font-serif font-bold text-slate-900 uppercase tracking-tight leading-none">{display.name}</h2>
-                  <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{display.isRegion ? (text.modal.south_view || "") : text.modal.raw_data_title}</Prose>
+                  {/* L etiquette ne parait que lorsqu elle apprend quelque chose.
+                      Sous le nom d un pays elle disait « Fiche de donnees brutes »
+                      -- on venait de cliquer ce pays pour ouvrir sa fiche, et le
+                      document s ouvre trois lignes plus bas sur « 01/05 ». Elle
+                      coutait 213 px sur une rangee qui en manquait vingt, et
+                      c est elle qui renvoyait « Reserve » a la ligne. Au-dessus
+                      d une region, en revanche, elle dit ce que le titre ne dit
+                      pas : que la fiche est une lecture d ensemble et non un
+                      Etat. Elle y reste. */}
+                  {display.isRegion && text.modal.south_view && (
+                    <Prose className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1.5 border border-slate-200 inline-block px-2 py-0.5 rounded-sm" lang={lang}>{text.modal.south_view}</Prose>
+                  )}
                 </div>
               </div>
                 

@@ -579,6 +579,17 @@ const DEMANDES = [
   ['« Hub » reprend l’encre de l’anneau',
    () => app.includes("const cHub = sombre ? 'var(--mqs-haut)' : 'var(--mq-bas)';")
       && app.includes("color: mot === 'Hub' ? cHub : cNom")],
+
+  ['le sommaire de la fiche ne laisse jamais une pastille orpheline',
+   () => {
+     // Regle sur QUATRE onglets, l en-tete en porte cinq depuis que la fiche
+     // est un document en cinq mouvements : « Reserve » tombait seule sous
+     // les quatre autres. Trois choses le corrigent, et elles se tiennent.
+     return css.includes('.fiche-tete { flex-wrap: wrap; }')
+         && css.includes(':is(main, .reader) .fiche-tete .bascule-groupe { flex-wrap: nowrap; }')
+         && css.includes(':is(main, .reader) .fiche-tete .bascule {')
+         && app.includes('{display.isRegion && text.modal.south_view && (');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

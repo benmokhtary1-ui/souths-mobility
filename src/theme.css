@@ -2535,6 +2535,47 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   color: var(--reserve) !important;
   background: color-mix(in oklab, var(--reserve) 16%, transparent) !important;
 }
+/* LE SOMMAIRE TIENT SUR UNE RANGEE.
+   -------------------------------------------------------------------------
+   L en-tete avait ete regle sur QUATRE onglets ; il en porte cinq depuis que
+   la fiche est devenue un document en cinq mouvements. Mesure a 737 px de
+   fiche : les cinq pastilles reclament 476 px et il en reste 494 — six de
+   trop, et « Reserve » tombait seule a la ligne suivante. Une rangee
+   orpheline se lit comme une erreur, et elle coutait quarante-huit pixels
+   d en-tete.
+
+   Ces pastilles ne sont pas la navigation du site : c est le sommaire d un
+   document dont les cinq parties sont toutes presentes dessous. Elles
+   peuvent donc tenir un cran plus serre que la pastille generale — assez
+   pour que les cinq passent, et l en-tete y gagne aussi en hauteur. */
+/* Quand le nom est long, c est le SOMMAIRE ENTIER qui descend, jamais une
+   pastille seule. Sans cela le groupe se replie sur lui-meme et « Reserve »
+   tombe a la ligne pendant que les quatre autres restent en haut : une rangee
+   orpheline, qui se lit comme une erreur. La rangee de l en-tete accepte donc
+   de passer a la ligne, et le groupe refuse de se couper. */
+.fiche-tete { flex-wrap: wrap; }
+/* Le refus de se couper ne vaut QU A PARTIR DE MD, la ou le sommaire est
+   pose a cote du titre : c est la seule largeur ou une pastille seule tombe
+   sous quatre autres. En dessous, le groupe occupe toute la ligne, et deux
+   rangees pleines y sont une mise en page, pas une erreur -- mesure a 375 px :
+   les cinq pastilles reclament 461 px pour 341 disponibles, et les tenir sur
+   une ligne coupait « Engagement » et « Reserve » hors du cadre. */
+@media (min-width: 768px) {
+  :is(main, .reader) .fiche-tete .bascule-groupe { flex-wrap: nowrap; }
+}
+
+:is(main, .reader) .fiche-tete .bascule {
+  font-size: 12px;
+  padding: 6px .7rem;
+  min-height: 34px;
+}
+
+/* L etiquette sous le nom se casse en trois lignes des que le nom est court.
+   « Nigeria » fait 122 px, l etiquette en demande 130 : elle heritait de la
+   largeur de son voisin et se pliait. Elle tient sur une ligne et pose sa
+   propre largeur — huit pixels de plus, que le sommaire resserre rend. */
+.fiche-tete h2 + p { white-space: nowrap; }
+
 /* L etiquette « Fiche de donnees brutes » et le cartouche du drapeau. */
 /* Les classes de papier que porte le balisage — filet clair, encre de libellé,
    fond creusé — sont posées en `!important` par la couche d'interception, et
