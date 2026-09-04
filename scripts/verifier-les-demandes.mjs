@@ -616,7 +616,7 @@ const DEMANDES = [
      // Quatre-vingt-deux termes, sept rubriques, vingt-deux mille pixels, et
      // aucun moyen d y sauter. Le sommaire ne parait qu en pleine liste : une
      // recherche qui rend trois resultats n a pas besoin d un sommaire de sept.
-     return app.includes("<nav className=\"glossaire-sommaire\"")
+     return app.includes("<nav className=\"glossaire-sommaire print:hidden\"")
          && app.includes('{!noResults && !query && (')
          && css.includes('.glossaire-rubrique {');
    }],

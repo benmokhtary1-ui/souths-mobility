@@ -11985,7 +11985,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
           identifiants sont ceux que l ancrage de citation pose deja sur les
           titres ; le sommaire ne fait que les relier. */}
       {!noResults && !query && (
-        <nav className="glossaire-sommaire" aria-label={tr({ fr: 'Les rubriques du glossaire', en: 'Glossary sections' }, lang)}>
+        <nav className="glossaire-sommaire print:hidden" aria-label={tr({ fr: 'Les rubriques du glossaire', en: 'Glossary sections' }, lang)}>
           {filteredCategories.map((cat, cIdx) => (
             <a key={cIdx} href={'#' + ardoise(tr(cat.category, lang))} className="glossaire-rubrique">
               {tr(cat.category, lang)}
