@@ -610,6 +610,25 @@ const DEMANDES = [
          && regle.includes('border-inline-start: 3px solid var(--accent)')
          && css.includes('.evolution-borne--fin b { font-size: calc(31px * var(--corps, 1))');
    }],
+
+  ['le glossaire se parcourt sans le faire défiler en entier',
+   () => {
+     // Quatre-vingt-deux termes, sept rubriques, vingt-deux mille pixels, et
+     // aucun moyen d y sauter. Le sommaire ne parait qu en pleine liste : une
+     // recherche qui rend trois resultats n a pas besoin d un sommaire de sept.
+     return app.includes("<nav className=\"glossaire-sommaire\"")
+         && app.includes('{!noResults && !query && (')
+         && css.includes('.glossaire-rubrique {');
+   }],
+
+  ['une ancre ne compte pas les entrées de sa rubrique',
+   () => {
+     // L identifiant venait du texte entier du titre, badge compris :
+     // « typologie-des-mobilites14 ». Ajouter une quinzieme entree renommait
+     // l ancre et cassait tout lien deja partage vers cette rubrique.
+     return app.includes('const orn = t.querySelectorAll(') && app.includes('data-hors-ancre')
+         && app.includes('copie.querySelectorAll(');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

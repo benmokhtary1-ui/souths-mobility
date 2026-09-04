@@ -6377,3 +6377,39 @@ nav .max-w-7xl.overflow-x-auto > * { justify-content: center; }
 :is(main, .reader) [class*="grid-cols"]:not(:has(> * > .fiche-nature)):not(:has(> * [class*="mt-auto"])):not(.carte-continent):not(:has(> .atlas-carte)) {
   align-items: start;
 }
+
+
+/* ---------- LE SOMMAIRE DU GLOSSAIRE --------------------------------------
+   Quatre-vingt-deux termes en sept rubriques, vingt-deux mille pixels de haut.
+   Il n y avait aucun moyen d y sauter : pour lire la derniere rubrique il
+   fallait faire defiler les six autres, ou deviner le mot a chercher.
+
+   Sept liens, poses en rangee qui se replie. Ils ne prennent pas la pastille du
+   site — une pastille se choisit et reste allumee ; un lien de sommaire mene
+   ailleurs et ne garde rien. Le filet de gauche est celui des chiffres de la
+   fiche pays : dans ce site, un filet d accent a gauche veut dire « ici commence
+   quelque chose ». */
+.glossaire-sommaire {
+  display: flex; flex-wrap: wrap; gap: var(--pas-1);
+  margin: 0 0 var(--pas-3);
+}
+.glossaire-rubrique {
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  padding: .38rem .7rem .38rem calc(.7rem - 2px);
+  border-inline-start: 2px solid color-mix(in oklab, var(--accent) 45%, transparent);
+  background: color-mix(in oklab, var(--accent) 4%, transparent);
+  font-size: calc(13px * var(--corps, 1)); line-height: 1.3;
+  color: var(--ink-soft); text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease);
+}
+.glossaire-rubrique:is(:hover, :focus-visible) {
+  border-inline-start-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+  color: var(--ink);
+}
+.glossaire-compte {
+  font-size: calc(11px * var(--corps, 1)); font-variant-numeric: tabular-nums;
+  color: var(--ink-mute);
+}

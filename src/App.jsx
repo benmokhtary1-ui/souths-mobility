@@ -864,7 +864,20 @@ const useAncresDeCitation = (lang, tab) => {
     const poser = () => {
       const vus = new Map();
       for (const t of main.querySelectorAll('h2, h3')) {
-        const texte = (t.textContent || '').trim();
+        // Le compte d entrees colle au titre dans le texte : « Typologie des
+        // mobilites » + « 14 ». Le prendre dans l identifiant liait l ancre au
+        // nombre de termes, et ajouter une entree cassait tout lien deja
+        // partage. Ce qui porte `data-hors-ancre` est un ornement du titre, pas
+        // son nom.
+        const orn = t.querySelectorAll('[data-hors-ancre]');
+        let texte;
+        if (orn.length) {
+          const copie = t.cloneNode(true);
+          copie.querySelectorAll('[data-hors-ancre]').forEach((e) => e.remove());
+          texte = (copie.textContent || '').trim();
+        } else {
+          texte = (t.textContent || '').trim();
+        }
         if (texte.length < 3) continue;
         if (!t.id) {
           const base = ardoise(texte) || 'analyse';
@@ -10749,7 +10762,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
               <div className="space-y-8 animate-in fade-in">
                 {legalMatrixData.map((regionObj, rIdx) => (
                   <div key={rIdx} className="bg-white p-6 md:p-8 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 className="text-xl font-serif font-bold text-slate-900 mb-3 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h3>
+                    <h3 className="text-xl font-serif font-bold text-slate-900 mb-2 border-b border-slate-100 pb-3">{tr(regionObj.region, lang)}</h3>
                     <Prose className="text-sm text-slate-600 leading-relaxed mb-6 font-medium italic" lang={lang}>{tr(regionObj.intro, lang)}</Prose>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -11942,7 +11955,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
         </div>
         <Prose className="text-sm text-slate-500 leading-relaxed mb-5" lang={lang}>{tr({ fr: `${totalTerms} termes techniques et notions théoriques mobilisés à travers cette plateforme, expliqués et référencés.`, en: `${totalTerms} technical terms and theoretical concepts used throughout this platform, explained and referenced.` }, lang)}</Prose>
         <div className="relative">
-          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" aria-hidden="true" />
           <input
             type="text"
             placeholder={tr({ fr: "Rechercher un terme…", en: "Search a term…" }, lang)}
@@ -11952,6 +11965,24 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
           />
         </div>
       </div>
+
+      {/* LE SOMMAIRE.
+          Il ne parait qu en pleine liste : des qu une recherche restreint le
+          corpus, la page se lit d un coup et un sommaire de sept entrees pour
+          trois resultats serait du bruit. Chaque lien porte le compte de sa
+          rubrique — on sait ce qu on va trouver avant d y aller. Les
+          identifiants sont ceux que l ancrage de citation pose deja sur les
+          titres ; le sommaire ne fait que les relier. */}
+      {!noResults && !query && (
+        <nav className="glossaire-sommaire" aria-label={tr({ fr: 'Les rubriques du glossaire', en: 'Glossary sections' }, lang)}>
+          {filteredCategories.map((cat, cIdx) => (
+            <a key={cIdx} href={'#' + ardoise(tr(cat.category, lang))} className="glossaire-rubrique">
+              {tr(cat.category, lang)}
+              <span className="glossaire-compte">{cat.terms.length}</span>
+            </a>
+          ))}
+        </nav>
+      )}
 
       {noResults ? (
         <div className="etat-vide">
@@ -11964,7 +11995,7 @@ const TabGlossary = ({ lang, text, exportGlossaryCSV, children }) => {
             <h3 className="flex items-center text-lg font-serif font-bold text-slate-800 mb-5 border-b border-slate-100 pb-3">
               <cat.icon className="w-5 h-5 me-2.5 text-teal-700" />
               {tr(cat.category, lang)}
-              <span className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{cat.terms.length}</span>
+              <span data-hors-ancre className="ms-2.5 text-[10px] font-bold text-slate-400 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">{cat.terms.length}</span>
             </h3>
             <div className="space-y-4">
               {cat.terms.map((t, tIdx) => (
