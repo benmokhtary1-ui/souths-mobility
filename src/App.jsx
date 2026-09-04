@@ -1246,7 +1246,7 @@ const EconomicComparison = ({ remittances, remittancesYear, aid, lang }) => {
       </div>
       <div>
         <div className="surtitre flex justify-between font-black">
-          <span className="text-slate-500 print:!text-slate-500">{tr({ fr: "Aide Internationale - APD (OCDE, 2024)", en: "International Aid - ODA (OECD, 2024)" }, lang)}</span>
+          <span className="text-slate-500 print:!text-slate-500">{tr({ fr: "Aide internationale — APD (OCDE, 2024)", en: "International aid — ODA (OECD, 2024)" }, lang)}</span>
           <span className="text-slate-600 print:!text-slate-600">{formatNumber(aid, lang)} % {tr({ fr: 'du PIB', en: 'of GDP' }, lang)}</span>
         </div>
         <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden print:!bg-slate-200">
@@ -3505,8 +3505,8 @@ const t = {
         s4: "IDMC - GRID Report (2025)",
         s5: "OIM - World Migration Report (2024)",
         s6: "OIT NORMLEX — Normes internationales du travail (2025)",
-        s7: "Union africaine - Traités, conventions et protocoles (2025)",
-        s8: "Banque mondiale - Base de données des transferts de fonds (2024)"
+        s7: "Union africaine — Traités, conventions et protocoles (2025)",
+        s8: "Banque mondiale — Base de données des transferts de fonds (2024)"
       },
       myth: "Postulat", reality: "Donnée Factuelle",
       footer: { tag: "Les données publiques sur les mobilités africaines, réunies, datées et rendues comparables. La plateforme n’en produit aucune : elle les rassemble et dit d’où elles viennent.", sources: "Sources : UA / OIT / OIM / CEA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • OIT NORMLEX (2025) • Banque mondiale (2024)" },
@@ -3538,7 +3538,7 @@ const t = {
         idp_title: "Protection & Forced Displacement (IDMC/UNHCR 2025)", idp_desc: "The vast majority of African forced mobility is absorbed within national borders or neighboring countries.", 
         idp_conflict: "Internally Displaced Conflict (IDMC 2025)", idp_disaster: "Internally Displaced Climate (IDMC 2025)",
         hcr_hosted: "International Refugees Hosted (UNHCR 2025)",
-        avoi_title: "Regional Integration - AVOI Index (AfDB 2024)", avoi_desc: "Visa openness index for citizens of other African countries.",
+        avoi_title: "Regional Integration — AVOI Index (AfDB 2024)", avoi_desc: "Visa openness index for citizens of other African countries.",
         au_instruments: "Key African Union Treaties & Conventions (Ratification Status 2025)"
       },
       sections: { 
@@ -3831,8 +3831,8 @@ const t = {
         s4: "IDMC - GRID Report (2025)",
         s5: "IOM - World Migration Report (2024)",
         s6: "ILO NORMLEX - International Labour Standards Database (2025)",
-        s7: "African Union - Treaties, Conventions, and Protocols (2025)",
-        s8: "World Bank - Migration and Remittances Data (2024)"
+        s7: "African Union — Treaties, Conventions, and Protocols (2025)",
+        s8: "World Bank — Migration and Remittances Data (2024)"
       },
       myth: "Premise", reality: "Factual Data",
       footer: { tag: "Public data on African mobility, gathered, dated and made comparable. The platform produces none of it: it assembles it and says where it comes from.", sources: "Sources : AU / ILO / IOM / ECA (2021) • UN DESA (2024) • UNHCR (2025) • IDMC (2025) • ILO NORMLEX (2025) • World Bank (2024)" },
@@ -9108,7 +9108,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "The founding act of the African Economic Community (AEC). It legally anchors free movement as a sine qua non condition for market integration."
       },
       article: {
-        ref: { fr: "Article 43 - Chapitre VI", en: "Article 43 - Chapter VI" },
+        ref: { fr: "Article 43 — Chapitre VI", en: "Article 43 — Chapter VI" },
         textFr: "« Les États membres conviennent d’adopter, individuellement, à l’échelon bilatéral ou régional, les mesures nécessaires en vue de réaliser progressivement la libre circulation des personnes, et de garantir la jouissance du droit de résidence et d’établissement à leurs ressortissants. »",
         textEn: "« Member States agree to adopt, individually, at bilateral or regional levels, the necessary measures, in order to achieve progressively the free movement of persons, and to ensure the enjoyment of the right of residence and the right of establishment by their nationals. »"
       }
@@ -9122,7 +9122,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "The Protocol on Free Movement aims to operationalize Art. 43 of Abuja. Paradox: ratified by only 4 countries (Rwanda, Sao Tome, Mali, Niger - the latter two having nevertheless left ECOWAS for the AES)."
       },
       article: {
-        ref: { fr: "Article 4 - Réalisation progressive", en: "Article 4 - Progressive Realization" },
+        ref: { fr: "Article 4 — Réalisation progressive", en: "Article 4 — Progressive Realization" },
         textFr: "« La libre circulation des personnes, le droit de résidence et le droit d’établissement sont réalisés en trois (3) phases : Première phase - Droit d’entrée; Deuxième phase - Droit de résidence; Troisième phase - Droit d’établissement. »",
         textEn: "« The free movement of persons, right of residence and right of establishment shall be achieved in three (3) phases: Phase One - Right of Entry; Phase Two - Right of Residence; Phase Three - Right of Establishment. »"
       }
@@ -9136,7 +9136,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Facing the political blockage of the Kigali Protocol, the Free Trade Area Agreement forces mobility through the economic prism (services), compelling States to allow trade-related skilled workers to circulate."
       },
       article: {
-        ref: { fr: "Protocole sur le commerce des services - Art. 1(p)", en: "Protocol on Trade in Services - Art. 1(p)" },
+        ref: { fr: "Protocole sur le commerce des services — Art. 1(p)", en: "Protocol on Trade in Services — Art. 1(p)" },
         textFr: "« Fourniture d’un service par la présence de personnes physiques (Mode 4) d’un État partie sur le territoire d’un autre État partie. (…) Les États parties négocient des engagements spécifiques applicables au mouvement des personnes physiques. »",
         textEn: "« Supply of a service by the presence of natural persons (Mode 4) of a State Party in the territory of any other State Party. (…) State Parties shall negotiate specific commitments applying to the movement of natural persons. »"
       }
@@ -9150,7 +9150,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Africa pioneered a more inclusive refugee definition than the United Nations' (1951 Geneva Convention), extending it to victims of generalized violence rather than targeted individual persecution alone."
       },
       article: {
-        ref: { fr: "Article 1.2 - Convention OUA 1969", en: "Article 1.2 - 1969 OAU Convention" },
+        ref: { fr: "Article 1.2 — Convention OUA 1969", en: "Article 1.2 - 1969 OAU Convention" },
         textFr: "« Le terme “réfugié” s’applique également à toute personne qui, du fait d’une agression, d’une occupation extérieure, d’une domination étrangère ou d’événements troublant gravement l’ordre public (…) est obligée de quitter sa résidence habituelle. »",
         textEn: "« The term “refugee” shall also apply to every person who, owing to external aggression, occupation, foreign domination or events seriously disturbing public order (…) is compelled to leave his place of habitual residence. »"
       }
@@ -9164,7 +9164,7 @@ const TabGovernance = ({ text, lang, activeSdgzTab, setActiveSdgzTab }) => {
         en: "Africa is the only continent with a binding treaty specifically protecting internally displaced persons (IDPs). It entered into force on 6 December 2012 and covers displacement linked to conflict, generalized violence, human rights violations, and disasters."
       },
       article: {
-        ref: { fr: "Article 1 - Convention de Kampala", en: "Article 1 - Kampala Convention" },
+        ref: { fr: "Article 1 — Convention de Kampala", en: "Article 1 — Kampala Convention" },
         textFr: "« [Les personnes déplacées internes sont] des personnes ou groupes de personnes qui ont été forcés ou obligés de fuir ou de quitter leur foyer (…) notamment en raison d’un conflit armé, de situations de violence généralisée, de violations des droits de l’homme ou de catastrophes naturelles ou provoquées par l’homme, et qui n’ont pas franchi les frontières internationalement reconnues d’un État. »",
         textEn: "« [Internally displaced persons are] persons or groups of persons who have been forced or obliged to flee or to leave their homes (…) in particular as a result of or in order to avoid the effects of armed conflict, situations of generalized violence, violations of human rights or natural or human-made disasters, and who have not crossed an internationally recognized state border. »"
       }

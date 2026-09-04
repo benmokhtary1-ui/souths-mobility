@@ -690,6 +690,24 @@ const DEMANDES = [
          && app.includes("fr: 'plus en transferts de diaspora qu’en aide publique, à part de PIB égale',")
          && !app.includes('ce pays en reçoit ');
    }],
+
+  ['un trait d’union joint, un tiret sépare',
+   () => {
+     // Trente-trois libelles posaient un tiret cadratin entre une source et ce
+     // qu elle porte -- « Union africaine — Traites, conventions et protocoles »
+     // -- et quatorze un trait d union a la meme place. Meme fonction, deux
+     // signes, et le minoritaire est celui qui a tort : un trait d union JOINT
+     // deux mots en un, un tiret SEPARE deux membres.
+     //
+     // Le releve ne vise que les traits d union entoures d espaces et suivis
+     // d une capitale : « Sao Tome-et-Principe » n en porte pas, donc rien de
+     // ce qui joint ne peut etre attrape.
+     const guillemet = "[" + String.fromCharCode(39, 34, 96) + "]";
+     const dedans = "[^" + String.fromCharCode(39, 34, 96) + "\\n]";
+     const motif = guillemet + dedans + "{6,80}[a-zà-ÿ0-9)] - [A-ZÀ-Ý(]" + dedans + "{2,60}" + guillemet;
+     return (app.match(new RegExp(motif, "g")) || []).length === 0;
+   }],
+
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
