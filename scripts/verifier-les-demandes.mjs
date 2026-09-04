@@ -745,6 +745,23 @@ const DEMANDES = [
      return app.includes('w-5 h-5 me-2 shrink-0')
          && !app.includes('<Lightbulb className="w-3 h-3" />');
    }],
+
+  ['chaque titre de section porte la couleur de sa section',
+   () => {
+     // La teinte de section vivait dans le bandeau, les graphiques, les termes
+     // et les apartes -- de 4,4 pour cent des elements sur Mobilites a 17,7 sur
+     // Verification. Elle ne marquait pas le titre de section, qui est pourtant
+     // l element le plus repete de chaque page.
+     //
+     // Le selecteur vise le ROLE. Premier jet fautif : il citait la liste de
+     // classes canonique, et le filet ne tombait que sur onze titres sur
+     // vingt-neuf. Quinze orthographes de h2 coexistent dans la source, mais
+     // la couche les rend toutes a vingt-six pixels : le role est deja uniforme
+     // a l ecran.
+     return css.includes(':is(main, .reader) h2.font-serif:not(.text-center):not(.uppercase)::before')
+         && css.includes('.fiche-tete h2::before { display: none; }')
+         && css.includes('background: var(--accent-light);');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

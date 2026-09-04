@@ -6425,3 +6425,46 @@ nav .max-w-7xl.overflow-x-auto > * { justify-content: center; }
   font-size: calc(11px * var(--corps, 1)); font-variant-numeric: tabular-nums;
   color: var(--ink-mute);
 }
+
+/* ---------- LE TITRE DE SECTION PORTE LA COULEUR DE SA SECTION -----------
+   La teinte de section vivait dans le bandeau d ouverture, les marques des
+   graphiques, les termes du glossaire, le filet des apartes et les boutons
+   d export. Mesure sur les sept sections : de 4,4 pour cent des elements sur
+   Mobilites a 17,7 sur Verification, presque toujours en texte, rarement en
+   filet, quasi jamais en fond.
+
+   Ce qu elle ne marquait pas, c est le TITRE DE SECTION : l element le plus
+   repete de chaque page, et celui qui ouvre chaque moment de lecture. Il
+   prend donc le filet d accent, qui est l idiome du site partout ailleurs --
+   les chiffres de la fiche pays, le compte des ratifications, les rubriques
+   du glossaire, la reserve. Deux pixels, trente-six de long.
+
+   LE SELECTEUR VISE LE ROLE, PAS L ORTHOGRAPHE. Premier jet fautif : il citait
+   la liste de classes canonique, et le filet ne tombait que sur onze titres
+   sur vingt-neuf -- Accueil, Atlas et Gouvernance n en portaient aucun. Il
+   aurait introduit une incoherence au lieu d en lever une. La mesure a montre
+   pourquoi : quinze orthographes de <h2> coexistent dans la source, mais la
+   couche d interception les rend TOUTES a vingt-six pixels. Le role est donc
+   deja uniforme a l ecran, et c est lui qu on vise.
+
+   Trois exceptions, et elles se justifient. Le nom du pays, dans l en-tete de
+   sa fiche, est deja marque par son drapeau. Un titre centre ne peut pas
+   porter un filet cale a gauche. Et sur fond sombre, l accent tombe dans
+   l encre : c est son cran clair qui prend le relais. */
+:is(main, .reader) h2.font-serif:not(.text-center):not(.uppercase) {
+  position: relative;
+  padding-top: .8rem;
+}
+:is(main, .reader) h2.font-serif:not(.text-center):not(.uppercase)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  width: 2.25rem;
+  height: 2px;
+  background: var(--accent);
+}
+.fiche-tete h2::before { display: none; }
+:is(.page-bandeau, .bg-slate-900, .bg-[#0f172a]) h2.font-serif::before {
+  background: var(--accent-light);
+}
