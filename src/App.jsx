@@ -5939,7 +5939,7 @@ const computeRegionAggregate = (countries) => {
 
 const indicatorThemes = [
   {
-    theme_fr: "Intégration & libre circulation", theme_en: "Integration & Free Movement", icon: <GitMerge />, color: "text-blue-800",
+    theme_fr: "Intégration & libre circulation", theme_en: "Integration & Free Movement", icon: <GitMerge />,
     items: [
       { 
         id: "1.1", fr: "Taux d’effectivité des protocoles régionaux", en: "Effectiveness of regional free movement protocols", 
@@ -5956,7 +5956,7 @@ const indicatorThemes = [
     ]
   },
   {
-    theme_fr: "Économie productive & diasporas", theme_en: "Productive Economy & Diasporas", icon: <TrendingUp />, color: "text-amber-700",
+    theme_fr: "Économie productive & diasporas", theme_en: "Productive Economy & Diasporas", icon: <TrendingUp />,
     items: [
       { 
         id: "2.1", fr: "Transferts alloués à l’investissement productif", en: "Remittances allocated to productive investment", 
@@ -5973,7 +5973,7 @@ const indicatorThemes = [
     ]
   },
   {
-    theme_fr: "Mobilité climatique & adaptation", theme_en: "Climate Mobility & Adaptation", icon: <Leaf />, color: "text-teal-700",
+    theme_fr: "Mobilité climatique & adaptation", theme_en: "Climate Mobility & Adaptation", icon: <Leaf />,
     items: [
       { 
         id: "3.1", fr: "Mobilité circulaire comme adaptation", en: "Circular mobility as adaptation", 
@@ -5990,7 +5990,7 @@ const indicatorThemes = [
     ]
   },
   {
-    theme_fr: "Santé & économie du soin", theme_en: "Health & Care Economy", icon: <HeartPulse />, color: "text-rose-800",
+    theme_fr: "Santé & économie du soin", theme_en: "Health & Care Economy", icon: <HeartPulse />,
     items: [
       { 
         id: "4.1", fr: "Contribution migrante aux systèmes de santé", en: "Migrant contribution to health systems", 
@@ -6007,7 +6007,7 @@ const indicatorThemes = [
     ]
   },
   {
-    theme_fr: "Savoirs & circulation des compétences", theme_en: "Knowledge & Skills Circulation", icon: <BookOpen />, color: "text-sky-700",
+    theme_fr: "Savoirs & circulation des compétences", theme_en: "Knowledge & Skills Circulation", icon: <BookOpen />,
     items: [
       { 
         id: "5.1", fr: "Taux de rétention intra-africaine des diplômés", en: "Intra-African retention of graduates", 
@@ -6024,7 +6024,7 @@ const indicatorThemes = [
     ]
   },
   {
-    theme_fr: "Protection & justice sociale", theme_en: "Protection & Social Justice", icon: <Scale />, color: "text-slate-700",
+    theme_fr: "Protection & justice sociale", theme_en: "Protection & Social Justice", icon: <Scale />,
     items: [
       { 
         id: "6.1", fr: "Décriminalisation de l’irrégularité", en: "Decriminalization of irregularity", 
@@ -11175,26 +11175,37 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
     <section id="data">
       <Chapitre lang={lang}>
         <div className="bg-white rounded-xl p-8 md:p-10 border border-slate-200 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-5 pb-6 border-b border-slate-100">
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <div className="p-3 bg-slate-100 rounded-sm border border-slate-200"><BookOpen className="h-6 w-6 text-slate-700" /></div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 tracking-tight">{text.sections.data}</h2>
-                <Prose className="text-slate-500 text-sm mt-2 leading-relaxed max-w-3xl" lang={lang}>{text.indicator_desc}</Prose>
-              </div>
-            </div>
+          {/* Le cartouche d icone gris, pose a gauche du titre, n existait nulle
+              part ailleurs : les blocs voisins de cette page ouvrent tous par un
+              titre puis une phrase. Celui-ci fait de meme, et le bouton d export
+              garde sa place a droite du titre, comme au glossaire. */}
+          <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+            <h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2">{text.sections.data}</h2>
             <CsvButton onClick={exportIndicatorsCSV} label={text.download_indicators} className="shrink-0" />
+          </div>
+          <div className="space-y-4 text-sm text-slate-700 leading-relaxed max-w-4xl text-justify mb-6">
+            <Prose lang={lang}>{text.indicator_desc}</Prose>
+            <Prose lang={lang}>{tr({
+              fr: "Elle avance douze indicateurs répartis en six axes, conçus en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Chacun vise une dimension des mobilités africaines qu’aucune mesure continentale ne couvre : effectivité réelle des protocoles de libre circulation, part investie des transferts, mobilité circulaire comme adaptation climatique, apport migrant aux systèmes de soins, circulation intra-africaine des compétences, portabilité des droits sociaux. Chaque fiche indique, sous « Le déplacement qu’il opère », le cadre de mesure auquel elle répond.",
+              en: 'It advances twelve indicators across six axes, designed as a counterpoint to the dominant statistical frameworks — migrant stocks, security indices, SDG targets. Each addresses a dimension of African mobility that no continental measure covers: the real effectiveness of free movement protocols, the invested share of remittances, circular mobility as climate adaptation, the migrant contribution to health systems, intra-African circulation of skills, portability of social rights. Each entry states, under “The shift it performs”, the measurement framework it answers.',
+            }, lang)}</Prose>
           </div>
   
           <div className="aparte aparte--reserve mb-10 flex items-start gap-3">
             <Lightbulb className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{tr({ fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice est une proposition issue de la recherche doctorale à l’origine du projet (Ben Mokhtar, 2026).\n\nElle avance douze indicateurs répartis en six axes, conçus en contrepoint des cadres statistiques dominants — stocks migratoires, index sécuritaires, cibles ODD. Chacun vise une dimension des mobilités africaines qu’aucune mesure continentale ne couvre : effectivité réelle des protocoles de libre circulation, part investie des transferts, mobilité circulaire comme adaptation climatique, apport migrant aux systèmes de soins, circulation intra-africaine des compétences, portabilité des droits sociaux. Chaque fiche indique, sous « Le déplacement qu’il opère », le cadre de mesure auquel elle répond.\n\nC’est une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain, non un jeu de données déjà constitué.", en: "The other sections of this platform consolidate data already collected by international institutions. This matrix is a proposal stemming from the doctoral research behind the project (Ben Mokhtar, 2026).\n\nIt advances twelve indicators across six axes, designed as a counterpoint to dominant statistical frameworks — migrant stocks, security indices, SDG targets. Each targets a dimension of African mobility no continental measure covers: actual effectiveness of free-movement protocols, invested share of remittances, circular mobility as climate adaptation, migrant contribution to care systems, intra-African circulation of skills, portability of social rights. Each card states, under \"The shift it makes\", the measurement framework it answers.\n\nThis is a methodological recommendation aimed at national statistical institutes and field researchers, not an already-constituted dataset." }, lang)}</Prose>
+            <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{tr({
+              fr: "Les autres sections de cette plateforme consolident des données déjà collectées par les institutions internationales. Cette matrice, elle, est une proposition issue de la recherche doctorale à l’origine du projet (Ben Mokhtar, 2026) : une recommandation méthodologique adressée aux instituts nationaux de statistique et aux chercheurs de terrain, non un jeu de données déjà constitué.",
+              en: 'The other sections of this platform consolidate data already collected by international institutions. This matrix is a proposal stemming from the doctoral research behind the project (Ben Mokhtar, 2026): a methodological recommendation addressed to national statistical institutes and field researchers, not a dataset already assembled.',
+            }, lang)}</Prose>
           </div>
   
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
             {indicatorThemes.map((theme, i) => (
               <div key={i}>
-                <h3 className={`flex items-center text-base font-serif font-bold ${theme.color} mb-5`}>
+                {/* Une seule encre. La couleur appartient a la section, pas a
+                    l axe : six teintes sur six titres freres faisaient croire a
+                    six natures differentes la ou il y a six axes d une matrice. */}
+                <h3 className="flex items-center text-base font-serif font-bold text-slate-900 mb-5">
                   {React.cloneElement(theme.icon, { className: "w-5 h-5 me-2" })} 
                   {tr({ fr: theme.theme_fr, en: theme.theme_en }, lang)}
                 </h3>

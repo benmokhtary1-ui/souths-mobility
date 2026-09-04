@@ -482,17 +482,24 @@ const DEMANDES = [
   ['le titre de section n’a qu’un seul dessin',
    () => {
      // Quinze exemplaires, cinq orthographes : mb-2, mb-3, mb-4, avec ou
-     // sans le cran md:text-2xl. Le role est le meme aux quinze endroits.
+     // sans le cran md:text-2xl. Le role est le meme partout.
+     //
+     // L assertion portait d abord sur le NOMBRE — exactement quinze. C etait
+     // une erreur de forme : le jour ou la matrice d indicateurs a rejoint la
+     // grammaire commune, elle a pose un seizieme titre au bon dessin, et le
+     // test a echoue pour une reussite. Ce qui doit tenir n est pas le compte,
+     // c est l UNICITE : aucun titre de section dans une autre orthographe.
      //
      // Cinq autres titres restent a vingt pixels, et c est voulu : ils
      // coiffent un panneau, non une section de page. Ils s accordent entre
-     // eux — c est un second niveau, pas un sixieme ecart.
+     // eux — un second niveau, pas un sixieme ecart.
      const compte = (h, n) => h.split(n).length - 1;
-     const dessin = '<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2"';
-     return compte(app, dessin) === 15
-         && !app.includes('<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-3"')
-         && !app.includes('<h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-4"')
-         && !app.includes('<h2 className="text-xl font-serif font-bold text-slate-900 mb-');
+     const dessin = String.fromCharCode(60) + 'h2 className="text-xl md:text-2xl font-serif font-bold text-slate-900 mb-2"';
+     const autre = (fin) => String.fromCharCode(60) + 'h2 className="text-xl' + fin;
+     return compte(app, dessin) >= 15
+         && !app.includes(autre(' md:text-2xl font-serif font-bold text-slate-900 mb-3"'))
+         && !app.includes(autre(' md:text-2xl font-serif font-bold text-slate-900 mb-4"'))
+         && !app.includes(autre(' font-serif font-bold text-slate-900 mb-'));
    }],
 
   ['la note de pied suit la forme que la feuille de style annonce',
@@ -708,6 +715,18 @@ const DEMANDES = [
      return (app.match(new RegExp(motif, "g")) || []).length === 0;
    }],
 
+
+  ['la matrice d’indicateurs suit la grammaire du site',
+   () => {
+     // C etait la seule section sans rien de la grammaire commune : un
+     // cartouche d icone gris a gauche du titre, six encres sur six
+     // intertitres freres, et neuf cent quatre-vingt-trois signes de methode
+     // dans une boite de reserve si haute qu elle se repliait.
+     const compte = (h, n) => h.split(n).length - 1;
+     return !app.includes('p-3 bg-slate-100 rounded-sm border')
+         && compte(app, 'color: "text-') === 0
+         && app.includes('flex items-center text-base font-serif font-bold text-slate-900 mb-5');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
