@@ -37,7 +37,7 @@ const toCSV = (rows) => {
   const cols = Object.keys(rows[0]);
   const cell = (v) => {
     const s = v === null || v === undefined ? '' : String(v).replace(/\s+/g, ' ').trim();
-    return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   return [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n') + '\n';
 };
@@ -82,11 +82,11 @@ const fmtNum = (val, lang) => {
 const localeOf = (lang) => tagDe(lang);
 
 const toNumber = (val) => {
-  if (typeof val === 'number') return Number.isFinite(val) ? val : null;
+  if (typeof val === 'number') return Number.isFinite(val) ? val : null;
   if (val === undefined || val === null || val === '') return null;
   const s = String(val).replace(/[\s  ]/g, '').replace(',', '.');
   const n = Number(s);
-  return Number.isFinite(n) ? n : null;
+  return Number.isFinite(n) ? n : null;
 };
 
 // Intl produit une espace fine insecable (U+202F) comme separateur de groupe en
@@ -129,7 +129,7 @@ const Num = ({ value, lang = 'fr', unit = null, className = '', ...rest }) => {
           ? <span key={i} className="num-sep">{p.value.replace(GROUP_SEP, ' ')}</span>
           : <span key={i}>{p.value}</span>
       )}
-      {unit ? <span className="num-unit">{unit}</span> : null}
+      {unit ? <span className="num-unit">{unit}</span> : null}
     </span>
   );
 };
@@ -2835,17 +2835,22 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5mm' }}>
           <BrandMark className="" tone="paper" style={{ width: '8mm', height: '8mm' }} />
           <div>
-            <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '10pt', letterSpacing: '.04em' }}>SOUTH(S) MOBILITY</div>
+            <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '10pt', letterSpacing: '.04em' }}>AFRICAN MOBILITY HUB</div>
             <div style={{ fontSize: '6.4pt', letterSpacing: '.14em', textTransform: 'uppercase', color: '#64748b' }}>
               {L('Savoirs & Données sur les mobilités', 'Knowledge & Data on mobility')}
             </div>
           </div>
         </div>
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5mm', textAlign: 'right' }}>
+          <div>
           <div style={{ fontFamily: 'Merriweather, serif', fontWeight: 700, fontSize: '13pt', lineHeight: 1.1 }}>{display.name}</div>
           <div style={{ fontSize: '6.4pt', letterSpacing: '.1em', textTransform: 'uppercase', color: '#64748b' }}>
             {display.isRegion ? L('Profil régional', 'Regional profile') : L('Profil pays', 'Country profile')} · {date}
           </div>
+          </div>
+          {!display.isRegion && display.iso2 && (
+            <CountryFlag iso2={display.iso2} emoji={display.flag} size="lg" className="pdf-drapeau" />
+          )}
         </div>
       </div>
 
@@ -2866,14 +2871,14 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
             <tr><th scope="row" className="k">{L('Stock de migrants (2024)', 'Migrant stock (2024)')}</th><td className="v"><Num value={display.stock} lang={lang} /></td></tr>
             <tr><th scope="row" className="k">{L('Part de la population', 'Share of population')}</th><td className="v">{nn(display.evolution, '%')}</td></tr>
             <tr><th scope="row" className="k">{L('Part des femmes', 'Female share')}</th><td className="v">{nn(display.female, '%')}</td></tr>
-            <tr><th scope="row" className="k">{L('Activité des migrants (OIT)', 'Migrant labour activity (ILO)')}</th><td className="v">{nn(display.labour_participation, '%')}{display.labour_participation_year ? ` (${display.labour_participation_year})` : ''}</td></tr>
+            <tr><th scope="row" className="k">{L('Activité des migrants (OIT)', 'Migrant labour activity (ILO)')}</th><td className="v">{nn(display.labour_participation, '%')}{display.labour_participation_year ? ` (${display.labour_participation_year})` : ''}</td></tr>
           </tbody></table>
         </div>
 
         <div className="pdf-block">
           <h2>{L('Déplacement & protection', 'Displacement & protection')}</h2>
           <table><tbody>
-            <tr><th scope="row" className="k">{L('Réfugiés accueillis', 'Refugees hosted')}</th><td className="v"><Num value={display.refugees_hosted} lang={lang} /></td></tr>
+            <tr><th scope="row" className="k">{L('Réfugiés accueillis (HCR 2024)', 'Refugees hosted (UNHCR 2024)')}</th><td className="v">{display.refugees_hosted === null || display.refugees_hosted === undefined ? '—' : <Num value={display.refugees_hosted} lang={lang} />}</td></tr>
             <tr><th scope="row" className="k">{L('Déplacés internes (conflit)', 'IDPs (conflict)')}</th><td className="v"><Num value={display.idp_conflict} lang={lang} /></td></tr>
             <tr><th scope="row" className="k">{L('Déplacés internes (catastrophes)', 'IDPs (disasters)')}</th><td className="v"><Num value={display.idp_disaster} lang={lang} /></td></tr>
             <tr><th scope="row" className="k">{L('Rétention Sud-Sud', 'South-South retention')}</th><td className="v">{nn(display.retention, '%')}</td></tr>
@@ -2883,7 +2888,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div className="pdf-block">
           <h2>{L('Économie de la mobilité', 'Mobility economy')}</h2>
           <table><tbody>
-            <tr><th scope="row" className="k">{L('Transferts de fonds (% PIB)', 'Remittances (% GDP)')}</th><td className="v">{nn(display.remittances, '%')}{display.remittances_year ? ` (${display.remittances_year})` : ''}</td></tr>
+            <tr><th scope="row" className="k">{L('Transferts de fonds (% PIB)', 'Remittances (% GDP)')}</th><td className="v">{nn(display.remittances, '%')}{display.remittances_year ? ` (${display.remittances_year})` : ''}</td></tr>
             <tr><th scope="row" className="k">{L('Aide publique au dév. (% PIB)', 'ODA (% GDP)')}</th><td className="v">{nn(display.aid, '%')}</td></tr>
           </tbody></table>
         </div>
@@ -2891,7 +2896,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
         <div className="pdf-block">
           <h2>{L('Ouverture des frontières', 'Border openness')}</h2>
           <table><tbody>
-            <tr><th scope="row" className="k">{L('Indice AVOI', 'AVOI index')}</th><td className="v">{display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100`}</td></tr>
+            <tr><th scope="row" className="k">{L('Indice AVOI', 'AVOI index')}</th><td className="v">{display.avoi === null || display.avoi === undefined ? '—' : `${display.avoi}/100`}</td></tr>
             {continentalAvoiAvg !== null && continentalAvoiAvg !== undefined && (
               <tr><th scope="row" className="k">{L('Moyenne continentale', 'Continental average')}</th><td className="v">{continentalAvoiAvg}/100</td></tr>
             )}
@@ -2927,7 +2932,7 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
               ].map(t => (
                 <tr key={t.key}>
                   <th scope="row" className="k">{tr({ fr: t.fr, en: t.en }, lang)}</th>
-                  <td className="v">{display.au_treaties[t.key] ? L('Ratifié', 'Ratified') : L('Non ratifié', 'Not ratified')}</td>
+                  <td className="v" data-etat={display.au_treaties[t.key] ? 'oui' : 'non'}>{display.au_treaties[t.key] ? L('Ratifié', 'Ratified') : L('Non ratifié', 'Not ratified')}</td>
                 </tr>
               ))}
             </tbody></table>
@@ -2954,6 +2959,23 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
           </div>
         )}
 
+        {display.iso2 && censusByCountry[display.iso2] && (
+          <div className="pdf-block">
+            <h2>{L('Recensements de la population', 'Population censuses')}</h2>
+            <table><tbody>
+              {censusRoundMeta.map((r) => {
+                const c = censusMark(censusByCountry[display.iso2][r.key]);
+                return (
+                  <tr key={r.key}>
+                    <th scope="row" className="k">{tr(r.label, lang)}</th>
+                    <td className="v" data-etat={c.counted ? 'oui' : undefined}>{c.raw || '—'}</td>
+                  </tr>
+                );
+              })}
+            </tbody></table>
+          </div>
+        )}
+
         {(display.trigger || display.response || display.impact) && (
           <div className="pdf-block">
             <h2>{L('Chaîne causale', 'Causal chain')}</h2>
@@ -2962,6 +2984,16 @@ const PdfCountryDossier = ({ display, lang, text, continentalAvoiAvg }) => {
             {display.impact && <p style={{ margin: 0, textAlign: 'justify' }}><strong>{text.modal.impact} · </strong>{display.impact}</p>}
           </div>
         )}
+      </div>
+
+      {/* LA RESERVE, EN PIED DE PLANCHE.
+          Elle ne vit pas dans les colonnes : elle ne porte pas sur une rubrique,
+          elle porte sur toutes. Un lecteur qui ne lirait qu une ligne de ce
+          dossier doit tout de meme rencontrer la limite qui la gouverne. */}
+      <div className="pdf-reserve">
+        <strong>{L('Réserve', 'Caveat')} · </strong>
+        {L('Les années d’observation ne sont pas alignées d’un champ à l’autre, et ne le seront pas\u202F: chaque mesure porte la sienne. Ce profil se lit ligne à ligne, non comme un instantané.',
+           'Observation years are not aligned across fields, and will not be: each measure carries its own. This profile reads line by line, not as a snapshot.')}
       </div>
 
       {/* Pied de page : provenance et citation */}
@@ -2983,11 +3015,11 @@ const PrintCitationFooter = ({ lang, sectionLabel, tab = null, detail = null }) 
   // rendu donnait l’adresse de la section PRECEDENTE — la citation d’un
   // document imprime renvoyait ailleurs que ce qu’il contient. Les effets d’un
   // enfant s’executent avant ceux du parent : attendre ne reglait rien.
-  const seg = tab ? tr(ROUTES[tab], lang) : null;
+  const seg = tab ? tr(ROUTES[tab], lang) : null;
   const chemin = seg
     ? `/${lang}/${seg}${detail ? `/${detail}` : ''}`
-    : (typeof window !== 'undefined' ? window.location.pathname : '');
-  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'African Mobility Hub';
+    : (typeof window !== 'undefined' ? window.location.pathname : '');
+  const siteUrl = typeof window !== 'undefined' ? `${window.location.origin}${chemin}` : 'African Mobility Hub';
   const printDate = new Date().toLocaleDateString(tr({ fr: 'fr-FR', en: 'en-US' }, lang), { year: 'numeric', month: 'long', day: 'numeric' });
   return (
     <div className="hidden print:block mt-8 pt-4 border-t-2 border-slate-900 break-inside-avoid">
@@ -3057,19 +3089,19 @@ const recLogos = {
 };
 
 const InstitutionLogo = ({ name, src, className = "max-h-8 max-w-full" }) => {
-  const [status, setStatus] = useState(src ? 'loading' : 'failed');
+  const [status, setStatus] = useState(src ? 'loading' : 'failed');
 
   useEffect(() => {
     if (!src) { setStatus('failed'); return; }
     setStatus('loading');
     const timer = setTimeout(() => {
-      setStatus((s) => (s === 'loading' ? 'failed' : s));
+      setStatus((s) => (s === 'loading' ? 'failed' : s));
     }, 8000);
     return () => clearTimeout(timer);
   }, [src]);
 
   if (status === 'failed') {
-    const initials = name.includes(' ') ? name.split(/\s+/).map(w => w[0]).slice(0, 3).join('') : name;
+    const initials = name.includes(' ') ? name.split(/\s+/).map(w => w[0]).slice(0, 3).join('') : name;
     return <span className="font-serif font-bold text-slate-400 text-xs tracking-wide">{initials}</span>;
   }
   return (
@@ -3236,7 +3268,7 @@ const t = {
           title: "L’Afrique s’est dotée de ses propres instruments, souvent avant la norme mondiale.",
           highlight: "Reste ce que les États en font.",
           desc: "Six instruments continentaux, {etats} États, un tableau de ratification. L’Acte constitutif les réunit tous ; le Protocole sur la libre circulation des personnes en réunit quatre.",
-          plain: "Qui fixe les règles de circulation en Afrique — l’Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s’appliquent réellement."
+          plain: "Qui fixe les règles de circulation en Afrique — l’Union africaine, les blocs régionaux, ou chaque État ? Cette section montre les règles écrites, puis lesquelles s’appliquent réellement."
         },
         library: {
           badge: "Centre Documentaire",
@@ -4047,7 +4079,11 @@ const mapIndicators = [
   },
   {
     key: 'refugees_hosted', label: { fr: "Réfugiés accueillis", en: "Refugees hosted" },
-    unit: '', get: c => Number(c.refugees_hosted),
+    // Le HCR ne rapporte pas tous les pays chaque annee, et son propre fichier
+    // le dit : « l absence d un pays signifie non rapporte, pas necessairement
+    // zero ». `Number(null)` vaut zero et peindrait ces pays au bas de
+    // l echelle, avec ceux qui n accueillent vraiment personne.
+    unit: '', get: c => (c.refugees_hosted === null || c.refugees_hosted === undefined ? null : Number(c.refugees_hosted)),
     hint: { fr: "Réfugiés sous mandat du HCR présents dans le pays (HCR, 2024).", en: "Refugees under UNHCR mandate present in the country (UNHCR, 2024)." },
     plain: { fr: "Le nombre de réfugiés qu’un pays héberge. Les plus gros pays d’accueil du continent sont voisins des pays d’où l’on fuit.", en: "How many refugees a country hosts. The continent’s largest hosts neighbour the countries people flee." }
   },
@@ -7534,7 +7570,7 @@ const TabForced = ({ text, lang, children }) => {
       pays: nm(c), iso2: c.iso2 || '',
       deplaces_conflit: Number(c.idp_conflict) || 0,
       deplaces_catastrophes: Number(c.idp_disaster) || 0,
-      refugies_accueillis: Number(c.refugees_hosted) || 0,
+      refugies_accueillis: c.refugees_hosted === null || c.refugees_hosted === undefined ? '' : Number(c.refugees_hosted),
       hcr_refugies_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.refugees || 0),
       hcr_demandeurs_asile_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.asylum || 0),
       hcr_apatrides_2024: Number(unhcrByCountry[(c.iso2 || '').toLowerCase()]?.['2024']?.stateless || 0),
@@ -11886,7 +11922,7 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
             "The bottleneck lies after collection. A significant share of the processing of African census data was long carried out from outside, the United States Census Bureau (USCB) having supported the tabulation of that data for decades. This dependence does not bear on the production of raw data, which exists and which national institutes collect themselves, but on what comes afterwards: formatting, interpretation, and the choice of the categories into which a population is sorted."
           )}</Prose>
           <Prose lang={lang}>{L(
-            "Or la catégorie n’est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
+            "Or la catégorie n’est jamais neutre. Dénombrer les résidents habituels (population de jure) ou toutes les personnes présentes (de facto) ? Retenir la citoyenneté ou le pays de naissance ? Poser ou non la question du motif ? Chacun de ces choix produit une image différente de la même population. Tant que ces arbitrages sont opérés ailleurs, la souveraineté statistique reste formelle.",
             "Yet the category is never neutral. Enumerate usual residents (de jure population) or all persons present (de facto)? Retain citizenship or country of birth? Ask the reason for the move, or leave it out? Each of these choices produces a different image of the same population. As long as these trade-offs are made elsewhere, statistical sovereignty remains formal."
           )}</Prose>
           <Prose className="text-white font-medium" lang={lang}>{L(
@@ -12422,7 +12458,7 @@ const authorPublications = [
     url: null
   },
   {
-    ref: "Ben Mokhtar, Y. « Un “modèle” africain ? Gouverner les mobilités en Afrique, entre ambitions continentales et prises administratives ». In ouvrage collectif dir. Chadia Arab et Leila Bouasria. En Toutes Lettres, 2026.",
+    ref: "Ben Mokhtar, Y. « Un “modèle” africain ? Gouverner les mobilités en Afrique, entre ambitions continentales et prises administratives ». In ouvrage collectif dir. Chadia Arab et Leila Bouasria. En Toutes Lettres, 2026.",
     kind: { fr: "Chapitre d’ouvrage à comité de lecture", en: "Peer-reviewed book chapter" },
     year: 2026,
     url: null
@@ -13635,7 +13671,19 @@ export default function App() {
           .pdf-doc { display: block !important; font-size: 8.2pt; line-height: 1.34; color: #0f172a; }
           .pdf-doc .pdf-cols { column-count: 2; column-gap: 6.5mm; }
           .pdf-doc .pdf-block { break-inside: avoid; page-break-inside: avoid; margin-bottom: 3.2mm; }
-          .pdf-doc h2 { font-size: 8.6pt; letter-spacing: .07em; text-transform: uppercase; margin: 0 0 1.4mm; padding-bottom: .8mm; border-bottom: .4pt solid #cbd5e1; color: #334155; }
+          /* LA COULEUR ENTRE PAR CE QU ELLE DISTINGUE.
+             Le dossier etait entierement en gris ardoise : le meme trait pour un
+             titre, une regle, un chiffre et un verdict. Chaque teinte posee ici
+             porte une information, et aucune n est decorative. Les valeurs sont
+             celles du site, reprises en dur : la feuille d impression vit hors
+             de <main>, donc hors de la teinte de section. */
+          .pdf-doc h2 { font-size: 8.6pt; letter-spacing: .07em; text-transform: uppercase; margin: 0 0 1.4mm; padding-bottom: .8mm; border-bottom: .5pt solid #3F4654; color: #272E3B; }
+          .pdf-doc .pdf-drapeau { width: 11mm; height: auto; border: .4pt solid #cbd5e1; border-radius: .8mm; }
+          /* Ratifie, non ratifie : le mot le dit deja, la couleur le confirme.
+             Un verdict qui ne tient qu a la couleur serait illisible en
+             photocopie ; ici elle double le mot, elle ne le remplace pas. */
+          .pdf-doc td.v[data-etat="oui"] { color: #0E6B45; }
+          .pdf-doc td.v[data-etat="non"] { color: #8A5510; }
           .pdf-doc table { width: 100%; border-collapse: collapse; }
           .pdf-doc :is(td, th) { padding: .7mm 0; vertical-align: top; border-bottom: .3pt dotted #e2e8f0; }
           /* La cle est passee en <th scope="row"> pour qu'un lecteur d'ecran sache
@@ -13643,10 +13691,18 @@ export default function App() {
              defaut, on lui rend l'aspect qu'elle avait en <td>. */
           .pdf-doc th.k { color: #64748b; padding-right: 2mm; text-align: left; font-weight: 400; }
           .pdf-doc td.v { text-align: right; font-weight: 700; white-space: nowrap; }
-          .pdf-doc .kpi { border: .4pt solid #cbd5e1; border-radius: 1.2mm; padding: 1.6mm 1.8mm; }
-          .pdf-doc .kpi .lbl { font-size: 5.9pt; letter-spacing: .09em; text-transform: uppercase; color: #64748b; display: block; }
-          .pdf-doc .kpi .val { font-size: 12pt; font-weight: 700; font-family: Merriweather, serif; line-height: 1.1; }
-          .pdf-doc .chip { display: inline-block; border: .4pt solid #cbd5e1; border-radius: 6pt; padding: .35mm 1.4mm; margin: 0 1mm .8mm 0; font-size: 6.4pt; font-weight: 700; }
+          /* Les six tuiles portent a l impression l assise qu ont les chiffres a
+             l ecran : un lavis tres pale, borde d un filet d accent a gauche. Le
+             nombre cesse de flotter, et le papier retrouve la grammaire de la
+             fiche au lieu d en inventer une seconde. */
+          .pdf-doc .kpi { border: 0; border-left: 1.6pt solid #3F4654; background: #F1F0F3; border-radius: 0; padding: 1.5mm 1.8mm 1.5mm 1.6mm; }
+          .pdf-doc .kpi .lbl { font-size: 5.9pt; letter-spacing: .09em; text-transform: uppercase; color: #615B55; display: block; }
+          .pdf-doc .kpi .val { font-size: 12pt; font-weight: 700; font-family: Merriweather, serif; line-height: 1.1; color: #272E3B; }
+          /* La reserve ferme la planche : un lavis d alerte tres pale, borde
+             a gauche comme les chiffres le sont a l accent. Elle n est pas une
+             rubrique parmi les autres — elle porte sur toutes. */
+          .pdf-doc .pdf-reserve { margin: 1.5mm 0 0; padding: 1.6mm 2mm 1.6mm 1.8mm; border-left: 1.6pt solid #C8892B; background: #FBF6EE; font-size: 7.2pt; line-height: 1.35; color: #342F29; break-inside: avoid; }
+          .pdf-doc .chip { display: inline-block; border: .4pt solid #3F4654; background: #F1F0F3; border-radius: 6pt; padding: .35mm 1.4mm; margin: 0 1mm .8mm 0; font-size: 6.4pt; font-weight: 600; color: #272E3B; }
         `}
       </style>
       <style>{`

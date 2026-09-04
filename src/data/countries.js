@@ -1,4 +1,5 @@
 import { genericDesc } from './genericDesc.js';
+import { unhcrByCountry } from '../unhcrData.js';
 
 // Base pays de la plateforme : 54 États, cinq régions selon le découpage
 // officiel de l’Union africaine (et non la nomenclature M49 des Nations unies).
@@ -9,7 +10,7 @@ import { genericDesc } from './genericDesc.js';
 //   avoi ............................. BAD & CUA, Africa Visa Openness Index
 //   remittances ...................... Banque mondiale
 //   idp_conflict, idp_disaster ....... IDMC
-//   refugees_hosted .................. HCR
+//   refugees_hosted .................. HCR, Refugee Data Finder 2024 (surcharge en bas de fichier)
 //   normlex .......................... OIT, base NORMLEX
 //   au_treaties ...................... listes officielles de statut de l’UA
 
@@ -470,3 +471,38 @@ export const countryData = {
     }
   ]
 };
+
+// ---------------------------------------------------------------------------
+// LES RÉFUGIÉS ACCUEILLIS SE LISENT CHEZ LE HCR, ET NULLE PART AILLEURS
+//
+// Le champ `refugees_hosted` écrit à la main portait un zéro pour QUARANTE-TROIS
+// des cinquante-quatre États — Kenya, R.D. Congo, Cameroun, Niger compris,
+// quand le HCR leur compte respectivement 604 257, 517 404, 427 706 et 369 836
+// réfugiés. Un zéro publié n'est pas une absence de donnée : c'est une
+// affirmation, et celle-là était fausse. Elle colorait la carte « Qui héberge
+// les réfugiés ? », classait ces États au dernier rang de la question, et
+// s'imprimait telle quelle sur le dossier destiné à être cité.
+//
+// Les onze valeurs non nulles ne valaient pas mieux : elles ne concordaient avec
+// aucun millésime du HCR — l'Égypte à 834 200 quand le HCR en compte 238 014,
+// l'Éthiopie à 521 400 quand il en compte 1 008 826. Un champ sans date ni
+// périmètre ne se corrige pas valeur par valeur : il se rebranche sur sa source.
+//
+// Il se lit donc désormais dans `unhcrData.js`, millésime 2024, définition du
+// HCR : réfugiés sous mandat, par pays d'asile. Une source, une date, un
+// périmètre.
+//
+// Et l'absence garde son sens. Le fichier du HCR le dit lui-même : « l'absence
+// d'un pays signifie non rapporté, pas nécessairement zéro ». Un pays que le HCR
+// ne rapporte pas reçoit donc `null` — que les vues rendent par un tiret — et
+// non un zéro qui affirmerait un fait qu'aucune institution ne publie. Deux
+// États sont dans ce cas, les Seychelles et Sao Tomé-et-Principe ; deux autres,
+// le Cabo Verde et la Sierra Leone, portent un zéro que le HCR publie vraiment.
+for (const region of Object.values(countryData)) {
+  for (const pays of region) {
+    const releve = pays.iso2 ? unhcrByCountry[pays.iso2] : null;
+    const an = releve && releve['2024'];
+    pays.refugees_hosted = an && typeof an.refugees === 'number' ? an.refugees : null;
+    pays.refugees_hosted_annee = an ? 2024 : null;
+  }
+}

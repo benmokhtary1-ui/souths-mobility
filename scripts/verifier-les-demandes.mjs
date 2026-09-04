@@ -18,6 +18,8 @@ const css = readFileSync('src/theme.css', 'utf8');
 const html = readFileSync('index.html', 'utf8');
 const tout = app + css;
 const lire = (f) => { try { return readFileSync(f, 'utf8'); } catch { return ''; } };
+const basePays = lire('src/data/countries.js');
+const hcr = lire('src/unhcrData.js');
 
 // Chaque demande : son libellé, et un test qui rend vrai quand elle est tenue.
 const DEMANDES = [
@@ -629,6 +631,39 @@ const DEMANDES = [
      const strip = "[data-hors-ancre], button, a[role=" + '"button"' + "]";
      return app.includes(strip) && app.split(strip).length - 1 === 2
          && app.includes('copie.querySelectorAll(');
+   }],
+
+  ['les réfugiés accueillis se lisent chez le HCR, et nulle part ailleurs',
+   () => {
+     // Le champ ecrit a la main portait un zero pour QUARANTE-TROIS des
+     // cinquante-quatre Etats -- Kenya 604 257, R.D. Congo 517 404, Cameroun
+     // 427 706 chez le HCR. Un zero publie est une affirmation, pas une
+     // absence de donnee, et celle-la coloriait la carte « Qui heberge les
+     // refugies ? », classait ces Etats au dernier rang, et s imprimait sur le
+     // dossier destine a etre cite.
+     return basePays.includes("import { unhcrByCountry } from '../unhcrData.js';")
+         && basePays.includes('pays.refugees_hosted = an && ')
+         && basePays.includes('pays.refugees_hosted_annee = an ? 2024 : null;')
+         && hcr.length > 1000;
+   }],
+
+  ['une absence de relevé ne devient jamais un zéro',
+   () => {
+     // Le fichier du HCR le dit lui-meme : « l absence d un pays signifie non
+     // rapporte, pas necessairement zero ». Deux Etats sont dans ce cas.
+     return app.includes('c.refugees_hosted === null || c.refugees_hosted === undefined ? null : Number(c.refugees_hosted)')
+         && app.includes("c.refugees_hosted === null || c.refugees_hosted === undefined ? '' : Number(c.refugees_hosted)")
+         && app.includes("display.refugees_hosted === undefined ? '—'");
+   }],
+
+  ['le dossier imprimé porte sa réserve et ses recensements',
+   () => {
+     // Le PDF donnait les chiffres sans dire quand l Etat s est compte lui-meme,
+     // ni que les annees d observation ne sont pas alignees -- dans celui des
+     // deux documents qui est fait pour etre cite.
+     return app.includes('className="pdf-reserve"')
+         && app.includes("L('Recensements de la population', 'Population censuses')")
+         && css.length > 0 && app.includes('.pdf-doc .pdf-reserve {');
    }],
 ];
 
