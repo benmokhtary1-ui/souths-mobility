@@ -2548,6 +2548,33 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    document dont les cinq parties sont toutes presentes dessous. Elles
    peuvent donc tenir un cran plus serre que la pastille generale — assez
    pour que les cinq passent, et l en-tete y gagne aussi en hauteur. */
+/* LA CROIX A SA PLACE RESERVEE.
+   Elle est posee en absolu a 24 px du bord, hors du flux : la rangee ne la
+   voyait donc pas et s etendait dessous. Mesure : la derniere pastille
+   finissait a 691 px et la croix commencait a 680 -- douze pixels de
+   recouvrement, sur le bouton qui ferme la fiche. La rangee s arrete
+   maintenant avant elle. Le pied n en a pas besoin : rien n y flotte.
+   Le padding de l en-tete est pose en !important par la regle d harmonisation
+   des gouttieres : le lui reprendre demanderait de la surenchere. On decale
+   donc le SOMMAIRE, qui est le dernier element de la rangee et n a aucune
+   marge par ailleurs. */
+:is(main, .reader) .fiche-tete .bascule-groupe { margin-inline-end: 2.25rem; }
+
+/* LE PIED NE SE MARCHE PLUS DESSUS.
+   La ligne de provenance et les deux boutons se partagent une rangee en
+   « justify-between ». Un element de flex refuse par defaut de descendre sous
+   la largeur de son contenu (min-width: auto) : la ligne gardait donc sa
+   largeur naturelle et passait SOUS les boutons -- mesure a 737 px, elle
+   finissait a 469 quand le premier bouton commencait a 411. Elle accepte
+   desormais de se replier dans la part qui lui revient. */
+.fiche-pied > .surtitre { min-width: 0; }
+/* Et les deux boutons refusent d etre comprimes. Le groupe se laissait
+   reduire a 220 px alors que les boutons en demandent 294 : ils debordaient
+   de leur propre cadre PAR LA GAUCHE, jusqu a 411 px, la ou la ligne de
+   provenance finissait a 469. Le groupe garde sa taille, la ligne prend ce
+   qui reste. */
+.fiche-pied > div { flex: none; }
+
 /* Quand le nom est long, c est le SOMMAIRE ENTIER qui descend, jamais une
    pastille seule. Sans cela le groupe se replie sur lui-meme et « Reserve »
    tombe a la ligne pendant que les quatre autres restent en haut : une rangee

@@ -590,6 +590,16 @@ const DEMANDES = [
          && css.includes(':is(main, .reader) .fiche-tete .bascule {')
          && app.includes('{display.isRegion && text.modal.south_view && (');
    }],
+
+  ['rien ne se marche dessus dans la fiche pays',
+   () => {
+     // Deux recouvrements mesures : la derniere pastille passait douze pixels
+     // sous la croix de fermeture, et les deux boutons du pied debordaient de
+     // leur groupe comprime jusque sur la ligne de provenance.
+     return css.includes(':is(main, .reader) .fiche-tete .bascule-groupe { margin-inline-end: 2.25rem; }')
+         && css.includes('.fiche-pied > .surtitre { min-width: 0; }')
+         && css.includes('.fiche-pied > div { flex: none; }');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
