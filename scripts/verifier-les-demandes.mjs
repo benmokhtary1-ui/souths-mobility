@@ -775,6 +775,26 @@ const DEMANDES = [
          && ico.includes('#3F4654') && ico.includes('prefers-color-scheme: dark')
          && ico.includes('class="anneau"');
    }],
+
+  ['le petit corps n’a qu’une interligne',
+   () => {
+     // Mesure sur les sept sections : le texte de treize pixels rendait TROIS
+     // interlignes -- 18,85 la ou la regle du site gagnait, 21,06 la ou la
+     // classe de Tailwind l emportait, 19,50 la ou la valeur venait d un
+     // parent. Les memes classes donnaient deux resultats selon l endroit.
+     //
+     // La cause : le rapport de Tailwind porte sur la taille DECLAREE (douze
+     // pixels) quand la couche de lisibilite remonte la taille RENDUE a treize.
+     // Le 1,625 voulu arrivait donc a 1,50 rapporte au corps reel.
+     //
+     // Les huit regles de la famille « plancher de petit corps » tiennent donc
+     // 1,5. Les quatorze autres 1,45 du fichier appartiennent a des composants
+     // precis — pastilles, puces, intitules serres — et gardent la leur.
+     const compte = (h, n) => h.split(n).length - 1;
+     return css.includes('.scene-flux-source) { line-height: 1.5; }')
+         && compte(css, 'font-size: calc(13px * var(--corps)); line-height: 1.45') === 0
+         && compte(css, 'line-height: 1.45') <= 14;
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

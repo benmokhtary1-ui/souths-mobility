@@ -1212,11 +1212,11 @@ main { view-transition-name: page; }
    hauteur de ligne exprimée en PIXELS par leur parent : le rapport dérivait à
    chaque emboîtement, et trente-huit éléments se retrouvaient à 1,67 quand le
    palier dit 1,62. Un interligne appartient à son corps, pas à son ancêtre. */
-.text-\[8px\]  { font-size: calc(13px * var(--corps)); line-height: 1.45; }
-.text-\[9px\]  { font-size: calc(13px * var(--corps)); line-height: 1.45; }
-.text-\[10px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
-.text-\[11px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
-.text-\[12px\] { font-size: calc(13px * var(--corps)); line-height: 1.45; }
+.text-\[8px\]  { font-size: calc(13px * var(--corps)); line-height: 1.5; }
+.text-\[9px\]  { font-size: calc(13px * var(--corps)); line-height: 1.5; }
+.text-\[10px\] { font-size: calc(13px * var(--corps)); line-height: 1.5; }
+.text-\[11px\] { font-size: calc(13px * var(--corps)); line-height: 1.5; }
+.text-\[12px\] { font-size: calc(13px * var(--corps)); line-height: 1.5; }
 .text-\[13px\], .text-\[13\.5px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }
 .text-\[14px\] { font-size: calc(13px * var(--corps)); line-height: 1.62; }   /* seul corps hors echelle : cinq emplois */
 .text-\[15px\] { font-size: calc(15px * var(--corps)); line-height: 1.62; }
@@ -1235,7 +1235,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
    valeurs de Tailwind : `text-sm` valait 15 px dans une carte et 14 dans
    le pied, `text-lg` 19 et 18. Une classe qui rend deux tailles selon
    l'endroit n'est plus une echelle. */
-:is(main, .reader, header, nav, footer) .text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.5; }
 :is(main, .reader, header, nav, footer) .text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .text-base { font-size: calc(15px * var(--corps)); line-height: 1.62; }
 /* Le haut de l'echelle. Sans ces trois regles, text-lg (18 px par defaut)
@@ -1261,7 +1261,7 @@ body, body > div, .font-sans.text-sm { font-size: calc(13px * var(--corps)); }
    ou une classe de base accompagnait la variante, c'est la base qui
    gagnait, ce qui annulait purement la typographie responsive. */
 @media (min-width: 768px) {
-:is(main, .reader, header, nav, footer) .md\:text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.45; }
+:is(main, .reader, header, nav, footer) .md\:text-xs   { font-size: calc(13px * var(--corps));   line-height: 1.5; }
 :is(main, .reader, header, nav, footer) .md\:text-sm   { font-size: calc(13px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .md\:text-base { font-size: calc(15px * var(--corps));   line-height: 1.62; }
 :is(main, .reader, header, nav, footer) .md\:text-lg   { font-size: calc(17px * var(--corps));   line-height: 1.4; }
@@ -1969,8 +1969,8 @@ html[data-lecture-mesure="courte"] :is(main, .reader) p:not(.en-clair) {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 8px;
   margin: 1rem 0 0; padding-top: 8px;
   border-top: 1px solid var(--rule);
-  /* La petite ligne, comme toute note du site : 13 / 1,45. */
-  font-size: calc(13px * var(--corps)); line-height: 1.45; color: var(--label);
+  /* La petite ligne, comme toute note du site : 13 / 1,5. */
+  font-size: calc(13px * var(--corps)); line-height: 1.5; color: var(--label);
   max-width: none !important;   /* la mesure de lecture ne s'applique pas ici */
 }
 
@@ -3983,7 +3983,11 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    Le quatrieme palier existait deja sous `.text-xs` ; il manquait au titre
    de ce bloc, qui en annoncait trois et en servait quatre. */
 :is(main, .reader) :is(p, li, dd, dt, blockquote) { line-height: 1.62; }
-:is(main, .reader) :is(p, li, dd, dt, blockquote):is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .provenance, .note-source, .scene-flux-source) { line-height: 1.45; }
+/* 1,45 pour tout le petit corps, et 1,5 pour le reste : deux interlignes pour
+   un meme role. La source d un chiffre ne se lit pas plus serre qu une note
+   de methode. La valeur est celle qui dominait deja, mesuree sur les sept
+   sections. */
+:is(main, .reader) :is(p, li, dd, dt, blockquote):is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\], .provenance, .note-source, .scene-flux-source) { line-height: 1.5; }
 :is(main, .reader) :is(h1, h2, h3, h4) { line-height: 1.4; }
 :is(main, .reader) .tabular-nums,
 :is(main, .reader) [class*="font-serif"][class*="font-bold"][class*="text-2xl"],
@@ -6467,4 +6471,27 @@ nav .max-w-7xl.overflow-x-auto > * { justify-content: center; }
 .fiche-tete h2::before { display: none; }
 :is(.page-bandeau, .bg-slate-900, .bg-[#0f172a]) h2.font-serif::before {
   background: var(--accent-light);
+}
+
+/* ---------- UNE SEULE INTERLIGNE POUR LE PETIT CORPS --------------------
+   Mesure sur les sept sections : le texte de treize pixels — celui de
+   l appareil, methodes, notes, sources — rendait TROIS interlignes.
+   18,85 px la ou la regle du theme gagnait, 21,06 la ou la classe de
+   Tailwind l emportait, 19,50 la ou ni l une ni l autre ne s appliquait et ou la
+   valeur venait d un parent. Les memes classes donnaient deux resultats
+   selon l endroit : le meme couple de classes rendait 19,50 a trente-six
+   endroits et 18,85 a seize.
+
+   La cause tient a un detail du calcul. Le rapport de Tailwind est
+   applique a la taille DECLAREE — douze pixels — quand la couche de
+   lisibilite remonte la taille RENDUE a treize. Le rapport voulu de 1,625
+   arrivait donc a 1,50 une fois rapporte au corps reel.
+
+   On tranche une fois pour toutes, au rapport deja majoritaire : 1,5. Il
+   est plus genereux que le 1,45 du theme, plus serre que le 1,625 de
+   Tailwind, et il vaut pour les trois chemins a la fois. */
+:is(main, .reader) :is(p, li, dd, dt, span, div).text-xs,
+:is(main, .reader) :is(p, li, dd, dt).text-xs.leading-relaxed,
+:is(main, .reader) :is(p, li, dd, dt)[class*="text-[1"] {
+  line-height: 1.5;
 }
