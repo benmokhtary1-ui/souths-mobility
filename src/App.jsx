@@ -6334,9 +6334,13 @@ const TabHome = ({ text, lang, setActiveTab, allerAtlas, allerVers }) => {
         </div>
         <div className="mt-8 pt-6 border-t border-slate-100">
           <p className="surtitre">{text.home_editorial.refs_title}</p>
+          {/* slate-500 sur blanc donne 4,76:1 — la limite AA, sur du 12 px.
+              Toutes les autres microtypographies du site tiennent slate-600, a
+              7,4:1. Une bibliographie n a aucune raison d etre le seul texte du
+              site qu on lise moins bien. */}
           <ul className="space-y-1.5">
             {text.home_editorial.refs.map((ref, idx) => (
-              <li key={idx} className="text-xs text-slate-500 leading-relaxed">
+              <li key={idx} className="text-xs text-slate-600 leading-relaxed">
                 {ref.url ? (
                   <a href={ref.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-700 hover:underline">{ref.text}</a>
                 ) : ref.text}
