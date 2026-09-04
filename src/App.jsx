@@ -11571,8 +11571,8 @@ const TabDataStats = ({ text, lang, exportCensusCSV, expandedIndicator, setExpan
         <div className="mt-6 aparte aparte--reserve flex items-start gap-3 max-w-4xl">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <Prose className="text-xs text-amber-900 leading-relaxed text-justify" lang={lang}>{L(
-              "Un taux de participation ne dit rien de la qualité des dénombrements, qui reste à établir pays par pays. Sept États n’ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join("A participation rate says nothing about the quality of the enumerations, which remains to be established country by country. Seven states did not census during the 2010 round — ") + " — et la République démocratique du Congo n’a conduit qu’un seul recensement dans son histoire, en 1984. L’Éthiopie a recensé, mais sans question sur la migration internationale.",
-              "Behind the rate, enumeration quality remains to be established. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + " — and the Democratic Republic of the Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
+              "Un taux de participation ne dit rien de la qualité des dénombrements, qui reste à établir pays par pays. Sept États n’ont pas recensé durant le cycle 2010 — " + censusNoRound2010.join(", ") + ". La RDC, elle, n’a conduit qu’un seul recensement dans son histoire, en 1984. L’Éthiopie a recensé, mais sans question sur la migration internationale.",
+              "Behind the rate, enumeration quality remains to be established. Seven states did not census during the 2010 round — " + censusNoRound2010En.join(", ") + ". DR Congo has conducted only one census in its history, in 1984. Ethiopia censused, but without any question on international migration."
             )}</Prose>
         </div>
       </Reveal>

@@ -665,6 +665,19 @@ const DEMANDES = [
          && app.includes("L('Recensements de la population', 'Population censuses')")
          && css.length > 0 && app.includes('.pdf-doc .pdf-reserve {');
    }],
+
+  ['aucune phrase anglaise ne sert de séparateur dans la version française',
+   () => {
+     // Une passe de remplacement avait ecrase le separateur d un `join()` par
+     // une phrase anglaise entiere. Resultat, sur la page Donnees : la liste
+     // des sept Etats qui n ont pas recense pendant le cycle 2010 sortait avec
+     // la version ANGLAISE du paragraphe intercalee entre chaque pays --
+     // « Comores A participation rate says nothing about… Centrafrique A
+     // participation rate says nothing about… ». Un separateur de liste tient
+     // en deux ou trois signes ; au-dela, c est qu une phrase y est tombee.
+     const longs = app.match(new RegExp("[.]join[(][\"'][^\"']{6,}[\"'][)]", "g")) || [];
+     return longs.length === 0;
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');
