@@ -2787,18 +2787,18 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
    repose sur un lavis très pâle, bordé d’un filet d’accent à gauche — le
    nombre cesse de flotter sur le papier, et l’œil trouve où atterrir sans
    qu’aucune ligne de plus ait été ajoutée.                                  */
-.fiche-mesure {
-  padding: var(--pas-2) var(--pas-2) var(--pas-2) calc(var(--pas-2) - 3px);
-  border-inline-start: 3px solid var(--accent);
-  background: linear-gradient(100deg,
-    color-mix(in oklab, var(--accent) 7%, transparent) 0%,
-    color-mix(in oklab, var(--accent) 2%, transparent) 62%,
-    transparent 100%);
-}
-/* Le compte des six textes reçoit la même assise, pour la même raison. Son
-   filet de fermeture reste : il vient d’une règle déclarée plus bas, et il
-   sépare utilement le compte de la liste qu’il annonce. */
-.ratif-compte {
+/* Les TROIS chiffres de tête la partagent, et elle n’est écrite qu’une fois.
+   Le compte des six textes l’avait déjà ; l’évolution en deux points ne
+   l’avait pas, et c’est pourtant le chiffre qui OUVRE la fiche — le stock
+   migratoire du premier mouvement. Il paraissait plus faible que la rétention
+   régionale posée à côté de lui, qui n’est qu’une mesure seconde : la
+   hiérarchie se lisait à l’envers. La même faute avait été relevée sur le
+   compte des ratifications, et corrigée pour la même raison.
+   Le filet de fermeture du compte reste : il vient d’une règle déclarée plus
+   bas, et il sépare utilement le compte de la liste qu’il annonce. */
+.fiche-mesure,
+.ratif-compte,
+.evolution-deux {
   padding: var(--pas-2) var(--pas-2) var(--pas-2) calc(var(--pas-2) - 3px);
   border-inline-start: 3px solid var(--accent);
   background: linear-gradient(100deg,
@@ -2909,7 +2909,10 @@ main[data-section='atlas'] > div > * + * { margin-block-start: 1.75rem !importan
   font-size: calc(19px * var(--corps, 1)); color: var(--ink-mute);
   font-variant-numeric: tabular-nums;
 }
-.evolution-borne--fin b { font-size: calc(26px * var(--corps, 1)); color: var(--ink); }
+/* Le point d’arrivée mène son mouvement comme les deux autres chiffres mènent
+   le leur : même corps, même encre. Il tenait 26 quand `.fiche-mesure-n` et
+   `.ratif-n` en tiennent 31. */
+.evolution-borne--fin b { font-size: calc(31px * var(--corps, 1)); color: var(--ink); letter-spacing: -.015em; }
 .evolution-borne small { font-size: calc(13px * var(--corps, 1)); color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 .evolution-fleche { width: 14px; height: 14px; color: var(--ink-mute); align-self: center; flex: none; }
 :root[dir="rtl"] .evolution-fleche { transform: scaleX(-1); }

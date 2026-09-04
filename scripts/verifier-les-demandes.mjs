@@ -314,10 +314,6 @@ const DEMANDES = [
    // Le bouton d impression portait `bg-slate-900` : de l encre sur de l encre.
    () => css.includes(':is(main, .reader) .fiche-pied button[class*="bg-slate-900"]')],
 
-  ['les chiffres de la fiche reposent sur une assise',
-   () => /\.fiche-mesure\s*\{[^}]*border-inline-start: 3px solid var\(--accent\)/s.test(css)
-      && /\.ratif-compte\s*\{[^}]*border-inline-start: 3px solid var\(--accent\)/s.test(css)],
-
   ['aucun folio fantôme ne subsiste',
    // Essaye, mesure, abandonne : il tombait sur le libelle du mouvement.
    () => !app.includes('data-folio=') && !css.includes('content: attr(data-folio)')],
@@ -599,6 +595,20 @@ const DEMANDES = [
      return css.includes(':is(main, .reader) .fiche-tete .bascule-groupe { margin-inline-end: 2.25rem; }')
          && css.includes('.fiche-pied > .surtitre { min-width: 0; }')
          && css.includes('.fiche-pied > div { flex: none; }');
+   }],
+
+  ['les trois chiffres de tête de la fiche ont la même assise et le même corps',
+   () => {
+     // L evolution en deux points ouvre la fiche — le stock migratoire — et
+     // elle etait la seule sans lavis ni filet, a 26 px quand les deux autres
+     // en tiennent 31 : la hierarchie se lisait a l envers. Le lavis, ecrit
+     // deux fois, ne l est plus qu une.
+     const k = css.indexOf('.fiche-mesure,');
+     if (k < 0) return false;
+     const regle = css.slice(k, css.indexOf('}', k));
+     return regle.includes('.ratif-compte,') && regle.includes('.evolution-deux')
+         && regle.includes('border-inline-start: 3px solid var(--accent)')
+         && css.includes('.evolution-borne--fin b { font-size: calc(31px * var(--corps, 1))');
    }],
 ];
 
