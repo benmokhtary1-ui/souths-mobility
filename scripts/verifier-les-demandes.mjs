@@ -807,6 +807,26 @@ const DEMANDES = [
      return compte(app, 'className="border border-slate-200 p-4 lift"') === 0
          && compte(app, 'className="border border-slate-200 rounded p-4 lift"') === 4;
    }],
+
+  ['les sept sections ouvrent et se ferment de la meme facon',
+   () => {
+     // Deux oublis releves par l audit d organisation.
+     //
+     // L Atlas etait la seule section sans filet d ouverture -- ce trait qui se
+     // trace a l arrivee et porte la teinte de la section. Son ouverture est
+     // sur mesure (la scene des flux) et faisait tout le reste : la planche du
+     // continent, l oeil-de-boeuf, le titre, la phrase. Il ne manquait que le
+     // filet, c est-a-dire le seul endroit ou sa couleur ne paraissait pas.
+     //
+     // Et « A propos » etait la seule section sans barre : la page qui dit d ou
+     // vient la plateforme ne pouvait pas s imprimer, quand ses trois volets
+     // voisins le pouvaient.
+     const compte = (h, n) => h.split(n).length - 1;
+     const scene = app.indexOf('<section className="scene-flux">');
+     if (scene < 0) return false;
+     return app.slice(scene, scene + 700).includes('trait-trace--ouverture')
+         && compte(app, '<BarreSection lang={lang} />') >= 5;
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

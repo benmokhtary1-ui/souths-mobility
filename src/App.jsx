@@ -4984,6 +4984,13 @@ const SceneFlux = ({ lang, children }) => {
   const reduit = useMemo(prefersReducedMotion, []);
   return (
     <section className="scene-flux">
+      {/* Le filet d ouverture, que les six autres sections portent et que
+          celle-ci n avait pas. Il se trace a l arrivee et prend la teinte de la
+          section : c est le seul endroit ou la couleur de l Atlas paraissait
+          nulle part alors qu elle est posee partout ailleurs. */}
+      <div className="absolute inset-x-0 bottom-0 h-px overflow-hidden">
+        <span className="trait-trace trait-trace--ouverture" />
+      </div>
       <svg className="scene-flux-carte" viewBox={AFRICA_VIEWBOX} aria-hidden="true" focusable="false"
            preserveAspectRatio="xMaxYMid meet">
         <g className="flux-continent">
@@ -12701,6 +12708,13 @@ const TabAbout = ({ text, lang, children }) => {
         desc={text.headers.about.desc}
         icon={Info}
       />
+
+      {/* Trois des quatre volets de cette page portaient la barre — la
+          Bibliotheque, le Glossaire, la Methode — et « A propos » non. C etait
+          la seule section du site sans son bouton d export : la page qui dit
+          d ou vient la plateforme et ce qu elle ne pretend pas etre ne pouvait
+          pas s imprimer, quand tout le reste le pouvait. */}
+      <BarreSection lang={lang} />
 
 
       <Reperes
