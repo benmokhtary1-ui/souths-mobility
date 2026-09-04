@@ -795,6 +795,18 @@ const DEMANDES = [
          && compte(css, 'font-size: calc(13px * var(--corps)); line-height: 1.45') === 0
          && compte(css, 'line-height: 1.45') <= 14;
    }],
+
+  ['les tuiles bordées prennent le rayon du site',
+   () => {
+     // Mesure sur les sept sections : soixante-cinq boites bordees sur les
+     // quatre cotes portent le rayon de dix pixels, et quatre ne le portaient
+     // pas -- une famille de tuiles a chiffre, la meme forme repetee. La
+     // soixante-sixieme reste a angle vif, et c est assume : le cadre du
+     // groupe de pastilles pose son rayon nul en !important.
+     const compte = (h, n) => h.split(n).length - 1;
+     return compte(app, 'className="border border-slate-200 p-4 lift"') === 0
+         && compte(app, 'className="border border-slate-200 rounded p-4 lift"') === 4;
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

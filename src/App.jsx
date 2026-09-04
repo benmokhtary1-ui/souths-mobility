@@ -2175,7 +2175,7 @@ const AspirationGap = ({ lang }) => {
             { v: '27 %', l: L("y ont pensé « beaucoup »", 'have thought about it "a lot"'), s: L("l’intention, pas le rêve", 'intent, not daydream'), tone: 'figure-terra' },
             { v: '+9', l: L('points depuis 2016-2018', 'points since 2016-2018'), s: L('sur 22 pays comparables', 'across 22 comparable countries'), tone: 'figure-warn' },
           ].map((k, i) => (
-            <div key={i} className="border border-slate-200 p-4 lift">
+            <div key={i} className="border border-slate-200 rounded p-4 lift">
               <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
               <span className="surtitre mt-2" style={{ color: 'var(--label)' }}>{k.l}</span>
               <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
@@ -2443,7 +2443,7 @@ const CensusRhythm = ({ lang }) => {
               { v: `${data.metronomes.length}`, l: L('pays au rythme de métronome', 'metronomic countries'), tone: 'figure-terra' },
               { v: `${data.longest[0].gap} ${L('ans', 'yrs')}`, l: L('le trou le plus long', 'the longest gap'), tone: 'figure-warn' },
             ].map((k, i) => (
-              <div key={i} className="border border-slate-200 p-4 lift">
+              <div key={i} className="border border-slate-200 rounded p-4 lift">
                 <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
                 <span className="surtitre mt-2" style={{ color: 'var(--label)' }}>{k.l}</span>
               </div>
@@ -6980,7 +6980,7 @@ const GovernanceCross = ({ lang }) => {
               { v: fmt(d.rhoAvoiAnchor), l: L('Ouverture visa × ancrage', 'Visa openness × anchoring'),
                 s: L('aucun lien', 'no relationship'), tone: 'figure-terra' },
             ].map((k, i) => (
-              <div key={i} className="border border-slate-200 p-4 lift">
+              <div key={i} className="border border-slate-200 rounded p-4 lift">
                 <div className={`text-2xl font-serif font-bold tabular-nums leading-none ${k.tone}`}>{k.v}</div>
                 <span className="surtitre mt-2" style={{ color: 'var(--label)' }}>{k.l}</span>
                 <span className="block text-[11px] mt-1" style={{ color: 'var(--label)' }}>{k.s}</span>
@@ -7736,7 +7736,7 @@ const TabForced = ({ text, lang, children }) => {
               const a = unhcrTotals['2014'][x.k], b = unhcrTotals['2024'][x.k];
               const mult = a ? b / a : 0;
               return (
-                <div key={x.k} className="border border-slate-200 p-4 lift">
+                <div key={x.k} className="border border-slate-200 rounded p-4 lift">
                   <p className="surtitre" style={{ color: 'var(--label)' }}>{x.l}</p>
                   <div className={`text-xl font-serif font-bold tabular-nums leading-none ${x.tone}`}>{fmt(b)}</div>
                   <div className="flex items-baseline gap-2 mt-2">
