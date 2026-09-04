@@ -6101,12 +6101,24 @@ main .barre-section { order: 99; margin-top: calc(-1 * var(--pas-2)); }
 }
 :is(main, .reader) .bascule-groupe { margin-inline: auto; }
 
-:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]) {
+/* LA TAILLE APPARTIENT AU BOUTON, PAS A SON CONTENANT.
+   Mesure sur les sept sections : quatorze boutons d export, tous le meme
+   geste — prendre ces donnees. Neuf vivent dans une `.barre-section` et
+   rendaient 15 px ; les cinq autres, poses a cote d un titre ou en bout de
+   rangee, rendaient 13. Le meme bouton changeait de taille selon l endroit
+   ou il se trouvait, ce qu aucun lecteur ne peut deviner et que rien ne
+   justifie.
+
+   La regle porte donc sur ce qu EST le bouton — un export, une commande de
+   carrousel — et non sur l endroit ou il se tient. */
+:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]),
+:is(main, .reader) :is(.barre-section-csv, .barre-section-pdf) {
   font-size: calc(15px * var(--corps, 1));
 }
 /* L'icone suit son libelle : elle etait calee sur 13 px, elle passe au meme
    rapport que le texte a cote duquel elle vit. */
-:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]) svg {
+:is(main, .reader) :is(.barre-section, .carrousel-commandes) :is(button, a[href]) svg,
+:is(main, .reader) :is(.barre-section-csv, .barre-section-pdf) svg {
   width: 1.06em;
   height: 1.06em;
 }

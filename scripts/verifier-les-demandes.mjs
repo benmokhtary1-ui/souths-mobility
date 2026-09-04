@@ -727,6 +727,24 @@ const DEMANDES = [
          && compte(app, 'color: "text-') === 0
          && app.includes('flex items-center text-base font-serif font-bold text-slate-900 mb-5');
    }],
+
+  ['le bouton d’export a une taille, pas deux',
+   () => {
+     // Quatorze boutons, tous le meme geste. Neuf vivaient dans une
+     // « .barre-section » et rendaient 15 px ; les cinq autres, poses a cote
+     // d un titre, rendaient 13. La regle porte desormais sur ce qu EST le
+     // bouton, pas sur l endroit ou il se tient.
+     return css.includes(':is(main, .reader) :is(.barre-section-csv, .barre-section-pdf) {');
+   }],
+
+  ['aucune icône ne se laisse écraser par le texte à côté',
+   () => {
+     // Une icone lucide est carree. Quinze ne l etaient plus : enfants de flex
+     // sans « shrink-0 », elles etaient comprimees par le titre a cote — 18,8 x 20
+     // pour un axe de la matrice, 15,1 x 16 pour les douze ampoules.
+     return app.includes('w-5 h-5 me-2 shrink-0')
+         && !app.includes('<Lightbulb className="w-3 h-3" />');
+   }],
 ];
 
 console.log('CHAQUE DEMANDE, VÉRIFIÉE SUR LE CODE');

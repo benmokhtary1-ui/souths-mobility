@@ -11206,7 +11206,10 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                     l axe : six teintes sur six titres freres faisaient croire a
                     six natures differentes la ou il y a six axes d une matrice. */}
                 <h3 className="flex items-center text-base font-serif font-bold text-slate-900 mb-5">
-                  {React.cloneElement(theme.icon, { className: "w-5 h-5 me-2" })} 
+                  {/* `shrink-0` : sans lui l icone est un enfant de flex comme un autre, et
+                      le titre a cote la comprime. Mesure : 18,8 x 20 pour l une, 16,6 x 20
+                      pour l autre — une icone lucide est carree, celles-la ne l etaient plus. */}
+                  {React.cloneElement(theme.icon, { className: "w-5 h-5 me-2 shrink-0" })} 
                   {tr({ fr: theme.theme_fr, en: theme.theme_en }, lang)}
                 </h3>
                 <div className="space-y-3">
@@ -11246,7 +11249,7 @@ const IndicatorsMatrix = ({ text, lang, expandedIndicator, setExpandedIndicator,
                             <Prose className="text-xs text-slate-700 leading-relaxed" lang={lang}>{tr({ fr: ind.method_fr, en: ind.method_en }, lang)}</Prose>
                           </div>
                           <div className="bg-white p-3 rounded-sm border border-slate-200">
-                            <span className="surtitre flex items-center gap-1"><Lightbulb className="w-3 h-3" />{tr({ fr: "Le déplacement qu’il opère", en: "The shift it makes" }, lang)}</span>
+                            <span className="surtitre flex items-center gap-1"><Lightbulb className="w-3 h-3 shrink-0" />{tr({ fr: "Le déplacement qu’il opère", en: "The shift it makes" }, lang)}</span>
                             <Prose className="text-xs text-slate-800 italic leading-relaxed" lang={lang}>{tr({ fr: ind.contrast_fr, en: ind.contrast_en }, lang)}</Prose>
                           </div>
                         </div>
