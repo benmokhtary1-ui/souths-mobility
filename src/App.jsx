@@ -13695,7 +13695,13 @@ export default function App() {
              l ecran : un lavis tres pale, borde d un filet d accent a gauche. Le
              nombre cesse de flotter, et le papier retrouve la grammaire de la
              fiche au lieu d en inventer une seconde. */
-          .pdf-doc .kpi { border: 0; border-left: 1.6pt solid #3F4654; background: #F1F0F3; border-radius: 0; padding: 1.5mm 1.8mm 1.5mm 1.6mm; }
+          /* Les six tuiles font la meme hauteur, mais deux libelles sur six
+             passent a la ligne — « Stock migrant (2024) », « Ouverture visa
+             (AVOI) » — et leur valeur tombait onze pixels plus bas que les
+             quatre autres. Sur une rangee de six chiffres, la ligne de base se
+             voit. Le libelle occupe le haut, la valeur se cale en pied, et les
+             six se lisent sur un meme fil quelle que soit la longueur du mot. */
+          .pdf-doc .kpi { border: 0; border-left: 1.6pt solid #3F4654; background: #F1F0F3; border-radius: 0; padding: 1.5mm 1.8mm 1.5mm 1.6mm; display: flex; flex-direction: column; justify-content: space-between; }
           .pdf-doc .kpi .lbl { font-size: 5.9pt; letter-spacing: .09em; text-transform: uppercase; color: #615B55; display: block; }
           .pdf-doc .kpi .val { font-size: 12pt; font-weight: 700; font-family: Merriweather, serif; line-height: 1.1; color: #272E3B; }
           /* La reserve ferme la planche : un lavis d alerte tres pale, borde
