@@ -14,7 +14,8 @@ import {
 import { evidenceCheckData } from './narrativesData';
 import { LANGUES, ACTIVES, LANGUE_DEFAUT, estRTL, tagDe, estPartielle } from './i18n/langues';
 import { tr, faireL, pluriel, appliquerLangue, catalogue } from './i18n/tr';
-import { africaCountryPaths, AFRICA_VIEWBOX } from './africaMapPaths';
+import { africaCountryPaths, AFRICA_VIEWBOX, AFRICA_POINTS,
+         AFRICA_CADRES_REGIONS, AFRICA_CADRES_PLANCHES, AFRICA_PETITS_ETATS } from './africaMapPaths';
 import { censusByCountry, censusRoundMeta, census2020Status } from './censusData';
 import { unhcrByCountry, unhcrTotals, UNHCR_SOURCE } from './unhcrData';
 import { iiagRank, IIAG_SOURCE } from './iiagData';
@@ -1604,18 +1605,11 @@ const BrandLockup = ({ corps = 22, tone = "paper", ecart = 0.34, className = "",
 // Corne pour le deplacement contraint, le corridor CEDEAO pour le travail,
 // Addis-Abeba pour la gouvernance. Le fond devient une indication de lieu.
 //
-// Reperes en coordonnees de la planche (viewBox 1000 x 1126), pris au centre
-// du trace de chaque pays. Ils servent a la fois aux cadrages et aux
-// trajectoires tracees en arriere-plan.
-const LIEUX = {
-  rabat: [196, 125], tunis: [420, 52], tripoli: [512, 154], caire: [675, 148],
-  nouakchott: [174, 224], dakar: [131, 308], bamako: [257, 268], ouaga: [286, 336],
-  niamey: [402, 269], abidjan: [238, 394], accra: [293, 389], lagos: [409, 375],
-  ndjamena: [530, 295], khartoum: [668, 296], juba: [662, 390], addis: [792, 374],
-  djibouti: [818, 342], mogadiscio: [861, 423], nairobi: [761, 480], kampala: [693, 468],
-  kinshasa: [567, 535], luanda: [520, 622], lusaka: [640, 645], dar: [725, 562],
-  harare: [655, 718], maputo: [732, 716], lecap: [632, 942], tana: [869, 717],
-};
+// Les reperes sont les villes elles-memes, projetees avec le fond depuis
+// leurs coordonnees reelles par scripts/composer-le-fond-de-carte.mjs. Ils
+// etaient auparavant poses a la main sur la planche, et s en ecartaient de
+// quarante-quatre unites en moyenne — cent neuf pour Le Cap.
+const LIEUX = AFRICA_POINTS;
 
 // Une planche par section, reperee par son numero — celui que le bandeau
 // affiche deja. Aucun appel de <PageHeader> n’a besoin d’etre modifie.
@@ -1626,33 +1620,33 @@ const LIEUX = {
 const ATLAS_CADRAGES = {
   // Pl. I — l’Atlas : le continent entier, sans cadrage. C’est la premiere
   // feuille du recueil, celle par laquelle on entre.
-  'Pl. I':     { crop: [-8, -8, 1022, 1142], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
+  'Pl. I':     { crop: AFRICA_CADRES_PLANCHES['Pl. I'], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
   // Pl. II — l’accueil : le meme continent entier, puisqu’on s’y oriente.
-  'Pl. II':    { crop: [-8, -8, 1022, 1142], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
+  'Pl. II':    { crop: AFRICA_CADRES_PLANCHES['Pl. II'], arcs: [['dakar','lagos'], ['lagos','kinshasa'], ['kinshasa','nairobi'], ['nairobi','caire'], ['kinshasa','lecap']] },
   // Quart nord-ouest : les traversees que le debat public imagine.
-  'Pl. III':   { crop: [30, 0, 830, 700],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
+  'Pl. III':   { crop: AFRICA_CADRES_PLANCHES['Pl. III'],  arcs: [['dakar','rabat'], ['bamako','tripoli'], ['niamey','tunis']] },
   // Facade est, large : Corne, Grands Lacs et vallee du Nil ensemble.
-  'Pl. V':   { crop: [370, 130, 630, 640], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
+  'Pl. V':   { crop: AFRICA_CADRES_PLANCHES['Pl. V'], arcs: [['mogadiscio','nairobi'], ['khartoum','juba'], ['juba','kampala'], ['kampala','kinshasa']] },
   // Facade ouest : le corridor CEDEAO d’un bout a l’autre.
-  'Pl. VI':    { crop: [30, 110, 660, 590], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
+  'Pl. VI':    { crop: AFRICA_CADRES_PLANCHES['Pl. VI'], arcs: [['dakar','abidjan'], ['abidjan','accra'], ['accra','lagos'], ['bamako','ouaga'], ['ouaga','abidjan']] },
   // Corridors : la largeur du continent d’ouest en est, ou passent les couples
   // de pays les plus lourds. Les arcs sont ceux que le volet chiffre.
-  'Pl. VII':   { crop: [40, 120, 900, 620], arcs: [['ouaga','abidjan'], ['bamako','abidjan'], ['juba','kampala'], ['kinshasa','kampala']] },
+  'Pl. VII':   { crop: AFRICA_CADRES_PLANCHES['Pl. VII'], arcs: [['ouaga','abidjan'], ['bamako','abidjan'], ['juba','kampala'], ['kinshasa','kampala']] },
   // Gouvernance : le continent en entier. L’Union africaine gouverne 54 Etats,
   // pas une region — un cadrage sur la Corne repetait celui du deplacement
   // contraint et disait le contraire de ce que fait cette section. Les
   // trajectoires, elles, partent bien d’Addis-Abeba vers les quatre horizons.
-  'Pl. VIII':   { crop: [0, 0, 1000, 940], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
+  'Pl. VIII':   { crop: AFRICA_CADRES_PLANCHES['Pl. VIII'], arcs: [['addis','rabat'], ['addis','dakar'], ['addis','lecap'], ['addis','djibouti']] },
   // Centre-sud : la ou se concentrent les appareils statistiques compares.
-  'Pl. IV':  { crop: [250, 290, 720, 720], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
+  'Pl. IV':  { crop: AFRICA_CADRES_PLANCHES['Pl. IV'], arcs: [['ndjamena','juba'], ['juba','kinshasa'], ['kinshasa','dar'], ['dar','lusaka']] },
   // Moitie sud, jusqu’a Madagascar.
-  'Pl. IX': { crop: [300, 460, 700, 666], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
+  'Pl. IX': { crop: AFRICA_CADRES_PLANCHES['Pl. IX'], arcs: [['luanda','lusaka'], ['lusaka','harare'], ['harare','maputo'], ['maputo','tana']] },
   // Bassin centre-equatorial.
-  'Pl. X':   { crop: [200, 230, 700, 660], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
+  'Pl. X':   { crop: AFRICA_CADRES_PLANCHES['Pl. X'], arcs: [['juba','kampala'], ['kampala','nairobi'], ['kinshasa','juba']] },
   // Bande mediterraneenne et saharienne, d’un ocean a l’autre.
-  'Pl. XI':    { crop: [40, 0, 820, 570],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
+  'Pl. XI':    { crop: AFRICA_CADRES_PLANCHES['Pl. XI'],  arcs: [['rabat','tunis'], ['tunis','tripoli'], ['rabat','nouakchott']] },
   // Facade atlantique, du detroit au golfe de Guinee.
-  'Pl. XII':   { crop: [20, 20, 620, 780], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
+  'Pl. XII':   { crop: AFRICA_CADRES_PLANCHES['Pl. XII'], arcs: [['rabat','dakar'], ['dakar','bamako'], ['bamako','rabat']] },
 };
 
 // Une trajectoire se courbe : la corde droite dit une ligne sur une carte, la
@@ -3497,7 +3491,7 @@ const t = {
         m3: "Datation champ par champ. Les millésimes ne sont pas alignés artificiellement : transferts de fonds, activité des migrants et ratifications portent chacun leur année d’observation. Aucune interpolation n’est pratiquée pour produire une homogénéité de façade, et un chiffre non vérifiable est affiché daté et assorti d’une réserve plutôt que lissé.",
         m4: "Proportion plutôt que valeur absolue. Les effectifs sont systématiquement rapportés à la population de référence. Les échelles ne sont jamais mélangées dans une même représentation (l’indice AVOI est stocké de 0 à 100 au niveau des pays, de 0 à 1 au niveau des CER). Les cartes choroplèthes utilisent un découpage par quantiles, robuste aux distributions très asymétriques comme celle des personnes déplacées internes.",
         m5: "Évaluation juridique seuillée. Les décomptes de ratification sont vérifiés sur les portails officiels avant publication. Le seuil d’entrée en vigueur est stocké instrument par instrument : 15 États parties pour cette catégorie de protocoles. Il pilote directement l’affichage du statut, « en vigueur » ou « pas encore en vigueur ».",
-        m6: "Restitution reproductible. Les huit jeux de données affichés sont exportables en CSV conforme au format RFC 4180, et chaque dossier PDF embarque sa source, l’adresse de la plateforme et la référence de citation. Les fonds cartographiques dérivent de Natural Earth (50 m), en projection Mercator, simplifiés par l’algorithme de Douglas-Peucker.",
+        m6: "Restitution reproductible. Les huit jeux de données affichés sont exportables en CSV conforme au format RFC 4180, et chaque dossier PDF embarque sa source, l’adresse de la plateforme et la référence de citation. Les fonds cartographiques dérivent de Natural Earth (50 m), simplifiés par l’algorithme de Douglas-Peucker et projetés en Eckert IV, méridien central 16° E. Cette projection conserve les aires : un pays y occupe la place que sa superficie lui donne, ce que Mercator — employée jusqu’en septembre 2026 — ne fait pas, puisqu’elle grossit les latitudes hautes. Le Maroc y est rendu d’un seul tenant.",
         sources_title: "Accès aux jeux de données, rapports & cadres juridiques :",
         s1: "Union africaine & CUA / OIT / OIM / CEA - 3e Rapport sur les statistiques migratoires (2021)",
         s2: "UNDESA - Stock migratoire mondial (2024)",
@@ -3823,7 +3817,7 @@ const t = {
         m3: "Field-level dating. Vintages are not artificially aligned: remittances, migrant activity, and ratifications each carry their own observation year. No interpolation is applied to manufacture surface-level homogeneity, and an unverifiable figure is shown dated and caveated rather than smoothed.",
         m4: "Proportion over absolute value. Counts are systematically related to their reference population. Scales are never mixed within a single representation (the AVOI index is stored 0-100 at country level, 0-1 at REC level). Choropleth maps use quantile binning, which is robust to heavily skewed distributions such as internal displacement.",
         m5: "Threshold-driven legal assessment. Ratification counts are checked against official portals before publication. The entry-into-force threshold — 15 states parties for this class of protocol — is stored per instrument and directly drives the \"in force\" or \"not yet in force\" status shown.",
-        m6: "Reproducible output. The eight displayed datasets are exportable as RFC 4180-compliant CSV, and every PDF dossier embeds its source, the platform address, and the citation reference. Map bases derive from Natural Earth (50m), in Mercator projection, simplified with the Douglas-Peucker algorithm.",
+        m6: "Reproducible output. The eight displayed datasets are exportable as RFC 4180-compliant CSV, and every PDF dossier embeds its source, the platform address, and the citation reference. Map bases derive from Natural Earth (50m), simplified with the Douglas-Peucker algorithm and projected in Eckert IV, central meridian 16° E. This projection is equal-area: a country occupies the space its surface gives it, which Mercator — used until September 2026 — does not, since it inflates high latitudes. Morocco is rendered as a single whole.",
         sources_title: "Access Original Datasets, Reports & Legal Frameworks:",
         s1: "African Union & AUC / ILO / IOM / ECA - 3rd Labour Migration Statistics Report (2021)",
         s2: "UNDESA - International Migrant Stock Data (2024)",
@@ -4094,24 +4088,12 @@ const mapIndicators = [
 // d’une rampe sequentielle a un jeu de categories nommees. Un statut de
 // recensement n’est pas une grandeur — le colorer par degrade mentirait sur
 // la nature de la donnee.
-// Les douze États dont le tracé tombe sous le seuil de visibilité, avec le
-// centre de leur emprise. Mesuré sur les tracés eux-mêmes plutôt que choisi :
-// est petit ce qui couvre moins de 1 000 unités carrées sur une planche de
-// 1000 × 1126 — les Seychelles en occupent cinq.
-const PETITS_ETATS = [
-  ['690', 972, 541],   // Seychelles
-  ['480', 997, 733],   // Maurice
-  ['174', 832, 628],   // Comores
-  ['678', 388, 474],   // Sao Tomé-et-Principe
-  ['270', 120, 322],   // Gambie
-  ['748', 683, 816],   // Eswatini
-  ['262', 817, 341],   // Djibouti
-  ['646', 664, 508],   // Rwanda
-  ['108', 665, 525],   // Burundi
-  ['624', 122, 342],   // Guinée-Bissau
-  ['426', 644, 858],   // Lesotho
-  ['132',  16, 290],   // Cabo Verde
-];
+// Les États dont le tracé tombe sous le seuil de visibilité, avec le centre
+// de leur emprise. Mesuré sur les tracés plutôt que choisi : est petit ce qui
+// couvre moins de 600 unités carrées sur une planche de 1006 × 1378 — les
+// Seychelles en occupent trois. Ils sont treize, et la liste se recalcule avec
+// le fond (scripts/composer-le-fond-de-carte.mjs).
+const PETITS_ETATS = AFRICA_PETITS_ETATS;
 
 // LE RAYON DE LA CIBLE TACTILE SE DÉDUIT DU VOISINAGE
 // ---------------------------------------------------------------------------
@@ -4144,18 +4126,12 @@ const RAYONS_TACTILES = Object.fromEntries(
 // Regarder l’Afrique de l’Ouest en affichant tout le continent oblige à
 // chercher la région dans l’image à chaque fois. Une carte régionale doit
 // cadrer sa région.
-const CADRES_REGIONS = {
-  af_med:     [73, -26, 701, 357],
-  af_west:    [-20, 154, 537, 299],
-  af_central: [362, 174, 339, 551],
-  af_east:    [544, 187, 480, 640],
-  af_south:   [424, 562, 393, 586],
-};
+const CADRES_REGIONS = AFRICA_CADRES_REGIONS;
 
 // Les cinq cadres n’ont pas le meme format — la bande mediterraneenne est large
-// et basse (701 x 357), l’Afrique centrale haute et etroite (339 x 551). Leur
-// imposer la meme hauteur donnait des cartes d’aires tres inegales : 90 600 px²
-// pour la centrale contre 289 500 pour la mediterraneenne, soit plus du triple.
+// et basse (709 x 423), l’Afrique centrale haute et etroite (346 x 756). Leur
+// imposer la meme hauteur donnait des cartes d’aires tres inegales. Les cadres
+// se calculent desormais avec le fond, a partir de fenetres geographiques.
 // Les regions hautes se retrouvaient minuscules, alors qu’elles portent autant
 // de pays que les autres.
 //
@@ -4167,12 +4143,18 @@ const CADRES_REGIONS = {
 // L’aire est choisie sous deux contraintes mesurees : la plus large ne doit pas
 // deborder la colonne (660 px), la plus haute doit rester sous 470 px pour que
 // la carte tienne dans un ecran avec son classement a cote.
-const AIRE_CARTE = 135000;
+//
+// Sous Eckert IV les cadres sont plus hauts, et 135 000 en envoyait trois sur
+// cinq buter contre le plafond — l’egalite des surfaces, qui est tout l’objet
+// du reglage, s’y serait perdue en silence. 101 000 est la plus grande aire
+// sous laquelle les cinq tiennent : la plus haute (Afrique centrale, 346 x 756)
+// arrive a 470 px tout juste, la plus large (mediterraneenne, 709 x 423) a 246.
+const AIRE_CARTE = 101000;
 const hauteurDuCadre = (region) => {
   const c = CADRES_REGIONS[region];
   if (!c) return null;
   const r = c[2] / c[3];
-  return Math.round(Math.min(470, Math.max(250, Math.sqrt(AIRE_CARTE / r))));
+  return Math.round(Math.min(470, Math.max(240, Math.sqrt(AIRE_CARTE / r))));
 };
 
 const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = false, region = null }) => {
@@ -4387,8 +4369,8 @@ const AfricaChoropleth = ({ indicator, lang, selectedId, onSelect, compact = fal
         })}
 
         {/* Les États trop petits pour être vus.
-            Les Seychelles occupent 1,9 × 2,7 unités sur une planche de
-            1000 × 1126 : à l’écran, une poussière. Douze pays sont dans ce cas,
+            Les Seychelles occupent 1,9 × 3,9 unités sur une planche de
+            1006 × 1378 : à l’écran, une poussière. Treize pays sont dans ce cas,
             dont Cabo Verde, Maurice, les Comores et São Tomé — l’essentiel des
             États insulaires du continent. Une carte qui les rend invisibles les
             efface de la comparaison.
@@ -4864,17 +4846,11 @@ const COUCHES_ATLAS = [
 // traces decoratifs : chacun relie deux points que la plateforme documente, et
 // tous figurent dans les sections correspondantes. Le mouvement est le sujet du
 // site — autant le montrer plutot que le dire.
-// Escales supplementaires, tirees des cartes de routes de l’OIM. Coordonnees
-// posees dans le repere de la planche a partir de l’emprise du pays concerne.
-const ESCALES_OIM = {
-  nouadhibou: [112, 196],   // Mauritanie, cote nord-ouest
-  dakhla:     [116, 178],   // sud du Maroc, cote atlantique
-  conakry:    [140, 385],   // Guinee
-  obock:      [820, 336],   // Djibouti, depart vers le Yemen
-  bosasso:    [880, 352],   // Puntland, Somalie
-  moyale:     [745, 425],   // frontiere Ethiopie-Kenya
-  beitbridge: [648, 752],   // frontiere Zimbabwe-Afrique du Sud
-};
+// Les points de passage releves par l'OIM, projetes eux aussi depuis leurs
+// coordonnees reelles : Nouadhibou et Dakhla sur la cote atlantique, Conakry,
+// Obock et Bosasso sur la route orientale, Moyale a la frontiere
+// ethio-kenyane, Beitbridge a la frontiere zimbabweo-sud-africaine.
+const ESCALES_OIM = AFRICA_POINTS;
 
 // Les corridors du bandeau d’ouverture.
 //
@@ -5850,7 +5826,10 @@ const AfricaRecMap = ({ recId, lang, accent = '#1F4E5F' }) => {
 
   return (
     <div className="relative">
-      <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[30rem] mx-auto block" role="img"
+      {/* Le plafond suit la planche : sous Eckert IV elle est plus haute d’un
+            cinquieme, et 30 rem auraient retreci la carte d’autant en largeur —
+            or c’est la largeur qui rend les petits Etats visables. */}
+        <svg viewBox={AFRICA_VIEWBOX} className="w-full h-auto max-h-[36rem] mx-auto block" role="img"
            aria-label={tr({ fr: "Carte des États membres", en: "Map of member states" }, lang)}>
         {Object.entries(africaCountryPaths).map(([id, d]) => {
           const isMember = memberIds.has(id);

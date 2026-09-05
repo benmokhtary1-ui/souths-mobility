@@ -30,7 +30,11 @@ const GRAPHITE_CLAIR = '#929AA9';
 const paths = readFileSync('src/africaMapPaths.js', 'utf8');
 const traces = [...paths.matchAll(/"(\d+)":"(M[^"]+)"/g)].map(m => m[2]);
 if (!traces.length) throw new Error('aucun tracé de pays trouvé');
-const vb = (paths.match(/AFRICA_VIEWBOX = "([^"]+)"/) || [])[1] || '-8 -8 1022 1142';
+const vb = (paths.match(/AFRICA_VIEWBOX = "([^"]+)"/) || [])[1];
+if (!vb) throw new Error('cadre du continent introuvable');
+// La planche prend les dimensions de son cadre : les écrire en dur revenait à
+// écraser la carte au premier changement de projection.
+const [, , vbL, vbH] = vb.split(' ').map(Number);
 
 console.log(`${traces.length} pays, cadre ${vb}`);
 
@@ -52,7 +56,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${L}" height="${H}" 
   <rect width="${L}" height="${H}" fill="url(#fond)"/>
 
   <g transform="translate(700, -40) scale(0.62)">
-    <svg width="1022" height="1142" viewBox="${vb}">
+    <svg width="${vbL}" height="${vbH}" viewBox="${vb}">
       <g fill="${GRAPHITE}" fill-opacity=".55" stroke="${GRAPHITE_CLAIR}" stroke-opacity=".28" stroke-width="1.2">
         ${traces.map(d => `<path d="${d}"/>`).join('')}
       </g>

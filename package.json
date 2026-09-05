@@ -8,8 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "verifier": "node scripts/verifier-les-demandes.mjs && node scripts/verifier-les-regles.mjs && node scripts/confronter-les-versions.mjs && node scripts/verifier-l-echelle.mjs && node scripts/verifier-les-comptes.mjs && node scripts/relever-les-definitions-doubles.mjs && node scripts/relever-les-attributions.mjs && node scripts/auditer-fond.mjs",
-    "flyer": "node scripts/composer-le-flyer.mjs && node scripts/verifier-le-flyer.mjs"
+    "verifier": "node scripts/verifier-les-demandes.mjs && node scripts/verifier-le-fond-de-carte.mjs && node scripts/verifier-les-regles.mjs && node scripts/confronter-les-versions.mjs && node scripts/verifier-l-echelle.mjs && node scripts/verifier-les-comptes.mjs && node scripts/relever-les-definitions-doubles.mjs && node scripts/relever-les-attributions.mjs && node scripts/auditer-fond.mjs",
+    "flyer": "node scripts/composer-le-flyer.mjs && node scripts/verifier-le-flyer.mjs",
+    "carte": "node scripts/composer-le-fond-de-carte.mjs && node scripts/verifier-le-fond-de-carte.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -24,6 +25,8 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.27",
+    "d3-geo": "^3.1.1",
+    "d3-geo-projection": "^4.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -33,6 +36,8 @@
     "qrcode": "^1.5.4",
     "sharp": "^0.35.4",
     "tailwindcss": "^3.4.19",
-    "vite": "^8.0.4"
+    "topojson-client": "^3.1.0",
+    "vite": "^8.0.4",
+    "world-atlas": "^2.0.2"
   }
 }
